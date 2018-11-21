@@ -7,14 +7,15 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AlertDialog;
+
 import android.view.Menu;
 import android.view.MenuItem;
-
-import com.google.common.base.Optional;
 
 import java.util.List;
 
@@ -210,7 +211,7 @@ public class RoomFinderDetailsActivity
                     return;
                 }
 
-                onMapListLoadFinished(Optional.of(data));
+                onMapListLoadFinished(data);
             }
 
             @Override
@@ -227,12 +228,12 @@ public class RoomFinderDetailsActivity
     }
 
     private void onMapListLoadFailed() {
-        onMapListLoadFinished(Optional.absent());
+        onMapListLoadFinished(null);
     }
 
-    private void onMapListLoadFinished(Optional<List<RoomFinderMap>> result) {
+    private void onMapListLoadFinished(@Nullable List<RoomFinderMap> result) {
         showLoadingEnded();
-        if (!result.isPresent()) {
+        if (result == null) {
             if (NetUtils.isConnected(this)) {
                 showErrorLayout();
             } else {
@@ -240,7 +241,7 @@ public class RoomFinderDetailsActivity
             }
             return;
         }
-        mapsList = result.get();
+        mapsList = result;
         if (mapsList.size() > 1) {
             mapsLoaded = true;
         }
@@ -264,7 +265,7 @@ public class RoomFinderDetailsActivity
                     return;
                 }
 
-                onGeoLoadFinished(LocationManager.Companion.convertRoomFinderCoordinateToGeo(data));
+                onGeoLoadFinished(LocationManager.convertRoomFinderCoordinateToGeo(data));
             }
 
             @Override
@@ -281,18 +282,18 @@ public class RoomFinderDetailsActivity
     }
 
     private void onLoadGeoFailed() {
-        onGeoLoadFinished(Optional.absent());
+        onGeoLoadFinished(null);
     }
 
-    private void onGeoLoadFinished(Optional<Geo> result) {
+    private void onGeoLoadFinished(@Nullable Geo result) {
         showLoadingEnded();
-        if (!result.isPresent()) {
+        if (result == null) {
             Utils.showToastOnUIThread(RoomFinderDetailsActivity.this, R.string.no_map_available);
             return;
         }
 
         // Build get directions intent and see if some app can handle it
-        String coordinates = result.get().getLatitude() + ',' + result.get().getLongitude();
+        String coordinates = result.getLatitude() + ',' + result.getLongitude();
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + coordinates));
         List<ResolveInfo> pkgAppsList = getApplicationContext().getPackageManager()
                 .queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);

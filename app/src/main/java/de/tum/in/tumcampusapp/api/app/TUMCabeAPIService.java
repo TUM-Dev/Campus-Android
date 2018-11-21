@@ -218,7 +218,6 @@ public interface TUMCabeAPIService {
     Call<List<Event>> getEvents();
 
     // Getting Ticket information
-
     @POST(API_EVENTS + API_TICKET + "my")
     Call<List<Ticket>> getTickets(@Body TUMCabeVerification verification);
 
@@ -229,12 +228,10 @@ public interface TUMCabeAPIService {
     Call<List<TicketType>> getTicketTypes(@Path("eventID") int eventID);
 
     // Ticket reservation
-
     @POST(API_EVENTS + API_TICKET + "reserve")
     Call<TicketReservationResponse> reserveTicket(@Body TUMCabeVerification verification);
 
     // Ticket purchase
-
     @POST(API_EVENTS + API_TICKET + "payment/stripe/purchase")
     Call<Ticket> purchaseTicketStripe(@Body TUMCabeVerification verification);
 

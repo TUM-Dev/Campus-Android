@@ -9,6 +9,11 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.utils.Const;
 
 
+/**
+ * This Activity displays more information about the event
+ * Especially the full description, link and the full dates
+ * Navigates back to EventsActivity or opens BuyTicketActivity
+ */
 public class EventDetailsActivity extends BaseActivity {
 
     public EventDetailsActivity() {

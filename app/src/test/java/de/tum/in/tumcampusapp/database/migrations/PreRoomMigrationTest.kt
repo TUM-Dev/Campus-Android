@@ -1,10 +1,9 @@
 package de.tum.`in`.tumcampusapp.database.migrations
 
-import androidx.room.util.TableInfo
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.Build
-import de.tum.`in`.tumcampusapp.BuildConfig
+import androidx.room.util.TableInfo
 import de.tum.`in`.tumcampusapp.TestApp
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -21,7 +20,7 @@ import java.io.File
 
 @Ignore
 @RunWith(RobolectricTestRunner::class)
-@Config(constants = BuildConfig::class, application = TestApp::class)
+@Config(application = TestApp::class)
 class PreRoomMigrationTest {
     private val preRoomSchema =
             """CREATE TABLE faculties (faculty INTEGER, name VARCHAR);

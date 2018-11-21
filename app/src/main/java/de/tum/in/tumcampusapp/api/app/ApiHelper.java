@@ -8,7 +8,6 @@ import android.os.Build;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
-import com.google.common.net.UrlEscapers;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.Writer;
@@ -16,10 +15,13 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.concurrent.TimeUnit;
 
 import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.utils.Utils;
+import kotlin.text.Charsets;
 import okhttp3.CertificatePinner;
 import okhttp3.CookieJar;
 import okhttp3.Interceptor;
@@ -118,8 +120,11 @@ public final class ApiHelper {
      * @return encoded url
      */
     public static String encodeUrl(String pUrl) {
-        return UrlEscapers.urlPathSegmentEscaper()
-                          .escape(pUrl);
+        try {
+            return URLEncoder.encode(pUrl, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

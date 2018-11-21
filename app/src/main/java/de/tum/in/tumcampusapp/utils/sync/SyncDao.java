@@ -1,12 +1,10 @@
 package de.tum.in.tumcampusapp.utils.sync;
 
+import androidx.annotation.Nullable;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-
-import javax.annotation.Nullable;
-
 import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
 @Dao

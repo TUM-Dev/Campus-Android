@@ -5,7 +5,7 @@ Vorlesungstermine, Neuigkeiten von TUM relevanten Organisationen, Veranstaltungs
 Die App ist sowohl für Studierende, wie auch Mitarbeiter gedacht.
 
 Entwickler und involvierte Personen:
-https://github.com/TCA-Team/TumCampusApp/blob/master/CONTRIBUTORS.md
+https://github.com/TUM-Dev/Campus-Android/blob/master/CONTRIBUTORS.md
 
 Support: https://www.facebook.com/TUMCampus / app@tum.de
 
@@ -25,4 +25,4 @@ Berechtigungen und die Gründe:
 - Ruhezustand deaktivieren: Um auch bei ausgeschaltetem Display Nachrichten empfangen zu können
 
 Lizenz: GNU GPL v3 - http://www.gnu.org/licenses/gpl.html
-Der Quellcode kann hier eingesehen werden: https://github.com/TCA-Team/
+Der Quellcode kann hier eingesehen werden: https://github.com/TUM-Dev/

@@ -4,12 +4,12 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import androidx.constraintlayout.widget.Group
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.Group
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
@@ -32,8 +32,10 @@ class NewsViewHolder(
     private val titleTextView: TextView? by lazy { itemView.findViewById<TextView>(R.id.news_title) }
     private val dateTextView: TextView by lazy { itemView.findViewById<TextView>(R.id.news_src_date) }
     private val sourceTextView: TextView by lazy { itemView.findViewById<TextView>(R.id.news_src_title) }
+    private val ticketsIcon: ImageView? by lazy { itemView.findViewById<ImageView>(R.id.tickets_icon) }
+    private val ticketsTextView: TextView? by lazy { itemView.findViewById<TextView>(R.id.tickets_available)}
 
-    fun bind(newsItem: News, newsSource: NewsSources) = with(itemView) {
+    fun bind(newsItem: News, newsSource: NewsSources, hasEvent: Boolean) = with(itemView) {
         val card = if (newsItem.isFilm) FilmCard(context) else NewsCard(context)
         card.setNews(newsItem)
         currentCard = card
@@ -46,7 +48,7 @@ class NewsViewHolder(
         loadNewsSourceInformation(context, newsSource)
 
         when (itemViewType) {
-            R.layout.card_news_film_item -> bindFilmItem(newsItem)
+            R.layout.card_news_film_item -> bindFilmItem(newsItem, hasEvent)
             else -> bindNews(newsItem)
         }
     }
@@ -69,12 +71,22 @@ class NewsViewHolder(
         }
     }
 
-    private fun bindFilmItem(newsItem: News) {
+    private fun bindFilmItem(newsItem: News, hasEvent: Boolean) {
         Picasso.get()
                 .load(newsItem.image)
                 .into(imageView)
 
         titleTextView?.text = COMPILE.matcher(newsItem.title).replaceAll("")
+
+        if (ticketsTextView != null && ticketsIcon != null) {
+            if (hasEvent) {
+                ticketsTextView?.visibility = VISIBLE
+                ticketsIcon?.visibility = VISIBLE
+            } else {
+                ticketsTextView?.visibility = GONE
+                ticketsIcon?.visibility = GONE
+            }
+        }
     }
 
     private fun bindNews(newsItem: News) {

@@ -22,12 +22,15 @@ android {
             proguardFiles(file('../proguard').listFiles())
             proguardFile getDefaultProguardFile('proguard-android.txt')
             minifyEnabled true
-            shrinkResources true
             useProguard true
         }
-        release.debuggable false
+        release {
+            debuggable false
+            shrinkResources true
+        }
         debug {
             debuggable true
+            shrinkResources false
             testCoverageEnabled true
         }
     }
@@ -35,8 +38,11 @@ android {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 551
-        versionName "2.1-dev"
+        versionCode 560
+        versionName "3.1-dev"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
         kapt.arguments {
             arg("room.schemaLocation", "$projectDir/schemas".toString())
         }
@@ -70,7 +76,6 @@ android {
         }
     }
     sourceSets {
-        androidTest.assets.srcDirs += files("$projectDir/src/test/java".toString())
         androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
 }
@@ -92,24 +97,23 @@ dependencies {
     implementation 'androidx.preference:preference:1.0.0'
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
-    implementation 'com.google.guava:guava:27.0-android'
 
     // Android arch components
-    implementation 'androidx.room:room-rxjava2:2.1.0-alpha01'
-    implementation 'androidx.room:room-runtime:2.1.0-alpha01'
+    implementation 'androidx.room:room-rxjava2:2.1.0-alpha02'
+    implementation 'androidx.room:room-runtime:2.1.0-alpha02'
     implementation 'androidx.lifecycle:lifecycle-runtime:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
-    kapt 'androidx.room:room-compiler:2.1.0-alpha01'
+    kapt 'androidx.room:room-compiler:2.1.0-alpha02'
 
     // Play services
     implementation 'com.google.android.gms:play-services-base:16.0.1'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:16.0.4'
+    implementation 'com.google.firebase:firebase-core:16.0.5'
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.6'
 
     // Helpers
     implementation 'com.google.code.gson:gson:2.8.5'
@@ -147,14 +151,18 @@ dependencies {
     implementation 'com.github.thellmund:Android-Week-View:2.0.1'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
-    
-    // Used for testing
+
+    // Testing
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.23.0'
     testImplementation 'org.assertj:assertj-core:3.11.1'
-    testImplementation 'androidx.room:room-testing:2.1.0-alpha01'
-    testImplementation 'org.robolectric:robolectric:3.8'
+    testImplementation 'androidx.room:room-testing:2.1.0-alpha02'
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+
+    testImplementation 'com.android.support.test:rules:1.0.2'
+    testImplementation 'com.android.support.test:runner:1.0.2'
+    testImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    testImplementation "org.robolectric:robolectric:4.0.1"
 
     // TicketSale
     implementation 'com.stripe:stripe-android:6.1.2'

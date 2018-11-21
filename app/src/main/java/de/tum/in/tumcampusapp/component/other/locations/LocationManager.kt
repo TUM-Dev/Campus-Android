@@ -9,7 +9,6 @@ import android.preference.PreferenceManager
 import androidx.core.content.ContextCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import com.google.common.base.Optional
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.component.other.locations.model.BuildingToGps
 import de.tum.`in`.tumcampusapp.component.other.locations.model.Geo
@@ -21,6 +20,7 @@ import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import java.io.IOException
+import java.lang.Double.parseDouble
 import java.util.*
 
 /**
@@ -53,7 +53,7 @@ class LocationManager(c: Context) {
         }
 
         val selectedCampus = Utils.getSetting(mContext, Const.DEFAULT_CAMPUS, "G")
-        val allCampi = Campus.values().associateBy(Campus::short);
+        val allCampi = Campus.values().associateBy(Campus::short)
 
         if ("X" != selectedCampus && allCampi.containsKey(selectedCampus)) {
             return allCampi[selectedCampus]!!.getLocation()
@@ -157,7 +157,7 @@ class LocationManager(c: Context) {
         }
 
         //Otherwise fallback to the default
-        return campus.defaultStation.station;
+        return campus.defaultStation.station
     }
 
     /**
@@ -181,7 +181,7 @@ class LocationManager(c: Context) {
             }
         }
 
-        val allCafeterias = getCafeterias();
+        val allCafeterias = getCafeterias()
         return if (allCafeterias.isEmpty()) -1 else allCafeterias[0].id
     }
 
@@ -204,8 +204,8 @@ class LocationManager(c: Context) {
         }
 
         val location = Location("roomfinder")
-        location.latitude = java.lang.Double.parseDouble(geo.latitude)
-        location.longitude = java.lang.Double.parseDouble(geo.longitude)
+        location.latitude = parseDouble(geo.latitude)
+        location.longitude = parseDouble(geo.longitude)
         return location
     }
 
@@ -241,7 +241,7 @@ class LocationManager(c: Context) {
      *
      * @return the id of current building
      */
-    fun getBuildingIDFromCurrentLocation(): Optional<String> = getBuildingIDFromLocation(getCurrentOrNextLocation())
+    fun getBuildingIDFromCurrentLocation(): String? = getBuildingIDFromLocation(getCurrentOrNextLocation())
 
     /**
      * This might be battery draining
@@ -287,15 +287,14 @@ class LocationManager(c: Context) {
      * @param archId arch_id of the room
      * @return Location or null on failure
      */
-    private fun fetchRoomGeo(archId: String): Optional<Geo> {
-        try {
+    private fun fetchRoomGeo(archId: String): Geo? {
+        return try {
             val coordinate = TUMCabeClient.getInstance(mContext).fetchCoordinates(archId)
-            return convertRoomFinderCoordinateToGeo(coordinate)
+            convertRoomFinderCoordinateToGeo(coordinate)
         } catch (e: IOException) {
             Utils.log(e)
+            null
         }
-
-        return Optional.absent()
     }
 
     /**
@@ -305,7 +304,7 @@ class LocationManager(c: Context) {
      * @param roomTitle Room title
      * @return Location or null on failure
      */
-    fun roomLocationStringToGeo(roomTitle: String): Optional<Geo> {
+    fun roomLocationStringToGeo(roomTitle: String): Geo? {
         var loc = roomTitle
         if (loc.contains("(")) {
             loc = loc.substring(0, loc.indexOf('('))
@@ -313,23 +312,17 @@ class LocationManager(c: Context) {
         }
 
         try {
-            val rooms = Optional.fromNullable(TUMCabeClient.getInstance(mContext)
-                    .fetchRooms(loc))
+            val rooms = TUMCabeClient.getInstance(mContext).fetchRooms(loc)
 
-            if (rooms.isPresent && !rooms.get()
-                            .isEmpty()) {
-                val room = rooms.get()[0]
-                        .arch_id
+            if (rooms != null && !rooms.isEmpty()) {
+                val room = rooms[0].arch_id
                 return fetchRoomGeo(room)
             }
 
-        } catch (e: IOException) {
-            Utils.log(e)
-        } catch (e: NullPointerException) {
+        } catch (e: Exception) {
             Utils.log(e)
         }
-
-        return Optional.absent()
+        return null
     }
 
     /**
@@ -339,11 +332,11 @@ class LocationManager(c: Context) {
      * @param location the give location
      * @return the id of current building
      */
-    private fun getBuildingIDFromLocation(location: Location): Optional<String> {
+    private fun getBuildingIDFromLocation(location: Location): String? {
         val buildingToGpsList = orFetchBuildingsToGps
 
         if (buildingToGpsList.isEmpty()) {
-            return Optional.absent()
+            return null
         }
 
         val lat = location.latitude
@@ -353,8 +346,8 @@ class LocationManager(c: Context) {
         var bestBuilding = ""
 
         for ((id, latitude, longitude) in buildingToGpsList) {
-            val buildingLat = java.lang.Double.parseDouble(latitude)
-            val buildingLng = java.lang.Double.parseDouble(longitude)
+            val buildingLat = parseDouble(latitude)
+            val buildingLng = parseDouble(longitude)
 
             Location.distanceBetween(buildingLat, buildingLng, lat, lng, results)
             val distance = results[0]
@@ -365,9 +358,9 @@ class LocationManager(c: Context) {
         }
 
         return if (bestDistance < 1000) {
-            Optional.of(bestBuilding)
+            bestBuilding
         } else {
-            Optional.absent()
+            null
         }
     }
 
@@ -387,7 +380,7 @@ class LocationManager(c: Context) {
             }
         }
 
-        private enum class Stations(val station : StationResult) {
+        private enum class Stations(val station: StationResult) {
             GarchingForschungszentrum(StationResult("Garching-Forschungszentrum", "1000460", Integer.MAX_VALUE)),
             GarchingHochbrueck(StationResult("Garching-Hochbrück", "1000480", Integer.MAX_VALUE)),
             Weihenstephan(StationResult("Weihenstephan", "1002911", Integer.MAX_VALUE)),
@@ -459,20 +452,18 @@ class LocationManager(c: Context) {
             return Geo(d17, d18)
         }
 
-        fun convertRoomFinderCoordinateToGeo(roomFinderCoordinate: RoomFinderCoordinate): Optional<Geo> {
-            try {
-                val zone = java.lang.Double.parseDouble(roomFinderCoordinate.utm_zone)
-                val easting = java.lang.Double.parseDouble(roomFinderCoordinate.utm_easting)
-                val northing = java.lang.Double.parseDouble(roomFinderCoordinate.utm_northing)
+        @JvmStatic
+        fun convertRoomFinderCoordinateToGeo(roomFinderCoordinate: RoomFinderCoordinate): Geo? {
+            return try {
+                val zone = parseDouble(roomFinderCoordinate.utm_zone)
+                val easting = parseDouble(roomFinderCoordinate.utm_easting)
+                val northing = parseDouble(roomFinderCoordinate.utm_northing)
 
-                return Optional.of(convertUTMtoLL(northing, easting, zone))
-            } catch (e: NullPointerException) {
+                convertUTMtoLL(northing, easting, zone)
+            } catch (e: Exception) {
                 Utils.log(e)
-            } catch (e: NumberFormatException) {
-                Utils.log(e)
+                null
             }
-
-            return Optional.absent()
         }
     }
 }

@@ -1,5 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.news.repository
 
+import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.model.Kino
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.sync.model.Sync
@@ -24,8 +25,10 @@ object KinoLocalRepository {
 
     fun getKinoByPosition(position: Int): Flowable<Kino> = db.kinoDao().getByPosition(position)
 
-    fun clear() = db.kinoDao().cleanUp()
+    fun getEventByMovieId(movieId: String): Flowable<Event> = db.eventDao().getEventByMovie(movieId)
 
-    fun getPosition(date: String) = db.kinoDao().getPosition(date)
+    fun getPositionByDate(date: String) = db.kinoDao().getPositionByDate(date)
+
+    fun getPositionById(id: String) = db.kinoDao().getPositionById(id)
 
 }

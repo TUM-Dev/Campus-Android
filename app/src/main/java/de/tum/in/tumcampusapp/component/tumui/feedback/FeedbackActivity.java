@@ -5,13 +5,13 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.RadioGroup;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.common.base.Strings;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -136,7 +136,7 @@ public class FeedbackActivity extends BaseActivity {
 
     private void initIncludeEmail(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-            if (!Strings.isNullOrEmpty(lrzId)) {
+            if (!TextUtils.isEmpty(lrzId)) {
                 email = lrzId + "@mytum.de";
                 includeEmail.setText(getResources()
                         .getString(R.string.feedback_include_email_tum_id, email));
@@ -155,7 +155,7 @@ public class FeedbackActivity extends BaseActivity {
 
     private void onIncludeEmailClick() {
         if (includeEmail.isChecked()) {
-            if (Strings.isNullOrEmpty(lrzId)) {
+            if (TextUtils.isEmpty(lrzId)) {
                 customEmailViewLayout.setVisibility(View.VISIBLE);
                 customEmailView.setText(email);
             }
