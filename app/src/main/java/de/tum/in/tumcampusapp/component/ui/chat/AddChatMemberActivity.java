@@ -3,8 +3,6 @@ package de.tum.in.tumcampusapp.component.ui.chat;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.inputmethod.EditorInfo;
@@ -16,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.ApiHelper;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
@@ -58,10 +58,9 @@ public class AddChatMemberActivity extends BaseActivity {
         delayHandler = new Handler();
         tumIdPattern = Pattern.compile(Const.TUM_ID_PATTERN);
 
-        room = new ChatRoom();
-        room.setName(getIntent().getStringExtra(Const.CHAT_ROOM_NAME));
+        room = new ChatRoom(getIntent().getStringExtra(Const.CHAT_ROOM_NAME));
         room.setId(getIntent().getIntExtra(Const.CURRENT_CHAT_ROOM, -1));
-        Utils.log("ChatRoom: " + room.getActualName() + " (roomId: " + room.getId() + ")");
+        Utils.log("ChatRoom: " + room.getTitle() + " (roomId: " + room.getId() + ")");
 
         tumCabeClient = TUMCabeClient.getInstance(this);
 
@@ -150,7 +149,7 @@ public class AddChatMemberActivity extends BaseActivity {
         });
 
         ImageView qrCode = findViewById(R.id.join_chat_qr_code);
-        qrCode.setImageBitmap(ApiHelper.createQRCode(room.getName()));
+        qrCode.setImageBitmap(ApiHelper.createQRCode(room.getCombinedName()));
     }
 
     private void getSuggestions() {
@@ -179,7 +178,7 @@ public class AddChatMemberActivity extends BaseActivity {
 
     private void showConfirmDialog(ChatMember member) {
         String message = getString(R.string.add_user_to_chat_message,
-                member.getDisplayName(), room.getActualName());
+                member.getDisplayName(), room.getTitle());
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setMessage(message)
                 .setPositiveButton(R.string.add, (dialogInterface, i) -> {
@@ -221,7 +220,7 @@ public class AddChatMemberActivity extends BaseActivity {
                         if (room != null) {
                             TcaDb.getInstance(getBaseContext())
                                     .chatRoomDao()
-                                    .updateMemberCount(room.getMembers(), room.getId(), room.getName());
+                                    .updateMemberCount(room.getMembers(), room.getId());
                             Utils.showToast(getBaseContext(), R.string.chat_member_added);
                         } else {
                             Utils.showToast(getBaseContext(), R.string.error_something_wrong);

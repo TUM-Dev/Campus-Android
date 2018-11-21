@@ -651,5 +651,7 @@ Signatur: %5$s</string>
     <string name="employee_mode_info">Menüpunkte wie die Notenansicht oder Studienbeitrag werden in dieser Ansicht nicht angezeigt.</string>
     <string name="event_imminent_error">Tickets können nur bis zu vier Stunden vor Beginn über die App erworben werden.</string>
     <string name="show_in_calendar">Im Kalender öffnen</string>
+    <string name="stripe_terms_of_service_checkbox">Ich stimme den allgemeinen Geschäftsbedingungen (AGB) zu.</string>
+    <string name="stripe_terms_of_service_button">AGB</string>
     <string name="tickets_available_here">Tickets hier erhältlich!</string>
 </resources>

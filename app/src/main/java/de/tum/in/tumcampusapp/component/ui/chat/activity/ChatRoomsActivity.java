@@ -7,9 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import androidx.annotation.NonNull;
-import com.google.android.material.tabs.TabLayout;
-import androidx.appcompat.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,12 +14,15 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
@@ -47,8 +47,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  * This activity presents the chat rooms of user's
  * lectures using the TUMOnline web service
  */
-public class ChatRoomsActivity
-        extends ActivityForAccessingTumOnline<LecturesResponse> implements OnItemClickListener {
+public class ChatRoomsActivity extends ActivityForAccessingTumOnline<LecturesResponse> implements OnItemClickListener {
 
     private static final int CAMERA_REQUEST_CODE = 34;
     private static final int JOIN_ROOM_REQUEST_CODE = 22;
@@ -97,8 +96,10 @@ public class ChatRoomsActivity
             }
         });
 
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.joined));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.not_joined));
+        tabLayout.addTab(tabLayout.newTab()
+                                  .setText(R.string.joined));
+        tabLayout.addTab(tabLayout.newTab()
+                                  .setText(R.string.not_joined));
     }
 
     @Override
@@ -161,8 +162,8 @@ public class ChatRoomsActivity
 
         List<ChatRoomAndLastMessage> chatRoomAndLastMessages = manager.getAllByStatus(mCurrentMode);
         runOnUiThread(() -> {
-                displayChatRoomsAndMessages(chatRoomAndLastMessages);
-                showLoadingEnded();
+            displayChatRoomsAndMessages(chatRoomAndLastMessages);
+            showLoadingEnded();
         });
     }
 
@@ -252,7 +253,8 @@ public class ChatRoomsActivity
                 .setMessage(R.string.new_chat_room_desc)
                 .setView(view)
                 .setPositiveButton(R.string.create, (dialogInterface, whichButton) -> {
-                    String value = input.getText().toString();
+                    String value = input.getText()
+                                        .toString();
                     String randId = Integer.toHexString((int) (Math.random() * 4096));
                     createOrJoinChatRoom(randId + ':' + value);
                 })
@@ -260,7 +262,8 @@ public class ChatRoomsActivity
                 .create();
 
         if (dialog.getWindow() != null) {
-            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+            dialog.getWindow()
+                  .setBackgroundDrawableResource(R.drawable.rounded_corners_background);
         }
 
         dialog.show();

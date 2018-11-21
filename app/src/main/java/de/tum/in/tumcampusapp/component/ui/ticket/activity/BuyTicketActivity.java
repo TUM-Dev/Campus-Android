@@ -215,6 +215,8 @@ public class BuyTicketActivity extends BaseActivity {
         Intent intent = new Intent(this, StripePaymentActivity.class);
         intent.putExtra(Const.KEY_TICKET_PRICE, ticketType.getFormattedPrice());
         intent.putExtra(Const.KEY_TICKET_HISTORY, response.getTicketHistory());
+        intent.putExtra(Const.KEY_TERMS_LINK, ticketType.getPaymentInfo().getTermsLink());
+        intent.putExtra(Const.KEY_STRIPE_API_PUBLISHABLE_KEY, ticketType.getPaymentInfo().getStripePublicKey());
         startActivity(intent);
     }
 

@@ -11,10 +11,6 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import androidx.annotation.NonNull;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AbsListView;
@@ -28,6 +24,10 @@ import com.google.gson.Gson;
 import java.util.Collections;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
@@ -107,7 +107,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
         currentChatMember = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
 
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(currentChatRoom.getName().substring(4));
+            getSupportActionBar().setTitle(currentChatRoom.getTitle());
         }
     }
 
@@ -248,7 +248,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
             // If currently in a room which does not match the one from the notification --> Switch
             currentChatRoom = room;
             if (getSupportActionBar() != null) {
-                getSupportActionBar().setSubtitle(currentChatRoom.getName().substring(4));
+                getSupportActionBar().setSubtitle(currentChatRoom.getTitle());
             }
             chatHistoryAdapter = null;
             getNextHistoryFromServer(true);
@@ -281,7 +281,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
     private void openAddChatMemberActivity() {
         Intent intent = new Intent(this, AddChatMemberActivity.class);
         intent.putExtra(Const.CURRENT_CHAT_ROOM, currentChatRoom.getId());
-        intent.putExtra(Const.CHAT_ROOM_NAME, currentChatRoom.getName());
+        intent.putExtra(Const.CHAT_ROOM_NAME, currentChatRoom.getCombinedName());
         startActivity(intent);
     }
 
@@ -289,7 +289,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.leave_chat_room)
                 .setMessage(getResources().getString(R.string.leave_chat_room_body))
-                .setPositiveButton(R.string.leave, (dialogInterface, i) -> removeUserFromChatRoom())
+                .setPositiveButton(R.string.leave, (dialogInterface, i) -> leaveChatRoom())
                 .setNegativeButton(android.R.string.cancel, null)
                 .create();
 
@@ -300,7 +300,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
         dialog.show();
     }
 
-    private void removeUserFromChatRoom() {
+    private void leaveChatRoom() {
         TUMCabeVerification verification = TUMCabeVerification.create(this, null);
         if (verification == null) {
             return;
@@ -334,6 +334,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
     private void sendMessage(String text) {
         final ChatMessage message = new ChatMessage(text, currentChatMember);
         message.setRoom(currentChatRoom.getId());
+        message.setSendingStatus(ChatMessage.STATUS_SENDING);
         chatHistoryAdapter.add(message);
         chatMessageViewModel.addToUnsent(message);
 
@@ -433,7 +434,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
         List<ChatMessage> unsent = chatMessageViewModel.getUnsentInChatRoom(currentChatRoom);
         messages.addAll(unsent);
 
-        Collections.sort(messages, (lhs, rhs) -> lhs.getDateTime().compareTo(rhs.getDateTime()));
+        Collections.sort(messages, (lhs, rhs) -> lhs.getTimestamp().compareTo(rhs.getTimestamp()));
         chatHistoryAdapter.updateHistory(messages);
 
         if (messages.isEmpty()) {

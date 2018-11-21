@@ -92,14 +92,14 @@ class ChatPushNotification(private val fcmChatPayload: FcmChat, context: Context
      */
     private fun onDataLoaded() {
         val chatRoom = passedChatRoom ?: return
-        val messages = chatMessageDao.getLastUnread(chatRoom.id)?.asReversed()
+        val messages = chatMessageDao.getLastUnread(chatRoom.id)
         val intent = Intent(Const.CHAT_BROADCAST_NAME).apply {
             putExtra("FcmChat", R.string.extras)
         }
         LocalBroadcastManager.getInstance(context)
                 .sendBroadcast(intent)
-
-        val notificationText = messages?.joinToString("\n")
+        val messagesText = messages?.asReversed()?.map { it.text }
+        val notificationText = messagesText?.joinToString("\n")
         // Put the data into the intent
         val notificationIntent = Intent(context, ChatActivity::class.java).apply {
             putExtra(Const.CURRENT_CHAT_ROOM, Gson().toJson(chatRoom))
@@ -147,7 +147,7 @@ class ChatPushNotification(private val fcmChatPayload: FcmChat, context: Context
         val n = NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_CHAT)
                 .setSmallIcon(defaultIcon)
                 .setLargeIcon(Utils.getLargeIcon(context, R.drawable.ic_chat_with_lines))
-                .setContentTitle(chatRoom.name.substring(4))
+                .setContentTitle(chatRoom.title)
                 .setStyle(NotificationCompat.BigTextStyle().bigText(text))
                 .setContentText(text)
                 .setContentIntent(contentIntent)
