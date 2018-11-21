@@ -33,8 +33,10 @@ public interface EventDao {
     @Query("UPDATE events SET dismissed = 1 WHERE id = :eventId")
     void setDismissed(int eventId);
 
-    @Query("DELETE FROM events WHERE end_time < date('now')")
-    void removePastEvents();
+    @Query("DELETE FROM events " +
+            "WHERE end_time < date('now') " +
+            "AND NOT EXISTS (SELECT * FROM tickets WHERE tickets.event_id = events.id)")
+    void removePastEventsWithoutTicket();
 
     @Query("DELETE FROM events")
     void removeAll();
