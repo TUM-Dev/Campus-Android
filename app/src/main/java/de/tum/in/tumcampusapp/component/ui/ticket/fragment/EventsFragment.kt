@@ -110,6 +110,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         if (events.isNotEmpty()) {
             val adapter = eventsRecyclerView.adapter as EventsAdapter
             adapter.update(events)
+            eventsRecyclerView.smoothScrollToPosition(0)
         } else {
             placeholderTextView.setText(eventType.placeholderResId)
         }
