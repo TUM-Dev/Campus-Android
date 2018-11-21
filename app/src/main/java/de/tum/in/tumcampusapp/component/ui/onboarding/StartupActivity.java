@@ -151,8 +151,8 @@ public class StartupActivity extends AppCompatActivity {
 
             // Display an AlertDialog with an explanation and a button to trigger the request.
             runOnUiThread(() -> {
-                AlertDialog dialog = new AlertDialog.Builder(this)
-                        .setMessage(getString(R.string.permission_location_explanation))
+                AlertDialog dialog = new AlertDialog.Builder(this, R.style.Theme_MaterialComponents_Light_Dialog)
+                        .setMessage(R.string.permission_location_explanation)
                         .setPositiveButton(R.string.ok, (dialogInterface, id) -> {
                             ActivityCompat.requestPermissions(
                                     this, PERMISSIONS_LOCATION, REQUEST_LOCATION);
@@ -163,7 +163,6 @@ public class StartupActivity extends AppCompatActivity {
                     dialog.getWindow().setBackgroundDrawableResource(
                             R.drawable.rounded_corners_background);
                 }
-
                 dialog.show();
             });
         } else {
