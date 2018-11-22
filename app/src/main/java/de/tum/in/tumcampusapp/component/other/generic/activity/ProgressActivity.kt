@@ -245,6 +245,12 @@ abstract class ProgressActivity<T>(
         }
     }
 
+    protected fun showContentLayout() {
+        runOnUiThread {
+            errorLayout.visibility = View.GONE
+        }
+    }
+
     protected fun showErrorLayout() {
         runOnUiThread {
             errorLayout.visibility = View.VISIBLE

@@ -44,6 +44,8 @@ import de.tum.in.tumcampusapp.utils.ui.Dialogs;
 public class CafeteriaActivity extends ActivityForDownloadingExternal
         implements AdapterView.OnItemSelectedListener {
 
+    private static final int NONE_SELECTED = -1;
+
     private List<Cafeteria> mCafeterias = new ArrayList<>();
 
     private CafeteriaViewModel cafeteriaViewModel;
@@ -88,7 +90,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
             if (value) {
                 showError(R.string.error_something_wrong);
             } else {
-                // TODO: Show content
+                showContentLayout();
             }
         });
     }
@@ -96,7 +98,6 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
     private void updateCafeteria(List<Cafeteria> cafeterias) {
         mCafeterias = cafeterias;
         adapter.notifyDataSetChanged();
-        //updateCafeteriaSpinner();
     }
 
     private ArrayAdapter<Cafeteria> createArrayAdapter() {
@@ -137,7 +138,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
         int cafeteriaId;
 
         if (intent != null && intent.hasExtra(Const.MENSA_FOR_FAVORITEDISH)) {
-            cafeteriaId = intent.getIntExtra(Const.MENSA_FOR_FAVORITEDISH, -1);
+            cafeteriaId = intent.getIntExtra(Const.MENSA_FOR_FAVORITEDISH, NONE_SELECTED);
             intent.removeExtra(Const.MENSA_FOR_FAVORITEDISH);
         } else if (intent.getExtras() != null && intent.hasExtra(Const.CAFETERIA_ID)) {
             cafeteriaId = intent.getIntExtra(Const.CAFETERIA_ID, 0);
@@ -150,16 +151,16 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
     }
 
     private void updateCafeteriaSpinner(int cafeteriaId) {
-        int selectedIndex = -1;
+        int selectedIndex = NONE_SELECTED;
         for (int i = 0; i < mCafeterias.size(); i++) {
             Cafeteria cafeteria = mCafeterias.get(i);
-            if (cafeteriaId == -1 || cafeteriaId == cafeteria.getId()) {
+            if (cafeteriaId == NONE_SELECTED || cafeteriaId == cafeteria.getId()) {
                 selectedIndex = i;
                 break;
             }
         }
 
-        if (selectedIndex > -1) {
+        if (selectedIndex != NONE_SELECTED) {
             spinner.setSelection(selectedIndex);
         }
     }
