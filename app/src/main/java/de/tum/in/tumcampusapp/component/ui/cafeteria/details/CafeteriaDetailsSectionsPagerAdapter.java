@@ -26,12 +26,14 @@ import de.tum.in.tumcampusapp.database.TcaDb;
  */
 public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdapter {
 
+    private DateTimeFormatter formatter;
     private int mCafeteriaId;
 
     private List<DateTime> dates = new ArrayList<>();
 
     public CafeteriaDetailsSectionsPagerAdapter(FragmentManager fm) {
         super(fm);
+        formatter = DateTimeFormat.fullDate();
     }
 
     @SuppressLint("CheckResult")
@@ -68,10 +70,8 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdap
 
     @Override
     public CharSequence getPageTitle(int position) {
-        DateTimeFormatter format = DateTimeFormat.fullDate();
         DateTime date = dates.get(position);
-
-        return format.print(date).toUpperCase(Locale.getDefault());
+        return formatter.print(date).toUpperCase(Locale.getDefault());
     }
 
     @Override

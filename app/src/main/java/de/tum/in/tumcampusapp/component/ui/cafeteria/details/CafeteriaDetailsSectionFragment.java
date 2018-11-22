@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.component.ui.cafeteria.details;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -59,33 +58,36 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         final Context context = rootView.getContext();
 
         if (!isBigLayout) {
-            // Show opening hours
-            OpenHoursHelper lm = new OpenHoursHelper(context);
-
-            TextView textview;
-            textview = new TextView(context, null, R.style.CardBody);
-            textview.setText(lm.getHoursByIdAsString(context, cafeteriaId, date));
-            textview.setTextColor(ContextCompat.getColor(context, R.color.sections_green));
-
-            int bottomPadding = context.getResources()
-                    .getDimensionPixelOffset(R.dimen.material_default_padding);
-            textview.setPadding(0, 0, 0, bottomPadding);
-
-            rootView.addView(textview);
+            TextView textView = createOpeningHoursTextView(context, cafeteriaId, date);
+            rootView.addView(textView);
         }
 
         // Show cafeteria menu
-        String curShort = "";
+        String currentCafeteriaMenuType = "";
         CafeteriaMenuInflater menuInflater = new CafeteriaMenuInflater(context, rootView, isBigLayout);
 
         for (CafeteriaMenu cafeteriaMenu : cafeteriaMenus) {
-            boolean isFirstInSection = !cafeteriaMenu.getTypeShort().equals(curShort);
+            boolean isFirstInSection = !cafeteriaMenu.getTypeShort().equals(currentCafeteriaMenuType);
             View view = menuInflater.inflate(cafeteriaMenu, isFirstInSection);
 
             if (view != null) {
                 rootView.addView(view);
             }
         }
+    }
+
+    private static TextView createOpeningHoursTextView(Context context, int cafeteriaId, DateTime date) {
+        OpenHoursHelper lm = new OpenHoursHelper(context);
+
+        TextView textview;
+        textview = new TextView(context, null, R.style.CardBody);
+        textview.setText(lm.getHoursByIdAsString(context, cafeteriaId, date));
+        textview.setTextColor(ContextCompat.getColor(context, R.color.sections_green));
+
+        int bottomPadding = context.getResources()
+                .getDimensionPixelOffset(R.dimen.material_default_padding);
+        textview.setPadding(0, 0, 0, bottomPadding);
+        return textview;
     }
 
     @Override
@@ -98,10 +100,10 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         TcaDb database = TcaDb.getInstance(requireContext());
         CafeteriaLocalRepository localRepository = new CafeteriaLocalRepository(database);
 
+        // TODO: Inject these
         cafeteriaViewModel = new CafeteriaViewModel(localRepository, remoteRepository);
     }
 
-    @SuppressLint("CheckResult")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
