@@ -14,9 +14,11 @@ import io.reactivex.schedulers.Schedulers
 /**
  * ViewModel for kinos.
  */
-class KinoViewModel(private val localRepository: KinoLocalRepository,
-                    private val remoteRepository: KinoRemoteRepository,
-                    private val compositeDisposable: CompositeDisposable) : ViewModel() {
+class KinoViewModel(
+        private val localRepository: KinoLocalRepository,
+        private val remoteRepository: KinoRemoteRepository,
+        private val compositeDisposable: CompositeDisposable
+) : ViewModel() {
 
     /**
      * Get all kinos from database

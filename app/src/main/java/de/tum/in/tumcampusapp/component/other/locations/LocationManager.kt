@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
-import android.preference.PreferenceManager
 import androidx.core.content.ContextCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -18,7 +17,9 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.LocationHelper.calculateDistanceToCafeteria
 import de.tum.`in`.tumcampusapp.utils.Utils
+import org.jetbrains.anko.defaultSharedPreferences
 import java.io.IOException
 import java.lang.Double.parseDouble
 import java.util.*
@@ -80,16 +81,11 @@ class LocationManager(c: Context) {
     private fun getCafeterias(): List<Cafeteria> {
         val location = getCurrentOrNextLocation()
 
-        val lat = location.latitude
-        val lng = location.longitude
-        val results = FloatArray(1)
+        // TODO: Shouldn't there be some elements in this list?
         val list = LinkedList<Cafeteria>()
-        for (cafeteria in list) {
-            Location.distanceBetween(cafeteria.latitude, cafeteria.longitude, lat, lng, results)
-            cafeteria.distance = results[0]
-        }
-        list.sort()
         return list
+                .map { it.copy(distance = calculateDistanceToCafeteria(it, location)) }
+                .sorted()
     }
 
     /**
@@ -174,11 +170,9 @@ class LocationManager(c: Context) {
     fun getCafeteria(): Int {
         val campus = getCurrentOrNextCampus()
         if (campus != null) {
-            val prefs = PreferenceManager.getDefaultSharedPreferences(mContext)
+            val prefs = mContext.defaultSharedPreferences
             val cafeteria = prefs.getString("card_cafeteria_default_" + campus.short, campus.defaultMensa)
-            if (cafeteria != null) {
-                return Integer.parseInt(cafeteria)
-            }
+            return cafeteria.toInt()
         }
 
         val allCafeterias = getCafeterias()

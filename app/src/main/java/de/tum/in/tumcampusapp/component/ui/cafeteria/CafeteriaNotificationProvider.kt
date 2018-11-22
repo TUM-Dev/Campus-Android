@@ -12,6 +12,7 @@ import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.MenuType
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
+import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import org.joda.time.DateTime
@@ -36,7 +37,8 @@ class CafeteriaNotificationProvider(context: Context) : NotificationProvider(con
             return null
         }
 
-        val cafeteria = CafeteriaLocalRepository.getCafeteriaWithMenus(cafeteriaId)
+        val localRepo = CafeteriaLocalRepository(TcaDb.getInstance(context))
+        val cafeteria = localRepo.getCafeteriaWithMenus(cafeteriaId)
         val menus = cafeteria.menus.filter { it.menuType != MenuType.SIDE_DISH }
         val intent = cafeteria.getIntent(context)
 

@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria.model
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import androidx.room.RoomWarnings
 
@@ -15,15 +16,15 @@ import androidx.room.RoomWarnings
  */
 @Entity
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
-data class Cafeteria(@field:PrimaryKey
-                     var id: Int = -1,
-                     var name: String = "",
-                     var address: String = "",
-                     var latitude: Double = -1.0,
-                     var longitude: Double = -1.0) : Comparable<Cafeteria> {
-
-    // Used for ordering cafeterias
-    var distance: Float = 0.toFloat()
+data class Cafeteria(
+        @field:PrimaryKey
+        var id: Int = -1,
+        var name: String = "",
+        var address: String = "",
+        var latitude: Double = -1.0,
+        var longitude: Double = -1.0,
+        @Ignore val distance: Float = 0f
+) : Comparable<Cafeteria> {
 
     override fun toString(): String = name
 

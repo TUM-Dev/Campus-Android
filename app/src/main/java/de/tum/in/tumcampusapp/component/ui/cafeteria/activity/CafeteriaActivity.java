@@ -3,9 +3,6 @@ package de.tum.in.tumcampusapp.component.ui.cafeteria.activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AlertDialog;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,9 +15,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.viewpager.widget.ViewPager;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
@@ -34,24 +33,23 @@ import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRe
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
-import io.reactivex.Flowable;
-import io.reactivex.disposables.CompositeDisposable;
+import de.tum.in.tumcampusapp.utils.ui.Dialogs;
 
 /**
  * Lists all dishes at selected cafeteria
  * <p>
  * OPTIONAL: Const.CAFETERIA_ID set in incoming bundle (cafeteria to show)
  */
-public class CafeteriaActivity extends ActivityForDownloadingExternal implements AdapterView.OnItemSelectedListener {
+public class CafeteriaActivity extends ActivityForDownloadingExternal
+        implements AdapterView.OnItemSelectedListener {
 
-    private ViewPager mViewPager;
+    private ViewPager viewPager;
     private int mCafeteriaId = -1;
     private CafeteriaViewModel cafeteriaViewModel;
     private List<Cafeteria> mCafeterias = new ArrayList<>();
 
-    private final CompositeDisposable mDisposable = new CompositeDisposable();
+    private Spinner spinner;
 
     public CafeteriaActivity() {
         super(Const.CAFETERIAS, R.layout.activity_cafeteria);
@@ -60,12 +58,10 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Get id from intent if specified
+
         final Intent intent = getIntent();
-        if (intent != null && intent.getExtras() != null
-                && intent.getExtras().containsKey(Const.CAFETERIA_ID)) {
-            mCafeteriaId = intent.getExtras()
-                                 .getInt(Const.CAFETERIA_ID);
+        if (intent.getExtras() != null && intent.hasExtra(Const.CAFETERIA_ID)) {
+            mCafeteriaId = intent.getIntExtra(Const.CAFETERIA_ID, 0);
         } else {
             // If we're not provided with a cafeteria ID, we choose the best matching cafeteria.
             int cafeteriaId = new CafeteriaManager(this).getBestMatchMensaId();
@@ -74,128 +70,85 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
             }
         }
 
-        mViewPager = findViewById(R.id.pager);
+        viewPager = findViewById(R.id.pager);
+        viewPager.setOffscreenPageLimit(50);
 
-        /*
-         *set pagelimit to avoid losing toggle button state.
-         *by default it's 1.
-         */
-        mViewPager.setOffscreenPageLimit(50);
+        TUMCabeClient client = TUMCabeClient.getInstance(this);
+        CafeteriaRemoteRepository remoteRepository = new CafeteriaRemoteRepository(client);
 
-        CafeteriaRemoteRepository remoteRepository = CafeteriaRemoteRepository.INSTANCE;
-        remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(this));
+        TcaDb db = TcaDb.getInstance(this);
+        CafeteriaLocalRepository localRepository = new CafeteriaLocalRepository(db);
 
-        CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
-        localRepository.setDb(TcaDb.getInstance(this));
+        ArrayAdapter<Cafeteria> adapter = createArrayAdapter();
 
-        cafeteriaViewModel = new CafeteriaViewModel(localRepository, remoteRepository, mDisposable);
-    }
+        spinner = findViewById(R.id.spinnerToolbar);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Add info icon to show ingredients
-        getMenuInflater().inflate(R.menu.menu_section_fragment_cafeteria_details, menu);
-        return true;
-    }
+        CafeteriaViewModel.Factory factory = new CafeteriaViewModel.Factory(localRepository, remoteRepository);
+        cafeteriaViewModel = ViewModelProviders.of(this, factory).get(CafeteriaViewModel.class);
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_ingredients) {
-            // Build a alert dialog containing the mapping of ingredients to the numbers
-            String ingredients = getString(R.string.cafeteria_ingredients);
-            SpannableString title = CafeteriaMenuInflater.menuToSpan(this, ingredients);
+        cafeteriaViewModel.getCafeterias().observe(this, cafeterias -> {
+            mCafeterias = cafeterias;
+            adapter.notifyDataSetChanged();
+            updateCafeteriaSpinner();
+        });
 
-            AlertDialog dialog = new AlertDialog.Builder(this)
-                    .setTitle(R.string.action_ingredients)
-                    .setMessage(title)
-                    .setPositiveButton(R.string.ok, null)
-                    .create();
-
-            if (dialog.getWindow() != null) {
-                dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        cafeteriaViewModel.getError().observe(this, value -> {
+            if (value) {
+                showError(R.string.error_something_wrong);
+            } else {
+                // TODO
             }
-
-            dialog.show();
-            return true;
-        }
-        if (item.getItemId() == R.id.action_settings) {
-            startActivity(new Intent(this, CafeteriaNotificationSettingsActivity.class));
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        });
     }
 
-    /**
-     * Setup action bar navigation (to switch between cafeterias)
-     */
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        // Adapter for drop-down navigation
-        ArrayAdapter<Cafeteria> adapterCafeterias = new ArrayAdapter<Cafeteria>(
+    private ArrayAdapter<Cafeteria> createArrayAdapter() {
+        return new ArrayAdapter<Cafeteria>(
                 this, R.layout.simple_spinner_item_actionbar, android.R.id.text1, mCafeterias) {
             final LayoutInflater inflater = LayoutInflater.from(getContext());
 
             @Override
             public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-                View v = inflater.inflate(R.layout.simple_spinner_dropdown_item_actionbar_two_line, parent, false);
-                Cafeteria c = getItem(position);
+                View v = inflater.inflate(
+                        R.layout.simple_spinner_dropdown_item_actionbar_two_line, parent, false);
+                Cafeteria cafeteria = getItem(position);
 
-                TextView name = v.findViewById(android.R.id.text1); // Set name
-                TextView address = v.findViewById(android.R.id.text2); // Set address
-                TextView dist = v.findViewById(R.id.distance); // Set distance
+                TextView name = v.findViewById(android.R.id.text1);
+                TextView address = v.findViewById(android.R.id.text2);
+                TextView distance = v.findViewById(R.id.distance);
 
-                if (c != null) {
-                    name.setText(c.getName());
-                    address.setText(c.getAddress());
-                    dist.setText(Utils.formatDistance(c.getDistance()));
+                if (cafeteria != null) {
+                    name.setText(cafeteria.getName());
+                    address.setText(cafeteria.getAddress());
+                    distance.setText(Utils.formatDistance(cafeteria.getDistance()));
                 }
 
                 return v;
             }
         };
-
-        Spinner spinner = findViewById(R.id.spinnerToolbar);
-        spinner.setAdapter(adapterCafeterias);
-        spinner.setOnItemSelectedListener(this);
-
-        Location currLocation = new LocationManager(this).getCurrentOrNextLocation();
-        Flowable<List<Cafeteria>> cafeterias = cafeteriaViewModel.getAllCafeterias(currLocation);
-        mDisposable.add(
-                cafeterias.subscribe(
-                        it -> {
-                            validateList(it);
-                            mCafeterias.clear();
-                            mCafeterias.addAll(it);
-                            adapterCafeterias.notifyDataSetChanged();
-                            setCurrentSelectedCafeteria(spinner);
-                        }, throwable -> Utils.logwithTag("CafeteriaActivity", throwable.getMessage())
-                ));
     }
 
-    private void validateList(Collection<Cafeteria> cafeterias) {
-        if (cafeterias.isEmpty()) {
-            if (NetUtils.isConnected(this)) {
-                showErrorLayout();
-            } else {
-                showNoInternetLayout();
-            }
-        }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Location location = new LocationManager(this).getCurrentOrNextLocation();
+        cafeteriaViewModel.fetchCafeterias(location);
     }
 
-    private void setCurrentSelectedCafeteria(Spinner spinner) {
-        int selIndex = -1;
+    private void updateCafeteriaSpinner() {
+        int selectedIndex = -1;
         for (int i = 0; i < mCafeterias.size(); i++) {
-            Cafeteria c = mCafeterias.get(i);
-            if (mCafeteriaId == -1 || mCafeteriaId == c.getId()) {
-                mCafeteriaId = c.getId();
-                selIndex = i;
+            Cafeteria cafeteria = mCafeterias.get(i);
+            if (mCafeteriaId == -1 || mCafeteriaId == cafeteria.getId()) {
+                mCafeteriaId = cafeteria.getId();
+                selectedIndex = i;
                 break;
             }
         }
-        if (selIndex > -1) {
-            spinner.setSelection(selIndex);
+
+        if (selectedIndex > -1) {
+            spinner.setSelection(selectedIndex);
         }
     }
 
@@ -209,42 +162,56 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         Intent intent = getIntent();
-        //check if Activity triggered from favoriteDish Notification
-        if (intent != null && intent.getExtras() != null && intent.getExtras()
-                                                                  .containsKey(Const.MENSA_FOR_FAVORITEDISH)) {
-            for (int i = 0; i < parent.getCount(); i++) {
+
+        // Check if Activity triggered from favoriteDish notification
+        if (intent != null && intent.hasExtra(Const.MENSA_FOR_FAVORITEDISH)) {
+            for (int i = 0; i < mCafeterias.size(); i++) {
                 //get mensaId from extra to redirect the user to it.
-                if (intent.getExtras()
-                          .getInt(Const.MENSA_FOR_FAVORITEDISH) == mCafeterias.get(i)
-                                                                              .getId()) {
-                    mCafeteriaId = mCafeterias.get(i)
-                                              .getId();
+                int favoriteDishCafeteriaId = intent.getIntExtra(Const.MENSA_FOR_FAVORITEDISH, -1);
+                if (mCafeterias.get(i).getId() == favoriteDishCafeteriaId) {
+                    mCafeteriaId = mCafeterias.get(i).getId();
                     parent.setSelection(i);
                     intent.removeExtra(Const.MENSA_FOR_FAVORITEDISH);
                     break;
                 }
             }
         } else {
-            mCafeteriaId = mCafeterias.get(pos)
-                                      .getId();
+            mCafeteriaId = mCafeterias.get(pos).getId();
         }
 
-        CafeteriaDetailsSectionsPagerAdapter mSectionsPagerAdapter
-                = new CafeteriaDetailsSectionsPagerAdapter(getSupportFragmentManager());
-        // Create the adapter that will return a fragment for each of the primary sections of the app.
-        mViewPager.setAdapter(null); //unset the adapter for updating
-        mSectionsPagerAdapter.setCafeteriaId(this, mCafeteriaId);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        CafeteriaDetailsSectionsPagerAdapter sectionsPagerAdapter =
+                new CafeteriaDetailsSectionsPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(null); // Unset the adapter for updating
+        sectionsPagerAdapter.setCafeteriaId(this, mCafeteriaId);
+        viewPager.setAdapter(sectionsPagerAdapter);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        //Don't change anything
+        // Don't change anything
     }
 
     @Override
-    protected void onDestroy() {
-        mDisposable.clear();
-        super.onDestroy();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_section_fragment_cafeteria_details, menu);
+        return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_ingredients) {
+            // Build a alert dialog containing the mapping of ingredients to the numbers
+            String ingredients = getString(R.string.cafeteria_ingredients);
+            SpannableString message = CafeteriaMenuInflater.menuToSpan(this, ingredients);
+
+            Dialogs.showConfirm(    this, R.string.action_ingredients, message);
+            return true;
+        }
+        if (item.getItemId() == R.id.action_settings) {
+            startActivity(new Intent(this, CafeteriaNotificationSettingsActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

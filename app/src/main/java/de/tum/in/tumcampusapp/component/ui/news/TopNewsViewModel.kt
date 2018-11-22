@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.ui.news;
 
-import androidx.lifecycle.ViewModel
 import android.content.Context
+import androidx.lifecycle.ViewModel
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -12,8 +12,10 @@ import io.reactivex.schedulers.Schedulers
 /**
  * ViewModel for TopNews/NewsAlert.
  */
-class TopNewsViewModel(private val remoteRepository: TopNewsRemoteRepository,
-                       private val compositeDisposable: CompositeDisposable) : ViewModel() {
+class TopNewsViewModel(
+        private val remoteRepository: TopNewsRemoteRepository,
+        private val compositeDisposable: CompositeDisposable
+) : ViewModel() {
 
     /**
      * Downloads the NewsAlert and stores it in the sharedPreferences
@@ -42,6 +44,5 @@ class TopNewsViewModel(private val remoteRepository: TopNewsRemoteRepository,
                         }, { t -> Utils.log(t) })
         )
     }
-    
-}
 
+}
