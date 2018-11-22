@@ -30,6 +30,9 @@ class CafeteriaViewModel(
     private val _cafeterias = MutableLiveData<List<Cafeteria>>()
     val cafeterias: LiveData<List<Cafeteria>> = _cafeterias
 
+    private val _selectedCafeteria = MutableLiveData<Cafeteria>()
+    val selectedCafeteria: LiveData<Cafeteria> = _selectedCafeteria
+
     private val _cafeteriaMenus = MutableLiveData<List<CafeteriaMenu>>()
     val cafeteriaMenus: LiveData<List<CafeteriaMenu>> = _cafeteriaMenus
 
@@ -37,6 +40,10 @@ class CafeteriaViewModel(
     val error: LiveData<Boolean> = _error
 
     private val compositeDisposable = CompositeDisposable()
+
+    fun updateSelectedCafeteria(cafeteria: Cafeteria) {
+        _selectedCafeteria.postValue(cafeteria)
+    }
 
     fun fetchCafeterias(location: Location) {
         compositeDisposable += getAllCafeterias(location)
