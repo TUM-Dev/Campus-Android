@@ -92,7 +92,7 @@ public class EventsController implements ProvidesCard {
     public void getEventsAndTicketsFromServer(Callback<List<Event>> eventCallback,
                                               Callback<List<Ticket>> ticketCallback) {
         // Delete all too old items
-        eventDao.removePastEvents();
+        eventDao.removePastEventsWithoutTicket();
 
         // Load all events
         TUMCabeClient.getInstance(context).fetchEvents(eventCallback);
