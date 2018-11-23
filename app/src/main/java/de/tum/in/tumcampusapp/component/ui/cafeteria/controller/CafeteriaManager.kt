@@ -3,7 +3,7 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller
 import android.content.Context
 import android.location.Location
 import de.tum.`in`.tumcampusapp.component.notifications.ProvidesNotifications
-import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
+import de.tum.`in`.tumcampusapp.component.other.locations.TumLocationManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaDao
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
@@ -16,7 +16,7 @@ import org.jetbrains.anko.defaultSharedPreferences
 
 class CafeteriaManager(
         private val context: Context,
-        private val locationManager: LocationManager,
+        private val locationManager: TumLocationManager,
         private val localRepository: CafeteriaLocalRepository
 ) : ProvidesNotifications {
 
@@ -59,7 +59,7 @@ class CafeteriaManager(
         return Utils.getSettingBool(context, "card_cafeteria_phone", true)
     }
 
-    fun getClosestCafeteriaId(location: Location, campus: LocationManager.Companion.Campus?): Int {
+    fun getClosestCafeteriaId(location: Location, campus: TumLocationManager.Companion.Campus?): Int {
         campus?.let {
             return getDefaultCampusCafeteriaId(it)
         }
@@ -74,7 +74,7 @@ class CafeteriaManager(
                 .sorted()
     }
 
-    private fun getDefaultCampusCafeteriaId(campus: LocationManager.Companion.Campus): Int {
+    private fun getDefaultCampusCafeteriaId(campus: TumLocationManager.Companion.Campus): Int {
         val prefs = context.defaultSharedPreferences
         val cafeteria = prefs.getString("card_cafeteria_default_" + campus.short, campus.defaultMensa)
         return cafeteria.toInt()

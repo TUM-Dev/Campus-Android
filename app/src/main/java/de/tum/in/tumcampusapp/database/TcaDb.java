@@ -25,7 +25,7 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarDao;
 import de.tum.in.tumcampusapp.component.tumui.calendar.WidgetsTimetableBlacklistDao;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBlacklist;
-import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocations;
+import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocation;
 import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaDao;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaLocationDao;
@@ -84,7 +84,7 @@ import de.tum.in.tumcampusapp.utils.sync.model.Sync;
         News.class,
         NewsSources.class,
         CalendarItem.class,
-        RoomLocations.class,
+        RoomLocation.class,
         WidgetsTimetableBlacklist.class,
         WifiMeasurement.class,
         Recent.class,

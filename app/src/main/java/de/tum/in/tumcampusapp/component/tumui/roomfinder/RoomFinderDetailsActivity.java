@@ -24,7 +24,7 @@ import de.tum.in.tumcampusapp.api.app.ApiHelper;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.ImageViewTouchFragment;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForLoadingInBackground;
-import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
+import de.tum.in.tumcampusapp.component.other.locations.TumLocationManager;
 import de.tum.in.tumcampusapp.component.other.locations.model.Geo;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderMap;
@@ -265,7 +265,7 @@ public class RoomFinderDetailsActivity
                     return;
                 }
 
-                onGeoLoadFinished(LocationManager.convertRoomFinderCoordinateToGeo(data));
+                onGeoLoadFinished(TumLocationManager.convertRoomFinderCoordinateToGeo(data));
             }
 
             @Override

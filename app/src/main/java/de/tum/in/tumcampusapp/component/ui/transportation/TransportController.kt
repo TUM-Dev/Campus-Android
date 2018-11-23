@@ -6,7 +6,7 @@ import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
 import de.tum.`in`.tumcampusapp.component.notifications.ProvidesNotifications
 import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
-import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
+import de.tum.`in`.tumcampusapp.component.other.locations.TumLocationManager
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.ProvidesCard
@@ -113,7 +113,7 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
         }
 
         // Get station for current campus
-        val locMan = LocationManager(context)
+        val locMan = TumLocationManager(context)
         val station = locMan.getStation() ?: return emptyList()
 
         val departures = getDeparturesFromExternal(context, station.id).blockingFirst()

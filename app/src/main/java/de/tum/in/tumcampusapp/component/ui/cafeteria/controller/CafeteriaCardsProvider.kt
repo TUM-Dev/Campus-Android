@@ -2,7 +2,7 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller
 
 import android.content.Context
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
-import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
+import de.tum.`in`.tumcampusapp.component.other.locations.TumLocationManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaMenuCard
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
@@ -15,8 +15,8 @@ class CafeteriaCardsProvider(
         private val localRepository: CafeteriaLocalRepository
 ) : ProvidesCard {
 
-    private val locationManager = LocationManager(context)
-    private val cafeteriaManager2 = CafeteriaManager(context)
+    private val locationManager = TumLocationManager(context)
+    private val cafeteriaManager2 = CafeteriaManager(context, locationManager, localRepository)
 
     override fun getCards(cacheControl: CacheControl): List<Card> {
         val results = ArrayList<Card>()

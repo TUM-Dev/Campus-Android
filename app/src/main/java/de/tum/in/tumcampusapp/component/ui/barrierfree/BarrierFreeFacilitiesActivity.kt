@@ -8,7 +8,7 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumCabe
-import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
+import de.tum.`in`.tumcampusapp.component.other.locations.TumLocationManager
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderDetailsActivity
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderListAdapter
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom
@@ -24,8 +24,8 @@ class BarrierFreeFacilitiesActivity : ActivityForAccessingTumCabe<List<RoomFinde
         TcaDb.getInstance(this).recentsDao()
     }
 
-    private val locationManager: LocationManager by lazy {
-        LocationManager(this)
+    private val locationManager: TumLocationManager by lazy {
+        TumLocationManager(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationListener
 import androidx.core.content.ContextCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -25,10 +24,14 @@ import java.util.*
  * Location manager, manages intelligent location services, provides methods to easily access
  * the users current location, campus, next public transfer station and best cafeteria
  */
-class LocationManager(c: Context) {
-    private val mContext: Context = c.applicationContext
+class TumLocationManager(c: Context) {
+
+    private val context: Context = c.applicationContext
     private val buildingToGpsDao: BuildingToGpsDao
-    private var manager: android.location.LocationManager? = null
+
+    private val locationProvider: LocationProvider by lazy {
+        LocationProvider(context)
+    }
 
     init {
         val db = TcaDb.getInstance(c)
@@ -45,12 +48,12 @@ class LocationManager(c: Context) {
             return null
         }
 
-        val loc = getLastLocation()
+        val loc = LocationProvider.getInstance(context).getLastLocation()
         if (loc != null) {
             return loc
         }
 
-        val selectedCampus = Utils.getSetting(mContext, Const.DEFAULT_CAMPUS, "G")
+        val selectedCampus = Utils.getSetting(context, Const.DEFAULT_CAMPUS, "G")
         val allCampi = Campus.values().associateBy(Campus::short)
 
         if ("X" != selectedCampus && allCampi.containsKey(selectedCampus)) {
@@ -80,44 +83,6 @@ class LocationManager(c: Context) {
     }
 
     /**
-     * Returns the last known location of the device
-     *
-     * @return The last location
-     */
-    fun getLastLocation(): Location? {
-        //Check Location permission for Android 6.0
-        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return null
-        }
-
-        var bestResult: Location? = null
-        var bestAccuracy = java.lang.Float.MAX_VALUE
-        var bestTime = java.lang.Long.MIN_VALUE
-        val minTime: Long = 0
-
-        val locationManager = mContext.getSystemService(Context.LOCATION_SERVICE) as android.location.LocationManager
-        val matchingProviders = locationManager.allProviders
-        for (provider in matchingProviders) {
-
-            val location = locationManager.getLastKnownLocation(provider)
-            if (location != null) {
-                val accuracy = location.accuracy
-                val time = location.time
-
-                if (time > minTime && accuracy < bestAccuracy) {
-                    bestResult = location
-                    bestAccuracy = accuracy
-                    bestTime = time
-                } else if (time < minTime && bestAccuracy == java.lang.Float.MAX_VALUE && time > bestTime) {
-                    bestResult = location
-                    bestTime = time
-                }
-            }
-        }
-        return bestResult
-    }
-
-    /**
      * Returns the name of the station that is nearby and/or set by the user
      *
      * @return Name of the station or null if the user is not near any campus
@@ -126,7 +91,7 @@ class LocationManager(c: Context) {
         val campus = getCurrentCampus() ?: return null
 
         //Try to find favorite station for current campus
-        val station = Utils.getSetting(mContext, "card_stations_default_" + campus.short, "")
+        val station = Utils.getSetting(context, "card_stations_default_" + campus.short, "")
         if (station.isEmpty()) {
             Stations.values().associateBy(Stations::station).values.find {
                 it.station.station == station
@@ -157,7 +122,7 @@ class LocationManager(c: Context) {
      * @return Location of the next lecture room
      */
     private fun getNextLocation(): Location {
-        val manager = CalendarController(mContext)
+        val manager = CalendarController(context)
         val geo = manager.nextCalendarItemGeo ?: return Campus.GarchingForschungszentrum.getLocation()
 
         val location = Location("roomfinder")
@@ -174,10 +139,10 @@ class LocationManager(c: Context) {
      */
     private val orFetchBuildingsToGps: List<BuildingToGps>
         get() {
-            var result: List<BuildingToGps>? = buildingToGpsDao.all
+            var result: List<BuildingToGps>? = buildingToGpsDao.getAll()
             if (result!!.isEmpty()) {
                 try {
-                    result = TUMCabeClient.getInstance(mContext).building2Gps
+                    result = TUMCabeClient.getInstance(context).building2Gps
                     if (result == null) {
                         return emptyList()
                     }
@@ -205,26 +170,16 @@ class LocationManager(c: Context) {
      *
      * @return false if permission check fails
      */
-    fun getLocationUpdates(locationListener: LocationListener): Boolean {
-        //Check Location permission for Android 6.0
-        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return false
+    fun getLocationUpdates(onChanged: (Location) -> Unit) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return
         }
 
-        // Acquire a reference to the system Location Manager
-        if (manager == null) {
-            manager = mContext.getSystemService(Context.LOCATION_SERVICE) as android.location.LocationManager
-        }
-        // Register the listener with the Location Manager to receive location updates
-        manager!!.requestLocationUpdates(android.location.LocationManager.GPS_PROVIDER, 1000, 1f, locationListener)
-        manager!!.requestLocationUpdates(android.location.LocationManager.NETWORK_PROVIDER, 1000, 1f, locationListener)
-        return true
+        locationProvider.getLocationUpdates { onChanged(it) }
     }
 
-    fun stopReceivingUpdates(locationListener: LocationListener) {
-        if (manager != null) {
-            manager!!.removeUpdates(locationListener)
-        }
+    fun stopLocationUpdates() {
+        locationProvider.removeLocationUpdates()
     }
 
     /**
@@ -232,7 +187,7 @@ class LocationManager(c: Context) {
      */
     private fun servicesConnected(): Boolean {
         val resultCode = GoogleApiAvailability.getInstance()
-                .isGooglePlayServicesAvailable(mContext) == ConnectionResult.SUCCESS
+                .isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS
 
         Utils.log("Google Play services is $resultCode")
         return resultCode
@@ -246,7 +201,7 @@ class LocationManager(c: Context) {
      */
     private fun fetchRoomGeo(archId: String): Geo? {
         return try {
-            val coordinate = TUMCabeClient.getInstance(mContext).fetchCoordinates(archId)
+            val coordinate = TUMCabeClient.getInstance(context).fetchCoordinates(archId)
             convertRoomFinderCoordinateToGeo(coordinate)
         } catch (e: IOException) {
             Utils.log(e)
@@ -269,7 +224,7 @@ class LocationManager(c: Context) {
         }
 
         try {
-            val rooms = TUMCabeClient.getInstance(mContext).fetchRooms(loc)
+            val rooms = TUMCabeClient.getInstance(context).fetchRooms(loc)
 
             if (rooms != null && !rooms.isEmpty()) {
                 val room = rooms[0].arch_id

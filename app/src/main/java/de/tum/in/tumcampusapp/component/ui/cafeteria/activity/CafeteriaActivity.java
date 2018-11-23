@@ -25,7 +25,7 @@ import androidx.viewpager.widget.ViewPager;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
-import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
+import de.tum.in.tumcampusapp.component.other.locations.TumLocationManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuInflater;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionsPagerAdapter;
@@ -135,7 +135,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
     @Override
     protected void onStart() {
         super.onStart();
-        Location location = new LocationManager(this).getCurrentOrNextLocation();
+        Location location = new TumLocationManager(this).getCurrentOrNextLocation();
         cafeteriaViewModel.fetchCafeterias(location);
     }
 
@@ -151,7 +151,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
         } else {
             // If we're not provided with a cafeteria ID, we choose the best matching cafeteria.
             // TODO: In ViewModel?
-            LocationManager locationManager = new LocationManager(this);
+            TumLocationManager locationManager = new TumLocationManager(this);
             CafeteriaLocalRepository localRepository = new CafeteriaLocalRepository(TcaDb.getInstance(this));
             CafeteriaManager cafeteriaManager = new CafeteriaManager(this, locationManager, localRepository);
             cafeteriaId = cafeteriaManager.getBestMatchMensaId();

@@ -20,7 +20,7 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarDao;
 import de.tum.in.tumcampusapp.component.tumui.calendar.WidgetsTimetableBlacklistDao;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBlacklist;
-import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocations;
+import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocation;
 import de.tum.in.tumcampusapp.database.TcaDb;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -303,7 +303,7 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("DUNNO", now));
         dao.insert(createCalendarItem("YES", now));
 
-        rlDao.insert(new RoomLocations("dummy location", "", ""));
+        rlDao.insert(new RoomLocation("dummy location", "", ""));
 
         assertThat(dao.getLecturesWithoutCoordinates()).hasSize(1);
     }
@@ -320,7 +320,7 @@ public class CalendarDaoTest {
         dao.insert(createCalendarItem("DUNNO", now));
         dao.insert(createCalendarItem("YES", now));
 
-        rlDao.insert(new RoomLocations("dummy location", "coordinate", "coordinate"));
+        rlDao.insert(new RoomLocation("dummy location", "coordinate", "coordinate"));
 
         assertThat(dao.getLecturesWithoutCoordinates()).hasSize(0);
     }

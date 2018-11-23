@@ -13,7 +13,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
+import de.tum.in.tumcampusapp.component.other.locations.TumLocationManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
@@ -36,7 +36,7 @@ public class MensaWidget extends AppWidgetProvider {
         TcaDb tcaDb = TcaDb.getInstance(context);
         localRepository = new CafeteriaLocalRepository(tcaDb);
 
-        LocationManager locationManager = new LocationManager(context);
+        TumLocationManager locationManager = new TumLocationManager(context);
         cafeteriaManager = new CafeteriaManager(context, locationManager, localRepository);
 
         for (int appWidgetId : appWidgetIds) {

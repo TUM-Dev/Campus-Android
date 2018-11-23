@@ -16,7 +16,7 @@ import de.tum.in.tumcampusapp.TestApp;
 import de.tum.in.tumcampusapp.component.other.locations.RoomLocationsDao;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarDao;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
-import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocations;
+import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocation;
 import de.tum.in.tumcampusapp.database.TcaDb;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -73,11 +73,11 @@ public class RoomLocationsDaoTest {
         calendarDao.insert(createCalendarItem(now.plusHours(3), "dummy location"));
         calendarDao.insert(createCalendarItem(now.plusHours(2), "yet another location"));
 
-        RoomLocations expected = new RoomLocations("dummy location", "123", "321");
+        RoomLocation expected = new RoomLocation("dummy location", "123", "321");
 
         dao.insert(expected);
-        dao.insert(new RoomLocations("some other location", "456", "654"));
-        dao.insert(new RoomLocations("yet another location", "789", "987"));
+        dao.insert(new RoomLocation("some other location", "456", "654"));
+        dao.insert(new RoomLocation("yet another location", "789", "987"));
 
         assertThat(dao.getNextLectureCoordinates()).isEqualToComparingFieldByField(expected);
     }

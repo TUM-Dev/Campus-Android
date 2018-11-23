@@ -4,14 +4,10 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.location.Location;
-import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -19,40 +15,35 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.UUID;
 
-import androidx.annotation.RequiresApi;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
-import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
+import de.tum.in.tumcampusapp.component.other.locations.LocationProvider;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Success;
 import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.ImageUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 public class FeedbackActivity extends BaseActivity {
 
@@ -74,11 +65,7 @@ public class FeedbackActivity extends BaseActivity {
     private String email;
     private String lrzId;
 
-    private Location location;
-    private LocationListener locationListener;
-    private LocationManager locationManager;
-
-    private ArrayList<String> picturePaths;
+    private ArrayList<String> picturePaths = new ArrayList<>();
 
     private RecyclerView.Adapter<?> thumbnailsAdapter;
 
@@ -108,9 +95,7 @@ public class FeedbackActivity extends BaseActivity {
         initIncludeLocation(savedInstanceState);
         initIncludeEmail(savedInstanceState);
 
-        if (savedInstanceState == null) {
-            picturePaths = new ArrayList<>();
-        } else {
+        if (savedInstanceState != null) {
             picturePaths = savedInstanceState.getStringArrayList(Const.FEEDBACK_PIC_PATHS);
             feedbackView.setText(savedInstanceState.getString(Const.FEEDBACK_MESSAGE));
         }
@@ -124,107 +109,10 @@ public class FeedbackActivity extends BaseActivity {
 
     @SuppressLint("NewApi")
     private void initIncludeLocation(Bundle savedInstanceState) {
-        includeLocation.setOnClickListener(view -> {
-            if (includeLocation.isChecked() && checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                saveLocation();
-            } else if (!includeLocation.isChecked()) {
-                stopListeningForLocation();
-            }
-        });
-
         if (savedInstanceState != null) {
             includeLocation.setChecked(savedInstanceState.getBoolean(Const.FEEDBACK_INCL_LOCATION));
         } else {
             includeLocation.setChecked(false);
-        }
-
-        if (includeLocation.isChecked()
-            && checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            saveLocation();
-        }
-    }
-
-    /**
-     * @return true if user has given permission before
-     */
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private boolean checkPermission(String permission) {
-        int permissionCheck = ContextCompat.checkSelfPermission(this, permission);
-        if (permissionCheck == PackageManager.PERMISSION_DENIED) {
-            int requestCode;
-            switch (permission) {
-                case Manifest.permission.READ_EXTERNAL_STORAGE:
-                    requestCode = PERMISSION_FILES;
-                    break;
-                case Manifest.permission.CAMERA:
-                    requestCode = PERMISSION_CAMERA;
-                    break;
-                default:
-                    requestCode = PERMISSION_LOCATION;
-                    break;
-            }
-            requestPermissions(new String[]{permission}, requestCode);
-            return false;
-        }
-        return true;
-    }
-
-    private void saveLocation() {
-        Utils.log("saveLocation");
-
-        locationManager = new LocationManager(this);
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location gps) {
-                location = gps; // just take the newest location
-                Utils.log("location (" + gps.getProvider() + "): " + location.getLatitude() + " " + location.getLongitude());
-            }
-
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
-            }
-
-            @Override
-            public void onProviderEnabled(String s) {
-            }
-
-            @Override
-            public void onProviderDisabled(String s) {
-                Utils.log("Provider " + s + " disabled");
-            }
-        };
-        locationManager.getLocationUpdates(locationListener);
-
-        // if the feedback is sent before we received a location
-        getBackupLocation();
-    }
-
-    private void stopListeningForLocation() {
-        Utils.log("Stop listening for location");
-        if (locationManager != null && locationListener != null) {
-            locationManager.stopReceivingUpdates(locationListener);
-        }
-    }
-
-    private void getBackupLocation() {
-        Location backup = new LocationManager(this).getLastLocation();
-        if (backup != null) {
-            location = backup;
-        }
-        if (location == null) { // we don't know anything about the location
-            includeLocation.setChecked(false);
-
-            AlertDialog dialog = new AlertDialog.Builder(this)
-                    .setTitle(R.string.location_services_off_title)
-                    .setMessage(R.string.location_services_off_message)
-                    .setPositiveButton(R.string.ok, null)
-                    .create();
-
-            if (dialog.getWindow() != null) {
-                dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
-            }
-
-            dialog.show();
         }
     }
 
@@ -272,12 +160,6 @@ public class FeedbackActivity extends BaseActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        stopListeningForLocation();
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         for (String path : picturePaths) {
@@ -289,47 +171,56 @@ public class FeedbackActivity extends BaseActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(Const.FEEDBACK_TOPIC, feedbackTopic);
-        outState.putString(Const.FEEDBACK_MESSAGE, feedbackView.getText()
-                                                               .toString());
+        outState.putString(Const.FEEDBACK_MESSAGE, feedbackView.getText().toString());
         outState.putStringArrayList(Const.FEEDBACK_PIC_PATHS, picturePaths);
         outState.putBoolean(Const.FEEDBACK_INCL_EMAIL, includeEmail.isChecked());
         outState.putBoolean(Const.FEEDBACK_INCL_LOCATION, includeLocation.isChecked());
-        outState.putString(Const.FEEDBACK_EMAIL, customEmailView.getText()
-                                                                .toString());
+        outState.putString(Const.FEEDBACK_EMAIL, customEmailView.getText().toString());
     }
 
     private boolean isValidEmail() {
-        email = customEmailView.getText()
-                               .toString();
-        boolean isValid = Patterns.EMAIL_ADDRESS.matcher(email)
-                                                .matches();
+        email = customEmailView.getText().toString();
+        boolean isValid = Patterns.EMAIL_ADDRESS.matcher(email).matches();
+
         if (isValid) {
             customEmailView.setTextColor(ContextCompat.getColor(this, R.color.valid));
         } else {
             customEmailView.setTextColor(ContextCompat.getColor(this, R.color.error));
         }
+
         return isValid;
     }
 
-    private Feedback getFeedback() {
-        return new Feedback(UUID.randomUUID()
-                                .toString(),
-                            (feedbackTopic == 0 ? Const.FEEDBACK_TOPIC_GENERAL : Const.FEEDBACK_TOPIC_APP),
-                            feedbackView.getText()
-                                        .toString(),
-                            (includeEmail.isChecked() ? email : ""),
-                            (includeLocation.isChecked() ? location.getLatitude() : 0),
-                            (includeLocation.isChecked() ? location.getLongitude() : 0),
-                            picturePaths == null ? 0 : picturePaths.size(),
-                            Build.VERSION.RELEASE,
-                            BuildConfig.VERSION_NAME);
+    private Feedback createFeedback() {
+        String topic = feedbackTopic == 0 ? Const.FEEDBACK_TOPIC_GENERAL : Const.FEEDBACK_TOPIC_APP;
+        int imageCount = picturePaths == null ? 0 : picturePaths.size();
+
+        double latitude = 0.0;
+        double longitude = 0.0;
+
+        if (includeLocation.isChecked()) {
+            Location location = LocationProvider.getInstance(this).getLastLocation();
+            if (location != null) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
+        }
+
+        return new Feedback(
+                UUID.randomUUID().toString(),
+                topic,
+                feedbackView.getText().toString(),
+                (includeEmail.isChecked() ? email : ""),
+                latitude,
+                longitude,
+                imageCount,
+                Build.VERSION.RELEASE,
+                BuildConfig.VERSION_NAME
+        );
     }
 
     public void onSendClicked(View view) {
-        if (feedbackView.getText()
-                        .toString()
-                        .trim()
-                        .isEmpty()) {
+        if (feedbackView.getText().toString().trim().isEmpty()) {
             if (picturePaths.isEmpty()) {
                 feedbackView.setError(getString(R.string.feedback_empty));
             } else {
@@ -352,7 +243,6 @@ public class FeedbackActivity extends BaseActivity {
 
     public void sendFeedback() {
         sentCount = 0;
-        stopListeningForLocation();
 
         if (includeEmail.isChecked() && TextUtils.isEmpty(lrzId) && !isValidEmail()) {
             return;
@@ -361,30 +251,33 @@ public class FeedbackActivity extends BaseActivity {
         showProgressBarDialog();
         TUMCabeClient client = TUMCabeClient.getInstance(this);
 
-        client.sendFeedback(getFeedback(), picturePaths.toArray(new String[picturePaths.size()]), new Callback<Success>() {
+        String[] paths = picturePaths.toArray(new String[0]);
+        client.sendFeedback(createFeedback(), paths, new Callback<Success>() {
             @Override
-            public void onResponse(Call<Success> call, Response<Success> response) {
+            public void onResponse(@NonNull Call<Success> call,
+                                   @NonNull Response<Success> response) {
                 Success success = response.body();
-                if (success != null && success.wasSuccessfullySent()) {
-                    sentCount++;
-                    Utils.log(success.getSuccess());
-                    if (sentCount == picturePaths.size() + 1) {
-                        progress.cancel();
-                        finish();
-                        Toast.makeText(feedbackView.getContext(), R.string.feedback_send_success, Toast.LENGTH_SHORT)
-                             .show();
-                    }
-                    Utils.log("sent " + sentCount + " of " + (picturePaths.size() + 1) + " message parts");
+                if (response.isSuccessful() && success != null && success.wasSuccessfullySent()) {
+                    handleFeedbackSuccess();
                 } else {
                     showErrorDialog();
                 }
             }
 
             @Override
-            public void onFailure(Call<Success> call, Throwable t) {
+            public void onFailure(@NonNull Call<Success> call, @NonNull Throwable t) {
                 showErrorDialog();
             }
         });
+    }
+
+    private void handleFeedbackSuccess() {
+        sentCount++;
+        if (sentCount == picturePaths.size() + 1) {
+            Utils.showToast(this, R.string.feedback_send_success);
+            progress.cancel();
+            finish();
+        }
     }
 
     private void showProgressBarDialog() {
@@ -412,7 +305,7 @@ public class FeedbackActivity extends BaseActivity {
                 .setMessage(R.string.feedback_sending_error)
                 .setIcon(R.drawable.ic_error_outline)
                 .setPositiveButton(R.string.try_again, (dialogInterface, i) -> sendFeedback())
-                .setNegativeButton(R.string.ok, null)
+                .setNegativeButton(R.string.cancel, null)
                 .create();
 
         if (errorDialog.getWindow() != null) {
@@ -423,19 +316,19 @@ public class FeedbackActivity extends BaseActivity {
     }
 
     @SuppressLint("NewApi")
-    public void addPicture(View view) {
-        String[] options = {getString(R.string.feedback_take_picture), getString(R.string.gallery)};
+    public void showAddPictureDialog(View view) {
+        String[] options = {
+                getString(R.string.feedback_take_picture),
+                getString(R.string.gallery)
+        };
+
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.feedback_add_picture)
-                .setItems(options, (dialogInterface, i) -> {
-                    if (i == 0) {
-                        if (checkPermission(Manifest.permission.CAMERA)) {
-                            startTakingPicture();
-                        }
+                .setItems(options, (dialogInterface, index) -> {
+                    if (index == 0) {
+                        startTakingPicture();
                     } else {
-                        if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                            openGallery();
-                        }
+                        openGallery();
                     }
                 })
                 .setNegativeButton(R.string.cancel, null)
@@ -450,154 +343,82 @@ public class FeedbackActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_TAKE_PHOTO) {
-                // get picture, resize it and write back the image
-                rescaleBitmap(Uri.fromFile(new File(mCurrentPhotoPath)), new File(mCurrentPhotoPath));
-
-                picturePaths.add(mCurrentPhotoPath);
-                thumbnailsAdapter.notifyDataSetChanged();
-            } else if (requestCode == REQUEST_GALLERY) {
-
-                File destination = null;
-                try {
-                    destination = createImageFile();
-                } catch (IOException e) {
-                    Utils.log(e);
-                }
-                rescaleBitmap(data.getData(), destination);
-
-                if (destination != null) {
-                    picturePaths.add(destination.getAbsolutePath());
-                    thumbnailsAdapter.notifyDataSetChanged();
-                }
-            }
+        if (resultCode != RESULT_OK) {
+            return;
         }
 
+        if (requestCode == REQUEST_TAKE_PHOTO) {
+            File imageFile = new File(mCurrentPhotoPath);
+            Uri imageUri = Uri.fromFile(imageFile);
+            onNewImageAvailable(imageFile, imageUri);
+        } else if (requestCode == REQUEST_GALLERY) {
+            File destination = ImageUtils.createImageFile(this);
+            if (destination != null) {
+                onNewImageAvailable(destination, data.getData());
+            }
+        }
+    }
+
+    private void onNewImageAvailable(File image, Uri uri) {
+        mCurrentPhotoPath = image.getAbsolutePath();
+        ImageUtils.rescaleBitmap(this, uri, image);
+        picturePaths.add(image.getAbsolutePath());
+        thumbnailsAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         switch (requestCode) {
             case PERMISSION_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    location = new LocationManager(this).getLastLocation();
-                    includeLocation.setChecked(true);
-                } else {
-                    includeLocation.setChecked(false);
-                }
+                boolean hasLocationPermission = grantResults.length > 0 && grantResults[0] == PERMISSION_GRANTED;
+                includeLocation.setChecked(hasLocationPermission);
                 return;
             }
             case PERMISSION_CAMERA: {
-                if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PERMISSION_GRANTED) {
                     startTakingPicture();
                 }
                 return;
             }
             case PERMISSION_FILES: {
-                if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PERMISSION_GRANTED) {
                     openGallery();
                 }
                 return;
             }
-            default: // don't do anything
+            default:
+                break;
         }
-    }
-
-    /**
-     * scales down the image and writes it to the destination file
-     *
-     * @param src
-     * @param destination
-     */
-    private void rescaleBitmap(Uri src, File destination) {
-        try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), src);
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            Utils.log("img before: " + bitmap.getWidth() + " x " + bitmap.getHeight());
-            bitmap = getResizedBitmap(bitmap, 1000);
-            Utils.log("img after: " + bitmap.getWidth() + " x " + bitmap.getHeight());
-            bitmap.compress(Bitmap.CompressFormat.JPEG, Const.FEEDBACK_IMG_COMPRESSION_QUALITY, out);
-            FileOutputStream fileOut = new FileOutputStream(destination);
-            fileOut.write(out.toByteArray());
-            fileOut.close();
-            out.close();
-        } catch (IOException e) {
-            Utils.log(e);
-        }
-    }
-
-    /**
-     * scales the bitmap down if it's bigger than maxSize
-     *
-     * @param image
-     * @param maxSize
-     * @return
-     */
-    private Bitmap getResizedBitmap(Bitmap image, int maxSize) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-        if (width < maxSize && height < maxSize) {
-            return image;
-        }
-
-        float bitmapRatio = (float) width / (float) height;
-        if (bitmapRatio > 1) {
-            width = maxSize;
-            height = (int) (width / bitmapRatio);
-        } else {
-            height = maxSize;
-            width = (int) (height * bitmapRatio);
-        }
-        return Bitmap.createScaledBitmap(image, width, height, true);
     }
 
     private void startTakingPicture() {
+        // TODO
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.CAMERA }, PERMISSION_CAMERA);
+            return;
+        }
+
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException e) {
-                Utils.log(e);
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Utils.log(getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath());
-                Uri photoURI = FileProvider.getUriForFile(this,
-                                                          "de.tum.in.tumcampusapp.fileprovider",
-                                                          photoFile);
+            File image = ImageUtils.createImageFile(this);
+            if (image != null) {
+                mCurrentPhotoPath = image.getAbsolutePath();
+                Uri photoURI = ImageUtils.getImageUri(this, image);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
         }
     }
 
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = DateTimeFormat.forPattern("yyyyMMdd_HHmmss")
-                                         .withLocale(Locale.GERMANY)
-                                         .print(DateTime.now());
-        String imageFileName = "IMG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
     private void openGallery() {
+        // TODO
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE }, PERMISSION_CAMERA);
+            return;
+        }
+
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);//

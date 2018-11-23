@@ -8,7 +8,7 @@ import de.tum.`in`.tumcampusapp.component.notifications.NotificationProvider
 import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
 import de.tum.`in`.tumcampusapp.component.notifications.model.InstantNotification
 import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
-import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
+import de.tum.`in`.tumcampusapp.component.other.locations.TumLocationManager
 import de.tum.`in`.tumcampusapp.utils.Const
 
 class TransportNotificationProvider(context: Context) : NotificationProvider(context) {
@@ -20,7 +20,7 @@ class TransportNotificationProvider(context: Context) : NotificationProvider(con
     }
 
     override fun buildNotification(): AppNotification? {
-        val locationManager = LocationManager(context)
+        val locationManager = TumLocationManager(context)
         val station = locationManager.getStation() ?: return null
 
         val title = context.getString(R.string.mvv)

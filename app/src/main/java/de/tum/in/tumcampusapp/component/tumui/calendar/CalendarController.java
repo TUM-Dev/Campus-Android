@@ -26,13 +26,13 @@ import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.notifications.NotificationScheduler;
 import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
 import de.tum.in.tumcampusapp.component.notifications.model.FutureNotification;
-import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
+import de.tum.in.tumcampusapp.component.other.locations.TumLocationManager;
 import de.tum.in.tumcampusapp.component.other.locations.RoomLocationsDao;
 import de.tum.in.tumcampusapp.component.other.locations.model.Geo;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.Event;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBlacklist;
-import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocations;
+import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocation;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
@@ -283,7 +283,7 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
      */
     public Geo getNextCalendarItemGeo() {
         Geo geo = null;
-        RoomLocations roomLocation = roomLocationsDao.getNextLectureCoordinates();
+        RoomLocation roomLocation = roomLocationsDao.getNextLectureCoordinates();
         if (roomLocation != null) {
             geo = roomLocation.toGeo();
         }
@@ -319,7 +319,7 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
         }
 
         public static void loadGeo(Context c) {
-            LocationManager locationManager = new LocationManager(c);
+            TumLocationManager locationManager = new TumLocationManager(c);
             final CalendarDao calendarDao = TcaDb.getInstance(c)
                     .calendarDao();
             final RoomLocationsDao roomLocationsDao = TcaDb.getInstance(c)
@@ -335,7 +335,7 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
                 @Nullable Geo geo = locationManager.roomLocationStringToGeo(location);
                 if (geo != null) {
                     Utils.logv("inserted " + location + ' ' + geo);
-                    roomLocationsDao.insert(new RoomLocations(location, geo));
+                    roomLocationsDao.insert(new RoomLocation(location, geo));
                 }
             }
 

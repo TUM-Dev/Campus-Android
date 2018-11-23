@@ -87,7 +87,7 @@
                     android:layout_height="@dimen/add_thumbnail_button_size"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="@dimen/material_default_padding"
-                    android:onClick="addPicture"
+                    android:onClick="showAddPictureDialog"
                     android:padding="@dimen/material_default_padding"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_outline_add_photo_alternate_24px"
