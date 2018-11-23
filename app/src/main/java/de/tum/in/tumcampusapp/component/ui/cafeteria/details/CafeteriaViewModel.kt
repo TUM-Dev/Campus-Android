@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.interactors.FetchBestMatchMensaInteractor
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
@@ -23,7 +23,7 @@ import org.joda.time.DateTime
  * ViewModel for cafeterias.
  */
 class CafeteriaViewModel(
-        private val cafeteriaManager: CafeteriaManager,
+        private val bestMatchMensaInteractor: FetchBestMatchMensaInteractor,
         private val localRepository: CafeteriaLocalRepository,
         private val remoteRepository: CafeteriaRemoteRepository
 ) : ViewModel() {
@@ -45,9 +45,10 @@ class CafeteriaViewModel(
 
     private val compositeDisposable = CompositeDisposable()
 
+    // TODO: More interactors
+
     fun fetchBestMatchMensaId(): Int {
-        // TODO
-        return cafeteriaManager.getBestMatchMensaId()
+        return bestMatchMensaInteractor.execute()
     }
 
     fun updateSelectedCafeteria(cafeteria: Cafeteria) {
@@ -126,14 +127,14 @@ class CafeteriaViewModel(
     }
 
     class Factory(
-            private val cafeteriaManager: CafeteriaManager,
+            private val bestMatchMensaInteractor: FetchBestMatchMensaInteractor,
             private val localRepository: CafeteriaLocalRepository,
             private val remoteRepository: CafeteriaRemoteRepository
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST") // no good way around this
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return CafeteriaViewModel(cafeteriaManager, localRepository, remoteRepository) as T
+            return CafeteriaViewModel(bestMatchMensaInteractor, localRepository, remoteRepository) as T
         }
 
     }

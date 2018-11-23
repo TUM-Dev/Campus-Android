@@ -30,6 +30,7 @@ import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuInflater;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.interactors.FetchBestMatchMensaInteractor;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository;
@@ -91,9 +92,10 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
         // TODO: In the future, these should be injected
         TumLocationManager tumLocationManager = new TumLocationManager(this);
         CafeteriaManager cafeteriaManager = new CafeteriaManager(this, tumLocationManager, localRepository);
+        FetchBestMatchMensaInteractor interactor = new FetchBestMatchMensaInteractor(cafeteriaManager);
 
         // TODO: In the future, these should be injected
-        CafeteriaViewModel.Factory factory = new CafeteriaViewModel.Factory(cafeteriaManager, localRepository, remoteRepository);
+        CafeteriaViewModel.Factory factory = new CafeteriaViewModel.Factory(interactor, localRepository, remoteRepository);
         cafeteriaViewModel = ViewModelProviders.of(this, factory).get(CafeteriaViewModel.class);
 
         cafeteriaViewModel.getCafeterias().observe(this, this::updateCafeteria);
