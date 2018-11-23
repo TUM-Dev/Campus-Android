@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProviders;
@@ -30,10 +31,8 @@ import de.tum.in.tumcampusapp.component.other.locations.TumLocationManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuInflater;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.interactors.FetchBestMatchMensaInteractor;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository;
+import de.tum.in.tumcampusapp.di.ViewModelFactory;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import de.tum.in.tumcampusapp.utils.ui.Dialogs;
@@ -52,16 +51,19 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
     private List<Cafeteria> mCafeterias = new ArrayList<>();
 
     @Inject
+    Provider<CafeteriaViewModel> provider;
+
+    @Inject
     TumLocationManager tumLocationManager;
 
-    @Inject
-    FetchBestMatchMensaInteractor bestMatchMensaInteractor;
+    /*@Inject
+    FetchBestMatchMensaInteractor bestMatchMensaInteractor;*/
 
-    @Inject
-    CafeteriaLocalRepository localRepository;
+    /*@Inject
+    CafeteriaLocalRepository localRepository;*/
 
-    @Inject
-    CafeteriaRemoteRepository remoteRepository;
+    /*@Inject
+    CafeteriaRemoteRepository remoteRepository;*/
 
     private ArrayAdapter<Cafeteria> adapter;
     private CafeteriaDetailsSectionsPagerAdapter sectionsPagerAdapter;
@@ -91,10 +93,13 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
 
         sectionsPagerAdapter = new CafeteriaDetailsSectionsPagerAdapter(getSupportFragmentManager());
 
-        // TODO: In the future, these should be injected
-        CafeteriaViewModel.Factory factory = new CafeteriaViewModel.Factory(
-                bestMatchMensaInteractor, localRepository, remoteRepository);
+        ViewModelFactory<CafeteriaViewModel> factory = new ViewModelFactory<>(provider);
         cafeteriaViewModel = ViewModelProviders.of(this, factory).get(CafeteriaViewModel.class);
+
+        // TODO: In the future, these should be injected
+        /*CafeteriaViewModel.Factory factory = new CafeteriaViewModel.Factory(
+                bestMatchMensaInteractor, localRepository, remoteRepository);
+        cafeteriaViewModel = ViewModelProviders.of(this, factory).get(CafeteriaViewModel.class);*/
 
         cafeteriaViewModel.getCafeterias().observe(this, this::updateCafeteria);
         cafeteriaViewModel.getSelectedCafeteria().observe(this, this::onNewCafeteriaSelected);

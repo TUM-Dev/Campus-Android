@@ -18,11 +18,12 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
+import javax.inject.Inject
 
 /**
  * ViewModel for cafeterias.
  */
-class CafeteriaViewModel(
+class CafeteriaViewModel @Inject constructor(
         private val bestMatchMensaInteractor: FetchBestMatchMensaInteractor,
         private val localRepository: CafeteriaLocalRepository,
         private val remoteRepository: CafeteriaRemoteRepository

@@ -13,14 +13,18 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManag
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.MenuType
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
-import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import org.joda.time.DateTime
+import javax.inject.Inject
 
-class CafeteriaNotificationProvider(context: Context) : NotificationProvider(context) {
-
-    private val cafeteriaMenuManager = CafeteriaMenuManager(context)
+class CafeteriaNotificationProvider @Inject constructor(
+        context: Context,
+        private val locationManager: TumLocationManager,
+        private val cafeteriaManager: CafeteriaManager,
+        private val cafeteriaMenuManager: CafeteriaMenuManager,
+        private val localRepository: CafeteriaLocalRepository
+) : NotificationProvider(context) {
 
     override fun getNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_CAFETERIA)
@@ -33,19 +37,14 @@ class CafeteriaNotificationProvider(context: Context) : NotificationProvider(con
     }
 
     override fun buildNotification(): AppNotification? {
-        // TODO: Inject
-        val locationManager = TumLocationManager(context)
-        val cafeteriaManager2 = CafeteriaManager(context, locationManager, CafeteriaLocalRepository(TcaDb.getInstance(context)))
-
         val location = locationManager.getCurrentOrNextLocation()
         val campus = locationManager.getCurrentOrNextCampus()
-        val cafeteriaId = cafeteriaManager2.getClosestCafeteriaId(location, campus)
+        val cafeteriaId = cafeteriaManager.getClosestCafeteriaId(location, campus)
         if (cafeteriaId == -1) {
             return null
         }
 
-        val localRepo = CafeteriaLocalRepository(TcaDb.getInstance(context))
-        val cafeteria = localRepo.getCafeteriaWithMenus(cafeteriaId)
+        val cafeteria = localRepository.getCafeteriaWithMenus(cafeteriaId)
         val menus = cafeteria.menus.filter { it.menuType != MenuType.SIDE_DISH }
         val intent = cafeteria.getIntent(context)
 

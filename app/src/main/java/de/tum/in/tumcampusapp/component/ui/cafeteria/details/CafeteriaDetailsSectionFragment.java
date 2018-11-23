@@ -13,27 +13,35 @@ import org.joda.time.format.DateTimeFormat;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.component.other.locations.TumLocationManager;
+import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuCard;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuInflater;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.interactors.FetchBestMatchMensaInteractor;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository;
-import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 
 /**
  * Fragment for each cafeteria-page.
  */
 public class CafeteriaDetailsSectionFragment extends Fragment {
+
+    @Inject
+    FetchBestMatchMensaInteractor interactor;
+
+    @Inject
+    CafeteriaLocalRepository localRepository;
+
+    @Inject
+    CafeteriaRemoteRepository remoteRepository;
 
     private CafeteriaViewModel cafeteriaViewModel;
 
@@ -96,19 +104,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        TUMCabeClient client = TUMCabeClient.getInstance(requireContext());
-        CafeteriaRemoteRepository remoteRepository = new CafeteriaRemoteRepository(client);
-
-        TcaDb database = TcaDb.getInstance(requireContext());
-        CafeteriaLocalRepository localRepository = new CafeteriaLocalRepository(database);
-
-        TumLocationManager tumLocationManager = new TumLocationManager(requireContext());
-
-        CafeteriaManager mgr = new CafeteriaManager(requireContext(), tumLocationManager, localRepository);
-        FetchBestMatchMensaInteractor interactor = new FetchBestMatchMensaInteractor(mgr);
-
-        // TODO: Inject these
+        ((BaseActivity) requireActivity()).getAppComponent().inject(this);
         cafeteriaViewModel = new CafeteriaViewModel(interactor, localRepository, remoteRepository);
     }
 
