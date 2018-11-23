@@ -3,6 +3,7 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller
 import android.content.Context
 import android.location.Location
 import de.tum.`in`.tumcampusapp.component.notifications.ProvidesNotifications
+import de.tum.`in`.tumcampusapp.component.other.locations.Locations
 import de.tum.`in`.tumcampusapp.component.other.locations.TumLocationManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaDao
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
@@ -59,7 +60,7 @@ class CafeteriaManager(
         return Utils.getSettingBool(context, "card_cafeteria_phone", true)
     }
 
-    fun getClosestCafeteriaId(location: Location, campus: TumLocationManager.Companion.Campus?): Int {
+    fun getClosestCafeteriaId(location: Location, campus: Locations.Campus?): Int {
         campus?.let {
             return getDefaultCampusCafeteriaId(it)
         }
@@ -74,7 +75,7 @@ class CafeteriaManager(
                 .sorted()
     }
 
-    private fun getDefaultCampusCafeteriaId(campus: TumLocationManager.Companion.Campus): Int {
+    private fun getDefaultCampusCafeteriaId(campus: Locations.Campus): Int {
         val prefs = context.defaultSharedPreferences
         val cafeteria = prefs.getString("card_cafeteria_default_" + campus.short, campus.defaultMensa)
         return cafeteria.toInt()

@@ -5,9 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.utils.ErrorHelper
@@ -23,6 +23,7 @@ import org.joda.time.DateTime
  * ViewModel for cafeterias.
  */
 class CafeteriaViewModel(
+        private val cafeteriaManager: CafeteriaManager,
         private val localRepository: CafeteriaLocalRepository,
         private val remoteRepository: CafeteriaRemoteRepository
 ) : ViewModel() {
@@ -43,6 +44,11 @@ class CafeteriaViewModel(
     val error: LiveData<Boolean> = _error
 
     private val compositeDisposable = CompositeDisposable()
+
+    fun fetchBestMatchMensaId(): Int {
+        // TODO
+        return cafeteriaManager.getBestMatchMensaId()
+    }
 
     fun updateSelectedCafeteria(cafeteria: Cafeteria) {
         _selectedCafeteria.postValue(cafeteria)
@@ -70,22 +76,11 @@ class CafeteriaViewModel(
                 .defaultIfEmpty(emptyList())
     }
 
-    fun getCafeteriaWithMenus(cafeteriaId: Int): CafeteriaWithMenus {
-        return localRepository.getCafeteriaWithMenus(cafeteriaId)
-    }
-
     fun fetchCafeteriaMenus(id: Int, date: DateTime) {
         compositeDisposable += Flowable.fromCallable { localRepository.getCafeteriaMenus(id, date) }
                 .subscribeOn(Schedulers.io())
                 .defaultIfEmpty(emptyList())
                 .subscribe { _cafeteriaMenus.postValue(it) }
-    }
-
-    fun getCafeteriaMenus(id: Int, date: DateTime): Flowable<List<CafeteriaMenu>> {
-        return Flowable
-                .fromCallable { localRepository.getCafeteriaMenus(id, date) }
-                .subscribeOn(Schedulers.io())
-                .defaultIfEmpty(emptyList())
     }
 
     private fun fetchAllMenuDates(): Flowable<List<DateTime>> {
@@ -131,13 +126,14 @@ class CafeteriaViewModel(
     }
 
     class Factory(
+            private val cafeteriaManager: CafeteriaManager,
             private val localRepository: CafeteriaLocalRepository,
             private val remoteRepository: CafeteriaRemoteRepository
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST") // no good way around this
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return CafeteriaViewModel(localRepository, remoteRepository) as T
+            return CafeteriaViewModel(cafeteriaManager, localRepository, remoteRepository) as T
         }
 
     }

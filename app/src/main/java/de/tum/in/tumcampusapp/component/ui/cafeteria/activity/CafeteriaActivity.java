@@ -51,6 +51,8 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
     private CafeteriaViewModel cafeteriaViewModel;
     private List<Cafeteria> mCafeterias = new ArrayList<>();
 
+    private TumLocationManager tumLocationManager;
+
     private ArrayAdapter<Cafeteria> adapter;
     private CafeteriaDetailsSectionsPagerAdapter sectionsPagerAdapter;
     private Spinner spinner;
@@ -66,13 +68,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
         ViewPager viewPager = findViewById(R.id.pager);
         viewPager.setOffscreenPageLimit(50);
 
-        // TODO: In the future, these should be injected
-        TUMCabeClient client = TUMCabeClient.getInstance(this);
-        CafeteriaRemoteRepository remoteRepository = new CafeteriaRemoteRepository(client);
-
-        // TODO: In the future, these should be injected
-        TcaDb db = TcaDb.getInstance(this);
-        CafeteriaLocalRepository localRepository = new CafeteriaLocalRepository(db);
+        tumLocationManager = new TumLocationManager(this);
 
         adapter = createArrayAdapter();
 
@@ -85,7 +81,19 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
         sectionsPagerAdapter = new CafeteriaDetailsSectionsPagerAdapter(getSupportFragmentManager());
 
         // TODO: In the future, these should be injected
-        CafeteriaViewModel.Factory factory = new CafeteriaViewModel.Factory(localRepository, remoteRepository);
+        TUMCabeClient client = TUMCabeClient.getInstance(this);
+        CafeteriaRemoteRepository remoteRepository = new CafeteriaRemoteRepository(client);
+
+        // TODO: In the future, these should be injected
+        TcaDb db = TcaDb.getInstance(this);
+        CafeteriaLocalRepository localRepository = new CafeteriaLocalRepository(db);
+
+        // TODO: In the future, these should be injected
+        TumLocationManager tumLocationManager = new TumLocationManager(this);
+        CafeteriaManager cafeteriaManager = new CafeteriaManager(this, tumLocationManager, localRepository);
+
+        // TODO: In the future, these should be injected
+        CafeteriaViewModel.Factory factory = new CafeteriaViewModel.Factory(cafeteriaManager, localRepository, remoteRepository);
         cafeteriaViewModel = ViewModelProviders.of(this, factory).get(CafeteriaViewModel.class);
 
         cafeteriaViewModel.getCafeterias().observe(this, this::updateCafeteria);
@@ -135,7 +143,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
     @Override
     protected void onStart() {
         super.onStart();
-        Location location = new TumLocationManager(this).getCurrentOrNextLocation();
+        Location location = tumLocationManager.getCurrentOrNextLocation();
         cafeteriaViewModel.fetchCafeterias(location);
     }
 
@@ -146,15 +154,11 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
         if (intent != null && intent.hasExtra(Const.MENSA_FOR_FAVORITEDISH)) {
             cafeteriaId = intent.getIntExtra(Const.MENSA_FOR_FAVORITEDISH, NONE_SELECTED);
             intent.removeExtra(Const.MENSA_FOR_FAVORITEDISH);
-        } else if (intent.getExtras() != null && intent.hasExtra(Const.CAFETERIA_ID)) {
+        } else if (intent != null && intent.hasExtra(Const.CAFETERIA_ID)) {
             cafeteriaId = intent.getIntExtra(Const.CAFETERIA_ID, 0);
         } else {
             // If we're not provided with a cafeteria ID, we choose the best matching cafeteria.
-            // TODO: In ViewModel?
-            TumLocationManager locationManager = new TumLocationManager(this);
-            CafeteriaLocalRepository localRepository = new CafeteriaLocalRepository(TcaDb.getInstance(this));
-            CafeteriaManager cafeteriaManager = new CafeteriaManager(this, locationManager, localRepository);
-            cafeteriaId = cafeteriaManager.getBestMatchMensaId();
+            cafeteriaId = cafeteriaViewModel.fetchBestMatchMensaId();
         }
 
         updateCafeteriaSpinner(cafeteriaId);
