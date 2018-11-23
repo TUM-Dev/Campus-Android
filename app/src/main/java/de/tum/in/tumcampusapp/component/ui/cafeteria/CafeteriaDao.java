@@ -15,6 +15,10 @@ public interface CafeteriaDao {
     @Query("SELECT * FROM cafeteria")
     Flowable<List<Cafeteria>> getAll();
 
+    // TODO
+    @Query("SELECT * FROM cafeteria")
+    List<Cafeteria> getAllNow();
+
     @Nullable
     @Query("SELECT * FROM cafeteria WHERE id = :id")
     Cafeteria getById(int id);

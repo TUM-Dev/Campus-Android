@@ -1,6 +1,5 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository
 
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
@@ -34,6 +33,8 @@ class CafeteriaLocalRepository(private val db: TcaDb) {
     // Canteen methods //
 
     fun getAllCafeterias(): Flowable<List<Cafeteria>> = db.cafeteriaDao().all
+
+    fun getAllCafeteriasNow(): List<Cafeteria> = db.cafeteriaDao().allNow
 
     fun getCafeteria(id: Int): Cafeteria? = db.cafeteriaDao().getById(id)
 

@@ -13,6 +13,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
@@ -27,6 +28,7 @@ import de.tum.in.tumcampusapp.utils.Const;
  */
 public class MensaWidget extends AppWidgetProvider {
 
+    private CafeteriaManager cafeteriaManager;
     private CafeteriaLocalRepository localRepository;
 
     @Override
@@ -34,17 +36,18 @@ public class MensaWidget extends AppWidgetProvider {
         TcaDb tcaDb = TcaDb.getInstance(context);
         localRepository = new CafeteriaLocalRepository(tcaDb);
 
+        LocationManager locationManager = new LocationManager(context);
+        cafeteriaManager = new CafeteriaManager(context, locationManager, localRepository);
+
         for (int appWidgetId : appWidgetIds) {
             RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.mensa_widget);
 
-            // Set the header for the Widget layout
-            CafeteriaManager mensaManager = new CafeteriaManager(context);
-
-            int cafeteriaId = mensaManager.getBestMatchMensaId();
+            int cafeteriaId = cafeteriaManager.getBestMatchMensaId();
             Cafeteria cafeteria = localRepository.getCafeteria(cafeteriaId);
 
             // TODO: Investigate how this can be null
             if (cafeteria != null) {
+                // Set the header for the Widget layout
                 rv.setTextViewText(R.id.mensa_widget_header, cafeteria.getName());
             }
 
@@ -55,7 +58,7 @@ public class MensaWidget extends AppWidgetProvider {
 
             // Set the header on click to open the mensa activity
             Intent mensaIntent = new Intent(context, CafeteriaActivity.class);
-            mensaIntent.putExtra(Const.CAFETERIA_ID, mensaManager.getBestMatchMensaId());
+            mensaIntent.putExtra(Const.CAFETERIA_ID, cafeteriaManager.getBestMatchMensaId());
             PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, mensaIntent, 0);
             rv.setOnClickPendingIntent(R.id.mensa_widget_header_container, pendingIntent);
 

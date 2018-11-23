@@ -9,9 +9,12 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaPrices;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository;
+import de.tum.in.tumcampusapp.database.TcaDb;
 
 public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
 
@@ -26,8 +29,11 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
 
     @Override
     public void onCreate() {
-        CafeteriaManager mensaManager = new CafeteriaManager(mApplicationContext);
-        mMenus = mensaManager.getBestMatchCafeteriaMenus();
+        // TODO: Inject
+        LocationManager locationManager = new LocationManager(mApplicationContext);
+        CafeteriaLocalRepository localRepository = new CafeteriaLocalRepository(TcaDb.getInstance(mApplicationContext));
+        CafeteriaManager cafeteriaManager = new CafeteriaManager(mApplicationContext, locationManager, localRepository);
+        mMenus = cafeteriaManager.getBestMatchCafeteriaMenus();
     }
 
     @Override

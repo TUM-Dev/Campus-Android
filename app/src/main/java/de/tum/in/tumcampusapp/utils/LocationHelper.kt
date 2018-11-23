@@ -5,6 +5,7 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 
 object LocationHelper {
 
+    @JvmStatic
     fun calculateDistanceToCafeteria(cafeteria: Cafeteria, location: Location): Float {
         val results = FloatArray(1)
         Location.distanceBetween(cafeteria.latitude, cafeteria.longitude,

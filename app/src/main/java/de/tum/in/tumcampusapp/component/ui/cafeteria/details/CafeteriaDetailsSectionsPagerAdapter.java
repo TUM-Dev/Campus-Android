@@ -1,13 +1,9 @@
 package de.tum.in.tumcampusapp.component.ui.cafeteria.details;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -15,10 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository;
-import de.tum.in.tumcampusapp.database.TcaDb;
 
 /**
  * A {@link FragmentStatePagerAdapter} that returns a fragment corresponding to one
@@ -26,35 +18,22 @@ import de.tum.in.tumcampusapp.database.TcaDb;
  */
 public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdapter {
 
+    private int cafeteriaId;
+    private List<DateTime> dates;
     private DateTimeFormatter formatter;
-    private int mCafeteriaId;
-
-    private List<DateTime> dates = new ArrayList<>();
 
     public CafeteriaDetailsSectionsPagerAdapter(FragmentManager fm) {
         super(fm);
-        formatter = DateTimeFormat.fullDate();
+        this.formatter = DateTimeFormat.fullDate();
     }
 
-    @SuppressLint("CheckResult")
-    public void setCafeteriaId(Context context, int cafeteriaId) {
-        mCafeteriaId = cafeteriaId;
+    public void setCafeteriaId(int cafeteriaId) {
+        this.cafeteriaId = cafeteriaId;
+    }
 
-        TUMCabeClient client = TUMCabeClient.getInstance(context);
-        CafeteriaRemoteRepository remoteRepository = new CafeteriaRemoteRepository(client);
-
-        TcaDb database = TcaDb.getInstance(context);
-        CafeteriaLocalRepository localRepository = new CafeteriaLocalRepository(database);
-
-        CafeteriaViewModel cafeteriaViewModel = new CafeteriaViewModel(localRepository, remoteRepository);
-
-        // TODO
-        cafeteriaViewModel
-                .getAllMenuDates()
-                .subscribe(dates -> {
-                    this.dates = dates;
-                    this.notifyDataSetChanged();
-                });
+    public void update(List<DateTime> menuDates) {
+        this.dates = menuDates;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -65,7 +44,7 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdap
     @Override
     public Fragment getItem(int position) {
         DateTime dateTime = dates.get(position);
-        return CafeteriaDetailsSectionFragment.newInstance(mCafeteriaId, dateTime);
+        return CafeteriaDetailsSectionFragment.newInstance(cafeteriaId, dateTime);
     }
 
     @Override
@@ -78,4 +57,5 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdap
     public int getItemPosition(@NonNull Object object) {
         return POSITION_NONE;
     }
+
 }

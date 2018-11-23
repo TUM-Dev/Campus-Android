@@ -9,6 +9,7 @@ import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
 import de.tum.`in`.tumcampusapp.component.notifications.model.InstantNotification
 import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
 import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.MenuType
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
@@ -32,7 +33,13 @@ class CafeteriaNotificationProvider(context: Context) : NotificationProvider(con
     }
 
     override fun buildNotification(): AppNotification? {
-        val cafeteriaId = LocationManager(context).getCafeteria()
+        // TODO: Inject
+        val locationManager = LocationManager(context)
+        val cafeteriaManager2 = CafeteriaManager(context)
+
+        val location = locationManager.getCurrentOrNextLocation()
+        val campus = locationManager.getCurrentOrNextCampus()
+        val cafeteriaId = cafeteriaManager2.getClosestCafeteriaId(location, campus)
         if (cafeteriaId == -1) {
             return null
         }

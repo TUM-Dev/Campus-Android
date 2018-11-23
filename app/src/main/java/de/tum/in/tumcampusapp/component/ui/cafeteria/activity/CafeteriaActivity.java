@@ -14,6 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,12 +48,11 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
 
     private static final int NONE_SELECTED = -1;
 
+    private CafeteriaViewModel cafeteriaViewModel;
     private List<Cafeteria> mCafeterias = new ArrayList<>();
 
-    private CafeteriaViewModel cafeteriaViewModel;
-
     private ArrayAdapter<Cafeteria> adapter;
-    private ViewPager viewPager;
+    private CafeteriaDetailsSectionsPagerAdapter sectionsPagerAdapter;
     private Spinner spinner;
 
     public CafeteriaActivity() {
@@ -62,12 +63,14 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        viewPager = findViewById(R.id.pager);
+        ViewPager viewPager = findViewById(R.id.pager);
         viewPager.setOffscreenPageLimit(50);
 
+        // TODO: In the future, these should be injected
         TUMCabeClient client = TUMCabeClient.getInstance(this);
         CafeteriaRemoteRepository remoteRepository = new CafeteriaRemoteRepository(client);
 
+        // TODO: In the future, these should be injected
         TcaDb db = TcaDb.getInstance(this);
         CafeteriaLocalRepository localRepository = new CafeteriaLocalRepository(db);
 
@@ -79,12 +82,15 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
 
         initCafeteriaSpinner();
 
+        sectionsPagerAdapter = new CafeteriaDetailsSectionsPagerAdapter(getSupportFragmentManager());
+
         // TODO: In the future, these should be injected
         CafeteriaViewModel.Factory factory = new CafeteriaViewModel.Factory(localRepository, remoteRepository);
         cafeteriaViewModel = ViewModelProviders.of(this, factory).get(CafeteriaViewModel.class);
 
         cafeteriaViewModel.getCafeterias().observe(this, this::updateCafeteria);
-        cafeteriaViewModel.getSelectedCafeteria().observe(this, this::updateSectionsPagerAdapter);
+        cafeteriaViewModel.getSelectedCafeteria().observe(this, this::onNewCafeteriaSelected);
+        cafeteriaViewModel.getMenuDates().observe(this, this::updateSectionsPagerAdapter);
 
         cafeteriaViewModel.getError().observe(this, value -> {
             if (value) {
@@ -144,10 +150,20 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
             cafeteriaId = intent.getIntExtra(Const.CAFETERIA_ID, 0);
         } else {
             // If we're not provided with a cafeteria ID, we choose the best matching cafeteria.
-            cafeteriaId = new CafeteriaManager(this).getBestMatchMensaId();
+            // TODO: In ViewModel?
+            LocationManager locationManager = new LocationManager(this);
+            CafeteriaLocalRepository localRepository = new CafeteriaLocalRepository(TcaDb.getInstance(this));
+            CafeteriaManager cafeteriaManager = new CafeteriaManager(this, locationManager, localRepository);
+            cafeteriaId = cafeteriaManager.getBestMatchMensaId();
         }
 
         updateCafeteriaSpinner(cafeteriaId);
+    }
+
+    private void onNewCafeteriaSelected(Cafeteria cafeteria) {
+        sectionsPagerAdapter.setCafeteriaId(cafeteria.getId());
+        updateCafeteriaSpinner(cafeteria.getId());
+        cafeteriaViewModel.fetchMenuDates();
     }
 
     private void updateCafeteriaSpinner(int cafeteriaId) {
@@ -178,12 +194,8 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
         cafeteriaViewModel.updateSelectedCafeteria(selected);
     }
 
-    private void updateSectionsPagerAdapter(Cafeteria cafeteria) {
-        CafeteriaDetailsSectionsPagerAdapter sectionsPagerAdapter =
-                new CafeteriaDetailsSectionsPagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(null); // Unset the adapter for updating
-        sectionsPagerAdapter.setCafeteriaId(this, cafeteria.getId());
-        viewPager.setAdapter(sectionsPagerAdapter);
+    private void updateSectionsPagerAdapter(List<DateTime> menuDates) {
+        sectionsPagerAdapter.update(menuDates);
     }
 
     @Override

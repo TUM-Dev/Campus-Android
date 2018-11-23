@@ -13,13 +13,10 @@ import de.tum.`in`.tumcampusapp.component.other.locations.model.BuildingToGps
 import de.tum.`in`.tumcampusapp.component.other.locations.model.Geo
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordinate
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
-import de.tum.`in`.tumcampusapp.utils.LocationHelper.calculateDistanceToCafeteria
 import de.tum.`in`.tumcampusapp.utils.Utils
-import org.jetbrains.anko.defaultSharedPreferences
 import java.io.IOException
 import java.lang.Double.parseDouble
 import java.util.*
@@ -70,22 +67,6 @@ class LocationManager(c: Context) {
     private fun getCurrentCampus(): Campus? {
         val loc = getCurrentLocation() ?: return null
         return getCampusFromLocation(loc)
-    }
-
-    /**
-     * Returns the cafeteria's identifier which is near the given location
-     * The used radius around the cafeteria is 1km.
-     *
-     * @return Campus id
-     */
-    private fun getCafeterias(): List<Cafeteria> {
-        val location = getCurrentOrNextLocation()
-
-        // TODO: Shouldn't there be some elements in this list?
-        val list = LinkedList<Cafeteria>()
-        return list
-                .map { it.copy(distance = calculateDistanceToCafeteria(it, location)) }
-                .sorted()
     }
 
     /**
@@ -146,7 +127,7 @@ class LocationManager(c: Context) {
 
         //Try to find favorite station for current campus
         val station = Utils.getSetting(mContext, "card_stations_default_" + campus.short, "")
-        if ("".equals(station)) {
+        if (station.isEmpty()) {
             Stations.values().associateBy(Stations::station).values.find {
                 it.station.station == station
             }?.let { return it.station }
@@ -160,23 +141,8 @@ class LocationManager(c: Context) {
      * Gets the campus you are currently on or if you are at home or wherever
      * query for your next lecture and find out at which campus it takes place
      */
-    private fun getCurrentOrNextCampus(): Campus? {
+    fun getCurrentOrNextCampus(): Campus? {
         return getCurrentCampus() ?: getNextCampus()
-    }
-
-    /**
-     * If the user is in university or a lecture has been recognized => Get nearest cafeteria
-     */
-    fun getCafeteria(): Int {
-        val campus = getCurrentOrNextCampus()
-        if (campus != null) {
-            val prefs = mContext.defaultSharedPreferences
-            val cafeteria = prefs.getString("card_cafeteria_default_" + campus.short, campus.defaultMensa)
-            return cafeteria.toInt()
-        }
-
-        val allCafeterias = getCafeterias()
-        return if (allCafeterias.isEmpty()) -1 else allCafeterias[0].id
     }
 
     /**
@@ -192,10 +158,7 @@ class LocationManager(c: Context) {
      */
     private fun getNextLocation(): Location {
         val manager = CalendarController(mContext)
-        val geo = manager.nextCalendarItemGeo
-        if (geo == null) {
-            return Campus.GarchingForschungszentrum.getLocation()
-        }
+        val geo = manager.nextCalendarItemGeo ?: return Campus.GarchingForschungszentrum.getLocation()
 
         val location = Location("roomfinder")
         location.latitude = parseDouble(geo.latitude)
@@ -359,7 +322,7 @@ class LocationManager(c: Context) {
     }
 
     companion object {
-        private enum class Campus(val short: String, val lat: Double, val lon: Double, val defaultMensa: String?, val defaultStation: Stations) {
+        enum class Campus(val short: String, val lat: Double, val lon: Double, val defaultMensa: String?, val defaultStation: Stations) {
             GarchingForschungszentrum("G", 48.2648424, 11.6709511, "422", Stations.GarchingForschungszentrum),
             GarchingHochbrueck("H", 48.249432, 11.633905, null, Stations.GarchingHochbrueck),
             Weihenstephan("W", 48.397990, 11.722727, "423", Stations.Weihenstephan),

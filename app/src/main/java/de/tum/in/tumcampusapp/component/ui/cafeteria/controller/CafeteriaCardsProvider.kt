@@ -15,6 +15,9 @@ class CafeteriaCardsProvider(
         private val localRepository: CafeteriaLocalRepository
 ) : ProvidesCard {
 
+    private val locationManager = LocationManager(context)
+    private val cafeteriaManager2 = CafeteriaManager(context)
+
     override fun getCards(cacheControl: CacheControl): List<Card> {
         val results = ArrayList<Card>()
 
@@ -32,7 +35,10 @@ class CafeteriaCardsProvider(
 
     private fun getCafeteriaWithMenus(): CafeteriaWithMenus? {
         // Choose which mensa should be shown
-        val cafeteriaId = LocationManager(context).getCafeteria()
+        //val cafeteriaId = LocationManager(context).getCafeteria()
+        val location = locationManager.getCurrentOrNextLocation()
+        val campus = locationManager.getCurrentOrNextCampus()
+        val cafeteriaId = cafeteriaManager2.getClosestCafeteriaId(location, campus)
         return if (cafeteriaId == -1) {
             null
         } else localRepository.getCafeteriaWithMenus(cafeteriaId)

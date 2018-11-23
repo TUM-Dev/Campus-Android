@@ -10,8 +10,8 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
+import de.tum.`in`.tumcampusapp.utils.ErrorHelper
 import de.tum.`in`.tumcampusapp.utils.LocationHelper
-import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.Flowable
 import io.reactivex.Observable
@@ -36,6 +36,9 @@ class CafeteriaViewModel(
     private val _cafeteriaMenus = MutableLiveData<List<CafeteriaMenu>>()
     val cafeteriaMenus: LiveData<List<CafeteriaMenu>> = _cafeteriaMenus
 
+    private val _menuDates = MutableLiveData<List<DateTime>>()
+    val menuDates: LiveData<List<DateTime>> = _menuDates
+
     private val _error = MutableLiveData<Boolean>()
     val error: LiveData<Boolean> = _error
 
@@ -49,11 +52,12 @@ class CafeteriaViewModel(
         compositeDisposable += getAllCafeterias(location)
                 .doOnError { _error.postValue(true) }
                 .doOnNext { _error.postValue(it.isEmpty()) }
-                .subscribe({
-                    _cafeterias.postValue(it)
-                }, {
-                    t -> Utils.log(t)
-                })
+                .subscribe(_cafeterias::postValue, ErrorHelper::crashOnException)
+    }
+
+    fun fetchMenuDates() {
+        compositeDisposable += fetchAllMenuDates()
+                .subscribe(_menuDates::postValue, ErrorHelper::crashOnException)
     }
 
     /**
@@ -84,7 +88,7 @@ class CafeteriaViewModel(
                 .defaultIfEmpty(emptyList())
     }
 
-    fun getAllMenuDates(): Flowable<List<DateTime>> {
+    private fun fetchAllMenuDates(): Flowable<List<DateTime>> {
         return Flowable
                 .fromCallable { localRepository.getAllMenuDates() }
                 .subscribeOn(Schedulers.io())
@@ -108,11 +112,7 @@ class CafeteriaViewModel(
                 .doAfterNext { localRepository.updateLastSync() }
                 .flatMap { remoteRepository.getAllCafeterias() }
                 .subscribeOn(Schedulers.io())
-                .subscribe({
-                    localRepository.addCafeterias(it)
-                }, {
-                    throwable -> Utils.log(throwable)
-                })
+                .subscribe(localRepository::addCafeterias, ErrorHelper::crashOnException)
     }
 
     /**

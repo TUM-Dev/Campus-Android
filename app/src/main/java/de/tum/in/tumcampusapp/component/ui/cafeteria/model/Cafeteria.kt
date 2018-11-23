@@ -23,7 +23,7 @@ data class Cafeteria(
         var address: String = "",
         var latitude: Double = -1.0,
         var longitude: Double = -1.0,
-        @Ignore val distance: Float = 0f
+        @Ignore var distance: Float = 0f
 ) : Comparable<Cafeteria> {
 
     override fun toString(): String = name
