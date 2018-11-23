@@ -13,11 +13,13 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.locations.TumLocationManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.MensaWidgetService;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -30,14 +32,18 @@ public class MensaWidget extends AppWidgetProvider {
 
     private CafeteriaManager cafeteriaManager;
     private CafeteriaLocalRepository localRepository;
+    private CafeteriaRemoteRepository remoteRepository;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         TcaDb tcaDb = TcaDb.getInstance(context);
         localRepository = new CafeteriaLocalRepository(tcaDb);
 
+        remoteRepository = new CafeteriaRemoteRepository(TUMCabeClient.getInstance(context));
+
+        // TODO
         TumLocationManager locationManager = new TumLocationManager(context);
-        cafeteriaManager = new CafeteriaManager(context, locationManager, localRepository);
+        cafeteriaManager = new CafeteriaManager(context, locationManager, localRepository, remoteRepository);
 
         for (int appWidgetId : appWidgetIds) {
             RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.mensa_widget);

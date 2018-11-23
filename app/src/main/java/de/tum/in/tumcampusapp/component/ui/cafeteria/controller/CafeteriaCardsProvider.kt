@@ -9,14 +9,14 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocal
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.ProvidesCard
 import java.util.*
+import javax.inject.Inject
 
-class CafeteriaCardsProvider(
+class CafeteriaCardsProvider @Inject constructor(
         private val context: Context,
-        private val localRepository: CafeteriaLocalRepository
+        private val cafeteriaManager: CafeteriaManager,
+        private val localRepository: CafeteriaLocalRepository,
+        private val locationManager: TumLocationManager
 ) : ProvidesCard {
-
-    private val locationManager = TumLocationManager(context)
-    private val cafeteriaManager2 = CafeteriaManager(context, locationManager, localRepository)
 
     override fun getCards(cacheControl: CacheControl): List<Card> {
         val results = ArrayList<Card>()
@@ -38,7 +38,7 @@ class CafeteriaCardsProvider(
         //val cafeteriaId = LocationManager(context).getCafeteria()
         val location = locationManager.getCurrentOrNextLocation()
         val campus = locationManager.getCurrentOrNextCampus()
-        val cafeteriaId = cafeteriaManager2.getClosestCafeteriaId(location, campus)
+        val cafeteriaId = cafeteriaManager.getClosestCafeteriaId(location, campus)
         return if (cafeteriaId == -1) {
             null
         } else localRepository.getCafeteriaWithMenus(cafeteriaId)

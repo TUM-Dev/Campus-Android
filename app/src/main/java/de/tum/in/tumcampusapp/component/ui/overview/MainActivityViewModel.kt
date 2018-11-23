@@ -1,14 +1,14 @@
 package de.tum.`in`.tumcampusapp.component.ui.overview
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
+import javax.inject.Inject
 
-class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val cardsRepo = CardsRepository(application.applicationContext)
+class MainActivityViewModel @Inject constructor(
+        private val cardsRepo: CardsRepository
+) : ViewModel() {
 
     val cards: LiveData<List<Card>>
         get() = cardsRepo.getCards()

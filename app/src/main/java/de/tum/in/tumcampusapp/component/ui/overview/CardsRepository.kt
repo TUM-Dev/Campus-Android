@@ -9,7 +9,6 @@ import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeeManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaCardsProvider
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomController
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.EduroamCard
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.EduroamFixCard
@@ -20,11 +19,14 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.ProvidesCard
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
-import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Utils
 import org.jetbrains.anko.doAsync
+import javax.inject.Inject
 
-class CardsRepository(private val context: Context) {
+class CardsRepository @Inject constructor(
+        private val context: Context,
+        private val cafeteriaCardsProvider: CafeteriaCardsProvider
+) {
 
     private var cards = MutableLiveData<List<Card>>()
 
@@ -64,8 +66,6 @@ class CardsRepository(private val context: Context) {
             add(EduroamFixCard(context).getIfShowOnStart())
         }
 
-        val localRepository = CafeteriaLocalRepository(TcaDb.getInstance(context))
-
         val providers = ArrayList<ProvidesCard>().apply {
             if (AccessTokenManager.hasValidAccessToken(context)) {
                 add(CalendarController(context))
@@ -73,14 +73,14 @@ class CardsRepository(private val context: Context) {
                 add(ChatRoomController(context))
             }
 
-            add(CafeteriaCardsProvider(context, localRepository))
+            add(cafeteriaCardsProvider)
             add(TransportController(context))
             add(NewsController(context))
             add(EventsController(context))
         }
 
         providers.forEach { provider ->
-            // Don't prevent a single card exception to block other cards from being displayed.
+            // Don't prevent a single card exception from blocking other cards from being displayed
             try {
                 val cards = provider.getCards(cacheControl)
                 results.addAll(cards)

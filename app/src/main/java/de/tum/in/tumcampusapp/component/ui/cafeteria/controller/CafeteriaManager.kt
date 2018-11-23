@@ -10,19 +10,36 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
+import de.tum.`in`.tumcampusapp.utils.ErrorHelper
 import de.tum.`in`.tumcampusapp.utils.LocationHelper.calculateDistanceToCafeteria
 import de.tum.`in`.tumcampusapp.utils.Utils
+import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.defaultSharedPreferences
+import javax.inject.Inject
 
-class CafeteriaManager(
+class CafeteriaManager @Inject constructor(
         private val context: Context,
         private val locationManager: TumLocationManager,
-        private val localRepository: CafeteriaLocalRepository
+        private val localRepository: CafeteriaLocalRepository,
+        private val remoteRepository: CafeteriaRemoteRepository
 ) : ProvidesNotifications {
 
     private val cafeteriaDao: CafeteriaDao by lazy {
         TcaDb.getInstance(context).cafeteriaDao()
+    }
+
+    fun fetchCafeteriasFromService(force: Boolean): Disposable {
+        return Observable
+                .fromCallable { localRepository.getLastSync() == null || force }
+                .doOnNext { localRepository.clear() }
+                .doAfterNext { localRepository.updateLastSync() }
+                .flatMap { remoteRepository.getAllCafeterias() }
+                .subscribeOn(Schedulers.io())
+                .subscribe(localRepository::addCafeterias, ErrorHelper::crashOnException)
     }
 
     fun getBestMatchCafeteriaMenus(): List<CafeteriaMenu> {

@@ -10,11 +10,7 @@ import de.tum.`in`.tumcampusapp.utils.Const
 
 class NotificationReceiver : BroadcastReceiver() {
 
-    override fun onReceive(context: Context?, intent: Intent?) {
-        if (context == null || intent == null) {
-            return
-        }
-
+    override fun onReceive(context: Context, intent: Intent) {
         val notificationId = intent.getIntExtra(Const.KEY_NOTIFICATION_ID, 0)
         val notification = intent.getParcelableExtra<Notification>(Const.KEY_NOTIFICATION) ?: return
 

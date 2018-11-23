@@ -14,7 +14,6 @@ import de.tum.`in`.tumcampusapp.utils.ErrorHelper
 import de.tum.`in`.tumcampusapp.utils.LocationHelper
 import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.Flowable
-import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
@@ -90,26 +89,6 @@ class CafeteriaViewModel @Inject constructor(
                 .fromCallable { localRepository.getAllMenuDates() }
                 .subscribeOn(Schedulers.io())
                 .defaultIfEmpty(emptyList())
-    }
-
-
-    /**
-     * Downloads cafeterias and stores them in the local repository.
-     *
-     * First checks whether a sync is necessary
-     * Then clears current cache
-     * Insert new cafeterias
-     * Lastly updates last sync
-     *
-     */
-    fun getCafeteriasFromService(force: Boolean) {
-        compositeDisposable += Observable
-                .fromCallable { localRepository.getLastSync() == null || force }
-                .doOnNext { localRepository.clear() }
-                .doAfterNext { localRepository.updateLastSync() }
-                .flatMap { remoteRepository.getAllCafeterias() }
-                .subscribeOn(Schedulers.io())
-                .subscribe(localRepository::addCafeterias, ErrorHelper::crashOnException)
     }
 
     /**

@@ -104,7 +104,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((BaseActivity) requireActivity()).getAppComponent().inject(this);
+        ((BaseActivity) requireActivity()).getInjector().inject(this);
         cafeteriaViewModel = new CafeteriaViewModel(interactor, localRepository, remoteRepository);
     }
 

@@ -56,15 +56,6 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
     @Inject
     TumLocationManager tumLocationManager;
 
-    /*@Inject
-    FetchBestMatchMensaInteractor bestMatchMensaInteractor;*/
-
-    /*@Inject
-    CafeteriaLocalRepository localRepository;*/
-
-    /*@Inject
-    CafeteriaRemoteRepository remoteRepository;*/
-
     private ArrayAdapter<Cafeteria> adapter;
     private CafeteriaDetailsSectionsPagerAdapter sectionsPagerAdapter;
     private Spinner spinner;
@@ -76,9 +67,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // TODO: Inject
-        getAppComponent().inject(this);
+        getInjector().inject(this);
 
         ViewPager viewPager = findViewById(R.id.pager);
         viewPager.setOffscreenPageLimit(50);
@@ -95,11 +84,6 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
 
         ViewModelFactory<CafeteriaViewModel> factory = new ViewModelFactory<>(provider);
         cafeteriaViewModel = ViewModelProviders.of(this, factory).get(CafeteriaViewModel.class);
-
-        // TODO: In the future, these should be injected
-        /*CafeteriaViewModel.Factory factory = new CafeteriaViewModel.Factory(
-                bestMatchMensaInteractor, localRepository, remoteRepository);
-        cafeteriaViewModel = ViewModelProviders.of(this, factory).get(CafeteriaViewModel.class);*/
 
         cafeteriaViewModel.getCafeterias().observe(this, this::updateCafeteria);
         cafeteriaViewModel.getSelectedCafeteria().observe(this, this::onNewCafeteriaSelected);

@@ -45,15 +45,15 @@ class LocationProvider(context: Context) {
 
     companion object {
 
-        private lateinit var locationProvider: LocationProvider
+        private var INSTANCE: LocationProvider? = null
 
         @JvmStatic
         fun getInstance(context: Context): LocationProvider {
-            if (this::locationProvider.isInitialized.not()) {
-                locationProvider = LocationProvider(context)
+            if (INSTANCE == null) {
+                INSTANCE = LocationProvider(context)
             }
 
-            return locationProvider
+            return INSTANCE!!
         }
 
     }

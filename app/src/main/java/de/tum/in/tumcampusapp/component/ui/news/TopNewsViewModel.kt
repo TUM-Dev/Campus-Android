@@ -8,11 +8,12 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 /**
  * ViewModel for TopNews/NewsAlert.
  */
-class TopNewsViewModel(
+class TopNewsViewModel @Inject constructor(
         private val remoteRepository: TopNewsRemoteRepository,
         private val compositeDisposable: CompositeDisposable
 ) : ViewModel() {

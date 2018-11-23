@@ -66,8 +66,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
 
     private static final int REQUEST_SYNC = 0;
     private static final int REQUEST_DELETE = 1;
-    private static final String[] PERMISSIONS_CALENDAR = {Manifest.permission.READ_CALENDAR,
-                                                          Manifest.permission.WRITE_CALENDAR};
+    private static final String[] PERMISSIONS_CALENDAR = {
+            Manifest.permission.READ_CALENDAR,
+            Manifest.permission.WRITE_CALENDAR
+    };
 
     private CalendarController calendarController;
     private boolean isPaused;
@@ -77,6 +79,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
      */
     private boolean isFetched;
     private boolean mWeekMode;
+
     private DateTime mShowDate;
     private MenuItem menuItemSwitchView;
     private MenuItem menuItemFilterCanceled;

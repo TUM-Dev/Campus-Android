@@ -10,11 +10,12 @@ import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 /**
  * ViewModel for kinos.
  */
-class KinoViewModel(
+class KinoViewModel @Inject constructor(
         private val localRepository: KinoLocalRepository,
         private val remoteRepository: KinoRemoteRepository,
         private val compositeDisposable: CompositeDisposable
