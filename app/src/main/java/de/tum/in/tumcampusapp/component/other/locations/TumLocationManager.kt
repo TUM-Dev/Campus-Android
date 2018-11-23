@@ -24,14 +24,11 @@ import java.lang.Double.parseDouble
  * Location manager, manages intelligent location services, provides methods to easily access
  * the users current location, campus, next public transfer station and best cafeteria
  */
-class TumLocationManager(c: Context) {
+class TumLocationManager(context: Context) {
 
-    private val context: Context = c.applicationContext
-    private val buildingToGpsDao: BuildingToGpsDao
-
-    init {
-        val db = TcaDb.getInstance(c)
-        buildingToGpsDao = db.buildingToGpsDao()
+    private val context = context.applicationContext
+    private val buildingToGpsDao: BuildingToGpsDao by lazy {
+        TcaDb.getInstance(context).buildingToGpsDao()
     }
 
     /**
@@ -45,15 +42,15 @@ class TumLocationManager(c: Context) {
         }
 
         val loc = LocationProvider.getInstance(context).getLastLocation()
-        if (loc != null) {
-            return loc
+        loc?.let {
+            return it
         }
 
         val selectedCampus = Utils.getSetting(context, Const.DEFAULT_CAMPUS, "G")
-        val allCampi = Locations.Campus.values().associateBy(Locations.Campus::short)
+        val allCampuses = Locations.Campus.values().associateBy(Locations.Campus::short)
 
-        if ("X" != selectedCampus && allCampi.containsKey(selectedCampus)) {
-            return allCampi[selectedCampus]!!.getLocation()
+        if ("X" != selectedCampus && allCampuses.containsKey(selectedCampus)) {
+            return allCampuses.getValue(selectedCampus).getLocation()
         }
         return null
     }
@@ -87,11 +84,13 @@ class TumLocationManager(c: Context) {
         val campus = getCurrentCampus() ?: return null
 
         // Try to find favorite station for current campus
-        val station = Utils.getSetting(context, "card_stations_default_" + campus.short, "")
-        if (station.isEmpty()) {
-            Locations.Stations.values().associateBy(Locations.Stations::station).values.find {
-                it.station.station == station
-            }?.let { return it.station }
+        val favoriteStation = Utils.getSetting(context, "card_stations_default_" + campus.short, "")
+        if (favoriteStation.isNotEmpty()) {
+            val stations = Locations.Stations.values().associateBy(Locations.Stations::station).values
+            val candidate = stations.find { it.station.station == favoriteStation }
+            candidate?.let {
+                return it.station
+            }
         }
 
         // Otherwise fallback to the default
