@@ -19,12 +19,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
+import de.tum.`in`.tumcampusapp.App
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.component.other.generic.drawer.DrawerMenuHelper
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavStartActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainActivity
+import de.tum.`in`.tumcampusapp.di.AppComponent
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.closeDrawers
@@ -35,6 +37,10 @@ import java.util.*
  */
 abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity(),
         SharedPreferences.OnSharedPreferenceChangeListener {
+
+    protected val appComponent: AppComponent by lazy {
+        (applicationContext as App).appComponent
+    }
 
     private val toolbar: Toolbar by lazy { findViewById<Toolbar>(R.id.main_toolbar) }
 

@@ -9,17 +9,30 @@ import com.squareup.picasso.Picasso;
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import de.tum.in.tumcampusapp.component.notifications.NotificationUtils;
+import de.tum.in.tumcampusapp.di.AppComponent;
+import de.tum.in.tumcampusapp.di.AppModule;
+import de.tum.in.tumcampusapp.di.DaggerAppComponent;
 
 public class App extends Application {
+
+    private AppComponent appComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
+        appComponent = DaggerAppComponent.builder()
+                .appModule(new AppModule(this))
+                .build();
+
         setupPicasso();
         NotificationUtils.setupNotificationChannels(this);
         JodaTimeAndroid.init(this);
         setupStrictMode();
+    }
+
+    public AppComponent getAppComponent() {
+        return appComponent;
     }
 
     protected void setupPicasso() {

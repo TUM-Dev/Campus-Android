@@ -35,7 +35,7 @@ class CafeteriaNotificationProvider(context: Context) : NotificationProvider(con
     override fun buildNotification(): AppNotification? {
         // TODO: Inject
         val locationManager = TumLocationManager(context)
-        val cafeteriaManager2 = CafeteriaManager(context)
+        val cafeteriaManager2 = CafeteriaManager(context, locationManager, CafeteriaLocalRepository(TcaDb.getInstance(context)))
 
         val location = locationManager.getCurrentOrNextLocation()
         val campus = locationManager.getCurrentOrNextCampus()

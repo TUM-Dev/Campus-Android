@@ -9,8 +9,11 @@ import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.app.model.UploadStatus
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
+import de.tum.`in`.tumcampusapp.component.other.locations.TumLocationManager
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.interactors.FetchBestMatchMensaInteractor
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
@@ -57,7 +60,11 @@ class DownloadService : JobIntentService() {
 
         val remoteRepository = CafeteriaRemoteRepository(tumCabeClient)
         val localRepository = CafeteriaLocalRepository(database)
-        cafeteriaViewModel = CafeteriaViewModel(localRepository, remoteRepository)
+
+        val locationManager = TumLocationManager(this)
+        val cafeteriaManager = CafeteriaManager(this, locationManager, localRepository)
+        val interactor = FetchBestMatchMensaInteractor(cafeteriaManager)
+        cafeteriaViewModel = CafeteriaViewModel(interactor, localRepository, remoteRepository)
 
         // Init sync table
         KinoLocalRepository.db = database

@@ -1,0 +1,72 @@
+package de.tum.`in`.tumcampusapp.di
+
+import android.content.Context
+import dagger.Module
+import dagger.Provides
+import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
+import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
+import de.tum.`in`.tumcampusapp.component.other.locations.TumLocationManager
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.interactors.FetchBestMatchMensaInteractor
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
+import de.tum.`in`.tumcampusapp.database.TcaDb
+import javax.inject.Singleton
+
+@Module
+class AppModule(private val context: Context) {
+
+    @Singleton
+    @Provides
+    fun provideDatabase(): TcaDb {
+        return TcaDb.getInstance(context)
+    }
+
+    @Singleton
+    @Provides
+    fun providesTumCabeClient(): TUMCabeClient {
+        return TUMCabeClient.getInstance(context)
+    }
+
+    @Singleton
+    @Provides
+    fun providesTumOnlineClient(): TUMOnlineClient {
+        return TUMOnlineClient.getInstance(context)
+    }
+
+    @Singleton
+    @Provides
+    fun providesCafeteriaLocalRepository(db: TcaDb): CafeteriaLocalRepository {
+        return CafeteriaLocalRepository(db)
+    }
+
+    @Singleton
+    @Provides
+    fun providesCafeteriaRemoteRepository(client: TUMCabeClient): CafeteriaRemoteRepository {
+        return CafeteriaRemoteRepository(client)
+    }
+
+    @Singleton
+    @Provides
+    fun provideTumLocationManager(): TumLocationManager {
+        return TumLocationManager(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideCafeteriaManager(
+            tumLocationManager: TumLocationManager,
+            localRepository: CafeteriaLocalRepository
+    ): CafeteriaManager {
+        return CafeteriaManager(context, tumLocationManager, localRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideFetchBestMatchMensaInteractor(
+            cafeteriaManager: CafeteriaManager
+    ): FetchBestMatchMensaInteractor {
+        return FetchBestMatchMensaInteractor(cafeteriaManager)
+    }
+
+}

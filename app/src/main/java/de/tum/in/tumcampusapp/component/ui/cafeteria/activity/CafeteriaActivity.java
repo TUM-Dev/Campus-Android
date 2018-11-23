@@ -19,22 +19,21 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.component.other.locations.TumLocationManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuInflater;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.interactors.FetchBestMatchMensaInteractor;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository;
-import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import de.tum.in.tumcampusapp.utils.ui.Dialogs;
@@ -52,7 +51,17 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
     private CafeteriaViewModel cafeteriaViewModel;
     private List<Cafeteria> mCafeterias = new ArrayList<>();
 
-    private TumLocationManager tumLocationManager;
+    @Inject
+    TumLocationManager tumLocationManager;
+
+    @Inject
+    FetchBestMatchMensaInteractor bestMatchMensaInteractor;
+
+    @Inject
+    CafeteriaLocalRepository localRepository;
+
+    @Inject
+    CafeteriaRemoteRepository remoteRepository;
 
     private ArrayAdapter<Cafeteria> adapter;
     private CafeteriaDetailsSectionsPagerAdapter sectionsPagerAdapter;
@@ -66,10 +75,11 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // TODO: Inject
+        getAppComponent().inject(this);
+
         ViewPager viewPager = findViewById(R.id.pager);
         viewPager.setOffscreenPageLimit(50);
-
-        tumLocationManager = new TumLocationManager(this);
 
         adapter = createArrayAdapter();
 
@@ -82,20 +92,8 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
         sectionsPagerAdapter = new CafeteriaDetailsSectionsPagerAdapter(getSupportFragmentManager());
 
         // TODO: In the future, these should be injected
-        TUMCabeClient client = TUMCabeClient.getInstance(this);
-        CafeteriaRemoteRepository remoteRepository = new CafeteriaRemoteRepository(client);
-
-        // TODO: In the future, these should be injected
-        TcaDb db = TcaDb.getInstance(this);
-        CafeteriaLocalRepository localRepository = new CafeteriaLocalRepository(db);
-
-        // TODO: In the future, these should be injected
-        TumLocationManager tumLocationManager = new TumLocationManager(this);
-        CafeteriaManager cafeteriaManager = new CafeteriaManager(this, tumLocationManager, localRepository);
-        FetchBestMatchMensaInteractor interactor = new FetchBestMatchMensaInteractor(cafeteriaManager);
-
-        // TODO: In the future, these should be injected
-        CafeteriaViewModel.Factory factory = new CafeteriaViewModel.Factory(interactor, localRepository, remoteRepository);
+        CafeteriaViewModel.Factory factory = new CafeteriaViewModel.Factory(
+                bestMatchMensaInteractor, localRepository, remoteRepository);
         cafeteriaViewModel = ViewModelProviders.of(this, factory).get(CafeteriaViewModel.class);
 
         cafeteriaViewModel.getCafeterias().observe(this, this::updateCafeteria);

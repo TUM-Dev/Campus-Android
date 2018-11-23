@@ -19,8 +19,11 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.component.other.locations.TumLocationManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuCard;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuInflater;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.interactors.FetchBestMatchMensaInteractor;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository;
@@ -100,8 +103,13 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         TcaDb database = TcaDb.getInstance(requireContext());
         CafeteriaLocalRepository localRepository = new CafeteriaLocalRepository(database);
 
+        TumLocationManager tumLocationManager = new TumLocationManager(requireContext());
+
+        CafeteriaManager mgr = new CafeteriaManager(requireContext(), tumLocationManager, localRepository);
+        FetchBestMatchMensaInteractor interactor = new FetchBestMatchMensaInteractor(mgr);
+
         // TODO: Inject these
-        cafeteriaViewModel = new CafeteriaViewModel(localRepository, remoteRepository);
+        cafeteriaViewModel = new CafeteriaViewModel(interactor, localRepository, remoteRepository);
     }
 
     @Override
