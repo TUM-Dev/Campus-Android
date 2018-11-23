@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import de.tum.in.tumcampusapp.R;
@@ -34,10 +36,14 @@ import retrofit2.Response;
  * Allows user to search for other users which he or she can then add to the ChatRoom
  */
 public class AddChatMemberActivity extends BaseActivity {
+
     private static final int THRESHOLD = 3; // min number of characters before getting suggestions
     private static final int DELAY = 1000; // millis after user stopped typing before getting suggestions
+
+    @Inject
+    TUMCabeClient tumCabeClient;
+
     private ChatRoom room;
-    private TUMCabeClient tumCabeClient;
     private Pattern tumIdPattern;
     private AutoCompleteTextView searchView;
 
@@ -54,6 +60,8 @@ public class AddChatMemberActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getInjector().inject(this);
+
         suggestions = new ArrayList<>();
         delayHandler = new Handler();
         tumIdPattern = Pattern.compile(Const.TUM_ID_PATTERN);
@@ -61,8 +69,6 @@ public class AddChatMemberActivity extends BaseActivity {
         room = new ChatRoom(getIntent().getStringExtra(Const.CHAT_ROOM_NAME));
         room.setId(getIntent().getIntExtra(Const.CURRENT_CHAT_ROOM, -1));
         Utils.log("ChatRoom: " + room.getTitle() + " (roomId: " + room.getId() + ")");
-
-        tumCabeClient = TUMCabeClient.getInstance(this);
 
         searchView = findViewById(R.id.chat_user_search);
         searchView.setThreshold(THRESHOLD);
@@ -211,27 +217,26 @@ public class AddChatMemberActivity extends BaseActivity {
             return;
         }
 
-        TUMCabeClient.getInstance(this)
-                .addUserToChat(room, member, verification, new Callback<ChatRoom>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ChatRoom> call,
-                                           @NonNull Response<ChatRoom> response) {
-                        ChatRoom room = response.body();
-                        if (room != null) {
-                            TcaDb.getInstance(getBaseContext())
-                                    .chatRoomDao()
-                                    .updateMemberCount(room.getMembers(), room.getId());
-                            Utils.showToast(getBaseContext(), R.string.chat_member_added);
-                        } else {
-                            Utils.showToast(getBaseContext(), R.string.error_something_wrong);
-                        }
-                    }
+        tumCabeClient.addUserToChat(room, member, verification, new Callback<ChatRoom>() {
+            @Override
+            public void onResponse(@NonNull Call<ChatRoom> call,
+                                   @NonNull Response<ChatRoom> response) {
+                ChatRoom room = response.body();
+                if (room != null) {
+                    TcaDb.getInstance(getBaseContext())
+                            .chatRoomDao()
+                            .updateMemberCount(room.getMembers(), room.getId());
+                    Utils.showToast(getBaseContext(), R.string.chat_member_added);
+                } else {
+                    Utils.showToast(getBaseContext(), R.string.error_something_wrong);
+                }
+            }
 
-                    @Override
-                    public void onFailure(@NonNull Call<ChatRoom> call, @NonNull Throwable t) {
-                        Utils.showToast(getBaseContext(), R.string.error);
-                    }
-                });
+            @Override
+            public void onFailure(@NonNull Call<ChatRoom> call, @NonNull Throwable t) {
+                Utils.showToast(getBaseContext(), R.string.error);
+            }
+        });
     }
 
 }

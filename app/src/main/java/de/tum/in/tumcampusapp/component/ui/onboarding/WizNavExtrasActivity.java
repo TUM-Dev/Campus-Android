@@ -5,12 +5,13 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.CheckBox;
 
 import java.io.IOException;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
@@ -30,10 +31,12 @@ import de.tum.in.tumcampusapp.utils.Utils;
 
 public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, ChatMember> {
 
-    private SharedPreferences preferences;
     private CheckBox checkSilentMode;
     private CheckBox bugReport;
     private CheckBox groupChatMode;
+
+    @Inject
+    SharedPreferences sharedPrefs;
 
     public WizNavExtrasActivity() {
         super(R.layout.activity_wiznav_extras);
@@ -42,19 +45,19 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+        getInjector().inject(this);
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 
         // set up bug report option
         bugReport = findViewById(R.id.chk_bug_reports);
-        bugReport.setChecked(preferences.getBoolean(Const.BUG_REPORTS, true));
+        bugReport.setChecked(sharedPrefs.getBoolean(Const.BUG_REPORTS, true));
 
         // Only make silent service selectable if access token exists
         // Otherwise the app cannot load lectures so silence service makes no sense
         checkSilentMode = findViewById(R.id.chk_silent_mode);
         if (AccessTokenManager.hasValidAccessToken(this)) {
-            checkSilentMode.setChecked(preferences.getBoolean(Const.SILENCE_SERVICE, false));
+            checkSilentMode.setChecked(sharedPrefs.getBoolean(Const.SILENCE_SERVICE, false));
             checkSilentMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (checkSilentMode.isChecked() &&
                     !SilenceService.hasPermissions(WizNavExtrasActivity.this)) {
@@ -70,7 +73,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         // set up groupChat option
         groupChatMode = findViewById(R.id.chk_group_chat);
         if (AccessTokenManager.hasValidAccessToken(this)) {
-            groupChatMode.setChecked(preferences.getBoolean(Const.GROUP_CHAT_ENABLED, true));
+            groupChatMode.setChecked(sharedPrefs.getBoolean(Const.GROUP_CHAT_ENABLED, true));
         } else {
             groupChatMode.setChecked(false);
             groupChatMode.setEnabled(false);
@@ -157,7 +160,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         }
 
         // Gets the editor for editing preferences and updates the preference values with the chosen state
-        Editor editor = preferences.edit();
+        Editor editor = sharedPrefs.edit();
         editor.putBoolean(Const.SILENCE_SERVICE, checkSilentMode.isChecked());
         editor.putBoolean(Const.BACKGROUND_MODE, true); // Enable by default
         editor.putBoolean(Const.BUG_REPORTS, bugReport.isChecked());

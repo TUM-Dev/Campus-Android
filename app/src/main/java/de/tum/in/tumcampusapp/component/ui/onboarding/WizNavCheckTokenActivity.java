@@ -3,14 +3,15 @@ package de.tum.in.tumcampusapp.component.ui.onboarding;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
 import android.view.View;
 import android.widget.Toast;
 
 import java.net.UnknownHostException;
 
+import javax.inject.Inject;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.api.tumonline.exception.InactiveTokenException;
@@ -25,6 +26,9 @@ import retrofit2.Response;
 
 public class WizNavCheckTokenActivity extends ProgressActivity<Void> {
 
+    @Inject
+    TUMOnlineClient tumOnlineClient;
+
     private Toast mToast;
 
     private Call<IdentitySet> mIdentityCall;
@@ -36,6 +40,7 @@ public class WizNavCheckTokenActivity extends ProgressActivity<Void> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getInjector().inject(this);
         disableRefresh();
     }
 
@@ -58,7 +63,7 @@ public class WizNavCheckTokenActivity extends ProgressActivity<Void> {
         mToast = Toast.makeText(this, R.string.checking_if_token_enabled, Toast.LENGTH_LONG);
         mToast.show();
 
-        mIdentityCall = TUMOnlineClient.getInstance(this).getIdentity();
+        mIdentityCall = tumOnlineClient.getIdentity();
         mIdentityCall.enqueue(new Callback<IdentitySet>() {
             @Override
             public void onResponse(@NonNull Call<IdentitySet> call,

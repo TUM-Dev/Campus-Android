@@ -9,7 +9,6 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.interactors.FetchBestMatc
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.utils.ErrorHelper
 import de.tum.`in`.tumcampusapp.utils.LocationHelper
 import de.tum.`in`.tumcampusapp.utils.plusAssign
@@ -24,8 +23,7 @@ import javax.inject.Inject
  */
 class CafeteriaViewModel @Inject constructor(
         private val bestMatchMensaInteractor: FetchBestMatchMensaInteractor,
-        private val localRepository: CafeteriaLocalRepository,
-        private val remoteRepository: CafeteriaRemoteRepository
+        private val localRepository: CafeteriaLocalRepository
 ) : ViewModel() {
 
     private val _cafeterias = MutableLiveData<List<Cafeteria>>()
@@ -108,13 +106,12 @@ class CafeteriaViewModel @Inject constructor(
 
     class Factory(
             private val bestMatchMensaInteractor: FetchBestMatchMensaInteractor,
-            private val localRepository: CafeteriaLocalRepository,
-            private val remoteRepository: CafeteriaRemoteRepository
+            private val localRepository: CafeteriaLocalRepository
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST") // no good way around this
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return CafeteriaViewModel(bestMatchMensaInteractor, localRepository, remoteRepository) as T
+            return CafeteriaViewModel(bestMatchMensaInteractor, localRepository) as T
         }
 
     }

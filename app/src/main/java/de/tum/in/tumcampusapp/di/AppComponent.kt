@@ -3,14 +3,19 @@ package de.tum.`in`.tumcampusapp.di
 import dagger.Component
 import de.tum.`in`.tumcampusapp.component.notifications.receivers.NotificationAlarmReceiver
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarActivity
+import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackActivity
 import de.tum.`in`.tumcampusapp.component.ui.barrierfree.BarrierFreeContactActivity
 import de.tum.`in`.tumcampusapp.component.ui.barrierfree.BarrierFreeFacilitiesActivity
 import de.tum.`in`.tumcampusapp.component.ui.barrierfree.BarrierFreeMoreInfoActivity
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionFragment
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.widget.MensaRemoteViewFactory
+import de.tum.`in`.tumcampusapp.component.ui.chat.AddChatMemberActivity
 import de.tum.`in`.tumcampusapp.component.ui.news.KinoDetailsFragment
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsActivity
+import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavCheckTokenActivity
+import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavExtrasActivity
+import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavStartActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.BuyTicketActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity
@@ -29,7 +34,17 @@ interface AppComponent {
 
     fun inject(newsActivity: NewsActivity)
 
+    fun inject(feedbackActivity: FeedbackActivity)
+
+    fun inject(wizNavStartActivity: WizNavStartActivity)
+
+    fun inject(wizNavCheckTokenActivity: WizNavCheckTokenActivity)
+
+    fun inject(wizNavExtrasActivity: WizNavExtrasActivity)
+
     fun inject(kinoDetailsFragment: KinoDetailsFragment)
+
+    fun inject(addChatMemberActivity: AddChatMemberActivity)
 
     fun inject(barrierFreeFacilitiesActivity: BarrierFreeFacilitiesActivity)
 

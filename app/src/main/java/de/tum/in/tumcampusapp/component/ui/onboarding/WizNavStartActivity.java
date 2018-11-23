@@ -5,18 +5,21 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.button.MaterialButton;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.google.android.material.button.MaterialButton;
+
 import java.util.Locale;
 
+import javax.inject.Inject;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
 import de.tum.in.tumcampusapp.api.app.exception.NoPublicKey;
@@ -47,6 +50,9 @@ public class WizNavStartActivity extends ProgressActivity<Void> implements TextW
 
     private Call<AccessToken> mTokenRequestCall;
 
+    @Inject
+    TUMOnlineClient tumOnlineClient;
+
     public WizNavStartActivity() {
         super(R.layout.activity_wiznav_start);
     }
@@ -54,6 +60,7 @@ public class WizNavStartActivity extends ProgressActivity<Void> implements TextW
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getInjector().inject(this);
 
         disableRefresh();
         findViewById(R.id.wizard_start_layout).requestFocus();
@@ -136,7 +143,7 @@ public class WizNavStartActivity extends ProgressActivity<Void> implements TextW
         showLoadingStart();
         String tokenName = "TUMCampusApp-" + Build.PRODUCT;
 
-        mTokenRequestCall = TUMOnlineClient.getInstance(this).requestToken(publicKey, tokenName);
+        mTokenRequestCall = tumOnlineClient.requestToken(publicKey, tokenName);
         mTokenRequestCall.enqueue(new Callback<AccessToken>() {
             @Override
             public void onResponse(@NonNull Call<AccessToken> call,

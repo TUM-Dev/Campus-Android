@@ -23,6 +23,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import javax.inject.Inject;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
@@ -73,6 +75,9 @@ public class FeedbackActivity extends BaseActivity {
     private Dialog progress;
     private Dialog errorDialog;
 
+    @Inject
+    TUMCabeClient tumCabeClient;
+
     public FeedbackActivity() {
         super(R.layout.activity_feedback);
     }
@@ -80,6 +85,7 @@ public class FeedbackActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getInjector().inject(this);
 
         feedbackTopic = GENERAL_FEEDBACK; // General feedback by default
 
@@ -249,10 +255,9 @@ public class FeedbackActivity extends BaseActivity {
         }
 
         showProgressBarDialog();
-        TUMCabeClient client = TUMCabeClient.getInstance(this);
 
         String[] paths = picturePaths.toArray(new String[0]);
-        client.sendFeedback(createFeedback(), paths, new Callback<Success>() {
+        tumCabeClient.sendFeedback(createFeedback(), paths, new Callback<Success>() {
             @Override
             public void onResponse(@NonNull Call<Success> call,
                                    @NonNull Response<Success> response) {

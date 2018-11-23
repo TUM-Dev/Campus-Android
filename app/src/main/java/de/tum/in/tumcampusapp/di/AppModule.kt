@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import dagger.Module
 import dagger.Provides
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
@@ -19,6 +20,7 @@ import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportNotificationProvider
 import de.tum.`in`.tumcampusapp.database.TcaDb
+import org.jetbrains.anko.defaultSharedPreferences
 import javax.inject.Singleton
 
 @Module
@@ -28,6 +30,12 @@ class AppModule(private val context: Context) {
     @Provides
     fun provideContext(): Context {
         return context
+    }
+
+    @Singleton
+    @Provides
+    fun provideSharedPreferences(): SharedPreferences {
+        return context.defaultSharedPreferences
     }
 
     @Singleton

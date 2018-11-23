@@ -14,11 +14,13 @@ import org.joda.time.format.DateTimeFormat;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuCard;
@@ -27,6 +29,7 @@ import de.tum.in.tumcampusapp.component.ui.cafeteria.interactors.FetchBestMatchM
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository;
+import de.tum.in.tumcampusapp.di.ViewModelFactory;
 import de.tum.in.tumcampusapp.utils.Const;
 
 /**
@@ -42,6 +45,9 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 
     @Inject
     CafeteriaRemoteRepository remoteRepository;
+
+    @Inject
+    Provider<CafeteriaViewModel> viewModelProvider;
 
     private CafeteriaViewModel cafeteriaViewModel;
 
@@ -105,7 +111,9 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((BaseActivity) requireActivity()).getInjector().inject(this);
-        cafeteriaViewModel = new CafeteriaViewModel(interactor, localRepository, remoteRepository);
+
+        ViewModelFactory<CafeteriaViewModel> factory = new ViewModelFactory<>(viewModelProvider);
+        cafeteriaViewModel = ViewModelProviders.of(this, factory).get(CafeteriaViewModel.class);
     }
 
     @Override
