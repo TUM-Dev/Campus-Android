@@ -5,8 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -20,6 +18,10 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+import javax.inject.Inject;
+
+import androidx.annotation.NonNull;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
@@ -44,7 +46,11 @@ public class ShowTicketActivity extends BaseActivity {
     private TextView priceTextView;
     private TextView redemptionStateTextView;
 
-    private EventsController eventsController;
+    @Inject
+    EventsController eventsController;
+
+    @Inject
+    TUMCabeClient tumCabeClient;
 
     private Ticket ticket;
     private Event event;
@@ -58,6 +64,7 @@ public class ShowTicketActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().getDecorView().setBackgroundColor(Color.WHITE);
+        getInjector().inject(this);
 
         initViews();
         loadTicketData();
@@ -86,26 +93,24 @@ public class ShowTicketActivity extends BaseActivity {
 
     private void loadRedemptionStatus() {
         try {
-            TUMCabeClient.getInstance(this)
-                    .fetchTicket(this, ticket.getId())
-                    .enqueue(new Callback<Ticket>() {
-                        @Override
-                        public void onResponse(@NonNull Call<Ticket> call,
-                                               @NonNull Response<Ticket> response) {
-                            Ticket ticket = response.body();
-                            if (response.isSuccessful() && ticket != null) {
-                                handleTicketRefreshSuccess(ticket);
-                            } else {
-                                handleTicketRefreshFailure();
-                            }
-                        }
+            tumCabeClient.fetchTicket(this, ticket.getId()).enqueue(new Callback<Ticket>() {
+                @Override
+                public void onResponse(@NonNull Call<Ticket> call,
+                                       @NonNull Response<Ticket> response) {
+                    Ticket ticket = response.body();
+                    if (response.isSuccessful() && ticket != null) {
+                        handleTicketRefreshSuccess(ticket);
+                    } else {
+                        handleTicketRefreshFailure();
+                    }
+                }
 
-                        @Override
-                        public void onFailure(@NonNull Call<Ticket> call, @NonNull Throwable t) {
-                            Utils.log(t);
-                            handleTicketRefreshFailure();
-                        }
-                    });
+                @Override
+                public void onFailure(@NonNull Call<Ticket> call, @NonNull Throwable t) {
+                    Utils.log(t);
+                    handleTicketRefreshFailure();
+                }
+            });
         } catch (NoPrivateKey e) {
             Utils.log(e);
         }
@@ -125,7 +130,6 @@ public class ShowTicketActivity extends BaseActivity {
     }
 
     private void loadTicketData() {
-        eventsController = new EventsController(this);
         int eventId = getIntent().getIntExtra(Const.KEY_EVENT_ID, 0);
 
         ticket = eventsController.getTicketByEventId(eventId);

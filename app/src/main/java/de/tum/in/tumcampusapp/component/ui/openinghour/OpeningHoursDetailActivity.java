@@ -29,16 +29,12 @@ public class OpeningHoursDetailActivity extends BaseActivity {
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putInt(OpeningHoursDetailFragment.ARG_ITEM_ID,
-                             getIntent().getIntExtra(OpeningHoursDetailFragment.ARG_ITEM_ID, 0));
-            arguments.putString(OpeningHoursDetailFragment.ARG_ITEM_CONTENT,
-                                getIntent().getStringExtra(OpeningHoursDetailFragment.ARG_ITEM_CONTENT));
+            int itemId = getIntent().getIntExtra(OpeningHoursDetailFragment.ARG_ITEM_ID, 0);
+            String content = getIntent().getStringExtra(OpeningHoursDetailFragment.ARG_ITEM_CONTENT);
+            boolean isTwoPane = getIntent().getBooleanExtra(OpeningHoursDetailFragment.TWO_PANE, false);
 
-            arguments.putBoolean(OpeningHoursDetailFragment.TWO_PANE,
-                                 getIntent().getBooleanExtra(OpeningHoursDetailFragment.TWO_PANE, false));
-            OpeningHoursDetailFragment fragment = new OpeningHoursDetailFragment();
-            fragment.setArguments(arguments);
+            OpeningHoursDetailFragment fragment =
+                    OpeningHoursDetailFragment.newInstance(itemId, content, isTwoPane);
             getSupportFragmentManager().beginTransaction()
                                        .add(R.id.item_detail_container, fragment)
                                        .commit();

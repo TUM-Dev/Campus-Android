@@ -14,6 +14,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import de.tum.in.tumcampusapp.R;
@@ -37,7 +39,6 @@ import retrofit2.Response;
  */
 public class BuyTicketActivity extends BaseActivity {
 
-    private EventsController eventsController;
     private int eventId;
 
     private Spinner ticketTypeSpinner;
@@ -46,6 +47,12 @@ public class BuyTicketActivity extends BaseActivity {
 
     private List<TicketType> ticketTypes;
 
+    @Inject
+    TUMCabeClient tumCabeClient;
+
+    @Inject
+    EventsController eventsController;
+
     public BuyTicketActivity() {
         super(R.layout.activity_buy_ticket);
     }
@@ -53,30 +60,28 @@ public class BuyTicketActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getInjector().inject(this);
 
-        eventsController = new EventsController(this);
         eventId = getIntent().getIntExtra(Const.KEY_EVENT_ID, 0);
 
         // Get ticket type information from API
-        TUMCabeClient
-                .getInstance(this)
-                .fetchTicketTypes(eventId, new Callback<List<TicketType>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<List<TicketType>> call,
-                                           @NonNull Response<List<TicketType>> response) {
-                        List<TicketType> results = response.body();
-                        if (results != null) {
-                            handleTicketTypesDownloadSuccess(results);
-                        }
-                    }
+        tumCabeClient.fetchTicketTypes(eventId, new Callback<List<TicketType>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<TicketType>> call,
+                                   @NonNull Response<List<TicketType>> response) {
+                List<TicketType> results = response.body();
+                if (results != null) {
+                    handleTicketTypesDownloadSuccess(results);
+                }
+            }
 
-                    @Override
-                    public void onFailure(@NonNull Call<List<TicketType>> call, @NonNull Throwable t) {
-                        Utils.log(t);
-                        Utils.showToast(BuyTicketActivity.this, R.string.error_something_wrong);
-                        finish();
-                    }
-                });
+            @Override
+            public void onFailure(@NonNull Call<List<TicketType>> call, @NonNull Throwable t) {
+                Utils.log(t);
+                Utils.showToast(BuyTicketActivity.this, R.string.error_something_wrong);
+                finish();
+            }
+        });
     }
 
     private void handleTicketTypesDownloadSuccess(@NonNull List<TicketType> ticketTypes) {
@@ -173,36 +178,34 @@ public class BuyTicketActivity extends BaseActivity {
             return;
         }
 
-        TUMCabeClient
-                .getInstance(this)
-                .reserveTicket(verification, new Callback<TicketReservationResponse>() {
-                    @Override
-                    public void onResponse(@NonNull Call<TicketReservationResponse> call,
-                                           @NonNull Response<TicketReservationResponse> response) {
-                        // ResponseBody can be null if the user has already bought a ticket
-                        // but has not fetched it from the server yet
-                        TicketReservationResponse reservationResponse = response.body();
-                        if (response.isSuccessful()
-                                && reservationResponse != null
-                                && reservationResponse.getError() == null) {
-                            handleTicketReservationSuccess(ticketType, reservationResponse);
-                        } else {
-                            if (reservationResponse == null || !response.isSuccessful()) {
-                                handleTicketNotFetched();
-                            } else {
-                                handleTicketReservationFailure(R.string.event_imminent_error);
-                                finish();
-                            }
-                        }
+        tumCabeClient.reserveTicket(verification, new Callback<TicketReservationResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<TicketReservationResponse> call,
+                                   @NonNull Response<TicketReservationResponse> response) {
+                // ResponseBody can be null if the user has already bought a ticket
+                // but has not fetched it from the server yet
+                TicketReservationResponse reservationResponse = response.body();
+                if (response.isSuccessful()
+                        && reservationResponse != null
+                        && reservationResponse.getError() == null) {
+                    handleTicketReservationSuccess(ticketType, reservationResponse);
+                } else {
+                    if (reservationResponse == null || !response.isSuccessful()) {
+                        handleTicketNotFetched();
+                    } else {
+                        handleTicketReservationFailure(R.string.event_imminent_error);
+                        finish();
                     }
+                }
+            }
 
-                    @Override
-                    public void onFailure(@NonNull Call<TicketReservationResponse> call,
-                                          @NonNull Throwable t) {
-                        Utils.log(t);
-                        handleTicketReservationFailure(R.string.error_something_wrong);
-                    }
-                });
+            @Override
+            public void onFailure(@NonNull Call<TicketReservationResponse> call,
+                                  @NonNull Throwable t) {
+                Utils.log(t);
+                handleTicketReservationFailure(R.string.error_something_wrong);
+            }
+        });
     }
 
     private void handleTicketReservationSuccess(TicketType ticketType,

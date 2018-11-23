@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsViewModel
@@ -23,11 +24,14 @@ import kotlinx.android.synthetic.main.fragment_events.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
 class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var eventType: EventType
-    private lateinit var eventsController: EventsController
+
+    @Inject
+    lateinit var eventsController: EventsController
 
     private val eventsCallback = object : Callback<List<Event>> {
         override fun onResponse(call: Call<List<Event>>, response: Response<List<Event>>) {
@@ -65,36 +69,36 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireActivity() as BaseActivity).injector.inject(this)
+    }
+
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_events, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(view) {
+        eventsRecyclerView.setHasFixedSize(true)
+        eventsRecyclerView.layoutManager = LinearLayoutManager(context)
+        eventsRecyclerView.itemAnimator = DefaultItemAnimator()
+        eventsRecyclerView.adapter = EventsAdapter(context)
 
-        with(view) {
-            eventsRecyclerView.setHasFixedSize(true)
-            eventsRecyclerView.layoutManager = LinearLayoutManager(context)
-            eventsRecyclerView.itemAnimator = DefaultItemAnimator()
-            eventsRecyclerView.adapter = EventsAdapter(context)
+        val spacing = Math.round(resources.getDimension(R.dimen.material_card_view_padding))
+        eventsRecyclerView.addItemDecoration(EqualSpacingItemDecoration(spacing))
 
-            val spacing = Math.round(resources.getDimension(R.dimen.material_card_view_padding))
-            eventsRecyclerView.addItemDecoration(EqualSpacingItemDecoration(spacing))
-
-            eventsRefreshLayout.setOnRefreshListener(this@EventsFragment)
-            eventsRefreshLayout.setColorSchemeResources(
-                    R.color.color_primary,
-                    R.color.tum_A100,
-                    R.color.tum_A200
-            )
-        }
+        eventsRefreshLayout.setOnRefreshListener(this@EventsFragment)
+        eventsRefreshLayout.setColorSchemeResources(
+                R.color.color_primary,
+                R.color.tum_A100,
+                R.color.tum_A200
+        )
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         eventType = arguments?.getSerializable(KEY_EVENT_TYPE) as EventType
-        eventsController = EventsController(context)
 
         val factory = EventsViewModel.Factory(eventsController, eventType)
         val viewModel = ViewModelProviders.of(this, factory).get(EventsViewModel::class.java)

@@ -72,19 +72,6 @@ class DownloadService : JobIntentService() {
 
         // SyncManager(this) // Starts a new sync in constructor; should be moved to explicit method call
 
-        //tumCabeClient = TUMCabeClient.getInstance(this)
-        //database = TcaDb.getInstance(this)
-
-        /*val remoteRepository = CafeteriaRemoteRepository(tumCabeClient)
-        val localRepository = CafeteriaLocalRepository(database)*/
-
-/*
-        val locationManager = TumLocationManager(this)
-        val cafeteriaManager = CafeteriaManager(this, locationManager, localRepository)
-        val interactor = FetchBestMatchMensaInteractor(cafeteriaManager)
-        cafeteriaViewModel = CafeteriaViewModel(interactor, localRepository, remoteRepository)
-*/
-
         // Init sync table
         KinoLocalRepository.db = database
         KinoRemoteRepository.tumCabeClient = tumCabeClient

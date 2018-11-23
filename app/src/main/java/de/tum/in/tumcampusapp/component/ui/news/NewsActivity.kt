@@ -13,18 +13,26 @@ import de.tum.`in`.tumcampusapp.component.other.generic.adapter.EqualSpacingItem
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
+import javax.inject.Inject
 
 /**
  * Activity to show News (message, image, date)
  */
-class NewsActivity : ActivityForDownloadingExternal(Const.NEWS, R.layout.activity_news), DialogInterface.OnMultiChoiceClickListener {
+class NewsActivity : ActivityForDownloadingExternal(
+        Const.NEWS,
+        R.layout.activity_news
+), DialogInterface.OnMultiChoiceClickListener {
 
-    private val recyclerView by lazy { findViewById(R.id.activity_news_list_view) as RecyclerView }
+    private val recyclerView by lazy { findViewById<RecyclerView>(R.id.activity_news_list_view) }
     private var state = -1
-    private val newsController: NewsController by lazy { NewsController(this) }
+
+    @Inject
+    lateinit var newsController: NewsController
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        injector.inject(this)
+
         requestDownload(false)
         showLoadingEnded()
         initRecyclerView()

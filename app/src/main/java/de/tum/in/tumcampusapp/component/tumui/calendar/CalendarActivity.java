@@ -35,6 +35,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
@@ -71,7 +73,12 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
             Manifest.permission.WRITE_CALENDAR
     };
 
-    private CalendarController calendarController;
+    @Inject
+    CalendarController calendarController;
+
+    @Inject
+    TcaDb database;
+
     private boolean isPaused;
 
     /**
@@ -98,6 +105,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getInjector().inject(this);
 
         mWeekView = findViewById(R.id.weekView);
         calendarController = new CalendarController(this);
@@ -500,13 +508,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
 
     @Override
     public void onEventDeleted(@NotNull String eventId) {
-        TcaDb db = TcaDb.getInstance(this);
-        db.calendarDao()
-          .delete(eventId);
+        database.calendarDao().delete(eventId);
 
         int id = Integer.parseInt(eventId);
-        db.scheduledNotificationsDao()
-          .delete(NotificationType.CALENDAR.getId(), id);
+        database.scheduledNotificationsDao().delete(NotificationType.CALENDAR.getId(), id);
 
         refreshWeekView();
         Utils.showToast(this, R.string.delete_event_confirmation);

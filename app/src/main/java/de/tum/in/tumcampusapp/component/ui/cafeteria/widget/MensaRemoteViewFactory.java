@@ -8,21 +8,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
+import de.tum.in.tumcampusapp.App;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.component.other.locations.TumLocationManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaPrices;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository;
-import de.tum.in.tumcampusapp.database.TcaDb;
 
 public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
 
     private static final Pattern COMPILE = Pattern.compile("\\([^\\)]+\\)");
 
     private final Context mApplicationContext;
+
+    @Inject
+    CafeteriaManager cafeteriaManager;
+
     private List<CafeteriaMenu> mMenus = new ArrayList<>();
 
     public MensaRemoteViewFactory(Context context) {
@@ -31,11 +33,7 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
 
     @Override
     public void onCreate() {
-        // TODO: Inject
-        TumLocationManager locationManager = new TumLocationManager(mApplicationContext);
-        CafeteriaLocalRepository localRepository = new CafeteriaLocalRepository(TcaDb.getInstance(mApplicationContext));
-        CafeteriaRemoteRepository remoteRepository = new CafeteriaRemoteRepository(TUMCabeClient.getInstance(mApplicationContext));
-        CafeteriaManager cafeteriaManager = new CafeteriaManager(mApplicationContext, locationManager, localRepository, remoteRepository);
+        ((App) mApplicationContext).getAppComponent().inject(this);
         mMenus = cafeteriaManager.getBestMatchCafeteriaMenus();
     }
 

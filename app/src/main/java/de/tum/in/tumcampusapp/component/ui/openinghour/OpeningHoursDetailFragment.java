@@ -1,20 +1,21 @@
 package de.tum.in.tumcampusapp.component.ui.openinghour;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.button.MaterialButton;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.material.button.MaterialButton;
+
 import java.util.List;
 import java.util.regex.Pattern;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaLocationDao;
@@ -29,20 +30,26 @@ import de.tum.in.tumcampusapp.database.TcaDb;
  * NEEDS: ARG_ITEM_ID and ARG_ITEM_CONTENT set in arguments
  */
 public class OpeningHoursDetailFragment extends Fragment {
-    public static final String ARG_ITEM_ID = "item_id";
-    public static final String ARG_ITEM_CONTENT = "item_content";
-    public static final String TWO_PANE = "two_pane";
+
+    static final String ARG_ITEM_ID = "item_id";
+    static final String ARG_ITEM_CONTENT = "item_content";
+    static final String TWO_PANE = "two_pane";
     private static final Pattern COMPILE = Pattern.compile("\\\\n");
 
     private int mItemId;
     private String mItemContent;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public OpeningHoursDetailFragment() {
-        // NOP
+    public static OpeningHoursDetailFragment newInstance(int itemId,
+                                                         String content, boolean isTwoPane) {
+        OpeningHoursDetailFragment fragment = new OpeningHoursDetailFragment();
+
+        Bundle arguments = new Bundle();
+        arguments.putInt(OpeningHoursDetailFragment.ARG_ITEM_ID, itemId);
+        arguments.putString(OpeningHoursDetailFragment.ARG_ITEM_CONTENT, content);
+        arguments.putBoolean(OpeningHoursDetailFragment.TWO_PANE, isTwoPane);
+        fragment.setArguments(arguments);
+
+        return fragment;
     }
 
     @Override

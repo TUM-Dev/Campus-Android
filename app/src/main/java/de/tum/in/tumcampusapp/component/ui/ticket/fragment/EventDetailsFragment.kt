@@ -14,6 +14,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.squareup.picasso.Picasso
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
+import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CreateEventActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventHelper
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
@@ -31,6 +32,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
+import javax.inject.Inject
 
 /**
  * Fragment for displaying information about an [Event]. Manages content that's shown in the
@@ -39,12 +41,20 @@ import java.util.*
 class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private var event: Event? = null
-    private lateinit var eventsController: EventsController
+
+    @Inject
+    lateinit var eventsController: EventsController
+
+    @Inject
+    lateinit var tumCabeClient: TUMCabeClient
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireActivity() as BaseActivity).injector.inject(this)
+    }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-
-        eventsController = EventsController(context)
 
         arguments?.let { args ->
             event = args.getParcelable(Const.KEY_EVENT)
@@ -130,31 +140,29 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun loadAvailableTicketCount(event: Event) {
-        TUMCabeClient
-                .getInstance(context)
-                .fetchTicketStats(event.id, object : Callback<List<TicketStatus>> {
-                    override fun onResponse(call: Call<List<TicketStatus>>,
-                                            response: Response<List<TicketStatus>>) {
-                        val statuses = response.body() ?: return
-                        val sum = statuses.sumBy { it.availableTicketCount }
+        tumCabeClient.fetchTicketStats(event.id, object : Callback<List<TicketStatus>> {
+            override fun onResponse(call: Call<List<TicketStatus>>,
+                                    response: Response<List<TicketStatus>>) {
+                val statuses = response.body() ?: return
+                val sum = statuses.sumBy { it.availableTicketCount }
 
-                        val text = String.format(Locale.getDefault(), "%d", sum)
+                val text = String.format(Locale.getDefault(), "%d", sum)
 
-                        if (isDetached.not()) {
-                            remainingTicketsTextView.text = text
-                            swipeRefreshLayout.isRefreshing = false
-                        }
-                    }
+                if (isDetached.not()) {
+                    remainingTicketsTextView.text = text
+                    swipeRefreshLayout.isRefreshing = false
+                }
+            }
 
-                    override fun onFailure(call: Call<List<TicketStatus>>, t: Throwable) {
-                        Utils.log(t)
+            override fun onFailure(call: Call<List<TicketStatus>>, t: Throwable) {
+                Utils.log(t)
 
-                        if (isDetached.not()) {
-                            remainingTicketsTextView.setText(R.string.unknown)
-                            swipeRefreshLayout.isRefreshing = false
-                        }
-                    }
-                })
+                if (isDetached.not()) {
+                    remainingTicketsTextView.setText(R.string.unknown)
+                    swipeRefreshLayout.isRefreshing = false
+                }
+            }
+        })
     }
 
     private fun showTicket(event: Event) {

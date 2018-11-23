@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForLoadingInBackground;
@@ -15,7 +17,10 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 public class BarrierFreeContactActivity extends ActivityForLoadingInBackground<Void, List<BarrierfreeContact>> {
 
-    public StickyListHeadersListView listview;
+    public StickyListHeadersListView listView;
+
+    @Inject
+    TUMCabeClient tumCabeClient;
 
     public BarrierFreeContactActivity() {
         super(R.layout.activity_barrier_free_list_info);
@@ -24,7 +29,9 @@ public class BarrierFreeContactActivity extends ActivityForLoadingInBackground<V
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        listview = findViewById(R.id.activity_barrier_info_list_view);
+        getInjector().inject(this);
+
+        listView = findViewById(R.id.activity_barrier_info_list_view);
         startLoading();
     }
 
@@ -33,8 +40,7 @@ public class BarrierFreeContactActivity extends ActivityForLoadingInBackground<V
         showLoadingStart();
         List<BarrierfreeContact> result = new ArrayList<>();
         try {
-            result = TUMCabeClient.getInstance(this)
-                                  .getBarrierfreeContactList();
+            result = tumCabeClient.getBarrierfreeContactList();
         } catch (IOException e) {
             Utils.log(e);
             return result;
@@ -51,6 +57,6 @@ public class BarrierFreeContactActivity extends ActivityForLoadingInBackground<V
         }
 
         BarrierfreeContactAdapter adapter = new BarrierfreeContactAdapter(this, result);
-        listview.setAdapter(adapter);
+        listView.setAdapter(adapter);
     }
 }

@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForLoadingInBackground;
@@ -25,6 +27,9 @@ public class BarrierFreeMoreInfoActivity
     public List<BarrierfreeMoreInfo> infos;
     public BarrierfreeMoreInfoAdapter adapter;
 
+    @Inject
+    TUMCabeClient tumCabeClient;
+
     public BarrierFreeMoreInfoActivity() {
         super(R.layout.activity_barrier_free_list_info);
     }
@@ -32,8 +37,9 @@ public class BarrierFreeMoreInfoActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        listview = findViewById(R.id.activity_barrier_info_list_view);
+        getInjector().inject(this);
 
+        listview = findViewById(R.id.activity_barrier_info_list_view);
         startLoading();
     }
 
@@ -56,8 +62,7 @@ public class BarrierFreeMoreInfoActivity
         showLoadingStart();
         List<BarrierfreeMoreInfo> result = new ArrayList<>();
         try {
-            result = TUMCabeClient.getInstance(this)
-                                  .getMoreInfoList();
+            result = tumCabeClient.getMoreInfoList();
         } catch (IOException e) {
             Utils.log(e);
             return result;

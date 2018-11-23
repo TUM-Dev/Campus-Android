@@ -15,21 +15,21 @@ import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import kotlinx.android.synthetic.main.activity_barrier_free_facilities.*
 import retrofit2.Call
+import javax.inject.Inject
 
 class BarrierFreeFacilitiesActivity : ActivityForAccessingTumCabe<List<RoomFinderRoom>>(
         R.layout.activity_barrier_free_facilities
 ), AdapterView.OnItemSelectedListener {
 
-    private val recents: RecentsDao by lazy {
-        TcaDb.getInstance(this).recentsDao()
-    }
+    @Inject
+    lateinit var locationManager: TumLocationManager
 
-    private val locationManager: TumLocationManager by lazy {
-        TumLocationManager(this)
-    }
+    @Inject
+    lateinit var database: TcaDb
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        injector.inject(this)
         spinnerToolbar.onItemSelectedListener = this
     }
 
@@ -52,7 +52,7 @@ class BarrierFreeFacilitiesActivity : ActivityForAccessingTumCabe<List<RoomFinde
         barrierFreeFacilitiesListView.adapter = RoomFinderListAdapter(this, response)
         barrierFreeFacilitiesListView.setOnItemClickListener { _, _, index, _ ->
             val facility = response[index]
-            recents.insert(Recent(facility.toString(), RecentsDao.ROOMS))
+            database.recentsDao().insert(Recent(facility.toString(), RecentsDao.ROOMS))
             openRoomFinderDetails(facility)
         }
     }

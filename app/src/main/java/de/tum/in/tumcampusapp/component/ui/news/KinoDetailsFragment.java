@@ -22,12 +22,15 @@ import com.squareup.picasso.Target;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoRemoteRepository;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventHelper;
@@ -53,10 +56,15 @@ public class KinoDetailsFragment extends Fragment {
 
     private View rootView;
     private Event event;
-    private EventsController eventsController;
 
     private KinoViewModel kinoViewModel;
     private final CompositeDisposable disposables = new CompositeDisposable();
+
+    @Inject
+    EventsController eventsController;
+
+    @Inject
+    TUMCabeClient tumCabeClient;
 
     public static KinoDetailsFragment newInstance(int position) {
         KinoDetailsFragment fragment = new KinoDetailsFragment();
@@ -64,6 +72,12 @@ public class KinoDetailsFragment extends Fragment {
         args.putInt(Const.POSITION, position);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((BaseActivity) requireActivity()).getInjector().inject(this);
     }
 
     @Override
@@ -102,7 +116,6 @@ public class KinoDetailsFragment extends Fragment {
 
     private void showEventTicketDetails(Event event) {
         this.event = event;
-        this.eventsController = new EventsController(getContext());
         initBuyOrShowTicket(event);
 
         rootView.findViewById(R.id.eventInformation).setVisibility(View.VISIBLE);
@@ -133,36 +146,35 @@ public class KinoDetailsFragment extends Fragment {
     }
 
     private void loadAvailableTicketCount(Event event) {
-        TUMCabeClient.getInstance(getContext())
-                .fetchTicketStats(event.getId(), new Callback<List<TicketStatus>>() {
-                    @Override
-                    public void onResponse(Call<List<TicketStatus>> call, Response<List<TicketStatus>> response) {
-                        List<TicketStatus> statusList = response.body();
-                        if (statusList == null) {
-                            if (!isDetached()) {
-                                ((TextView) rootView.findViewById(R.id.remainingTicketsTextView))
-                                        .setText(R.string.unknown);
-                            }
-                        }
-                        int sum = 0;
-                        for (TicketStatus status : statusList) {
-                            sum += status.getAvailableTicketCount();
-                        }
-                        String text = String.format(Locale.getDefault(), "%d", sum);
-                        if (!isDetached()) {
-                            ((TextView) rootView.findViewById(R.id.remainingTicketsTextView))
-                                    .setText(text);
-                        }
+        tumCabeClient.fetchTicketStats(event.getId(), new Callback<List<TicketStatus>>() {
+            @Override
+            public void onResponse(Call<List<TicketStatus>> call, Response<List<TicketStatus>> response) {
+                List<TicketStatus> statusList = response.body();
+                if (statusList == null) {
+                    if (!isDetached()) {
+                        ((TextView) rootView.findViewById(R.id.remainingTicketsTextView))
+                                .setText(R.string.unknown);
                     }
+                }
+                int sum = 0;
+                for (TicketStatus status : statusList) {
+                    sum += status.getAvailableTicketCount();
+                }
+                String text = String.format(Locale.getDefault(), "%d", sum);
+                if (!isDetached()) {
+                    ((TextView) rootView.findViewById(R.id.remainingTicketsTextView))
+                            .setText(text);
+                }
+            }
 
-                    @Override
-                    public void onFailure(Call<List<TicketStatus>> call, Throwable t) {
-                        if (!isDetached()) {
-                            ((TextView) rootView.findViewById(R.id.remainingTicketsTextView))
-                                    .setText(R.string.unknown);
-                        }
-                    }
-                });
+            @Override
+            public void onFailure(Call<List<TicketStatus>> call, Throwable t) {
+                if (!isDetached()) {
+                    ((TextView) rootView.findViewById(R.id.remainingTicketsTextView))
+                            .setText(R.string.unknown);
+                }
+            }
+        });
     }
 
     private void showMovieDetails(Kino kino) {

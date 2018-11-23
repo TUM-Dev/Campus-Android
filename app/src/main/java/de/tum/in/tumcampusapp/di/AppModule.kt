@@ -6,6 +6,7 @@ import dagger.Provides
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.component.other.locations.TumLocationManager
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeesNotificationProvider
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaNotificationProvider
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaCardsProvider
@@ -91,6 +92,12 @@ class AppModule(private val context: Context) {
     @Provides
     fun providesEventsController(): EventsController {
         return EventsController(context)
+    }
+
+    @Singleton
+    @Provides
+    fun providesCalendarController(): CalendarController {
+        return CalendarController(context)
     }
 
     @Singleton
