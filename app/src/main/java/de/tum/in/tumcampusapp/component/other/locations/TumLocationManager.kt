@@ -1,10 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.other.locations
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
 import android.location.Location
-import androidx.core.content.ContextCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
@@ -15,10 +12,13 @@ import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoord
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.LocationHelper
+import de.tum.`in`.tumcampusapp.utils.LocationHelper.calculateDistanceToBuilding
+import de.tum.`in`.tumcampusapp.utils.LocationHelper.calculateDistanceToCampus
 import de.tum.`in`.tumcampusapp.utils.Utils
+import de.tum.`in`.tumcampusapp.utils.tryOrNull
 import java.io.IOException
 import java.lang.Double.parseDouble
-import java.util.*
 
 /**
  * Location manager, manages intelligent location services, provides methods to easily access
@@ -28,10 +28,6 @@ class TumLocationManager(c: Context) {
 
     private val context: Context = c.applicationContext
     private val buildingToGpsDao: BuildingToGpsDao
-
-    private val locationProvider: LocationProvider by lazy {
-        LocationProvider(context)
-    }
 
     init {
         val db = TcaDb.getInstance(c)
@@ -54,7 +50,7 @@ class TumLocationManager(c: Context) {
         }
 
         val selectedCampus = Utils.getSetting(context, Const.DEFAULT_CAMPUS, "G")
-        val allCampi = Campus.values().associateBy(Campus::short)
+        val allCampi = Locations.Campus.values().associateBy(Locations.Campus::short)
 
         if ("X" != selectedCampus && allCampi.containsKey(selectedCampus)) {
             return allCampi[selectedCampus]!!.getLocation()
@@ -65,9 +61,9 @@ class TumLocationManager(c: Context) {
     /**
      * Returns the "id" of the current campus
      *
-     * @return Campus id
+     * @return Locations.Campus id
      */
-    private fun getCurrentCampus(): Campus? {
+    private fun getCurrentCampus(): Locations.Campus? {
         val loc = getCurrentLocation() ?: return null
         return getCampusFromLocation(loc)
     }
@@ -90,15 +86,15 @@ class TumLocationManager(c: Context) {
     fun getStation(): StationResult? {
         val campus = getCurrentCampus() ?: return null
 
-        //Try to find favorite station for current campus
+        // Try to find favorite station for current campus
         val station = Utils.getSetting(context, "card_stations_default_" + campus.short, "")
         if (station.isEmpty()) {
-            Stations.values().associateBy(Stations::station).values.find {
+            Locations.Stations.values().associateBy(Locations.Stations::station).values.find {
                 it.station.station == station
             }?.let { return it.station }
         }
 
-        //Otherwise fallback to the default
+        // Otherwise fallback to the default
         return campus.defaultStation.station
     }
 
@@ -106,14 +102,14 @@ class TumLocationManager(c: Context) {
      * Gets the campus you are currently on or if you are at home or wherever
      * query for your next lecture and find out at which campus it takes place
      */
-    fun getCurrentOrNextCampus(): Campus? {
+    fun getCurrentOrNextCampus(): Locations.Campus? {
         return getCurrentCampus() ?: getNextCampus()
     }
 
     /**
      * Queries your calender and gets the campus at which your next lecture takes place
      */
-    private fun getNextCampus(): Campus? = getCampusFromLocation(getNextLocation())
+    private fun getNextCampus(): Locations.Campus? = getCampusFromLocation(getNextLocation())
 
     /**
      * Gets the location of the next room where the user has a lecture.
@@ -123,7 +119,7 @@ class TumLocationManager(c: Context) {
      */
     private fun getNextLocation(): Location {
         val manager = CalendarController(context)
-        val geo = manager.nextCalendarItemGeo ?: return Campus.GarchingForschungszentrum.getLocation()
+        val geo = manager.nextCalendarItemGeo ?: return Locations.Campus.GarchingForschungszentrum.getLocation()
 
         val location = Location("roomfinder")
         location.latitude = parseDouble(geo.latitude)
@@ -131,31 +127,19 @@ class TumLocationManager(c: Context) {
         return location
     }
 
-    /**
-     * This method tries to get the list of BuildingToGps by querying database or requesting the server.
-     * If both two ways fail, it returns Optional.absent().
-     * we have to fetch buildings to gps mapping first.
-     * @return The list of BuildingToGps
-     */
-    private val orFetchBuildingsToGps: List<BuildingToGps>
-        get() {
-            var result: List<BuildingToGps>? = buildingToGpsDao.getAll()
-            if (result!!.isEmpty()) {
-                try {
-                    result = TUMCabeClient.getInstance(context).building2Gps
-                    if (result == null) {
-                        return emptyList()
-                    }
-                    for (map in result) {
-                        buildingToGpsDao.insert(map)
-                    }
-                } catch (e: IOException) {
-                    Utils.log(e)
-                    return ArrayList()
-                }
-            }
-            return result
+    private fun loadBuildingToGpsList(): List<BuildingToGps> {
+        val results = buildingToGpsDao.getAll()
+        if (results.isNotEmpty()) {
+            return results
         }
+
+        val apiResults = tryOrNull { TUMCabeClient.getInstance(context).building2Gps } ?: emptyList()
+        apiResults.forEach {
+            buildingToGpsDao.insert(it)
+        }
+
+        return apiResults
+    }
 
     /**
      * Get Building ID accroding to the current location
@@ -164,23 +148,6 @@ class TumLocationManager(c: Context) {
      * @return the id of current building
      */
     fun getBuildingIDFromCurrentLocation(): String? = getBuildingIDFromLocation(getCurrentOrNextLocation())
-
-    /**
-     * This might be battery draining
-     *
-     * @return false if permission check fails
-     */
-    fun getLocationUpdates(onChanged: (Location) -> Unit) {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return
-        }
-
-        locationProvider.getLocationUpdates { onChanged(it) }
-    }
-
-    fun stopLocationUpdates() {
-        locationProvider.removeLocationUpdates()
-    }
 
     /**
      * Checks that Google Play services are available
@@ -217,24 +184,17 @@ class TumLocationManager(c: Context) {
      * @return Location or null on failure
      */
     fun roomLocationStringToGeo(roomTitle: String): Geo? {
-        var loc = roomTitle
-        if (loc.contains("(")) {
-            loc = loc.substring(0, loc.indexOf('('))
-                    .trim { it <= ' ' }
+        val location = if (roomTitle.contains("(")) {
+            roomTitle.substring(0, roomTitle.indexOf('(')).trim { it <= ' ' }
+        } else {
+            roomTitle
         }
 
-        try {
-            val rooms = TUMCabeClient.getInstance(context).fetchRooms(loc)
-
-            if (rooms != null && !rooms.isEmpty()) {
-                val room = rooms[0].arch_id
-                return fetchRoomGeo(room)
-            }
-
-        } catch (e: Exception) {
-            Utils.log(e)
+        val rooms = tryOrNull { TUMCabeClient.getInstance(context).fetchRooms(location) }
+        return rooms?.let {
+            val room = rooms.first().arch_id
+            fetchRoomGeo(room)
         }
-        return null
     }
 
     /**
@@ -245,69 +205,23 @@ class TumLocationManager(c: Context) {
      * @return the id of current building
      */
     private fun getBuildingIDFromLocation(location: Location): String? {
-        val buildingToGpsList = orFetchBuildingsToGps
-
+        val buildingToGpsList = loadBuildingToGpsList()
         if (buildingToGpsList.isEmpty()) {
             return null
         }
 
-        val lat = location.latitude
-        val lng = location.longitude
-        val results = FloatArray(1)
-        var bestDistance = java.lang.Float.MAX_VALUE
-        var bestBuilding = ""
-
-        for ((id, latitude, longitude) in buildingToGpsList) {
-            val buildingLat = parseDouble(latitude)
-            val buildingLng = parseDouble(longitude)
-
-            Location.distanceBetween(buildingLat, buildingLng, lat, lng, results)
-            val distance = results[0]
-            if (distance < bestDistance) {
-                bestDistance = distance
-                bestBuilding = id
-            }
-        }
-
-        return if (bestDistance < 1000) {
-            bestBuilding
-        } else {
-            null
-        }
+        return buildingToGpsList
+                .map {
+                    val distance = calculateDistanceToBuilding(it, location)
+                    Pair(it, distance)
+                }
+                .filter { it.second < 1_000 }
+                .sortedBy { it.second }
+                .map { it.first.id }
+                .firstOrNull()
     }
 
     companion object {
-        enum class Campus(val short: String, val lat: Double, val lon: Double, val defaultMensa: String?, val defaultStation: Stations) {
-            GarchingForschungszentrum("G", 48.2648424, 11.6709511, "422", Stations.GarchingForschungszentrum),
-            GarchingHochbrueck("H", 48.249432, 11.633905, null, Stations.GarchingHochbrueck),
-            Weihenstephan("W", 48.397990, 11.722727, "423", Stations.Weihenstephan),
-            Stammgelaende("C", 48.149436, 11.567635, "421", Stations.Stammgelaende),
-            KlinikumGrosshadern("K", 48.110847, 11.4703001, "414", Stations.KlinikumGrosshadern),
-            KlinikumRechtsDerIsar("I", 48.137, 11.601119, null, Stations.KlinikumRechtsDerIsar),
-            Leopoldstrasse("L", 48.155916, 11.583095, "411", Stations.Leopoldstrasse),
-            GeschwisterSchollplatzAdalbertstrasse("S", 48.150244, 11.580665, null, Stations.GeschwisterSchollplatzAdalbertstrasse);
-
-            fun getLocation(): Location {
-                return Location("defaultLocation").apply { latitude = lat; longitude = lon }
-            }
-        }
-
-        private enum class Stations(val station: StationResult) {
-            GarchingForschungszentrum(StationResult("Garching-Forschungszentrum", "1000460", Integer.MAX_VALUE)),
-            GarchingHochbrueck(StationResult("Garching-Hochbrück", "1000480", Integer.MAX_VALUE)),
-            Weihenstephan(StationResult("Weihenstephan", "1002911", Integer.MAX_VALUE)),
-            Stammgelaende(StationResult("Theresienstraße", "1000120", Integer.MAX_VALUE)),
-            KlinikumGrosshadern(StationResult("Klinikum Großhadern", "1001540", Integer.MAX_VALUE)),
-            KlinikumRechtsDerIsar(StationResult("Max-Weber-Platz", "1000580", Integer.MAX_VALUE)),
-            Leopoldstrasse(StationResult("Giselastraße", "1000080", Integer.MAX_VALUE)),
-            GeschwisterSchollplatzAdalbertstrasse(StationResult("Universität", "1000070", Integer.MAX_VALUE)),
-            Pinakotheken(StationResult("Pinakotheken", "1000051", Integer.MAX_VALUE)),
-            TUM(StationResult("Technische Universität", "1000095", Integer.MAX_VALUE)),
-            Waldhueterstrasse(StationResult("Waldhüterstraße", "1001574", Integer.MAX_VALUE)),
-            Martinsried(StationResult("LMU Martinsried", "1002557", Integer.MAX_VALUE)),
-            GarchingTUM(StationResult("Garching-Technische Universität", "1002070", Integer.MAX_VALUE))
-        }
-
 
         /**
          * Returns the "id" of the campus near the given location
@@ -316,52 +230,17 @@ class TumLocationManager(c: Context) {
          * @param location The location to search for a campus
          * @return Campus id
          */
-        private fun getCampusFromLocation(location: Location): Campus? {
-            val lat = location.latitude
-            val lng = location.longitude
-            val results = FloatArray(1)
-            var bestDistance = java.lang.Float.MAX_VALUE
-            var bestCampus: Campus? = null
-            for (l in Campus.values()) {
-                Location.distanceBetween(l.lat, l.lon, lat, lng, results)
-                val distance = results[0]
-                if (distance < bestDistance) {
-                    bestDistance = distance
-                    bestCampus = l
-                }
-            }
-
-            return if (bestDistance < 1000) {
-                bestCampus
-            } else {
-                null
-            }
-        }
-
-        /**
-         * Converts UTM based coordinates to latitude and longitude based format
-         */
-        private fun convertUTMtoLL(north: Double, east: Double, zone: Double): Geo {
-            val d = 0.99960000000000004
-            val d1 = 6378137
-            val d2 = 0.0066943799999999998
-            val d4 = (1 - Math.sqrt(1 - d2)) / (1 + Math.sqrt(1 - d2))
-            val d15 = east - 500000
-            val d11 = (zone - 1) * 6 - 180 + 3
-            val d3 = d2 / (1 - d2)
-            val d10 = north / d
-            val d12 = d10 / (d1 * (1 - d2 / 4 - (3 * d2 * d2) / 64 - (5 * Math.pow(d2, 3.0)) / 256))
-            val d14 = d12 + ((3 * d4) / 2 - (27 * Math.pow(d4, 3.0)) / 32) * Math.sin(2 * d12) + ((21 * d4 * d4) / 16 - (55 * Math.pow(d4, 4.0)) / 32) * Math.sin(4 * d12) + ((151 * Math.pow(d4, 3.0)) / 96) * Math.sin(6 * d12)
-            val d5 = d1 / Math.sqrt(1 - d2 * Math.sin(d14) * Math.sin(d14))
-            val d6 = Math.tan(d14) * Math.tan(d14)
-            val d7 = d3 * Math.cos(d14) * Math.cos(d14)
-            val d8 = (d1 * (1 - d2)) / Math.pow(1 - d2 * Math.sin(d14) * Math.sin(d14), 1.5)
-            val d9 = d15 / (d5 * d)
-            var d17 = d14 - ((d5 * Math.tan(d14)) / d8) * ((d9 * d9) / 2 - ((5 + 3 * d6 + 10 * d7 - 4 * d7 * d7 - 9 * d3) * Math.pow(d9, 4.0)) / 24 + ((61 + 90 * d6 + 298 * d7 + 45 * d6 * d6 - 252 * d3 - 3 * d7 * d7) * Math.pow(d9, 6.0)) / 720)
-            d17 *= 180 / Math.PI
-            var d18 = (d9 - ((1 + 2 * d6 + d7) * Math.pow(d9, 3.0)) / 6 + ((5 - 2 * d7 + 28 * d6 - 3 * d7 * d7 + 8 * d3 + 24 * d6 * d6) * Math.pow(d9, 5.0)) / 120) / Math.cos(d14)
-            d18 = d11 + d18 * 180 / Math.PI
-            return Geo(d17, d18)
+        private fun getCampusFromLocation(location: Location): Locations.Campus? {
+            val campuses = Locations.Campus.values()
+            return campuses
+                    .map {
+                        val distance = calculateDistanceToCampus(it, location)
+                        Pair(it, distance)
+                    }
+                    .filter { it.second < 1_000 }
+                    .sortedBy { it.second }
+                    .map { it.first }
+                    .firstOrNull()
         }
 
         @JvmStatic
@@ -370,8 +249,7 @@ class TumLocationManager(c: Context) {
                 val zone = parseDouble(roomFinderCoordinate.utm_zone)
                 val easting = parseDouble(roomFinderCoordinate.utm_easting)
                 val northing = parseDouble(roomFinderCoordinate.utm_northing)
-
-                convertUTMtoLL(northing, easting, zone)
+                LocationHelper.convertUTMtoLL(northing, easting, zone)
             } catch (e: Exception) {
                 Utils.log(e)
                 null
