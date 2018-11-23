@@ -1,10 +1,10 @@
 package de.tum.`in`.tumcampusapp.component.ui.transportation
 
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.LinearLayout
+import androidx.appcompat.app.AlertDialog
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
@@ -17,6 +17,7 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 /**
  * Activity to show transport departures for a specified station
@@ -26,21 +27,23 @@ import io.reactivex.schedulers.Schedulers
  */
 class TransportationDetailsActivity : ProgressActivity<Unit>(R.layout.activity_transportation_detail) {
 
-    private lateinit var mViewResults: LinearLayout
-    private lateinit var recentsDao: RecentsDao
-    private lateinit var transportManager: TransportController
-    private lateinit var gson: Gson
+    private val resultsView: LinearLayout by lazy {
+        findViewById<LinearLayout>(R.id.activity_transport_result)
+    }
+
+    private val gson: Gson by lazy { Gson() }
+
+    @Inject
+    lateinit var database: TcaDb
+
+    @Inject
+    lateinit var transportController: TransportController
 
     private val disposable = CompositeDisposable()
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // get all stations from db
-        recentsDao = TcaDb.getInstance(this).recentsDao()
-        transportManager = TransportController(this)
-        gson = Gson()
-        mViewResults = this.findViewById(R.id.activity_transport_result)
+        injector.inject(this)
 
         val intent = intent
         if (intent == null) {
@@ -81,7 +84,7 @@ class TransportationDetailsActivity : ProgressActivity<Unit>(R.layout.activity_t
         val jsonStationResult = gson.toJson(stationResult)
 
         // save clicked station into db
-        recentsDao.insert(Recent(jsonStationResult, RecentsDao.STATIONS))
+        database.recentsDao().insert(Recent(jsonStationResult, RecentsDao.STATIONS))
 
         disposable.add(TransportController.getDeparturesFromExternal(this, locationID)
                 .subscribeOn(Schedulers.io())
@@ -104,31 +107,31 @@ class TransportationDetailsActivity : ProgressActivity<Unit>(R.layout.activity_t
             showError(R.string.no_departures_found)
             return
         }
-        mViewResults.removeAllViews()
+        resultsView.removeAllViews()
         for ((_, direction, lineSymbol, _, departureTime) in results) {
             val view = DepartureView(this, true)
 
             view.setOnClickListener { v ->
                 val departureView = v as DepartureView
                 val symbol = departureView.symbol
-                val highlight = if (transportManager.isFavorite(symbol)) {
-                    transportManager.deleteFavorite(symbol)
+                val highlight = if (transportController.isFavorite(symbol)) {
+                    transportController.deleteFavorite(symbol)
                     false
                 } else {
-                    transportManager.addFavorite(symbol)
+                    transportController.addFavorite(symbol)
                     true
                 }
 
                 // Update the other views with the same symbol
-                for (i in 0 until mViewResults.childCount) {
-                    val child = mViewResults.getChildAt(i) as DepartureView
+                for (i in 0 until resultsView.childCount) {
+                    val child = resultsView.getChildAt(i) as DepartureView
                     if (child.symbol == symbol) {
                         child.setSymbol(symbol, highlight)
                     }
                 }
             }
 
-            if (transportManager.isFavorite(lineSymbol)) {
+            if (transportController.isFavorite(lineSymbol)) {
                 view.setSymbol(lineSymbol, true)
             } else {
                 view.setSymbol(lineSymbol, false)
@@ -136,14 +139,14 @@ class TransportationDetailsActivity : ProgressActivity<Unit>(R.layout.activity_t
 
             view.setLine(direction)
             view.setTime(departureTime)
-            mViewResults.addView(view)
+            resultsView.addView(view)
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        for (i in 0 until mViewResults.childCount) {
-            val view = mViewResults.getChildAt(i) as? DepartureView ?: continue
+        for (i in 0 until resultsView.childCount) {
+            val view = resultsView.getChildAt(i) as? DepartureView ?: continue
             view.removeAllCallbacksAndMessages()
         }
     }

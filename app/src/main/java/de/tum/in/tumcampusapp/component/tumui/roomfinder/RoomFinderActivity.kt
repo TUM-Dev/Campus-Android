@@ -20,6 +20,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView
 import java.io.IOException
 import java.io.Serializable
 import java.util.regex.Pattern
+import javax.inject.Inject
 
 /**
  * Activity to show a convenience interface for using the MyTUM room finder.
@@ -28,16 +29,21 @@ class RoomFinderActivity : ActivityForSearchingInBackground<List<RoomFinderRoom>
         R.layout.activity_roomfinder, RoomFinderSuggestionProvider.AUTHORITY, 3
 ), OnItemClickListener {
 
-    private val recentsDao by lazy { TcaDb.getInstance(this).recentsDao() }
-    private val listView by lazy { findViewById<StickyListHeadersListView>(R.id.list) as StickyListHeadersListView }
+    private val listView by lazy { findViewById<StickyListHeadersListView>(R.id.list) }
     private lateinit var adapter: RoomFinderListAdapter
+
+    @Inject
+    lateinit var tumCabeClient: TUMCabeClient
+
+    @Inject
+    lateinit var database: TcaDb
 
     /**
      * Reconstruct recents from String
      */
     private val recents: List<RoomFinderRoom>
         get() {
-            return recentsDao.getAll(RecentsDao.ROOMS)?.mapNotNull {
+            return database.recentsDao().getAll(RecentsDao.ROOMS)?.mapNotNull {
                 try {
                     RoomFinderRoom.fromRecent(it)
                 } catch (ignore: IllegalArgumentException) {
@@ -48,6 +54,7 @@ class RoomFinderActivity : ActivityForSearchingInBackground<List<RoomFinderRoom>
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        injector.inject(this)
 
         adapter = RoomFinderListAdapter(this, recents)
         listView.setOnItemClickListener(this)
@@ -68,7 +75,7 @@ class RoomFinderActivity : ActivityForSearchingInBackground<List<RoomFinderRoom>
 
     override fun onSearchInBackground(query: String): List<RoomFinderRoom>? {
         return try {
-            TUMCabeClient.getInstance(this).fetchRooms(userRoomSearchMatching(query))
+            tumCabeClient.fetchRooms(userRoomSearchMatching(query))
         } catch (e: IOException) {
             Utils.log(e)
             null
@@ -104,7 +111,7 @@ class RoomFinderActivity : ActivityForSearchingInBackground<List<RoomFinderRoom>
      * a given room. Also adds this room to the recent queries.
      */
     private fun openRoomDetails(room: Serializable) {
-        recentsDao.insert(Recent(room.toString(), RecentsDao.ROOMS))
+        database.recentsDao().insert(Recent(room.toString(), RecentsDao.ROOMS))
 
         // Start detail activity
         val intent = Intent(this, RoomFinderDetailsActivity::class.java)

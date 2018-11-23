@@ -4,6 +4,7 @@ import dagger.Component
 import de.tum.`in`.tumcampusapp.component.notifications.receivers.NotificationAlarmReceiver
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarActivity
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackActivity
+import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity
 import de.tum.`in`.tumcampusapp.component.ui.barrierfree.BarrierFreeContactActivity
 import de.tum.`in`.tumcampusapp.component.ui.barrierfree.BarrierFreeFacilitiesActivity
 import de.tum.`in`.tumcampusapp.component.ui.barrierfree.BarrierFreeMoreInfoActivity
@@ -21,6 +22,8 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.BuyTicketActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.fragment.EventDetailsFragment
 import de.tum.`in`.tumcampusapp.component.ui.ticket.fragment.EventsFragment
+import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportationActivity
+import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportationDetailsActivity
 import de.tum.`in`.tumcampusapp.service.DownloadService
 import javax.inject.Singleton
 
@@ -42,6 +45,8 @@ interface AppComponent {
 
     fun inject(wizNavExtrasActivity: WizNavExtrasActivity)
 
+    fun inject(roomFinderActivity: RoomFinderActivity)
+
     fun inject(kinoDetailsFragment: KinoDetailsFragment)
 
     fun inject(addChatMemberActivity: AddChatMemberActivity)
@@ -59,6 +64,10 @@ interface AppComponent {
     fun inject(eventDetailsFragment: EventDetailsFragment)
 
     fun inject(eventsFragment: EventsFragment)
+
+    fun inject(transportationActivity: TransportationActivity)
+
+    fun inject(transportationDetailsActivity: TransportationDetailsActivity)
 
     fun inject(cafeteriaActivity: CafeteriaActivity)
 

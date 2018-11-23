@@ -18,6 +18,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.net.UnknownHostException
+import javax.inject.Inject
 
 /**
  * Activity to show transport stations and departures
@@ -27,23 +28,24 @@ class TransportationActivity : ActivityForSearching<Unit>(
         MVVStationSuggestionProvider.AUTHORITY, 3
 ), OnItemClickListener {
 
-    private lateinit var listViewResults: ListView
-    private lateinit var adapterStations: ArrayAdapter<StationResult>
-    private lateinit var recentsDao: RecentsDao
+    private val resultsListView: ListView by lazy {
+        findViewById<ListView>(R.id.activity_transport_listview_result)
+    }
 
+    @Inject
+    lateinit var database: TcaDb
+
+    private lateinit var adapterStations: ArrayAdapter<StationResult>
     private val disposable = CompositeDisposable()
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        injector.inject(this)
 
-        recentsDao = TcaDb.getInstance(this)
-                .recentsDao()
-
-        listViewResults = findViewById(R.id.activity_transport_listview_result)
-        listViewResults.onItemClickListener = this
+        resultsListView.onItemClickListener = this
 
         // Initialize stations adapter
-        val recentStations = recentsDao.getAll(RecentsDao.STATIONS) ?: emptyList()
+        val recentStations = database.recentsDao().getAll(RecentsDao.STATIONS) ?: emptyList()
         adapterStations = ArrayAdapter(this, android.R.layout.simple_list_item_1,
                 TransportController.getRecentStations(recentStations))
 
@@ -52,7 +54,7 @@ class TransportationActivity : ActivityForSearching<Unit>(
             return
         }
 
-        listViewResults.adapter = adapterStations
+        resultsListView.adapter = adapterStations
 
     }
 
@@ -77,9 +79,9 @@ class TransportationActivity : ActivityForSearching<Unit>(
     }
 
     override fun onStartSearch() {
-        val recents = recentsDao.getAll(RecentsDao.STATIONS)
+        val recents = database.recentsDao().getAll(RecentsDao.STATIONS)
         if (recents == null) {
-            listViewResults.adapter = NoResultsAdapter(this)
+            resultsListView.adapter = NoResultsAdapter(this)
             return
         }
 
@@ -120,7 +122,7 @@ class TransportationActivity : ActivityForSearching<Unit>(
         adapterStations.addAll(stations)
 
         adapterStations.notifyDataSetChanged()
-        listViewResults.adapter = adapterStations
+        resultsListView.adapter = adapterStations
     }
 
     override fun onStop() {

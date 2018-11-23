@@ -2,6 +2,7 @@ package de.tum.`in`.tumcampusapp.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.room.PrimaryKey
 import dagger.Module
 import dagger.Provides
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
@@ -18,6 +19,7 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocal
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
+import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportNotificationProvider
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import org.jetbrains.anko.defaultSharedPreferences
@@ -92,20 +94,26 @@ class AppModule(private val context: Context) {
 
     @Singleton
     @Provides
-    fun providesNewsController(): NewsController {
+    fun provideNewsController(): NewsController {
         return NewsController(context)
     }
 
     @Singleton
     @Provides
-    fun providesEventsController(): EventsController {
+    fun provideEventsController(): EventsController {
         return EventsController(context)
     }
 
     @Singleton
     @Provides
-    fun providesCalendarController(): CalendarController {
+    fun provideCalendarController(): CalendarController {
         return CalendarController(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideTransportController(): TransportController {
+        return TransportController(context)
     }
 
     @Singleton
