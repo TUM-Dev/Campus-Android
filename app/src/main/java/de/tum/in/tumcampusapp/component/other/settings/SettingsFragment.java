@@ -17,6 +17,8 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
@@ -30,6 +32,7 @@ import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreferenceCompat;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
+import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
 import de.tum.in.tumcampusapp.component.ui.eduroam.SetupEduroamActivity;
 import de.tum.in.tumcampusapp.component.ui.news.NewsController;
@@ -37,18 +40,31 @@ import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.onboarding.StartupActivity;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.BackgroundService;
+import de.tum.in.tumcampusapp.service.DownloadService;
+import de.tum.in.tumcampusapp.service.SendMessageService;
 import de.tum.in.tumcampusapp.service.SilenceService;
+import de.tum.in.tumcampusapp.utils.CacheManager;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 public class SettingsFragment extends PreferenceFragmentCompat
         implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
 
-    public static final String FRAGMENT_TAG = "my_preference_fragment";
+    static final String FRAGMENT_TAG = "my_preference_fragment";
+
     private static final String BUTTON_LOGOUT = "button_logout";
     private static final String SETUP_EDUROAM = "card_eduroam_setup";
 
     private FragmentActivity mContext;
+
+    @Inject
+    TcaDb database;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((BaseActivity) requireActivity()).getInjector().inject(this);
+    }
 
     @Override
     public void onCreatePreferences(Bundle bundle, String rootKey) {
@@ -265,7 +281,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
 
     private void clearData() {
-        TcaDb.resetDb(mContext);
+        database.resetDb();
+        stopServices(mContext);
+
+        CacheManager cacheManager = new CacheManager(mContext);
+        cacheManager.clearCache();
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         sharedPrefs.edit().clear().apply();
@@ -287,6 +307,18 @@ public class SettingsFragment extends PreferenceFragmentCompat
         if (readCalendar == PackageManager.PERMISSION_GRANTED &&
                 writeCalendar == PackageManager.PERMISSION_GRANTED) {
             CalendarController.deleteLocalCalendar(mContext);
+        }
+    }
+
+    private void stopServices(Context context) {
+        Class<?>[] services = new Class<?>[]{
+                CalendarController.QueryLocationsService.class,
+                SendMessageService.class,
+                SilenceService.class,
+                DownloadService.class,
+                BackgroundService.class};
+        for (Class<?> service : services) {
+            context.stopService(new Intent(context, service));
         }
     }
 

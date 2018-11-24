@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.database;
 
 import android.content.Context;
-import android.content.Intent;
 
 import androidx.room.Database;
 import androidx.room.Room;
@@ -20,7 +19,6 @@ import de.tum.in.tumcampusapp.component.other.locations.RoomLocationsDao;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.WifiMeasurementDao;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
-import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarDao;
 import de.tum.in.tumcampusapp.component.tumui.calendar.WidgetsTimetableBlacklistDao;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
@@ -60,11 +58,6 @@ import de.tum.in.tumcampusapp.component.ui.tufilm.KinoDao;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
 import de.tum.in.tumcampusapp.database.migrations.Migration2to3;
-import de.tum.in.tumcampusapp.service.BackgroundService;
-import de.tum.in.tumcampusapp.service.DownloadService;
-import de.tum.in.tumcampusapp.service.SendMessageService;
-import de.tum.in.tumcampusapp.service.SilenceService;
-import de.tum.in.tumcampusapp.utils.CacheManager;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.sync.SyncDao;
 import de.tum.in.tumcampusapp.utils.sync.model.Sync;
@@ -170,25 +163,9 @@ public abstract class TcaDb extends RoomDatabase {
      * Drop all tables, so we can do a complete clean start
      * Careful: After executing this method, almost all the managers are in an illegal state, and
      * can't do any SQL anymore. So take care to actually reinitialize all Managers
-     *
-     * @param c context
      */
-    public static void resetDb(Context c) {
-        // Stop all services, since they might have instantiated Managers and cause SQLExceptions
-        Class<?>[] services = new Class<?>[]{
-                CalendarController.QueryLocationsService.class,
-                SendMessageService.class,
-                SilenceService.class,
-                DownloadService.class,
-                BackgroundService.class};
-        for (Class<?> service : services) {
-            c.stopService(new Intent(c, service));
-        }
-
-        // Clear our cache table
-        CacheManager cacheManager = new CacheManager(c);
-        cacheManager.clearCache();
-
-        TcaDb.getInstance(c).clearAllTables();
+    public void resetDb() {
+        clearAllTables();
     }
+
 }

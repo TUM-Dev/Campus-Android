@@ -11,9 +11,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.provider.CalendarContract;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
@@ -21,13 +18,16 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.notifications.NotificationScheduler;
 import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
 import de.tum.in.tumcampusapp.component.notifications.model.FutureNotification;
-import de.tum.in.tumcampusapp.component.other.locations.TumLocationManager;
 import de.tum.in.tumcampusapp.component.other.locations.RoomLocationsDao;
+import de.tum.in.tumcampusapp.component.other.locations.TumLocationManager;
 import de.tum.in.tumcampusapp.component.other.locations.model.Geo;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.Event;

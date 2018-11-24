@@ -185,22 +185,6 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
 
         private val widgetDeparturesList = SparseArray<WidgetDepartures>()
 
-        /**
-         * Get all departures for a station.
-         *
-         * @param stationID Station ID, station name might or might not work
-         * @return List of departures
-         */
-        /*@JvmStatic
-        @Deprecated("Use fetchDeparturesAtStation") // TODO
-        fun getDeparturesFromExternal(context: Context, stationID: String): Observable<List<Departure>> {
-            return MvvClient.getInstance(context)
-                    .getDepartures(stationID)
-                    .onErrorReturn { MvvDepartureList(emptyList()) }
-                    .map { it.departures.orEmpty() }
-                    .map { it.map { mvvDeparture -> Departure.create(mvvDeparture) } }
-                    .map { it.sortedBy { departure -> departure.countDown } }
-        }*/
-
     }
+
 }

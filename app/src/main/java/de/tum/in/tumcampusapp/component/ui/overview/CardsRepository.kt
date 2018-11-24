@@ -9,7 +9,7 @@ import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeeManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaCardsProvider
-import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomController
+import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.EduroamCard
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.EduroamFixCard
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
@@ -25,7 +25,8 @@ import javax.inject.Inject
 
 class CardsRepository @Inject constructor(
         private val context: Context,
-        private val cafeteriaCardsProvider: CafeteriaCardsProvider
+        private val cafeteriaCardsProvider: CafeteriaCardsProvider,
+        private val chatRoomCardsProvider: ChatRoomCardsProvider
 ) {
 
     private var cards = MutableLiveData<List<Card>>()
@@ -70,7 +71,7 @@ class CardsRepository @Inject constructor(
             if (AccessTokenManager.hasValidAccessToken(context)) {
                 add(CalendarController(context))
                 add(TuitionFeeManager(context))
-                add(ChatRoomController(context))
+                add(chatRoomCardsProvider)
             }
 
             add(cafeteriaCardsProvider)

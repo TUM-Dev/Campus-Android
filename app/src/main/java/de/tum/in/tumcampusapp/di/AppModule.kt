@@ -16,6 +16,8 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuM
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.interactors.FetchBestMatchMensaInteractor
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomCardsProvider
+import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomController
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
@@ -127,6 +129,23 @@ class AppModule(private val context: Context) {
 
     @Singleton
     @Provides
+    fun provideChatRoomCardsProvider(
+            tumOnlineClient: TUMOnlineClient,
+            tumCabeClient: TUMCabeClient,
+            chatRoomController: ChatRoomController,
+            database: TcaDb
+    ): ChatRoomCardsProvider {
+        return ChatRoomCardsProvider(context, tumOnlineClient, tumCabeClient, chatRoomController, database)
+    }
+
+    @Singleton
+    @Provides
+    fun provideChatRoomController(): ChatRoomController {
+        return ChatRoomController(context)
+    }
+
+    @Singleton
+    @Provides
     fun provideFetchBestMatchMensaInteractor(
             cafeteriaManager: CafeteriaManager
     ): FetchBestMatchMensaInteractor {
@@ -149,9 +168,10 @@ class AppModule(private val context: Context) {
     @Singleton
     @Provides
     fun provideTransportNotificationProvider(
-            transportController: TransportController
+            transportController: TransportController,
+            tumLocationManager: TumLocationManager
     ): TransportNotificationProvider {
-        return TransportNotificationProvider(context, transportController)
+        return TransportNotificationProvider(context, transportController, tumLocationManager)
     }
 
     @Singleton

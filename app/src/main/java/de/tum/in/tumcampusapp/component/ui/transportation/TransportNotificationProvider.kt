@@ -14,7 +14,8 @@ import javax.inject.Inject
 
 class TransportNotificationProvider @Inject constructor(
         context: Context,
-        private val transportController: TransportController
+        private val transportController: TransportController,
+        private val tumLocationManager: TumLocationManager
 ) : NotificationProvider(context) {
 
     override fun getNotificationBuilder(): NotificationCompat.Builder {
@@ -24,8 +25,7 @@ class TransportNotificationProvider @Inject constructor(
     }
 
     override fun buildNotification(): AppNotification? {
-        val locationManager = TumLocationManager(context)
-        val station = locationManager.getStation() ?: return null
+        val station = tumLocationManager.getStation() ?: return null
 
         val title = context.getString(R.string.mvv)
         val text = "Departures at ${station.station}"

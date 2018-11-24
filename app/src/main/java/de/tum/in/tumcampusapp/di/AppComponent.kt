@@ -2,6 +2,7 @@ package de.tum.`in`.tumcampusapp.di
 
 import dagger.Component
 import de.tum.`in`.tumcampusapp.component.notifications.receivers.NotificationAlarmReceiver
+import de.tum.`in`.tumcampusapp.component.other.settings.SettingsFragment
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarActivity
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackActivity
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity
@@ -51,6 +52,8 @@ interface AppComponent {
     fun inject(roomFinderActivity: RoomFinderActivity)
 
     fun inject(kinoDetailsFragment: KinoDetailsFragment)
+
+    fun inject(settingsFragment: SettingsFragment)
 
     fun inject(addChatMemberActivity: AddChatMemberActivity)
 
