@@ -190,9 +190,8 @@ class TumLocationManager(context: Context) {
         }
 
         val rooms = tryOrNull { TUMCabeClient.getInstance(context).fetchRooms(location) }
-        return rooms?.let {
-            val room = rooms.first().arch_id
-            fetchRoomGeo(room)
+        return rooms?.firstOrNull()?.let {
+            fetchRoomGeo(it.arch_id)
         }
     }
 
