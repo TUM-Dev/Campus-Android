@@ -333,7 +333,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
 
     private void sendMessage(String text) {
         if (currentChatMember == null) {
-            Utils.showToast(this, R.string.chat_message_send_error); // TODO
+            Utils.showToast(this, R.string.chat_message_send_error);
             return;
         }
 
