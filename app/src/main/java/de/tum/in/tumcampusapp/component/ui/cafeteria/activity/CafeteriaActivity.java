@@ -56,6 +56,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
     @Inject
     TumLocationManager tumLocationManager;
 
+    private ViewPager viewPager;
     private ArrayAdapter<Cafeteria> adapter;
     private CafeteriaDetailsSectionsPagerAdapter sectionsPagerAdapter;
     private Spinner spinner;
@@ -72,7 +73,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
         ViewModelFactory<CafeteriaViewModel> factory = new ViewModelFactory<>(provider);
         cafeteriaViewModel = ViewModelProviders.of(this, factory).get(CafeteriaViewModel.class);
 
-        ViewPager viewPager = findViewById(R.id.pager);
+        viewPager = findViewById(R.id.pager);
         viewPager.setOffscreenPageLimit(50);
 
         adapter = createArrayAdapter();
@@ -157,7 +158,6 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
 
     private void onNewCafeteriaSelected(Cafeteria cafeteria) {
         sectionsPagerAdapter.setCafeteriaId(cafeteria.getId());
-        //updateCafeteriaSpinner(cafeteria.getId());
         cafeteriaViewModel.fetchMenuDates();
     }
 
@@ -191,7 +191,9 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
     }
 
     private void updateSectionsPagerAdapter(List<DateTime> menuDates) {
+        viewPager.setAdapter(null);
         sectionsPagerAdapter.update(menuDates);
+        viewPager.setAdapter(sectionsPagerAdapter);
     }
 
     @Override
