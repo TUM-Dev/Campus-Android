@@ -69,6 +69,9 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
         super.onCreate(savedInstanceState);
         getInjector().inject(this);
 
+        ViewModelFactory<CafeteriaViewModel> factory = new ViewModelFactory<>(provider);
+        cafeteriaViewModel = ViewModelProviders.of(this, factory).get(CafeteriaViewModel.class);
+
         ViewPager viewPager = findViewById(R.id.pager);
         viewPager.setOffscreenPageLimit(50);
 
@@ -81,9 +84,6 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
         initCafeteriaSpinner();
 
         sectionsPagerAdapter = new CafeteriaDetailsSectionsPagerAdapter(getSupportFragmentManager());
-
-        ViewModelFactory<CafeteriaViewModel> factory = new ViewModelFactory<>(provider);
-        cafeteriaViewModel = ViewModelProviders.of(this, factory).get(CafeteriaViewModel.class);
 
         cafeteriaViewModel.getCafeterias().observe(this, this::updateCafeteria);
         cafeteriaViewModel.getSelectedCafeteria().observe(this, this::onNewCafeteriaSelected);
