@@ -14,7 +14,6 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsS
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.widget.MensaRemoteViewFactory
 import de.tum.`in`.tumcampusapp.component.ui.chat.AddChatMemberActivity
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.SetupEduroamActivity
-import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoDetailsFragment
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsActivity
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavCheckTokenActivity
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavExtrasActivity
@@ -28,6 +27,8 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.fragment.EventsFragment
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportationActivity
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportationDetailsActivity
 import de.tum.`in`.tumcampusapp.component.ui.transportation.widget.MVVWidgetConfigureActivity
+import de.tum.`in`.tumcampusapp.component.ui.transportation.widget.MVVWidgetService
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoDetailsFragment
 import de.tum.`in`.tumcampusapp.service.DownloadService
 import de.tum.`in`.tumcampusapp.service.ScanResultsAvailableReceiver
 import javax.inject.Singleton
@@ -87,6 +88,8 @@ interface AppComponent {
     fun inject(downloadService: DownloadService)
 
     fun inject(mensaRemoteViewFactory: MensaRemoteViewFactory)
+
+    fun inject(mvvRemoteViewFactory: MVVWidgetService)
 
     fun inject(setupEduroamActivity: SetupEduroamActivity)
 

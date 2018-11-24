@@ -8,16 +8,17 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import androidx.annotation.NonNull;
 import android.view.View;
 import android.widget.RemoteViews;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
+import androidx.annotation.NonNull;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.WidgetDepartures;
+import de.tum.in.tumcampusapp.component.ui.transportation.repository.TransportLocalRepository;
+import de.tum.in.tumcampusapp.database.TcaDb;
 
 /**
  * Implementation of App Widget functionality.
@@ -37,7 +38,7 @@ public class MVVWidget extends AppWidgetProvider {
     public static final int DOWNLOAD_DELAY = 5 * 60 * 1000;
 
     private static Timer timer = new Timer();
-    private TransportController transportController;
+    private MVVWidgetController widgetController;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -50,7 +51,7 @@ public class MVVWidget extends AppWidgetProvider {
     public void onDeleted(Context context, int[] appWidgetIds) {
         // When the user deletes the widget, delete the associated setting from the database.
         for (int appWidgetId : appWidgetIds) {
-            transportController.deleteWidget(appWidgetId);
+            widgetController.deleteWidget(appWidgetId);
         }
 
         super.onDeleted(context, appWidgetIds);
@@ -70,7 +71,7 @@ public class MVVWidget extends AppWidgetProvider {
         boolean autoReload = false;
 
         for (int appWidgetId : getActiveWidgetIds(context)) {
-            WidgetDepartures widgetDepartures = transportController.getWidget(appWidgetId);
+            WidgetDepartures widgetDepartures = widgetController.getWidget(appWidgetId);
             if (widgetDepartures.getAutoReload()) {
                 autoReload = true;
                 break;
@@ -125,7 +126,7 @@ public class MVVWidget extends AppWidgetProvider {
     private void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                  int appWidgetId, boolean forceLoadData) {
         // Get the settings for this widget from the database
-        WidgetDepartures widgetDepartures = transportController.getWidget(appWidgetId);
+        WidgetDepartures widgetDepartures = widgetController.getWidget(appWidgetId);
 
         // Instantiate the RemoteViews object for the app widget layout.
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.mvv_widget);
@@ -169,8 +170,9 @@ public class MVVWidget extends AppWidgetProvider {
 
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
-        // onReceive is the entry point to the widget, so we initialise transportController here.
-        transportController = new TransportController(context);
+        // onReceive is the entry point to the widget, so we initialise widgetController here.
+        // TODO
+        widgetController = new MVVWidgetController(new TransportLocalRepository(TcaDb.getInstance(context)));
 
         String action = intent.getAction();
         if (action == null || action.equals(MVVWidget.BROADCAST_RELOAD_ALL)) {

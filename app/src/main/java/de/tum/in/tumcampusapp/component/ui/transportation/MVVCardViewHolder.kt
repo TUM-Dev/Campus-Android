@@ -4,6 +4,8 @@ import android.view.View
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.Departure
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
+import de.tum.`in`.tumcampusapp.component.ui.transportation.repository.TransportLocalRepository
+import de.tum.`in`.tumcampusapp.database.TcaDb
 import kotlinx.android.synthetic.main.card_mvv.view.*
 
 class MVVCardViewHolder(itemView: View) : CardViewHolder(itemView) {
@@ -12,7 +14,7 @@ class MVVCardViewHolder(itemView: View) : CardViewHolder(itemView) {
         with(itemView) {
             stationNameTextView.text = station.station
 
-            val controller = TransportController(context)
+            val localRepo = TransportLocalRepository(TcaDb.getInstance(context))
             val items = Math.min(departures.size, 5)
 
             if (contentContainerLayout.childCount == 0) {
@@ -20,7 +22,7 @@ class MVVCardViewHolder(itemView: View) : CardViewHolder(itemView) {
                         .take(items)
                         .map { departure ->
                             DepartureView(context).apply {
-                                val isFavorite = controller.isFavorite(departure.symbol)
+                                val isFavorite = localRepo.isFavorite(departure.symbol)
                                 setSymbol(departure.symbol, isFavorite)
                                 setLine(departure.direction)
                                 setTime(departure.departureTime)

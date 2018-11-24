@@ -33,6 +33,11 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsRemoteRepo
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportNotificationProvider
+import de.tum.`in`.tumcampusapp.component.ui.transportation.api.MvvApiService
+import de.tum.`in`.tumcampusapp.component.ui.transportation.api.MvvClient
+import de.tum.`in`.tumcampusapp.component.ui.transportation.repository.TransportLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.transportation.repository.TransportRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.transportation.widget.MVVWidgetController
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.sync.SyncManager
 import org.jetbrains.anko.defaultSharedPreferences
@@ -189,16 +194,46 @@ class AppModule(private val context: Context) {
 
     @Singleton
     @Provides
+    fun provideMvvApiService(): MvvApiService {
+        return MvvClient.getInstance(context)
+    }
+
+    @Singleton
+    @Provides
     fun provideTransportController(): TransportController {
         return TransportController(context)
     }
 
     @Singleton
     @Provides
+    fun provideTransportLocalRepository(
+            database: TcaDb
+    ): TransportLocalRepository {
+        return TransportLocalRepository(database)
+    }
+
+    @Singleton
+    @Provides
+    fun provideTransportRemoteRepository(
+            mvvService: MvvApiService
+    ): TransportRemoteRepository {
+        return TransportRemoteRepository(mvvService)
+    }
+
+    @Singleton
+    @Provides
     fun provideTransportCardsProvider(
-            transportController: TransportController
+            transportRemoteRepository: TransportRemoteRepository
     ): TransportCardsProvider {
-        return TransportCardsProvider(context, transportController)
+        return TransportCardsProvider(context, transportRemoteRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideMVVWidgetController(
+            localRepository: TransportLocalRepository
+    ): MVVWidgetController {
+        return MVVWidgetController(localRepository)
     }
 
     @Singleton
@@ -252,10 +287,10 @@ class AppModule(private val context: Context) {
     @Singleton
     @Provides
     fun provideTransportNotificationProvider(
-            transportController: TransportController,
+            remoteRepository: TransportRemoteRepository,
             tumLocationManager: TumLocationManager
     ): TransportNotificationProvider {
-        return TransportNotificationProvider(context, transportController, tumLocationManager)
+        return TransportNotificationProvider(context, remoteRepository, tumLocationManager)
     }
 
     @Singleton

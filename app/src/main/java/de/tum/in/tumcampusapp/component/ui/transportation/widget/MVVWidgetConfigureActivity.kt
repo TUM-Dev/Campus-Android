@@ -15,11 +15,13 @@ import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForSearching
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.NoResultsAdapter
 import de.tum.`in`.tumcampusapp.component.ui.transportation.MVVStationSuggestionProvider
-import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.WidgetDepartures
+import de.tum.`in`.tumcampusapp.component.ui.transportation.repository.TransportLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.transportation.repository.TransportRemoteRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Utils
+import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -36,7 +38,13 @@ class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
     private lateinit var widgetDepartures: WidgetDepartures
 
     @Inject
-    lateinit var transportController: TransportController
+    lateinit var transportRemoteRepository: TransportRemoteRepository
+
+    @Inject
+    lateinit var transportLocalRepository: TransportLocalRepository
+
+    @Inject
+    lateinit var widgetController: MVVWidgetController
 
     private val disposable = CompositeDisposable()
 
@@ -60,7 +68,7 @@ class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
         appWidgetId = intent.extras?.getInt(EXTRA_APPWIDGET_ID, INVALID_APPWIDGET_ID)
                 ?: INVALID_APPWIDGET_ID
 
-        widgetDepartures = transportController.getWidget(appWidgetId)
+        widgetDepartures = widgetController.getWidget(appWidgetId)
 
         val autoReloadSwitch = findViewById<Switch>(R.id.mvv_widget_auto_reload)
         autoReloadSwitch.isChecked = widgetDepartures.autoReload
@@ -79,7 +87,7 @@ class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
 
         // Initialize stations adapter
         val recentQueries = recentsDao.getAll(RecentsDao.STATIONS) ?: emptyList()
-        val stations = transportController.getRecentStations(recentQueries)
+        val stations = transportLocalRepository.getRecentStations(recentQueries)
         adapterStations = ArrayAdapter(this, android.R.layout.simple_list_item_1, stations)
 
         if (adapterStations.isEmpty) {
@@ -97,12 +105,13 @@ class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
             return
         }
 
-        val stations = transportController.getRecentStations(recents)
+        val stations = transportLocalRepository.getRecentStations(recents)
         displayStations(stations)
     }
 
     override fun onStartSearch(query: String) {
-        disposable.add(transportController.fetchStationsByPrefix(this, query)
+        disposable += transportRemoteRepository
+                .fetchStationsByPrefix(query)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::displayStations) {
@@ -110,7 +119,7 @@ class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
                     Utils.showToast(this, R.string.something_wrong)
                     Utils.log(it)
                     onStartSearch()
-                })
+                }
     }
 
     private fun displayStations(stations: List<StationResult>) {
@@ -148,7 +157,7 @@ class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
      */
     private fun saveAndReturn() {
         // save the settings
-        transportController.addWidget(appWidgetId, widgetDepartures)
+        widgetController.addWidget(appWidgetId, widgetDepartures)
 
         // update widget
         val reloadIntent = Intent(this, MVVWidget::class.java)

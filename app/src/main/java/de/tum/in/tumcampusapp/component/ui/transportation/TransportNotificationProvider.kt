@@ -9,12 +9,13 @@ import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
 import de.tum.`in`.tumcampusapp.component.notifications.model.InstantNotification
 import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
 import de.tum.`in`.tumcampusapp.component.other.locations.TumLocationManager
+import de.tum.`in`.tumcampusapp.component.ui.transportation.repository.TransportRemoteRepository
 import de.tum.`in`.tumcampusapp.utils.Const
 import javax.inject.Inject
 
 class TransportNotificationProvider @Inject constructor(
         context: Context,
-        private val transportController: TransportController,
+        private val transportRemoteRepository: TransportRemoteRepository,
         private val tumLocationManager: TumLocationManager
 ) : NotificationProvider(context) {
 
@@ -31,7 +32,7 @@ class TransportNotificationProvider @Inject constructor(
         val text = "Departures at ${station.station}"
 
         val inboxStyle = NotificationCompat.InboxStyle()
-        transportController
+        transportRemoteRepository
                 .fetchDeparturesAtStation(station.id)
                 .blockingFirst()
                 .map { "${it.servingLine} (${it.direction}) in ${it.countDown} min" }

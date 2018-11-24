@@ -5,13 +5,14 @@ import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.other.locations.TumLocationManager
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardsProvider
+import de.tum.`in`.tumcampusapp.component.ui.transportation.repository.TransportRemoteRepository
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import java.util.*
 import javax.inject.Inject
 
 class TransportCardsProvider @Inject constructor(
         private val context: Context,
-        private val transportController: TransportController
+        private val remoteRepository: TransportRemoteRepository
 ) : CardsProvider {
 
     override fun provideCards(cacheControl: CacheControl): List<Card> {
@@ -24,7 +25,7 @@ class TransportCardsProvider @Inject constructor(
         val locMan = TumLocationManager(context)
         val station = locMan.getStation() ?: return emptyList()
 
-        val departures = transportController.fetchDeparturesAtStation(station.id).blockingFirst()
+        val departures = remoteRepository.fetchDeparturesAtStation(station.id).blockingFirst()
         val card = MVVCard(context).apply {
             setStation(station)
             setDepartures(departures)

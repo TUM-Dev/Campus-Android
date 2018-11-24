@@ -1,6 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa
 
-import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
+import de.tum.`in`.tumcampusapp.component.ui.transportation.repository.TransportRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.transportation.widget.MVVWidget
 
 /**
@@ -55,12 +55,12 @@ class WidgetDepartures(
      *
      * @return The list of departures
      */
-    fun getDepartures(transportController: TransportController,
+    fun getDepartures(remoteRepository: TransportRemoteRepository,
                       forceServerLoad: Boolean): List<Departure> {
         // download only id there is no data or the last loading is more than X min ago
         val shouldAutoReload = System.currentTimeMillis() - this.lastLoad > MVVWidget.DOWNLOAD_DELAY
         if (this.departures.isEmpty() || forceServerLoad || this.autoReload && shouldAutoReload) {
-            val departures = transportController.fetchDeparturesAtStation(stationId).blockingFirst()
+            val departures = remoteRepository.fetchDeparturesAtStation(stationId).blockingFirst()
             if (departures.isEmpty()) {
                 this.isOffline = true
             } else {

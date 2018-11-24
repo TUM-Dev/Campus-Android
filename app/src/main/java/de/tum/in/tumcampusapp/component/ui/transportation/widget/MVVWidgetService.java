@@ -10,43 +10,66 @@ import android.widget.RemoteViewsService;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import androidx.annotation.Nullable;
+import de.tum.in.tumcampusapp.App;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.transportation.MVVSymbol;
-import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.Departure;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.WidgetDepartures;
+import de.tum.in.tumcampusapp.component.ui.transportation.repository.TransportRemoteRepository;
 
 @SuppressLint("Registered")
 public class MVVWidgetService extends RemoteViewsService {
 
+    @Inject
+    TransportRemoteRepository remoteRepository;
+
+    @Inject
+    MVVWidgetController widgetController;
+
     @Override
-    public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        return new MVVRemoteViewFactory(this.getApplicationContext(), intent);
+    public void onCreate() {
+        super.onCreate();
+        ((App) getApplicationContext()).getAppComponent().inject(this);
     }
 
-    private class MVVRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
+    @Override
+    public RemoteViewsFactory onGetViewFactory(Intent intent) {
+        return new MVVRemoteViewFactory(getApplicationContext(),
+                remoteRepository, widgetController, intent);
+    }
+
+    public static class MVVRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
 
         private final Context applicationContext;
         private List<Departure> departures = new ArrayList<>();
         private int appWidgetID;
         private boolean forceLoadDepartures;
 
-        MVVRemoteViewFactory(Context applicationContext, Intent intent) {
+        private TransportRemoteRepository remoteRepository;
+        private MVVWidgetController widgetController;
+
+        MVVRemoteViewFactory(Context applicationContext,
+                             TransportRemoteRepository remoteRepository,
+                             MVVWidgetController widgetController, Intent intent) {
             this.applicationContext = applicationContext;
+            this.remoteRepository = remoteRepository;
+            this.widgetController = widgetController;
             this.appWidgetID = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
             this.forceLoadDepartures = intent.getBooleanExtra(MVVWidget.MVV_WIDGET_FORCE_RELOAD, true);
         }
 
         @Override
         public void onCreate() {
+            // Free ad space
         }
 
         @Override
         public void onDataSetChanged() {
-            TransportController transportManager = new TransportController(applicationContext);
-            WidgetDepartures wd = transportManager.getWidget(this.appWidgetID);
-            this.departures = wd.getDepartures(transportManager, this.forceLoadDepartures);
+            WidgetDepartures wd = widgetController.getWidget(this.appWidgetID);
+            this.departures = wd.getDepartures(remoteRepository, this.forceLoadDepartures);
         }
 
         @Override

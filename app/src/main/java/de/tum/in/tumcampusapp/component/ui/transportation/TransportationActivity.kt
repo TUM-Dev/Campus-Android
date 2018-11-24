@@ -12,6 +12,8 @@ import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForSearching
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.NoResultsAdapter
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
+import de.tum.`in`.tumcampusapp.component.ui.transportation.repository.TransportLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.transportation.repository.TransportRemoteRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -36,7 +38,10 @@ class TransportationActivity : ActivityForSearching<Unit>(
     lateinit var database: TcaDb
 
     @Inject
-    lateinit var transportController: TransportController
+    lateinit var transportRemoteRepository: TransportRemoteRepository
+
+    @Inject
+    lateinit var transportLocalRepository: TransportLocalRepository
 
     private lateinit var adapterStations: ArrayAdapter<StationResult>
     private var disposable: Disposable? = null
@@ -50,7 +55,7 @@ class TransportationActivity : ActivityForSearching<Unit>(
         // Initialize stations adapter
         val recentStations = database.recentsDao().getAll(RecentsDao.STATIONS) ?: emptyList()
         adapterStations = ArrayAdapter(this, android.R.layout.simple_list_item_1,
-                transportController.getRecentStations(recentStations))
+                transportLocalRepository.getRecentStations(recentStations))
 
         if (adapterStations.count == 0) {
             openSearch()
@@ -88,12 +93,13 @@ class TransportationActivity : ActivityForSearching<Unit>(
             return
         }
 
-        val stations = transportController.getRecentStations(recents)
+        val stations = transportLocalRepository.getRecentStations(recents)
         displayStations(stations)
     }
 
     override fun onStartSearch(query: String) {
-        disposable = transportController.fetchStationsByPrefix(this, query)
+        disposable = transportRemoteRepository
+                .fetchStationsByPrefix(query)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::displayStations) { t ->

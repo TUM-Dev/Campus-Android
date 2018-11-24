@@ -12,6 +12,8 @@ import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ProgressActivity
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.Departure
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
+import de.tum.`in`.tumcampusapp.component.ui.transportation.repository.TransportLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.transportation.repository.TransportRemoteRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
@@ -38,7 +40,10 @@ class TransportationDetailsActivity : ProgressActivity<Unit>(R.layout.activity_t
     lateinit var database: TcaDb
 
     @Inject
-    lateinit var transportController: TransportController
+    lateinit var transportRemoteRepository: TransportRemoteRepository
+
+    @Inject
+    lateinit var transportLocalRepository: TransportLocalRepository
 
     private val disposable = CompositeDisposable()
 
@@ -87,7 +92,7 @@ class TransportationDetailsActivity : ProgressActivity<Unit>(R.layout.activity_t
         // save clicked station into db
         database.recentsDao().insert(Recent(jsonStationResult, RecentsDao.STATIONS))
 
-        disposable += transportController.fetchDeparturesAtStation(locationID)
+        disposable += transportRemoteRepository.fetchDeparturesAtStation(locationID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::displayResults) {
@@ -115,11 +120,11 @@ class TransportationDetailsActivity : ProgressActivity<Unit>(R.layout.activity_t
             view.setOnClickListener { v ->
                 val departureView = v as DepartureView
                 val symbol = departureView.symbol
-                val highlight = if (transportController.isFavorite(symbol)) {
-                    transportController.deleteFavorite(symbol)
+                val highlight = if (transportLocalRepository.isFavorite(symbol)) {
+                    transportLocalRepository.deleteFavorite(symbol)
                     false
                 } else {
-                    transportController.addFavorite(symbol)
+                    transportLocalRepository.addFavorite(symbol)
                     true
                 }
 
@@ -132,7 +137,7 @@ class TransportationDetailsActivity : ProgressActivity<Unit>(R.layout.activity_t
                 }
             }
 
-            if (transportController.isFavorite(lineSymbol)) {
+            if (transportLocalRepository.isFavorite(lineSymbol)) {
                 view.setSymbol(lineSymbol, true)
             } else {
                 view.setSymbol(lineSymbol, false)
