@@ -21,6 +21,7 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocal
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomController
+import de.tum.`in`.tumcampusapp.component.ui.eduroam.EduroamController
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
@@ -222,6 +223,12 @@ class AppModule(private val context: Context) {
     @Provides
     fun provideTuitionFeesNotificationProvider(): TuitionFeesNotificationProvider {
         return TuitionFeesNotificationProvider(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideEduroamController(): EduroamController {
+        return EduroamController(context)
     }
 
 }

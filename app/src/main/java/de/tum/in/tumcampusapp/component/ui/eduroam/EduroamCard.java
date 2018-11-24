@@ -8,14 +8,15 @@ import android.content.pm.PackageManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
-import androidx.annotation.NonNull;
-import com.google.android.material.button.MaterialButton;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.button.MaterialButton;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
@@ -55,9 +56,10 @@ public class EduroamCard extends Card {
     protected boolean shouldShow(@NonNull SharedPreferences prefs) {
         // Check if WiFi is turned on at all, as we cannot say if it was configured if it is off
         WifiManager wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        EduroamController eduroamController = new EduroamController(getContext());
         return wifiManager != null
                 && wifiManager.isWifiEnabled()
-                && EduroamController.getEduroamConfig(getContext()) == null
+                && eduroamController.getEduroamConfig() == null
                 && eduroamAvailable(wifiManager);
     }
 

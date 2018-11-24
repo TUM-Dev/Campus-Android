@@ -13,6 +13,7 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivit
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionFragment
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.widget.MensaRemoteViewFactory
 import de.tum.`in`.tumcampusapp.component.ui.chat.AddChatMemberActivity
+import de.tum.`in`.tumcampusapp.component.ui.eduroam.SetupEduroamActivity
 import de.tum.`in`.tumcampusapp.component.ui.news.KinoDetailsFragment
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsActivity
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavCheckTokenActivity
@@ -27,6 +28,7 @@ import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportationActivi
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportationDetailsActivity
 import de.tum.`in`.tumcampusapp.component.ui.transportation.widget.MVVWidgetConfigureActivity
 import de.tum.`in`.tumcampusapp.service.DownloadService
+import de.tum.`in`.tumcampusapp.service.ScanResultsAvailableReceiver
 import javax.inject.Singleton
 
 @Singleton
@@ -84,5 +86,9 @@ interface AppComponent {
     fun inject(downloadService: DownloadService)
 
     fun inject(mensaRemoteViewFactory: MensaRemoteViewFactory)
+
+    fun inject(setupEduroamActivity: SetupEduroamActivity)
+
+    fun inject(scanResultsAvailableReceiver: ScanResultsAvailableReceiver)
 
 }

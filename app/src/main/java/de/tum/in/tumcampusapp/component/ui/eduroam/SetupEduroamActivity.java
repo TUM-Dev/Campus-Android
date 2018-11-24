@@ -3,14 +3,17 @@ package de.tum.in.tumcampusapp.component.ui.eduroam;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
-import com.google.android.material.textfield.TextInputEditText;
-import androidx.appcompat.app.AlertDialog;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.material.textfield.TextInputEditText;
+
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
+import androidx.appcompat.app.AlertDialog;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -25,6 +28,9 @@ public class SetupEduroamActivity extends BaseActivity {
     private TextInputEditText lrz;
     private TextInputEditText password;
 
+    @Inject
+    EduroamController eduroamController;
+
     public SetupEduroamActivity() {
         super(R.layout.activity_setup_eduroam);
     }
@@ -32,6 +38,7 @@ public class SetupEduroamActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getInjector().inject(this);
 
         if (getIntent().getBooleanExtra(Const.EXTRA_FOREIGN_CONFIGURATION_EXISTS, false)) {
             showDeleteProfileDialog();
@@ -83,24 +90,22 @@ public class SetupEduroamActivity extends BaseActivity {
     public void onClickSetup(View v) {
         //Verify that we have a valid LRZ / TUM ID
         final Pattern pattern = Pattern.compile(Const.TUM_ID_PATTERN);
-        if (!pattern.matcher(lrz.getText())
-                    .matches()) {
+        if (!pattern.matcher(lrz.getText()).matches()) {
             Utils.showToast(this, getString(R.string.eduroam_not_valid_id));
             return;
         }
 
         //We need some sort of password
-        if (password.getText()
-                    .length() == 0) {
+        if (password.getText().length() == 0) {
             Utils.showToast(this, getString(R.string.eduroam_please_enter_password));
             return;
         }
 
         //Do Setup
-        EduroamController manager = new EduroamController(getApplicationContext());
-        boolean success = manager.configureEduroam(lrz.getText()
-                                                      .toString(), password.getText()
-                                                                           .toString());
+        String lrzId = lrz.getText().toString();
+        String pwd = password.getText().toString();
+        boolean success = eduroamController.configureEduroam(lrzId, pwd);
+
         if (success) {
             Utils.showToast(this, R.string.eduroam_success);
             Utils.setSetting(this, Const.REFRESH_CARDS, true);

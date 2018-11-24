@@ -6,8 +6,6 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiEnterpriseConfig;
 import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
@@ -29,13 +29,16 @@ import static android.os.Build.VERSION_CODES.M;
 public class EduroamFixCard extends Card {
 
     private static final String RADIUS_DNS = "radius.lrz.de";
+    private static final String AT_SIGN = "@";
+
     private final List<String> errors;
     private WifiConfiguration eduroam;
-    private static final String AT_SIGN = "@";
+    private EduroamController eduroamController;
 
     public EduroamFixCard(Context context) {
         super(CardManager.CARD_EDUROAM_FIX, context, "card_eduroam_fix_start");
         errors = new ArrayList<>();
+        eduroamController = new EduroamController(context);
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
@@ -79,7 +82,7 @@ public class EduroamFixCard extends Card {
 
     private boolean isConfigValid() {
         errors.clear();
-        eduroam = EduroamController.getEduroamConfig(getContext());
+        eduroam = eduroamController.getEduroamConfig();
 
         //If it is not configured then the config valid
         if (eduroam == null) {

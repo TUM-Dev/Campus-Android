@@ -14,14 +14,18 @@ import android.net.wifi.ScanResult
 import android.net.wifi.WifiManager
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import de.tum.`in`.tumcampusapp.App
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.wifimeasurement.WifiMeasurementLocationListener
 import de.tum.`in`.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.EduroamController
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.SetupEduroamActivity
 import de.tum.`in`.tumcampusapp.utils.Const
-import de.tum.`in`.tumcampusapp.utils.NetUtils
+import de.tum.`in`.tumcampusapp.utils.NetUtils.isConnected
 import de.tum.`in`.tumcampusapp.utils.Utils
+import org.jetbrains.anko.locationManager
+import org.jetbrains.anko.wifiManager
+import javax.inject.Inject
 
 /**
  * Listens for android's ScanResultsAvailable broadcast and checks if eduroam is nearby.
@@ -31,6 +35,9 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
 
     private var locationManager: LocationManager? = null
 
+    @Inject
+    lateinit var eduroamController: EduroamController
+
     /**
      * This method either gets called by broadcast directly or gets repeatedly triggered by the
      * WifiScanHandler, which starts scans at time periods, as long as an eduroam or lrz network is
@@ -39,6 +46,8 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
      * interval.
      */
     override fun onReceive(context: Context, intent: Intent) {
+        (context.applicationContext as App).appComponent.inject(this)
+
         if (intent.action != WifiManager.SCAN_RESULTS_AVAILABLE_ACTION) {
             return
         }
@@ -46,14 +55,12 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
         WifiScanHandler.getInstance().onScanFinished()
 
         //Check if wifi is turned on at all
-        val wifiManager = context.applicationContext
-                .getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val wifiManager = context.wifiManager
         if (!wifiManager.isWifiEnabled) {
             return
         }
 
-        locationManager = context.applicationContext
-                .getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        locationManager = context.locationManager
 
         //Check if locations are enabled
         val locationsEnabled = ContextCompat.checkSelfPermission(
@@ -64,7 +71,7 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
         }
 
         // Test if user has eduroam configured already
-        val isEduroamConfigured = EduroamController.getEduroamConfig(context) != null || NetUtils.isConnected(context)
+        val isEduroamConfigured = eduroamController.getEduroamConfig() != null || isConnected(context)
 
         val wifiScansEnabled = Utils.getSettingBool(context, Const.WIFI_SCANS_ALLOWED, false)
         var nextScanScheduled = false
@@ -97,11 +104,6 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
             } else {
                 Utils.log("WifiScanHandler stopped")
             }
-        }
-
-        //???
-        if (!Utils.getSettingBool(context, SHOULD_SHOW, true)) {
-            Utils.setSetting(context, SHOULD_SHOW, true)
         }
     }
 
