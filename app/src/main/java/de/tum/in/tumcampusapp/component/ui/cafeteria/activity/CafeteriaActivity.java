@@ -171,6 +171,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
 
         if (selectedIndex != NONE_SELECTED) {
             spinner.setSelection(selectedIndex);
+            cafeteriaViewModel.updateSelectedCafeteria(mCafeterias.get(selectedIndex));
         }
     }
 
