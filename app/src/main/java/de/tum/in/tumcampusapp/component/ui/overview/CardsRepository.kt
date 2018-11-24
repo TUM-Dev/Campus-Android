@@ -6,19 +6,19 @@ import androidx.lifecycle.MutableLiveData
 import com.crashlytics.android.Crashlytics
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
-import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeeManager
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarCardsProvider
+import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeesCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.EduroamCard
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.EduroamFixCard
-import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
+import de.tum.`in`.tumcampusapp.component.ui.news.NewsCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsCard
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.LoginPromptCard
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
-import de.tum.`in`.tumcampusapp.component.ui.overview.card.ProvidesCard
-import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
-import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
+import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardsProvider
+import de.tum.`in`.tumcampusapp.component.ui.ticket.EventCardsProvider
+import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportCardsProvider
 import de.tum.`in`.tumcampusapp.utils.Utils
 import org.jetbrains.anko.doAsync
 import javax.inject.Inject
@@ -26,7 +26,12 @@ import javax.inject.Inject
 class CardsRepository @Inject constructor(
         private val context: Context,
         private val cafeteriaCardsProvider: CafeteriaCardsProvider,
-        private val chatRoomCardsProvider: ChatRoomCardsProvider
+        private val chatRoomCardsProvider: ChatRoomCardsProvider,
+        private val newsCardsProvider: NewsCardsProvider,
+        private val transportCardsProvider: TransportCardsProvider,
+        private val eventCardsProvider: EventCardsProvider,
+        private val tuitionFeesCardsProvider: TuitionFeesCardsProvider,
+        private val calendarCardsProvider: CalendarCardsProvider
 ) {
 
     private var cards = MutableLiveData<List<Card>>()
@@ -67,23 +72,23 @@ class CardsRepository @Inject constructor(
             add(EduroamFixCard(context).getIfShowOnStart())
         }
 
-        val providers = ArrayList<ProvidesCard>().apply {
+        val providers = ArrayList<CardsProvider>().apply {
             if (AccessTokenManager.hasValidAccessToken(context)) {
-                add(CalendarController(context))
-                add(TuitionFeeManager(context))
+                add(calendarCardsProvider)
+                add(tuitionFeesCardsProvider)
                 add(chatRoomCardsProvider)
             }
 
             add(cafeteriaCardsProvider)
-            add(TransportController(context))
-            add(NewsController(context))
-            add(EventsController(context))
+            add(transportCardsProvider)
+            add(newsCardsProvider)
+            add(eventCardsProvider)
         }
 
         providers.forEach { provider ->
             // Don't prevent a single card exception from blocking other cards from being displayed
             try {
-                val cards = provider.getCards(cacheControl)
+                val cards = provider.provideCards(cacheControl)
                 results.addAll(cards)
             } catch (e: Exception) {
                 // We still want to know about it though

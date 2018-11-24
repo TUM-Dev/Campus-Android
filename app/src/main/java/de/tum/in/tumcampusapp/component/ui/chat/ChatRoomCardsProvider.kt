@@ -7,7 +7,7 @@ import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatRoom
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
-import de.tum.`in`.tumcampusapp.component.ui.overview.card.ProvidesCard
+import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardsProvider
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -21,9 +21,9 @@ class ChatRoomCardsProvider @Inject constructor(
         private val tumCabeClient: TUMCabeClient,
         private val chatRoomController: ChatRoomController,
         private val database: TcaDb
-) : ProvidesCard {
+) : CardsProvider {
 
-    override fun getCards(cacheControl: CacheControl): List<Card> {
+    override fun provideCards(cacheControl: CacheControl): List<Card> {
         val results = ArrayList<Card>()
 
         try {

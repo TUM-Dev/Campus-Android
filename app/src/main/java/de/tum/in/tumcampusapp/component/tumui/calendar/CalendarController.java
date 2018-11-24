@@ -12,7 +12,6 @@ import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.provider.CalendarContract;
 
-import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
@@ -22,7 +21,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.notifications.NotificationScheduler;
 import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
 import de.tum.in.tumcampusapp.component.notifications.model.FutureNotification;
@@ -33,8 +31,6 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.Event;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBlacklist;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocation;
-import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
-import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -43,7 +39,7 @@ import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 /**
  * Calendar Manager, handles database stuff, external imports.
  */
-public class CalendarController implements ProvidesCard, ProvidesNotifications {
+public class CalendarController implements ProvidesNotifications {
 
     private static final String[] PROJECTION = {"_id", "name"};
 
@@ -288,21 +284,6 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
             geo = roomLocation.toGeo();
         }
         return geo;
-    }
-
-    @NotNull
-    @Override
-    public List<Card> getCards(@NonNull CacheControl cacheControl) {
-        List<CalendarItem> nextCalendarItems = calendarDao.getNextUniqueCalendarItems();
-        List<Card> results = new ArrayList<>();
-
-        if (!nextCalendarItems.isEmpty()) {
-            NextLectureCard card = new NextLectureCard(mContext);
-            card.setLectures(nextCalendarItems);
-            results.add(card.getIfShowOnStart());
-        }
-
-        return results;
     }
 
     @Override

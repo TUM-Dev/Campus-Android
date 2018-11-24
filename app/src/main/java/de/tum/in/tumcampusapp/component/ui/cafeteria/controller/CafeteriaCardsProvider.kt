@@ -7,7 +7,7 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaMenuCard
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
-import de.tum.`in`.tumcampusapp.component.ui.overview.card.ProvidesCard
+import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardsProvider
 import java.util.*
 import javax.inject.Inject
 
@@ -16,9 +16,9 @@ class CafeteriaCardsProvider @Inject constructor(
         private val cafeteriaManager: CafeteriaManager,
         private val localRepository: CafeteriaLocalRepository,
         private val locationManager: TumLocationManager
-) : ProvidesCard {
+) : CardsProvider {
 
-    override fun getCards(cacheControl: CacheControl): List<Card> {
+    override fun provideCards(cacheControl: CacheControl): List<Card> {
         val results = ArrayList<Card>()
 
         val cafeteria = getCafeteriaWithMenus() ?: return results

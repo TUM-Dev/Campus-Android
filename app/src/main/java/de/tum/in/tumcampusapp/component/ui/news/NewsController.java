@@ -1,9 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.news;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
 
-import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 
 import java.io.IOException;
@@ -12,15 +10,11 @@ import java.util.Collection;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.notifications.NotificationScheduler;
 import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
 import de.tum.in.tumcampusapp.component.notifications.model.AppNotification;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
-import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
-import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
-import de.tum.in.tumcampusapp.component.ui.tufilm.FilmCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Utils;
 import de.tum.in.tumcampusapp.utils.sync.SyncManager;
@@ -28,7 +22,7 @@ import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 /**
  * News Manager, handles database stuff, external imports
  */
-public class NewsController implements ProvidesCard, ProvidesNotifications {
+public class NewsController implements ProvidesNotifications {
 
     private static final int TIME_TO_SYNC = 86400;
     private final Context context;
@@ -166,7 +160,7 @@ public class NewsController implements ProvidesCard, ProvidesNotifications {
      * @param context
      * @return
      */
-    private Collection<Integer> getActiveSources(Context context) {
+    Collection<Integer> getActiveSources(Context context) {
         Collection<Integer> sources = new ArrayList<>();
         List<NewsSources> newsSources = getNewsSources();
         for (NewsSources newsSource : newsSources) {
@@ -176,34 +170,6 @@ public class NewsController implements ProvidesCard, ProvidesNotifications {
             }
         }
         return sources;
-    }
-
-    @NotNull
-    @Override
-    public List<Card> getCards(@NonNull CacheControl cacheControl) {
-        List<Card> results = new ArrayList<>();
-        Collection<Integer> sources = getActiveSources(context);
-
-        List<News> news;
-        if (Utils.getSettingBool(context, "card_news_latest_only", true)) {
-            news = newsDao.getBySourcesLatest(sources.toArray(new Integer[0]));
-        } else {
-            news = newsDao.getBySources(sources.toArray(new Integer[0]));
-        }
-
-        for (News n : news) {
-            NewsCard card;
-            if (n.isFilm()) {
-                card = new FilmCard(context);
-            } else {
-                card = new NewsCard(context);
-            }
-
-            card.setNews(n);
-            results.add(card.getIfShowOnStart());
-        }
-
-        return results;
     }
 
     @Override

@@ -7,7 +7,10 @@ import dagger.Provides
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.component.other.locations.TumLocationManager
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarCardsProvider
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
+import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeeManager
+import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeesCardsProvider
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeesNotificationProvider
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaNotificationProvider
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaCardsProvider
@@ -18,8 +21,10 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocal
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomController
+import de.tum.`in`.tumcampusapp.component.ui.news.NewsCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
+import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportNotificationProvider
 import de.tum.`in`.tumcampusapp.database.TcaDb
@@ -101,6 +106,15 @@ class AppModule(private val context: Context) {
 
     @Singleton
     @Provides
+    fun provideNewsCardsProvider(
+            database: TcaDb,
+            newsController: NewsController
+    ): NewsCardsProvider {
+        return NewsCardsProvider(context, database, newsController)
+    }
+
+    @Singleton
+    @Provides
     fun provideEventsController(): EventsController {
         return EventsController(context)
     }
@@ -113,8 +127,24 @@ class AppModule(private val context: Context) {
 
     @Singleton
     @Provides
+    fun provideCalendarCardsProvider(
+            database: TcaDb
+    ): CalendarCardsProvider {
+        return CalendarCardsProvider(context, database)
+    }
+
+    @Singleton
+    @Provides
     fun provideTransportController(): TransportController {
         return TransportController(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideTransportCardsProvider(
+            transportController: TransportController
+    ): TransportCardsProvider {
+        return TransportCardsProvider(context, transportController)
     }
 
     @Singleton
@@ -172,6 +202,20 @@ class AppModule(private val context: Context) {
             tumLocationManager: TumLocationManager
     ): TransportNotificationProvider {
         return TransportNotificationProvider(context, transportController, tumLocationManager)
+    }
+
+    @Singleton
+    @Provides
+    fun provideTuitionFeeManager(): TuitionFeeManager {
+        return TuitionFeeManager(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideTuitionFeesCardsProvider(
+            tuitionFeeManager: TuitionFeeManager
+    ): TuitionFeesCardsProvider {
+        return TuitionFeesCardsProvider(context, tuitionFeeManager)
     }
 
     @Singleton

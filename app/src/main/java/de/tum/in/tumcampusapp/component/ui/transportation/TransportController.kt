@@ -2,14 +2,10 @@ package de.tum.`in`.tumcampusapp.component.ui.transportation
 
 import android.content.Context
 import android.util.SparseArray
-import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
 import de.tum.`in`.tumcampusapp.component.notifications.ProvidesNotifications
 import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
-import de.tum.`in`.tumcampusapp.component.other.locations.TumLocationManager
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.Event
-import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
-import de.tum.`in`.tumcampusapp.component.ui.overview.card.ProvidesCard
 import de.tum.`in`.tumcampusapp.component.ui.transportation.api.MvvClient
 import de.tum.`in`.tumcampusapp.component.ui.transportation.api.MvvDepartureList
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.TransportFavorites
@@ -18,15 +14,13 @@ import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.Departure
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.WidgetDepartures
 import de.tum.`in`.tumcampusapp.database.TcaDb
-import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.Observable
-import java.util.*
 
 /**
  * Transport Manager, handles querying data from mvv and card creation
  */
-class TransportController(private val context: Context) : ProvidesCard, ProvidesNotifications {
+class TransportController(private val context: Context) : ProvidesNotifications {
 
     private val transportDao = TcaDb.getInstance(context).transportDao()
 
@@ -104,29 +98,6 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
 
         widgetDeparturesList.put(widgetId, widgetDepartures)
         return widgetDepartures
-    }
-
-    override fun getCards(cacheControl: CacheControl): List<Card> {
-        val results = ArrayList<Card>()
-        if (!NetUtils.isConnected(context)) {
-            return emptyList()
-        }
-
-        // Get station for current campus
-        val locMan = TumLocationManager(context)
-        val station = locMan.getStation() ?: return emptyList()
-
-        val departures = fetchDeparturesAtStation(station.id).blockingFirst()
-        val card = MVVCard(context).apply {
-            setStation(station)
-            setDepartures(departures)
-        }
-
-        card.getIfShowOnStart()?.let {
-            results.add(it)
-        }
-
-        return results
     }
 
     override fun hasNotificationsEnabled(): Boolean {
