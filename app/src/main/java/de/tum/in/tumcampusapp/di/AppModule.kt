@@ -2,7 +2,6 @@ package de.tum.`in`.tumcampusapp.di
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.room.PrimaryKey
 import dagger.Module
 import dagger.Provides
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
@@ -149,8 +148,10 @@ class AppModule(private val context: Context) {
 
     @Singleton
     @Provides
-    fun provideTransportNotificationProvider(): TransportNotificationProvider {
-        return TransportNotificationProvider(context)
+    fun provideTransportNotificationProvider(
+            transportController: TransportController
+    ): TransportNotificationProvider {
+        return TransportNotificationProvider(context, transportController)
     }
 
     @Singleton

@@ -5,11 +5,11 @@ import android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_ID
 import android.appwidget.AppWidgetManager.INVALID_APPWIDGET_ID
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.content.ContextCompat
 import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Switch
+import androidx.core.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForSearching
@@ -23,6 +23,7 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
         R.layout.activity_mvv_widget_configure, MVVStationSuggestionProvider.AUTHORITY, 3) {
@@ -34,10 +35,14 @@ class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
 
     private lateinit var widgetDepartures: WidgetDepartures
 
+    @Inject
+    lateinit var transportController: TransportController
+
     private val disposable = CompositeDisposable()
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        injector.inject(this)
 
         recentsDao = TcaDb.getInstance(this).recentsDao()
 
@@ -55,8 +60,7 @@ class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
         appWidgetId = intent.extras?.getInt(EXTRA_APPWIDGET_ID, INVALID_APPWIDGET_ID)
                 ?: INVALID_APPWIDGET_ID
 
-        val controller = TransportController(this)
-        widgetDepartures = controller.getWidget(appWidgetId)
+        widgetDepartures = transportController.getWidget(appWidgetId)
 
         val autoReloadSwitch = findViewById<Switch>(R.id.mvv_widget_auto_reload)
         autoReloadSwitch.isChecked = widgetDepartures.autoReload
@@ -75,7 +79,7 @@ class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
 
         // Initialize stations adapter
         val recentQueries = recentsDao.getAll(RecentsDao.STATIONS) ?: emptyList()
-        val stations = TransportController.getRecentStations(recentQueries)
+        val stations = transportController.getRecentStations(recentQueries)
         adapterStations = ArrayAdapter(this, android.R.layout.simple_list_item_1, stations)
 
         if (adapterStations.isEmpty) {
@@ -93,12 +97,12 @@ class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
             return
         }
 
-        val stations = TransportController.getRecentStations(recents)
+        val stations = transportController.getRecentStations(recents)
         displayStations(stations)
     }
 
     override fun onStartSearch(query: String) {
-        disposable.add(TransportController.getStationsFromExternal(this, query)
+        disposable.add(transportController.fetchStationsByPrefix(this, query)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::displayStations) {
@@ -144,8 +148,7 @@ class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
      */
     private fun saveAndReturn() {
         // save the settings
-        val transportManager = TransportController(this)
-        transportManager.addWidget(appWidgetId, widgetDepartures)
+        transportController.addWidget(appWidgetId, widgetDepartures)
 
         // update widget
         val reloadIntent = Intent(this, MVVWidget::class.java)

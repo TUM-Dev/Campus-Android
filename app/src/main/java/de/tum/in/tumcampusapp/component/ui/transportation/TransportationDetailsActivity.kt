@@ -14,6 +14,7 @@ import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.Departure
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Utils
+import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -86,14 +87,14 @@ class TransportationDetailsActivity : ProgressActivity<Unit>(R.layout.activity_t
         // save clicked station into db
         database.recentsDao().insert(Recent(jsonStationResult, RecentsDao.STATIONS))
 
-        disposable.add(TransportController.getDeparturesFromExternal(this, locationID)
+        disposable += transportController.fetchDeparturesAtStation(locationID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::displayResults) {
-                    // something went wrong
+                    // Something went wrong
                     Utils.log(it)
                     showError(R.string.no_departures_found)
-                })
+                }
     }
 
     /**

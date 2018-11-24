@@ -116,7 +116,7 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
         val locMan = TumLocationManager(context)
         val station = locMan.getStation() ?: return emptyList()
 
-        val departures = getDeparturesFromExternal(context, station.id).blockingFirst()
+        val departures = fetchDeparturesAtStation(station.id).blockingFirst()
         val card = MVVCard(context).apply {
             setStation(station)
             setDepartures(departures)
@@ -160,8 +160,30 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
         NotificationScheduler(context).schedule(notifications)
     }
 
+    fun fetchDeparturesAtStation(stationID: String): Observable<List<Departure>> {
+        return MvvClient.getInstance(context)
+                .getDepartures(stationID)
+                .onErrorReturn { MvvDepartureList(emptyList()) }
+                .map { it.departures.orEmpty() }
+                .map { it.map { mvvDeparture -> Departure.create(mvvDeparture) } }
+                .map { it.sortedBy { departure -> departure.countDown } }
+    }
+
+    fun fetchStationsByPrefix(context: Context, prefix: String): Observable<List<StationResult>> {
+        return MvvClient.getInstance(context)
+                .getStations(prefix)
+                .map { it.stations.sortedBy { station -> station.quality } }
+    }
+
+    fun getRecentStations(recents: Collection<Recent>): List<StationResult> {
+        return recents.mapNotNull {
+            StationResult.fromRecent(it)
+        }
+    }
+
     companion object {
-        private var widgetDeparturesList = SparseArray<WidgetDepartures>()
+
+        private val widgetDeparturesList = SparseArray<WidgetDepartures>()
 
         /**
          * Get all departures for a station.
@@ -169,7 +191,8 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
          * @param stationID Station ID, station name might or might not work
          * @return List of departures
          */
-        @JvmStatic
+        /*@JvmStatic
+        @Deprecated("Use fetchDeparturesAtStation") // TODO
         fun getDeparturesFromExternal(context: Context, stationID: String): Observable<List<Departure>> {
             return MvvClient.getInstance(context)
                     .getDepartures(stationID)
@@ -177,26 +200,7 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
                     .map { it.departures.orEmpty() }
                     .map { it.map { mvvDeparture -> Departure.create(mvvDeparture) } }
                     .map { it.sortedBy { departure -> departure.countDown } }
-        }
+        }*/
 
-        /**
-         * Find stations by station name prefix
-         *
-         * @param prefix Name prefix
-         * @return List of StationResult
-         */
-        @JvmStatic
-        fun getStationsFromExternal(context: Context, prefix: String): Observable<List<StationResult>> {
-            return MvvClient.getInstance(context)
-                    .getStations(prefix)
-                    .map { it.stations.sortedBy { station -> station.quality } }
-        }
-
-        @JvmStatic
-        fun getRecentStations(recents: Collection<Recent>): List<StationResult> {
-            return recents.mapNotNull {
-                StationResult.fromRecent(it)
-            }
-        }
     }
 }

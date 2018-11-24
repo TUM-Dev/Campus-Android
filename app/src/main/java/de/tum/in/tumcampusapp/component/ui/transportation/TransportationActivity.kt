@@ -15,7 +15,7 @@ import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationRes
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.net.UnknownHostException
 import javax.inject.Inject
@@ -35,8 +35,11 @@ class TransportationActivity : ActivityForSearching<Unit>(
     @Inject
     lateinit var database: TcaDb
 
+    @Inject
+    lateinit var transportController: TransportController
+
     private lateinit var adapterStations: ArrayAdapter<StationResult>
-    private val disposable = CompositeDisposable()
+    private var disposable: Disposable? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +50,7 @@ class TransportationActivity : ActivityForSearching<Unit>(
         // Initialize stations adapter
         val recentStations = database.recentsDao().getAll(RecentsDao.STATIONS) ?: emptyList()
         adapterStations = ArrayAdapter(this, android.R.layout.simple_list_item_1,
-                TransportController.getRecentStations(recentStations))
+                transportController.getRecentStations(recentStations))
 
         if (adapterStations.count == 0) {
             openSearch()
@@ -85,12 +88,12 @@ class TransportationActivity : ActivityForSearching<Unit>(
             return
         }
 
-        val stations = TransportController.getRecentStations(recents)
+        val stations = transportController.getRecentStations(recents)
         displayStations(stations)
     }
 
     override fun onStartSearch(query: String) {
-        disposable.add(TransportController.getStationsFromExternal(this, query)
+        disposable = transportController.fetchStationsByPrefix(this, query)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::displayStations) { t ->
@@ -100,7 +103,7 @@ class TransportationActivity : ActivityForSearching<Unit>(
                         is UnknownHostException -> showNoInternetLayout()
                         else -> showError(R.string.something_wrong)
                     }
-                })
+                }
     }
 
     private fun displayStations(stations: List<StationResult>) {
@@ -127,6 +130,6 @@ class TransportationActivity : ActivityForSearching<Unit>(
 
     override fun onStop() {
         super.onStop()
-        disposable.clear()
+        disposable?.dispose()
     }
 }

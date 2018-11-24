@@ -10,8 +10,12 @@ import de.tum.`in`.tumcampusapp.component.notifications.model.InstantNotificatio
 import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
 import de.tum.`in`.tumcampusapp.component.other.locations.TumLocationManager
 import de.tum.`in`.tumcampusapp.utils.Const
+import javax.inject.Inject
 
-class TransportNotificationProvider(context: Context) : NotificationProvider(context) {
+class TransportNotificationProvider @Inject constructor(
+        context: Context,
+        private val transportController: TransportController
+) : NotificationProvider(context) {
 
     override fun getNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_MVV)
@@ -27,8 +31,8 @@ class TransportNotificationProvider(context: Context) : NotificationProvider(con
         val text = "Departures at ${station.station}"
 
         val inboxStyle = NotificationCompat.InboxStyle()
-        TransportController
-                .getDeparturesFromExternal(context, station.id)
+        transportController
+                .fetchDeparturesAtStation(station.id)
                 .blockingFirst()
                 .map { "${it.servingLine} (${it.direction}) in ${it.countDown} min" }
                 .forEach { inboxStyle.addLine(it) }

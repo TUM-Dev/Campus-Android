@@ -4,13 +4,13 @@ import android.annotation.SuppressLint;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
-import androidx.annotation.Nullable;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.transportation.MVVSymbol;
 import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
@@ -46,7 +46,7 @@ public class MVVWidgetService extends RemoteViewsService {
         public void onDataSetChanged() {
             TransportController transportManager = new TransportController(applicationContext);
             WidgetDepartures wd = transportManager.getWidget(this.appWidgetID);
-            this.departures = wd.getDepartures(applicationContext, this.forceLoadDepartures);
+            this.departures = wd.getDepartures(transportManager, this.forceLoadDepartures);
         }
 
         @Override

@@ -1,9 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa
 
-import android.content.Context
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
 import de.tum.`in`.tumcampusapp.component.ui.transportation.widget.MVVWidget
-import java.util.*
 
 /**
  * Create new WidgetDepartures. It contains the widget settingsPrefix and can load the according departure list
@@ -13,11 +11,13 @@ import java.util.*
  * @param useLocation Whether this widgets station is determined by the current location
  * @param autoReload  If widget should update automatically, otherwise a button-press is required
  */
-class WidgetDepartures(station: String = "",
-                       stationId: String = "",
-                       var useLocation: Boolean = false,
-                       var autoReload: Boolean = false,
-                       var departures: MutableList<Departure> = ArrayList()) {
+class WidgetDepartures(
+        station: String = "",
+        stationId: String = "",
+        var useLocation: Boolean = false,
+        var autoReload: Boolean = false,
+        var departures: MutableList<Departure> = mutableListOf()
+) {
 
     private var lastLoad: Long = 0
     /**
@@ -55,11 +55,12 @@ class WidgetDepartures(station: String = "",
      *
      * @return The list of departures
      */
-    fun getDepartures(context: Context, forceServerLoad: Boolean): List<Departure> {
+    fun getDepartures(transportController: TransportController,
+                      forceServerLoad: Boolean): List<Departure> {
         // download only id there is no data or the last loading is more than X min ago
         val shouldAutoReload = System.currentTimeMillis() - this.lastLoad > MVVWidget.DOWNLOAD_DELAY
         if (this.departures.isEmpty() || forceServerLoad || this.autoReload && shouldAutoReload) {
-            val departures = TransportController.getDeparturesFromExternal(context, this.stationId).blockingFirst()
+            val departures = transportController.fetchDeparturesAtStation(stationId).blockingFirst()
             if (departures.isEmpty()) {
                 this.isOffline = true
             } else {

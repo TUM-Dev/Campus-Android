@@ -23,21 +23,19 @@ object ImageUtils {
 
     @JvmStatic
     fun createImageFile(context: Context): File? {
-        // Create an image file name
         val timeStamp = DateTimeFormat.forPattern("yyyyMMdd_HHmmss")
                 .withLocale(Locale.GERMANY)
                 .print(DateTime.now())
         val imageFileName = "IMG_" + timeStamp + "_"
         val storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 
-        //mCurrentPhotoPath = image.absolutePath
         return tryOrNull {
             File.createTempFile(imageFileName, ".jpg", storageDir)
         }
     }
 
     @JvmStatic
-    fun rescaleBitmap(context: Context, src: Uri?, destination: File) {
+    fun rescaleBitmapAndSaveToFile(context: Context, src: Uri?, destination: File) {
         try {
             var bitmap = MediaStore.Images.Media.getBitmap(context.applicationContext.contentResolver, src)
             val out = ByteArrayOutputStream()

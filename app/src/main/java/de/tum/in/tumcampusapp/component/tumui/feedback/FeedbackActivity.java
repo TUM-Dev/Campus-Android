@@ -366,7 +366,7 @@ public class FeedbackActivity extends BaseActivity {
 
     private void onNewImageAvailable(File image, Uri uri) {
         mCurrentPhotoPath = image.getAbsolutePath();
-        ImageUtils.rescaleBitmap(this, uri, image);
+        ImageUtils.rescaleBitmapAndSaveToFile(this, uri, image);
         picturePaths.add(image.getAbsolutePath());
         thumbnailsAdapter.notifyDataSetChanged();
     }

@@ -24,6 +24,7 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.fragment.EventDetailsFragmen
 import de.tum.`in`.tumcampusapp.component.ui.ticket.fragment.EventsFragment
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportationActivity
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportationDetailsActivity
+import de.tum.`in`.tumcampusapp.component.ui.transportation.widget.MVVWidgetConfigureActivity
 import de.tum.`in`.tumcampusapp.service.DownloadService
 import javax.inject.Singleton
 
@@ -36,6 +37,8 @@ interface AppComponent {
     fun inject(calendarActivity: CalendarActivity)
 
     fun inject(newsActivity: NewsActivity)
+
+    fun inject(mvvWidgetConfigureActivity: MVVWidgetConfigureActivity)
 
     fun inject(feedbackActivity: FeedbackActivity)
 
