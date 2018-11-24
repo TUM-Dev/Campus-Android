@@ -22,11 +22,12 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
-import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservation;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
+import de.tum.in.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository;
+import de.tum.in.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
@@ -51,7 +52,10 @@ public class BuyTicketActivity extends BaseActivity {
     TUMCabeClient tumCabeClient;
 
     @Inject
-    EventsController eventsController;
+    EventsLocalRepository eventsLocalRepository;
+
+    @Inject
+    TicketsLocalRepository ticketsLocalRepository;
 
     public BuyTicketActivity() {
         super(R.layout.activity_buy_ticket);
@@ -86,7 +90,7 @@ public class BuyTicketActivity extends BaseActivity {
 
     private void handleTicketTypesDownloadSuccess(@NonNull List<TicketType> ticketTypes) {
         this.ticketTypes = ticketTypes;
-        eventsController.addTicketTypes(ticketTypes);
+        ticketsLocalRepository.addTicketTypes(ticketTypes);
         setupUi();
     }
 
@@ -106,7 +110,7 @@ public class BuyTicketActivity extends BaseActivity {
         TextView locationView = findViewById(R.id.ticket_details_location);
         TextView dateView = findViewById(R.id.ticket_details_date);
 
-        Event event = eventsController.getEventById(eventId);
+        Event event = eventsLocalRepository.getEventById(eventId);
 
         eventView.setText(event.getTitle());
         locationView.setText(event.getLocality());

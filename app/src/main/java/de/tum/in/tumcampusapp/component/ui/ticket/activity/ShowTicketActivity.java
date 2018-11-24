@@ -26,10 +26,11 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
-import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
+import de.tum.in.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository;
+import de.tum.in.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
@@ -47,7 +48,10 @@ public class ShowTicketActivity extends BaseActivity {
     private TextView redemptionStateTextView;
 
     @Inject
-    EventsController eventsController;
+    EventsLocalRepository eventsLocalRepository;
+
+    @Inject
+    TicketsLocalRepository ticketsLocalRepository;
 
     @Inject
     TUMCabeClient tumCabeClient;
@@ -118,7 +122,7 @@ public class ShowTicketActivity extends BaseActivity {
 
     private void handleTicketRefreshSuccess(Ticket ticket) {
         this.ticket = ticket;
-        eventsController.insert(ticket);
+        ticketsLocalRepository.insert(ticket);
 
         setViewData();
         swipeRefreshLayout.setRefreshing(false);
@@ -132,9 +136,9 @@ public class ShowTicketActivity extends BaseActivity {
     private void loadTicketData() {
         int eventId = getIntent().getIntExtra(Const.KEY_EVENT_ID, 0);
 
-        ticket = eventsController.getTicketByEventId(eventId);
-        event = eventsController.getEventById(ticket.getEventId());
-        ticketType = eventsController.getTicketTypeById(ticket.getTicketTypeId());
+        ticket = ticketsLocalRepository.getTicketByEventId(eventId);
+        event = eventsLocalRepository.getEventById(ticket.getEventId());
+        ticketType = ticketsLocalRepository.getTicketTypeById(ticket.getTicketTypeId());
     }
 
     private void setViewData() {

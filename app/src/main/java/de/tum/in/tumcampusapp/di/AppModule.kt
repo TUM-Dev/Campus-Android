@@ -24,7 +24,10 @@ import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomController
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.EduroamController
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
-import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
+import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportNotificationProvider
@@ -79,6 +82,34 @@ class AppModule(private val context: Context) {
 
     @Singleton
     @Provides
+    fun provideEventsLocalRepository(
+            database: TcaDb
+    ): EventsLocalRepository {
+        return EventsLocalRepository(database)
+    }
+
+    @Singleton
+    @Provides
+    fun provideEventsRemoteRepository(
+            tumCabeClient: TUMCabeClient,
+            eventsLocalRepository: EventsLocalRepository,
+            ticketsLocalRepository: TicketsLocalRepository,
+            ticketsRemoteRepository: TicketsRemoteRepository
+    ): EventsRemoteRepository {
+        return EventsRemoteRepository(context, tumCabeClient,
+                eventsLocalRepository, ticketsLocalRepository, ticketsRemoteRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideTicketsLocalRepository(
+            database: TcaDb
+    ): TicketsLocalRepository {
+        return TicketsLocalRepository(database)
+    }
+
+    @Singleton
+    @Provides
     fun provideTumLocationManager(): TumLocationManager {
         return TumLocationManager(context)
     }
@@ -112,12 +143,6 @@ class AppModule(private val context: Context) {
             newsController: NewsController
     ): NewsCardsProvider {
         return NewsCardsProvider(context, database, newsController)
-    }
-
-    @Singleton
-    @Provides
-    fun provideEventsController(): EventsController {
-        return EventsController(context)
     }
 
     @Singleton

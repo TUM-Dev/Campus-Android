@@ -18,11 +18,7 @@ import org.joda.time.DateTime
  */
 class EventHelper {
     companion object {
-        fun buyTicket(event: Event, buyButton: View, context: Context?) {
-            if (context == null) {
-                return
-            }
-
+        fun buyTicket(event: Event, buyButton: View, context: Context) {
             if (isEventImminent(event)) {
                 showEventImminentDialog(context)
                 buyButton.visibility = View.GONE

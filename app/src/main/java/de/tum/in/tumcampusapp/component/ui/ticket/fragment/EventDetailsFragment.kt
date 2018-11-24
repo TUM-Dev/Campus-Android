@@ -17,10 +17,10 @@ import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CreateEventActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventHelper
-import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.payload.TicketStatus
+import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Const.KEY_EVENT_ID
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
@@ -43,7 +43,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private var event: Event? = null
 
     @Inject
-    lateinit var eventsController: EventsController
+    lateinit var eventsLocalRepository: EventsLocalRepository
 
     @Inject
     lateinit var tumCabeClient: TUMCabeClient
@@ -93,7 +93,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onResume() {
         super.onResume()
         event?.let {
-            if (!eventsController.isEventBooked(it) && EventHelper.isEventImminent(it)) {
+            if (!eventsLocalRepository.isEventBooked(it) && EventHelper.isEventImminent(it)) {
                 ticketButton.visibility = View.GONE
             }
         }
@@ -112,12 +112,14 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             posterProgressBar.visibility = View.GONE
         }
 
-        if (eventsController.isEventBooked(event)) {
+        if (eventsLocalRepository.isEventBooked(event)) {
             ticketButton.text = getString(R.string.show_ticket)
             ticketButton.setOnClickListener { showTicket(event) }
         } else {
             ticketButton.text = getString(R.string.buy_ticket)
-            ticketButton.setOnClickListener { EventHelper.buyTicket(event, ticketButton, context) }
+            ticketButton.setOnClickListener {
+                EventHelper.buyTicket(event, ticketButton, requireContext())
+            }
         }
 
         context?.let {

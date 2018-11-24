@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.squareup.picasso.Picasso;
@@ -34,10 +33,10 @@ import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoRemoteRepository;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventHelper;
-import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
+import de.tum.in.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -61,7 +60,7 @@ public class KinoDetailsFragment extends Fragment {
     private final CompositeDisposable disposables = new CompositeDisposable();
 
     @Inject
-    EventsController eventsController;
+    EventsLocalRepository eventsLocalRepository;
 
     @Inject
     TUMCabeClient tumCabeClient;
@@ -125,14 +124,10 @@ public class KinoDetailsFragment extends Fragment {
 
     private void initBuyOrShowTicket(Event event) {
         MaterialButton ticketButton = rootView.findViewById(R.id.buyTicketButton);
-        if (eventsController.isEventBooked(event)) {
+        if (eventsLocalRepository.isEventBooked(event)) {
             ticketButton.setText(R.string.show_ticket);
             ticketButton.setVisibility(View.VISIBLE);
             ticketButton.setOnClickListener(view -> {
-                if (event == null) {
-                    Toast.makeText(getContext(), R.string.error, Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 Intent intent = new Intent(getContext(), ShowTicketActivity.class);
                 intent.putExtra(KEY_EVENT_ID, event.getId());
                 startActivity(intent);
@@ -141,7 +136,8 @@ public class KinoDetailsFragment extends Fragment {
             ticketButton.setText(R.string.buy_ticket);
             ticketButton.setVisibility(View.VISIBLE);
             ticketButton.setOnClickListener(
-                    view -> EventHelper.Companion.buyTicket(this.event, ticketButton, getContext()));
+                    view -> EventHelper.Companion.buyTicket(this.event, ticketButton, requireContext())
+            );
         }
     }
 

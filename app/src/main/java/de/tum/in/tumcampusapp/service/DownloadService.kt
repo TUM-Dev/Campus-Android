@@ -19,7 +19,7 @@ import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsViewModel
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
-import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
+import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsRemoteRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -40,8 +40,6 @@ class DownloadService : JobIntentService() {
     private lateinit var kinoViewModel: KinoViewModel
     private lateinit var topNewsViewModel: TopNewsViewModel
 
-    //private lateinit var tumCabeClient: TUMCabeClient
-    //private lateinit var database: TcaDb
     private val disposable = CompositeDisposable()
 
     @Inject
@@ -60,7 +58,7 @@ class DownloadService : JobIntentService() {
     lateinit var newsController: NewsController
 
     @Inject
-    lateinit var eventsController: EventsController
+    lateinit var eventsRemoteRepository: EventsRemoteRepository
 
     override fun onCreate() {
         super.onCreate()
@@ -168,7 +166,7 @@ class DownloadService : JobIntentService() {
     }
 
     private fun downloadEvents(): Boolean {
-        eventsController.downloadFromService()
+        eventsRemoteRepository.downloadFromService()
         return true
     }
 

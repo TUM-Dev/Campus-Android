@@ -12,12 +12,14 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration
-import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsViewModel
 import de.tum.`in`.tumcampusapp.component.ui.ticket.adapter.EventsAdapter
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.EventType
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Ticket
+import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.observeNonNull
 import kotlinx.android.synthetic.main.fragment_events.*
@@ -31,12 +33,18 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private lateinit var eventType: EventType
 
     @Inject
-    lateinit var eventsController: EventsController
+    lateinit var eventsRemoteRepository: EventsRemoteRepository
+
+    @Inject
+    lateinit var eventsLocalRepository: EventsLocalRepository
+
+    @Inject
+    lateinit var ticketsLocalRepository: TicketsLocalRepository
 
     private val eventsCallback = object : Callback<List<Event>> {
         override fun onResponse(call: Call<List<Event>>, response: Response<List<Event>>) {
             val events = response.body() ?: return
-            eventsController.storeEvents(events)
+            eventsLocalRepository.storeEvents(events)
 
             if (this@EventsFragment.isDetached.not()) {
                 eventsRefreshLayout.isRefreshing = false
@@ -57,7 +65,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private val ticketsCallback = object : Callback<List<Ticket>> {
         override fun onResponse(call: Call<List<Ticket>>, response: Response<List<Ticket>>) {
             val tickets = response.body() ?: return
-            eventsController.insert(*tickets.toTypedArray())
+            ticketsLocalRepository.insert(*tickets.toTypedArray())
             eventsRefreshLayout.isRefreshing = false
         }
 
@@ -100,7 +108,8 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         super.onActivityCreated(savedInstanceState)
         eventType = arguments?.getSerializable(KEY_EVENT_TYPE) as EventType
 
-        val factory = EventsViewModel.Factory(eventsController, eventType)
+        // TODO Inject
+        val factory = EventsViewModel.Factory(eventsLocalRepository, eventType)
         val viewModel = ViewModelProviders.of(this, factory).get(EventsViewModel::class.java)
 
         viewModel.events.observeNonNull(this) { showEvents(it) }
@@ -120,7 +129,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onRefresh() {
-        eventsController.getEventsAndTicketsFromServer(eventsCallback, ticketsCallback)
+        eventsRemoteRepository.fetchEventsAndTickets(eventsCallback, ticketsCallback)
     }
 
     companion object {

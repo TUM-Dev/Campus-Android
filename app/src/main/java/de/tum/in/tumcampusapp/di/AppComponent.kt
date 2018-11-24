@@ -22,6 +22,7 @@ import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavStartActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.BuyTicketActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity
+import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.StripePaymentActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.fragment.EventDetailsFragment
 import de.tum.`in`.tumcampusapp.component.ui.ticket.fragment.EventsFragment
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportationActivity
@@ -90,5 +91,7 @@ interface AppComponent {
     fun inject(setupEduroamActivity: SetupEduroamActivity)
 
     fun inject(scanResultsAvailableReceiver: ScanResultsAvailableReceiver)
+
+    fun inject(stripePaymentActivity: StripePaymentActivity)
 
 }

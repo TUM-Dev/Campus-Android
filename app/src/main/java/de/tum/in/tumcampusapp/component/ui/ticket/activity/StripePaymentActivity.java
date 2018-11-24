@@ -25,8 +25,7 @@ import com.stripe.android.model.Source;
 import com.stripe.android.model.SourceCardData;
 import com.stripe.android.view.PaymentMethodsActivity;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,9 +35,9 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
-import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.TicketEphemeralKeyProvider;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
+import de.tum.in.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
@@ -63,6 +62,12 @@ public class StripePaymentActivity extends BaseActivity {
     private String termsOfServiceLink;
     private String stripePublishableKey;
 
+    @Inject
+    TicketsLocalRepository ticketsLocalRepository;
+
+    @Inject
+    TUMCabeClient tumCabeClient;
+
     public StripePaymentActivity() {
         super(R.layout.activity_payment_stripe);
     }
@@ -70,6 +75,7 @@ public class StripePaymentActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getInjector().inject(this);
 
         ticketPrice = getIntent().getStringExtra(Const.KEY_TICKET_PRICE);
         ticketHistory = getIntent().getIntExtra(Const.KEY_TICKET_HISTORY, -1);
@@ -164,25 +170,23 @@ public class StripePaymentActivity extends BaseActivity {
                 return;
             }
 
-            TUMCabeClient
-                    .getInstance(this)
-                    .purchaseTicketStripe(this, ticketHistory,
-                            methodId, cardholder, new Callback<Ticket>() {
-                                @Override
-                                public void onResponse(@NonNull Call<Ticket> call,
-                                                       @NonNull Response<Ticket> response) {
-                                    Ticket ticket = response.body();
-                                    if (ticket != null) {
-                                        handleTicketPurchaseSuccess(ticket);
-                                    }
-                                }
+            tumCabeClient.purchaseTicketStripe(this, ticketHistory,
+                    methodId, cardholder, new Callback<Ticket>() {
+                        @Override
+                        public void onResponse(@NonNull Call<Ticket> call,
+                                               @NonNull Response<Ticket> response) {
+                            Ticket ticket = response.body();
+                            if (ticket != null) {
+                                handleTicketPurchaseSuccess(ticket);
+                            }
+                        }
 
-                                @Override
-                                public void onFailure(@NonNull Call<Ticket> call, @NonNull Throwable t) {
-                                    Utils.log(t);
-                                    handleTicketPurchaseFailure();
-                                }
-                            });
+                        @Override
+                        public void onFailure(@NonNull Call<Ticket> call, @NonNull Throwable t) {
+                            Utils.log(t);
+                            handleTicketPurchaseFailure();
+                        }
+                    });
         } catch (NoPrivateKey e) {
             Utils.log(e);
             handleTicketPurchaseFailure();
@@ -191,13 +195,7 @@ public class StripePaymentActivity extends BaseActivity {
 
     private void handleTicketPurchaseSuccess(@NonNull Ticket ticket) {
         showLoading(false);
-
-        List<Ticket> tickets = new ArrayList<>();
-        tickets.add(ticket);
-
-        EventsController controller = new EventsController(this);
-        controller.insert(tickets.toArray(new Ticket[0]));
-
+        ticketsLocalRepository.insert(ticket);
         openPaymentConfirmation(ticket);
     }
 

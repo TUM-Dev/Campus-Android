@@ -26,9 +26,10 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventCard;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventDiffUtil;
-import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
+import de.tum.in.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository;
+import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
@@ -40,13 +41,13 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
     private static final Pattern TITLE_DATE = Pattern.compile("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*");
 
     private Context mContext;
-    private EventsController mEventsController;
+    private EventsLocalRepository mEventsLocalRepository;
 
     private List<Event> mEvents = new ArrayList<>();
 
     public EventsAdapter(Context context) {
         mContext = context;
-        mEventsController = new EventsController(context);
+        mEventsLocalRepository = new EventsLocalRepository(TcaDb.getInstance(context));
     }
 
     @NonNull
@@ -65,7 +66,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         eventCard.setEvent(event);
         holder.setCurrentCard(eventCard);
 
-        boolean hasTicket = mEventsController.isEventBooked(event);
+        boolean hasTicket = mEventsLocalRepository.isEventBooked(event);
         holder.bind(event, hasTicket);
     }
 
