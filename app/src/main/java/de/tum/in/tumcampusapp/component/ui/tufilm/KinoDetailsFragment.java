@@ -74,14 +74,10 @@ public class KinoDetailsFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ((BaseActivity) requireActivity()).getInjector().inject(this);
-    }
-
-    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        ((BaseActivity) requireActivity()).getInjector().inject(this);
+
         KinoLocalRepository.db = TcaDb.getInstance(context);
         kinoViewModel = new KinoViewModel(
                 KinoLocalRepository.INSTANCE, KinoRemoteRepository.INSTANCE, disposables);

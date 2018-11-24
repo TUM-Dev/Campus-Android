@@ -24,7 +24,7 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdap
 
     public CafeteriaDetailsSectionsPagerAdapter(FragmentManager fm) {
         super(fm);
-        this.formatter = DateTimeFormat.fullDate();
+        formatter = DateTimeFormat.fullDate();
     }
 
     public void setCafeteriaId(int cafeteriaId) {
@@ -32,7 +32,7 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdap
     }
 
     public void update(List<DateTime> menuDates) {
-        this.dates = menuDates;
+        dates = menuDates;
         notifyDataSetChanged();
     }
 

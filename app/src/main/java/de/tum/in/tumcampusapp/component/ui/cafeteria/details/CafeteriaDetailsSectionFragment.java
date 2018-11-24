@@ -108,9 +108,14 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        ((BaseActivity) requireActivity()).getInjector().inject(this);
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((BaseActivity) requireActivity()).getInjector().inject(this);
 
         ViewModelFactory<CafeteriaViewModel> factory = new ViewModelFactory<>(viewModelProvider);
         cafeteriaViewModel = ViewModelProviders.of(this, factory).get(CafeteriaViewModel.class);

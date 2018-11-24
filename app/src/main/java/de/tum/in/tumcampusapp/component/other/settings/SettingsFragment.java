@@ -64,8 +64,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
     NewsLocalRepository newsLocalRepository;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         ((BaseActivity) requireActivity()).getInjector().inject(this);
     }
 

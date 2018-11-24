@@ -100,6 +100,8 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
 
     private void updateCafeteria(List<Cafeteria> cafeterias) {
         mCafeterias = cafeterias;
+        adapter.clear();
+        adapter.addAll(cafeterias);
         adapter.notifyDataSetChanged();
     }
 
@@ -155,7 +157,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
 
     private void onNewCafeteriaSelected(Cafeteria cafeteria) {
         sectionsPagerAdapter.setCafeteriaId(cafeteria.getId());
-        updateCafeteriaSpinner(cafeteria.getId());
+        //updateCafeteriaSpinner(cafeteria.getId());
         cafeteriaViewModel.fetchMenuDates();
     }
 
