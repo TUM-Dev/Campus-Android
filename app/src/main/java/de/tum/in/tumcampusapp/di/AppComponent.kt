@@ -14,7 +14,7 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsS
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.widget.MensaRemoteViewFactory
 import de.tum.`in`.tumcampusapp.component.ui.chat.AddChatMemberActivity
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.SetupEduroamActivity
-import de.tum.`in`.tumcampusapp.component.ui.news.KinoDetailsFragment
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoDetailsFragment
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsActivity
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavCheckTokenActivity
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavExtrasActivity

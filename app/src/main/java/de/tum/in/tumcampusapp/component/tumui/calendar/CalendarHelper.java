@@ -17,7 +17,7 @@ public final class CalendarHelper {
     private static final String CALENDAR_NAME = "TUM Campus";
 
     /**
-     * Gets uri query to insert calendar TUM_Campus_APP to google calendar
+     * Gets uri query to insertSources calendar TUM_Campus_APP to google calendar
      *
      * @param c Context
      * @return Uri for insertion

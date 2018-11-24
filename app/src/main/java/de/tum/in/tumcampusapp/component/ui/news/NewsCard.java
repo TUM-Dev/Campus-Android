@@ -4,20 +4,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import org.joda.time.DateTime;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
 import de.tum.in.tumcampusapp.component.other.navigation.SystemIntent;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
+import de.tum.in.tumcampusapp.component.ui.news.repository.NewsLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
+import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
@@ -101,8 +103,9 @@ public class NewsCard extends Card {
 
     @Override
     protected void discard(@NonNull SharedPreferences.Editor editor) {
-        NewsController newsController = new NewsController(getContext());
-        newsController.setDismissed(mNews.getId(), mNews.getDismissed() | 1);
+        NewsLocalRepository newsLocalRepository =
+                new NewsLocalRepository(getContext(), TcaDb.getInstance(getContext()));
+        newsLocalRepository.setDismissed(mNews.getId(), mNews.getDismissed() | 1);
     }
 
 }

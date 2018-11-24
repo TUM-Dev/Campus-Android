@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.component.ui.news.repository
+package de.tum.`in`.tumcampusapp.component.ui.tufilm.repository
 
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.model.Kino

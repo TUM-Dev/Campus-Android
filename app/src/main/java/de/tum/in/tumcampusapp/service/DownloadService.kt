@@ -13,13 +13,13 @@ import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location
-import de.tum.`in`.tumcampusapp.component.ui.news.KinoViewModel
-import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
 import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsViewModel
-import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoLocalRepository
-import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.news.repository.NewsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoViewModel
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -55,7 +55,7 @@ class DownloadService : JobIntentService() {
     lateinit var database: TcaDb
 
     @Inject
-    lateinit var newsController: NewsController
+    lateinit var newsRemoteRepository: NewsRemoteRepository
 
     @Inject
     lateinit var eventsRemoteRepository: EventsRemoteRepository
@@ -161,7 +161,7 @@ class DownloadService : JobIntentService() {
     }
 
     private fun downloadNews(force: Boolean): Boolean {
-        newsController.downloadFromExternal(force)
+        newsRemoteRepository.downloadFromExternal(force)
         return true
     }
 

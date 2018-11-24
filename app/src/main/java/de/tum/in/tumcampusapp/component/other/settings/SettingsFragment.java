@@ -35,8 +35,8 @@ import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
 import de.tum.in.tumcampusapp.component.ui.eduroam.SetupEduroamActivity;
-import de.tum.in.tumcampusapp.component.ui.news.NewsController;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
+import de.tum.in.tumcampusapp.component.ui.news.repository.NewsLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.onboarding.StartupActivity;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.BackgroundService;
@@ -59,6 +59,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     @Inject
     TcaDb database;
+
+    @Inject
+    NewsLocalRepository newsLocalRepository;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -121,8 +124,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
         PreferenceCategory newsSourcesPreference =
                 (PreferenceCategory) findPreference("card_news_sources");
 
-        NewsController newsController = new NewsController(mContext);
-        List<NewsSources> newsSources = newsController.getNewsSources();
+        List<NewsSources> newsSources = newsLocalRepository.getNewsSources();
+
         for (NewsSources newsSource : newsSources) {
             final CheckBoxPreference pref = new CheckBoxPreference(mContext);
             pref.setKey("card_news_source_" + newsSource.getId());
@@ -138,7 +141,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                     try {
                         Bitmap bmp = Picasso.get().load(url).get();
                         mContext.runOnUiThread(() -> {
-                            if(isAdded()){
+                            if (isAdded()) {
                                 pref.setIcon(new BitmapDrawable(getResources(), bmp));
                             }
                         });

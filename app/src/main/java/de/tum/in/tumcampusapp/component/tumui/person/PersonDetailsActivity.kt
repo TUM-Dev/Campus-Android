@@ -169,7 +169,7 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
     /**
      * Adds the given employee to the users contact list
      *
-     * @param employee Object to insert into contacts
+     * @param employee Object to insertSources into contacts
      */
     private fun addContact(employee: Employee?) {
         if (!isPermissionGranted(Const.CONTACTS_PERMISSION_REQUEST_CODE)) {

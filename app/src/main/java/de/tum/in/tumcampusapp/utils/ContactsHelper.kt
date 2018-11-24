@@ -22,8 +22,8 @@ class ContactsHelper {
 
             val rawContactID = ops.size
 
-            // Adding insert operation to operations list
-            // to insert a new raw contact in the table ContactsContract.RawContacts
+            // Adding insertSources operation to operations list
+            // to insertSources a new raw contact in the table ContactsContract.RawContacts
             ops.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
                     .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
                     .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
@@ -118,8 +118,8 @@ class ContactsHelper {
                 val stream = ByteArrayOutputStream()
                 bitmap.compress(Bitmap.CompressFormat.PNG, 75, stream)
 
-                // Adding insert operation to operations list
-                // to insert Photo in the table ContactsContract.Data
+                // Adding insertSources operation to operations list
+                // to insertSources Photo in the table ContactsContract.Data
                 ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                         .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactID)
                         .withValue(ContactsContract.Data.IS_SUPER_PRIMARY, 1)
@@ -134,7 +134,7 @@ class ContactsHelper {
                 }
             }
 
-            // Executing all the insert operations as a single database transaction
+            // Executing all the insertSources operations as a single database transaction
             try {
                 context.contentResolver.applyBatch(ContactsContract.AUTHORITY, ops)
                 Utils.showToast(context, R.string.contact_added)

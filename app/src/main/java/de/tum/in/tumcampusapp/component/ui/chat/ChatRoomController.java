@@ -70,7 +70,7 @@ public class ChatRoomController {
      */
     public void replaceIntoRooms(Collection<ChatRoom> rooms) {
         if (rooms == null || rooms.isEmpty()) {
-            Utils.log("No rooms passed, can't insert anything.");
+            Utils.log("No rooms passed, can't insertSources anything.");
             return;
         }
 

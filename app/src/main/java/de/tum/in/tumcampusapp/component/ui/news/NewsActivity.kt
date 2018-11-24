@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration
+import de.tum.`in`.tumcampusapp.component.ui.news.repository.NewsLocalRepository
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -27,7 +28,7 @@ class NewsActivity : ActivityForDownloadingExternal(
     private var state = -1
 
     @Inject
-    lateinit var newsController: NewsController
+    lateinit var newsLocalRepository: NewsLocalRepository
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +50,7 @@ class NewsActivity : ActivityForDownloadingExternal(
         super.onStart()
 
         // Gets all news from database
-        val news = newsController.getAllFromDb(this)
+        val news = newsLocalRepository.getAll()
         if (news.isEmpty()) {
             if (NetUtils.isConnected(this)) {
                 showErrorLayout()
@@ -64,14 +65,14 @@ class NewsActivity : ActivityForDownloadingExternal(
 
         // Restore previous state (including selected item index and scroll position)
         if (state == -1) {
-            recyclerView.scrollToPosition(newsController.todayIndex)
+            recyclerView.scrollToPosition(newsLocalRepository.getTodayIndex())
         } else {
             recyclerView.scrollToPosition(state)
         }
     }
 
     override fun onClick(dialog: DialogInterface, which: Int, isChecked: Boolean) {
-        val newsSources = newsController.newsSources
+        val newsSources = newsLocalRepository.getNewsSources()
 
         if (which < newsSources.size) {
             val key = "news_source_" + newsSources[which].id
@@ -102,7 +103,7 @@ class NewsActivity : ActivityForDownloadingExternal(
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_disable_sources) {
             // Populate the settingsPrefix dialog from the NewsController sources
-            val (items, checkedItems) = newsController.newsSources
+            val (items, checkedItems) = newsLocalRepository.getNewsSources()
                     .map { (id, title) ->
                         title to Utils.getSettingBool(this, "news_source_$id", true) }
                     .unzip()

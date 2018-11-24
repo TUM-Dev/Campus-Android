@@ -4,30 +4,21 @@ import android.content.Context;
 
 import org.joda.time.DateTime;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.notifications.NotificationScheduler;
 import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
 import de.tum.in.tumcampusapp.component.notifications.model.AppNotification;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
-import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
-import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Utils;
-import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 
 /**
  * News Manager, handles database stuff, external imports
  */
 public class NewsController implements ProvidesNotifications {
 
-    private static final int TIME_TO_SYNC = 86400;
     private final Context context;
-    private final NewsDao newsDao;
-    private final NewsSourcesDao newsSourcesDao;
 
     /**
      * Constructor, open/create database, create table if necessary
@@ -36,55 +27,9 @@ public class NewsController implements ProvidesNotifications {
      */
     public NewsController(Context context) {
         this.context = context;
-        newsDao = TcaDb.getInstance(context)
-                       .newsDao();
-        newsSourcesDao = TcaDb.getInstance(context)
-                              .newsSourcesDao();
     }
 
-    /**
-     * Download news from external interface (JSON)
-     *
-     * @param force True to force download over normal sync period, else false
-     */
-    public void downloadFromExternal(boolean force) {
-        SyncManager sync = new SyncManager(context);
-        if (!force && !sync.needSync(this, TIME_TO_SYNC)) {
-            return;
-        }
-
-        News latestNews = newsDao.getLast();
-        DateTime latestNewsDate = (latestNews != null) ? latestNews.getDate() : DateTime.now();
-
-        // Delete all too old items
-        newsDao.cleanUp();
-
-        TUMCabeClient api = TUMCabeClient.getInstance(context);
-
-        // Load all news sources
-        try {
-            List<NewsSources> sources = api.getNewsSources();
-            newsSourcesDao.insert(sources);
-        } catch (IOException e) {
-            Utils.log(e);
-            return;
-        }
-
-        // Load all news since the last sync
-        try {
-            List<News> news = api.getNews(getLastId());
-            newsDao.insert(news);
-            showNewsNotification(news, latestNewsDate);
-        } catch (IOException e) {
-            Utils.log(e);
-            return;
-        }
-
-        // Finish sync
-        sync.replaceIntoDb(this);
-    }
-
-    private void showNewsNotification(List<News> news, DateTime latestNewsDate) {
+    public void showNewsNotification(List<News> news, DateTime latestNewsDate) {
         if (!hasNotificationsEnabled()) {
             return;
         }
@@ -108,68 +53,6 @@ public class NewsController implements ProvidesNotifications {
             NotificationScheduler scheduler = new NotificationScheduler(context);
             scheduler.schedule(notification);
         }
-    }
-
-    /**
-     * Get all news from the database
-     *
-     * @return List of News
-     */
-    public List<News> getAllFromDb(Context context) {
-        int selectedNewspread = Integer.parseInt(Utils.getSetting(this.context, "news_newspread", "7"));
-        List<NewsSources> newsSources = getNewsSources();
-        Collection<Integer> newsSourceIds = new ArrayList<>();
-        for (NewsSources newsSource : newsSources) {
-            int id = newsSource.getId();
-            boolean show = Utils.getSettingBool(context, "news_source_" + id, id <= 7);
-            if (show) {
-                newsSourceIds.add(id);
-            }
-        }
-        return newsDao.getAll(newsSourceIds.toArray(new Integer[newsSourceIds.size()]), selectedNewspread);
-    }
-
-    /**
-     * Get the index of the newest item that is older than 'now'
-     *
-     * @return index of the newest item that is older than 'now' - 1
-     */
-    public int getTodayIndex() {
-        int selectedNewspread = Integer.parseInt(Utils.getSetting(context, "news_newspread", "7"));
-        List<News> news = newsDao.getNewer(selectedNewspread);
-        return news.isEmpty() ? 0 : news.size() - 1;
-    }
-
-    private String getLastId() {
-        News last = newsDao.getLast();
-        return last == null ? "" : last.getId();
-    }
-
-    public List<NewsSources> getNewsSources() {
-        String selectedNewspread = Utils.getSetting(context, "news_newspread", "7");
-        return newsSourcesDao.getNewsSources(selectedNewspread);
-    }
-
-    public void setDismissed(String id, int d) {
-        newsDao.setDismissed(String.valueOf(d), id);
-    }
-
-    /**
-     * Gather all sources that should be displayed
-     *
-     * @param context
-     * @return
-     */
-    Collection<Integer> getActiveSources(Context context) {
-        Collection<Integer> sources = new ArrayList<>();
-        List<NewsSources> newsSources = getNewsSources();
-        for (NewsSources newsSource : newsSources) {
-            Integer id = newsSource.getId();
-            if (Utils.getSettingBool(context, "card_news_source_" + id, true)) {
-                sources.add(id);
-            }
-        }
-        return sources;
     }
 
     @Override

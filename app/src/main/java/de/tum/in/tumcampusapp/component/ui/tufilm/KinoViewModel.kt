@@ -1,8 +1,8 @@
-package de.tum.`in`.tumcampusapp.component.ui.news
+package de.tum.`in`.tumcampusapp.component.ui.tufilm
 
 import androidx.lifecycle.ViewModel
-import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoLocalRepository
-import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.model.Kino
 import de.tum.`in`.tumcampusapp.utils.Utils
