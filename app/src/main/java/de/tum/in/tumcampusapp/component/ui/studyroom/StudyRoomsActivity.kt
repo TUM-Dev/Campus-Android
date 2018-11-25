@@ -17,6 +17,7 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumCabe
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup
+import de.tum.`in`.tumcampusapp.component.ui.studyroom.di.StudyRoomsModule
 import kotlinx.android.synthetic.main.activity_study_rooms.*
 import javax.inject.Inject
 
@@ -60,7 +61,10 @@ class StudyRoomsActivity : ActivityForAccessingTumCabe<List<StudyRoomGroup>>(
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        injector.inject(this)
+        injector.studyRoomsComponent()
+                .studyRoomsModule(StudyRoomsModule())
+                .build()
+                .inject(this)
         loadStudyRooms()
     }
 

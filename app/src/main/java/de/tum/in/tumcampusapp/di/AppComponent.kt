@@ -22,8 +22,7 @@ import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavExtrasActivity
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavStartActivity
 import de.tum.`in`.tumcampusapp.component.ui.openinghour.OpeningHoursDetailFragment
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainActivity
-import de.tum.`in`.tumcampusapp.component.ui.studyroom.StudyRoomGroupDetailsFragment
-import de.tum.`in`.tumcampusapp.component.ui.studyroom.StudyRoomsActivity
+import de.tum.`in`.tumcampusapp.component.ui.studyroom.di.StudyRoomsComponent
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.BuyTicketActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.StripePaymentActivity
@@ -43,6 +42,8 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [AppModule::class])
 interface AppComponent {
+
+    fun studyRoomsComponent(): StudyRoomsComponent.Builder
 
     fun inject(mainActivity: MainActivity)
 
@@ -107,10 +108,6 @@ interface AppComponent {
     fun inject(stripePaymentActivity: StripePaymentActivity)
 
     fun inject(kinoActivity: KinoActivity)
-
-    fun inject(studyRooomGroupDetailsFragment: StudyRoomGroupDetailsFragment)
-
-    fun inject(studyRoomsActivity: StudyRoomsActivity)
 
     fun inject(openingHoursDetailFragment: OpeningHoursDetailFragment)
 

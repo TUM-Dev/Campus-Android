@@ -33,7 +33,6 @@ import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.NewsLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.NewsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
-import de.tum.`in`.tumcampusapp.component.ui.studyroom.StudyRoomGroupLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository
@@ -408,14 +407,6 @@ class AppModule(private val context: Context) {
             remoteRepository: KinoRemoteRepository
     ): KinoUpdater {
         return KinoUpdater(localRepository, remoteRepository)
-    }
-
-    @Singleton
-    @Provides
-    fun provideStudyRoomGroupLocalRepository(
-            database: TcaDb
-    ): StudyRoomGroupLocalRepository {
-        return StudyRoomGroupLocalRepository(database)
     }
 
 }
