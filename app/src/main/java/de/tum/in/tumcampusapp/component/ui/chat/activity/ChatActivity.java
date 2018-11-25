@@ -87,6 +87,9 @@ public class ChatActivity extends ActivityForDownloadingExternal
     @Inject
     Provider<ChatMessageViewModel> viewModelProvider;
 
+    @Inject
+    TUMCabeClient tumCabeClient;
+
     public ChatActivity() {
         super(Const.CURRENT_CHAT_ROOM, R.layout.activity_chat);
     }
@@ -273,29 +276,28 @@ public class ChatActivity extends ActivityForDownloadingExternal
             return;
         }
 
-        TUMCabeClient.getInstance(this)
-                .leaveChatRoom(currentChatRoom, verification, new Callback<ChatRoom>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ChatRoom> call,
-                                           @NonNull Response<ChatRoom> response) {
-                        ChatRoom room = response.body();
-                        if (response.isSuccessful() && room != null) {
-                            new ChatRoomController(ChatActivity.this).leave(currentChatRoom);
+        tumCabeClient.leaveChatRoom(currentChatRoom, verification, new Callback<ChatRoom>() {
+            @Override
+            public void onResponse(@NonNull Call<ChatRoom> call,
+                                   @NonNull Response<ChatRoom> response) {
+                ChatRoom room = response.body();
+                if (response.isSuccessful() && room != null) {
+                    new ChatRoomController(ChatActivity.this).leave(currentChatRoom);
 
-                            Intent intent = new Intent(ChatActivity.this, ChatRoomsActivity.class);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            Utils.showToast(ChatActivity.this, R.string.error_something_wrong);
-                        }
-                    }
+                    Intent intent = new Intent(ChatActivity.this, ChatRoomsActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Utils.showToast(ChatActivity.this, R.string.error_something_wrong);
+                }
+            }
 
-                    @Override
-                    public void onFailure(@NonNull Call<ChatRoom> call, @NonNull Throwable t) {
-                        Utils.log(t, "Failure leaving chat room");
-                        Utils.showToast(ChatActivity.this, R.string.error_something_wrong);
-                    }
-                });
+            @Override
+            public void onFailure(@NonNull Call<ChatRoom> call, @NonNull Throwable t) {
+                Utils.log(t, "Failure leaving chat room");
+                Utils.showToast(ChatActivity.this, R.string.error_something_wrong);
+            }
+        });
     }
 
     private void sendMessage(String text) {
