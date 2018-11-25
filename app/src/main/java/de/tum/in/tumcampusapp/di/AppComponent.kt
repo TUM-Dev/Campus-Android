@@ -28,7 +28,8 @@ import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportationActivi
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportationDetailsActivity
 import de.tum.`in`.tumcampusapp.component.ui.transportation.widget.MVVWidgetConfigureActivity
 import de.tum.`in`.tumcampusapp.component.ui.transportation.widget.MVVWidgetService
-import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoDetailsFragment
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoActivity
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.details.KinoDetailsFragment
 import de.tum.`in`.tumcampusapp.service.DownloadService
 import de.tum.`in`.tumcampusapp.service.ScanResultsAvailableReceiver
 import javax.inject.Singleton
@@ -96,5 +97,7 @@ interface AppComponent {
     fun inject(scanResultsAvailableReceiver: ScanResultsAvailableReceiver)
 
     fun inject(stripePaymentActivity: StripePaymentActivity)
+
+    fun inject(kinoActivity: KinoActivity)
 
 }

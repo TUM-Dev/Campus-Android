@@ -1,11 +1,11 @@
 package de.tum.in.tumcampusapp.component.ui.tufilm;
 
+import java.util.List;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-
-import java.util.List;
-
+import de.tum.in.tumcampusapp.component.ui.tufilm.details.KinoDetailsFragment;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 
 public class KinoAdapter extends FragmentStatePagerAdapter {
@@ -19,7 +19,8 @@ public class KinoAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return KinoDetailsFragment.newInstance(position);
+        String id = movies.get(position).getId();
+        return KinoDetailsFragment.newInstance(id);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.component.ui.tufilm;
+package de.tum.in.tumcampusapp.component.ui.tufilm.details;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,33 +18,24 @@ import com.google.android.material.button.MaterialButton;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
-import de.tum.in.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository;
-import de.tum.in.tumcampusapp.component.ui.tufilm.repository.KinoRemoteRepository;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventHelper;
 import de.tum.in.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
-import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
-import de.tum.in.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository;
+import de.tum.in.tumcampusapp.component.ui.tufilm.KinoViewModel;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
-import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.utils.Const;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import de.tum.in.tumcampusapp.di.ViewModelFactory;
 
 import static de.tum.in.tumcampusapp.utils.Const.KEY_EVENT_ID;
 
@@ -56,19 +47,15 @@ public class KinoDetailsFragment extends Fragment {
     private View rootView;
     private Event event;
 
-    private KinoViewModel kinoViewModel;
-    private final CompositeDisposable disposables = new CompositeDisposable();
+    private KinoDetailsViewModel viewModel;
 
     @Inject
-    EventsLocalRepository eventsLocalRepository;
+    Provider<KinoViewModel> viewModelProvider;
 
-    @Inject
-    TUMCabeClient tumCabeClient;
-
-    public static KinoDetailsFragment newInstance(int position) {
+    public static KinoDetailsFragment newInstance(String id) {
         KinoDetailsFragment fragment = new KinoDetailsFragment();
         Bundle args = new Bundle();
-        args.putInt(Const.POSITION, position);
+        args.putString("id", id);
         fragment.setArguments(args);
         return fragment;
     }
@@ -78,9 +65,8 @@ public class KinoDetailsFragment extends Fragment {
         super.onAttach(context);
         ((BaseActivity) requireActivity()).getInjector().inject(this);
 
-        KinoLocalRepository.db = TcaDb.getInstance(context);
-        kinoViewModel = new KinoViewModel(
-                KinoLocalRepository.INSTANCE, KinoRemoteRepository.INSTANCE, disposables);
+        ViewModelFactory<KinoViewModel> factory = new ViewModelFactory<>(viewModelProvider);
+        viewModel = ViewModelProviders.of(this, factory).get(KinoDetailsViewModel.class);
     }
 
     @Override
@@ -101,12 +87,14 @@ public class KinoDetailsFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        String movieId = getArguments().getString("id");
 
-        int position = getArguments().getInt(Const.POSITION);
-        Disposable disposable = kinoViewModel
-                .getKinoByPosition(position)
-                .subscribe(this::showMovieDetails);
-        disposables.add(disposable);
+        viewModel.getKino().observe(getViewLifecycleOwner(), this::showMovieDetails);
+        viewModel.getEvent().observe(getViewLifecycleOwner(), this::showEventTicketDetails);
+        viewModel.getTicketCount().observe(getViewLifecycleOwner(), this::updateAvailableTicketCount);
+
+        viewModel.fetchKino(movieId);
+        viewModel.fetchEventByMovieId(movieId);
     }
 
     private void showEventTicketDetails(Event event) {
@@ -115,12 +103,11 @@ public class KinoDetailsFragment extends Fragment {
 
         rootView.findViewById(R.id.eventInformation).setVisibility(View.VISIBLE);
         ((TextView) rootView.findViewById(R.id.locationTextView)).setText(event.getLocality());
-        loadAvailableTicketCount(event);
     }
 
     private void initBuyOrShowTicket(Event event) {
         MaterialButton ticketButton = rootView.findViewById(R.id.buyTicketButton);
-        if (eventsLocalRepository.isEventBooked(event)) {
+        if (viewModel.isEventBooked(event)) {
             ticketButton.setText(R.string.show_ticket);
             ticketButton.setVisibility(View.VISIBLE);
             ticketButton.setOnClickListener(view -> {
@@ -137,44 +124,12 @@ public class KinoDetailsFragment extends Fragment {
         }
     }
 
-    private void loadAvailableTicketCount(Event event) {
-        tumCabeClient.fetchTicketStats(event.getId(), new Callback<List<TicketStatus>>() {
-            @Override
-            public void onResponse(Call<List<TicketStatus>> call, Response<List<TicketStatus>> response) {
-                List<TicketStatus> statusList = response.body();
-                if (statusList == null) {
-                    if (!isDetached()) {
-                        ((TextView) rootView.findViewById(R.id.remainingTicketsTextView))
-                                .setText(R.string.unknown);
-                    }
-                }
-                int sum = 0;
-                for (TicketStatus status : statusList) {
-                    sum += status.getAvailableTicketCount();
-                }
-                String text = String.format(Locale.getDefault(), "%d", sum);
-                if (!isDetached()) {
-                    ((TextView) rootView.findViewById(R.id.remainingTicketsTextView))
-                            .setText(text);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<TicketStatus>> call, Throwable t) {
-                if (!isDetached()) {
-                    ((TextView) rootView.findViewById(R.id.remainingTicketsTextView))
-                            .setText(R.string.unknown);
-                }
-            }
-        });
+    private void updateAvailableTicketCount(int count) {
+        String text = String.format(Locale.getDefault(), "%d", count);
+        ((TextView) rootView.findViewById(R.id.remainingTicketsTextView)).setText(text);
     }
 
     private void showMovieDetails(Kino kino) {
-        Disposable disposable = kinoViewModel
-                .getEventByMovieId(kino.getId())
-                .subscribe(this::showEventTicketDetails);
-        disposables.add(disposable);
-
         loadPoster(kino);
 
         TextView dateTextView = rootView.findViewById(R.id.dateTextView);
@@ -249,16 +204,10 @@ public class KinoDetailsFragment extends Fragment {
         }
     }
 
-    public void showTrailer(Kino kino) {
+    private void showTrailer(Kino kino) {
         String url = kino.getTrailerSearchUrl();
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         requireActivity().startActivity(intent);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        disposables.dispose();
     }
 
 }

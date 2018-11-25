@@ -60,6 +60,12 @@ class DownloadService : JobIntentService() {
     @Inject
     lateinit var eventsRemoteRepository: EventsRemoteRepository
 
+    @Inject
+    lateinit var kinoLocalRepository: KinoLocalRepository
+
+    @Inject
+    lateinit var kinoRemoteRepository: KinoRemoteRepository
+
     override fun onCreate() {
         super.onCreate()
         (applicationContext as App).appComponent.inject(this)
@@ -71,9 +77,7 @@ class DownloadService : JobIntentService() {
         // SyncManager(this) // Starts a new sync in constructor; should be moved to explicit method call
 
         // Init sync table
-        KinoLocalRepository.db = database
-        KinoRemoteRepository.tumCabeClient = tumCabeClient
-        kinoViewModel = KinoViewModel(KinoLocalRepository, KinoRemoteRepository, disposable)
+        kinoViewModel = KinoViewModel(kinoLocalRepository, kinoRemoteRepository)
 
         TopNewsRemoteRepository.tumCabeClient = tumCabeClient
         topNewsViewModel = TopNewsViewModel(TopNewsRemoteRepository, disposable)
