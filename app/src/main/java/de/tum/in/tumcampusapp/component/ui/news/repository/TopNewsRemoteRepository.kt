@@ -9,8 +9,9 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class TopNewsRemoteRepository(
+class TopNewsRemoteRepository @Inject constructor(
         private val context: Context,
         private val tumCabeClient: TUMCabeClient
 ) {

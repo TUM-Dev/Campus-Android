@@ -2,7 +2,6 @@ package de.tum.`in`.tumcampusapp.di
 
 import dagger.Component
 import de.tum.`in`.tumcampusapp.component.notifications.receivers.NotificationAlarmReceiver
-import de.tum.`in`.tumcampusapp.component.other.settings.SettingsFragment
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarActivity
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackActivity
 import de.tum.`in`.tumcampusapp.component.tumui.person.PersonSearchActivity
@@ -17,17 +16,14 @@ import de.tum.`in`.tumcampusapp.component.ui.chat.AddChatMemberActivity
 import de.tum.`in`.tumcampusapp.component.ui.chat.di.ChatComponent
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.SetupEduroamActivity
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsActivity
+import de.tum.`in`.tumcampusapp.component.ui.news.di.NewsComponent
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavCheckTokenActivity
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavExtrasActivity
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavStartActivity
 import de.tum.`in`.tumcampusapp.component.ui.openinghour.OpeningHoursDetailFragment
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainActivity
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.di.StudyRoomsComponent
-import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.BuyTicketActivity
-import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity
-import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.StripePaymentActivity
-import de.tum.`in`.tumcampusapp.component.ui.ticket.fragment.EventDetailsFragment
-import de.tum.`in`.tumcampusapp.component.ui.ticket.fragment.EventsFragment
+import de.tum.`in`.tumcampusapp.component.ui.ticket.di.TicketsComponent
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportationActivity
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportationDetailsActivity
 import de.tum.`in`.tumcampusapp.component.ui.transportation.widget.MVVWidgetConfigureActivity
@@ -44,7 +40,11 @@ interface AppComponent {
 
     fun chatComponent(): ChatComponent.Builder
 
+    fun newsComponent(): NewsComponent.Builder
+
     fun studyRoomsComponent(): StudyRoomsComponent.Builder
+
+    fun ticketsComponent(): TicketsComponent.Builder
 
     fun inject(mainActivity: MainActivity)
 
@@ -66,8 +66,6 @@ interface AppComponent {
 
     fun inject(kinoDetailsFragment: KinoDetailsFragment)
 
-    fun inject(settingsFragment: SettingsFragment)
-
     fun inject(addChatMemberActivity: AddChatMemberActivity)
 
     fun inject(barrierFreeFacilitiesActivity: BarrierFreeFacilitiesActivity)
@@ -75,14 +73,6 @@ interface AppComponent {
     fun inject(barrierFreeContactActivity: BarrierFreeContactActivity)
 
     fun inject(barrierFreeMoreInfoActivity: BarrierFreeMoreInfoActivity)
-
-    fun inject(buyTicketActivity: BuyTicketActivity)
-
-    fun inject(showTicketActivity: ShowTicketActivity)
-
-    fun inject(eventDetailsFragment: EventDetailsFragment)
-
-    fun inject(eventsFragment: EventsFragment)
 
     fun inject(transportationActivity: TransportationActivity)
 
@@ -103,8 +93,6 @@ interface AppComponent {
     fun inject(setupEduroamActivity: SetupEduroamActivity)
 
     fun inject(scanResultsAvailableReceiver: ScanResultsAvailableReceiver)
-
-    fun inject(stripePaymentActivity: StripePaymentActivity)
 
     fun inject(kinoActivity: KinoActivity)
 

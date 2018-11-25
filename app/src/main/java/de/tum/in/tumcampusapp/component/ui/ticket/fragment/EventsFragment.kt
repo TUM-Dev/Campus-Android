@@ -15,6 +15,7 @@ import de.tum.`in`.tumcampusapp.component.other.generic.adapter.EqualSpacingItem
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMember
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsViewModel
 import de.tum.`in`.tumcampusapp.component.ui.ticket.adapter.EventsAdapter
+import de.tum.`in`.tumcampusapp.component.ui.ticket.di.TicketsModule
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.EventType
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
@@ -38,7 +39,10 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        injector.inject(this)
+        injector.ticketsComponent()
+                .ticketsModule(TicketsModule(requireContext()))
+                .build()
+                .inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater,

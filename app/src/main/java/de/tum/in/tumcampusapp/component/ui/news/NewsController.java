@@ -7,6 +7,8 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import de.tum.in.tumcampusapp.component.notifications.NotificationScheduler;
 import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
 import de.tum.in.tumcampusapp.component.notifications.model.AppNotification;
@@ -25,6 +27,7 @@ public class NewsController implements ProvidesNotifications {
      *
      * @param context Context
      */
+    @Inject
     public NewsController(Context context) {
         this.context = context;
     }

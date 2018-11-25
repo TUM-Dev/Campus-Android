@@ -24,15 +24,6 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocal
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaMenuLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.EduroamController
-import de.tum.`in`.tumcampusapp.component.ui.news.NewsCardsProvider
-import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
-import de.tum.`in`.tumcampusapp.component.ui.news.repository.NewsLocalRepository
-import de.tum.`in`.tumcampusapp.component.ui.news.repository.NewsRemoteRepository
-import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
-import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository
-import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsRemoteRepository
-import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository
-import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportNotificationProvider
@@ -96,34 +87,6 @@ class AppModule(private val context: Context) {
 
     @Singleton
     @Provides
-    fun provideEventsLocalRepository(
-            database: TcaDb
-    ): EventsLocalRepository {
-        return EventsLocalRepository(database)
-    }
-
-    @Singleton
-    @Provides
-    fun provideEventsRemoteRepository(
-            tumCabeClient: TUMCabeClient,
-            eventsLocalRepository: EventsLocalRepository,
-            ticketsLocalRepository: TicketsLocalRepository,
-            ticketsRemoteRepository: TicketsRemoteRepository
-    ): EventsRemoteRepository {
-        return EventsRemoteRepository(context, tumCabeClient,
-                eventsLocalRepository, ticketsLocalRepository, ticketsRemoteRepository)
-    }
-
-    @Singleton
-    @Provides
-    fun provideTicketsLocalRepository(
-            database: TcaDb
-    ): TicketsLocalRepository {
-        return TicketsLocalRepository(database)
-    }
-
-    @Singleton
-    @Provides
     fun provideTumLocationManager(): TumLocationManager {
         return TumLocationManager(context)
     }
@@ -178,48 +141,6 @@ class AppModule(private val context: Context) {
     @Provides
     fun provideSyncManager(): SyncManager {
         return SyncManager(context)
-    }
-
-    @Singleton
-    @Provides
-    fun provideNewsController(): NewsController {
-        return NewsController(context)
-    }
-
-    @Singleton
-    @Provides
-    fun provideNewsLocalRepository(
-            database: TcaDb
-    ): NewsLocalRepository {
-        return NewsLocalRepository(context, database)
-    }
-
-    @Singleton
-    @Provides
-    fun provideNewsRemoteRepository(
-            localRepository: NewsLocalRepository,
-            syncManager: SyncManager,
-            tumCabeClient: TUMCabeClient,
-            newsController: NewsController
-    ): NewsRemoteRepository {
-        return NewsRemoteRepository(localRepository, syncManager, tumCabeClient, newsController)
-    }
-
-    @Singleton
-    @Provides
-    fun provideNewsCardsProvider(
-            database: TcaDb,
-            newsLocalRepository: NewsLocalRepository
-    ): NewsCardsProvider {
-        return NewsCardsProvider(context, database, newsLocalRepository)
-    }
-
-    @Singleton
-    @Provides
-    fun provideTopNewsRemoteRepository(
-            tumCabeClient: TUMCabeClient
-    ): TopNewsRemoteRepository {
-        return TopNewsRemoteRepository(context, tumCabeClient)
     }
 
     @Singleton

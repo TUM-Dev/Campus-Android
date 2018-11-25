@@ -35,6 +35,7 @@ import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
 import de.tum.in.tumcampusapp.component.ui.eduroam.SetupEduroamActivity;
+import de.tum.in.tumcampusapp.component.ui.news.di.NewsModule;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.news.repository.NewsLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.onboarding.StartupActivity;
@@ -66,7 +67,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        ((BaseActivity) requireActivity()).getInjector().inject(this);
+        ((BaseActivity) requireActivity()).getInjector().newsComponent()
+                .newsModule(new NewsModule(requireContext()))
+                .build()
+                .inject(this);
     }
 
     @Override
