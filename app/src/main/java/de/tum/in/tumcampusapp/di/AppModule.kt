@@ -6,6 +6,7 @@ import dagger.Module
 import dagger.Provides
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
+import de.tum.`in`.tumcampusapp.component.other.locations.LocationProvider
 import de.tum.`in`.tumcampusapp.component.other.locations.TumLocationManager
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarCardsProvider
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
@@ -123,6 +124,12 @@ class AppModule(private val context: Context) {
     @Provides
     fun provideTumLocationManager(): TumLocationManager {
         return TumLocationManager(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideLocationProvider(): LocationProvider {
+        return LocationProvider(context)
     }
 
     @Singleton

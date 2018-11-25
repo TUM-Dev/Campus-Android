@@ -2,11 +2,11 @@ package de.tum.in.tumcampusapp.component.tumui.lectures.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 
 import java.util.Collections;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForSearchingTumOnline;
@@ -40,8 +40,7 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<Lect
         lvMyLecturesList = findViewById(R.id.lvMyLecturesList);
 
         lvMyLecturesList.setOnItemClickListener((a, v, position, id) -> {
-            Object o = lvMyLecturesList.getItemAtPosition(position);
-            Lecture item = (Lecture) o;
+            Lecture item = (Lecture) lvMyLecturesList.getItemAtPosition(position);
 
             Intent intent = new Intent(this, LecturesDetailsActivity.class);
             intent.putExtra(Lecture.STP_SP_NR, item.getStp_sp_nr());

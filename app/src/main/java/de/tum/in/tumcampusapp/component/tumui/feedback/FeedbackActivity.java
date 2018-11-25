@@ -78,6 +78,9 @@ public class FeedbackActivity extends BaseActivity {
     @Inject
     TUMCabeClient tumCabeClient;
 
+    @Inject
+    LocationProvider locationProvider;
+
     public FeedbackActivity() {
         super(R.layout.activity_feedback);
     }
@@ -205,7 +208,7 @@ public class FeedbackActivity extends BaseActivity {
         double longitude = 0.0;
 
         if (includeLocation.isChecked()) {
-            Location location = LocationProvider.getInstance(this).getLastLocation();
+            Location location = locationProvider.getLastLocation();
             if (location != null) {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();

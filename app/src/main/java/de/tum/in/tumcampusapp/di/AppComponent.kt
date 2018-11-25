@@ -5,6 +5,7 @@ import de.tum.`in`.tumcampusapp.component.notifications.receivers.NotificationAl
 import de.tum.`in`.tumcampusapp.component.other.settings.SettingsFragment
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarActivity
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackActivity
+import de.tum.`in`.tumcampusapp.component.tumui.person.PersonSearchActivity
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity
 import de.tum.`in`.tumcampusapp.component.ui.barrierfree.BarrierFreeContactActivity
 import de.tum.`in`.tumcampusapp.component.ui.barrierfree.BarrierFreeFacilitiesActivity
@@ -108,5 +109,7 @@ interface AppComponent {
     fun inject(studyRoomsActivity: StudyRoomsActivity)
 
     fun inject(openingHoursDetailFragment: OpeningHoursDetailFragment)
+
+    fun inject(personSearchActivity: PersonSearchActivity)
 
 }

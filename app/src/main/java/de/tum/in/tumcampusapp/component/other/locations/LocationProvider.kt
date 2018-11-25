@@ -9,8 +9,11 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import org.jetbrains.anko.locationManager
+import javax.inject.Inject
 
-class LocationProvider(context: Context) {
+class LocationProvider @Inject constructor(
+        context: Context
+) {
 
     // TODO: Inject this
     private val locationProvider = LocationServices.getFusedLocationProviderClient(context)
