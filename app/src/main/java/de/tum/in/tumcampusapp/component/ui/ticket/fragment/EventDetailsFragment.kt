@@ -21,11 +21,8 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.payload.TicketStatus
 import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository
-import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.*
 import de.tum.`in`.tumcampusapp.utils.Const.KEY_EVENT_ID
-import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
-import de.tum.`in`.tumcampusapp.utils.Utils
-import de.tum.`in`.tumcampusapp.utils.into
 import kotlinx.android.synthetic.main.fragment_event_details.*
 import kotlinx.android.synthetic.main.fragment_event_details.view.*
 import retrofit2.Call
@@ -50,7 +47,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (requireActivity() as BaseActivity).injector.inject(this)
+        injector.inject(this)
     }
 
     override fun onAttach(context: Context?) {

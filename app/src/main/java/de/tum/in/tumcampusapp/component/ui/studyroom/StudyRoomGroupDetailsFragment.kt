@@ -9,9 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.GridEqualSpacingDecoration
 import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.injector
 import javax.inject.Inject
 
 /**
@@ -28,7 +28,7 @@ class StudyRoomGroupDetailsFragment : Fragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        (requireActivity() as BaseActivity).injector.inject(this)
+        injector.inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

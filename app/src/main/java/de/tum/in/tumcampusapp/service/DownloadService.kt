@@ -4,27 +4,20 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.JobIntentService
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import de.tum.`in`.tumcampusapp.App
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.app.model.UploadStatus
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location
-import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsViewModel
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.NewsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsRemoteRepository
-import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoViewModel
-import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository
-import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoUpdater
 import de.tum.`in`.tumcampusapp.database.TcaDb
-import de.tum.`in`.tumcampusapp.utils.CacheManager
-import de.tum.`in`.tumcampusapp.utils.Const
-import de.tum.`in`.tumcampusapp.utils.NetUtils
-import de.tum.`in`.tumcampusapp.utils.Utils
+import de.tum.`in`.tumcampusapp.utils.*
 import io.reactivex.disposables.CompositeDisposable
 import org.jetbrains.anko.doAsync
 import java.io.IOException
@@ -37,16 +30,19 @@ class DownloadService : JobIntentService() {
 
     private lateinit var broadcastManager: LocalBroadcastManager
 
-    private lateinit var kinoViewModel: KinoViewModel
-    private lateinit var topNewsViewModel: TopNewsViewModel
-
     private val disposable = CompositeDisposable()
+
+    @Inject
+    lateinit var kinoUpdater: KinoUpdater
+
+    @Inject
+    lateinit var topNewsRemoteRepository: TopNewsRemoteRepository
 
     @Inject
     lateinit var cafeteriaManager: CafeteriaManager
 
     @Inject
-    lateinit var cafeteriaMenuManager: CafeteriaMenuManager
+    lateinit var cafeteriaMenuRemoteRepository: CafeteriaMenuRemoteRepository
 
     @Inject
     lateinit var tumCabeClient: TUMCabeClient
@@ -60,27 +56,11 @@ class DownloadService : JobIntentService() {
     @Inject
     lateinit var eventsRemoteRepository: EventsRemoteRepository
 
-    @Inject
-    lateinit var kinoLocalRepository: KinoLocalRepository
-
-    @Inject
-    lateinit var kinoRemoteRepository: KinoRemoteRepository
-
     override fun onCreate() {
         super.onCreate()
-        (applicationContext as App).appComponent.inject(this)
-
-        Utils.log("DownloadService service has started")
-
+        injector.inject(this)
         broadcastManager = LocalBroadcastManager.getInstance(this)
-
-        // SyncManager(this) // Starts a new sync in constructor; should be moved to explicit method call
-
-        // Init sync table
-        kinoViewModel = KinoViewModel(kinoLocalRepository, kinoRemoteRepository)
-
-        TopNewsRemoteRepository.tumCabeClient = tumCabeClient
-        topNewsViewModel = TopNewsViewModel(TopNewsRemoteRepository, disposable)
+        Utils.log("DownloadService service has started")
     }
 
     override fun onHandleWork(intent: Intent) {
@@ -154,13 +134,13 @@ class DownloadService : JobIntentService() {
     }
 
     private fun downloadCafeterias(force: Boolean): Boolean {
-        cafeteriaMenuManager.downloadMenus(force)
+        cafeteriaMenuRemoteRepository.downloadMenus(force)
         cafeteriaManager.fetchCafeteriasFromService(force)
         return true
     }
 
     private fun downloadKino(force: Boolean): Boolean {
-        kinoViewModel.getKinosFromService(force)
+        disposable += kinoUpdater.fetchAndStoreKinos(force)
         return true
     }
 
@@ -175,7 +155,10 @@ class DownloadService : JobIntentService() {
     }
 
 
-    private fun downloadTopNews() = topNewsViewModel.getNewsAlertFromService(this)
+    private fun downloadTopNews(): Boolean {
+        topNewsRemoteRepository.fetchNewsAlert()
+        return true
+    }
 
     /**
      * Import default location and opening hours from assets

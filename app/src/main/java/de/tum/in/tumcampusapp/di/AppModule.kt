@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import dagger.Module
 import dagger.Provides
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
+import de.tum.`in`.tumcampusapp.api.cafeteria.CafeteriaAPIClient
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.component.other.locations.LocationProvider
 import de.tum.`in`.tumcampusapp.component.other.locations.TumLocationManager
@@ -17,8 +18,10 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaNotificationProv
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.interactors.FetchBestMatchMensaInteractor
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaMenuLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomController
@@ -27,6 +30,7 @@ import de.tum.`in`.tumcampusapp.component.ui.news.NewsCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.NewsLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.NewsRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.StudyRoomGroupLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsRemoteRepository
@@ -40,6 +44,7 @@ import de.tum.`in`.tumcampusapp.component.ui.transportation.api.MvvClient
 import de.tum.`in`.tumcampusapp.component.ui.transportation.repository.TransportLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.transportation.repository.TransportRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.transportation.widget.MVVWidgetController
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoUpdater
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
@@ -150,6 +155,30 @@ class AppModule(private val context: Context) {
 
     @Singleton
     @Provides
+    fun provideCafeteriaApiClient(): CafeteriaAPIClient {
+        return CafeteriaAPIClient.getInstance(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideCafeteriaMenuLocalRepository(
+            database: TcaDb
+    ): CafeteriaMenuLocalRepository {
+        return CafeteriaMenuLocalRepository(database)
+    }
+
+    @Singleton
+    @Provides
+    fun provideCafeteriaMenuRemoteRepository(
+            cafeteriaMenuManager: CafeteriaMenuManager,
+            localRepository: CafeteriaMenuLocalRepository,
+            apiClient: CafeteriaAPIClient
+    ): CafeteriaMenuRemoteRepository {
+        return CafeteriaMenuRemoteRepository(cafeteriaMenuManager, localRepository, apiClient)
+    }
+
+    @Singleton
+    @Provides
     fun provideSyncManager(): SyncManager {
         return SyncManager(context)
     }
@@ -186,6 +215,14 @@ class AppModule(private val context: Context) {
             newsLocalRepository: NewsLocalRepository
     ): NewsCardsProvider {
         return NewsCardsProvider(context, database, newsLocalRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideTopNewsRemoteRepository(
+            tumCabeClient: TUMCabeClient
+    ): TopNewsRemoteRepository {
+        return TopNewsRemoteRepository(context, tumCabeClient)
     }
 
     @Singleton
@@ -343,6 +380,15 @@ class AppModule(private val context: Context) {
             tumCabeClient: TUMCabeClient
     ): KinoRemoteRepository {
         return KinoRemoteRepository(tumCabeClient)
+    }
+
+    @Singleton
+    @Provides
+    fun provideKinoUpdater(
+            localRepository: KinoLocalRepository,
+            remoteRepository: KinoRemoteRepository
+    ): KinoUpdater {
+        return KinoUpdater(localRepository, remoteRepository)
     }
 
     @Singleton

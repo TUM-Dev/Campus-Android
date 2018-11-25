@@ -5,13 +5,11 @@ import android.location.Location
 import de.tum.`in`.tumcampusapp.component.notifications.ProvidesNotifications
 import de.tum.`in`.tumcampusapp.component.other.locations.Locations
 import de.tum.`in`.tumcampusapp.component.other.locations.TumLocationManager
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaDao
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
-import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.ErrorHelper
 import de.tum.`in`.tumcampusapp.utils.LocationHelper.calculateDistanceToCafeteria
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -27,10 +25,6 @@ class CafeteriaManager @Inject constructor(
         private val localRepository: CafeteriaLocalRepository,
         private val remoteRepository: CafeteriaRemoteRepository
 ) : ProvidesNotifications {
-
-    private val cafeteriaDao: CafeteriaDao by lazy {
-        TcaDb.getInstance(context).cafeteriaDao()
-    }
 
     fun fetchCafeteriasFromService(force: Boolean): Disposable {
         return Observable
@@ -87,7 +81,7 @@ class CafeteriaManager @Inject constructor(
     }
 
     private fun getAllCafeterias(location: Location): List<Cafeteria> {
-        val cafeterias = cafeteriaDao.allNow
+        val cafeterias = localRepository.getAllCafeteriasNow()
         cafeterias.forEach { it.distance = calculateDistanceToCafeteria(it, location) }
         return cafeterias.sorted()
     }
