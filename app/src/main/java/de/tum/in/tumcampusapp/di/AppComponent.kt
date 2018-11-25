@@ -14,6 +14,7 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivit
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionFragment
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.widget.MensaRemoteViewFactory
 import de.tum.`in`.tumcampusapp.component.ui.chat.AddChatMemberActivity
+import de.tum.`in`.tumcampusapp.component.ui.chat.activity.ChatActivity
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.SetupEduroamActivity
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsActivity
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavCheckTokenActivity
@@ -36,6 +37,7 @@ import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoActivity
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.details.KinoDetailsFragment
 import de.tum.`in`.tumcampusapp.service.DownloadService
 import de.tum.`in`.tumcampusapp.service.ScanResultsAvailableReceiver
+import de.tum.`in`.tumcampusapp.service.SendMessageService
 import javax.inject.Singleton
 
 @Singleton
@@ -47,6 +49,8 @@ interface AppComponent {
     fun inject(calendarActivity: CalendarActivity)
 
     fun inject(newsActivity: NewsActivity)
+
+    fun inject(chatActivity: ChatActivity)
 
     fun inject(mvvWidgetConfigureActivity: MVVWidgetConfigureActivity)
 
@@ -111,5 +115,7 @@ interface AppComponent {
     fun inject(openingHoursDetailFragment: OpeningHoursDetailFragment)
 
     fun inject(personSearchActivity: PersonSearchActivity)
+
+    fun inject(sendMessageService: SendMessageService)
 
 }
