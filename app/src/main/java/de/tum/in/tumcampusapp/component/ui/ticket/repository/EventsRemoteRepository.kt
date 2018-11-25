@@ -67,4 +67,9 @@ class EventsRemoteRepository @Inject constructor(
         }
     }
 
+    fun fetchEvents(callback: Callback<List<Event>>) {
+        eventsLocalRepository.removePastEventsWithoutTicket()
+        tumCabeClient.fetchEvents(callback)
+    }
+
 }

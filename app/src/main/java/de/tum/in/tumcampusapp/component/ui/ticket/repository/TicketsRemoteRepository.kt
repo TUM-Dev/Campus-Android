@@ -1,5 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket.repository
 
+import android.content.Context
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Ticket
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.TicketType
@@ -10,9 +11,15 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class TicketsRemoteRepository @Inject constructor(
+        private val context: Context,
         private val tumCabeClient: TUMCabeClient,
         private val ticketsLocalRepository: TicketsLocalRepository
 ) {
+
+    fun fetchTickets(callback: Callback<List<Ticket>>) {
+        // TODO: Should not pass Context here, but TUMCabeVerification object (create in AppModule?)
+        tumCabeClient.fetchTickets(context, callback)
+    }
 
     fun fetchTicketTypesForTickets(tickets: List<Ticket>) {
         tickets.forEach { fetchTicketTypesForTicket(it) }
