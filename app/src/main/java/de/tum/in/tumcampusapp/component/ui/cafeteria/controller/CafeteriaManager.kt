@@ -87,9 +87,9 @@ class CafeteriaManager @Inject constructor(
     }
 
     private fun getAllCafeterias(location: Location): List<Cafeteria> {
-        return cafeteriaDao.allNow
-                .map { it.copy(distance = calculateDistanceToCafeteria(it, location)) }
-                .sorted()
+        val cafeterias = cafeteriaDao.allNow
+        cafeterias.forEach { it.distance = calculateDistanceToCafeteria(it, location) }
+        return cafeterias.sorted()
     }
 
     private fun getDefaultCampusCafeteriaId(campus: Locations.Campus): Int {

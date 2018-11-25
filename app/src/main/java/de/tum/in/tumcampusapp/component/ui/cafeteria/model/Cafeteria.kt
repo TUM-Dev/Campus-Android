@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria.model
 
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import androidx.room.RoomWarnings
 
@@ -22,9 +21,11 @@ data class Cafeteria(
         var name: String = "",
         var address: String = "",
         var latitude: Double = -1.0,
-        var longitude: Double = -1.0,
-        @Ignore var distance: Float = 0f
+        var longitude: Double = -1.0
 ) : Comparable<Cafeteria> {
+
+    // Used for ordering cafeterias
+    var distance: Float = 0f
 
     override fun toString(): String = name
 

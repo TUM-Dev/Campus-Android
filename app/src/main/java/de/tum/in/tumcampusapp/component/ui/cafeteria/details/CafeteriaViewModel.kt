@@ -10,7 +10,7 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.utils.ErrorHelper
-import de.tum.`in`.tumcampusapp.utils.LocationHelper
+import de.tum.`in`.tumcampusapp.utils.LocationHelper.calculateDistanceToCafeteria
 import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
@@ -93,10 +93,8 @@ class CafeteriaViewModel @Inject constructor(
      * Adds the distance between user and cafeteria to model.
      */
     private fun transformCafeteria(cafeterias: List<Cafeteria>, location: Location): List<Cafeteria> {
-        return cafeterias.map {
-            val distance = LocationHelper.calculateDistanceToCafeteria(it, location)
-            it.copy(distance = distance)
-        }
+        cafeterias.forEach { it.distance = calculateDistanceToCafeteria(it, location) }
+        return cafeterias
     }
 
     override fun onCleared() {
