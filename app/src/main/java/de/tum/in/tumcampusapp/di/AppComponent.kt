@@ -18,6 +18,7 @@ import de.tum.`in`.tumcampusapp.component.ui.news.NewsActivity
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavCheckTokenActivity
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavExtrasActivity
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavStartActivity
+import de.tum.`in`.tumcampusapp.component.ui.openinghour.OpeningHoursDetailFragment
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainActivity
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.StudyRoomGroupDetailsFragment
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.StudyRoomsActivity
@@ -105,5 +106,7 @@ interface AppComponent {
     fun inject(studyRooomGroupDetailsFragment: StudyRoomGroupDetailsFragment)
 
     fun inject(studyRoomsActivity: StudyRoomsActivity)
+
+    fun inject(openingHoursDetailFragment: OpeningHoursDetailFragment)
 
 }

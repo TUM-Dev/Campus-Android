@@ -79,13 +79,6 @@ public class OpeningHoursListActivity extends BaseActivity implements OpeningHou
         } else {
             // In single-pane mode, simply start the detail activity
             // for the selected item ID.
-            /*
-            Intent detailIntent = new Intent(this, OpeningHoursDetailActivity.class);
-            detailIntent.putExtra(OpeningHoursDetailFragment.ARG_ITEM_ID, id);
-            detailIntent.putExtra(OpeningHoursDetailFragment.ARG_ITEM_CONTENT, name);
-            detailIntent.putExtra(OpeningHoursDetailFragment.TWO_PANE, mTwoPane);
-            startActivity(detailIntent);
-            */
             Bundle options = new Bundle();
             options.putInt(OpeningHoursDetailFragment.ARG_ITEM_ID, id);
             options.putString(OpeningHoursDetailFragment.ARG_ITEM_CONTENT, name);

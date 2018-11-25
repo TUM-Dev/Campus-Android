@@ -12,15 +12,17 @@ import com.google.android.material.button.MaterialButton;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaLocationDao;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Location;
-import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository;
 
 /**
  * A fragment representing a single Item detail screen. This fragment is either
@@ -31,13 +33,21 @@ import de.tum.in.tumcampusapp.database.TcaDb;
  */
 public class OpeningHoursDetailFragment extends Fragment {
 
+    private static final Pattern COMPILE = Pattern.compile("\\\\n");
+    private static final String[] categories = {
+            "library", "info", "cafeteria_gar",
+            "cafeteria_grh", "cafeteria", "cafeteria_pas", "cafeteria_wst"
+    };
+
     static final String ARG_ITEM_ID = "item_id";
     static final String ARG_ITEM_CONTENT = "item_content";
     static final String TWO_PANE = "two_pane";
-    private static final Pattern COMPILE = Pattern.compile("\\\\n");
 
     private int mItemId;
     private String mItemContent;
+
+    @Inject
+    CafeteriaLocalRepository localRepository;
 
     public static OpeningHoursDetailFragment newInstance(int itemId,
                                                          String content, boolean isTwoPane) {
@@ -55,32 +65,30 @@ public class OpeningHoursDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((BaseActivity) requireActivity()).getInjector().inject(this);
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
+        if (getArguments() != null && getArguments().containsKey(ARG_ITEM_ID)) {
             mItemId = getArguments().getInt(ARG_ITEM_ID);
             mItemContent = getArguments().getString(ARG_ITEM_CONTENT);
         }
-        if (getArguments().containsKey(TWO_PANE) && !getArguments().getBoolean(TWO_PANE)) {
-            getActivity().setTitle(mItemContent);
+
+        if (getArguments() != null
+                && getArguments().containsKey(TWO_PANE) && !getArguments().getBoolean(TWO_PANE)) {
+            requireActivity().setTitle(mItemContent);
         }
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_item_detail, container, false);
-
-        // click on category in list
-        CafeteriaLocationDao dao = TcaDb.getInstance(getActivity())
-                                        .locationDao();
-        String[] categories = {"library", "info", "cafeteria_gar", "cafeteria_grh", "cafeteria", "cafeteria_pas", "cafeteria_wst"};
-        List<Location> locations = dao.getAllOfCategory(categories[mItemId]);
+        List<Location> locations = localRepository.getAllLocationsOfCategory(categories[mItemId]);
 
         RecyclerView recyclerView = rootView.findViewById(R.id.fragment_item_detail_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(new OpeningHoursDetailAdapter(locations));
 
-        int spacing = Math.round(getResources().getDimension(R.dimen.material_card_view_padding));
+        final int spacing = Math.round(getResources().getDimension(R.dimen.material_card_view_padding));
         recyclerView.addItemDecoration(new EqualSpacingItemDecoration(spacing));
 
         return rootView;
@@ -140,8 +148,9 @@ public class OpeningHoursDetailFragment extends Fragment {
             this.locations = locations;
         }
 
+        @NonNull
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.card_header_details_button, parent, false);
             return new RecyclerView.ViewHolder(v) {
@@ -149,7 +158,7 @@ public class OpeningHoursDetailFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             OpeningHoursDetailFragment.this.setViewValue(holder.itemView, locations.get(position));
         }
 
