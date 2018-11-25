@@ -23,10 +23,6 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.interactors.FetchBestMatc
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaMenuLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
-import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomCardsProvider
-import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomController
-import de.tum.`in`.tumcampusapp.component.ui.chat.repository.ChatMessageLocalRepository
-import de.tum.`in`.tumcampusapp.component.ui.chat.repository.ChatMessageRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.EduroamController
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
@@ -292,40 +288,6 @@ class AppModule(private val context: Context) {
             tumLocationManager: TumLocationManager
     ) : CafeteriaCardsProvider {
         return CafeteriaCardsProvider(context, cafeteriaManager, localRepository, tumLocationManager)
-    }
-
-    @Singleton
-    @Provides
-    fun provideChatRoomCardsProvider(
-            tumOnlineClient: TUMOnlineClient,
-            tumCabeClient: TUMCabeClient,
-            chatRoomController: ChatRoomController,
-            database: TcaDb
-    ): ChatRoomCardsProvider {
-        return ChatRoomCardsProvider(context, tumOnlineClient, tumCabeClient, chatRoomController, database)
-    }
-
-    @Singleton
-    @Provides
-    fun provideChatRoomController(): ChatRoomController {
-        return ChatRoomController(context)
-    }
-
-    @Singleton
-    @Provides
-    fun provideChatMessageLocalRepository(
-            database: TcaDb
-    ): ChatMessageLocalRepository {
-        return ChatMessageLocalRepository(database)
-    }
-
-    @Singleton
-    @Provides
-    fun provideChatMessageRemoteRepository(
-            localRepository: ChatMessageLocalRepository,
-            tumCabeClient: TUMCabeClient
-    ): ChatMessageRemoteRepository {
-        return ChatMessageRemoteRepository(context, localRepository, tumCabeClient)
     }
 
     @Singleton

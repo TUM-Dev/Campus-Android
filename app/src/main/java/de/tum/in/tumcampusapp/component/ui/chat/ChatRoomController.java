@@ -1,12 +1,12 @@
 package de.tum.in.tumcampusapp.component.ui.chat;
 
-import android.content.Context;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.Lecture;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
@@ -15,21 +15,14 @@ import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Utils;
 
-/**
- * TUMOnline cache manager, allows caching of TUMOnline requests
- */
+
 public class ChatRoomController {
 
     private final ChatRoomDao chatRoomDao;
 
-    /**
-     * Constructor, open/create database, create table if necessary
-     *
-     * @param context Context
-     */
-    public ChatRoomController(Context context) {
-        TcaDb db = TcaDb.getInstance(context); // TODO: Inject this
-        chatRoomDao = db.chatRoomDao();
+    @Inject
+    public ChatRoomController(TcaDb database) {
+        chatRoomDao = database.chatRoomDao();
     }
 
     /**

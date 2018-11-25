@@ -12,6 +12,7 @@ import androidx.core.app.JobIntentService;
 import de.tum.in.tumcampusapp.App;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
+import de.tum.in.tumcampusapp.component.ui.chat.di.ChatModule;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.repository.ChatMessageLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.chat.repository.ChatMessageRemoteRepository;
@@ -39,7 +40,10 @@ public class SendMessageService extends JobIntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        ((App) getApplicationContext()).getAppComponent().inject(this);
+        ((App) getApplicationContext()).getAppComponent().chatComponent()
+                .chatModule(new ChatModule(this))
+                .build()
+                .inject(this);
     }
 
     @Override

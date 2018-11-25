@@ -7,6 +7,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventsResponse
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LecturesResponse
 import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomController
+import de.tum.`in`.tumcampusapp.database.TcaDb
 import okhttp3.Cache
 import org.jetbrains.anko.doAsync
 import retrofit2.Call
@@ -58,7 +59,7 @@ class CacheManager(private val context: Context) {
                                             response: Response<LecturesResponse>) {
                         Utils.log("Successfully updated personal lectures in background")
                         val lectures = response.body()?.lectures ?: return
-                        val chatRoomController = ChatRoomController(context)
+                        val chatRoomController = ChatRoomController(TcaDb.getInstance(context))
                         chatRoomController.createLectureRooms(lectures)
                     }
 

@@ -41,6 +41,7 @@ import de.tum.in.tumcampusapp.component.ui.chat.ChatMessageViewModel;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatRoomController;
 import de.tum.in.tumcampusapp.component.ui.chat.FcmChat;
 import de.tum.in.tumcampusapp.component.ui.chat.adapter.ChatHistoryAdapter;
+import de.tum.in.tumcampusapp.component.ui.chat.di.ChatModule;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
@@ -90,6 +91,9 @@ public class ChatActivity extends ActivityForDownloadingExternal
     @Inject
     TUMCabeClient tumCabeClient;
 
+    @Inject
+    ChatRoomController chatRoomController;
+
     public ChatActivity() {
         super(Const.CURRENT_CHAT_ROOM, R.layout.activity_chat);
     }
@@ -97,7 +101,10 @@ public class ChatActivity extends ActivityForDownloadingExternal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getInjector().inject(this);
+        getInjector().chatComponent()
+                .chatModule(new ChatModule(this))
+                .build()
+                .inject(this);
 
         Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
@@ -282,7 +289,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
                                    @NonNull Response<ChatRoom> response) {
                 ChatRoom room = response.body();
                 if (response.isSuccessful() && room != null) {
-                    new ChatRoomController(ChatActivity.this).leave(currentChatRoom);
+                    chatRoomController.leave(currentChatRoom);
 
                     Intent intent = new Intent(ChatActivity.this, ChatRoomsActivity.class);
                     startActivity(intent);
