@@ -33,7 +33,6 @@ import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventHelper;
 import de.tum.in.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
-import de.tum.in.tumcampusapp.component.ui.tufilm.KinoViewModel;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.di.ViewModelFactory;
 
@@ -50,7 +49,7 @@ public class KinoDetailsFragment extends Fragment {
     private KinoDetailsViewModel viewModel;
 
     @Inject
-    Provider<KinoViewModel> viewModelProvider;
+    Provider<KinoDetailsViewModel> viewModelProvider;
 
     public static KinoDetailsFragment newInstance(String id) {
         KinoDetailsFragment fragment = new KinoDetailsFragment();
@@ -65,7 +64,7 @@ public class KinoDetailsFragment extends Fragment {
         super.onAttach(context);
         ((BaseActivity) requireActivity()).getInjector().inject(this);
 
-        ViewModelFactory<KinoViewModel> factory = new ViewModelFactory<>(viewModelProvider);
+        ViewModelFactory<KinoDetailsViewModel> factory = new ViewModelFactory<>(viewModelProvider);
         viewModel = ViewModelProviders.of(this, factory).get(KinoDetailsViewModel.class);
     }
 
