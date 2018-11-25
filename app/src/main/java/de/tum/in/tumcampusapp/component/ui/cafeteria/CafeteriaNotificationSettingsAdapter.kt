@@ -2,10 +2,10 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria
 
 import android.app.TimePickerDialog
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.utils.Utils
 import kotlinx.android.synthetic.main.notification_schedule_listitem.view.*
@@ -15,10 +15,9 @@ import java.util.*
 
 class CafeteriaNotificationSettingsAdapter(
         private val context: Context,
+        private val settings: CafeteriaNotificationSettings,
         private val dailySchedule: List<CafeteriaNotificationTime>
 ) : RecyclerView.Adapter<CafeteriaNotificationSettingsAdapter.ViewHolder>(), OnNotificationTimeChangedListener {
-
-    private val settings = CafeteriaNotificationSettings.getInstance(context)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)

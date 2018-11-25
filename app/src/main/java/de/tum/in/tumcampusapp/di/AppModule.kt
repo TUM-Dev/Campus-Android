@@ -14,14 +14,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeeManager
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeesCardsProvider
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeesNotificationProvider
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaNotificationProvider
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaCardsProvider
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuRemoteRepository
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.interactors.FetchBestMatchMensaInteractor
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaMenuLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.EduroamController
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportCardsProvider
@@ -73,6 +66,11 @@ class AppModule(private val context: Context) {
         return TUMOnlineClient.getInstance(context)
     }
 
+    @Provides
+    fun provideCafeteriaApiClient(): CafeteriaAPIClient {
+        return CafeteriaAPIClient.getInstance(context)
+    }
+
     @Singleton
     @Provides
     fun providesCafeteriaLocalRepository(db: TcaDb): CafeteriaLocalRepository {
@@ -95,46 +93,6 @@ class AppModule(private val context: Context) {
     @Provides
     fun provideLocationProvider(): LocationProvider {
         return LocationProvider(context)
-    }
-
-    @Singleton
-    @Provides
-    fun provideCafeteriaManager(
-            tumLocationManager: TumLocationManager,
-            localRepository: CafeteriaLocalRepository,
-            remoteRepository: CafeteriaRemoteRepository
-    ): CafeteriaManager {
-        return CafeteriaManager(context, tumLocationManager, localRepository, remoteRepository)
-    }
-
-    @Singleton
-    @Provides
-    fun provideCafeteriaMenuManager(): CafeteriaMenuManager {
-        return CafeteriaMenuManager(context)
-    }
-
-    @Singleton
-    @Provides
-    fun provideCafeteriaApiClient(): CafeteriaAPIClient {
-        return CafeteriaAPIClient.getInstance(context)
-    }
-
-    @Singleton
-    @Provides
-    fun provideCafeteriaMenuLocalRepository(
-            database: TcaDb
-    ): CafeteriaMenuLocalRepository {
-        return CafeteriaMenuLocalRepository(database)
-    }
-
-    @Singleton
-    @Provides
-    fun provideCafeteriaMenuRemoteRepository(
-            cafeteriaMenuManager: CafeteriaMenuManager,
-            localRepository: CafeteriaMenuLocalRepository,
-            apiClient: CafeteriaAPIClient
-    ): CafeteriaMenuRemoteRepository {
-        return CafeteriaMenuRemoteRepository(cafeteriaMenuManager, localRepository, apiClient)
     }
 
     @Singleton
@@ -199,37 +157,6 @@ class AppModule(private val context: Context) {
             localRepository: TransportLocalRepository
     ): MVVWidgetController {
         return MVVWidgetController(localRepository)
-    }
-
-    @Singleton
-    @Provides
-    fun provideCafeteriaCardsProvider(
-            cafeteriaManager: CafeteriaManager,
-            localRepository: CafeteriaLocalRepository,
-            tumLocationManager: TumLocationManager
-    ) : CafeteriaCardsProvider {
-        return CafeteriaCardsProvider(context, cafeteriaManager, localRepository, tumLocationManager)
-    }
-
-    @Singleton
-    @Provides
-    fun provideFetchBestMatchMensaInteractor(
-            cafeteriaManager: CafeteriaManager
-    ): FetchBestMatchMensaInteractor {
-        return FetchBestMatchMensaInteractor(cafeteriaManager)
-    }
-
-    @Singleton
-    @Provides
-    fun provideCafeteriaNotificationProvider(
-            tumLocationManager: TumLocationManager,
-            cafeteriaManager: CafeteriaManager,
-            cafeteriaMenuManager: CafeteriaMenuManager,
-            localRepository: CafeteriaLocalRepository
-    ): CafeteriaNotificationProvider {
-        return CafeteriaNotificationProvider(
-                context, tumLocationManager, cafeteriaManager, cafeteriaMenuManager, localRepository
-        )
     }
 
     @Singleton

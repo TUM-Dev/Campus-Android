@@ -8,6 +8,8 @@ import org.joda.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import de.tum.in.tumcampusapp.component.notifications.NotificationScheduler;
 import de.tum.in.tumcampusapp.component.notifications.persistence.NotificationType;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuDao;
@@ -25,27 +27,23 @@ public class CafeteriaMenuManager {
     private final Context mContext;
     private final CafeteriaMenuDao menuDao;
     private final FavoriteDishDao favoriteDishDao;
+    private final CafeteriaNotificationSettings notificationSettings;
 
-    /**
-     * Constructor, open/create database, create table if necessary
-     *
-     * @param context Context
-     */
-    public CafeteriaMenuManager(Context context) {
+    @Inject
+    public CafeteriaMenuManager(Context context, TcaDb database,
+                                CafeteriaNotificationSettings settings) {
         mContext = context;
-        TcaDb db = TcaDb.getInstance(context);
-        menuDao = db.cafeteriaMenuDao();
-        favoriteDishDao = db.favoriteDishDao();
+        menuDao = database.cafeteriaMenuDao();
+        favoriteDishDao = database.favoriteDishDao();
+        notificationSettings = settings;
     }
 
     public void scheduleNotificationAlarms() {
         List<DateTime> menuDates = menuDao.getAllDates();
         List<DateTime> notificationTimes = new ArrayList<>();
 
-        CafeteriaNotificationSettings settings = new CafeteriaNotificationSettings(mContext);
-
         for (DateTime menuDate : menuDates) {
-            LocalTime weekdayNotificationTime = settings.retrieveLocalTime(menuDate);
+            LocalTime weekdayNotificationTime = notificationSettings.retrieveLocalTime(menuDate);
             if (weekdayNotificationTime != null) {
                 DateTime notificationTime = weekdayNotificationTime.toDateTimeToday();
                 notificationTimes.add(notificationTime);

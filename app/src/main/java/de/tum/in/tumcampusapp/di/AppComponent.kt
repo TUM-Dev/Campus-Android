@@ -11,6 +11,7 @@ import de.tum.`in`.tumcampusapp.component.ui.barrierfree.BarrierFreeFacilitiesAc
 import de.tum.`in`.tumcampusapp.component.ui.barrierfree.BarrierFreeMoreInfoActivity
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionFragment
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.di.CafeteriaComponent
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.widget.MensaRemoteViewFactory
 import de.tum.`in`.tumcampusapp.component.ui.chat.AddChatMemberActivity
 import de.tum.`in`.tumcampusapp.component.ui.chat.di.ChatComponent
@@ -37,6 +38,8 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [AppModule::class])
 interface AppComponent {
+
+    fun cafeteriaComponent(): CafeteriaComponent.Builder
 
     fun chatComponent(): ChatComponent.Builder
 
