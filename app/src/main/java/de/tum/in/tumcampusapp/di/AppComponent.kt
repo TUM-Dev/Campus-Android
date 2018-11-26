@@ -2,7 +2,6 @@ package de.tum.`in`.tumcampusapp.di
 
 import dagger.Component
 import de.tum.`in`.tumcampusapp.component.notifications.receivers.NotificationAlarmReceiver
-import de.tum.`in`.tumcampusapp.service.QueryLocationsService
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.di.CalendarComponent
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackActivity
 import de.tum.`in`.tumcampusapp.component.tumui.person.PersonSearchActivity
@@ -32,6 +31,7 @@ import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoActivity
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.details.KinoDetailsFragment
 import de.tum.`in`.tumcampusapp.service.DownloadService
 import de.tum.`in`.tumcampusapp.service.FillCacheService
+import de.tum.`in`.tumcampusapp.service.QueryLocationsService
 import de.tum.`in`.tumcampusapp.service.ScanResultsAvailableReceiver
 import javax.inject.Singleton
 
@@ -57,8 +57,6 @@ interface AppComponent {
 
     fun inject(newsActivity: NewsActivity)
 
-    //fun inject(mvvWidgetConfigureActivity: MVVWidgetConfigureActivity)
-
     fun inject(feedbackActivity: FeedbackActivity)
 
     fun inject(wizNavStartActivity: WizNavStartActivity)
@@ -78,10 +76,6 @@ interface AppComponent {
     fun inject(barrierFreeContactActivity: BarrierFreeContactActivity)
 
     fun inject(barrierFreeMoreInfoActivity: BarrierFreeMoreInfoActivity)
-
-    /*fun inject(transportationActivity: TransportationActivity)
-
-    fun inject(transportationDetailsActivity: TransportationDetailsActivity)*/
 
     fun inject(cafeteriaActivity: CafeteriaActivity)
 
