@@ -27,8 +27,7 @@ import de.tum.`in`.tumcampusapp.component.ui.studyroom.di.StudyRoomsComponent
 import de.tum.`in`.tumcampusapp.component.ui.ticket.di.TicketsComponent
 import de.tum.`in`.tumcampusapp.component.ui.transportation.di.TransportComponent
 import de.tum.`in`.tumcampusapp.component.ui.transportation.widget.MVVWidgetService
-import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoActivity
-import de.tum.`in`.tumcampusapp.component.ui.tufilm.details.KinoDetailsFragment
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.di.KinoComponent
 import de.tum.`in`.tumcampusapp.service.DownloadService
 import de.tum.`in`.tumcampusapp.service.FillCacheService
 import de.tum.`in`.tumcampusapp.service.QueryLocationsService
@@ -44,6 +43,8 @@ interface AppComponent {
     fun calendarComponent(): CalendarComponent.Builder
 
     fun chatComponent(): ChatComponent.Builder
+
+    fun kinoComponent(): KinoComponent.Builder
 
     fun newsComponent(): NewsComponent.Builder
 
@@ -66,8 +67,6 @@ interface AppComponent {
     fun inject(wizNavExtrasActivity: WizNavExtrasActivity)
 
     fun inject(roomFinderActivity: RoomFinderActivity)
-
-    fun inject(kinoDetailsFragment: KinoDetailsFragment)
 
     fun inject(addChatMemberActivity: AddChatMemberActivity)
 
@@ -94,8 +93,6 @@ interface AppComponent {
     fun inject(setupEduroamActivity: SetupEduroamActivity)
 
     fun inject(scanResultsAvailableReceiver: ScanResultsAvailableReceiver)
-
-    fun inject(kinoActivity: KinoActivity)
 
     fun inject(openingHoursDetailFragment: OpeningHoursDetailFragment)
 

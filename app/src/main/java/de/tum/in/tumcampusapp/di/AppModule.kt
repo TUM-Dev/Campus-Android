@@ -18,9 +18,6 @@ import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeesNotificati
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.EduroamController
 import de.tum.`in`.tumcampusapp.component.ui.transportation.api.MvvApiService
 import de.tum.`in`.tumcampusapp.component.ui.transportation.api.MvvClient
-import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoUpdater
-import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository
-import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.sync.SyncManager
 import org.jetbrains.anko.defaultSharedPreferences
@@ -131,31 +128,6 @@ class AppModule(private val context: Context) {
     @Provides
     fun provideEduroamController(): EduroamController {
         return EduroamController(context)
-    }
-
-    @Singleton
-    @Provides
-    fun provideKinoLocalRepository(
-            database: TcaDb
-    ): KinoLocalRepository {
-        return KinoLocalRepository(database)
-    }
-
-    @Singleton
-    @Provides
-    fun provideKinoRemoteRepository(
-            tumCabeClient: TUMCabeClient
-    ): KinoRemoteRepository {
-        return KinoRemoteRepository(tumCabeClient)
-    }
-
-    @Singleton
-    @Provides
-    fun provideKinoUpdater(
-            localRepository: KinoLocalRepository,
-            remoteRepository: KinoRemoteRepository
-    ): KinoUpdater {
-        return KinoUpdater(localRepository, remoteRepository)
     }
 
 }
