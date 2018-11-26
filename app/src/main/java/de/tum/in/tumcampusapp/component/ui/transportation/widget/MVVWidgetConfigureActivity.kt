@@ -59,7 +59,6 @@ class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
                 .build()
                 .inject(this)
 
-        // TODO: Use a LocalRepo instead
         recentsDao = database.recentsDao()
 
         // Setup cancel button

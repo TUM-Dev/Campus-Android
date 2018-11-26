@@ -56,6 +56,12 @@ class DownloadService : JobIntentService() {
     @Inject
     lateinit var eventsRemoteRepository: EventsRemoteRepository
 
+    @Inject
+    lateinit var backgroundUpdater: BackgroundUpdater
+
+    @Inject
+    lateinit var authenticationManager: AuthenticationManager
+
     override fun onCreate() {
         super.onCreate()
         injector.inject(this)
@@ -65,7 +71,62 @@ class DownloadService : JobIntentService() {
 
     override fun onHandleWork(intent: Intent) {
         doAsync {
-            download(intent, this@DownloadService)
+            download(intent)
+        }
+    }
+
+    private fun download(intent: Intent) {
+        val action = intent.getStringExtra(Const.ACTION_EXTRA) ?: return
+
+        var success = true
+        val force = intent.getBooleanExtra(Const.FORCE_DOWNLOAD, false)
+        val launch = intent.getBooleanExtra(Const.APP_LAUNCHES, false)
+
+        // Check if device has a internet connection
+        val backgroundServicePermitted = Utils.isBackgroundServicePermitted(this)
+
+        if (NetUtils.isConnected(this) && (launch || backgroundServicePermitted)) {
+            Utils.logv("Handle action <$action>")
+
+            when (action) {
+                Const.EVENTS -> success = downloadEvents()
+                Const.NEWS -> success = downloadNews(force)
+                Const.CAFETERIAS -> success = downloadCafeterias(force)
+                Const.KINO -> success = downloadKino(force)
+                Const.TOP_NEWS -> success = downloadTopNews()
+                else -> {
+                    success = downloadAll(force)
+
+                    if (AccessTokenManager.hasValidAccessToken(this)) {
+                        backgroundUpdater.update()
+                    }
+                }
+            }
+        }
+
+        // Update the last run time saved in shared prefs
+        if (action == Const.DOWNLOAD_ALL_FROM_EXTERNAL) {
+            try {
+                importLocationsDefaults()
+            } catch (e: IOException) {
+                Utils.log(e)
+                success = false
+            }
+
+            if (success) {
+                Utils.setSetting(this, LAST_UPDATE, System.currentTimeMillis())
+            }
+
+            success = true
+        }
+
+        // After done the job, create an broadcast intent and send it. The receivers will be
+        // informed that the download service has finished.
+        Utils.logv("DownloadService was " + (if (success) "" else "not ") + "successful")
+        if (success) {
+            broadcastDownloadSuccess()
+        } else {
+            broadcastDownloadError(R.string.exception_unknown)
         }
     }
 
@@ -113,7 +174,7 @@ class DownloadService : JobIntentService() {
         // upload FCM Token if not uploaded or invalid
         if (uploadStatus.fcmToken != UploadStatus.UPLOADED) {
             Utils.log("upload fcm token")
-            AuthenticationManager(this).tryToUploadFcmToken()
+            authenticationManager.tryToUploadFcmToken()
         }
 
         if (lrzId.isEmpty()) {
@@ -130,7 +191,7 @@ class DownloadService : JobIntentService() {
         }
 
         // upload obfuscated ids
-        AuthenticationManager(this).uploadObfuscatedIds(uploadStatus)
+        authenticationManager.uploadObfuscatedIds(uploadStatus)
     }
 
     private fun downloadCafeterias(force: Boolean): Boolean {
@@ -196,67 +257,6 @@ class DownloadService : JobIntentService() {
          * @return time when BackgroundService was executed last time
          */
         @JvmStatic fun lastUpdate(context: Context): Long = Utils.getSettingLong(context, LAST_UPDATE, 0L)
-
-        /**
-         * Download the data for a specific intent
-         * note, that only one concurrent download() is possible with a static synchronized method!
-         */
-        @Synchronized
-        private fun download(intent: Intent, service: DownloadService) {
-            val action = intent.getStringExtra(Const.ACTION_EXTRA) ?: return
-
-            var success = true
-            val force = intent.getBooleanExtra(Const.FORCE_DOWNLOAD, false)
-            val launch = intent.getBooleanExtra(Const.APP_LAUNCHES, false)
-
-            // Check if device has a internet connection
-            val backgroundServicePermitted = Utils.isBackgroundServicePermitted(service)
-
-            if (NetUtils.isConnected(service) && (launch || backgroundServicePermitted)) {
-                Utils.logv("Handle action <$action>")
-
-                when (action) {
-                    Const.EVENTS -> success = service.downloadEvents()
-                    Const.NEWS -> success = service.downloadNews(force)
-                    Const.CAFETERIAS -> success = service.downloadCafeterias(force)
-                    Const.KINO -> success = service.downloadKino(force)
-                    Const.TOP_NEWS -> success = service.downloadTopNews()
-                    else -> {
-                        success = service.downloadAll(force)
-
-                        if (AccessTokenManager.hasValidAccessToken(service)) {
-                            val cacheManager = CacheManager(service)
-                            cacheManager.fillCache()
-                        }
-                    }
-                }
-            }
-
-            // Update the last run time saved in shared prefs
-            if (action == Const.DOWNLOAD_ALL_FROM_EXTERNAL) {
-                try {
-                    service.importLocationsDefaults()
-                } catch (e: IOException) {
-                    Utils.log(e)
-                    success = false
-                }
-
-                if (success) {
-                    Utils.setSetting(service, LAST_UPDATE, System.currentTimeMillis())
-                }
-
-                success = true
-            }
-
-            // After done the job, create an broadcast intent and send it. The receivers will be
-            // informed that the download service has finished.
-            Utils.logv("DownloadService was " + (if (success) "" else "not ") + "successful")
-            if (success) {
-                service.broadcastDownloadSuccess()
-            } else {
-                service.broadcastDownloadError(R.string.exception_unknown)
-            }
-        }
 
         @JvmStatic fun enqueueWork(context: Context, work: Intent) {
             Utils.log("Download work enqueued")

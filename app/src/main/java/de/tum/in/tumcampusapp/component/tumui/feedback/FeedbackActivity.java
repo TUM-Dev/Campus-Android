@@ -402,7 +402,6 @@ public class FeedbackActivity extends BaseActivity {
     }
 
     private void startTakingPicture() {
-        // TODO
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.CAMERA }, PERMISSION_CAMERA);
             return;
@@ -421,7 +420,6 @@ public class FeedbackActivity extends BaseActivity {
     }
 
     private void openGallery() {
-        // TODO
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE }, PERMISSION_CAMERA);
             return;

@@ -15,7 +15,6 @@ class LocationProvider @Inject constructor(
         context: Context
 ) {
 
-    // TODO: Inject this
     private val locationProvider = LocationServices.getFusedLocationProviderClient(context)
 
     private val locationManager: LocationManager by lazy {

@@ -42,6 +42,7 @@ import de.tum.in.tumcampusapp.component.ui.onboarding.StartupActivity;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.BackgroundService;
 import de.tum.in.tumcampusapp.service.DownloadService;
+import de.tum.in.tumcampusapp.service.QueryLocationsService;
 import de.tum.in.tumcampusapp.service.SendMessageService;
 import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.utils.CacheManager;
@@ -63,6 +64,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     @Inject
     NewsLocalRepository newsLocalRepository;
+
+    @Inject
+    CacheManager cacheManager;
+
+    @Inject
+    SharedPreferences sharedPrefs;
 
     @Override
     public void onAttach(Context context) {
@@ -291,10 +298,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         database.resetDb();
         stopServices(mContext);
 
-        CacheManager cacheManager = new CacheManager(mContext);
         cacheManager.clearCache();
-
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         sharedPrefs.edit().clear().apply();
 
         // Remove all notifications that are currently shown
@@ -319,7 +323,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     private void stopServices(Context context) {
         Class<?>[] services = new Class<?>[]{
-                CalendarController.QueryLocationsService.class,
+                QueryLocationsService.class,
                 SendMessageService.class,
                 SilenceService.class,
                 DownloadService.class,

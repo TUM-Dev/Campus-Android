@@ -2,6 +2,7 @@ package de.tum.`in`.tumcampusapp.di
 
 import dagger.Component
 import de.tum.`in`.tumcampusapp.component.notifications.receivers.NotificationAlarmReceiver
+import de.tum.`in`.tumcampusapp.service.QueryLocationsService
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.di.CalendarComponent
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackActivity
 import de.tum.`in`.tumcampusapp.component.tumui.person.PersonSearchActivity
@@ -30,6 +31,7 @@ import de.tum.`in`.tumcampusapp.component.ui.transportation.widget.MVVWidgetServ
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoActivity
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.details.KinoDetailsFragment
 import de.tum.`in`.tumcampusapp.service.DownloadService
+import de.tum.`in`.tumcampusapp.service.FillCacheService
 import de.tum.`in`.tumcampusapp.service.ScanResultsAvailableReceiver
 import javax.inject.Singleton
 
@@ -89,6 +91,8 @@ interface AppComponent {
 
     fun inject(downloadService: DownloadService)
 
+    fun inject(fillCacheService: FillCacheService)
+
     fun inject(mensaRemoteViewFactory: MensaRemoteViewFactory)
 
     fun inject(mvvRemoteViewFactory: MVVWidgetService)
@@ -102,5 +106,7 @@ interface AppComponent {
     fun inject(openingHoursDetailFragment: OpeningHoursDetailFragment)
 
     fun inject(personSearchActivity: PersonSearchActivity)
+
+    fun inject(queryLocationsService: QueryLocationsService)
 
 }

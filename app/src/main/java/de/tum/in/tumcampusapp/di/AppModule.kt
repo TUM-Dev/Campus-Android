@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import dagger.Module
 import dagger.Provides
+import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.cafeteria.CafeteriaAPIClient
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
@@ -38,6 +39,12 @@ class AppModule(private val context: Context) {
     @Provides
     fun provideSharedPreferences(): SharedPreferences {
         return context.defaultSharedPreferences
+    }
+
+    @Singleton
+    @Provides
+    fun provideAuthenticationManager(): AuthenticationManager {
+        return AuthenticationManager(context)
     }
 
     @Singleton
