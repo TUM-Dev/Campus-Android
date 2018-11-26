@@ -36,6 +36,7 @@ import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.TicketEphemeralKeyProvider;
+import de.tum.in.tumcampusapp.component.ui.ticket.di.TicketsModule;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -75,7 +76,10 @@ public class StripePaymentActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getInjector().inject(this);
+        getInjector().ticketsComponent()
+                .ticketsModule(new TicketsModule(this))
+                .build()
+                .inject(this);
 
         ticketPrice = getIntent().getStringExtra(Const.KEY_TICKET_PRICE);
         ticketHistory = getIntent().getIntExtra(Const.KEY_TICKET_HISTORY, -1);

@@ -22,6 +22,7 @@ import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatRoomController;
+import de.tum.in.tumcampusapp.component.ui.chat.di.ChatModule;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.service.SilenceService;
@@ -38,6 +39,12 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
     @Inject
     SharedPreferences sharedPrefs;
 
+    @Inject
+    TUMCabeClient tumCabeClient;
+
+    @Inject
+    ChatRoomController chatRoomController;
+
     public WizNavExtrasActivity() {
         super(R.layout.activity_wiznav_extras);
     }
@@ -45,7 +52,11 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getInjector().inject(this);
+        getInjector()
+                .chatComponent()
+                .chatModule(new ChatModule(this))
+                .build()
+                .inject(this);
 
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 
@@ -92,8 +103,6 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
             return null;
         }
 
-        TUMCabeClient tumCabeClient = TUMCabeClient.getInstance(this);
-
         // by now we should have generated rsa key and uploaded it to our server and tumonline
 
         // Get the users lrzId and initialise chat member
@@ -135,11 +144,11 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         try {
             TUMCabeVerification verification = TUMCabeVerification.create(this, null);
             List<ChatRoom> rooms = tumCabeClient.getMemberRooms(member.getId(), verification);
-            new ChatRoomController(this).replaceIntoRooms(rooms);
+            chatRoomController.replaceIntoRooms(rooms);
 
             // upload obfuscated ids now that we have a member
-            UploadStatus uploadStatus = TUMCabeClient.getInstance(this)
-                    .getUploadStatus(Utils.getSetting(this, Const.LRZ_ID, ""));
+            UploadStatus uploadStatus =
+                    tumCabeClient.getUploadStatus(Utils.getSetting(this, Const.LRZ_ID, ""));
             if (uploadStatus != null) {
                 new AuthenticationManager(this).uploadObfuscatedIds(uploadStatus);
             }

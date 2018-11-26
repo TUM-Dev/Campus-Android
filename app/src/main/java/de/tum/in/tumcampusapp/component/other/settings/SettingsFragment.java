@@ -35,12 +35,14 @@ import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
 import de.tum.in.tumcampusapp.component.ui.eduroam.SetupEduroamActivity;
+import de.tum.in.tumcampusapp.component.ui.news.di.NewsModule;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.news.repository.NewsLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.onboarding.StartupActivity;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.BackgroundService;
 import de.tum.in.tumcampusapp.service.DownloadService;
+import de.tum.in.tumcampusapp.service.QueryLocationsService;
 import de.tum.in.tumcampusapp.service.SendMessageService;
 import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.utils.CacheManager;
@@ -63,10 +65,22 @@ public class SettingsFragment extends PreferenceFragmentCompat
     @Inject
     NewsLocalRepository newsLocalRepository;
 
+    @Inject
+    CacheManager cacheManager;
+
+    @Inject
+    SharedPreferences sharedPrefs;
+
+    @Inject
+    CalendarController calendarController;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        ((BaseActivity) requireActivity()).getInjector().inject(this);
+        ((BaseActivity) requireActivity()).getInjector().newsComponent()
+                .newsModule(new NewsModule(requireContext()))
+                .build()
+                .inject(this);
     }
 
     @Override
@@ -287,10 +301,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         database.resetDb();
         stopServices(mContext);
 
-        CacheManager cacheManager = new CacheManager(mContext);
         cacheManager.clearCache();
-
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         sharedPrefs.edit().clear().apply();
 
         // Remove all notifications that are currently shown
@@ -309,13 +320,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
         Utils.setSetting(mContext, Const.SYNC_CALENDAR, false);
         if (readCalendar == PackageManager.PERMISSION_GRANTED &&
                 writeCalendar == PackageManager.PERMISSION_GRANTED) {
-            CalendarController.deleteLocalCalendar(mContext);
+            calendarController.deleteLocalCalendar();
         }
     }
 
     private void stopServices(Context context) {
         Class<?>[] services = new Class<?>[]{
-                CalendarController.QueryLocationsService.class,
+                QueryLocationsService.class,
                 SendMessageService.class,
                 SilenceService.class,
                 DownloadService.class,

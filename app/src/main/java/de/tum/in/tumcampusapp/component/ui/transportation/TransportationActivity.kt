@@ -11,6 +11,7 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForSearching
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.NoResultsAdapter
+import de.tum.`in`.tumcampusapp.component.ui.transportation.di.TransportModule
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
 import de.tum.`in`.tumcampusapp.component.ui.transportation.repository.TransportLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.transportation.repository.TransportRemoteRepository
@@ -48,7 +49,10 @@ class TransportationActivity : ActivityForSearching<Unit>(
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        injector.inject(this)
+        injector.transportComponent()
+                .transportModule(TransportModule(this))
+                .build()
+                .inject(this)
 
         resultsListView.onItemClickListener = this
 
@@ -63,7 +67,6 @@ class TransportationActivity : ActivityForSearching<Unit>(
         }
 
         resultsListView.adapter = adapterStations
-
     }
 
     /**

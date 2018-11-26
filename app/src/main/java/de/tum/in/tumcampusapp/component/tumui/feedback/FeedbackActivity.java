@@ -78,6 +78,9 @@ public class FeedbackActivity extends BaseActivity {
     @Inject
     TUMCabeClient tumCabeClient;
 
+    @Inject
+    LocationProvider locationProvider;
+
     public FeedbackActivity() {
         super(R.layout.activity_feedback);
     }
@@ -205,7 +208,7 @@ public class FeedbackActivity extends BaseActivity {
         double longitude = 0.0;
 
         if (includeLocation.isChecked()) {
-            Location location = LocationProvider.getInstance(this).getLastLocation();
+            Location location = locationProvider.getLastLocation();
             if (location != null) {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
@@ -399,7 +402,6 @@ public class FeedbackActivity extends BaseActivity {
     }
 
     private void startTakingPicture() {
-        // TODO
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.CAMERA }, PERMISSION_CAMERA);
             return;
@@ -418,7 +420,6 @@ public class FeedbackActivity extends BaseActivity {
     }
 
     private void openGallery() {
-        // TODO
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE }, PERMISSION_CAMERA);
             return;

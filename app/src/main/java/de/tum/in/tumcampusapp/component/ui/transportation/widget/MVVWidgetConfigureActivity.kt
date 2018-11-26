@@ -15,6 +15,7 @@ import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForSearching
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.NoResultsAdapter
 import de.tum.`in`.tumcampusapp.component.ui.transportation.MVVStationSuggestionProvider
+import de.tum.`in`.tumcampusapp.component.ui.transportation.di.TransportModule
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.WidgetDepartures
 import de.tum.`in`.tumcampusapp.component.ui.transportation.repository.TransportLocalRepository
@@ -46,13 +47,19 @@ class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
     @Inject
     lateinit var widgetController: MVVWidgetController
 
+    @Inject
+    lateinit var database: TcaDb
+
     private val disposable = CompositeDisposable()
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        injector.inject(this)
+        injector.transportComponent()
+                .transportModule(TransportModule(this))
+                .build()
+                .inject(this)
 
-        recentsDao = TcaDb.getInstance(this).recentsDao()
+        recentsDao = database.recentsDao()
 
         // Setup cancel button
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)

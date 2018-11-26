@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.api.app;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
-import androidx.annotation.NonNull;
 import android.util.Base64;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -18,6 +17,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.UUID;
 
+import androidx.annotation.NonNull;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.app.exception.NoPublicKey;
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
@@ -32,7 +32,6 @@ import de.tum.in.tumcampusapp.service.FcmTokenHandler;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.RSASigner;
 import de.tum.in.tumcampusapp.utils.Utils;
-
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
@@ -246,7 +245,6 @@ public class AuthenticationManager {
                     @Override
                     public void onFailure(@NonNull Call<TokenConfirmation> call, @NonNull Throwable t) {
                         Utils.log(t);
-                        // TODO: We should probably try again
                     }
                 });
     }

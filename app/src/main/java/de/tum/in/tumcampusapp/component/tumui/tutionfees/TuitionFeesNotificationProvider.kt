@@ -10,8 +10,12 @@ import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
 import de.tum.`in`.tumcampusapp.component.notifications.model.InstantNotification
 import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
 import de.tum.`in`.tumcampusapp.utils.Const
+import javax.inject.Inject
 
-class TuitionFeesNotificationProvider(context: Context) : NotificationProvider(context) {
+class TuitionFeesNotificationProvider @Inject constructor(
+        context: Context,
+        private val tuitionFeeManager: TuitionFeeManager
+) : NotificationProvider(context) {
 
     override fun getNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
@@ -21,7 +25,6 @@ class TuitionFeesNotificationProvider(context: Context) : NotificationProvider(c
     }
 
     override fun buildNotification(): AppNotification? {
-        val tuitionFeeManager = TuitionFeeManager(context)
         val tuition = tuitionFeeManager.loadTuition(CacheControl.USE_CACHE)
 
         if (tuition == null || tuition.isPaid) {

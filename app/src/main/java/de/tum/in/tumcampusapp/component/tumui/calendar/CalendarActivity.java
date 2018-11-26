@@ -45,11 +45,13 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.notifications.persistence.NotificationType;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
+import de.tum.in.tumcampusapp.component.tumui.calendar.di.CalendarModule;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.Event;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.EventsResponse;
 import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
 import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.service.QueryLocationsService;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -75,6 +77,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
 
     @Inject
     CalendarController calendarController;
+
+    @Inject
+    TransportController transportController;
 
     @Inject
     TcaDb database;
@@ -105,10 +110,12 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getInjector().inject(this);
+        getInjector().calendarComponent()
+                .calendarModule(new CalendarModule(this))
+                .build()
+                .inject(this);
 
         mWeekView = findViewById(R.id.weekView);
-        calendarController = new CalendarController(this);
         isPaused = false;
 
         // The week view has infinite scrolling horizontally. We have to provide the events of a
@@ -195,9 +202,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
                         .subscribe(() -> {
                             // Update the action bar to display the enabled menu options
                             invalidateOptionsMenu();
-                            Intent intent = new Intent(
-                                    this, CalendarController.QueryLocationsService.class);
-                            startService(intent);
+                            QueryLocationsService.start(this);
                         })
         );
     }
@@ -207,7 +212,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
             calendarController.scheduleNotifications(events);
         }
 
-        TransportController transportController = new TransportController(this);
         if (transportController.hasNotificationsEnabled()) {
             transportController.scheduleNotifications(events);
         }
@@ -254,7 +258,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
         }
 
         mDisposable.add(
-                Completable.fromAction(() -> CalendarController.syncCalendar(this))
+                Completable.fromAction(() -> calendarController.syncCalendar())
                            .subscribeOn(Schedulers.io())
                            .observeOn(AndroidSchedulers.mainThread())
                            .subscribe(() -> {
@@ -409,7 +413,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.dialog_delete_calendar))
                .setPositiveButton(getString(R.string.yes), (arg0, arg1) -> {
-                   int deleted = CalendarController.deleteLocalCalendar(this);
+                   int deleted = calendarController.deleteLocalCalendar();
                    Utils.setSetting(CalendarActivity.this, Const.SYNC_CALENDAR, false);
                    this.invalidateOptionsMenu();
                    if (deleted > 0) {

@@ -7,6 +7,8 @@ import org.joda.time.DateTime;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.component.notifications.NotificationScheduler;
@@ -23,9 +25,12 @@ import retrofit2.Response;
 public class TuitionFeeManager implements ProvidesNotifications {
 
     private Context mContext;
+    private NotificationScheduler mNotificationScheduler;
 
-    public TuitionFeeManager(Context context) {
+    @Inject
+    public TuitionFeeManager(Context context, NotificationScheduler scheduler) {
         mContext = context;
+        mNotificationScheduler = scheduler;
     }
 
     @Override
@@ -65,9 +70,7 @@ public class TuitionFeeManager implements ProvidesNotifications {
     private void scheduleNotificationAlarm(Tuition tuition) {
         DateTime notificationTime =
                 TuitionNotificationScheduler.INSTANCE.getNextNotificationTime(tuition);
-
-        NotificationScheduler scheduler = new NotificationScheduler(mContext);
-        scheduler.scheduleAlarm(NotificationType.TUITION_FEES, notificationTime);
+        mNotificationScheduler.scheduleAlarm(NotificationType.TUITION_FEES, notificationTime);
     }
 
 }

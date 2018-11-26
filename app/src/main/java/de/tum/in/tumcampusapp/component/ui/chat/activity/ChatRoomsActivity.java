@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import de.tum.in.tumcampusapp.R;
@@ -33,6 +35,7 @@ import de.tum.in.tumcampusapp.component.tumui.lectures.model.Lecture;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesResponse;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatRoomController;
 import de.tum.in.tumcampusapp.component.ui.chat.adapter.ChatRoomListAdapter;
+import de.tum.in.tumcampusapp.component.ui.chat.di.ChatModule;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomAndLastMessage;
@@ -52,7 +55,6 @@ public class ChatRoomsActivity extends ActivityForAccessingTumOnline<LecturesRes
     private static final int CAMERA_REQUEST_CODE = 34;
     private static final int JOIN_ROOM_REQUEST_CODE = 22;
 
-    private ChatRoomController manager;
     private int mCurrentMode = ChatRoom.MODE_JOINED;
 
     private ChatRoom currentChatRoom;
@@ -61,6 +63,9 @@ public class ChatRoomsActivity extends ActivityForAccessingTumOnline<LecturesRes
     private StickyListHeadersListView lvMyChatRoomList;
     private ChatRoomListAdapter chatRoomAdapter;
 
+    @Inject
+    ChatRoomController manager;
+
     public ChatRoomsActivity() {
         super(R.layout.activity_chat_rooms);
     }
@@ -68,11 +73,13 @@ public class ChatRoomsActivity extends ActivityForAccessingTumOnline<LecturesRes
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getInjector().chatComponent()
+                .chatModule(new ChatModule(this))
+                .build()
+                .inject(this);
 
         lvMyChatRoomList = findViewById(R.id.lvMyChatRoomList);
         lvMyChatRoomList.setOnItemClickListener(this);
-
-        manager = new ChatRoomController(this);
 
         TabLayout tabLayout = findViewById(R.id.chat_rooms_tabs);
         // Create a tab listener that is called when the user changes tabs.

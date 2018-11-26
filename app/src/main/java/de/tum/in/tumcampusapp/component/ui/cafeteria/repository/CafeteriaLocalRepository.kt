@@ -4,13 +4,17 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManag
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.sync.model.Sync
 import io.reactivex.Flowable
 import org.jetbrains.anko.doAsync
 import org.joda.time.DateTime
+import javax.inject.Inject
 
-class CafeteriaLocalRepository(private val db: TcaDb) {
+class CafeteriaLocalRepository @Inject constructor(
+        private val db: TcaDb
+) {
 
     fun getCafeteriaWithMenus(cafeteriaId: Int): CafeteriaWithMenus {
         return CafeteriaWithMenus(cafeteriaId).apply {
@@ -44,6 +48,12 @@ class CafeteriaLocalRepository(private val db: TcaDb) {
             db.cafeteriaDao().insert(*cafeterias.toTypedArray())
         }
     }
+
+    // Locations //
+
+    fun getAllLocationsOfCategory(
+            category: String
+    ): List<Location> = db.locationDao().getAllOfCategory(category)
 
     // Sync methods //
 

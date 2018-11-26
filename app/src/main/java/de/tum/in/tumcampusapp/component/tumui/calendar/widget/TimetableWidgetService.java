@@ -15,9 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
+import de.tum.in.tumcampusapp.App;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
 import de.tum.in.tumcampusapp.component.tumui.calendar.IntegratedCalendarEvent;
+import de.tum.in.tumcampusapp.component.tumui.calendar.di.CalendarModule;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 
@@ -29,11 +33,14 @@ public class TimetableWidgetService extends RemoteViewsService {
         return new TimetableRemoteViewFactory(this.getApplicationContext(), intent);
     }
 
-    private class TimetableRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
+    public class TimetableRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
 
         private final Context applicationContext;
         private final int appWidgetID;
         private List<IntegratedCalendarEvent> calendarEvents;
+
+        @Inject
+        CalendarController calendarController;
 
         TimetableRemoteViewFactory(Context applicationContext, Intent intent) {
             this.applicationContext = applicationContext;
@@ -43,12 +50,16 @@ public class TimetableWidgetService extends RemoteViewsService {
 
         @Override
         public void onCreate() {
+            ((App) getApplicationContext()).getAppComponent()
+                    .calendarComponent()
+                    .calendarModule(new CalendarModule(applicationContext))
+                    .build()
+                    .inject(this);
         }
 
         @Override
         public void onDataSetChanged() {
             // Get events
-            CalendarController calendarController = new CalendarController(this.applicationContext);
             calendarEvents = calendarController.getNextDaysFromDb(14, this.appWidgetID);
 
             // Set isFirstOnDay flags

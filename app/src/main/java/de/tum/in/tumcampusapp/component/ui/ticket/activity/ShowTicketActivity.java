@@ -26,6 +26,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
+import de.tum.in.tumcampusapp.component.ui.ticket.di.TicketsModule;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
@@ -68,7 +69,10 @@ public class ShowTicketActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().getDecorView().setBackgroundColor(Color.WHITE);
-        getInjector().inject(this);
+        getInjector().ticketsComponent()
+                .ticketsModule(new TicketsModule(this))
+                .build()
+                .inject(this);
 
         initViews();
         loadTicketData();

@@ -5,11 +5,15 @@ import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
 import de.tum.`in`.tumcampusapp.component.notifications.ProvidesNotifications
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.Event
 import de.tum.`in`.tumcampusapp.utils.Utils
+import javax.inject.Inject
 
 /**
  * Transport Manager, handles querying data from mvv and card creation
  */
-class TransportController(private val context: Context) : ProvidesNotifications {
+class TransportController @Inject constructor(
+        private val context: Context,
+        private val notificationScheduler: NotificationScheduler
+) : ProvidesNotifications {
 
     // TODO Rename to TransportNotificationsProvider
 
@@ -41,7 +45,7 @@ class TransportController(private val context: Context) : ProvidesNotifications 
                 .take(maxNotificationsToSchedule) // Some manufacturers cap the amount of alarms you can schedule (https://stackoverflow.com/a/29610474)
 
         val notifications = notificationCandidates.mapNotNull { it.toNotification(context) }
-        NotificationScheduler(context).schedule(notifications)
+        notificationScheduler.schedule(notifications)
     }
 
 }

@@ -5,7 +5,6 @@ import android.R.layout.simple_spinner_dropdown_item
 import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
-import androidx.viewpager.widget.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,11 +12,14 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.viewpager.widget.ViewPager
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumCabe
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup
+import de.tum.`in`.tumcampusapp.component.ui.studyroom.di.StudyRoomsModule
 import kotlinx.android.synthetic.main.activity_study_rooms.*
+import javax.inject.Inject
 
 /**
  * Shows information about reservable study rooms.
@@ -30,7 +32,9 @@ class StudyRoomsActivity : ActivityForAccessingTumCabe<List<StudyRoomGroup>>(
 
     private val viewPager: ViewPager by lazy { findViewById<ViewPager>(R.id.pager) }
     private val sectionsPagerAdapter by lazy { StudyRoomsPagerAdapter(supportFragmentManager) }
-    private val studyRoomGroupManager by lazy { StudyRoomGroupManager(this) }
+
+    @Inject
+    lateinit var localRepository: StudyRoomGroupLocalRepository
 
     // Drop-down navigation
     private val studyRoomGroupsSpinner: Spinner
@@ -57,6 +61,10 @@ class StudyRoomsActivity : ActivityForAccessingTumCabe<List<StudyRoomGroup>>(
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        injector.studyRoomsComponent()
+                .studyRoomsModule(StudyRoomsModule())
+                .build()
+                .inject(this)
         loadStudyRooms()
     }
 
@@ -111,7 +119,7 @@ class StudyRoomsActivity : ActivityForAccessingTumCabe<List<StudyRoomGroup>>(
     }
 
     override fun onDownloadSuccessful(response: List<StudyRoomGroup>) {
-        studyRoomGroupManager.updateDatabase(response) {
+        localRepository.updateDatabase(response) {
             runOnUiThread {
                 groups = response
                 displayStudyRooms()

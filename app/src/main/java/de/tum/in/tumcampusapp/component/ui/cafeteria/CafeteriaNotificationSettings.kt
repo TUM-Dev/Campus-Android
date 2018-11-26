@@ -1,21 +1,19 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria
 
 import android.content.Context
-import android.preference.PreferenceManager
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
+import android.content.SharedPreferences
 import org.joda.time.DateTime
 import org.joda.time.LocalTime
+import javax.inject.Inject
 
 /**
  * This class encapsulates the user's settings for cafeteria notifications. It allows retrieval and
  * manipulation of notification times. It also reschedules alarms if notifications times are changed.
- *
- * @param context A [Context]
  */
-class CafeteriaNotificationSettings(context: Context) {
-
-    private val cafeteriaMenuManager = CafeteriaMenuManager(context)
-    private val persistentStore = CafeteriaNotificationSettingsStore(context)
+class CafeteriaNotificationSettings @Inject constructor(
+        //private val cafeteriaMenuManager: CafeteriaMenuManager,
+        private val persistentStore: Store
+) {
 
     /**
      * Returns the [LocalTime] of cafeteria notifications on a particular weekday, or null if the
@@ -43,7 +41,7 @@ class CafeteriaNotificationSettings(context: Context) {
      * Stores the provided [CafeteriaNotificationTime].
      *
      * @param notificationTime The [CafeteriaNotificationTime] to store
-     * @return Boolean whether the data in [CafeteriaNotificationSettingsStore] was updated
+     * @return Boolean whether the data in [Store] was updated
      */
     private fun updateLocalTimeOfDay(notificationTime: CafeteriaNotificationTime): Boolean {
         val currentlyStored = persistentStore.retrieveTimeForDay(notificationTime.weekday)
@@ -56,28 +54,21 @@ class CafeteriaNotificationSettings(context: Context) {
         return true
     }
 
-    /**
-     * Stores all [CafeteriaNotificationTime]s in the [CafeteriaNotificationSettingsStore] and
-     * returns whether any time was actually changed.
-     *
-     * @param times The list of [CafeteriaNotificationTime]s
-     * @return Boolean whether any time was actually changed
-     */
-    fun saveEntireSchedule(times: List<CafeteriaNotificationTime>): Boolean {
+    fun ifNotificationTimesDidChange(
+            times: List<CafeteriaNotificationTime>,
+            block: () -> Unit
+    ) {
         if (times.size != 5) {
-            return false
+            return
         }
 
-        val didChangeTime = times
+        val didChange = times
                 .map { updateLocalTimeOfDay(it) }
                 .toBooleanArray()
                 .any { it }
 
-        return if (didChangeTime) {
-            cafeteriaMenuManager.scheduleNotificationAlarms();
-            true
-        } else {
-            false
+        if (didChange) {
+            block()
         }
     }
 
@@ -88,24 +79,12 @@ class CafeteriaNotificationSettings(context: Context) {
         private const val MINUTE_SUFFIX = "_MINUTE"
         private const val NO_VALUE_SET = -1
 
-        private var INSTANCE: CafeteriaNotificationSettings? = null
-
         private val defaultNotificationTime: LocalTime by lazy {
             LocalTime.now()
                     .withHourOfDay(9)
                     .withMinuteOfHour(30)
                     .withSecondOfMinute(0)
                     .withMillisOfSecond(0)
-        }
-
-        @JvmStatic
-        @Synchronized
-        fun getInstance(context: Context): CafeteriaNotificationSettings {
-            if (INSTANCE == null) {
-                INSTANCE = CafeteriaNotificationSettings(context)
-            }
-
-            return INSTANCE!!
         }
 
     }
@@ -115,9 +94,9 @@ class CafeteriaNotificationSettings(context: Context) {
      *
      * @param context A [Context]
      */
-    private class CafeteriaNotificationSettingsStore(context: Context) {
-
-        private val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
+    class Store @Inject constructor(
+            private val sharedPrefs: SharedPreferences
+    ) {
 
         fun storeNotificationTime(notificationTime: CafeteriaNotificationTime) {
             storeTimeForDay(notificationTime.weekday.dayOfWeek, notificationTime.time)

@@ -3,17 +3,23 @@ package de.tum.`in`.tumcampusapp.service
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.JobIntentService
-import de.tum.`in`.tumcampusapp.utils.CacheManager
+import de.tum.`in`.tumcampusapp.utils.BackgroundUpdater
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
+import de.tum.`in`.tumcampusapp.utils.injector
+import javax.inject.Inject
 
 /**
  * Service used to fill caches in background, for faster/offline access
  */
 class FillCacheService : JobIntentService() {
 
+    @Inject
+    lateinit var backgroundUpdater: BackgroundUpdater
+
     override fun onCreate() {
         super.onCreate()
+        injector.inject(this)
         Utils.logv("FillCacheService has started")
     }
 
@@ -23,8 +29,7 @@ class FillCacheService : JobIntentService() {
     }
 
     override fun onHandleWork(intent: Intent) {
-        val cacheManager = CacheManager(this@FillCacheService)
-        cacheManager.fillCache()
+        backgroundUpdater.update()
     }
 
     companion object {

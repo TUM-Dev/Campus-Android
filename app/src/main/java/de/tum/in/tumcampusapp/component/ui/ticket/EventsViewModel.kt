@@ -23,16 +23,15 @@ class EventsViewModel @Inject constructor(
         private val eventsLocalRepository: EventsLocalRepository,
         private val eventsRemoteRepository: EventsRemoteRepository,
         private val ticketsLocalRepository: TicketsLocalRepository,
-        private val ticketsRemoteRepository: TicketsRemoteRepository
+        private val ticketsRemoteRepository: TicketsRemoteRepository,
+        private val eventType: EventType
 ) : ViewModel() {
 
-    // TODO: Inject EventType
-    fun getEvents(type: EventType): LiveData<List<Event>> {
-        return when (type) {
+    val events: LiveData<List<Event>>
+        get() = when (eventType) {
             EventType.ALL -> eventsLocalRepository.getEvents()
-            else -> eventsLocalRepository.getBookedEvents()
+            EventType.BOOKED -> eventsLocalRepository.getBookedEvents()
         }
-    }
 
     val tickets: LiveData<List<Ticket>>
         get() = ticketsLocalRepository.getAll()

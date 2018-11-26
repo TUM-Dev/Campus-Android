@@ -1,34 +1,27 @@
 package de.tum.`in`.tumcampusapp.component.ui.studyroom
 
-import android.content.Context
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.model.StudyRoom
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import org.jetbrains.anko.doAsync
+import javax.inject.Inject
 
 /**
  * Handles content for the study room feature, fetches external data.
  */
-class StudyRoomGroupManager(context: Context) {
-
-    private val roomsDao: StudyRoomDao
-    private val groupsDao: StudyRoomGroupDao
-
-    init {
-        val db = TcaDb.getInstance(context)
-        roomsDao = db.studyRoomDao()
-        groupsDao = db.studyRoomGroupDao()
-    }
+class StudyRoomGroupLocalRepository @Inject constructor(
+        private val database: TcaDb
+) {
 
     fun updateDatabase(groups: List<StudyRoomGroup>, callback: () -> Unit) {
         doAsync {
-            groupsDao.removeCache()
-            roomsDao.removeCache()
+            database.studyRoomGroupDao().removeCache()
+            database.studyRoomDao().removeCache()
 
-            groupsDao.insert(*groups.toTypedArray())
+            database.studyRoomGroupDao().insert(*groups.toTypedArray())
 
             groups.forEach { group ->
-                roomsDao.insert(*group.rooms.toTypedArray())
+                database.studyRoomDao().insert(*group.rooms.toTypedArray())
             }
 
             callback()
@@ -36,7 +29,7 @@ class StudyRoomGroupManager(context: Context) {
     }
 
     fun getAllStudyRoomsForGroup(groupId: Int): List<StudyRoom> {
-        return roomsDao.getAll(groupId).sorted()
+        return database.studyRoomDao().getAll(groupId).sorted()
     }
 
 }

@@ -30,6 +30,9 @@ public interface KinoDao {
     @Query("SELECT * FROM kino ORDER BY date LIMIT 1 OFFSET :position")
     Flowable<Kino> getByPosition(int position);
 
+    @Query("SELECT * FROM kino WHERE id = :id")
+    Flowable<Kino> getById(String id);
+
     @Query("DELETE FROM kino")
     void flush();
 }

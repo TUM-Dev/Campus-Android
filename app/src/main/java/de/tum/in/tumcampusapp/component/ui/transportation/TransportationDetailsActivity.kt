@@ -10,6 +10,7 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ProgressActivity
+import de.tum.`in`.tumcampusapp.component.ui.transportation.di.TransportModule
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.Departure
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
 import de.tum.`in`.tumcampusapp.component.ui.transportation.repository.TransportLocalRepository
@@ -49,7 +50,10 @@ class TransportationDetailsActivity : ProgressActivity<Unit>(R.layout.activity_t
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        injector.inject(this)
+        injector.transportComponent()
+                .transportModule(TransportModule(this))
+                .build()
+                .inject(this)
 
         val intent = intent
         if (intent == null) {

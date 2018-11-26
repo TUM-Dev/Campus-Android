@@ -25,10 +25,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuCard;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuInflater;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.interactors.FetchBestMatchMensaInteractor;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository;
 import de.tum.in.tumcampusapp.di.ViewModelFactory;
 import de.tum.in.tumcampusapp.utils.Const;
 
@@ -36,15 +33,6 @@ import de.tum.in.tumcampusapp.utils.Const;
  * Fragment for each cafeteria-page.
  */
 public class CafeteriaDetailsSectionFragment extends Fragment {
-
-    @Inject
-    FetchBestMatchMensaInteractor interactor;
-
-    @Inject
-    CafeteriaLocalRepository localRepository;
-
-    @Inject
-    CafeteriaRemoteRepository remoteRepository;
 
     @Inject
     Provider<CafeteriaViewModel> viewModelProvider;

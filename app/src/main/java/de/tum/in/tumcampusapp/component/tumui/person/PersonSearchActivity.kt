@@ -2,9 +2,9 @@ package de.tum.`in`.tumcampusapp.component.tumui.person
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import android.view.View
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
@@ -13,6 +13,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.PersonList
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import kotlinx.android.synthetic.main.activity_person_search.*
+import javax.inject.Inject
 
 /**
  * Activity to search for employees.
@@ -22,18 +23,18 @@ class PersonSearchActivity : ActivityForSearchingTumOnline<PersonList>(
         PersonSearchSuggestionProvider.AUTHORITY, 3
 ), PersonSearchResultsItemListener {
 
-    private lateinit var recentsDao: RecentsDao
+    @Inject
+    lateinit var database: TcaDb
 
     private val recents: List<Person>
         get() {
-            val recents = recentsDao.getAll(RecentsDao.PERSONS) ?: return emptyList()
+            val recents = database.recentsDao().getAll(RecentsDao.PERSONS) ?: return emptyList()
             return recents.map { recent -> Person.fromRecent(recent) }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        recentsDao = TcaDb.getInstance(this).recentsDao()
+        injector.inject(this)
 
         val layoutManager = LinearLayoutManager(this)
 
@@ -54,7 +55,7 @@ class PersonSearchActivity : ActivityForSearchingTumOnline<PersonList>(
 
     override fun onItemSelected(person: Person) {
         val lastSearch = person.id + "$" + person.getFullName().trim { it <= ' ' }
-        recentsDao.insert(Recent(lastSearch, RecentsDao.PERSONS))
+        database.recentsDao().insert(Recent(lastSearch, RecentsDao.PERSONS))
         showPersonDetails(person)
     }
 

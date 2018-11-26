@@ -4,15 +4,19 @@ import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.ListView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import de.tum.in.tumcampusapp.App;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
+import de.tum.in.tumcampusapp.component.tumui.calendar.di.CalendarModule;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.lectures.adapter.LectureListSelectionAdapter;
 
@@ -20,10 +24,18 @@ public class TimetableWidgetConfigureActivity extends AppCompatActivity {
 
     private int appWidgetId;
 
+    @Inject
+    CalendarController calendarController;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timetable_widget_configure);
+
+        ((App) getApplicationContext()).getAppComponent().calendarComponent()
+                .calendarModule(new CalendarModule(this))
+                .build()
+                .inject(this);
 
         // Setup toolbar and save button
         setSupportActionBar(findViewById(R.id.main_toolbar));
@@ -50,7 +62,6 @@ public class TimetableWidgetConfigureActivity extends AppCompatActivity {
         ListView listViewLectures = findViewById(R.id.activity_timetable_lectures);
 
         // Initialize stations adapter
-        CalendarController calendarController = new CalendarController(this);
         List<CalendarItem> lectures = calendarController.getLecturesForWidget(this.appWidgetId);
         listViewLectures.setAdapter(new LectureListSelectionAdapter(this, lectures, this.appWidgetId));
         listViewLectures.requestFocus();

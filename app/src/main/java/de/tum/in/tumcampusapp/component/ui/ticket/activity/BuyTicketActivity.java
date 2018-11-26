@@ -22,6 +22,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
+import de.tum.in.tumcampusapp.component.ui.ticket.di.TicketsModule;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservation;
@@ -64,7 +65,10 @@ public class BuyTicketActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getInjector().inject(this);
+        getInjector().ticketsComponent()
+                .ticketsModule(new TicketsModule(this))
+                .build()
+                .inject(this);
 
         eventId = getIntent().getIntExtra(Const.KEY_EVENT_ID, 0);
 

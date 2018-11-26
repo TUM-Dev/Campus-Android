@@ -14,11 +14,13 @@ import android.widget.RemoteViews;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.inject.Inject;
+
 import androidx.annotation.NonNull;
+import de.tum.in.tumcampusapp.App;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.ui.transportation.di.TransportModule;
 import de.tum.in.tumcampusapp.component.ui.transportation.model.efa.WidgetDepartures;
-import de.tum.in.tumcampusapp.component.ui.transportation.repository.TransportLocalRepository;
-import de.tum.in.tumcampusapp.database.TcaDb;
 
 /**
  * Implementation of App Widget functionality.
@@ -38,7 +40,9 @@ public class MVVWidget extends AppWidgetProvider {
     public static final int DOWNLOAD_DELAY = 5 * 60 * 1000;
 
     private static Timer timer = new Timer();
-    private MVVWidgetController widgetController;
+
+    @Inject
+    MVVWidgetController widgetController;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -170,9 +174,12 @@ public class MVVWidget extends AppWidgetProvider {
 
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
-        // onReceive is the entry point to the widget, so we initialise widgetController here.
-        // TODO
-        widgetController = new MVVWidgetController(new TransportLocalRepository(TcaDb.getInstance(context)));
+        // onReceive is the entry point to the widget, so we perform the injection here
+        ((App) context.getApplicationContext()).getAppComponent()
+                .transportComponent()
+                .transportModule(new TransportModule(context))
+                .build()
+                .inject(this);
 
         String action = intent.getAction();
         if (action == null || action.equals(MVVWidget.BROADCAST_RELOAD_ALL)) {
