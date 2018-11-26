@@ -21,16 +21,16 @@ android {
         all {
             proguardFiles(file('../proguard').listFiles())
             proguardFile getDefaultProguardFile('proguard-android.txt')
-            //minifyEnabled true TODO
-            //useProguard true
+            minifyEnabled true
+            useProguard true
         }
         release {
             debuggable false
-            //shrinkResources true
+            shrinkResources true
         }
         debug {
             debuggable true
-            //shrinkResources false
+            shrinkResources false
             testCoverageEnabled true
         }
     }
