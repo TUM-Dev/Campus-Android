@@ -41,7 +41,7 @@ public class MensaWidget extends AppWidgetProvider {
 
         remoteRepository = new CafeteriaRemoteRepository(TUMCabeClient.getInstance(context));
 
-        // TODO
+        // TODO Provide these via dependency injection, not manual creation
         TumLocationManager locationManager = new TumLocationManager(context);
         cafeteriaManager = new CafeteriaManager(context, locationManager, localRepository, remoteRepository);
 

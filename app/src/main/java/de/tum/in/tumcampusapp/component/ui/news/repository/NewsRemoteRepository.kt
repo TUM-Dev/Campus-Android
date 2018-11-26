@@ -12,7 +12,7 @@ class NewsRemoteRepository @Inject constructor(
         private val localRepository: NewsLocalRepository,
         private val syncManager: SyncManager,
         private val tumCabeClient: TUMCabeClient,
-        private val newsController: NewsController // TODO: Replace NewsController
+        private val newsController: NewsController // TODO: Replace NewsController with some NewsNotificationPresenter or similar
 ) {
 
     fun downloadFromExternal(force: Boolean) {
@@ -46,7 +46,7 @@ class NewsRemoteRepository @Inject constructor(
         }
 
         // Finish sync
-        syncManager.replaceIntoDb(this) // TODO
+        syncManager.replaceIntoDb(this)
     }
 
     companion object {
