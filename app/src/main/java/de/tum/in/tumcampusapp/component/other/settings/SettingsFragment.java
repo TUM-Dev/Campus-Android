@@ -71,6 +71,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
     @Inject
     SharedPreferences sharedPrefs;
 
+    @Inject
+    CalendarController calendarController;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -317,7 +320,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         Utils.setSetting(mContext, Const.SYNC_CALENDAR, false);
         if (readCalendar == PackageManager.PERMISSION_GRANTED &&
                 writeCalendar == PackageManager.PERMISSION_GRANTED) {
-            CalendarController.deleteLocalCalendar(mContext);
+            calendarController.deleteLocalCalendar();
         }
     }
 

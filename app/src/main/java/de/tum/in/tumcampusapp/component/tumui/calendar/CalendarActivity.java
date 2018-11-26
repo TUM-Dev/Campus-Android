@@ -258,7 +258,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
         }
 
         mDisposable.add(
-                Completable.fromAction(() -> CalendarController.syncCalendar(this))
+                Completable.fromAction(() -> calendarController.syncCalendar())
                            .subscribeOn(Schedulers.io())
                            .observeOn(AndroidSchedulers.mainThread())
                            .subscribe(() -> {
@@ -413,7 +413,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.dialog_delete_calendar))
                .setPositiveButton(getString(R.string.yes), (arg0, arg1) -> {
-                   int deleted = CalendarController.deleteLocalCalendar(this);
+                   int deleted = calendarController.deleteLocalCalendar();
                    Utils.setSetting(CalendarActivity.this, Const.SYNC_CALENDAR, false);
                    this.invalidateOptionsMenu();
                    if (deleted > 0) {

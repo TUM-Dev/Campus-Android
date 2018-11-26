@@ -29,6 +29,9 @@ class QueryLocationsService : IntentService(QUERY_LOCATIONS) {
     @Inject
     lateinit var syncManager: SyncManager
 
+    @Inject
+    lateinit var calendarController: CalendarController
+
     override fun onCreate() {
         super.onCreate()
         injector.inject(this)
@@ -68,7 +71,7 @@ class QueryLocationsService : IntentService(QUERY_LOCATIONS) {
         }
 
         try {
-            CalendarController.syncCalendar(this)
+            calendarController.syncCalendar()
             syncManager.replaceIntoDb(Const.SYNC_CALENDAR)
         } catch (e: SQLiteException) {
             Utils.log(e)

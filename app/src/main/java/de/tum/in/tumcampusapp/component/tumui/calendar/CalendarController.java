@@ -1,10 +1,8 @@
 package de.tum.in.tumcampusapp.component.tumui.calendar;
 
-import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.net.Uri;
@@ -35,6 +33,9 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 
+import static android.Manifest.permission.WRITE_CALENDAR;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
 /**
  * Calendar Manager, handles database stuff, external imports.
  */
@@ -43,8 +44,6 @@ public class CalendarController implements ProvidesNotifications {
     // TODO: Create CalendarLocalRepo & CalendarRemoteRepo
 
     private static final String[] PROJECTION = {"_id", "name"};
-
-    private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
 
     private final Context mContext;
     private final CalendarDao calendarDao;
@@ -63,14 +62,12 @@ public class CalendarController implements ProvidesNotifications {
 
     /**
      * Replaces the current TUM_CAMPUS_APP calendar with a new version.
-     *
-     * @param c Context
      */
-    public static void syncCalendar(Context c) throws SQLiteException {
+    public void syncCalendar() throws SQLiteException {
         // Deleting earlier calendar created by TUM Campus App
-        deleteLocalCalendar(c);
-        Uri uri = CalendarHelper.addCalendar(c);
-        addEvents(c, uri);
+        deleteLocalCalendar();
+        Uri uri = CalendarHelper.addCalendar(mContext);
+        addEvents(uri);
     }
 
     /**
@@ -78,20 +75,20 @@ public class CalendarController implements ProvidesNotifications {
      *
      * @return Number of rows deleted
      */
-    public static int deleteLocalCalendar(Context c) {
-        return CalendarHelper.deleteCalendar(c);
+    public int deleteLocalCalendar() {
+        return CalendarHelper.deleteCalendar(mContext);
     }
 
     /**
      * Adds events to the content provider
      */
-    private static void addEvents(Context c, Uri uri) throws SQLiteException {
-        if (ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+    private void addEvents(Uri uri) throws SQLiteException {
+        if (ContextCompat.checkSelfPermission(mContext, WRITE_CALENDAR) != PERMISSION_GRANTED) {
             return;
         }
 
         // Get ID
-        ContentResolver contentResolver = c.getContentResolver();
+        ContentResolver contentResolver = mContext.getContentResolver();
         String id = "0";
         try (Cursor cursor = contentResolver.query(uri, PROJECTION, null, null, null)) {
             while (cursor != null && cursor.moveToNext()) {
@@ -99,22 +96,22 @@ public class CalendarController implements ProvidesNotifications {
             }
         }
 
-        CalendarDao calendarDao = TcaDb.getInstance(c).calendarDao();
+        CalendarDao calendarDao = TcaDb.getInstance(mContext).calendarDao();
         List<CalendarItem> calendarItems = calendarDao.getAllNotCancelled();
 
         for (CalendarItem calendarItem : calendarItems) {
             ContentValues values = calendarItem.toContentValues();
             values.put(CalendarContract.Events.CALENDAR_ID, id);
-            values.put(CalendarContract.Events.EVENT_TIMEZONE, c.getString(R.string.calendarTimeZone));
+            values.put(CalendarContract.Events.EVENT_TIMEZONE, mContext.getString(R.string.calendarTimeZone));
             contentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
         }
     }
 
-    public List<CalendarItem> getFromDbBetweenDates(DateTime begin, DateTime end) {
+    List<CalendarItem> getFromDbBetweenDates(DateTime begin, DateTime end) {
         return calendarDao.getAllBetweenDates(begin, end);
     }
 
-    public List<CalendarItem> getFromDbNotCancelledBetweenDates(DateTime begin, DateTime end) {
+    List<CalendarItem> getFromDbNotCancelledBetweenDates(DateTime begin, DateTime end) {
         return calendarDao.getAllNotCancelledBetweenDates(begin, end);
     }
 
@@ -256,7 +253,7 @@ public class CalendarController implements ProvidesNotifications {
             items.add(event.toCalendarItem());
         }
 
-        calendarDao.insert(items.toArray(new CalendarItem[items.size()]));
+        calendarDao.insert(items.toArray(new CalendarItem[0]));
     }
 
     /**
@@ -267,7 +264,7 @@ public class CalendarController implements ProvidesNotifications {
     }
 
     @Nullable
-    public List<String> getLocationsForEvent(String eventId) {
+    List<String> getLocationsForEvent(String eventId) {
         return calendarDao.getNonCancelledLocationsById(eventId);
     }
 
