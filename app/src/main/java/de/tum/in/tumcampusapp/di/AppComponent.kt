@@ -25,9 +25,7 @@ import de.tum.`in`.tumcampusapp.component.ui.openinghour.OpeningHoursDetailFragm
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainActivity
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.di.StudyRoomsComponent
 import de.tum.`in`.tumcampusapp.component.ui.ticket.di.TicketsComponent
-import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportationActivity
-import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportationDetailsActivity
-import de.tum.`in`.tumcampusapp.component.ui.transportation.widget.MVVWidgetConfigureActivity
+import de.tum.`in`.tumcampusapp.component.ui.transportation.di.TransportComponent
 import de.tum.`in`.tumcampusapp.component.ui.transportation.widget.MVVWidgetService
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoActivity
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.details.KinoDetailsFragment
@@ -51,11 +49,13 @@ interface AppComponent {
 
     fun ticketsComponent(): TicketsComponent.Builder
 
+    fun transportComponent(): TransportComponent.Builder
+
     fun inject(mainActivity: MainActivity)
 
     fun inject(newsActivity: NewsActivity)
 
-    fun inject(mvvWidgetConfigureActivity: MVVWidgetConfigureActivity)
+    //fun inject(mvvWidgetConfigureActivity: MVVWidgetConfigureActivity)
 
     fun inject(feedbackActivity: FeedbackActivity)
 
@@ -77,9 +77,9 @@ interface AppComponent {
 
     fun inject(barrierFreeMoreInfoActivity: BarrierFreeMoreInfoActivity)
 
-    fun inject(transportationActivity: TransportationActivity)
+    /*fun inject(transportationActivity: TransportationActivity)
 
-    fun inject(transportationDetailsActivity: TransportationDetailsActivity)
+    fun inject(transportationDetailsActivity: TransportationDetailsActivity)*/
 
     fun inject(cafeteriaActivity: CafeteriaActivity)
 

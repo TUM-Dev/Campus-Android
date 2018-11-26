@@ -2,6 +2,7 @@ package de.tum.`in`.tumcampusapp.service
 
 import android.app.AlarmManager
 import android.app.NotificationManager
+import android.app.NotificationManager.INTERRUPTION_FILTER_ALL
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -11,20 +12,24 @@ import android.provider.Settings
 import androidx.annotation.RequiresApi
 import androidx.core.app.JobIntentService
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.di.CalendarModule
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Const.SILENCE_SERVICE_JOB_ID
 import de.tum.`in`.tumcampusapp.utils.Utils
+import de.tum.`in`.tumcampusapp.utils.injector
+import org.jetbrains.anko.alarmManager
+import org.jetbrains.anko.audioManager
+import org.jetbrains.anko.notificationManager
 import org.joda.time.DateTime
+import javax.inject.Inject
 
 /**
  * Service used to silence the mobile during lectures
  */
 class SilenceService : JobIntentService() {
 
-    /**
-     * We can't and won't change the ringer modes, if the device is in DoNotDisturb mode. DnD requires
-     * explicit user interaction, so we are out of the game until DnD is off again
-     */
+    @Inject
+    lateinit var calendarController: CalendarController
 
     // See: https://stackoverflow.com/questions/31387137/android-detect-do-not-disturb-status
     // Settings.System.getInt(getContentResolver(), Settings.System.DO_NOT_DISTURB, 1);
@@ -32,8 +37,7 @@ class SilenceService : JobIntentService() {
     private val isDoNotDisturbActive: Boolean
         get() {
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
-                notificationManager.currentInterruptionFilter != android.app.NotificationManager.INTERRUPTION_FILTER_ALL
+                notificationManager.currentInterruptionFilter != INTERRUPTION_FILTER_ALL
             } else {
                 try {
                     val mode = Settings.Global.getInt(contentResolver, "zen_mode")
@@ -46,6 +50,10 @@ class SilenceService : JobIntentService() {
 
     override fun onCreate() {
         super.onCreate()
+        injector.calendarComponent()
+                .calendarModule(CalendarModule(this))
+                .build()
+                .inject(this)
         Utils.log("SilenceService has started")
     }
 
@@ -66,7 +74,6 @@ class SilenceService : JobIntentService() {
             return
         }
 
-        val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val newIntent = Intent(this, SilenceService::class.java)
         val pendingIntent = PendingIntent.getService(this, 0, newIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
@@ -74,14 +81,12 @@ class SilenceService : JobIntentService() {
         var waitDuration = CHECK_INTERVAL.toLong()
         Utils.log("SilenceService enabled, checking for lectures …")
 
-        val calendarController = CalendarController(this)
         if (!calendarController.hasLectures()) {
             Utils.logv("No lectures available")
             alarmManager.set(AlarmManager.RTC, startTime + waitDuration, pendingIntent)
             return
         }
 
-        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         val currentLectures = calendarController.currentFromDb
         Utils.log("Current lectures: " + currentLectures.size)
 

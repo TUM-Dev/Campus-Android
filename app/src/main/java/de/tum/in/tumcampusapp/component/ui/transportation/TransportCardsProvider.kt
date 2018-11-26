@@ -12,7 +12,8 @@ import javax.inject.Inject
 
 class TransportCardsProvider @Inject constructor(
         private val context: Context,
-        private val remoteRepository: TransportRemoteRepository
+        private val remoteRepository: TransportRemoteRepository,
+        private val tumLocationManager: TumLocationManager
 ) : CardsProvider {
 
     override fun provideCards(cacheControl: CacheControl): List<Card> {
@@ -22,8 +23,7 @@ class TransportCardsProvider @Inject constructor(
         }
 
         // Get station for current campus
-        val locMan = TumLocationManager(context)
-        val station = locMan.getStation() ?: return emptyList()
+        val station = tumLocationManager.getStation() ?: return emptyList()
 
         val departures = remoteRepository.fetchDeparturesAtStation(station.id).blockingFirst()
         val card = MVVCard(context).apply {

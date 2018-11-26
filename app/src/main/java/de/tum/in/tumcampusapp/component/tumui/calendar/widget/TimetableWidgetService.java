@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.notifications.NotificationScheduler;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
 import de.tum.in.tumcampusapp.component.tumui.calendar.IntegratedCalendarEvent;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -48,7 +49,9 @@ public class TimetableWidgetService extends RemoteViewsService {
         @Override
         public void onDataSetChanged() {
             // Get events
-            CalendarController calendarController = new CalendarController(this.applicationContext);
+            // TODO: Inject
+            NotificationScheduler scheduler = new NotificationScheduler(this.applicationContext);
+            CalendarController calendarController = new CalendarController(this.applicationContext, scheduler);
             calendarEvents = calendarController.getNextDaysFromDb(14, this.appWidgetID);
 
             // Set isFirstOnDay flags

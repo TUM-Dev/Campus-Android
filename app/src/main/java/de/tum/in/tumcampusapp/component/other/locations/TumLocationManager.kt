@@ -5,6 +5,7 @@ import android.location.Location
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
+import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
 import de.tum.`in`.tumcampusapp.component.other.locations.model.BuildingToGps
 import de.tum.`in`.tumcampusapp.component.other.locations.model.Geo
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
@@ -19,12 +20,17 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.tryOrNull
 import java.io.IOException
 import java.lang.Double.parseDouble
+import javax.inject.Inject
 
 /**
- * Location manager, manages intelligent location services, provides methods to easily access
+ * Location calendarController, manages intelligent location services, provides methods to easily access
  * the users current location, campus, next public transfer station and best cafeteria
  */
-class TumLocationManager(context: Context) {
+class TumLocationManager @Inject constructor(
+        context: Context,
+        private val notificationScheduler: NotificationScheduler,
+        private val calendarController: CalendarController
+) {
 
     private val context = context.applicationContext
     private val buildingToGpsDao: BuildingToGpsDao by lazy {
@@ -117,8 +123,8 @@ class TumLocationManager(context: Context) {
      * @return Location of the next lecture room
      */
     private fun getNextLocation(): Location {
-        val manager = CalendarController(context)
-        val geo = manager.nextCalendarItemGeo ?: return Locations.Campus.GarchingForschungszentrum.getLocation()
+        val geo = calendarController.nextCalendarItemGeo
+                ?: return Locations.Campus.GarchingForschungszentrum.getLocation()
 
         val location = Location("roomfinder")
         location.latitude = parseDouble(geo.latitude)

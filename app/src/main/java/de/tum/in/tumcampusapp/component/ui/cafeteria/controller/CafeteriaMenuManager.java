@@ -28,14 +28,17 @@ public class CafeteriaMenuManager {
     private final CafeteriaMenuDao menuDao;
     private final FavoriteDishDao favoriteDishDao;
     private final CafeteriaNotificationSettings notificationSettings;
+    private final NotificationScheduler notificationScheduler;
 
     @Inject
     public CafeteriaMenuManager(Context context, TcaDb database,
-                                CafeteriaNotificationSettings settings) {
+                                CafeteriaNotificationSettings settings,
+                                NotificationScheduler scheduler) {
         mContext = context;
         menuDao = database.cafeteriaMenuDao();
         favoriteDishDao = database.favoriteDishDao();
         notificationSettings = settings;
+        notificationScheduler = scheduler;
     }
 
     public void scheduleNotificationAlarms() {
@@ -50,8 +53,7 @@ public class CafeteriaMenuManager {
             }
         }
 
-        NotificationScheduler scheduler = new NotificationScheduler(mContext);
-        scheduler.scheduleAlarms(NotificationType.CAFETERIA, notificationTimes);
+        notificationScheduler.scheduleAlarms(NotificationType.CAFETERIA, notificationTimes);
     }
 
     /**

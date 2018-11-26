@@ -14,7 +14,9 @@ import org.joda.time.format.DateTimeFormat;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.component.notifications.NotificationScheduler;
 import de.tum.in.tumcampusapp.component.other.locations.TumLocationManager;
+import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
@@ -41,8 +43,13 @@ public class MensaWidget extends AppWidgetProvider {
 
         remoteRepository = new CafeteriaRemoteRepository(TUMCabeClient.getInstance(context));
 
-        // TODO
-        TumLocationManager locationManager = new TumLocationManager(context);
+        // TODO Inject
+        NotificationScheduler scheduler = new NotificationScheduler(context);
+        TumLocationManager locationManager = new TumLocationManager(
+                context,
+                scheduler,
+                new CalendarController(context, scheduler)
+        );
         cafeteriaManager = new CafeteriaManager(context, locationManager, localRepository, remoteRepository);
 
         for (int appWidgetId : appWidgetIds) {

@@ -4,6 +4,7 @@ import android.content.Context
 import dagger.Module
 import dagger.Provides
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
+import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.NewsLocalRepository
@@ -16,8 +17,10 @@ import de.tum.`in`.tumcampusapp.utils.sync.SyncManager
 class NewsModule(private val context: Context) {
 
     @Provides
-    fun provideNewsController(): NewsController {
-        return NewsController(context)
+    fun provideNewsController(
+            notificationScheduler: NotificationScheduler
+    ): NewsController {
+        return NewsController(context, notificationScheduler)
     }
 
     @Provides

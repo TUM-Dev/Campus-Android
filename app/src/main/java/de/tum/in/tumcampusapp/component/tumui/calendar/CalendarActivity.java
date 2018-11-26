@@ -78,6 +78,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     CalendarController calendarController;
 
     @Inject
+    TransportController transportController;
+
+    @Inject
     TcaDb database;
 
     private boolean isPaused;
@@ -210,7 +213,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
             calendarController.scheduleNotifications(events);
         }
 
-        TransportController transportController = new TransportController(this);
         if (transportController.hasNotificationsEnabled()) {
             transportController.scheduleNotifications(events);
         }

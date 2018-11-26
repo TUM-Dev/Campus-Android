@@ -49,22 +49,19 @@ public class CalendarController implements ProvidesNotifications {
 
     private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
 
-    private final CalendarDao calendarDao;
-
-    private final RoomLocationsDao roomLocationsDao;
-
-    private final WidgetsTimetableBlacklistDao widgetsTimetableBlacklistDao;
     private final Context mContext;
+    private final CalendarDao calendarDao;
+    private final RoomLocationsDao roomLocationsDao;
+    private final WidgetsTimetableBlacklistDao widgetsTimetableBlacklistDao;
+    private final NotificationScheduler notificationScheduler;
 
     @Inject
-    public CalendarController(Context context) {
+    public CalendarController(Context context, NotificationScheduler scheduler) {
         mContext = context;
-        calendarDao = TcaDb.getInstance(context)
-                .calendarDao();
-        roomLocationsDao = TcaDb.getInstance(context)
-                .roomLocationsDao();
-        widgetsTimetableBlacklistDao = TcaDb.getInstance(context)
-                .widgetsTimetableBlacklistDao();
+        calendarDao = TcaDb.getInstance(context).calendarDao(); // TODO: Inject DB
+        roomLocationsDao = TcaDb.getInstance(context).roomLocationsDao();
+        widgetsTimetableBlacklistDao = TcaDb.getInstance(context).widgetsTimetableBlacklistDao();
+        notificationScheduler = scheduler;
     }
 
     /**
@@ -224,8 +221,7 @@ public class CalendarController implements ProvidesNotifications {
             }
         }
 
-        NotificationScheduler scheduler = new NotificationScheduler(mContext);
-        scheduler.schedule(notifications);
+        notificationScheduler.schedule(notifications);
     }
 
     public void importCalendar(@NonNull List<Event> events) {
@@ -305,7 +301,11 @@ public class CalendarController implements ProvidesNotifications {
         }
 
         public static void loadGeo(Context c) {
-            TumLocationManager locationManager = new TumLocationManager(c);
+            // TODO: Inject?
+            NotificationScheduler scheduler = new NotificationScheduler(c);
+            CalendarController calendarController = new CalendarController(c, scheduler);
+            TumLocationManager locationManager = new TumLocationManager(c, scheduler, calendarController);
+
             final CalendarDao calendarDao = TcaDb.getInstance(c)
                     .calendarDao();
             final RoomLocationsDao roomLocationsDao = TcaDb.getInstance(c)

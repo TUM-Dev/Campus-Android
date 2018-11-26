@@ -7,20 +7,16 @@ import dagger.Provides
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.cafeteria.CafeteriaAPIClient
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
+import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
 import de.tum.`in`.tumcampusapp.component.other.locations.LocationProvider
 import de.tum.`in`.tumcampusapp.component.other.locations.TumLocationManager
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeeManager
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeesCardsProvider
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeesNotificationProvider
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.EduroamController
-import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportCardsProvider
-import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
-import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportNotificationProvider
 import de.tum.`in`.tumcampusapp.component.ui.transportation.api.MvvApiService
 import de.tum.`in`.tumcampusapp.component.ui.transportation.api.MvvClient
-import de.tum.`in`.tumcampusapp.component.ui.transportation.repository.TransportLocalRepository
-import de.tum.`in`.tumcampusapp.component.ui.transportation.repository.TransportRemoteRepository
-import de.tum.`in`.tumcampusapp.component.ui.transportation.widget.MVVWidgetController
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoUpdater
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoRemoteRepository
@@ -69,14 +65,23 @@ class AppModule(private val context: Context) {
 
     @Singleton
     @Provides
-    fun provideTumLocationManager(): TumLocationManager {
-        return TumLocationManager(context)
+    fun provideTumLocationManager(
+            notificationScheduler: NotificationScheduler,
+            calendarController: CalendarController
+    ): TumLocationManager {
+        return TumLocationManager(context, notificationScheduler, calendarController)
     }
 
     @Singleton
     @Provides
     fun provideLocationProvider(): LocationProvider {
         return LocationProvider(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideNotificationScheduler(): NotificationScheduler {
+        return NotificationScheduler(context)
     }
 
     @Singleton
@@ -93,55 +98,10 @@ class AppModule(private val context: Context) {
 
     @Singleton
     @Provides
-    fun provideTransportController(): TransportController {
-        return TransportController(context)
-    }
-
-    @Singleton
-    @Provides
-    fun provideTransportLocalRepository(
-            database: TcaDb
-    ): TransportLocalRepository {
-        return TransportLocalRepository(database)
-    }
-
-    @Singleton
-    @Provides
-    fun provideTransportRemoteRepository(
-            mvvService: MvvApiService
-    ): TransportRemoteRepository {
-        return TransportRemoteRepository(mvvService)
-    }
-
-    @Singleton
-    @Provides
-    fun provideTransportCardsProvider(
-            transportRemoteRepository: TransportRemoteRepository
-    ): TransportCardsProvider {
-        return TransportCardsProvider(context, transportRemoteRepository)
-    }
-
-    @Singleton
-    @Provides
-    fun provideMVVWidgetController(
-            localRepository: TransportLocalRepository
-    ): MVVWidgetController {
-        return MVVWidgetController(localRepository)
-    }
-
-    @Singleton
-    @Provides
-    fun provideTransportNotificationProvider(
-            remoteRepository: TransportRemoteRepository,
-            tumLocationManager: TumLocationManager
-    ): TransportNotificationProvider {
-        return TransportNotificationProvider(context, remoteRepository, tumLocationManager)
-    }
-
-    @Singleton
-    @Provides
-    fun provideTuitionFeeManager(): TuitionFeeManager {
-        return TuitionFeeManager(context)
+    fun provideTuitionFeeManager(
+            notificationScheduler: NotificationScheduler
+    ): TuitionFeeManager {
+        return TuitionFeeManager(context, notificationScheduler)
     }
 
     @Singleton
@@ -154,8 +114,10 @@ class AppModule(private val context: Context) {
 
     @Singleton
     @Provides
-    fun provideTuitionFeesNotificationProvider(): TuitionFeesNotificationProvider {
-        return TuitionFeesNotificationProvider(context)
+    fun provideTuitionFeesNotificationProvider(
+            tuitionFeeManager: TuitionFeeManager
+    ): TuitionFeesNotificationProvider {
+        return TuitionFeesNotificationProvider(context, tuitionFeeManager)
     }
 
     @Singleton

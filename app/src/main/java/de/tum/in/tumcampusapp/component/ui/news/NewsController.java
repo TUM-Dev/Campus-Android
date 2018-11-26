@@ -21,6 +21,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
 public class NewsController implements ProvidesNotifications {
 
     private final Context context;
+    private final NotificationScheduler notificationScheduler;
 
     /**
      * Constructor, open/create database, create table if necessary
@@ -28,8 +29,9 @@ public class NewsController implements ProvidesNotifications {
      * @param context Context
      */
     @Inject
-    public NewsController(Context context) {
+    public NewsController(Context context, NotificationScheduler scheduler) {
         this.context = context;
+        this.notificationScheduler = scheduler;
     }
 
     public void showNewsNotification(List<News> news, DateTime latestNewsDate) {
@@ -53,8 +55,7 @@ public class NewsController implements ProvidesNotifications {
         AppNotification notification = provider.buildNotification();
 
         if (notification != null) {
-            NotificationScheduler scheduler = new NotificationScheduler(context);
-            scheduler.schedule(notification);
+            notificationScheduler.schedule(notification);
         }
     }
 

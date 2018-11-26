@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.cafeteria.CafeteriaAPIClient
+import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
 import de.tum.`in`.tumcampusapp.component.other.locations.TumLocationManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaNotificationProvider
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaNotificationSettings
@@ -44,9 +45,10 @@ class CafeteriaModule(private val context: Context) {
     @Provides
     fun provideCafeteriaMenuManager(
             database: TcaDb,
-            settings: CafeteriaNotificationSettings
+            settings: CafeteriaNotificationSettings,
+            notificationScheduler: NotificationScheduler
     ): CafeteriaMenuManager {
-        return CafeteriaMenuManager(context, database, settings)
+        return CafeteriaMenuManager(context, database, settings, notificationScheduler)
     }
 
     @Provides
