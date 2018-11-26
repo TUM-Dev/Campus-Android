@@ -10,8 +10,11 @@ import de.tum.`in`.tumcampusapp.utils.sync.model.Sync
 import io.reactivex.Flowable
 import org.jetbrains.anko.doAsync
 import org.joda.time.DateTime
+import javax.inject.Inject
 
-class CafeteriaLocalRepository(private val db: TcaDb) {
+class CafeteriaLocalRepository @Inject constructor(
+        private val db: TcaDb
+) {
 
     fun getCafeteriaWithMenus(cafeteriaId: Int): CafeteriaWithMenus {
         return CafeteriaWithMenus(cafeteriaId).apply {

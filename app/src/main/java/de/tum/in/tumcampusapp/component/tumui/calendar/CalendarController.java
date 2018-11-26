@@ -17,6 +17,8 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -41,6 +43,8 @@ import de.tum.in.tumcampusapp.utils.sync.SyncManager;
  */
 public class CalendarController implements ProvidesNotifications {
 
+    // TODO: Create CalendarLocalRepo & CalendarRemoteRepo
+
     private static final String[] PROJECTION = {"_id", "name"};
 
     private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
@@ -52,6 +56,7 @@ public class CalendarController implements ProvidesNotifications {
     private final WidgetsTimetableBlacklistDao widgetsTimetableBlacklistDao;
     private final Context mContext;
 
+    @Inject
     public CalendarController(Context context) {
         mContext = context;
         calendarDao = TcaDb.getInstance(context)

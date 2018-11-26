@@ -2,7 +2,7 @@ package de.tum.`in`.tumcampusapp.di
 
 import dagger.Component
 import de.tum.`in`.tumcampusapp.component.notifications.receivers.NotificationAlarmReceiver
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarActivity
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.di.CalendarComponent
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackActivity
 import de.tum.`in`.tumcampusapp.component.tumui.person.PersonSearchActivity
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity
@@ -41,6 +41,8 @@ interface AppComponent {
 
     fun cafeteriaComponent(): CafeteriaComponent.Builder
 
+    fun calendarComponent(): CalendarComponent.Builder
+
     fun chatComponent(): ChatComponent.Builder
 
     fun newsComponent(): NewsComponent.Builder
@@ -50,8 +52,6 @@ interface AppComponent {
     fun ticketsComponent(): TicketsComponent.Builder
 
     fun inject(mainActivity: MainActivity)
-
-    fun inject(calendarActivity: CalendarActivity)
 
     fun inject(newsActivity: NewsActivity)
 

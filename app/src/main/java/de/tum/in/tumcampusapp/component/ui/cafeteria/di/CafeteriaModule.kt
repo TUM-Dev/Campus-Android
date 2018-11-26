@@ -3,6 +3,7 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria.di
 import android.content.Context
 import dagger.Module
 import dagger.Provides
+import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.cafeteria.CafeteriaAPIClient
 import de.tum.`in`.tumcampusapp.component.other.locations.TumLocationManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaNotificationProvider
@@ -20,6 +21,16 @@ import org.jetbrains.anko.defaultSharedPreferences
 
 @Module
 class CafeteriaModule(private val context: Context) {
+
+    @Provides
+    fun providesCafeteriaLocalRepository(db: TcaDb): CafeteriaLocalRepository {
+        return CafeteriaLocalRepository(db)
+    }
+
+    @Provides
+    fun providesCafeteriaRemoteRepository(client: TUMCabeClient): CafeteriaRemoteRepository {
+        return CafeteriaRemoteRepository(client)
+    }
 
     @Provides
     fun provideCafeteriaManager(

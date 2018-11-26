@@ -9,13 +9,9 @@ import de.tum.`in`.tumcampusapp.api.cafeteria.CafeteriaAPIClient
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.component.other.locations.LocationProvider
 import de.tum.`in`.tumcampusapp.component.other.locations.TumLocationManager
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarCardsProvider
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeeManager
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeesCardsProvider
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeesNotificationProvider
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.EduroamController
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
@@ -73,18 +69,6 @@ class AppModule(private val context: Context) {
 
     @Singleton
     @Provides
-    fun providesCafeteriaLocalRepository(db: TcaDb): CafeteriaLocalRepository {
-        return CafeteriaLocalRepository(db)
-    }
-
-    @Singleton
-    @Provides
-    fun providesCafeteriaRemoteRepository(client: TUMCabeClient): CafeteriaRemoteRepository {
-        return CafeteriaRemoteRepository(client)
-    }
-
-    @Singleton
-    @Provides
     fun provideTumLocationManager(): TumLocationManager {
         return TumLocationManager(context)
     }
@@ -99,20 +83,6 @@ class AppModule(private val context: Context) {
     @Provides
     fun provideSyncManager(): SyncManager {
         return SyncManager(context)
-    }
-
-    @Singleton
-    @Provides
-    fun provideCalendarController(): CalendarController {
-        return CalendarController(context)
-    }
-
-    @Singleton
-    @Provides
-    fun provideCalendarCardsProvider(
-            database: TcaDb
-    ): CalendarCardsProvider {
-        return CalendarCardsProvider(context, database)
     }
 
     @Singleton

@@ -45,6 +45,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.notifications.persistence.NotificationType;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
+import de.tum.in.tumcampusapp.component.tumui.calendar.di.CalendarModule;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.Event;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.EventsResponse;
@@ -105,10 +106,12 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getInjector().inject(this);
+        getInjector().calendarComponent()
+                .calendarModule(new CalendarModule(this))
+                .build()
+                .inject(this);
 
         mWeekView = findViewById(R.id.weekView);
-        calendarController = new CalendarController(this);
         isPaused = false;
 
         // The week view has infinite scrolling horizontally. We have to provide the events of a

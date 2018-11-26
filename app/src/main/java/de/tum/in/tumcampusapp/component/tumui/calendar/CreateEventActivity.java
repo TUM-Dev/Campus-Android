@@ -5,16 +5,14 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.button.MaterialButton;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.button.MaterialButton;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -24,9 +22,15 @@ import org.joda.time.format.DateTimeFormatter;
 import java.net.UnknownHostException;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.exception.RequestLimitReachedException;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
+import de.tum.in.tumcampusapp.component.tumui.calendar.di.CalendarModule;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CreateEventResponse;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse;
@@ -55,6 +59,9 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     private MaterialButton createButton;
     private CalendarItem event;
 
+    @Inject
+    TcaDb database;
+
     public CreateEventActivity() {
         super(R.layout.activity_create_event);
     }
@@ -62,6 +69,11 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getInjector().calendarComponent()
+                .calendarModule(new CalendarModule(this))
+                .build()
+                .inject(this);
+
         initViews();
 
         if (getSupportActionBar() != null) {
@@ -237,7 +249,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
                                            @NonNull Response<DeleteEventResponse> response) {
                         if (response.isSuccessful()) {
                             Utils.log("Event successfully deleted (now creating the edited version)");
-                            TcaDb.getInstance(CreateEventActivity.this).calendarDao().delete(eventId);
+                            database.calendarDao().delete(eventId);
                             createEvent();
                         } else {
                             Utils.showToast(CreateEventActivity.this, R.string.error_unknown);
@@ -292,7 +304,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     public void onDownloadSuccessful(@NonNull CreateEventResponse response) {
         String nr = response.getEventId();
         event.setNr(nr);
-        TcaDb.getInstance(this).calendarDao().insert(event);
+        database.calendarDao().insert(event);
         finish();
     }
 
