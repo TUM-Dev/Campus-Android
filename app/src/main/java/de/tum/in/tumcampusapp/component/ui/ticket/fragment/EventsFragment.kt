@@ -27,7 +27,9 @@ import javax.inject.Provider
 
 class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
-    private lateinit var eventType: EventType
+    private val eventType: EventType by lazy {
+        arguments?.getSerializable(KEY_EVENT_TYPE) as EventType
+    }
 
     @Inject
     lateinit var provider: Provider<EventsViewModel>
@@ -41,6 +43,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         super.onAttach(context)
         injector.ticketsComponent()
                 .ticketsModule(TicketsModule(requireContext()))
+                .eventType(eventType)
                 .build()
                 .inject(this)
     }
@@ -69,9 +72,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        eventType = arguments?.getSerializable(KEY_EVENT_TYPE) as EventType
-
-        viewModel.getEvents(eventType).observeNonNull(viewLifecycleOwner, this::showEvents)
+        viewModel.events.observeNonNull(viewLifecycleOwner, this::showEvents)
         viewModel.error.observe(viewLifecycleOwner, this::showError)
     }
 
