@@ -59,6 +59,8 @@ data class Kino(
     val formattedDescription: String
         get() {
             return description
+                    .replace(".", ". ")   // Add space after full stops
+                    .replace("\\s+", " ") // If this results in multiple spaces, reduce them to one
                     .replace("\n", "")
                     .replace("\r", "\r\n")
                     .removeSuffix("\r\n")
