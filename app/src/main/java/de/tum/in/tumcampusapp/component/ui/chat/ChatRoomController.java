@@ -11,13 +11,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.Lecture;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.LecturesResponse;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomAndLastMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomDbRow;
@@ -118,7 +118,7 @@ public class ChatRoomController implements ProvidesCard {
 
     @NotNull
     @Override
-    public List<Card> getCards(CacheControl cacheControl) {
+    public List<Card> getCards(@NonNull CacheControl cacheControl) {
         List<Card> results = new ArrayList<>();
 
         try {
@@ -140,8 +140,6 @@ public class ChatRoomController implements ProvidesCard {
             if (Utils.getSettingBool(mContext, Const.AUTO_JOIN_NEW_ROOMS, false)) {
                 TUMCabeClient client = TUMCabeClient.getInstance(mContext);
                 List<String> newRooms = this.getNewUnjoined();
-                ChatMember currentChatMember = Utils.getSetting(
-                        mContext, Const.CHAT_MEMBER, ChatMember.class);
 
                 for (String roomId : newRooms) {
                     // Join chat room

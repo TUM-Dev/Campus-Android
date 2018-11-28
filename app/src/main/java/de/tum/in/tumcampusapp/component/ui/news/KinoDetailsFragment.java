@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.squareup.picasso.Picasso;
@@ -30,6 +31,8 @@ import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoRemoteRepository;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventHelper;
+import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
+import de.tum.in.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
@@ -41,6 +44,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static de.tum.in.tumcampusapp.utils.Const.KEY_EVENT_ID;
+
 /**
  * Fragment for KinoDetails. Manages content that gets shown on the pagerView
  */
@@ -48,6 +53,7 @@ public class KinoDetailsFragment extends Fragment {
 
     private View rootView;
     private Event event;
+    private EventsController eventsController;
 
     private KinoViewModel kinoViewModel;
     private final CompositeDisposable disposables = new CompositeDisposable();
@@ -78,9 +84,8 @@ public class KinoDetailsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (event != null && EventHelper.Companion.isEventImminent(event)) {
-            rootView.findViewById(R.id.buyTicketButton).setVisibility(View.GONE);
-            rootView.findViewById(R.id.eventInformation).setVisibility(View.GONE);
+        if (event != null) {
+            initBuyOrShowTicket(event);
         }
     }
 
@@ -97,17 +102,34 @@ public class KinoDetailsFragment extends Fragment {
 
     private void showEventTicketDetails(Event event) {
         this.event = event;
-        if (EventHelper.Companion.isEventImminent(event)) {
-            return;
-        }
-        rootView.findViewById(R.id.eventInformation).setVisibility(View.VISIBLE);
-        MaterialButton buyButton = rootView.findViewById(R.id.buyTicketButton);
-        buyButton.setVisibility(View.VISIBLE);
-        buyButton.setOnClickListener(
-                view -> EventHelper.Companion.buyTicket(this.event, buyButton, getContext()));
+        this.eventsController = new EventsController(getContext());
+        initBuyOrShowTicket(event);
 
+        rootView.findViewById(R.id.eventInformation).setVisibility(View.VISIBLE);
         ((TextView) rootView.findViewById(R.id.locationTextView)).setText(event.getLocality());
         loadAvailableTicketCount(event);
+    }
+
+    private void initBuyOrShowTicket(Event event) {
+        MaterialButton ticketButton = rootView.findViewById(R.id.buyTicketButton);
+        if (eventsController.isEventBooked(event)) {
+            ticketButton.setText(R.string.show_ticket);
+            ticketButton.setVisibility(View.VISIBLE);
+            ticketButton.setOnClickListener(view -> {
+                if (event == null) {
+                    Toast.makeText(getContext(), R.string.error, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Intent intent = new Intent(getContext(), ShowTicketActivity.class);
+                intent.putExtra(KEY_EVENT_ID, event.getId());
+                startActivity(intent);
+            });
+        } else if (!EventHelper.Companion.isEventImminent(event)) {
+            ticketButton.setText(R.string.buy_ticket);
+            ticketButton.setVisibility(View.VISIBLE);
+            ticketButton.setOnClickListener(
+                    view -> EventHelper.Companion.buyTicket(this.event, ticketButton, getContext()));
+        }
     }
 
     private void loadAvailableTicketCount(Event event) {
