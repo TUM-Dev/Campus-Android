@@ -1,8 +1,6 @@
 package de.tum.in.tumcampusapp.api.app;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,6 +12,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
 import de.tum.in.tumcampusapp.api.app.model.DeviceUploadFcmToken;
@@ -49,6 +49,7 @@ import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketPurchaseStripe;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
+import de.tum.in.tumcampusapp.component.ui.updatenote.model.UpdateNote;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Flowable;
@@ -89,6 +90,7 @@ public final class TUMCabeClient {
     static final String API_CAFETERIAS = "mensen/";
     static final String API_KINOS = "kino/";
     static final String API_NEWS = "news/";
+    static final String API_UPDATE_NOTE = "update/";
     static final String API_EVENTS = "event/";
     static final String API_TICKET = "ticket/";
     static final String API_STUDY_ROOMS = "studyroom/list";
@@ -407,6 +409,10 @@ public final class TUMCabeClient {
 
     public void fetchTicketStats(int event, Callback<List<TicketStatus>> cb) {
         service.getTicketStats(event).enqueue(cb);
+    }
+
+    public UpdateNote getUpdateNote(String version) throws IOException {
+        return service.getUpdateNote(version).execute().body();
     }
 
 }
