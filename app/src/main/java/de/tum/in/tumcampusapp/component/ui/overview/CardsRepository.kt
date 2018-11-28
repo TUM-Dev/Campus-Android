@@ -1,8 +1,8 @@
 package de.tum.`in`.tumcampusapp.component.ui.overview
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import android.content.Context
 import com.crashlytics.android.Crashlytics
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
@@ -19,6 +19,7 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.ProvidesCard
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
+import de.tum.`in`.tumcampusapp.component.ui.updatenote.UpdateNoteController
 import de.tum.`in`.tumcampusapp.utils.Utils
 import org.jetbrains.anko.doAsync
 
@@ -73,6 +74,7 @@ class CardsRepository(private val context: Context) {
             add(TransportController(context))
             add(NewsController(context))
             add(EventsController(context))
+            add(UpdateNoteController(context))
         }
 
         providers.forEach { provider ->
