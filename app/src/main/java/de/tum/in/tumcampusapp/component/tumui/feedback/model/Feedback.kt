@@ -14,11 +14,12 @@ import kotlin.collections.ArrayList
  *          (-> determines the final recipient of the feedback)
  * @param message the actual feedback that the user typed in
  * @param email reply-to email
+ * @param imageCount needed for the server (has to know for how many images it has to wait)
  * @param osVersion helpful info if bugs are submitted
  * @param appVersion helpful info if bugs are submitted
  */
 data class Feedback(
-        val id: String = UUID.randomUUID().toString(), // to be able to match the pictures to the text message
+        val id: String = UUID.randomUUID().toString(),
         var topic: String = Const.FEEDBACK_TOPIC_GENERAL,
         var message: String = "",
         var email: String = "",
@@ -28,6 +29,8 @@ data class Feedback(
         var longitude: Double = 0.toDouble(),
         val osVersion: String = Build.VERSION.RELEASE,
         val appVersion: String = BuildConfig.VERSION_NAME,
+        var imageCount: Int = 0,
+        @Transient // don't send this
         var picturePaths: List<String> = ArrayList()): Parcelable {
 
     constructor(parcel: Parcel) : this() {
@@ -38,6 +41,7 @@ data class Feedback(
         includeLocation = parcel.readInt() == 1
         latitude = parcel.readDouble()
         longitude = parcel.readDouble()
+        imageCount = parcel.readInt()
         parcel.readStringList(picturePaths)
     }
 
@@ -49,6 +53,7 @@ data class Feedback(
         parcel.writeInt(if (includeLocation) 1 else 0)
         parcel.writeDouble(latitude)
         parcel.writeDouble(longitude)
+        parcel.writeInt(imageCount)
         parcel.writeStringList(picturePaths)
     }
 

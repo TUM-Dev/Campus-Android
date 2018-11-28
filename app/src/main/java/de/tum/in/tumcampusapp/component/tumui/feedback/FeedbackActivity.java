@@ -86,7 +86,7 @@ public class FeedbackActivity extends BaseActivity {
         if (feedback == null) {
             feedback = new Feedback();
         }
-        // get values whose state we don't observe
+        // get values that we don't observe
         feedback.setMessage(feedbackView.getText().toString());
         if (lrzId == null || lrzId.isEmpty()) {
             feedback.setEmail(customEmailView.getText().toString());
@@ -109,7 +109,6 @@ public class FeedbackActivity extends BaseActivity {
         findViewById(R.id.feedback_add_image).setOnClickListener(
                 view -> controller.showPictureOptionsDialog(FeedbackActivity.this));
     }
-
 
     @SuppressLint("NewApi")
     private void initIncludeLocation() {

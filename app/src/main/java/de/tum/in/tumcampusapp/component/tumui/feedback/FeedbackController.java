@@ -110,7 +110,18 @@ class FeedbackController {
     }
 
     void sendFeedback(Activity activity, Feedback feedback, String lrzId) {
+        // adjust information that is to be sent to the server
+        if (!feedback.getIncludeEmail()) {
+            feedback.setEmail("");
+        }
+        if (!feedback.getIncludeLocation()) {
+            feedback.setLongitude(0);
+            feedback.setLatitude(0);
+        }
+        feedback.setImageCount(feedback.getPicturePaths().size());
+
         Utils.log("Feedback: " + feedback.toString());
+
         imagesSent = 0;
         stopListeningForLocation();
 
@@ -126,7 +137,11 @@ class FeedbackController {
             public void onResponse(@NonNull Call<Success> call, @NonNull Response<Success> response) {
                 Success success = response.body();
                 if (success != null && success.wasSuccessfullySent()) {
-                    sendImages(feedback, activity, lrzId);
+                    if (feedback.getImageCount() == 0) {
+                        onFeedbackSent(activity);
+                    } else {
+                        sendImages(feedback, activity, lrzId);
+                    }
                 } else {
                     showErrorDialog((dialogInterface, i) -> sendFeedback(activity, feedback, lrzId));
                 }
@@ -149,15 +164,11 @@ class FeedbackController {
                     showErrorDialog((dialogInterface, i) -> sendFeedback(activity, feedback, lrzId));
                     return;
                 }
-
                 imagesSent++;
-                if (imagesSent == feedback.getPicturePaths().size()) {
-                    progress.cancel();
-                    activity.finish();
-                    Toast.makeText(mContext, R.string.feedback_send_success, Toast.LENGTH_SHORT)
-                            .show();
+                if (imagesSent == feedback.getImageCount()) {
+                    onFeedbackSent(activity);
                 }
-                Utils.log("sent " + imagesSent + " of " + (feedback.getPicturePaths().size()) + " images");
+                Utils.log("sent " + imagesSent + " of " + (feedback.getImageCount()) + " images");
             }
 
             @Override
@@ -165,6 +176,12 @@ class FeedbackController {
                 showErrorDialog((dialogInterface, i) -> sendFeedback(activity, feedback, lrzId));
             }
         });
+    }
+
+    private void onFeedbackSent(Activity activity) {
+        progress.cancel();
+        activity.finish();
+        Toast.makeText(mContext, R.string.feedback_send_success, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -219,7 +236,6 @@ class FeedbackController {
         if (dialog.getWindow() != null) {
             dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
         }
-
         dialog.show();
     }
 
@@ -253,7 +269,6 @@ class FeedbackController {
         if (errorDialog.getWindow() != null) {
             errorDialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
         }
-
         errorDialog.show();
     }
 
