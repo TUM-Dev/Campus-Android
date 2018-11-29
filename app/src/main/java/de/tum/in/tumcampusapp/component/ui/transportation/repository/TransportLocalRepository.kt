@@ -19,7 +19,7 @@ class TransportLocalRepository @Inject constructor(
         database.transportDao().deleteWidget(widgetId)
     }
 
-    fun getById(widgetId: Int) = database.transportDao().getAllWithId(widgetId)
+    fun getById(widgetId: Int): WidgetsTransport? = database.transportDao().getAllWithId(widgetId)
 
     /**
      * Check if the transport symbol is one of the user's favorites.

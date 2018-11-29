@@ -33,7 +33,7 @@ class MVVWidgetController @Inject constructor(
         }
 
         val widgetDepartures = WidgetDepartures().apply {
-            localRepository.getById(widgetId).let {
+            localRepository.getById(widgetId)?.let {
                 station = it.station
                 stationId = it.stationId
                 useLocation = it.location
