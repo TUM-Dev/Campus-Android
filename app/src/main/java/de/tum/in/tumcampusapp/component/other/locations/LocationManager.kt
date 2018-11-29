@@ -20,6 +20,7 @@ import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.tryOrNull
+import org.jetbrains.anko.doAsync
 import java.io.IOException
 import java.lang.Double.parseDouble
 import java.util.*
@@ -236,7 +237,9 @@ class LocationManager(c: Context) {
      * @return the id of current building
      */
     fun fetchBuildingIDFromCurrentLocation(callback: (String?) -> Unit) {
-        fetchBuildingIDFromLocation(getCurrentOrNextLocation(), callback)
+        doAsync {
+            fetchBuildingIDFromLocation(getCurrentOrNextLocation(), callback)
+        }
     }
 
     /**
