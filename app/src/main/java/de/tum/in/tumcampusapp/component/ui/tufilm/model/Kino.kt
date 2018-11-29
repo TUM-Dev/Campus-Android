@@ -51,7 +51,7 @@ data class Kino(
     val formattedShortDate: String
         get() {
             // e.g. 11/20/2018 8:00 PM (Style SS = short date and short time)
-            val shortDate = DateTimeFormat.shortDate().withLocale(Locale.getDefault()).print(date)
+            val shortDate = DateTimeFormat.forPattern("dd MMM").print(date)
             val shortTime = DateTimeFormat.shortTime().withLocale(Locale.getDefault()).print(date)
             return "$shortDate\n$shortTime"
         }
