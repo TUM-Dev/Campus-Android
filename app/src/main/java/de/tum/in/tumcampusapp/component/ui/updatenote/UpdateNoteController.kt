@@ -12,10 +12,9 @@ class UpdateNoteController(context: Context) {
 
     fun downloadUpdateNote() {
         try {
-            Utils.setSetting(mContext, Const.UPDATE_MESSAGE, "This is the update note")
             val note = TUMCabeClient.getInstance(mContext)
                     .getUpdateNote(BuildConfig.VERSION_NAME)
-            Utils.setSetting(mContext, Const.UPDATE_MESSAGE, note.updateNote)
+            Utils.setSetting(mContext, Const.UPDATE_MESSAGE, note?.updateNote ?: "")
         } catch (e: IOException) {
             Utils.log(e)
         }
