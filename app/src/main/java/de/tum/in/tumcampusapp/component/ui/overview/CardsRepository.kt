@@ -19,7 +19,7 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.ProvidesCard
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
-import de.tum.`in`.tumcampusapp.component.ui.updatenote.UpdateNoteController
+import de.tum.`in`.tumcampusapp.component.ui.updatenote.UpdateNoteCard
 import de.tum.`in`.tumcampusapp.utils.Utils
 import org.jetbrains.anko.doAsync
 
@@ -61,10 +61,10 @@ class CardsRepository(private val context: Context) {
             add(SupportCard(context).getIfShowOnStart())
             add(EduroamCard(context).getIfShowOnStart())
             add(EduroamFixCard(context).getIfShowOnStart())
+            add(UpdateNoteCard(context).getIfShowOnStart())
         }
 
         val providers = ArrayList<ProvidesCard>().apply {
-            add(UpdateNoteController(context))
             if (AccessTokenManager.hasValidAccessToken(context)) {
                 add(CalendarController(context))
                 add(TuitionFeeManager(context))

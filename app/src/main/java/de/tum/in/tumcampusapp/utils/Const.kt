@@ -177,5 +177,6 @@ object Const {
     const val KEY_NOTIFICATION_TYPE_ID = "type_id"
 
     const val SHOW_UPDATE_NOTE = "showUpdateNote"
+    const val UPDATE_MESSAGE = "updateNoteMessage"
     const val SAVED_APP_VERSION = "SavedAppVersion"
 }

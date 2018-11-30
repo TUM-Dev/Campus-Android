@@ -12,24 +12,25 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
-import de.tum.`in`.tumcampusapp.component.ui.updatenote.model.UpdateNote
 import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.Utils
 
-class UpdateNoteCard(context: Context) : Card(CardManager.CARD_UPDATE_NOTE, context, "whats_new") {
-    var updateNote: UpdateNote? = null
+class UpdateNoteCard(context: Context) : Card(CardManager.CARD_UPDATE_NOTE, context, "update_note") {
 
     override fun updateViewHolder(viewHolder: RecyclerView.ViewHolder) {
         super.updateViewHolder(viewHolder)
         val version = BuildConfig.VERSION_NAME
-        (viewHolder as UpdateNoteViewHolder).bind(updateNote, version)
+        val updateMessage = Utils.getSetting(context, Const.UPDATE_MESSAGE, "")
+        (viewHolder as UpdateNoteViewHolder).bind(updateMessage, version)
     }
 
     override fun shouldShow(prefs: SharedPreferences): Boolean {
-        return prefs.getBoolean(Const.SHOW_UPDATE_NOTE, false)
+        return Utils.getSettingBool(context, Const.SHOW_UPDATE_NOTE, false)
+        && Utils.getSetting(context, Const.UPDATE_MESSAGE, "").isNotEmpty()
     }
 
     override fun discard(editor: SharedPreferences.Editor) {
-        editor.putBoolean(Const.SHOW_UPDATE_NOTE, false)
+        Utils.setSetting(context, Const.SHOW_UPDATE_NOTE, false)
     }
 
     companion object {
@@ -42,13 +43,12 @@ class UpdateNoteCard(context: Context) : Card(CardManager.CARD_UPDATE_NOTE, cont
     }
 
     class UpdateNoteViewHolder(view: View) : CardViewHolder(view) {
-        internal var titleView: TextView = view.findViewById(R.id.update_note_title)
         internal var subtitleView: TextView = view.findViewById(R.id.update_note_subtitle)
         internal var messageView: TextView = view.findViewById(R.id.update_note_message)
 
-        fun bind(updateNote: UpdateNote?, version: String) {
+        fun bind(updateMessage: String, version: String) {
             subtitleView.text = activity.getString(R.string.update_note_version, version)
-            messageView.text = updateNote?.updateNote
+            messageView.text = updateMessage
         }
     }
 }

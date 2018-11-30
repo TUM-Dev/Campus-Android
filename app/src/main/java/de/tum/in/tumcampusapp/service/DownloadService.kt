@@ -21,6 +21,7 @@ import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
+import de.tum.`in`.tumcampusapp.component.ui.updatenote.UpdateNoteController
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -101,12 +102,13 @@ class DownloadService : JobIntentService() {
      */
     private fun downloadAll(force: Boolean): Boolean {
         uploadMissingIds()
+        val updateNoteSuccess = downloadUpdateNote()
         val cafeSuccess = downloadCafeterias(force)
         val kinoSuccess = downloadKino(force)
         val newsSuccess = downloadNews(force)
         val eventsSuccess = downloadEvents()
         val topNewsSuccess = downloadTopNews()
-        return cafeSuccess && kinoSuccess && newsSuccess && topNewsSuccess && eventsSuccess
+        return updateNoteSuccess && cafeSuccess && kinoSuccess && newsSuccess && topNewsSuccess && eventsSuccess
     }
 
     /**
@@ -139,6 +141,11 @@ class DownloadService : JobIntentService() {
 
         // upload obfuscated ids
         AuthenticationManager(this).uploadObfuscatedIds(uploadStatus);
+    }
+
+    private fun downloadUpdateNote(): Boolean {
+        UpdateNoteController(this).downloadUpdateNote()
+        return true
     }
 
     private fun downloadCafeterias(force: Boolean): Boolean {
