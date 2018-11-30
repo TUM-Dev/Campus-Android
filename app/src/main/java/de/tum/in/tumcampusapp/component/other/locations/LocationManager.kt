@@ -213,21 +213,20 @@ class LocationManager(c: Context) {
 
     /**
      * This method tries to get the list of BuildingToGps by querying database or requesting the server.
-     * If both two ways fail, it returns Optional.absent().
+     * If both two ways fail, it returns an empty list.
      * we have to fetch buildings to gps mapping first.
      * @return The list of BuildingToGps
      */
     private fun fetchBuildingsToGps(): List<BuildingToGps> {
         val results = buildingToGpsDao.all.orEmpty()
-        if (results.isEmpty()) {
-            val newResults = tryOrNull { TUMCabeClient.getInstance(mContext).building2Gps }
-            newResults?.let {
-                buildingToGpsDao.insert(*it.toTypedArray())
-                return newResults
-            }
+        if (results.isNotEmpty()) {
+            return results
         }
 
-        return results
+        val newResults = tryOrNull { TUMCabeClient.getInstance(mContext).building2Gps }
+        return newResults.orEmpty().also {
+            buildingToGpsDao.insert(*it.toTypedArray())
+        }
     }
 
     /**

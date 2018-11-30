@@ -9,6 +9,7 @@ import androidx.core.app.JobIntentService
 import androidx.core.content.ContextCompat
 import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.RoomLocations
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -18,6 +19,13 @@ import org.jetbrains.anko.doAsync
 
 class QueryLocationsService : JobIntentService() {
 
+    private lateinit var locationManager: LocationManager
+
+    override fun onCreate() {
+        super.onCreate()
+        locationManager = LocationManager(this)
+    }
+
     override fun onHandleWork(intent: Intent) {
         doAsync {
             loadGeo()
@@ -25,23 +33,13 @@ class QueryLocationsService : JobIntentService() {
     }
 
     private fun loadGeo() {
-        val locationManager = LocationManager(this)
         val calendarDao = TcaDb.getInstance(this).calendarDao()
         val roomLocationsDao = TcaDb.getInstance(this).roomLocationsDao()
 
-        val calendarItems = calendarDao.lecturesWithoutCoordinates
-        for (calendarItem in calendarItems) {
-            val location = calendarItem.location
-            if (location.isEmpty()) {
-                continue
-            }
-
-            val geo = locationManager.roomLocationStringToGeo(location)
-            geo?.let {
-                Utils.logv("inserted " + location + ' '.toString() + it)
-                roomLocationsDao.insert(RoomLocations(location, it))
-            }
-        }
+        calendarDao.lecturesWithoutCoordinates
+                .filter { it.location.isNotEmpty() }
+                .mapNotNull { createRoomLocationsOrNull(it) }
+                .also { roomLocationsDao.insert(*it.toTypedArray()) }
 
         // Do sync of google calendar if necessary
         val shouldSyncCalendar = Utils.getSettingBool(this, Const.SYNC_CALENDAR, false)
@@ -58,6 +56,13 @@ class QueryLocationsService : JobIntentService() {
             syncManager.replaceIntoDb(Const.SYNC_CALENDAR)
         } catch (e: SQLiteException) {
             Utils.log(e)
+        }
+    }
+
+    private fun createRoomLocationsOrNull(item: CalendarItem): RoomLocations? {
+        val geo = locationManager.roomLocationStringToGeo(item.location)
+        return geo?.let {
+            RoomLocations(item.location, it)
         }
     }
 
