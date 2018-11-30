@@ -76,26 +76,28 @@ class FeedbackController {
     void startTakingPicture(Activity activity) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(mContext.getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = ImageUtils.createImageFile(mContext);
-                // Save a file: path for use with ACTION_VIEW intents
-                mCurrentPhotoPath = photoFile.getAbsolutePath();
-            } catch (IOException e) {
-                Utils.log(e);
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Utils.log(mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath());
-                Uri photoURI = FileProvider.getUriForFile(mContext,
-                        "de.tum.in.tumcampusapp.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                activity.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }
+        if (takePictureIntent.resolveActivity(mContext.getPackageManager()) == null) {
+            return;
         }
+        // Create the File where the photo should go
+        File photoFile = null;
+        try {
+            photoFile = ImageUtils.createImageFile(mContext);
+            // Save a file: path for use with ACTION_VIEW intents
+            mCurrentPhotoPath = photoFile.getAbsolutePath();
+        } catch (IOException e) {
+            Utils.log(e);
+        }
+        // Continue only if the File was successfully created
+        if (photoFile == null) {
+            return;
+        }
+        Utils.log(mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath());
+        Uri photoURI = FileProvider.getUriForFile(mContext,
+                "de.tum.in.tumcampusapp.fileprovider",
+                photoFile);
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+        activity.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
     }
 
     void openGallery(Activity activity) {
@@ -136,14 +138,14 @@ class FeedbackController {
             @Override
             public void onResponse(@NonNull Call<Success> call, @NonNull Response<Success> response) {
                 Success success = response.body();
-                if (success != null && success.wasSuccessfullySent()) {
-                    if (feedback.getImageCount() == 0) {
-                        onFeedbackSent(activity);
-                    } else {
-                        sendImages(feedback, activity, lrzId);
-                    }
-                } else {
+                if (success == null || !success.wasSuccessfullySent()) {
                     showErrorDialog((dialogInterface, i) -> sendFeedback(activity, feedback, lrzId));
+                    return;
+                }
+                if (feedback.getImageCount() == 0) {
+                    onFeedbackSent(activity);
+                } else {
+                    sendImages(feedback, activity, lrzId);
                 }
             }
 
@@ -313,20 +315,20 @@ class FeedbackController {
         Location backup = new LocationManager(mContext).getLastLocation();
         if (backup != null) {
             location = backup;
+            return;
         }
-        if (location == null) { // we don't know anything about the location
-            AlertDialog dialog = new AlertDialog.Builder(mContext)
-                    .setTitle(R.string.location_services_off_title)
-                    .setMessage(R.string.location_services_off_message)
-                    .setPositiveButton(R.string.ok, null)
-                    .create();
+        // we don't know anything about the location
+        AlertDialog dialog = new AlertDialog.Builder(mContext)
+                .setTitle(R.string.location_services_off_title)
+                .setMessage(R.string.location_services_off_message)
+                .setPositiveButton(R.string.ok, null)
+                .create();
 
-            if (dialog.getWindow() != null) {
-                dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
-            }
-
-            dialog.show();
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
         }
+
+        dialog.show();
     }
 
 }
