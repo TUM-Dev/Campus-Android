@@ -64,17 +64,16 @@ class CardsRepository(private val context: Context) {
         }
 
         val providers = ArrayList<ProvidesCard>().apply {
+            add(UpdateNoteController(context))
             if (AccessTokenManager.hasValidAccessToken(context)) {
                 add(CalendarController(context))
                 add(TuitionFeeManager(context))
                 add(ChatRoomController(context))
             }
-
             add(CafeteriaManager(context))
             add(TransportController(context))
             add(NewsController(context))
             add(EventsController(context))
-            add(UpdateNoteController(context))
         }
 
         providers.forEach { provider ->

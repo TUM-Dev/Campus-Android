@@ -2,4 +2,4 @@ package de.tum.`in`.tumcampusapp.component.ui.updatenote.model
 
 import com.google.gson.annotations.SerializedName
 
-data class UpdateNote(@SerializedName("update_note") var updateNote: String)
+data class UpdateNote(@SerializedName("message") var updateNote: String)

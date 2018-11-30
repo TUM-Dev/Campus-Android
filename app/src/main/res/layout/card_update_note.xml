@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/CardBody"
-            android:text="There are tons of new features! <br> First"/>
+            android:hint="There are tons of new features!"/>
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

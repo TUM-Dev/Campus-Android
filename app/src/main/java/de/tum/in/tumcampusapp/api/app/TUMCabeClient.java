@@ -90,7 +90,7 @@ public final class TUMCabeClient {
     static final String API_CAFETERIAS = "mensen/";
     static final String API_KINOS = "kino/";
     static final String API_NEWS = "news/";
-    static final String API_UPDATE_NOTE = "update/";
+    static final String API_UPDATE_NOTE = "updatenote/";
     static final String API_EVENTS = "event/";
     static final String API_TICKET = "ticket/";
     static final String API_STUDY_ROOMS = "studyroom/list";
