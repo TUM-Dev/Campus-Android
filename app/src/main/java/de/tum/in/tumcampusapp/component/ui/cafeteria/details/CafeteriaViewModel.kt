@@ -8,19 +8,16 @@ import androidx.lifecycle.ViewModelProvider
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.utils.LocationHelper
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.Flowable
-import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
 
 class CafeteriaViewModel(
-        private val localRepository: CafeteriaLocalRepository,
-        private val remoteRepository: CafeteriaRemoteRepository
+        private val localRepository: CafeteriaLocalRepository
 ) : ViewModel() {
 
     private val _cafeterias = MutableLiveData<List<Cafeteria>>()
@@ -81,29 +78,6 @@ class CafeteriaViewModel(
     }
 
     /**
-     * Downloads cafeterias and stores them in the local repository.
-     *
-     * First checks whether a sync is necessary
-     * Then clears current cache
-     * Insert new cafeterias
-     * Lastly updates last sync
-     *
-     */
-    fun getCafeteriasFromService(force: Boolean) {
-        compositeDisposable += Observable
-                .fromCallable { localRepository.getLastSync() == null || force }
-                .doOnNext { localRepository.clear() }
-                .doAfterNext { localRepository.updateLastSync() }
-                .flatMap { remoteRepository.getAllCafeterias() }
-                .subscribeOn(Schedulers.io())
-                .subscribe({
-                    localRepository.addCafeterias(it)
-                }, {
-                    throwable -> Utils.log(throwable)
-                })
-    }
-
-    /**
      * Adds the distance between user and cafeteria to model.
      */
     private fun transformCafeteria(cafeterias: List<Cafeteria>, location: Location): List<Cafeteria> {
@@ -119,13 +93,12 @@ class CafeteriaViewModel(
     }
 
     class Factory(
-            private val localRepository: CafeteriaLocalRepository,
-            private val remoteRepository: CafeteriaRemoteRepository
+            private val localRepository: CafeteriaLocalRepository
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST") // no good way around this
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return CafeteriaViewModel(localRepository, remoteRepository) as T
+            return CafeteriaViewModel(localRepository) as T
         }
 
     }

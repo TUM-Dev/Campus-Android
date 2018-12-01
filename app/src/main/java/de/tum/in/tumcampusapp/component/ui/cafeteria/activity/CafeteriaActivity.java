@@ -24,7 +24,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuInflater;
@@ -33,7 +32,6 @@ import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSec
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -78,14 +76,10 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
         initCafeteriaSpinner();
         sectionsPagerAdapter = new CafeteriaDetailsSectionsPagerAdapter(getSupportFragmentManager());
 
-        TUMCabeClient client = TUMCabeClient.getInstance(this);
-        CafeteriaRemoteRepository remoteRepository = new CafeteriaRemoteRepository(client);
-
         TcaDb db = TcaDb.getInstance(this);
         CafeteriaLocalRepository localRepository = new CafeteriaLocalRepository(db);
 
-        CafeteriaViewModel.Factory factory =
-                new CafeteriaViewModel.Factory(localRepository, remoteRepository);
+        CafeteriaViewModel.Factory factory = new CafeteriaViewModel.Factory(localRepository);
         cafeteriaViewModel = ViewModelProviders.of(this, factory).get(CafeteriaViewModel.class);
 
         cafeteriaViewModel.getCafeterias().observe(this, this::updateCafeteria);
