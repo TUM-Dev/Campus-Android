@@ -41,7 +41,7 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
  */
 public class CalendarController implements ProvidesNotifications {
 
-    // TODO: Create CalendarLocalRepo & CalendarRemoteRepo
+    // TODO(thellmund) Create CalendarLocalRepo & CalendarRemoteRepo
 
     private static final String[] PROJECTION = {"_id", "name"};
 
@@ -55,7 +55,7 @@ public class CalendarController implements ProvidesNotifications {
     @Inject
     public CalendarController(Context context, NotificationScheduler scheduler) {
         mContext = context;
-        calendarDao = TcaDb.getInstance(context).calendarDao(); // TODO: Inject DB
+        calendarDao = TcaDb.getInstance(context).calendarDao(); // TODO(thellmund) Inject DB
         roomLocationsDao = TcaDb.getInstance(context).roomLocationsDao();
         widgetsTimetableBlacklistDao = TcaDb.getInstance(context).widgetsTimetableBlacklistDao();
         notificationScheduler = scheduler;

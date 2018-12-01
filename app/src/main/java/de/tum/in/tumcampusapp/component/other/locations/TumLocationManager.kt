@@ -23,8 +23,13 @@ import java.lang.Double.parseDouble
 import javax.inject.Inject
 
 /**
- * Location calendarController, manages intelligent location services, provides methods to easily access
- * the users current location, campus, next public transfer station and best cafeteria
+ * This class provides app-specific location functionality, as opposed to the generic
+ * [LocationProvider]. This includes providing the likely next location, the closest campus or the
+ * closest public transport station.
+ *
+ * @param context A [Context]
+ * @param database The [TcaDb] for database queries
+ * @param calendarController The [CalendarController] for querying for upcoming event locations.
  */
 class TumLocationManager @Inject constructor(
         context: Context,
@@ -32,7 +37,7 @@ class TumLocationManager @Inject constructor(
         private val calendarController: CalendarController
 ) {
 
-    private val applicationCOntext = context.applicationContext
+    private val applicationContext = context.applicationContext
 
     private val buildingToGpsDao: BuildingToGpsDao by lazy {
         database.buildingToGpsDao()
@@ -48,12 +53,12 @@ class TumLocationManager @Inject constructor(
             return null
         }
 
-        val loc = LocationProvider.getInstance(applicationCOntext).getLastLocation()
+        val loc = LocationProvider.getInstance(applicationContext).getLastLocation()
         loc?.let {
             return it
         }
 
-        val selectedCampus = Utils.getSetting(applicationCOntext, Const.DEFAULT_CAMPUS, "G")
+        val selectedCampus = Utils.getSetting(applicationContext, Const.DEFAULT_CAMPUS, "G")
         val allCampuses = Locations.Campus.values().associateBy(Locations.Campus::short)
 
         if ("X" != selectedCampus && allCampuses.containsKey(selectedCampus)) {
@@ -91,7 +96,7 @@ class TumLocationManager @Inject constructor(
         val campus = getCurrentCampus() ?: return null
 
         // Try to find favorite station for current campus
-        val favoriteStation = Utils.getSetting(applicationCOntext, "card_stations_default_" + campus.short, "")
+        val favoriteStation = Utils.getSetting(applicationContext, "card_stations_default_" + campus.short, "")
         if (favoriteStation.isNotEmpty()) {
             val stations = Locations.Stations.values().associateBy(Locations.Stations::station).values
             val candidate = stations.find { it.station.station == favoriteStation }
@@ -139,7 +144,7 @@ class TumLocationManager @Inject constructor(
             return results
         }
 
-        val apiResults = tryOrNull { TUMCabeClient.getInstance(applicationCOntext).building2Gps } ?: emptyList()
+        val apiResults = tryOrNull { TUMCabeClient.getInstance(applicationContext).building2Gps } ?: emptyList()
         apiResults.forEach {
             buildingToGpsDao.insert(it)
         }
@@ -158,7 +163,7 @@ class TumLocationManager @Inject constructor(
      */
     private fun servicesConnected(): Boolean {
         val resultCode = GoogleApiAvailability.getInstance()
-                .isGooglePlayServicesAvailable(applicationCOntext) == ConnectionResult.SUCCESS
+                .isGooglePlayServicesAvailable(applicationContext) == ConnectionResult.SUCCESS
 
         Utils.log("Google Play services is $resultCode")
         return resultCode
@@ -172,7 +177,7 @@ class TumLocationManager @Inject constructor(
      */
     private fun fetchRoomGeo(archId: String): Geo? {
         return try {
-            val coordinate = TUMCabeClient.getInstance(applicationCOntext).fetchCoordinates(archId)
+            val coordinate = TUMCabeClient.getInstance(applicationContext).fetchCoordinates(archId)
             convertRoomFinderCoordinateToGeo(coordinate)
         } catch (e: IOException) {
             Utils.log(e)
@@ -194,7 +199,7 @@ class TumLocationManager @Inject constructor(
             roomTitle
         }
 
-        val rooms = tryOrNull { TUMCabeClient.getInstance(applicationCOntext).fetchRooms(location) }
+        val rooms = tryOrNull { TUMCabeClient.getInstance(applicationContext).fetchRooms(location) }
         return rooms?.firstOrNull()?.let {
             fetchRoomGeo(it.arch_id)
         }

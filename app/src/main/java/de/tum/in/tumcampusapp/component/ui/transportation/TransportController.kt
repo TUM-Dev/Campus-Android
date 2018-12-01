@@ -15,7 +15,7 @@ class TransportController @Inject constructor(
         private val notificationScheduler: NotificationScheduler
 ) : ProvidesNotifications {
 
-    // TODO Rename to TransportNotificationsProvider
+    // TODO(thellmund) Rename this class?
 
     override fun hasNotificationsEnabled(): Boolean {
         return Utils.getSettingBool(context, "card_mvv_phone", false)

@@ -17,7 +17,7 @@ class TicketsRemoteRepository @Inject constructor(
 ) {
 
     fun fetchTickets(callback: Callback<List<Ticket>>) {
-        // TODO: Should not pass Context here, but TUMCabeVerification object (create in AppModule?)
+        // TODO(thellmund) Should not pass Context here, but TUMCabeVerification object (create in AppModule?)
         tumCabeClient.fetchTickets(context, callback)
     }
 

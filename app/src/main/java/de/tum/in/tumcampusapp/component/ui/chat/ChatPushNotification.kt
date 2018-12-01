@@ -72,7 +72,7 @@ class ChatPushNotification(private val fcmChatPayload: FcmChat, context: Context
     private fun getNewMessages(chatRoom: ChatRoom, messageId: Int) {
         val verification = TUMCabeVerification.create(context, null) ?: return
 
-        // TODO: Inject
+        // TODO(thellmund) Inject
         val localRepo = ChatMessageLocalRepository(TcaDb.getInstance(context))
         val remoteRepo = ChatMessageRemoteRepository(context, localRepo, TUMCabeClient.getInstance(context))
         val chatMessageViewModel = ChatMessageViewModel(localRepo, remoteRepo)

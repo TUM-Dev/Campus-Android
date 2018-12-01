@@ -49,9 +49,11 @@ class EventsRemoteRepository @Inject constructor(
         fetchEventsAndTickets(eventCallback, ticketCallback)
     }
 
-    // TODO: Without callback, use uni-directional data flow
-    fun fetchEventsAndTickets(eventCallback: Callback<List<Event>>,
-                              ticketCallback: Callback<List<Ticket>>) {
+    // TODO(thellmund) Without callback, use uni-directional data flow
+    private fun fetchEventsAndTickets(
+            eventCallback: Callback<List<Event>>,
+            ticketCallback: Callback<List<Ticket>>
+    ) {
         eventsLocalRepository.removePastEventsWithoutTicket()
 
         // Load all events and store them in the cache

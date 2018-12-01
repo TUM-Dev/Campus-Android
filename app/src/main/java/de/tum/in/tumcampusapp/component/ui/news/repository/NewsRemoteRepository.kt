@@ -12,7 +12,7 @@ class NewsRemoteRepository @Inject constructor(
         private val localRepository: NewsLocalRepository,
         private val syncManager: SyncManager,
         private val tumCabeClient: TUMCabeClient,
-        private val newsController: NewsController // TODO: Replace NewsController with some NewsNotificationPresenter or similar
+        private val newsController: NewsController // TODO(thellmund) Replace NewsController with some NewsNotificationPresenter or similar
 ) {
 
     fun downloadFromExternal(force: Boolean) {

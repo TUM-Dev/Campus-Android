@@ -12,7 +12,7 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class CafeteriaMenuRemoteRepository @Inject constructor(
-        private val cafeteriaMenuManager: CafeteriaMenuManager,  // TODO Rename
+        private val cafeteriaMenuManager: CafeteriaMenuManager,  // TODO(thellmund) Rename
         private val localRepository: CafeteriaMenuLocalRepository,
         private val apiClient: CafeteriaAPIClient
 ) {

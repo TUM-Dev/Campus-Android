@@ -40,7 +40,7 @@ class EventsViewModel @Inject constructor(
     val error: LiveData<Int?> = _error
 
     fun fetchEventsAndTickets(isLoggedIn: Boolean) {
-        // TODO: Inject AppConfig, a wrapper around SharedPreferences
+        // TODO(thellmund) Inject AppConfig, a wrapper around SharedPreferences
         fetchEvents()
 
         if (isLoggedIn) {

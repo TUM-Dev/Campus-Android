@@ -23,7 +23,6 @@ class TopNewsRemoteRepository @Inject constructor(
                 .subscribeOn(Schedulers.computation())
                 .observeOn(Schedulers.io())
                 .subscribe({ newsAlert ->
-                    // TODO: Store NewsAlerts in Room, not SharedPreferences!
                     Utils.setSetting(context, Const.NEWS_ALERT_IMAGE, newsAlert.url)
                     Utils.setSetting(context, Const.NEWS_ALERT_LINK, newsAlert.link)
 

@@ -43,7 +43,7 @@ class CafeteriaViewModel @Inject constructor(
 
     private val compositeDisposable = CompositeDisposable()
 
-    // TODO: More interactors
+    // TODO(thellmund) More interactors
 
     fun fetchBestMatchMensaId(): Int {
         return bestMatchMensaInteractor.execute()

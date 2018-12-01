@@ -26,7 +26,7 @@ class NewsActivity : ActivityForDownloadingExternal(
 ), DialogInterface.OnMultiChoiceClickListener {
 
     private val recyclerView by lazy {
-        findViewById<RecyclerView>(R.id.activity_news_list_view) // TODO
+        findViewById<RecyclerView>(R.id.activity_news_list_view)
     }
 
     private var state = -1

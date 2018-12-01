@@ -39,7 +39,7 @@ public class MensaWidget extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
-        // TODO: Search for a more efficient way, e.g. AndroidInjection
+        // TODO(thellmund) Search for a more efficient way, e.g. AndroidInjection
         ((App) context.getApplicationContext()).getAppComponent()
                 .cafeteriaComponent()
                 .cafeteriaModule(new CafeteriaModule(context))
