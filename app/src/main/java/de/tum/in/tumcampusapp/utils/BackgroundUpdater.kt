@@ -47,7 +47,7 @@ class BackgroundUpdater @Inject constructor(
 
     private fun loadRoomLocations() {
         doAsync {
-            QueryLocationsService.start(context)
+            QueryLocationsService.enqueueWork(context)
         }
     }
 

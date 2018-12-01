@@ -5,8 +5,6 @@ import android.content.Context
 import android.location.Location
 import android.location.LocationManager
 import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import org.jetbrains.anko.locationManager
 import javax.inject.Inject
@@ -27,31 +25,6 @@ class LocationProvider @Inject constructor(
     fun getLastLocation(): Location? {
         // TODO: Make async
         return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-    }
-
-    @SuppressLint("MissingPermission")
-    fun getLocationUpdates(block: (Location) -> Unit) {
-        val locationRequest = LocationRequest()
-        // TODO: Configure
-
-        locationCallback = object : LocationCallback() {
-
-            override fun onLocationResult(locationResult: LocationResult?) {
-                locationResult?.let {
-                    block(it.lastLocation)
-                }
-            }
-
-        }
-
-        locationProvider.requestLocationUpdates(locationRequest, locationCallback, null)
-    }
-
-    fun removeLocationUpdates() {
-        locationCallback?.let {
-            locationProvider.removeLocationUpdates(it)
-        }
-        locationCallback = null
     }
 
     companion object {

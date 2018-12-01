@@ -12,6 +12,7 @@ import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
 import de.tum.`in`.tumcampusapp.component.other.locations.LocationProvider
 import de.tum.`in`.tumcampusapp.component.other.locations.TumLocationManager
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
+import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackController
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeeManager
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeesCardsProvider
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeesNotificationProvider
@@ -70,10 +71,10 @@ class AppModule(private val context: Context) {
     @Singleton
     @Provides
     fun provideTumLocationManager(
-            notificationScheduler: NotificationScheduler,
+            database: TcaDb,
             calendarController: CalendarController
     ): TumLocationManager {
-        return TumLocationManager(context, notificationScheduler, calendarController)
+        return TumLocationManager(context, database, calendarController)
     }
 
     @Singleton
@@ -128,6 +129,12 @@ class AppModule(private val context: Context) {
     @Provides
     fun provideEduroamController(): EduroamController {
         return EduroamController(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideFeedbackController(): FeedbackController {
+        return FeedbackController(context)
     }
 
 }

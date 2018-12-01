@@ -1,19 +1,18 @@
 package de.tum.`in`.tumcampusapp.activities
 
 import android.view.View
+import androidx.room.Room
 import androidx.viewpager.widget.ViewPager
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.TestApp
-import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoViewModel
-import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository
-import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoActivity
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoAdapter
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoDao
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoViewModel
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.model.Kino
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import io.reactivex.android.plugins.RxAndroidPlugins
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import org.assertj.core.api.Assertions.assertThat
@@ -39,9 +38,9 @@ class KinoActivityTest {
 
     @Before
     fun setUp() {
-        val db =  TcaDb.getInstance(RuntimeEnvironment.application)
-        KinoLocalRepository.db = db
-        viewModel = KinoViewModel(KinoLocalRepository, KinoRemoteRepository, CompositeDisposable())
+        val db = Room.inMemoryDatabaseBuilder(RuntimeEnvironment.systemContext, TcaDb::class.java).build()
+        val localRepo = KinoLocalRepository(db)
+        viewModel = KinoViewModel(localRepo)
         RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
         RxJavaPlugins.setComputationSchedulerHandler { Schedulers.trampoline()  }
         RxJavaPlugins.setNewThreadSchedulerHandler { Schedulers.trampoline()  }

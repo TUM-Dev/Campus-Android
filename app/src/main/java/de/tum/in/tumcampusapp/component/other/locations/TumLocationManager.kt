@@ -5,7 +5,6 @@ import android.location.Location
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
-import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
 import de.tum.`in`.tumcampusapp.component.other.locations.model.BuildingToGps
 import de.tum.`in`.tumcampusapp.component.other.locations.model.Geo
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
@@ -18,6 +17,7 @@ import de.tum.`in`.tumcampusapp.utils.LocationHelper.calculateDistanceToBuilding
 import de.tum.`in`.tumcampusapp.utils.LocationHelper.calculateDistanceToCampus
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.tryOrNull
+import org.jetbrains.anko.doAsync
 import java.io.IOException
 import java.lang.Double.parseDouble
 import javax.inject.Inject
@@ -28,13 +28,14 @@ import javax.inject.Inject
  */
 class TumLocationManager @Inject constructor(
         context: Context,
-        private val notificationScheduler: NotificationScheduler,
+        private val database: TcaDb,
         private val calendarController: CalendarController
 ) {
 
-    private val context = context.applicationContext
+    private val applicationCOntext = context.applicationContext
+
     private val buildingToGpsDao: BuildingToGpsDao by lazy {
-        TcaDb.getInstance(context).buildingToGpsDao()
+        database.buildingToGpsDao()
     }
 
     /**
@@ -47,12 +48,12 @@ class TumLocationManager @Inject constructor(
             return null
         }
 
-        val loc = LocationProvider.getInstance(context).getLastLocation()
+        val loc = LocationProvider.getInstance(applicationCOntext).getLastLocation()
         loc?.let {
             return it
         }
 
-        val selectedCampus = Utils.getSetting(context, Const.DEFAULT_CAMPUS, "G")
+        val selectedCampus = Utils.getSetting(applicationCOntext, Const.DEFAULT_CAMPUS, "G")
         val allCampuses = Locations.Campus.values().associateBy(Locations.Campus::short)
 
         if ("X" != selectedCampus && allCampuses.containsKey(selectedCampus)) {
@@ -90,7 +91,7 @@ class TumLocationManager @Inject constructor(
         val campus = getCurrentCampus() ?: return null
 
         // Try to find favorite station for current campus
-        val favoriteStation = Utils.getSetting(context, "card_stations_default_" + campus.short, "")
+        val favoriteStation = Utils.getSetting(applicationCOntext, "card_stations_default_" + campus.short, "")
         if (favoriteStation.isNotEmpty()) {
             val stations = Locations.Stations.values().associateBy(Locations.Stations::station).values
             val candidate = stations.find { it.station.station == favoriteStation }
@@ -138,7 +139,7 @@ class TumLocationManager @Inject constructor(
             return results
         }
 
-        val apiResults = tryOrNull { TUMCabeClient.getInstance(context).building2Gps } ?: emptyList()
+        val apiResults = tryOrNull { TUMCabeClient.getInstance(applicationCOntext).building2Gps } ?: emptyList()
         apiResults.forEach {
             buildingToGpsDao.insert(it)
         }
@@ -146,20 +147,18 @@ class TumLocationManager @Inject constructor(
         return apiResults
     }
 
-    /**
-     * Get Building ID accroding to the current location
-     * Do not call on UI thread.
-     *
-     * @return the id of current building
-     */
-    fun getBuildingIDFromCurrentLocation(): String? = getBuildingIDFromLocation(getCurrentOrNextLocation())
+    fun fetchBuildingIDFromCurrentLocation(callback: (String?) -> Unit) {
+        doAsync {
+            fetchBuildingIDFromLocation(getCurrentOrNextLocation(), callback)
+        }
+    }
 
     /**
      * Checks that Google Play services are available
      */
     private fun servicesConnected(): Boolean {
         val resultCode = GoogleApiAvailability.getInstance()
-                .isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS
+                .isGooglePlayServicesAvailable(applicationCOntext) == ConnectionResult.SUCCESS
 
         Utils.log("Google Play services is $resultCode")
         return resultCode
@@ -173,7 +172,7 @@ class TumLocationManager @Inject constructor(
      */
     private fun fetchRoomGeo(archId: String): Geo? {
         return try {
-            val coordinate = TUMCabeClient.getInstance(context).fetchCoordinates(archId)
+            val coordinate = TUMCabeClient.getInstance(applicationCOntext).fetchCoordinates(archId)
             convertRoomFinderCoordinateToGeo(coordinate)
         } catch (e: IOException) {
             Utils.log(e)
@@ -195,7 +194,7 @@ class TumLocationManager @Inject constructor(
             roomTitle
         }
 
-        val rooms = tryOrNull { TUMCabeClient.getInstance(context).fetchRooms(location) }
+        val rooms = tryOrNull { TUMCabeClient.getInstance(applicationCOntext).fetchRooms(location) }
         return rooms?.firstOrNull()?.let {
             fetchRoomGeo(it.arch_id)
         }
@@ -208,13 +207,13 @@ class TumLocationManager @Inject constructor(
      * @param location the give location
      * @return the id of current building
      */
-    private fun getBuildingIDFromLocation(location: Location): String? {
+    private fun fetchBuildingIDFromLocation(location: Location, block: (String?) -> Unit) {
         val buildingToGpsList = loadBuildingToGpsList()
         if (buildingToGpsList.isEmpty()) {
-            return null
+            block(null)
         }
 
-        return buildingToGpsList
+        val result = buildingToGpsList
                 .map {
                     val distance = calculateDistanceToBuilding(it, location)
                     Pair(it, distance)
@@ -223,6 +222,7 @@ class TumLocationManager @Inject constructor(
                 .sortedBy { it.second }
                 .map { it.first.id }
                 .firstOrNull()
+        block(result)
     }
 
     companion object {

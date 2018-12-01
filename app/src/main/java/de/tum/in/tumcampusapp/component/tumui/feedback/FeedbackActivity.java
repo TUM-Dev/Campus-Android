@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.component.tumui.feedback;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,6 +13,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
+
+import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -32,7 +33,7 @@ import static de.tum.in.tumcampusapp.component.tumui.feedback.FeedbackController
 import static de.tum.in.tumcampusapp.component.tumui.feedback.FeedbackController.REQUEST_GALLERY;
 import static de.tum.in.tumcampusapp.component.tumui.feedback.FeedbackController.REQUEST_TAKE_PHOTO;
 
-public class FeedbackActivity2 extends BaseActivity {
+public class FeedbackActivity extends BaseActivity {
 
     private CheckBox includeEmail, includeLocation;
     private TextInputLayout customEmailViewLayout;
@@ -40,19 +41,20 @@ public class FeedbackActivity2 extends BaseActivity {
 
     private RecyclerView.Adapter thumbnailsAdapter;
 
-    private FeedbackController controller;
     private Feedback feedback;
     private String lrzId;
 
-    public FeedbackActivity2() {
+    @Inject
+    FeedbackController controller;
+
+    public FeedbackActivity() {
         super(R.layout.activity_feedback);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        controller = new FeedbackController(this);
+        getInjector().inject(this);
 
         boolean loadingSavedState = savedInstanceState != null;
         if (loadingSavedState) {
@@ -79,23 +81,21 @@ public class FeedbackActivity2 extends BaseActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(Const.FEEDBACK, getFeedback());
+        outState.putParcelable(Const.FEEDBACK, createFeedback());
     }
 
-    private Feedback getFeedback() {
+    private Feedback createFeedback() {
         if (feedback == null) {
             feedback = new Feedback();
         }
+
         // get values that we don't observe
         feedback.setMessage(feedbackView.getText().toString());
         if (lrzId == null || lrzId.isEmpty()) {
             feedback.setEmail(customEmailView.getText().toString());
         }
+
         feedback.setIncludeLocation(includeLocation.isChecked());
-        if (controller.getLocation() != null) {
-            feedback.setLatitude(controller.getLocation().getLatitude());
-            feedback.setLongitude(controller.getLocation().getLongitude());
-        }
         return feedback;
     }
 
@@ -112,20 +112,7 @@ public class FeedbackActivity2 extends BaseActivity {
 
     @SuppressLint("NewApi")
     private void initIncludeLocation() {
-        includeLocation.setOnClickListener(view -> {
-            if (includeLocation.isChecked()
-                    && controller.checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, this)) {
-                controller.saveLocation();
-            } else if (!includeLocation.isChecked()) {
-                controller.stopListeningForLocation();
-            }
-        });
-
         includeLocation.setChecked(feedback.getIncludeLocation());
-        if (includeLocation.isChecked()
-                && controller.checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, this)) {
-            controller.saveLocation();
-        }
     }
 
     private void initIncludeEmail(boolean loadingSavedState) {
@@ -177,12 +164,6 @@ public class FeedbackActivity2 extends BaseActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        controller.stopListeningForLocation();
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         for (String path : feedback.getPicturePaths()) {
@@ -191,7 +172,7 @@ public class FeedbackActivity2 extends BaseActivity {
     }
 
     public void onSendClicked(View view) {
-        getFeedback();
+        createFeedback();
 
         if (feedback.getMessage().trim().isEmpty()) {
             if (feedback.getPicturePaths().isEmpty()) {
@@ -238,7 +219,6 @@ public class FeedbackActivity2 extends BaseActivity {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    controller.saveLocation();
                     includeLocation.setChecked(true);
                 } else {
                     includeLocation.setChecked(false);

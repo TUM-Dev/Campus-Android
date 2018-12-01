@@ -8,10 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Patterns;
@@ -22,13 +20,14 @@ import java.io.File;
 import java.io.IOException;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
+import de.tum.in.tumcampusapp.component.other.locations.LocationProvider;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Success;
 import de.tum.in.tumcampusapp.utils.ImageUtils;
@@ -40,7 +39,7 @@ import retrofit2.Response;
 /**
  * Handles choosing images and network operations and corresponding dialogs.
  */
-class FeedbackController {
+public class FeedbackController {
 
     static final int REQUEST_TAKE_PHOTO = 11;
     static final int REQUEST_GALLERY = 12;
@@ -56,17 +55,8 @@ class FeedbackController {
     private Dialog progress;
     private Dialog errorDialog;
 
-    private Location location;
-    private LocationListener locationListener;
-    private LocationManager locationManager;
-
-
-    FeedbackController(Context context) {
+    public FeedbackController(Context context) {
         mContext = context;
-    }
-
-    Location getLocation() {
-        return location;
     }
 
     String getCurrentPhotoPath() {
@@ -112,20 +102,30 @@ class FeedbackController {
     }
 
     void sendFeedback(Activity activity, Feedback feedback, String lrzId) {
+        Location location = getCurrentLocation();
+        if (location == null) {
+            showNoLocationDialog();
+            return;
+        }
+
         // adjust information that is to be sent to the server
         if (!feedback.getIncludeEmail()) {
             feedback.setEmail("");
         }
+
         if (!feedback.getIncludeLocation()) {
             feedback.setLongitude(0);
             feedback.setLatitude(0);
+        } else {
+            feedback.setLatitude(location.getLatitude());
+            feedback.setLongitude(location.getLongitude());
         }
+
         feedback.setImageCount(feedback.getPicturePaths().size());
 
         Utils.log("Feedback: " + feedback.toString());
 
         imagesSent = 0;
-        stopListeningForLocation();
 
         if (feedback.getIncludeEmail() && !isEmailValid(feedback.getEmail())) {
             Toast.makeText(activity.getApplicationContext(), "Email is not valid", Toast.LENGTH_SHORT).show();
@@ -133,6 +133,7 @@ class FeedbackController {
         }
 
         showProgressBarDialog();
+
         TUMCabeClient client = TUMCabeClient.getInstance(mContext);
         client.sendFeedback(feedback, new Callback<Success>() {
             @Override
@@ -274,50 +275,12 @@ class FeedbackController {
         errorDialog.show();
     }
 
-    void saveLocation() {
-        Utils.log("saveLocation");
-
-        locationManager = new LocationManager(mContext);
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location gps) {
-                location = gps; // just take the newest location
-                Utils.log("location (" + gps.getProvider() + "): " + location.getLatitude() + " " + location.getLongitude());
-            }
-
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
-            }
-
-            @Override
-            public void onProviderEnabled(String s) {
-            }
-
-            @Override
-            public void onProviderDisabled(String s) {
-                Utils.log("Provider " + s + " disabled");
-            }
-        };
-        locationManager.getLocationUpdates(locationListener);
-
-        // if the feedback is sent before we received a location
-        getBackupLocation();
+    @Nullable
+    private Location getCurrentLocation() {
+        return LocationProvider.getInstance(mContext).getLastLocation();
     }
 
-    void stopListeningForLocation() {
-        Utils.log("Stop listening for location");
-        if (locationManager != null && locationListener != null) {
-            locationManager.stopReceivingUpdates(locationListener);
-        }
-    }
-
-    private void getBackupLocation() {
-        Location backup = new LocationManager(mContext).getLastLocation();
-        if (backup != null) {
-            location = backup;
-            return;
-        }
-        // we don't know anything about the location
+    private void showNoLocationDialog() {
         AlertDialog dialog = new AlertDialog.Builder(mContext)
                 .setTitle(R.string.location_services_off_title)
                 .setMessage(R.string.location_services_off_message)

@@ -18,7 +18,6 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.injector
 import de.tum.`in`.tumcampusapp.utils.sync.SyncManager
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.locationManager
 import javax.inject.Inject
 
 class QueryLocationsService : JobIntentService() {
@@ -58,7 +57,6 @@ class QueryLocationsService : JobIntentService() {
         // Do sync of google calendar if necessary
         val shouldSyncCalendar = Utils.getSettingBool(this, Const.SYNC_CALENDAR, false)
                 && ContextCompat.checkSelfPermission(this, WRITE_CALENDAR) == PERMISSION_GRANTED
-        val syncManager = SyncManager(this)
         val needsSync = syncManager.needSync(Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)
 
         if (shouldSyncCalendar.not() || needsSync.not()) {

@@ -42,6 +42,7 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 public class CalendarController implements ProvidesNotifications {
 
     // TODO: Create CalendarLocalRepo & CalendarRemoteRepo
+
     private static final String[] PROJECTION = {"_id", "name"};
 
     private final Context mContext;
