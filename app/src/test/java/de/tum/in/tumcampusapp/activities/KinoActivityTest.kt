@@ -17,6 +17,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import org.assertj.core.api.Assertions.assertThat
+import org.joda.time.DateTime
 import org.junit.After
 import org.junit.Before
 import org.junit.Ignore
@@ -63,7 +64,7 @@ class KinoActivityTest {
      */
     @Test
     fun mainComponentDisplayedTest() {
-        dao.insert(Kino())
+        dao.insert(KINO)
         kinoActivity = Robolectric.buildActivity(KinoActivity::class.java).create().start().get()
         waitForUI()
         assertThat(kinoActivity!!.findViewById<View>(R.id.drawer_layout).visibility).isEqualTo(View.VISIBLE)
@@ -88,7 +89,7 @@ class KinoActivityTest {
      */
     @Test
     fun kinoAdapterUsedTest() {
-        dao.insert(Kino())
+        dao.insert(KINO)
         kinoActivity = Robolectric.buildActivity(KinoActivity::class.java).create().start().get()
         waitForUI()
         Thread.sleep(100)
@@ -102,4 +103,24 @@ class KinoActivityTest {
     private fun waitForUI(){
         viewModel.getAllKinos().blockingFirst()
     }
+
+    companion object {
+        private val KINO = Kino(
+                "123",
+                "Deadpool 2",
+                "2018",
+                "137 min",
+                "Comedy",
+                "Someone",
+                "Ryan Reynolds and others",
+                "The best",
+                "I dunno stuff happens",
+                "",
+                null,
+                DateTime.now(),
+                DateTime.now(),
+                ""
+        )
+    }
+
 }

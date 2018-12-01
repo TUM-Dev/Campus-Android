@@ -174,13 +174,13 @@ public class KinoDetailsFragment extends Fragment {
         loadPoster(kino);
 
         TextView dateTextView = rootView.findViewById(R.id.dateTextView);
-        dateTextView.setText(kino.getFormattedDate());
+        dateTextView.setText(kino.getFormattedShortDate());
 
         TextView runtimeTextView = rootView.findViewById(R.id.runtimeTextView);
         runtimeTextView.setText(kino.getRuntime());
 
         TextView ratingTextView = rootView.findViewById(R.id.ratingTextView);
-        ratingTextView.setText(kino.getRating());
+        ratingTextView.setText(kino.getFormattedRating());
 
         int colorPrimary = ContextCompat.getColor(requireContext(), R.color.color_primary);
         setCompoundDrawablesTint(dateTextView, colorPrimary);

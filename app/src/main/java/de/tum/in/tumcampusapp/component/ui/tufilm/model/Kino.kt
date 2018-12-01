@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import java.util.*
+import kotlin.math.roundToInt
 
 /**
  * Kino Constructor
@@ -28,33 +29,38 @@ import java.util.*
  */
 @Entity
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
-data class Kino(@PrimaryKey
-                @SerializedName("kino")
-                var id: String = "",
-                var title: String = "",
-                var year: String = "",
-                var runtime: String = "",
-                var genre: String = "",
-                var director: String = "",
-                var actors: String = "",
-                var rating: String = "",
-                var description: String = "",
-                var cover: String = "",
-                var trailer: String? = "",
-                var date: DateTime = DateTime(),
-                var created: DateTime = DateTime(),
-                var link: String = "") {
+data class Kino(
+        @PrimaryKey
+        @SerializedName("kino")
+        val id: String,
+        val title: String,
+        val year: String,
+        val runtime: String,
+        val genre: String,
+        val director: String,
+        val actors: String,
+        val rating: String,
+        val description: String,
+        val cover: String,
+        val trailer: String?,
+        val date: DateTime,
+        val created: DateTime,
+        val link: String
+) {
 
-    val formattedDate: String
+    val formattedShortDate: String
         get() {
-            // e.g. Nov 20, 2018 8:00 PM (Style MS = medium date and short time)
-            val formatter = DateTimeFormat.forStyle("MS").withLocale(Locale.getDefault())
-            return formatter.print(date)
+            // e.g. 11/20/2018 8:00 PM (Style SS = short date and short time)
+            val shortDate = DateTimeFormat.forPattern("dd MMM").print(date)
+            val shortTime = DateTimeFormat.shortTime().withLocale(Locale.getDefault()).print(date)
+            return "$shortDate\n$shortTime"
         }
 
     val formattedDescription: String
         get() {
             return description
+                    .replace(".", ". ")   // Add space after full stops
+                    .replace("\\s+", " ") // If this results in multiple spaces, reduce them to one
                     .replace("\n", "")
                     .replace("\r", "\r\n")
                     .removeSuffix("\r\n")
@@ -66,7 +72,10 @@ data class Kino(@PrimaryKey
             return "https://www.youtube.com/results?search_query=Trailer $actualTitle".replace(" ", "+")
         }
 
-    fun isFutureMovie() = date.isAfterNow
+    val formattedRating: String
+        get() {
+            val roundedRating = rating.toDouble().roundToInt()
+            return "$roundedRating / 10"
+        }
 
 }
-
