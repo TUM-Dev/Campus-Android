@@ -48,16 +48,19 @@ class CafeteriaViewModel(
         compositeDisposable += getAllCafeterias(location)
                 .doOnError { _error.postValue(true) }
                 .doOnNext { _error.postValue(it.isEmpty()) }
-                .subscribe({
-                    _cafeterias.postValue(it)
-                }, {
-                    t -> Utils.log(t)
-                })
+                .subscribe(_cafeterias::postValue, Utils::log)
     }
 
     fun fetchMenuDates() {
         compositeDisposable += fetchAllMenuDates()
                 .subscribe(_menuDates::postValue, Utils::log)
+    }
+
+    fun fetchCafeteriaMenus(id: Int, date: DateTime) {
+        compositeDisposable += Flowable.fromCallable { localRepository.getCafeteriaMenus(id, date) }
+                .subscribeOn(Schedulers.io())
+                .defaultIfEmpty(emptyList())
+                .subscribe { _cafeteriaMenus.postValue(it) }
     }
 
     private fun fetchAllMenuDates(): Flowable<List<DateTime>> {
@@ -75,13 +78,6 @@ class CafeteriaViewModel(
                 .map { transformCafeteria(it, location) }
                 .subscribeOn(Schedulers.io())
                 .defaultIfEmpty(emptyList())
-    }
-
-    fun fetchCafeteriaMenus(id: Int, date: DateTime) {
-        compositeDisposable += Flowable.fromCallable { localRepository.getCafeteriaMenus(id, date) }
-                .subscribeOn(Schedulers.io())
-                .defaultIfEmpty(emptyList())
-                .subscribe { _cafeteriaMenus.postValue(it) }
     }
 
     /**
