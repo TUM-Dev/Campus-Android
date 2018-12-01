@@ -194,7 +194,7 @@ public final class TUMCabeClient {
                 .body();
     }
 
-    Observable<TUMCabeStatus> uploadObfuscatedIds(String lrzId, ObfuscatedIdsUpload ids){
+    Observable<TUMCabeStatus> uploadObfuscatedIds(String lrzId, ObfuscatedIdsUpload ids) {
         return service.uploadObfuscatedIds(lrzId, ids);
     }
 
@@ -306,9 +306,16 @@ public final class TUMCabeClient {
                 .body();
     }
 
-    public void sendFeedback(Feedback feedback, String[] imagePaths, Callback<Success> cb) {
+    public void sendFeedback(Feedback feedback, Callback<Success> cb) {
         service.sendFeedback(feedback).enqueue(cb);
+    }
 
+    public void sendFeedback(Feedback feedback, String[] imagePaths, Callback<Success> cb) {
+        service.sendFeedback(feedback)
+                .enqueue(cb);
+    }
+
+    public void sendFeedbackImages(Feedback feedback, String[] imagePaths, Callback<Success> cb) {
         for (int i = 0; i < imagePaths.length; i++) {
             File file = new File(imagePaths[i]);
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);

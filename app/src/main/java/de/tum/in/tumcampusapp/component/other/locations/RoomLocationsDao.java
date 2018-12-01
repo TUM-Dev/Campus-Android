@@ -17,7 +17,7 @@ public interface RoomLocationsDao {
     RoomLocation getNextLectureCoordinates();
 
     @Insert
-    void insert(RoomLocation roomLocations);
+    void insert(RoomLocation... roomLocations);
 
     @Query("DELETE FROM room_locations")
     void flush();

@@ -44,7 +44,7 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
 
     @Override
     public void onDestroy() {
-        // Noop 
+        // Noop
     }
 
     @Override
@@ -54,8 +54,12 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
 
     @Override
     public RemoteViews getViewAt(int position) {
-        CafeteriaMenu currentItem = mMenus.get(position);
+        if (position >= mMenus.size()) {
+            // No idea why this happens, but getViewAt is occasionally called with position == size
+            return getLoadingView();
+        }
 
+        CafeteriaMenu currentItem = mMenus.get(position);
         RemoteViews rv = new RemoteViews(mApplicationContext.getPackageName(), R.layout.mensa_widget_item);
 
         String menuContent = COMPILE.matcher(currentItem.getName())
@@ -75,7 +79,7 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
 
     @Override
     public RemoteViews getLoadingView() {
-        return null;
+        return new RemoteViews(mApplicationContext.getPackageName(), R.layout.mensa_widget_loading_item);
     }
 
     @Override

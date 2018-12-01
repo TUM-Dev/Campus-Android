@@ -199,12 +199,14 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
                         .fromAction(() -> calendarController.importCalendar(events))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(() -> {
-                            // Update the action bar to display the enabled menu options
-                            invalidateOptionsMenu();
-                            QueryLocationsService.start(this);
-                        })
+                        .subscribe(this::onCalendarImportedIntoDatabase)
         );
+    }
+
+    private void onCalendarImportedIntoDatabase() {
+        // Update the action bar to display the enabled menu options
+        invalidateOptionsMenu();
+        QueryLocationsService.enqueueWork(this);
     }
 
     private void scheduleNotifications(@NonNull List<Event> events) {

@@ -55,7 +55,9 @@
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
     <!-- Do not collect crashes by default -->
-    <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" />
+    <meta-data
+        android:name="firebase_crashlytics_collection_enabled"
+        android:value="false" />
 
     <application
         android:name=".App"
@@ -463,13 +465,6 @@
             android:launchMode="singleTop"
             android:parentActivityName=".component.ui.barrierfree.BarrierFreeInfoActivity" />
         <activity
-            android:name=".component.tumui.feedback.FeedbackActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/feedback"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.tumui.feedback.FeedbackActivity"
-            android:theme="@style/AppTheme.NoDrawerLayout" />
-        <activity
             android:name=".component.tumui.calendar.CreateEventActivity"
             android:label="@string/activity_create_event_title"
             android:parentActivityName=".component.tumui.calendar.CalendarActivity" />
@@ -609,12 +604,13 @@
             android:exported="false" />
         <service
             android:name=".service.QueryLocationsService"
-            android:exported="false" />
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".service.FcmReceiverService"
-            android:stopWithTask="false"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            android:stopWithTask="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

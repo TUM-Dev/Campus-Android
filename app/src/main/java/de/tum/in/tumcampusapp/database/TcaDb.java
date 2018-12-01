@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.database;
 
 import android.content.Context;
+import android.content.Intent;
 
 import androidx.room.Database;
 import androidx.room.Room;
@@ -58,6 +59,12 @@ import de.tum.in.tumcampusapp.component.ui.tufilm.KinoDao;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
 import de.tum.in.tumcampusapp.database.migrations.Migration2to3;
+import de.tum.in.tumcampusapp.service.BackgroundService;
+import de.tum.in.tumcampusapp.service.DownloadService;
+import de.tum.in.tumcampusapp.service.QueryLocationsService;
+import de.tum.in.tumcampusapp.service.SendMessageService;
+import de.tum.in.tumcampusapp.service.SilenceService;
+import de.tum.in.tumcampusapp.utils.CacheManager;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.sync.SyncDao;
 import de.tum.in.tumcampusapp.utils.sync.model.Sync;

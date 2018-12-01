@@ -70,10 +70,7 @@ class StudyRoomsActivity : ActivityForAccessingTumCabe<List<StudyRoomGroup>>(
 
     override fun onRefresh() = loadStudyRooms()
 
-    /**
-     * A new study room group has been selected -> Switch.
-     */
-    override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
         groupId = groups[pos].id
         changeViewPagerAdapter(groupId)
     }
