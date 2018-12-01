@@ -465,6 +465,13 @@
             android:launchMode="singleTop"
             android:parentActivityName=".component.ui.barrierfree.BarrierFreeInfoActivity" />
         <activity
+            android:name=".component.tumui.feedback.FeedbackActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/feedback"
+            android:launchMode="singleTop"
+            android:parentActivityName=".component.tumui.feedback.FeedbackActivity"
+            android:theme="@style/AppTheme.NoDrawerLayout" />
+        <activity
             android:name=".component.tumui.calendar.CreateEventActivity"
             android:label="@string/activity_create_event_title"
             android:parentActivityName=".component.tumui.calendar.CalendarActivity" />

@@ -218,7 +218,8 @@ public class FeedbackController {
                 mContext.getString(R.string.feedback_take_picture),
                 mContext.getString(R.string.gallery)
         };
-        AlertDialog dialog = new AlertDialog.Builder(mContext)
+
+        AlertDialog dialog = new AlertDialog.Builder(activity)
                 .setTitle(R.string.feedback_add_picture)
                 .setItems(options, (dialogInterface, i) -> {
                     if (i == 0) {
