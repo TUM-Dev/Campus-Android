@@ -10,10 +10,13 @@ import de.tum.`in`.tumcampusapp.component.other.locations.model.Geo
  */
 @Entity(tableName = "room_locations")
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
-data class RoomLocations(@PrimaryKey
-                         var title: String = "",
-                         var latitude: String = "",
-                         var longitude: String = "") {
+data class RoomLocations(
+        @PrimaryKey
+        var title: String = "",
+        var latitude: String = "",
+        var longitude: String = ""
+) {
+
     constructor(title: String, geo: Geo) : this(title, geo.latitude, geo.longitude)
 
     /**
@@ -22,4 +25,5 @@ data class RoomLocations(@PrimaryKey
     fun toGeo(): Geo {
         return Geo(latitude, longitude);
     }
+
 }

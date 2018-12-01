@@ -91,6 +91,7 @@ object Const {
     const val SEND_WIFI_SERVICE_JOB_ID = 1003
     const val DOWNLOAD_SERVICE_JOB_ID = 1004
     const val FILL_CACHE_SERVICE_JOB_ID = 1005
+    const val QUERY_LOCATIONS_SERVICE_JOB_ID = 1006
 
     const val FEEDBACK = "feedback"
     const val FEEDBACK_IMG_COMPRESSION_QUALITY = 50;
