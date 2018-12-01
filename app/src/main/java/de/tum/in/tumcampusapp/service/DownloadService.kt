@@ -55,12 +55,9 @@ class DownloadService : JobIntentService() {
         tumCabeClient = TUMCabeClient.getInstance(this)
         database = TcaDb.getInstance(this)
 
-        val remoteRepository = CafeteriaRemoteRepository
-        remoteRepository.tumCabeClient = tumCabeClient
-
-        val localRepository = CafeteriaLocalRepository
-        localRepository.db = database
-        cafeteriaViewModel = CafeteriaViewModel(localRepository, remoteRepository, disposable)
+        val remoteRepository = CafeteriaRemoteRepository(tumCabeClient)
+        val localRepository = CafeteriaLocalRepository(database)
+        cafeteriaViewModel = CafeteriaViewModel(localRepository, remoteRepository)
 
         // Init sync table
         KinoLocalRepository.db = database
@@ -111,7 +108,7 @@ class DownloadService : JobIntentService() {
 
     /**
      * asks to verify private key, uploads fcm token and obfuscated ids (if missing)
-    */
+     */
     private fun uploadMissingIds() {
         val lrzId = Utils.getSetting(this, Const.LRZ_ID, "")
 

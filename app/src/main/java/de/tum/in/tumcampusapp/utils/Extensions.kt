@@ -17,6 +17,8 @@ import android.widget.TextView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.RequestCreator
 import de.tum.`in`.tumcampusapp.component.other.generic.drawer.SideNavigationItem
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
 /**
  * Executes the block and return null in case of an [Exception].
@@ -124,4 +126,8 @@ fun TextView.addCompoundDrawablesWithIntrinsicBounds(
 fun TextView.addCompoundDrawablesWithIntrinsicBounds(
         start: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0) {
     setCompoundDrawablesWithIntrinsicBounds(start, top, right, bottom)
+}
+
+operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
+    this.add(disposable)
 }
