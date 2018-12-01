@@ -110,7 +110,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
 
     private ArrayAdapter<Cafeteria> createArrayAdapter() {
         return new ArrayAdapter<Cafeteria>(
-                this, R.layout.simple_spinner_item_actionbar, android.R.id.text1, mCafeterias) {
+                this, R.layout.simple_spinner_item_actionbar) {
             final LayoutInflater inflater = LayoutInflater.from(getContext());
 
             @Override
@@ -148,7 +148,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
         if (intent != null && intent.hasExtra(Const.MENSA_FOR_FAVORITEDISH)) {
             cafeteriaId = intent.getIntExtra(Const.MENSA_FOR_FAVORITEDISH, NONE_SELECTED);
             intent.removeExtra(Const.MENSA_FOR_FAVORITEDISH);
-        } else if (intent.getExtras() != null && intent.hasExtra(Const.CAFETERIA_ID)) {
+        } else if (intent != null && intent.hasExtra(Const.CAFETERIA_ID)) {
             cafeteriaId = intent.getIntExtra(Const.CAFETERIA_ID, 0);
         } else {
             // If we're not provided with a cafeteria ID, we choose the best matching cafeteria.

@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.utils.LocationHelper
@@ -78,31 +77,12 @@ class CafeteriaViewModel(
                 .defaultIfEmpty(emptyList())
     }
 
-    fun getCafeteriaWithMenus(cafeteriaId: Int): CafeteriaWithMenus {
-        return localRepository.getCafeteriaWithMenus(cafeteriaId)
-    }
-
     fun fetchCafeteriaMenus(id: Int, date: DateTime) {
         compositeDisposable += Flowable.fromCallable { localRepository.getCafeteriaMenus(id, date) }
                 .subscribeOn(Schedulers.io())
                 .defaultIfEmpty(emptyList())
                 .subscribe { _cafeteriaMenus.postValue(it) }
     }
-
-    fun getCafeteriaMenus(id: Int, date: DateTime): Flowable<List<CafeteriaMenu>> {
-        return Flowable
-                .fromCallable { localRepository.getCafeteriaMenus(id, date) }
-                .subscribeOn(Schedulers.io())
-                .defaultIfEmpty(emptyList())
-    }
-
-    fun getAllMenuDates(): Flowable<List<DateTime>> {
-        return Flowable
-                .fromCallable { localRepository.getAllMenuDates() }
-                .subscribeOn(Schedulers.io())
-                .defaultIfEmpty(emptyList())
-    }
-
 
     /**
      * Downloads cafeterias and stores them in the local repository.
