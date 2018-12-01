@@ -1,19 +1,14 @@
 package de.tum.in.tumcampusapp.component.tumui.calendar;
 
 import android.Manifest;
-import android.app.IntentService;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.provider.CalendarContract;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
@@ -21,12 +16,14 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.notifications.NotificationScheduler;
 import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
 import de.tum.in.tumcampusapp.component.notifications.model.FutureNotification;
-import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.other.locations.RoomLocationsDao;
 import de.tum.in.tumcampusapp.component.other.locations.model.Geo;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
@@ -46,8 +43,6 @@ import de.tum.in.tumcampusapp.utils.sync.SyncManager;
 public class CalendarController implements ProvidesCard, ProvidesNotifications {
 
     private static final String[] PROJECTION = {"_id", "name"};
-
-    private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
 
     private final CalendarDao calendarDao;
 
@@ -310,56 +305,4 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
         return Utils.getSettingBool(mContext, "card_next_phone", false);
     }
 
-    public static class QueryLocationsService extends IntentService {
-
-        private static final String QUERY_LOCATIONS = "query_locations";
-
-        public QueryLocationsService() {
-            super(QUERY_LOCATIONS);
-        }
-
-        public static void loadGeo(Context c) {
-            LocationManager locationManager = new LocationManager(c);
-            final CalendarDao calendarDao = TcaDb.getInstance(c)
-                    .calendarDao();
-            final RoomLocationsDao roomLocationsDao = TcaDb.getInstance(c)
-                    .roomLocationsDao();
-
-            List<CalendarItem> calendarItems = calendarDao.getLecturesWithoutCoordinates();
-            for (CalendarItem calendarItem : calendarItems) {
-                String location = calendarItem.getLocation();
-                if (location.isEmpty()) {
-                    continue;
-                }
-
-                @Nullable Geo geo = locationManager.roomLocationStringToGeo(location);
-                if (geo != null) {
-                    Utils.logv("inserted " + location + ' ' + geo);
-                    roomLocationsDao.insert(new RoomLocations(location, geo));
-                }
-            }
-
-            // Do sync of google calendar if necessary
-            boolean syncCalendar = Utils.getSettingBool(c, Const.SYNC_CALENDAR, false)
-                    && ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) ==
-                    PackageManager.PERMISSION_GRANTED;
-
-            SyncManager syncManager = new SyncManager(c);
-            if (!syncCalendar || !syncManager.needSync(Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)) {
-                return;
-            }
-
-            try {
-                syncCalendar(c);
-                syncManager.replaceIntoDb(Const.SYNC_CALENDAR);
-            } catch (SQLiteException e) {
-                Utils.log(e);
-            }
-        }
-
-        @Override
-        protected void onHandleIntent(Intent intent) {
-            new Thread(() -> loadGeo(QueryLocationsService.this)).start();
-        }
-    }
 }

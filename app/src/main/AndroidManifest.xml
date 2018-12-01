@@ -635,8 +635,9 @@
             android:name=".service.ScanResultsAvailableReceiver$NeverShowAgainService"
             android:exported="false" />
         <service
-            android:name=".component.tumui.calendar.CalendarController$QueryLocationsService"
-            android:exported="false" />
+            android:name=".service.QueryLocationsService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".service.FcmReceiverService"
             android:stopWithTask="false"

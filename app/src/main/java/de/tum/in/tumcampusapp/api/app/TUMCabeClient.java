@@ -1,8 +1,6 @@
 package de.tum.in.tumcampusapp.api.app;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,6 +12,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
 import de.tum.in.tumcampusapp.api.app.model.DeviceUploadFcmToken;
@@ -194,7 +194,7 @@ public final class TUMCabeClient {
                 .body();
     }
 
-    Observable<TUMCabeStatus> uploadObfuscatedIds(String lrzId, ObfuscatedIdsUpload ids){
+    Observable<TUMCabeStatus> uploadObfuscatedIds(String lrzId, ObfuscatedIdsUpload ids) {
         return service.uploadObfuscatedIds(lrzId, ids);
     }
 
@@ -306,10 +306,11 @@ public final class TUMCabeClient {
                 .body();
     }
 
-    public void sendFeedback(Feedback feedback, String[] imagePaths, Callback<Success> cb) {
-        service.sendFeedback(feedback)
-                .enqueue(cb);
+    public void sendFeedback(Feedback feedback, Callback<Success> cb) {
+        service.sendFeedback(feedback).enqueue(cb);
+    }
 
+    public void sendFeedbackImages(Feedback feedback, String[] imagePaths, Callback<Success> cb) {
         for (int i = 0; i < imagePaths.length; i++) {
             File file = new File(imagePaths[i]);
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
