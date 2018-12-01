@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
-import de.tum.`in`.tumcampusapp.utils.LocationHelper
+import de.tum.`in`.tumcampusapp.utils.LocationHelper.calculateDistanceToCafeteria
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.Flowable
@@ -37,22 +37,48 @@ class CafeteriaViewModel(
 
     private val compositeDisposable = CompositeDisposable()
 
+    /**
+     * Updates the currently selected [Cafeteria] and posts a new value to [selectedCafeteria].
+     *
+     * @param cafeteria The newly selected [Cafeteria]
+     */
     fun updateSelectedCafeteria(cafeteria: Cafeteria) {
         _selectedCafeteria.postValue(cafeteria)
     }
 
+    /**
+     * Fetches all [Cafeteria]s around the provided [Location] from the database and posts the
+     * results to [cafeterias].
+     *
+     * @param location The current [Location]
+     */
     fun fetchCafeterias(location: Location) {
-        compositeDisposable += getAllCafeterias(location)
+        compositeDisposable += localRepository.getAllCafeterias()
+                .map { transformCafeteria(it, location) }
+                .subscribeOn(Schedulers.io())
+                .defaultIfEmpty(emptyList())
                 .doOnError { _error.postValue(true) }
                 .doOnNext { _error.postValue(it.isEmpty()) }
                 .subscribe(_cafeterias::postValue, Utils::log)
     }
 
+    /**
+     * Fetches all menu dates from the database and posts them to [menuDates].
+     */
     fun fetchMenuDates() {
-        compositeDisposable += fetchAllMenuDates()
+        compositeDisposable += Flowable.fromCallable { localRepository.getAllMenuDates() }
+                .subscribeOn(Schedulers.io())
+                .defaultIfEmpty(emptyList())
                 .subscribe(_menuDates::postValue, Utils::log)
     }
 
+    /**
+     * Fetches [CafeteriaMenu]s for the provided cafeteria ID at the requested date from the
+     * database and posts its result to [cafeteriaMenus].
+     *
+     * @param id The ID of the [Cafeteria]
+     * @param date The [DateTime] for which to fetch the [CafeteriaMenu]
+     */
     fun fetchCafeteriaMenus(id: Int, date: DateTime) {
         compositeDisposable += Flowable.fromCallable { localRepository.getCafeteriaMenus(id, date) }
                 .subscribeOn(Schedulers.io())
@@ -60,29 +86,15 @@ class CafeteriaViewModel(
                 .subscribe { _cafeteriaMenus.postValue(it) }
     }
 
-    private fun fetchAllMenuDates(): Flowable<List<DateTime>> {
-        return Flowable
-                .fromCallable { localRepository.getAllMenuDates() }
-                .subscribeOn(Schedulers.io())
-                .defaultIfEmpty(emptyList())
-    }
-
-    /**
-     * Returns a flowable that emits a list of cafeterias from the local repository.
-     */
-    private fun getAllCafeterias(location: Location): Flowable<List<Cafeteria>> {
-        return localRepository.getAllCafeterias()
-                .map { transformCafeteria(it, location) }
-                .subscribeOn(Schedulers.io())
-                .defaultIfEmpty(emptyList())
-    }
-
     /**
      * Adds the distance between user and cafeteria to model.
      */
-    private fun transformCafeteria(cafeterias: List<Cafeteria>, location: Location): List<Cafeteria> {
+    private fun transformCafeteria(
+            cafeterias: List<Cafeteria>,
+            location: Location
+    ): List<Cafeteria> {
         return cafeterias.map {
-            it.distance = LocationHelper.calculateDistanceToCafeteria(it, location)
+            it.distance = calculateDistanceToCafeteria(it, location)
             it
         }
     }
