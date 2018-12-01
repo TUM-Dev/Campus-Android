@@ -86,8 +86,8 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
         cafeteriaViewModel.getSelectedCafeteria().observe(this, this::onNewCafeteriaSelected);
         cafeteriaViewModel.getMenuDates().observe(this, this::updateSectionsPagerAdapter);
 
-        cafeteriaViewModel.getError().observe(this, value -> {
-            if (value) {
+        cafeteriaViewModel.getError().observe(this, isError -> {
+            if (isError) {
                 showError(R.string.error_something_wrong);
             } else {
                 showContentLayout();
