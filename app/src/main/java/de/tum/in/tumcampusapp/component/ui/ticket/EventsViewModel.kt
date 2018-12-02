@@ -1,7 +1,5 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -9,11 +7,9 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.EventType
 
 class EventsViewModel(
-        application: Application,
+        private val controller: EventsController,
         private val type: EventType
-) : AndroidViewModel(application) {
-
-    private val controller = EventsController(application.applicationContext)
+) : ViewModel() {
 
     val events: LiveData<List<Event>>
         get() = when (type) {
@@ -22,13 +18,13 @@ class EventsViewModel(
         }
 
     class Factory(
-            private val application: Application,
+            private val controller: EventsController,
             private val eventType: EventType
-    ) : ViewModelProvider.AndroidViewModelFactory(application) {
+    ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST") // no good way around this
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return EventsViewModel(application, eventType) as T
+            return EventsViewModel(controller, eventType) as T
         }
 
     }

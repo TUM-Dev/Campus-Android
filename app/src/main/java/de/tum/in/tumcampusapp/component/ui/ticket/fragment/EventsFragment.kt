@@ -1,14 +1,14 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket.fragment
 
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
@@ -96,7 +96,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         eventType = arguments?.getSerializable(KEY_EVENT_TYPE) as EventType
         eventsController = EventsController(context)
 
-        val factory = EventsViewModel.Factory(requireActivity().application, eventType)
+        val factory = EventsViewModel.Factory(eventsController, eventType)
         val viewModel = ViewModelProviders.of(this, factory).get(EventsViewModel::class.java)
 
         viewModel.events.observeNonNull(this) { showEvents(it) }
