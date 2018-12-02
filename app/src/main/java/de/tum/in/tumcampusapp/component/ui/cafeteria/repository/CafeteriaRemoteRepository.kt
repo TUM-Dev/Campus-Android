@@ -21,7 +21,7 @@ class CafeteriaRemoteRepository(
      *
      */
     @SuppressLint("CheckResult")
-    fun getCafeteriasFromService(force: Boolean) {
+    fun fetchCafeterias(force: Boolean) {
             Observable.just(1)
                     .filter { localRepository.getLastSync() == null || force }
                     .subscribeOn(Schedulers.io())

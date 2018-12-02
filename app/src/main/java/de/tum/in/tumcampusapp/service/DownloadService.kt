@@ -14,10 +14,10 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
-import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository
-import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -105,7 +105,7 @@ class DownloadService : JobIntentService() {
 
     /**
      * asks to verify private key, uploads fcm token and obfuscated ids (if missing)
-    */
+     */
     private fun uploadMissingIds() {
         val lrzId = Utils.getSetting(this, Const.LRZ_ID, "")
 
@@ -137,7 +137,7 @@ class DownloadService : JobIntentService() {
 
     private fun downloadCafeterias(force: Boolean): Boolean {
         CafeteriaMenuManager(this).downloadMenus(force)
-        cafeteriaRemoteRepository.getCafeteriasFromService(force)
+        cafeteriaRemoteRepository.fetchCafeterias(force)
         return true
     }
 

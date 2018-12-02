@@ -46,7 +46,6 @@ class CafeteriaLocalRepository(
         database.cafeteriaDao().insert(*cafeteria)
     }
 
-
     // Sync methods //
 
     fun getLastSync() = database.syncDao().getSyncSince(CafeteriaManager::class.java.name, TIME_TO_SYNC)
@@ -56,9 +55,7 @@ class CafeteriaLocalRepository(
     fun clear() = database.cafeteriaDao().removeCache()
 
     companion object {
-        private const val TIME_TO_SYNC = 604800
+        private const val TIME_TO_SYNC = 604800 // 1 week
     }
 
 }
-
-

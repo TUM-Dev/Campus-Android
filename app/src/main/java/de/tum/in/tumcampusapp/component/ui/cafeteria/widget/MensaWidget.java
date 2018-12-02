@@ -27,6 +27,8 @@ import de.tum.in.tumcampusapp.utils.Const;
  */
 public class MensaWidget extends AppWidgetProvider {
 
+    private CafeteriaLocalRepository localRepository;
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         CafeteriaLocalRepository localRepository =
@@ -68,5 +70,3 @@ public class MensaWidget extends AppWidgetProvider {
     }
 
 }
-
-

@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.component.ui.cafeteria.controller;
 import android.content.Context;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
@@ -11,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
