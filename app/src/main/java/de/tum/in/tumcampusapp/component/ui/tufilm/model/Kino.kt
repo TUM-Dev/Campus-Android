@@ -50,7 +50,6 @@ data class Kino(
 
     val formattedShortDate: String
         get() {
-            // e.g. 11/20/2018 8:00 PM (Style SS = short date and short time)
             val shortDate = DateTimeFormat.forPattern("dd MMM").print(date)
             val shortTime = DateTimeFormat.shortTime().withLocale(Locale.getDefault()).print(date)
             return "$shortDate\n$shortTime"
@@ -74,8 +73,12 @@ data class Kino(
 
     val formattedRating: String
         get() {
-            val roundedRating = rating.toDouble().roundToInt()
-            return "$roundedRating / 10"
+            return try {
+                val roundedRating = rating.toDouble().roundToInt()
+                "$roundedRating / 10"
+            } catch (e: NumberFormatException) {
+                rating
+            }
         }
 
 }
