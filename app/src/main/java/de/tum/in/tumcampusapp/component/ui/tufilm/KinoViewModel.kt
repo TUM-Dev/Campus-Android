@@ -12,11 +12,12 @@ import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 /**
  * ViewModel for kinos.
  */
-class KinoViewModel(
+class KinoViewModel @Inject constructor(
         private val localRepository: KinoLocalRepository
 ) : ViewModel() {
 

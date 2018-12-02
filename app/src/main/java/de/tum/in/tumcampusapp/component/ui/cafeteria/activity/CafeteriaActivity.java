@@ -62,6 +62,12 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
     @Inject
     Provider<CafeteriaViewModel> viewModelProvider;
 
+    @Inject
+    LocationManager locationManager;
+
+    @Inject
+    CafeteriaManager cafeteriaManager;
+
     public CafeteriaActivity() {
         super(Const.CAFETERIAS, R.layout.activity_cafeteria);
     }
@@ -70,7 +76,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getInjector().cafeteriaComponent()
-                .cafeteriaModule(new CafeteriaModule(this))
+                .cafeteriaModule(new CafeteriaModule())
                 .build()
                 .inject(this);
 
@@ -138,7 +144,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
     @Override
     protected void onStart() {
         super.onStart();
-        Location location = new LocationManager(this).getCurrentOrNextLocation();
+        Location location = locationManager.getCurrentOrNextLocation();
         cafeteriaViewModel.fetchCafeterias(location);
     }
 
@@ -153,7 +159,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
             cafeteriaId = intent.getIntExtra(Const.CAFETERIA_ID, 0);
         } else {
             // If we're not provided with a cafeteria ID, we choose the best matching cafeteria.
-            cafeteriaId = new CafeteriaManager(this).getBestMatchMensaId();
+            cafeteriaId = cafeteriaManager.getBestMatchMensaId();
         }
 
         updateCafeteriaSpinner(cafeteriaId);

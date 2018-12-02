@@ -38,7 +38,7 @@ import java.util.*
 abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity(),
         SharedPreferences.OnSharedPreferenceChangeListener {
 
-    protected val injector: AppComponent by lazy { app.appComponent }
+    val injector: AppComponent by lazy { app.appComponent }
 
     private val toolbar: Toolbar by lazy { findViewById<Toolbar>(R.id.main_toolbar) }
 

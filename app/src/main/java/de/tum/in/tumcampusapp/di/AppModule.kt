@@ -5,6 +5,8 @@ import dagger.Module
 import dagger.Provides
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
+import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
+import de.tum.`in`.tumcampusapp.component.ui.overview.CardsRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import javax.inject.Singleton
 
@@ -32,5 +34,17 @@ class AppModule(private val context: Context) {
     fun provideDatabase(
             context: Context
     ): TcaDb = TcaDb.getInstance(context)
+
+    @Singleton
+    @Provides
+    fun provideLocationManager(
+            context: Context
+    ): LocationManager = LocationManager(context)
+
+    @Singleton
+    @Provides
+    fun provideCardsRepository(
+            context: Context
+    ): CardsRepository = CardsRepository(context)
 
 }
