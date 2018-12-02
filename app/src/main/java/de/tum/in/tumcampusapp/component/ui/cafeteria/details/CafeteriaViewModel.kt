@@ -1,40 +1,32 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria.details
 
-import androidx.lifecycle.ViewModel
 import android.location.Location
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
-import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.Flowable
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
 
 /**
  * ViewModel for cafeterias.
  */
-class CafeteriaViewModel(private val localRepository: CafeteriaLocalRepository,
-                         private val remoteRepository: CafeteriaRemoteRepository,
-                         private val compositeDisposable: CompositeDisposable) : ViewModel() {
+class CafeteriaViewModel(
+        private val localRepository: CafeteriaLocalRepository
+) : ViewModel() {
 
     /**
      * Returns a flowable that emits a list of cafeterias from the local repository.
      */
-    fun getAllCafeterias(location: Location): Flowable<List<Cafeteria>> =
+    fun getAllCafeterias(location: Location): Flowable<List<Cafeteria>> = // TODO: LiveData
             localRepository.getAllCafeterias()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .map { transformCafeteria(it, location) }
                     .defaultIfEmpty(emptyList())
-
-    fun getCafeteriaWithMenus(cafeteriaId: Int): CafeteriaWithMenus {
-        return localRepository.getCafeteriaWithMenus(cafeteriaId)
-    }
 
     fun getCafeteriaMenus(id: Int, date: DateTime): Flowable<List<CafeteriaMenu>> {
         return Flowable
@@ -52,29 +44,6 @@ class CafeteriaViewModel(private val localRepository: CafeteriaLocalRepository,
                 .defaultIfEmpty(emptyList())
     }
 
-
-    /**
-     * Downloads cafeterias and stores them in the local repository.
-     *
-     * First checks whether a sync is necessary
-     * Then clears current cache
-     * Insert new cafeterias
-     * Lastly updates last sync
-     *
-     */
-    fun getCafeteriasFromService(force: Boolean): Boolean =
-            compositeDisposable.add(Observable.just(1)
-                    .filter { localRepository.getLastSync() == null || force }
-                    .subscribeOn(Schedulers.computation())
-                    .observeOn(Schedulers.io())
-                    .doOnNext { localRepository.clear() }
-                    .flatMap { remoteRepository.getAllCafeterias() }
-                    .doAfterNext { localRepository.updateLastSync() }
-                    .subscribe({ cafeteria ->
-                        cafeteria.forEach { localRepository.addCafeteria(it) }
-                    }, { throwable -> Utils.log(throwable) })
-            )
-
     /**
      * Adds the distance between user and cafeteria to model.
      */
@@ -85,4 +54,15 @@ class CafeteriaViewModel(private val localRepository: CafeteriaLocalRepository,
                 it.distance = results[0]
                 it
             }
+
+    class Factory(
+            private val localRepository: CafeteriaLocalRepository
+    ) : ViewModelProvider.Factory {
+
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return CafeteriaViewModel(localRepository) as T
+        }
+
+    }
+
 }

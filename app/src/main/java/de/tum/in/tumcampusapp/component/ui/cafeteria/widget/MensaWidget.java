@@ -29,18 +29,18 @@ public class MensaWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        CafeteriaLocalRepository localRepository =
+                new CafeteriaLocalRepository(TcaDb.getInstance(context));
+        CafeteriaManager mensaManager = new CafeteriaManager(context);
+
+        int cafeteriaId = mensaManager.getBestMatchMensaId();
+        Cafeteria cafeteria = localRepository.getCafeteria(cafeteriaId);
+
         for (int appWidgetId : appWidgetIds) {
             RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.mensa_widget);
 
-            // Set the header for the Widget layout
-            CafeteriaManager mensaManager = new CafeteriaManager(context);
-            CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
-            localRepository.setDb(TcaDb.getInstance(context));
-
-            int cafeteriaId = mensaManager.getBestMatchMensaId();
-            Cafeteria cafeteria = localRepository.getCafeteria(cafeteriaId);
-
             // TODO: Investigate how this can be null
+            // Set the header for the Widget layout
             if (cafeteria != null) {
                 rv.setTextViewText(R.id.mensa_widget_header, cafeteria.getName());
             }

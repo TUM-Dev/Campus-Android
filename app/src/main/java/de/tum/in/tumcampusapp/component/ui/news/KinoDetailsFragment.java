@@ -26,10 +26,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoLocalRepository;
-import de.tum.in.tumcampusapp.component.ui.news.repository.KinoRemoteRepository;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventHelper;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity;
@@ -69,9 +69,9 @@ public class KinoDetailsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        KinoLocalRepository.db = TcaDb.getInstance(context);
-        kinoViewModel = new KinoViewModel(
-                KinoLocalRepository.INSTANCE, KinoRemoteRepository.INSTANCE, disposables);
+        KinoLocalRepository localRepository = new KinoLocalRepository(TcaDb.getInstance(context));
+        KinoViewModel.Factory factory = new KinoViewModel.Factory(localRepository);
+        kinoViewModel = ViewModelProviders.of(this, factory).get(KinoViewModel.class);
     }
 
     @Override

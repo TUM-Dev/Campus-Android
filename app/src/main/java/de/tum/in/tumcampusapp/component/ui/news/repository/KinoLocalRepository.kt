@@ -7,28 +7,30 @@ import de.tum.`in`.tumcampusapp.utils.sync.model.Sync
 import io.reactivex.Flowable
 import org.joda.time.DateTime
 
-object KinoLocalRepository {
+class KinoLocalRepository(
+        private val database: TcaDb
+) {
 
-    private const val TIME_TO_SYNC = 1800
+    fun getLastSync() = database.syncDao().getSyncSince(Kino::class.java.name, TIME_TO_SYNC)
 
-    lateinit var db: TcaDb
+    fun updateLastSync() = database.syncDao().insert(Sync(Kino::class.java.name, DateTime.now()))
 
-    fun getLastSync() = db.syncDao().getSyncSince(Kino::class.java.name, TIME_TO_SYNC)
+    fun addKino(vararg kino: Kino) = database.kinoDao().insert(*kino)
 
-    fun updateLastSync() = db.syncDao().insert(Sync(Kino::class.java.name, DateTime.now()))
+    fun getAllKinos(): Flowable<List<Kino>> = database.kinoDao().all
 
-    fun addKino(kino: Kino) = db.kinoDao().insert(kino)
+    fun getLatestId(): String? = database.kinoDao().latestId
 
-    fun getAllKinos(): Flowable<List<Kino>> = db.kinoDao().all
+    fun getKinoByPosition(position: Int): Flowable<Kino> = database.kinoDao().getByPosition(position)
 
-    fun getLatestId(): String? = db.kinoDao().latestId
+    fun getEventByMovieId(movieId: String): Flowable<Event> = database.eventDao().getEventByMovie(movieId)
 
-    fun getKinoByPosition(position: Int): Flowable<Kino> = db.kinoDao().getByPosition(position)
+    fun getPositionByDate(date: String) = database.kinoDao().getPositionByDate(date)
 
-    fun getEventByMovieId(movieId: String): Flowable<Event> = db.eventDao().getEventByMovie(movieId)
+    fun getPositionById(id: String) = database.kinoDao().getPositionById(id)
 
-    fun getPositionByDate(date: String) = db.kinoDao().getPositionByDate(date)
-
-    fun getPositionById(id: String) = db.kinoDao().getPositionById(id)
+    companion object {
+        private const val TIME_TO_SYNC = 1800
+    }
 
 }

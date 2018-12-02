@@ -4,12 +4,12 @@ import android.os.Bundle;
 
 import java.util.List;
 
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ProgressActivity;
 import de.tum.in.tumcampusapp.component.ui.news.KinoViewModel;
 import de.tum.in.tumcampusapp.component.ui.news.repository.KinoLocalRepository;
-import de.tum.in.tumcampusapp.component.ui.news.repository.KinoRemoteRepository;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -36,10 +36,9 @@ public class KinoActivity extends ProgressActivity<Void> {
         super.onCreate(savedInstanceState);
         getWindow().setBackgroundDrawableResource(R.color.secondary_window_background);
 
-        KinoLocalRepository.db = TcaDb.getInstance(this);
-
-        KinoViewModel kinoViewModel = new KinoViewModel(
-                KinoLocalRepository.INSTANCE, KinoRemoteRepository.INSTANCE, disposables);
+        KinoLocalRepository localRepository = new KinoLocalRepository(TcaDb.getInstance(this));
+        KinoViewModel.Factory factory = new KinoViewModel.Factory(localRepository);
+        KinoViewModel kinoViewModel = ViewModelProviders.of(this, factory).get(KinoViewModel.class);
 
         String movieDate = getIntent().getStringExtra(Const.KINO_DATE);
         int movieId = getIntent().getIntExtra(Const.KINO_ID, -1);
@@ -55,6 +54,7 @@ public class KinoActivity extends ProgressActivity<Void> {
         int margin = getResources().getDimensionPixelSize(R.dimen.material_default_padding);
         mPager.setPageMargin(margin);
 
+        // TODO: Handle in ViewModel
         Disposable disposable = kinoViewModel
                 .getAllKinos()
                 .subscribe(this::showKinosOrPlaceholder, throwable -> {

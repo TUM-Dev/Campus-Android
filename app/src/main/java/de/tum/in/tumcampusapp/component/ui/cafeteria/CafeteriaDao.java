@@ -1,13 +1,12 @@
 package de.tum.in.tumcampusapp.component.ui.cafeteria;
 
+import java.util.List;
+
+import androidx.annotation.Nullable;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.annotation.Nullable;
-
-import java.util.List;
-
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
 import io.reactivex.Flowable;
 
@@ -24,7 +23,7 @@ public interface CafeteriaDao {
     void removeCache();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Cafeteria cafeteria);
+    void insert(Cafeteria... cafeteria);
 
     @Query("SELECT name FROM cafeteria WHERE id = :id")
     String getMensaNameFromId(int id);

@@ -3,9 +3,6 @@ package de.tum.in.tumcampusapp.component.ui.cafeteria.activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AlertDialog;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,8 +18,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.viewpager.widget.ViewPager;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuInflater;
@@ -31,7 +31,6 @@ import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSec
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.NetUtils;
@@ -77,18 +76,15 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         mViewPager = findViewById(R.id.pager);
 
         /*
-         *set pagelimit to avoid losing toggle button state.
-         *by default it's 1.
+         * Set page limit to avoid losing toggle button state.
+         * By default it's 1.
          */
         mViewPager.setOffscreenPageLimit(50);
 
-        CafeteriaRemoteRepository remoteRepository = CafeteriaRemoteRepository.INSTANCE;
-        remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(this));
+        CafeteriaLocalRepository localRepository = new CafeteriaLocalRepository(TcaDb.getInstance(this));
+        CafeteriaViewModel.Factory factory = new CafeteriaViewModel.Factory(localRepository);
 
-        CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
-        localRepository.setDb(TcaDb.getInstance(this));
-
-        cafeteriaViewModel = new CafeteriaViewModel(localRepository, remoteRepository, mDisposable);
+        cafeteriaViewModel = ViewModelProviders.of(this, factory).get(CafeteriaViewModel.class);
     }
 
     @Override
@@ -230,10 +226,10 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         }
 
         CafeteriaDetailsSectionsPagerAdapter mSectionsPagerAdapter
-                = new CafeteriaDetailsSectionsPagerAdapter(getSupportFragmentManager());
+                = new CafeteriaDetailsSectionsPagerAdapter(getSupportFragmentManager(), this);
         // Create the adapter that will return a fragment for each of the primary sections of the app.
         mViewPager.setAdapter(null); //unset the adapter for updating
-        mSectionsPagerAdapter.setCafeteriaId(this, mCafeteriaId);
+        mSectionsPagerAdapter.setCafeteriaId(mCafeteriaId);
         mViewPager.setAdapter(mSectionsPagerAdapter);
     }
 

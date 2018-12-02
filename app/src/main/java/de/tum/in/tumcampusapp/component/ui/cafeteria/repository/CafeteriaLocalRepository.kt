@@ -11,13 +11,11 @@ import org.joda.time.DateTime
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
-object CafeteriaLocalRepository {
-
-    private const val TIME_TO_SYNC = 604800
+class CafeteriaLocalRepository(
+        private val database: TcaDb
+) {
 
     private val executor: Executor = Executors.newSingleThreadExecutor()
-
-    lateinit var db: TcaDb
 
     fun getCafeteriaWithMenus(cafeteriaId: Int): CafeteriaWithMenus {
         return CafeteriaWithMenus(cafeteriaId).apply {
@@ -32,28 +30,34 @@ object CafeteriaLocalRepository {
     // Menu methods //
 
     fun getCafeteriaMenus(id: Int, date: DateTime): List<CafeteriaMenu> {
-        return db.cafeteriaMenuDao().getTypeNameFromDbCard(id, date)
+        return database.cafeteriaMenuDao().getTypeNameFromDbCard(id, date)
     }
 
-    fun getAllMenuDates(): List<DateTime> = db.cafeteriaMenuDao().allDates
+    fun getAllMenuDates(): List<DateTime> = database.cafeteriaMenuDao().allDates
 
 
     // Canteen methods //
 
-    fun getAllCafeterias(): Flowable<List<Cafeteria>> = db.cafeteriaDao().all
+    fun getAllCafeterias(): Flowable<List<Cafeteria>> = database.cafeteriaDao().all
 
-    fun getCafeteria(id: Int): Cafeteria? = db.cafeteriaDao().getById(id)
+    fun getCafeteria(id: Int): Cafeteria? = database.cafeteriaDao().getById(id)
 
-    fun addCafeteria(cafeteria: Cafeteria) = executor.execute { db.cafeteriaDao().insert(cafeteria) }
+    fun addCafeteria(vararg cafeteria: Cafeteria) = executor.execute {
+        database.cafeteriaDao().insert(*cafeteria)
+    }
 
 
     // Sync methods //
 
-    fun getLastSync() = db.syncDao().getSyncSince(CafeteriaManager::class.java.name, TIME_TO_SYNC)
+    fun getLastSync() = database.syncDao().getSyncSince(CafeteriaManager::class.java.name, TIME_TO_SYNC)
 
-    fun updateLastSync() = db.syncDao().insert(Sync(CafeteriaManager::class.java.name, DateTime.now()))
+    fun updateLastSync() = database.syncDao().insert(Sync(CafeteriaManager::class.java.name, DateTime.now()))
 
-    fun clear() = db.cafeteriaDao().removeCache()
+    fun clear() = database.cafeteriaDao().removeCache()
+
+    companion object {
+        private const val TIME_TO_SYNC = 604800
+    }
 
 }
 
