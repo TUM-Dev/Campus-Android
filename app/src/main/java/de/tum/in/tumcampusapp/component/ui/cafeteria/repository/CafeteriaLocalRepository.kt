@@ -10,8 +10,9 @@ import io.reactivex.Flowable
 import org.joda.time.DateTime
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
+import javax.inject.Inject
 
-class CafeteriaLocalRepository(
+class CafeteriaLocalRepository @Inject constructor(
         private val database: TcaDb
 ) {
 

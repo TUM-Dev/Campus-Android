@@ -15,8 +15,9 @@ import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
+import javax.inject.Inject
 
-class CafeteriaViewModel(
+class CafeteriaViewModel @Inject constructor(
         private val localRepository: CafeteriaLocalRepository
 ) : ViewModel() {
 
