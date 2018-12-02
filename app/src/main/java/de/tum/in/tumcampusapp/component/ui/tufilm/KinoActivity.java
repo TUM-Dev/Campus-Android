@@ -7,11 +7,9 @@ import java.util.List;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ProgressActivity;
-import de.tum.in.tumcampusapp.component.ui.ticket.EventsRemoteRepository;
-import de.tum.in.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
+import de.tum.in.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 
@@ -34,10 +32,8 @@ public class KinoActivity extends ProgressActivity<Void> {
 
         KinoLocalRepository localRepository =
                 new KinoLocalRepository(TcaDb.getInstance(this));
-        EventsRemoteRepository eventsRemoteRepository =
-                new EventsRemoteRepository(TUMCabeClient.getInstance(this));
 
-        KinoViewModel.Factory factory = new KinoViewModel.Factory(localRepository, eventsRemoteRepository);
+        KinoViewModel.Factory factory = new KinoViewModel.Factory(localRepository);
         KinoViewModel kinoViewModel = ViewModelProviders.of(this, factory).get(KinoViewModel.class);
 
         String movieDate = getIntent().getStringExtra(Const.KINO_DATE);
