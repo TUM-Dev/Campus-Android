@@ -7,15 +7,13 @@ import java.util.List;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ProgressActivity;
-import de.tum.in.tumcampusapp.component.ui.news.KinoViewModel;
-import de.tum.in.tumcampusapp.component.ui.news.repository.KinoLocalRepository;
+import de.tum.in.tumcampusapp.component.ui.ticket.EventsRemoteRepository;
+import de.tum.in.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.Utils;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 /**
  * Activity to show TU Kino films
@@ -29,19 +27,22 @@ public class KinoActivity extends ProgressActivity<Void> {
         super(R.layout.activity_kino);
     }
 
-    private final CompositeDisposable disposables = new CompositeDisposable();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setBackgroundDrawableResource(R.color.secondary_window_background);
 
-        KinoLocalRepository localRepository = new KinoLocalRepository(TcaDb.getInstance(this));
-        KinoViewModel.Factory factory = new KinoViewModel.Factory(localRepository);
+        KinoLocalRepository localRepository =
+                new KinoLocalRepository(TcaDb.getInstance(this));
+        EventsRemoteRepository eventsRemoteRepository =
+                new EventsRemoteRepository(TUMCabeClient.getInstance(this));
+
+        KinoViewModel.Factory factory = new KinoViewModel.Factory(localRepository, eventsRemoteRepository);
         KinoViewModel kinoViewModel = ViewModelProviders.of(this, factory).get(KinoViewModel.class);
 
         String movieDate = getIntent().getStringExtra(Const.KINO_DATE);
         int movieId = getIntent().getIntExtra(Const.KINO_ID, -1);
+
         if (movieDate != null) {
             startPosition = kinoViewModel.getPositionByDate(movieDate);
         } else if (movieId != -1) {
@@ -54,15 +55,8 @@ public class KinoActivity extends ProgressActivity<Void> {
         int margin = getResources().getDimensionPixelSize(R.dimen.material_default_padding);
         mPager.setPageMargin(margin);
 
-        // TODO: Handle in ViewModel
-        Disposable disposable = kinoViewModel
-                .getAllKinos()
-                .subscribe(this::showKinosOrPlaceholder, throwable -> {
-                    Utils.log(throwable);
-                    showError(R.string.error_something_wrong);
-                });
-
-        disposables.add(disposable);
+        kinoViewModel.getKinos().observe(this, this::showKinosOrPlaceholder);
+        kinoViewModel.getError().observe(this, this::showError);
     }
 
     private void showKinosOrPlaceholder(List<Kino> kinos) {
@@ -74,12 +68,6 @@ public class KinoActivity extends ProgressActivity<Void> {
         KinoAdapter kinoAdapter = new KinoAdapter(getSupportFragmentManager(), kinos);
         mPager.setAdapter(kinoAdapter);
         mPager.setCurrentItem(startPosition);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        disposables.dispose();
     }
 
 }

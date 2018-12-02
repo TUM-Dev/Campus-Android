@@ -37,6 +37,7 @@ import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -240,5 +241,8 @@ public interface TUMCabeAPIService {
 
     @GET(API_EVENTS + API_TICKET + "status/{event}")
     Call<List<TicketStatus>> getTicketStats(@Path("event") int event);
+
+    @GET(API_EVENTS + API_TICKET + "status/{event}")
+    Single<List<TicketStatus>> getTicketStatsRx(@Path("event") int event);
 
 }

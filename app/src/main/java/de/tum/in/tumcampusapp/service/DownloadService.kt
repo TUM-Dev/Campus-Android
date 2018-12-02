@@ -14,8 +14,8 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
-import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoLocalRepository
-import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
 import de.tum.`in`.tumcampusapp.database.TcaDb
