@@ -4,8 +4,6 @@ import android.view.View
 import androidx.viewpager.widget.ViewPager
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.TestApp
-import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
-import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoActivity
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoAdapter
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoDao
@@ -36,13 +34,11 @@ class KinoActivityTest {
     private lateinit var dao: KinoDao
     private lateinit var viewModel: KinoViewModel
 
-
     @Before
     fun setUp() {
         val db =  TcaDb.getInstance(RuntimeEnvironment.application)
         val localRepository = KinoLocalRepository(db)
-        val eventsRepository = EventsRemoteRepository(TUMCabeClient.getInstance(RuntimeEnvironment.application))
-        viewModel = KinoViewModel(localRepository, eventsRepository)
+        viewModel = KinoViewModel(localRepository)
         RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
         RxJavaPlugins.setComputationSchedulerHandler { Schedulers.trampoline()  }
         RxJavaPlugins.setNewThreadSchedulerHandler { Schedulers.trampoline()  }
