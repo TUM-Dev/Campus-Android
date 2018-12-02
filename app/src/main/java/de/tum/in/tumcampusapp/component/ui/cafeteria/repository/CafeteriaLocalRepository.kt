@@ -7,10 +7,15 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.sync.model.Sync
 import io.reactivex.Flowable
-import org.jetbrains.anko.doAsync
 import org.joda.time.DateTime
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 
-class CafeteriaLocalRepository(private val db: TcaDb) {
+class CafeteriaLocalRepository(
+        private val database: TcaDb
+) {
+
+    private val executor: Executor = Executors.newSingleThreadExecutor()
 
     fun getCafeteriaWithMenus(cafeteriaId: Int): CafeteriaWithMenus {
         return CafeteriaWithMenus(cafeteriaId).apply {
@@ -25,34 +30,32 @@ class CafeteriaLocalRepository(private val db: TcaDb) {
     // Menu methods //
 
     fun getCafeteriaMenus(id: Int, date: DateTime): List<CafeteriaMenu> {
-        return db.cafeteriaMenuDao().getTypeNameFromDbCard(id, date)
+        return database.cafeteriaMenuDao().getTypeNameFromDbCard(id, date)
     }
 
-    fun getAllMenuDates(): List<DateTime> = db.cafeteriaMenuDao().allDates
+    fun getAllMenuDates(): List<DateTime> = database.cafeteriaMenuDao().allDates
 
 
     // Canteen methods //
 
-    fun getAllCafeterias(): Flowable<List<Cafeteria>> = db.cafeteriaDao().all
+    fun getAllCafeterias(): Flowable<List<Cafeteria>> = database.cafeteriaDao().all
 
-    fun getCafeteria(id: Int): Cafeteria? = db.cafeteriaDao().getById(id)
+    fun getCafeteria(id: Int): Cafeteria? = database.cafeteriaDao().getById(id)
 
-    fun addCafeterias(cafeterias: List<Cafeteria>) {
-        doAsync {
-            db.cafeteriaDao().insert(*cafeterias.toTypedArray())
-        }
+    fun addCafeteria(vararg cafeteria: Cafeteria) = executor.execute {
+        database.cafeteriaDao().insert(*cafeteria)
     }
 
     // Sync methods //
 
-    fun getLastSync() = db.syncDao().getSyncSince(CafeteriaManager::class.java.name, TIME_TO_SYNC)
+    fun getLastSync() = database.syncDao().getSyncSince(CafeteriaManager::class.java.name, TIME_TO_SYNC)
 
-    fun updateLastSync() = db.syncDao().insert(Sync(CafeteriaManager::class.java.name, DateTime.now()))
+    fun updateLastSync() = database.syncDao().insert(Sync(CafeteriaManager::class.java.name, DateTime.now()))
 
-    fun clear() = db.cafeteriaDao().removeCache()
+    fun clear() = database.cafeteriaDao().removeCache()
 
     companion object {
-        private const val TIME_TO_SYNC = 604800
+        private const val TIME_TO_SYNC = 604800 // 1 week
     }
 
 }

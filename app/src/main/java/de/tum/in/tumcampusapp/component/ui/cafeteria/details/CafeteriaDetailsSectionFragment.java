@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuCard;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuInflater;
@@ -94,8 +95,9 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 
         TcaDb database = TcaDb.getInstance(requireContext());
         CafeteriaLocalRepository localRepository = new CafeteriaLocalRepository(database);
+        CafeteriaViewModel.Factory factory = new CafeteriaViewModel.Factory(localRepository);
 
-        cafeteriaViewModel = new CafeteriaViewModel(localRepository);
+        cafeteriaViewModel = ViewModelProviders.of(this, factory).get(CafeteriaViewModel.class);
     }
 
     @Override
@@ -121,4 +123,5 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 
         cafeteriaViewModel.fetchCafeteriaMenus(cafeteriaId, menuDate);
     }
+
 }

@@ -29,58 +29,12 @@ import de.tum.in.tumcampusapp.utils.Utils;
 public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
 
     private Context mContext;
-    private LocationManager locationManager;
-    private CafeteriaLocalRepository localRepository;
+    private final CafeteriaLocalRepository localRepository;
 
-    /**
-     * Constructor, open/create database, create table if necessary
-     *
-     * @param context Context
-     */
     public CafeteriaManager(Context context) {
         mContext = context;
-        locationManager = new LocationManager(context);
-        localRepository = new CafeteriaLocalRepository(TcaDb.getInstance(context));
-    }
-
-    @Override
-    public boolean hasNotificationsEnabled() {
-        return Utils.getSettingBool(mContext, "card_cafeteria_phone", true);
-    }
-
-    /**
-     * Returns a list of {@link CafeteriaMenu}s of the best-matching cafeteria. If there's no
-     * best-matching cafeteria, it returns an empty list.
-     */
-    public List<CafeteriaMenu> getBestMatchCafeteriaMenus() {
-        int cafeteriaId = getBestMatchMensaId();
-        if (cafeteriaId == -1) {
-            return Collections.emptyList();
-        }
-
-        return getCafeteriaMenusByCafeteriaId(cafeteriaId);
-    }
-
-    public int getBestMatchMensaId() {
-        // Choose which mensa should be shown
-        int cafeteriaId = locationManager.getCafeteria();
-        if (cafeteriaId == -1) {
-            Utils.log("could not get a Cafeteria from locationManager!");
-        }
-        return cafeteriaId;
-    }
-
-    private List<CafeteriaMenu> getCafeteriaMenusByCafeteriaId(int cafeteriaId) {
-        CafeteriaWithMenus cafeteria = new CafeteriaWithMenus(cafeteriaId);
-
-        List<DateTime> menuDates = localRepository.getAllMenuDates();
-        cafeteria.setMenuDates(menuDates);
-
-        DateTime nextMenuDate = cafeteria.getNextMenuDate();
-        List<CafeteriaMenu> menus = localRepository.getCafeteriaMenus(cafeteriaId, nextMenuDate);
-        cafeteria.setMenus(menus);
-
-        return cafeteria.getMenus();
+        TcaDb db = TcaDb.getInstance(context);
+        localRepository = new CafeteriaLocalRepository(db);
     }
 
     @NotNull
@@ -100,6 +54,11 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
         return results;
     }
 
+    @Override
+    public boolean hasNotificationsEnabled() {
+        return Utils.getSettingBool(mContext, "card_cafeteria_phone", true);
+    }
+
     @Nullable
     private CafeteriaWithMenus getCafeteriaWithMenus() {
         // Choose which mensa should be shown
@@ -107,8 +66,42 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
         if (cafeteriaId == -1) {
             return null;
         }
-
         return localRepository.getCafeteriaWithMenus(cafeteriaId);
+    }
+
+    /**
+     * Returns a list of {@link CafeteriaMenu}s of the best-matching cafeteria. If there's no
+     * best-matching cafeteria, it returns an empty list.
+     */
+    public List<CafeteriaMenu> getBestMatchCafeteriaMenus() {
+        int cafeteriaId = getBestMatchMensaId();
+        if (cafeteriaId == -1) {
+            return Collections.emptyList();
+        }
+
+        return getCafeteriaMenusByCafeteriaId(cafeteriaId);
+    }
+
+    public int getBestMatchMensaId() {
+        // Choose which mensa should be shown
+        int cafeteriaId = new LocationManager(mContext).getCafeteria();
+        if (cafeteriaId == -1) {
+            Utils.log("could not get a Cafeteria from locationManager!");
+        }
+        return cafeteriaId;
+    }
+
+    private List<CafeteriaMenu> getCafeteriaMenusByCafeteriaId(int cafeteriaId) {
+        CafeteriaWithMenus cafeteria = new CafeteriaWithMenus(cafeteriaId);
+
+        List<DateTime> menuDates = localRepository.getAllMenuDates();
+        cafeteria.setMenuDates(menuDates);
+
+        DateTime nextMenuDate = cafeteria.getNextMenuDate();
+        List<CafeteriaMenu> menus = localRepository.getCafeteriaMenus(cafeteriaId, nextMenuDate);
+        cafeteria.setMenus(menus);
+
+        return cafeteria.getMenus();
     }
 
 }

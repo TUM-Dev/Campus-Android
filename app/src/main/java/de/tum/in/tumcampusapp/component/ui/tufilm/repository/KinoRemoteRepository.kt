@@ -1,35 +1,35 @@
-package de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository
+package de.tum.`in`.tumcampusapp.component.ui.tufilm.repository
 
 import android.annotation.SuppressLint
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.utils.Utils
-import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class CafeteriaRemoteRepository(
+class KinoRemoteRepository(
         private val tumCabeClient: TUMCabeClient,
-        private val localRepository: CafeteriaLocalRepository
+        private val localRepository: KinoLocalRepository
 ) {
 
     /**
-     * Downloads cafeterias and stores them in the local repository.
+     * Downloads kinos and stores them in the local repository.
      *
      * First checks whether a sync is necessary
      * Then clears current cache
-     * Insert new cafeterias
+     * Insert new kinos
      * Lastly updates last sync
      *
      */
     @SuppressLint("CheckResult")
-    fun fetchCafeterias(force: Boolean) {
-        Observable.just(1)
+    fun fetchKinos(force: Boolean) {
+        val latestId = localRepository.getLatestId() ?: "0"
+        tumCabeClient.getKinos(latestId)
                 .filter { localRepository.getLastSync() == null || force }
                 .subscribeOn(Schedulers.io())
-                .doOnNext { localRepository.clear() }
-                .flatMap { tumCabeClient.cafeterias }
+                .observeOn(AndroidSchedulers.mainThread())
                 .doAfterNext { localRepository.updateLastSync() }
                 .map { it.toTypedArray() }
-                .subscribe(localRepository::addCafeteria, Utils::log)
+                .subscribe(localRepository::addKino, Utils::log)
     }
 
 }

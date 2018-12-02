@@ -28,22 +28,25 @@ import de.tum.in.tumcampusapp.utils.Const;
 public class MensaWidget extends AppWidgetProvider {
 
     private CafeteriaLocalRepository localRepository;
+    private CafeteriaManager mensaManager;
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+        localRepository = new CafeteriaLocalRepository(TcaDb.getInstance(context));
+        mensaManager = new CafeteriaManager(context);
+    }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        TcaDb tcaDb = TcaDb.getInstance(context);
-        localRepository = new CafeteriaLocalRepository(tcaDb);
+        int cafeteriaId = mensaManager.getBestMatchMensaId();
+        Cafeteria cafeteria = localRepository.getCafeteria(cafeteriaId);
 
         for (int appWidgetId : appWidgetIds) {
             RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.mensa_widget);
 
-            // Set the header for the Widget layout
-            CafeteriaManager mensaManager = new CafeteriaManager(context);
-
-            int cafeteriaId = mensaManager.getBestMatchMensaId();
-            Cafeteria cafeteria = localRepository.getCafeteria(cafeteriaId);
-
             // TODO: Investigate how this can be null
+            // Set the header for the Widget layout
             if (cafeteria != null) {
                 rv.setTextViewText(R.id.mensa_widget_header, cafeteria.getName());
             }

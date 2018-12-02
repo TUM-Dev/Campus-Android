@@ -53,6 +53,7 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -406,8 +407,8 @@ public final class TUMCabeClient {
         service.retrieveEphemeralKey(verification).enqueue(cb);
     }
 
-    public void fetchTicketStats(int event, Callback<List<TicketStatus>> cb) {
-        service.getTicketStats(event).enqueue(cb);
+    public Single<List<TicketStatus>> fetchTicketStats(int event) {
+        return service.getTicketStats(event);
     }
 
 }

@@ -4,16 +4,14 @@ import android.view.View
 import androidx.viewpager.widget.ViewPager
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.TestApp
-import de.tum.`in`.tumcampusapp.component.ui.news.KinoViewModel
-import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoLocalRepository
-import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoActivity
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoAdapter
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoDao
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoViewModel
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.model.Kino
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import io.reactivex.android.plugins.RxAndroidPlugins
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import org.assertj.core.api.Assertions.assertThat
@@ -36,12 +34,11 @@ class KinoActivityTest {
     private lateinit var dao: KinoDao
     private lateinit var viewModel: KinoViewModel
 
-
     @Before
     fun setUp() {
         val db =  TcaDb.getInstance(RuntimeEnvironment.application)
-        KinoLocalRepository.db = db
-        viewModel = KinoViewModel(KinoLocalRepository, KinoRemoteRepository, CompositeDisposable())
+        val localRepository = KinoLocalRepository(db)
+        viewModel = KinoViewModel(localRepository)
         RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
         RxJavaPlugins.setComputationSchedulerHandler { Schedulers.trampoline()  }
         RxJavaPlugins.setNewThreadSchedulerHandler { Schedulers.trampoline()  }
@@ -100,7 +97,7 @@ class KinoActivityTest {
      * Since we have an immediate scheduler which runs on the same thread and thus can only execute actions sequentially, this will
      * make the test wait until any previous tasks (like the activity waiting for kinos) are done.
      */
-    private fun waitForUI(){
+    private fun waitForUI() {
         viewModel.getAllKinos().blockingFirst()
     }
 

@@ -20,6 +20,7 @@ import org.joda.time.DateTime
 class CafeteriaNotificationProvider(context: Context) : NotificationProvider(context) {
 
     private val cafeteriaMenuManager = CafeteriaMenuManager(context)
+    private val cafeteriaLocalRepository = CafeteriaLocalRepository(TcaDb.getInstance(context))
 
     override fun getNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_CAFETERIA)
@@ -37,8 +38,7 @@ class CafeteriaNotificationProvider(context: Context) : NotificationProvider(con
             return null
         }
 
-        val localRepo = CafeteriaLocalRepository(TcaDb.getInstance(context))
-        val cafeteria = localRepo.getCafeteriaWithMenus(cafeteriaId)
+        val cafeteria = cafeteriaLocalRepository.getCafeteriaWithMenus(cafeteriaId)
         val menus = cafeteria.menus.filter { it.menuType != MenuType.SIDE_DISH }
         val intent = cafeteria.getIntent(context)
 
