@@ -70,8 +70,6 @@ public class KinoDetailsFragment extends Fragment {
         KinoDetailsViewModel.Factory factory = new
                 KinoDetailsViewModel.Factory(localRepository, eventsRemoteRepository);
 
-        // We use requireActivity() so that ViewModelProviders reuses the ViewModel across instances
-        // of KinoDetailsFragment.
         kinoViewModel = ViewModelProviders.of(this, factory).get(KinoDetailsViewModel.class);
         kinoViewModel.getKino().observe(this, this::showMovieDetails);
         kinoViewModel.getEvent().observe(this, this::showEventTicketDetails);
