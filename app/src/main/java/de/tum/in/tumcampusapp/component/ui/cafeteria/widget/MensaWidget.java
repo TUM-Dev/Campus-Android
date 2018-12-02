@@ -28,13 +28,17 @@ import de.tum.in.tumcampusapp.utils.Const;
 public class MensaWidget extends AppWidgetProvider {
 
     private CafeteriaLocalRepository localRepository;
+    private CafeteriaManager mensaManager;
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+        localRepository = new CafeteriaLocalRepository(TcaDb.getInstance(context));
+        mensaManager = new CafeteriaManager(context);
+    }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        CafeteriaLocalRepository localRepository =
-                new CafeteriaLocalRepository(TcaDb.getInstance(context));
-        CafeteriaManager mensaManager = new CafeteriaManager(context);
-
         int cafeteriaId = mensaManager.getBestMatchMensaId();
         Cafeteria cafeteria = localRepository.getCafeteria(cafeteriaId);
 

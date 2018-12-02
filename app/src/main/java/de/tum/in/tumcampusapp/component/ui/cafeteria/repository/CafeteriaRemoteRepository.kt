@@ -22,14 +22,14 @@ class CafeteriaRemoteRepository(
      */
     @SuppressLint("CheckResult")
     fun fetchCafeterias(force: Boolean) {
-            Observable.just(1)
-                    .filter { localRepository.getLastSync() == null || force }
-                    .subscribeOn(Schedulers.io())
-                    .doOnNext { localRepository.clear() }
-                    .flatMap { tumCabeClient.cafeterias }
-                    .doAfterNext { localRepository.updateLastSync() }
-                    .map { it.toTypedArray() }
-                    .subscribe(localRepository::addCafeteria, Utils::log)
+        Observable.just(1)
+                .filter { localRepository.getLastSync() == null || force }
+                .subscribeOn(Schedulers.io())
+                .doOnNext { localRepository.clear() }
+                .flatMap { tumCabeClient.cafeterias }
+                .doAfterNext { localRepository.updateLastSync() }
+                .map { it.toTypedArray() }
+                .subscribe(localRepository::addCafeteria, Utils::log)
     }
 
 }
