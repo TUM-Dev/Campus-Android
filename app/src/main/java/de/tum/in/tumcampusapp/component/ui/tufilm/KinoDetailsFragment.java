@@ -52,7 +52,7 @@ public class KinoDetailsFragment extends Fragment {
     private EventsController eventsController;
 
     @Inject
-    Provider<KinoViewModel> viewModelProvider;
+    Provider<KinoDetailsViewModel> viewModelProvider;
 
     private KinoDetailsViewModel kinoViewModel;
 
@@ -73,7 +73,7 @@ public class KinoDetailsFragment extends Fragment {
                 .build()
                 .inject(this);
 
-        ViewModelFactory<KinoViewModel> factory = new ViewModelFactory<>(viewModelProvider);
+        ViewModelFactory<KinoDetailsViewModel> factory = new ViewModelFactory<>(viewModelProvider);
         kinoViewModel = ViewModelProviders.of(this, factory).get(KinoDetailsViewModel.class);
 
         kinoViewModel.getKino().observe(this, this::showMovieDetails);

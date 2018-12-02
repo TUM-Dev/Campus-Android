@@ -13,23 +13,30 @@ import org.joda.time.format.DateTimeFormat;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuCard;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuInflater;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.di.CafeteriaModule;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository;
-import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.di.ViewModelFactory;
 import de.tum.in.tumcampusapp.utils.Const;
 
 /**
  * Fragment for each cafeteria-page.
  */
 public class CafeteriaDetailsSectionFragment extends Fragment {
+
+    @Inject
+    Provider<CafeteriaViewModel> viewModelProvider;
 
     private CafeteriaViewModel cafeteriaViewModel;
 
@@ -90,13 +97,15 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        ((BaseActivity) requireActivity()).getInjector()
+                .cafeteriaComponent()
+                .cafeteriaModule(new CafeteriaModule())
+                .build()
+                .inject(this);
 
-        TcaDb database = TcaDb.getInstance(requireContext());
-        CafeteriaLocalRepository localRepository = new CafeteriaLocalRepository(database);
-        CafeteriaViewModel.Factory factory = new CafeteriaViewModel.Factory(localRepository);
-
+        ViewModelFactory<CafeteriaViewModel> factory = new ViewModelFactory<>(viewModelProvider);
         cafeteriaViewModel = ViewModelProviders.of(this, factory).get(CafeteriaViewModel.class);
     }
 

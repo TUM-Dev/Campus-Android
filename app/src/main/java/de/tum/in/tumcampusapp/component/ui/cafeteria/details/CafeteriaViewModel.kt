@@ -105,15 +105,4 @@ class CafeteriaViewModel @Inject constructor(
         compositeDisposable.dispose()
     }
 
-    class Factory(
-            private val localRepository: CafeteriaLocalRepository
-    ) : ViewModelProvider.Factory {
-
-        @Suppress("UNCHECKED_CAST") // no good way around this
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return CafeteriaViewModel(localRepository) as T
-        }
-
-    }
-
 }
