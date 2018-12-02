@@ -27,15 +27,18 @@ import de.tum.in.tumcampusapp.utils.Const;
  */
 public class MensaWidget extends AppWidgetProvider {
 
+    private CafeteriaLocalRepository localRepository;
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        TcaDb tcaDb = TcaDb.getInstance(context);
+        localRepository = new CafeteriaLocalRepository(tcaDb);
+
         for (int appWidgetId : appWidgetIds) {
             RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.mensa_widget);
 
             // Set the header for the Widget layout
             CafeteriaManager mensaManager = new CafeteriaManager(context);
-            CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
-            localRepository.setDb(TcaDb.getInstance(context));
 
             int cafeteriaId = mensaManager.getBestMatchMensaId();
             Cafeteria cafeteria = localRepository.getCafeteria(cafeteriaId);
@@ -68,5 +71,3 @@ public class MensaWidget extends AppWidgetProvider {
     }
 
 }
-
-

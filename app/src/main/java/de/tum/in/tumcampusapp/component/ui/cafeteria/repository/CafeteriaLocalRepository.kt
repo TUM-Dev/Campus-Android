@@ -7,17 +7,10 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.sync.model.Sync
 import io.reactivex.Flowable
+import org.jetbrains.anko.doAsync
 import org.joda.time.DateTime
-import java.util.concurrent.Executor
-import java.util.concurrent.Executors
 
-object CafeteriaLocalRepository {
-
-    private const val TIME_TO_SYNC = 604800
-
-    private val executor: Executor = Executors.newSingleThreadExecutor()
-
-    lateinit var db: TcaDb
+class CafeteriaLocalRepository(private val db: TcaDb) {
 
     fun getCafeteriaWithMenus(cafeteriaId: Int): CafeteriaWithMenus {
         return CafeteriaWithMenus(cafeteriaId).apply {
@@ -44,8 +37,11 @@ object CafeteriaLocalRepository {
 
     fun getCafeteria(id: Int): Cafeteria? = db.cafeteriaDao().getById(id)
 
-    fun addCafeteria(cafeteria: Cafeteria) = executor.execute { db.cafeteriaDao().insert(cafeteria) }
-
+    fun addCafeterias(cafeterias: List<Cafeteria>) {
+        doAsync {
+            db.cafeteriaDao().insert(*cafeterias.toTypedArray())
+        }
+    }
 
     // Sync methods //
 
@@ -55,6 +51,8 @@ object CafeteriaLocalRepository {
 
     fun clear() = db.cafeteriaDao().removeCache()
 
+    companion object {
+        private const val TIME_TO_SYNC = 604800
+    }
+
 }
-
-

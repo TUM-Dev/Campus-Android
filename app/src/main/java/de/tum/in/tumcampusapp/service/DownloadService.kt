@@ -10,7 +10,6 @@ import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.app.model.UploadStatus
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
@@ -36,7 +35,7 @@ import java.io.IOException
 class DownloadService : JobIntentService() {
 
     private lateinit var broadcastManager: LocalBroadcastManager
-    private lateinit var cafeteriaViewModel: CafeteriaViewModel
+    private lateinit var cafeteriaRemoteRepository: CafeteriaRemoteRepository
 
     private lateinit var kinoViewModel: KinoViewModel
     private lateinit var topNewsViewModel: TopNewsViewModel
@@ -55,12 +54,8 @@ class DownloadService : JobIntentService() {
         tumCabeClient = TUMCabeClient.getInstance(this)
         database = TcaDb.getInstance(this)
 
-        val remoteRepository = CafeteriaRemoteRepository
-        remoteRepository.tumCabeClient = tumCabeClient
-
-        val localRepository = CafeteriaLocalRepository
-        localRepository.db = database
-        cafeteriaViewModel = CafeteriaViewModel(localRepository, remoteRepository, disposable)
+        val localRepository = CafeteriaLocalRepository(database)
+        cafeteriaRemoteRepository = CafeteriaRemoteRepository(tumCabeClient, localRepository)
 
         // Init sync table
         KinoLocalRepository.db = database
@@ -111,7 +106,7 @@ class DownloadService : JobIntentService() {
 
     /**
      * asks to verify private key, uploads fcm token and obfuscated ids (if missing)
-    */
+     */
     private fun uploadMissingIds() {
         val lrzId = Utils.getSetting(this, Const.LRZ_ID, "")
 
@@ -143,7 +138,7 @@ class DownloadService : JobIntentService() {
 
     private fun downloadCafeterias(force: Boolean): Boolean {
         CafeteriaMenuManager(this).downloadMenus(force)
-        cafeteriaViewModel.getCafeteriasFromService(force)
+        cafeteriaRemoteRepository.fetchCafeterias(force)
         return true
     }
 
