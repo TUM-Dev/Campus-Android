@@ -240,9 +240,6 @@ public interface TUMCabeAPIService {
     Call<HashMap<String, Object>> retrieveEphemeralKey(@Body TUMCabeVerification verification);
 
     @GET(API_EVENTS + API_TICKET + "status/{event}")
-    Call<List<TicketStatus>> getTicketStats(@Path("event") int event);
-
-    @GET(API_EVENTS + API_TICKET + "status/{event}")
-    Single<List<TicketStatus>> getTicketStatsRx(@Path("event") int event);
+    Single<List<TicketStatus>> getTicketStats(@Path("event") int event);
 
 }

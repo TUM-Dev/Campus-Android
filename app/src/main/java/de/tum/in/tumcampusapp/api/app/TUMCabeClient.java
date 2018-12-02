@@ -407,12 +407,8 @@ public final class TUMCabeClient {
         service.retrieveEphemeralKey(verification).enqueue(cb);
     }
 
-    public void fetchTicketStats(int event, Callback<List<TicketStatus>> cb) {
-        service.getTicketStats(event).enqueue(cb);
-    }
-
     public Single<List<TicketStatus>> fetchTicketStats(int event) {
-        return service.getTicketStatsRx(event);
+        return service.getTicketStats(event);
     }
 
 }
