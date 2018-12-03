@@ -1,11 +1,15 @@
 package de.tum.`in`.tumcampusapp.di
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
+import de.tum.`in`.tumcampusapp.component.ui.news.RealTopNewsStore
+import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsStore
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardsRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import javax.inject.Singleton
@@ -16,6 +20,18 @@ class AppModule(private val context: Context) {
     @Singleton
     @Provides
     fun provideContext(): Context = context
+
+    @Singleton
+    @Provides
+    fun provideSharedPreferences(
+            context: Context
+    ): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+
+    @Singleton
+    @Provides
+    fun provideTopNewsStore(
+            sharedPrefs: SharedPreferences
+    ): TopNewsStore = RealTopNewsStore(sharedPrefs)
 
     @Singleton
     @Provides

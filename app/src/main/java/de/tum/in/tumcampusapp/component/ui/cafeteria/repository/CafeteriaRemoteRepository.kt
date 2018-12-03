@@ -5,8 +5,9 @@ import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class CafeteriaRemoteRepository(
+class CafeteriaRemoteRepository @Inject constructor(
         private val tumCabeClient: TUMCabeClient,
         private val localRepository: CafeteriaLocalRepository
 ) {
