@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
+import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
@@ -62,5 +63,11 @@ class AppModule(private val context: Context) {
     fun provideCardsRepository(
             context: Context
     ): CardsRepository = CardsRepository(context)
+
+    @Singleton
+    @Provides
+    fun provideAuthenticationManager(
+            context: Context
+    ): AuthenticationManager = AuthenticationManager(context)
 
 }

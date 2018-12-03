@@ -1,11 +1,15 @@
 package de.tum.`in`.tumcampusapp.service.di
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
 import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsStore
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
@@ -34,5 +38,20 @@ class DownloadModule {
     fun provideCafeteriaLocalRepository(
             database: TcaDb
     ): CafeteriaLocalRepository = CafeteriaLocalRepository(database)
+
+    @Provides
+    fun provideEventsController(
+            context: Context
+    ): EventsController = EventsController(context)
+
+    @Provides
+    fun provideNewsController(
+            context: Context
+    ): NewsController = NewsController(context)
+
+    @Provides
+    fun provideCafeteriaMenuManager(
+            context: Context
+    ): CafeteriaMenuManager = CafeteriaMenuManager(context)
 
 }

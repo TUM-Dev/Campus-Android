@@ -7,6 +7,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
@@ -43,6 +45,7 @@ public class EventsController implements ProvidesCard {
      *
      * @param context Context
      */
+    @Inject
     public EventsController(Context context) {
         this.context = context;
         TcaDb db = TcaDb.getInstance(context);

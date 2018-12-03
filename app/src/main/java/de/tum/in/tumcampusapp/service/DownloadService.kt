@@ -51,6 +51,18 @@ class DownloadService : JobIntentService() {
     @Inject
     lateinit var cafeteriaRemoteRepository: CafeteriaRemoteRepository
 
+    @Inject
+    lateinit var eventsController: EventsController
+
+    @Inject
+    lateinit var newsController: NewsController
+
+    @Inject
+    lateinit var authenticationManager: AuthenticationManager
+
+    @Inject
+    lateinit var cafeteriaMenuManager: CafeteriaMenuManager
+
     private val disposable = CompositeDisposable()
 
     override fun onCreate() {
@@ -112,7 +124,7 @@ class DownloadService : JobIntentService() {
         // upload FCM Token if not uploaded or invalid
         if (uploadStatus.fcmToken != UploadStatus.UPLOADED) {
             Utils.log("upload fcm token")
-            AuthenticationManager(this).tryToUploadFcmToken()
+            authenticationManager.tryToUploadFcmToken()
         }
 
         if (lrzId.isEmpty()) {
@@ -129,11 +141,11 @@ class DownloadService : JobIntentService() {
         }
 
         // upload obfuscated ids
-        AuthenticationManager(this).uploadObfuscatedIds(uploadStatus)
+        authenticationManager.uploadObfuscatedIds(uploadStatus)
     }
 
     private fun downloadCafeterias(force: Boolean): Boolean {
-        CafeteriaMenuManager(this).downloadMenus(force)
+        cafeteriaMenuManager.downloadMenus(force)
         cafeteriaRemoteRepository.fetchCafeterias(force)
         return true
     }
@@ -144,12 +156,12 @@ class DownloadService : JobIntentService() {
     }
 
     private fun downloadNews(force: Boolean): Boolean {
-        NewsController(this).downloadFromExternal(force)
+        newsController.downloadFromExternal(force)
         return true
     }
 
     private fun downloadEvents(): Boolean {
-        EventsController(this).downloadFromService()
+        eventsController.downloadFromService()
         return true
     }
 
