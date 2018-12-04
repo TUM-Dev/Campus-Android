@@ -9,6 +9,10 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocal
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
 
+/**
+ * This module provides dependencies needed in the cafeteria functionality, for instance the
+ * [CafeteriaManager] and the data repositories.
+ */
 @Module
 class CafeteriaModule {
 

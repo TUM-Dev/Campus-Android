@@ -15,6 +15,12 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.CardsRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import javax.inject.Singleton
 
+/**
+ * This module provides dependencies that are needed throughout the entire app, for instance the
+ * database or the Retrofit clients.
+ *
+ * @param context A [Context]
+ */
 @Module
 class AppModule(private val context: Context) {
 

@@ -20,15 +20,19 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        appComponent = DaggerAppComponent.builder()
-                .appModule(new AppModule(this))
-                .build();
-
+        buildAppComponent();
         setupPicasso();
         NotificationUtils.setupNotificationChannels(this);
         JodaTimeAndroid.init(this);
         setupStrictMode();
+    }
+
+    private void buildAppComponent() {
+        // We use Dagger 2 for dependency injection. The main AppModule and AppComponent can be
+        // found in the package "di".
+        appComponent = DaggerAppComponent.builder()
+                .appModule(new AppModule(this))
+                .build();
     }
 
     protected void setupPicasso() {

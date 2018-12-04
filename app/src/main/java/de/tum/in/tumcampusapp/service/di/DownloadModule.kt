@@ -14,6 +14,10 @@ import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoLocalReposito
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
 
+/**
+ * This module provides dependencies that are needed in the download functionality, namely
+ * [DownloadService]. It mainly includes data repositories and manager classes.
+ */
 @Module
 class DownloadModule {
 
