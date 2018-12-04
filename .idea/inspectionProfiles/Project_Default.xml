@@ -98,7 +98,7 @@
       <option name="useParameterizedTypeForCollectionMethods" value="true" />
       <option name="doNotWeakenToJavaLangObject" value="true" />
       <option name="onlyWeakentoInterface" value="true" />
-      <stopClasses>java.util.List,org.joda.time.LocalDate,de.tum.in.tumcampusapp.component.ui.barrierfree.BarrierfreeContactAdapter,java.lang.String,de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel.Factory</stopClasses>
+      <stopClasses>java.util.List,org.joda.time.LocalDate,de.tum.in.tumcampusapp.component.ui.barrierfree.BarrierfreeContactAdapter,java.lang.String,de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel.Factory,de.tum.in.tumcampusapp.di.ViewModelFactory</stopClasses>
     </inspection_tool>
     <inspection_tool class="UnnecessaryConstantArrayCreationExpression" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnnecessaryConstructor" enabled="true" level="WARNING" enabled_by_default="true" />

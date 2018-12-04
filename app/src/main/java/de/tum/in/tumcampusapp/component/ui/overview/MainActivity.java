@@ -14,6 +14,9 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
@@ -27,6 +30,7 @@ import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
+import de.tum.in.tumcampusapp.di.ViewModelFactory;
 import de.tum.in.tumcampusapp.service.DownloadService;
 import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -45,7 +49,10 @@ public class MainActivity extends BaseActivity
     private CardAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    private MainActivityViewModel mViewModel;
+    @Inject
+    Provider<MainActivityViewModel> viewModelProvider;
+
+    private MainActivityViewModel viewModel;
 
     ConnectivityManager connectivityManager;
     final NetworkCallback networkCallback = new NetworkCallback() {
@@ -62,6 +69,8 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getInjector().inject(this);
+
         connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         // Setup pull to refresh
@@ -98,11 +107,10 @@ public class MainActivity extends BaseActivity
         Intent service = new Intent(this, SilenceService.class);
         this.startService(service);
 
-        mViewModel = ViewModelProviders
-                .of(this)
-                .get(MainActivityViewModel.class);
+        ViewModelFactory<MainActivityViewModel> factory = new ViewModelFactory<>(viewModelProvider);
+        viewModel = ViewModelProviders.of(this, factory).get(MainActivityViewModel.class);
 
-        mViewModel.getCards().observe(this, cards -> {
+        viewModel.getCards().observe(this, cards -> {
             if (cards != null) {
                 onNewCardsAvailable(cards);
             }
@@ -168,7 +176,7 @@ public class MainActivity extends BaseActivity
      */
     @Override
     public void onRefresh() {
-        mViewModel.refreshCards();
+        viewModel.refreshCards();
     }
 
     /**

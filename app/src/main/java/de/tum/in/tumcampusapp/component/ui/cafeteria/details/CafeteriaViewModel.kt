@@ -15,8 +15,9 @@ import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
+import javax.inject.Inject
 
-class CafeteriaViewModel(
+class CafeteriaViewModel @Inject constructor(
         private val localRepository: CafeteriaLocalRepository
 ) : ViewModel() {
 
@@ -102,17 +103,6 @@ class CafeteriaViewModel(
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.dispose()
-    }
-
-    class Factory(
-            private val localRepository: CafeteriaLocalRepository
-    ) : ViewModelProvider.Factory {
-
-        @Suppress("UNCHECKED_CAST") // no good way around this
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return CafeteriaViewModel(localRepository) as T
-        }
-
     }
 
 }

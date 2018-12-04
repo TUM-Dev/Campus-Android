@@ -19,6 +19,9 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProviders;
@@ -30,9 +33,9 @@ import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuInflater;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.di.CafeteriaModule;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository;
-import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.di.ViewModelFactory;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
@@ -56,6 +59,15 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
     private ViewPager viewPager;
     private Spinner spinner;
 
+    @Inject
+    Provider<CafeteriaViewModel> viewModelProvider;
+
+    @Inject
+    LocationManager locationManager;
+
+    @Inject
+    CafeteriaManager cafeteriaManager;
+
     public CafeteriaActivity() {
         super(Const.CAFETERIAS, R.layout.activity_cafeteria);
     }
@@ -63,6 +75,10 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getInjector().cafeteriaComponent()
+                .cafeteriaModule(new CafeteriaModule())
+                .build()
+                .inject(this);
 
         viewPager = findViewById(R.id.pager);
         viewPager.setOffscreenPageLimit(50);
@@ -76,10 +92,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
         initCafeteriaSpinner();
         sectionsPagerAdapter = new CafeteriaDetailsSectionsPagerAdapter(getSupportFragmentManager());
 
-        TcaDb db = TcaDb.getInstance(this);
-        CafeteriaLocalRepository localRepository = new CafeteriaLocalRepository(db);
-
-        CafeteriaViewModel.Factory factory = new CafeteriaViewModel.Factory(localRepository);
+        ViewModelFactory<CafeteriaViewModel> factory = new ViewModelFactory<>(viewModelProvider);
         cafeteriaViewModel = ViewModelProviders.of(this, factory).get(CafeteriaViewModel.class);
 
         cafeteriaViewModel.getCafeterias().observe(this, this::updateCafeteria);
@@ -131,7 +144,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
     @Override
     protected void onStart() {
         super.onStart();
-        Location location = new LocationManager(this).getCurrentOrNextLocation();
+        Location location = locationManager.getCurrentOrNextLocation();
         cafeteriaViewModel.fetchCafeterias(location);
     }
 
@@ -146,7 +159,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
             cafeteriaId = intent.getIntExtra(Const.CAFETERIA_ID, 0);
         } else {
             // If we're not provided with a cafeteria ID, we choose the best matching cafeteria.
-            cafeteriaId = new CafeteriaManager(this).getBestMatchMensaId();
+            cafeteriaId = cafeteriaManager.getBestMatchMensaId();
         }
 
         updateCafeteriaSpinner(cafeteriaId);

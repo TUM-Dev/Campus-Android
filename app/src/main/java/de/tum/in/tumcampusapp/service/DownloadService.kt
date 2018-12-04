@@ -11,14 +11,14 @@ import de.tum.`in`.tumcampusapp.api.app.model.UploadStatus
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
-import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
+import de.tum.`in`.tumcampusapp.di.injector
+import de.tum.`in`.tumcampusapp.service.di.DownloadModule
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.NetUtils
@@ -26,6 +26,7 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.disposables.CompositeDisposable
 import org.jetbrains.anko.doAsync
 import java.io.IOException
+import javax.inject.Inject
 
 /**
  * Service used to download files from external pages
@@ -35,33 +36,41 @@ class DownloadService : JobIntentService() {
     private val broadcastManager: LocalBroadcastManager by lazy {
         LocalBroadcastManager.getInstance(this)
     }
+    @Inject
+    lateinit var tumCabeClient: TUMCabeClient
 
-    private val tumCabeClient: TUMCabeClient by lazy {
-        TUMCabeClient.getInstance(this)
-    }
+    @Inject
+    lateinit var database: TcaDb
 
-    private val database: TcaDb by lazy {
-        TcaDb.getInstance(this)
-    }
+    @Inject
+    lateinit var topNewsRemoteRepository: TopNewsRemoteRepository
 
-    private val topNewsRemoteRepository: TopNewsRemoteRepository by lazy {
-        TopNewsRemoteRepository(this, tumCabeClient)
-    }
+    @Inject
+    lateinit var kinoRemoteRepository: KinoRemoteRepository
 
-    private val kinoRemoteRepository: KinoRemoteRepository by lazy {
-        val localRepo = KinoLocalRepository(database)
-        KinoRemoteRepository(tumCabeClient, localRepo)
-    }
+    @Inject
+    lateinit var cafeteriaRemoteRepository: CafeteriaRemoteRepository
 
-    private val cafeteriaRemoteRepository: CafeteriaRemoteRepository by lazy {
-        val localRepo = CafeteriaLocalRepository(database)
-        CafeteriaRemoteRepository(tumCabeClient, localRepo)
-    }
+    @Inject
+    lateinit var eventsController: EventsController
+
+    @Inject
+    lateinit var newsController: NewsController
+
+    @Inject
+    lateinit var authenticationManager: AuthenticationManager
+
+    @Inject
+    lateinit var cafeteriaMenuManager: CafeteriaMenuManager
 
     private val disposable = CompositeDisposable()
 
     override fun onCreate() {
         super.onCreate()
+        injector.downloadComponent()
+                .downloadModule(DownloadModule())
+                .build()
+                .inject(this)
         Utils.log("DownloadService service has started")
     }
 
@@ -115,7 +124,7 @@ class DownloadService : JobIntentService() {
         // upload FCM Token if not uploaded or invalid
         if (uploadStatus.fcmToken != UploadStatus.UPLOADED) {
             Utils.log("upload fcm token")
-            AuthenticationManager(this).tryToUploadFcmToken()
+            authenticationManager.tryToUploadFcmToken()
         }
 
         if (lrzId.isEmpty()) {
@@ -132,11 +141,11 @@ class DownloadService : JobIntentService() {
         }
 
         // upload obfuscated ids
-        AuthenticationManager(this).uploadObfuscatedIds(uploadStatus)
+        authenticationManager.uploadObfuscatedIds(uploadStatus)
     }
 
     private fun downloadCafeterias(force: Boolean): Boolean {
-        CafeteriaMenuManager(this).downloadMenus(force)
+        cafeteriaMenuManager.downloadMenus(force)
         cafeteriaRemoteRepository.fetchCafeterias(force)
         return true
     }
@@ -147,15 +156,14 @@ class DownloadService : JobIntentService() {
     }
 
     private fun downloadNews(force: Boolean): Boolean {
-        NewsController(this).downloadFromExternal(force)
+        newsController.downloadFromExternal(force)
         return true
     }
 
     private fun downloadEvents(): Boolean {
-        EventsController(this).downloadFromService()
+        eventsController.downloadFromService()
         return true
     }
-
 
     private fun downloadTopNews(): Boolean {
         topNewsRemoteRepository.fetchNewsAlert()

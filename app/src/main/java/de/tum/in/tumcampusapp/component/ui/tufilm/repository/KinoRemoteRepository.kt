@@ -5,8 +5,9 @@ import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class KinoRemoteRepository(
+class KinoRemoteRepository @Inject constructor(
         private val tumCabeClient: TUMCabeClient,
         private val localRepository: KinoLocalRepository
 ) {

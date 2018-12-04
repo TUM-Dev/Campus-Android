@@ -3,7 +3,6 @@ package de.tum.`in`.tumcampusapp.component.ui.tufilm
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.model.Kino
@@ -12,8 +11,9 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class KinoDetailsViewModel(
+class KinoDetailsViewModel @Inject constructor(
         private val localRepository: KinoLocalRepository,
         private val eventsRemoteRepository: EventsRemoteRepository
 ) : ViewModel() {
@@ -53,17 +53,6 @@ class KinoDetailsViewModel(
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.dispose()
-    }
-
-    class Factory(
-            private val localRepository: KinoLocalRepository,
-            private val eventsRemoteRepository: EventsRemoteRepository
-    ) : ViewModelProvider.Factory {
-
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return KinoDetailsViewModel(localRepository, eventsRemoteRepository) as T
-        }
-
     }
 
 }

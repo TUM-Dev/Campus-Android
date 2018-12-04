@@ -4,13 +4,16 @@ import android.os.Bundle;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ProgressActivity;
+import de.tum.in.tumcampusapp.component.ui.tufilm.di.KinoModule;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
-import de.tum.in.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository;
-import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.di.ViewModelFactory;
 import de.tum.in.tumcampusapp.utils.Const;
 
 /**
@@ -21,6 +24,9 @@ public class KinoActivity extends ProgressActivity<Void> {
     private int startPosition;
     private ViewPager mPager;
 
+    @Inject
+    Provider<KinoViewModel> viewModelProvider;
+
     public KinoActivity() {
         super(R.layout.activity_kino);
     }
@@ -28,12 +34,14 @@ public class KinoActivity extends ProgressActivity<Void> {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getInjector().kinoComponent()
+                .kinoModule(new KinoModule())
+                .build()
+                .inject(this);
+
         getWindow().setBackgroundDrawableResource(R.color.secondary_window_background);
 
-        KinoLocalRepository localRepository =
-                new KinoLocalRepository(TcaDb.getInstance(this));
-
-        KinoViewModel.Factory factory = new KinoViewModel.Factory(localRepository);
+        ViewModelFactory<KinoViewModel> factory = new ViewModelFactory<>(viewModelProvider);
         KinoViewModel kinoViewModel = ViewModelProviders.of(this, factory).get(KinoViewModel.class);
 
         String movieDate = getIntent().getStringExtra(Const.KINO_DATE);

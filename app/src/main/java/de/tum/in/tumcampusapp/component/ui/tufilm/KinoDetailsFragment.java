@@ -21,21 +21,23 @@ import com.squareup.picasso.Target;
 
 import java.util.Locale;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventHelper;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
-import de.tum.in.tumcampusapp.component.ui.ticket.EventsRemoteRepository;
 import de.tum.in.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
+import de.tum.in.tumcampusapp.component.ui.tufilm.di.KinoModule;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
-import de.tum.in.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository;
-import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.di.ViewModelFactory;
 import de.tum.in.tumcampusapp.utils.Const;
 
 import static de.tum.in.tumcampusapp.utils.Const.KEY_EVENT_ID;
@@ -48,6 +50,9 @@ public class KinoDetailsFragment extends Fragment {
     private View rootView;
     private Event event;
     private EventsController eventsController;
+
+    @Inject
+    Provider<KinoDetailsViewModel> viewModelProvider;
 
     private KinoDetailsViewModel kinoViewModel;
 
@@ -62,15 +67,15 @@ public class KinoDetailsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        ((BaseActivity) requireActivity()).getInjector()
+                .kinoComponent()
+                .kinoModule(new KinoModule())
+                .build()
+                .inject(this);
 
-        KinoLocalRepository localRepository = new KinoLocalRepository(TcaDb.getInstance(context));
-        EventsRemoteRepository eventsRemoteRepository =
-                new EventsRemoteRepository(TUMCabeClient.getInstance(context));
-
-        KinoDetailsViewModel.Factory factory = new
-                KinoDetailsViewModel.Factory(localRepository, eventsRemoteRepository);
-
+        ViewModelFactory<KinoDetailsViewModel> factory = new ViewModelFactory<>(viewModelProvider);
         kinoViewModel = ViewModelProviders.of(this, factory).get(KinoDetailsViewModel.class);
+
         kinoViewModel.getKino().observe(this, this::showMovieDetails);
         kinoViewModel.getEvent().observe(this, this::showEventTicketDetails);
         kinoViewModel.getTicketCount().observe(this, this::showTicketCount);

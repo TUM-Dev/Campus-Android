@@ -4,8 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +15,16 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.Nullable;
-import org.joda.time.DateTime;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
 import de.tum.in.tumcampusapp.component.other.navigation.SystemIntent;
+import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
-import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateTimeUtils;
-import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * Shows important news
@@ -34,11 +32,13 @@ import de.tum.in.tumcampusapp.utils.Utils;
 public class TopNewsCard extends Card {
     private ImageView imageView;
     private ProgressBar progress;
-    private Context context;
+    private TopNewsStore topNewsStore;
+    private NewsAlert newsAlert;
 
     public TopNewsCard(Context context) {
         super(CardManager.CARD_TOP_NEWS, context, "top_news");
-        this.context = context;
+        this.topNewsStore = new RealTopNewsStore(PreferenceManager.getDefaultSharedPreferences(context));
+        this.newsAlert = topNewsStore.getNewsAlert();
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
@@ -47,12 +47,12 @@ public class TopNewsCard extends Card {
     }
 
     private void updateImageView() {
-        String imageURL = Utils.getSetting(context, Const.NEWS_ALERT_IMAGE, "");
-        if (imageURL.isEmpty() || imageView == null) {
+        if (newsAlert == null || newsAlert.getUrl().isEmpty() || imageView == null) {
             return;
         }
+
         Picasso.get()
-                .load(imageURL)
+                .load(newsAlert.getUrl())
                 .into(imageView, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -75,14 +75,12 @@ public class TopNewsCard extends Card {
     @Nullable
     @Override
     public NavigationDestination getNavigationDestination() {
-        String url = Utils.getSetting(getContext(), Const.NEWS_ALERT_LINK, "");
-        if (!url.isEmpty()) {
-            Intent data = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            return new SystemIntent(data);
+        if (newsAlert == null || newsAlert.getLink().isEmpty()) {
+            return null;
         }
 
-        // If there is no link, don't react to clicks
-        return null;
+        Intent data = new Intent(Intent.ACTION_VIEW, Uri.parse(newsAlert.getLink()));
+        return new SystemIntent(data);
     }
 
     @Override
@@ -95,22 +93,16 @@ public class TopNewsCard extends Card {
 
     @Override
     protected boolean shouldShow(@NonNull SharedPreferences prefs) {
-        // don't show if the showUntil date does not exist or is in the past
-        String untilDateString = Utils.getSetting(context, Const.NEWS_ALERT_SHOW_UNTIL, "");
-        if (untilDateString.isEmpty()) {
+        if (newsAlert == null) {
             return false;
         }
 
-        DateTime until = DateTimeUtils.INSTANCE.parseIsoDateWithMillis(untilDateString);
-        if (until == null) {
-            return false;
-        }
-        return Utils.getSettingBool(context, CardManager.SHOW_TOP_NEWS, true)
-                && until.isAfterNow();
+        return topNewsStore.isEnabled() && newsAlert.getShouldDisplay();
     }
 
     @Override
     public void discard(@NonNull SharedPreferences.Editor editor) {
-        Utils.setSetting(this.getContext(), CardManager.SHOW_TOP_NEWS, false);
+        topNewsStore.setEnabled(false);
     }
+
 }
