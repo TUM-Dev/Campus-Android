@@ -14,7 +14,7 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
-import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
+import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.di.injector
@@ -52,7 +52,7 @@ class DownloadService : JobIntentService() {
     lateinit var cafeteriaRemoteRepository: CafeteriaRemoteRepository
 
     @Inject
-    lateinit var eventsController: EventsController
+    lateinit var eventsRemoteRepository: EventsRemoteRepository
 
     @Inject
     lateinit var newsController: NewsController
@@ -161,7 +161,7 @@ class DownloadService : JobIntentService() {
     }
 
     private fun downloadEvents(): Boolean {
-        eventsController.downloadFromService()
+        eventsRemoteRepository.fetchEventsAndTickets()
         return true
     }
 
