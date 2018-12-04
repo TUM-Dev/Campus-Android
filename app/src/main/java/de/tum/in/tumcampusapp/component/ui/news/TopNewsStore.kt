@@ -7,14 +7,39 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import javax.inject.Inject
 
+/**
+ * This interface defines all possible operations on a persistent store for [NewsAlert] objects.
+ * It's implemented by [RealTopNewsStore].
+ */
 interface TopNewsStore {
 
+    /**
+     * Returns whether the user has enabled the display of top-news cards in overview screen.
+     *
+     * @return True if top-news cards should be displayed
+     */
     fun isEnabled(): Boolean
 
+    /**
+     * Sets whether top-news cards should be displayed in overview screen.
+     *
+     * @param isEnabled Whether top-news cards should be displayed
+     */
     fun setEnabled(isEnabled: Boolean)
 
+    /**
+     * Returns the most recent [NewsAlert], or null if none is stored.
+     *
+     * @return The [NewsAlert] or null
+     */
     fun getNewsAlert(): NewsAlert?
 
+    /**
+     * Stores the provided [NewsAlert] in the persistent store. It can later be retrieved via
+     * [getNewsAlert].
+     *
+     * @param newsAlert The [NewsAlert] to be stored
+     */
     fun store(newsAlert: NewsAlert)
 
 }
