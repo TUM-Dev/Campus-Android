@@ -174,5 +174,5 @@ object Const {
 
     const val SHOW_UPDATE_NOTE = "showUpdateNote"
     const val UPDATE_MESSAGE = "updateNoteMessage"
-    const val SAVED_APP_VERSION = "SavedAppVersion"
+    const val SAVED_APP_VERSION = "savedAppVersion"
 }
