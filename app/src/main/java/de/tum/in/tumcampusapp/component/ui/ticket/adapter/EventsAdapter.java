@@ -2,16 +2,6 @@ package de.tum.in.tumcampusapp.component.ui.ticket.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-
-import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.Group;
-
-import com.google.android.material.button.MaterialButton;
-
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.material.button.MaterialButton;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -26,6 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.Group;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventCard;
@@ -33,6 +29,8 @@ import de.tum.in.tumcampusapp.component.ui.ticket.EventDiffUtil;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.EventBetaInfo;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.EventItem;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
@@ -43,12 +41,15 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
     private static final Pattern COMPILE = Pattern.compile("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*");
 
-    enum CardType {INFO, VERTICAL, HORIZONTAL}
+    private static final int CARD_INFO = 0;
+    private static final int CARD_HORIZONTAL = 1;
+    private static final int CARD_VERTICAL = 2;
 
     private Context mContext;
     private EventsController mEventsController;
 
-    private List<Event> mEvents = new ArrayList<>();
+    private List<EventItem> mEvents = new ArrayList<>();
+    private EventItem betaInfo = new EventBetaInfo();
 
     public EventsAdapter(Context context) {
         mContext = context;
@@ -59,11 +60,11 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
     @Override
     public CardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         int layoutRes;
-        if (viewType == CardType.INFO.ordinal()) {
+        if (viewType == CARD_INFO) {
             return new CardViewHolder(LayoutInflater.from(parent.getContext())
                                                     .inflate(R.layout.card_events_info, parent, false));
         }
-        if (viewType == CardType.HORIZONTAL.ordinal()) {
+        if (viewType == CARD_HORIZONTAL) {
             layoutRes = R.layout.card_events_item;
         } else {
             layoutRes = R.layout.card_events_item_vertical;
@@ -75,23 +76,23 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) {
-            return CardType.INFO.ordinal();
+        EventItem item = mEvents.get(position);
+        if (item instanceof EventBetaInfo) {
+            return CARD_INFO;
         }
-        if (mEvents.get(position - 1)
-                   .getKino() != -1) {
-            return CardType.VERTICAL.ordinal();
+        if (((Event)item).getKino() == -1) {
+            return CARD_HORIZONTAL;
         }
-        return CardType.HORIZONTAL.ordinal();
+        return CARD_VERTICAL;
     }
 
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
-        if (position == 0) {
+        EventItem eventItem = mEvents.get(position);
+        if (eventItem instanceof EventBetaInfo) {
             return;
         }
-        Event event = mEvents.get(position - 1);
-
+        Event event = (Event) eventItem;
         EventCard eventCard = new EventCard(mContext);
         eventCard.setEvent(event);
         holder.setCurrentCard(eventCard);
@@ -102,16 +103,14 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
     @Override
     public int getItemCount() {
-        return mEvents.size() + 1;
+        return mEvents.size();
     }
 
-    public void update(List<Event> newEvents) {
+    public void update(List<EventItem> newEvents) {
+        newEvents.add(0, betaInfo);
         DiffUtil.Callback callback = new EventDiffUtil(mEvents, newEvents);
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(callback);
-
-        mEvents.clear();
-        mEvents.addAll(newEvents);
-
+        mEvents = newEvents;
         diffResult.dispatchUpdatesTo(this);
     }
 
