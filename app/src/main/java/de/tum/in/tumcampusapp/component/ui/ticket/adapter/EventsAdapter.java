@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.component.ui.ticket.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ import static android.view.View.VISIBLE;
 
 public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
-    private static final Pattern COMPILE = Pattern.compile("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*");
+    private static final Pattern TITLE_DATE = Pattern.compile("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*");
 
     private static final int CARD_INFO = 0;
     private static final int CARD_HORIZONTAL = 1;
@@ -80,7 +81,7 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         if (item instanceof EventBetaInfo) {
             return CARD_INFO;
         }
-        if (((Event)item).getKino() == -1) {
+        if (((Event) item).getKino() == -1) {
             return CARD_HORIZONTAL;
         }
         return CARD_VERTICAL;
@@ -166,8 +167,7 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
             }
 
             String title = event.getTitle();
-            title = COMPILE.matcher(title)
-                           .replaceAll("");
+            title = TITLE_DATE.matcher(title).replaceAll("");
             titleTextView.setText(title);
 
             String startTime = event.getFormattedStartDateTime(itemView.getContext());

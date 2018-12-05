@@ -30,7 +30,7 @@ public class RestoreCard extends StickyCard {
     }
 
     /**
-     * Override getPosition, we want the RestoreCard to be the last card.
+     * Override getPositionByDate, we want the RestoreCard to be the last card.
      */
     @Override
     public int getPosition() {

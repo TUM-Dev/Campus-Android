@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.ticket.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -8,6 +9,7 @@ import android.text.TextWatcher;
 import android.transition.TransitionManager;
 import android.view.View;
 import android.view.autofill.AutofillManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -49,6 +51,7 @@ public class StripePaymentActivity extends BaseActivity {
     private EditText cardholderEditText;
     private ViewSwitcher selectMethodSwitcher;
     private MaterialButton purchaseButton;
+    private CheckBox termsOfServiceCheckBox;
 
     private PaymentSession paymentSession;
     private boolean didSelectPaymentMethod;
@@ -57,6 +60,8 @@ public class StripePaymentActivity extends BaseActivity {
                                // we need the ID to init the purchase
 
     private String ticketPrice;
+    private String termsOfServiceLink;
+    private String stripePublishableKey;
 
     public StripePaymentActivity() {
         super(R.layout.activity_payment_stripe);
@@ -68,8 +73,13 @@ public class StripePaymentActivity extends BaseActivity {
 
         ticketPrice = getIntent().getStringExtra(Const.KEY_TICKET_PRICE);
         ticketHistory = getIntent().getIntExtra(Const.KEY_TICKET_HISTORY, -1);
+        termsOfServiceLink = getIntent().getStringExtra(Const.KEY_TERMS_LINK);
+        stripePublishableKey = getIntent().getStringExtra(Const.KEY_STRIPE_API_PUBLISHABLE_KEY);
 
-        if (ticketHistory < 0 || ticketPrice == null) {
+        if (ticketHistory < 0
+                || ticketPrice == null
+                || termsOfServiceLink.isEmpty()
+                || stripePublishableKey == null) {
             Utils.showToast(this, R.string.error_something_wrong);
             finish();
             return;
@@ -121,11 +131,22 @@ public class StripePaymentActivity extends BaseActivity {
         purchaseButton = findViewById(R.id.complete_purchase_button);
         purchaseButton.setText(purchaseButtonString);
         purchaseButton.setOnClickListener(v -> purchaseTicket());
+
+        termsOfServiceCheckBox = findViewById(R.id.terms_of_service_checkbox);
+        termsOfServiceCheckBox.setOnClickListener((view) -> updateBuyButton());
+
+        findViewById(R.id.terms_of_service_button).setOnClickListener((view -> {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+            browserIntent.setData(Uri.parse(termsOfServiceLink));
+            view.getContext().startActivity(browserIntent);
+        }));
     }
 
     private void updateBuyButton() {
         boolean hasCardholder = !cardholderEditText.getText().toString().isEmpty();
-        boolean enabled = hasCardholder && didSelectPaymentMethod;
+        boolean enabled = hasCardholder
+                && didSelectPaymentMethod
+                && termsOfServiceCheckBox.isChecked();
         float alpha = enabled ? 1.0f : 0.5f;
 
         purchaseButton.setEnabled(enabled);
@@ -239,7 +260,7 @@ public class StripePaymentActivity extends BaseActivity {
     }
 
     private void initStripeSession() {
-        PaymentConfiguration.init(Const.STRIPE_API_PUBLISHABLE_KEY);
+        PaymentConfiguration.init(stripePublishableKey);
         initCustomerSession();
     }
 
@@ -296,7 +317,7 @@ public class StripePaymentActivity extends BaseActivity {
 
             @Override
             public void onPaymentSessionDataChanged(@NonNull PaymentSessionData data) {
-                purchaseButton.setEnabled(true);
+                updateBuyButton();
                 selectMethodSwitcher.setEnabled(true);
             }
 

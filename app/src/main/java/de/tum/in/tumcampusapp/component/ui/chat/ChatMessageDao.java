@@ -1,12 +1,11 @@
 package de.tum.in.tumcampusapp.component.ui.chat;
 
+import java.util.List;
+
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-
-import java.util.List;
-
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
 
 @Dao
@@ -18,8 +17,7 @@ public interface ChatMessageDao {
     @Query("SELECT c.* FROM chat_message c WHERE c.room=:room ORDER BY c.sending, c._id")
     List<ChatMessage> getAll(int room);
 
-    @Query("UPDATE chat_room "
-           + "SET last_read = "
+    @Query("UPDATE chat_room SET last_read = "
                 + "case when (select MAX(_id) from chat_message where room=:room) is null then -1 "
                 + "else (select MAX(_id) from chat_message where room=:room) end "
            + "WHERE room=:room")
