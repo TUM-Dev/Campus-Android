@@ -91,13 +91,9 @@ object Const {
     const val SEND_WIFI_SERVICE_JOB_ID = 1003
     const val DOWNLOAD_SERVICE_JOB_ID = 1004
     const val FILL_CACHE_SERVICE_JOB_ID = 1005
+    const val QUERY_LOCATIONS_SERVICE_JOB_ID = 1006
 
-    const val FEEDBACK_MESSAGE = "feedback_message"
-    const val FEEDBACK_PIC_PATHS = "feedback_paths"
-    const val FEEDBACK_INCL_EMAIL = "feedback_include_email"
-    const val FEEDBACK_INCL_LOCATION = "feedback_incl_location"
-    const val FEEDBACK_TOPIC = "feedback_topic"
-    const val FEEDBACK_EMAIL = "feedback_reply_to"
+    const val FEEDBACK = "feedback"
     const val FEEDBACK_IMG_COMPRESSION_QUALITY = 50;
     const val FEEDBACK_TOPIC_GENERAL = "general"
     const val FEEDBACK_TOPIC_APP = "tca"

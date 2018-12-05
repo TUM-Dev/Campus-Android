@@ -13,7 +13,7 @@ import io.reactivex.Flowable;
 public interface KinoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Kino kino);
+    void insert(Kino... kino);
 
     @Query("SELECT * FROM kino ORDER BY date")
     Flowable<List<Kino>> getAll();

@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.news;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
@@ -11,6 +10,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import androidx.annotation.NonNull;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.notifications.NotificationScheduler;
@@ -40,6 +42,7 @@ public class NewsController implements ProvidesCard, ProvidesNotifications {
      *
      * @param context Context
      */
+    @Inject
     public NewsController(Context context) {
         this.context = context;
         newsDao = TcaDb.getInstance(context)

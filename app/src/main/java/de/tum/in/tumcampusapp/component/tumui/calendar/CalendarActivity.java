@@ -48,6 +48,7 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.model.Event;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.EventsResponse;
 import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
 import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.service.QueryLocationsService;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -181,14 +182,14 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
                         .fromAction(() -> calendarController.importCalendar(events))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(() -> {
-                            // Update the action bar to display the enabled menu options
-                            invalidateOptionsMenu();
-                            Intent intent = new Intent(
-                                    this, CalendarController.QueryLocationsService.class);
-                            startService(intent);
-                        })
+                        .subscribe(this::onCalendarImportedIntoDatabase)
         );
+    }
+
+    private void onCalendarImportedIntoDatabase() {
+        // Update the action bar to display the enabled menu options
+        invalidateOptionsMenu();
+        QueryLocationsService.enqueueWork(this);
     }
 
     private void scheduleNotifications(@NonNull List<Event> events) {

@@ -20,7 +20,6 @@ import de.tum.in.tumcampusapp.component.other.locations.RoomLocationsDao;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.WifiMeasurementDao;
 import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
-import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarDao;
 import de.tum.in.tumcampusapp.component.tumui.calendar.WidgetsTimetableBlacklistDao;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
@@ -62,6 +61,7 @@ import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
 import de.tum.in.tumcampusapp.database.migrations.Migration2to3;
 import de.tum.in.tumcampusapp.service.BackgroundService;
 import de.tum.in.tumcampusapp.service.DownloadService;
+import de.tum.in.tumcampusapp.service.QueryLocationsService;
 import de.tum.in.tumcampusapp.service.SendMessageService;
 import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.utils.CacheManager;
@@ -176,7 +176,7 @@ public abstract class TcaDb extends RoomDatabase {
     public static void resetDb(Context c) {
         // Stop all services, since they might have instantiated Managers and cause SQLExceptions
         Class<?>[] services = new Class<?>[]{
-                CalendarController.QueryLocationsService.class,
+                QueryLocationsService.class,
                 SendMessageService.class,
                 SilenceService.class,
                 DownloadService.class,

@@ -13,13 +13,14 @@ import android.widget.LinearLayout;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 public class FeedbackThumbnailsAdapter extends RecyclerView.Adapter<FeedbackThumbnailsAdapter.ViewHolder> {
-    private ArrayList<String> paths;
-    private ArrayList<Bitmap> thumbs;
+    private List<String> paths;
+    private List<Bitmap> thumbs;
 
     private int viewing;
 
@@ -32,7 +33,7 @@ public class FeedbackThumbnailsAdapter extends RecyclerView.Adapter<FeedbackThum
         }
     }
 
-    public FeedbackThumbnailsAdapter(ArrayList<String> paths) {
+    public FeedbackThumbnailsAdapter(List<String> paths) {
         this.paths = paths;
         thumbs = new ArrayList<>(paths.size());
     }

@@ -1,6 +1,5 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket.fragment
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.squareup.picasso.Picasso
 import de.tum.`in`.tumcampusapp.R
@@ -17,20 +17,16 @@ import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CreateEventActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventHelper
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
+import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
-import de.tum.`in`.tumcampusapp.component.ui.ticket.payload.TicketStatus
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Const.KEY_EVENT_ID
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
-import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.into
+import de.tum.`in`.tumcampusapp.utils.observe
 import kotlinx.android.synthetic.main.fragment_event_details.*
 import kotlinx.android.synthetic.main.fragment_event_details.view.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.util.*
 
 /**
  * Fragment for displaying information about an [Event]. Manages content that's shown in the
@@ -38,17 +34,19 @@ import java.util.*
  */
 class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
-    private var event: Event? = null
-    private lateinit var eventsController: EventsController
+    private val event: Event by lazy {
+        arguments?.getParcelable(Const.KEY_EVENT)
+                ?: throw IllegalStateException("No event provided to EventDetailsFragment")
+    }
 
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
+    private val eventsController: EventsController by lazy {
+        EventsController(requireContext())
+    }
 
-        eventsController = EventsController(context)
-
-        arguments?.let { args ->
-            event = args.getParcelable(Const.KEY_EVENT)
-        }
+    private val viewModel: EventDetailsViewModel by lazy {
+        val remoteRepo = EventsRemoteRepository(TUMCabeClient.getInstance(requireContext()))
+        val factory = EventDetailsViewModel.Factory(event.id, remoteRepo)
+        ViewModelProviders.of(this, factory).get(EventDetailsViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -68,24 +66,18 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        event?.let {
-            showEventDetails(it)
-            loadAvailableTicketCount(it)
-        }
+        showEventDetails(event)
+        viewModel.ticketCount.observe(viewLifecycleOwner, this::showTicketCount)
     }
 
     override fun onRefresh() {
-        event?.let {
-            loadAvailableTicketCount(it)
-        }
+        viewModel.fetchTicketCount()
     }
 
     override fun onResume() {
         super.onResume()
-        event?.let {
-            if (!eventsController.isEventBooked(it) && EventHelper.isEventImminent(it)) {
-                ticketButton.visibility = View.GONE
-            }
+        if (!eventsController.isEventBooked(event) && EventHelper.isEventImminent(event)) {
+            ticketButton.visibility = View.GONE
         }
     }
 
@@ -129,32 +121,10 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         startActivity(intent)
     }
 
-    private fun loadAvailableTicketCount(event: Event) {
-        TUMCabeClient
-                .getInstance(context)
-                .fetchTicketStats(event.id, object : Callback<List<TicketStatus>> {
-                    override fun onResponse(call: Call<List<TicketStatus>>,
-                                            response: Response<List<TicketStatus>>) {
-                        val statuses = response.body() ?: return
-                        val sum = statuses.sumBy { it.availableTicketCount }
-
-                        val text = String.format(Locale.getDefault(), "%d", sum)
-
-                        if (isDetached.not()) {
-                            remainingTicketsTextView.text = text
-                            swipeRefreshLayout.isRefreshing = false
-                        }
-                    }
-
-                    override fun onFailure(call: Call<List<TicketStatus>>, t: Throwable) {
-                        Utils.log(t)
-
-                        if (isDetached.not()) {
-                            remainingTicketsTextView.setText(R.string.unknown)
-                            swipeRefreshLayout.isRefreshing = false
-                        }
-                    }
-                })
+    private fun showTicketCount(count: Int?) {
+        val text = count?.toString() ?: getString(R.string.unknown)
+        remainingTicketsTextView.text = text
+        swipeRefreshLayout.isRefreshing = false
     }
 
     private fun showTicket(event: Event) {

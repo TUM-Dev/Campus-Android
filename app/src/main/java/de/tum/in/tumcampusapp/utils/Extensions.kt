@@ -1,22 +1,24 @@
 package de.tum.`in`.tumcampusapp.utils
 
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import com.google.android.material.button.MaterialButton
-import androidx.drawerlayout.widget.DrawerLayout
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import com.google.android.material.button.MaterialButton
 import com.squareup.picasso.Callback
 import com.squareup.picasso.RequestCreator
 import de.tum.`in`.tumcampusapp.component.other.generic.drawer.SideNavigationItem
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
 /**
  * Executes the block and return null in case of an [Exception].
@@ -108,6 +110,10 @@ fun DrawerLayout.closeDrawers(callback: () -> Unit) {
     closeDrawers()
 }
 
+fun <T> LiveData<T>.observe(owner: LifecycleOwner, callback: (T?) -> Unit) {
+    observe(owner, Observer<T> { value -> callback(value) })
+}
+
 fun <T> LiveData<T>.observeNonNull(owner: LifecycleOwner, callback: (T) -> Unit) {
     observe(owner, Observer<T> { value ->
         value?.let {
@@ -124,4 +130,8 @@ fun TextView.addCompoundDrawablesWithIntrinsicBounds(
 fun TextView.addCompoundDrawablesWithIntrinsicBounds(
         start: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0) {
     setCompoundDrawablesWithIntrinsicBounds(start, top, right, bottom)
+}
+
+operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
+    this.add(disposable)
 }

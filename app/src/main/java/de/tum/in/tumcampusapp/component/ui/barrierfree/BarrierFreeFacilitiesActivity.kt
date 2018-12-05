@@ -34,18 +34,22 @@ class BarrierFreeFacilitiesActivity : ActivityForAccessingTumCabe<List<RoomFinde
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-        val apiCall = when (position) {
-            0 -> getApiCallForCurrentLocation()
-            1 -> apiClient.listOfToilets
-            else -> apiClient.listOfElevators
+        when (position) {
+            0 -> fetchApiCallForCurrentLocation()
+            1 -> executeApiCall(apiClient.listOfElevators)
+            else -> executeApiCall(apiClient.listOfElevators)
         }
-
-        apiCall?.let { fetch(it) } ?: showError(R.string.error_something_wrong)
     }
 
-    private fun getApiCallForCurrentLocation(): Call<List<RoomFinderRoom>>? {
-        val buildingId = locationManager.getBuildingIDFromCurrentLocation() ?: return null
-        return apiClient.getListOfNearbyFacilities(buildingId)
+    private fun fetchApiCallForCurrentLocation() {
+        locationManager.fetchBuildingIDFromCurrentLocation {
+            val apiCall = apiClient.getListOfNearbyFacilities(it)
+            executeApiCall(apiCall)
+        }
+    }
+
+    private fun executeApiCall(apiCall: Call<List<RoomFinderRoom>>?) {
+        apiCall?.let { fetch(it) } ?: showError(R.string.error_something_wrong)
     }
 
     override fun onDownloadSuccessful(response: List<RoomFinderRoom>) {

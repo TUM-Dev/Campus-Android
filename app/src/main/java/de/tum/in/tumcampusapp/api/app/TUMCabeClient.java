@@ -54,6 +54,7 @@ import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -196,7 +197,7 @@ public final class TUMCabeClient {
                 .body();
     }
 
-    Observable<TUMCabeStatus> uploadObfuscatedIds(String lrzId, ObfuscatedIdsUpload ids){
+    Observable<TUMCabeStatus> uploadObfuscatedIds(String lrzId, ObfuscatedIdsUpload ids) {
         return service.uploadObfuscatedIds(lrzId, ids);
     }
 
@@ -308,10 +309,11 @@ public final class TUMCabeClient {
                 .body();
     }
 
-    public void sendFeedback(Feedback feedback, String[] imagePaths, Callback<Success> cb) {
-        service.sendFeedback(feedback)
-                .enqueue(cb);
+    public void sendFeedback(Feedback feedback, Callback<Success> cb) {
+        service.sendFeedback(feedback).enqueue(cb);
+    }
 
+    public void sendFeedbackImages(Feedback feedback, String[] imagePaths, Callback<Success> cb) {
         for (int i = 0; i < imagePaths.length; i++) {
             File file = new File(imagePaths[i]);
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
@@ -407,8 +409,8 @@ public final class TUMCabeClient {
         service.retrieveEphemeralKey(verification).enqueue(cb);
     }
 
-    public void fetchTicketStats(int event, Callback<List<TicketStatus>> cb) {
-        service.getTicketStats(event).enqueue(cb);
+    public Single<List<TicketStatus>> fetchTicketStats(int event) {
+        return service.getTicketStats(event);
     }
 
     public UpdateNote getUpdateNote(String version) throws IOException {

@@ -10,72 +10,75 @@ import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.app.model.UploadStatus
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
-import de.tum.`in`.tumcampusapp.component.ui.news.KinoViewModel
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
-import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsViewModel
-import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoLocalRepository
-import de.tum.`in`.tumcampusapp.component.ui.news.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
 import de.tum.`in`.tumcampusapp.component.ui.updatenote.UpdateNoteController
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
+import de.tum.`in`.tumcampusapp.di.injector
+import de.tum.`in`.tumcampusapp.service.di.DownloadModule
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
-import de.tum.`in`.tumcampusapp.utils.sync.SyncManager
 import io.reactivex.disposables.CompositeDisposable
+import org.jetbrains.anko.doAsync
 import java.io.IOException
+import javax.inject.Inject
 
 /**
  * Service used to download files from external pages
  */
 class DownloadService : JobIntentService() {
 
-    private lateinit var broadcastManager: LocalBroadcastManager
-    private lateinit var cafeteriaViewModel: CafeteriaViewModel
+    private val broadcastManager: LocalBroadcastManager by lazy {
+        LocalBroadcastManager.getInstance(this)
+    }
+    @Inject
+    lateinit var tumCabeClient: TUMCabeClient
 
-    private lateinit var kinoViewModel: KinoViewModel
-    private lateinit var topNewsViewModel: TopNewsViewModel
+    @Inject
+    lateinit var database: TcaDb
 
-    private lateinit var tumCabeClient: TUMCabeClient
-    private lateinit var database: TcaDb
+    @Inject
+    lateinit var topNewsRemoteRepository: TopNewsRemoteRepository
+
+    @Inject
+    lateinit var kinoRemoteRepository: KinoRemoteRepository
+
+    @Inject
+    lateinit var cafeteriaRemoteRepository: CafeteriaRemoteRepository
+
+    @Inject
+    lateinit var eventsController: EventsController
+
+    @Inject
+    lateinit var newsController: NewsController
+
+    @Inject
+    lateinit var authenticationManager: AuthenticationManager
+
+    @Inject
+    lateinit var cafeteriaMenuManager: CafeteriaMenuManager
+
     private val disposable = CompositeDisposable()
 
     override fun onCreate() {
         super.onCreate()
+        injector.downloadComponent()
+                .downloadModule(DownloadModule())
+                .build()
+                .inject(this)
         Utils.log("DownloadService service has started")
-        broadcastManager = LocalBroadcastManager.getInstance(this)
-
-        SyncManager(this) // Starts a new sync in constructor; should be moved to explicit method call
-
-        tumCabeClient = TUMCabeClient.getInstance(this)
-        database = TcaDb.getInstance(this)
-
-        val remoteRepository = CafeteriaRemoteRepository
-        remoteRepository.tumCabeClient = tumCabeClient
-
-        val localRepository = CafeteriaLocalRepository
-        localRepository.db = database
-        cafeteriaViewModel = CafeteriaViewModel(localRepository, remoteRepository, disposable)
-
-        // Init sync table
-        KinoLocalRepository.db = database
-        KinoRemoteRepository.tumCabeClient = tumCabeClient
-        kinoViewModel = KinoViewModel(KinoLocalRepository, KinoRemoteRepository, disposable)
-
-        TopNewsRemoteRepository.tumCabeClient = tumCabeClient
-        topNewsViewModel = TopNewsViewModel(TopNewsRemoteRepository, disposable)
     }
 
     override fun onHandleWork(intent: Intent) {
-        Thread {
+        doAsync {
             download(intent, this@DownloadService)
-        }.start()
+        }
     }
 
     private fun broadcastDownloadSuccess() {
@@ -113,7 +116,7 @@ class DownloadService : JobIntentService() {
 
     /**
      * asks to verify private key, uploads fcm token and obfuscated ids (if missing)
-    */
+     */
     private fun uploadMissingIds() {
         val lrzId = Utils.getSetting(this, Const.LRZ_ID, "")
 
@@ -123,7 +126,7 @@ class DownloadService : JobIntentService() {
         // upload FCM Token if not uploaded or invalid
         if (uploadStatus.fcmToken != UploadStatus.UPLOADED) {
             Utils.log("upload fcm token")
-            AuthenticationManager(this).tryToUploadFcmToken()
+            authenticationManager.tryToUploadFcmToken()
         }
 
         if (lrzId.isEmpty()) {
@@ -140,7 +143,7 @@ class DownloadService : JobIntentService() {
         }
 
         // upload obfuscated ids
-        AuthenticationManager(this).uploadObfuscatedIds(uploadStatus);
+        authenticationManager.uploadObfuscatedIds(uploadStatus)
     }
 
     private fun downloadUpdateNote(): Boolean {
@@ -149,28 +152,30 @@ class DownloadService : JobIntentService() {
     }
 
     private fun downloadCafeterias(force: Boolean): Boolean {
-        CafeteriaMenuManager(this).downloadMenus(force)
-        cafeteriaViewModel.getCafeteriasFromService(force)
+        cafeteriaMenuManager.downloadMenus(force)
+        cafeteriaRemoteRepository.fetchCafeterias(force)
         return true
     }
 
     private fun downloadKino(force: Boolean): Boolean {
-        kinoViewModel.getKinosFromService(force)
+        kinoRemoteRepository.fetchKinos(force)
         return true
     }
 
     private fun downloadNews(force: Boolean): Boolean {
-        NewsController(this).downloadFromExternal(force)
+        newsController.downloadFromExternal(force)
         return true
     }
 
     private fun downloadEvents(): Boolean {
-        EventsController(this).downloadFromService()
+        eventsController.downloadFromService()
         return true
     }
 
-
-    private fun downloadTopNews() = topNewsViewModel.getNewsAlertFromService(this)
+    private fun downloadTopNews(): Boolean {
+        topNewsRemoteRepository.fetchNewsAlert()
+        return true
+    }
 
     /**
      * Import default location and opening hours from assets
