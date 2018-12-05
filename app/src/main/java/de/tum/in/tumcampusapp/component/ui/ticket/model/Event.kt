@@ -51,7 +51,7 @@ data class Event(
         var dismissed: Int = 0,
         var kino: Int = -1,
         var news: Int = -1
-) : Parcelable, Comparable<Event> {
+) : Parcelable, Comparable<Event>, EventItem {
 
     // Unsafe calls are only ok because we control writeToParcel().
     // Keep in sync with writeToParcel()!
@@ -95,6 +95,10 @@ data class Event(
 
     override fun describeContents(): Int {
         return 0
+    }
+
+    override fun getIdForComparison(): Int {
+        return id
     }
 
     companion object {

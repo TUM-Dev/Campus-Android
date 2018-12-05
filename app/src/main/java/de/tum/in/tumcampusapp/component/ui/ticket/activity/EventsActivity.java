@@ -1,8 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.ticket.activity;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -18,7 +16,6 @@ import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownlo
 import de.tum.in.tumcampusapp.component.ui.ticket.fragment.EventsFragment;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.EventType;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.Utils;
 
 public class EventsActivity extends ActivityForDownloadingExternal {
 
@@ -38,17 +35,6 @@ public class EventsActivity extends ActivityForDownloadingExternal {
 
         TabLayout eventTab = findViewById(R.id.event_tab);
         eventTab.setupWithViewPager(viewPager);
-
-        // Make the beta info only show once, until dismissed. Then hide directly.
-        TextView betaInfo = findViewById(R.id.ticket_beta);
-        if (Utils.getSettingBool(this, SHOW_BETA_INFO, true)) {
-            betaInfo.setOnClickListener(view -> {
-                view.setVisibility(View.GONE);
-                Utils.setSetting(this, SHOW_BETA_INFO, false);
-            });
-        } else {
-            betaInfo.setVisibility(View.GONE);
-        }
 
         eventTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

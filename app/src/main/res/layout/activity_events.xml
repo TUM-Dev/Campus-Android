@@ -40,18 +40,6 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <TextView
-            android:id="@+id/ticket_beta"
-            style="@style/InfoBox"
-            android:layout_marginTop="@dimen/material_default_padding"
-            android:layout_marginStart="@dimen/material_default_padding"
-            android:layout_marginEnd="@dimen/material_default_padding"
-            android:autoLink="email"
-            android:text="@string/ticket_sale_beta"
-            android:textColorLink="@android:color/white"
-            android:clickable="true"
-            android:focusable="true"/>
-
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
