@@ -246,6 +246,6 @@ public interface TUMCabeAPIService {
 
     // Update note
     @GET(API_UPDATE_NOTE + "{version}")
-    Call<UpdateNote> getUpdateNote(@Path("version") String version);
+    Call<UpdateNote> getUpdateNote(@Path("version") int version);
 
 }

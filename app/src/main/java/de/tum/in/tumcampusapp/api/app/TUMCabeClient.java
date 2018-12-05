@@ -413,7 +413,7 @@ public final class TUMCabeClient {
         return service.getTicketStats(event);
     }
 
-    public UpdateNote getUpdateNote(String version) throws IOException {
+    public UpdateNote getUpdateNote(int version) throws IOException {
         return service.getUpdateNote(version).execute().body();
     }
 
