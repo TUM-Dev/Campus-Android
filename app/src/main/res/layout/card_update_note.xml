@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/StandardCard">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/material_default_padding"
+        android:paddingTop="@dimen/material_default_padding"
+        android:paddingBottom="@dimen/material_default_padding">
+        <TextView
+            android:id="@+id/update_note_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/CardTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="@dimen/material_tiny_padding"
+            android:layout_marginEnd="@dimen/material_small_padding"
+            android:text="@string/update_note_title"/>
+        <TextView
+            android:id="@+id/update_note_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/update_note_title"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            style="@style/CardSource"/>
+        <TextView
+            android:id="@+id/update_note_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/update_note_subtitle"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            style="@style/CardBody"/>
+        <ImageView
+            android:id="@+id/cardMoreIcon"
+            style="@style/CardMoreIcon"
+            app:layout_constraintBottom_toBottomOf="@id/update_note_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/update_note_title" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

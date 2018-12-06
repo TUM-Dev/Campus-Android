@@ -654,4 +654,7 @@ Signatur: %5$s</string>
     <string name="stripe_terms_of_service_checkbox">Ich stimme den allgemeinen Geschäftsbedingungen (AGB) zu.</string>
     <string name="stripe_terms_of_service_button">AGB</string>
     <string name="tickets_available_here">Tickets hier erhältlich!</string>
+
+    <string name="update_note_title">Neue Features</string>
+    <string name="update_note_version">Version %s</string>
 </resources>
