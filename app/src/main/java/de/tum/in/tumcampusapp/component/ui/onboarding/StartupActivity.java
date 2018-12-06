@@ -75,6 +75,7 @@ public class StartupActivity extends AppCompatActivity {
         int savedAppVersion = Utils.getSettingInt(this, Const.SAVED_APP_VERSION, BuildConfig.VERSION_CODE);
         if (savedAppVersion < BuildConfig.VERSION_CODE) {
             Utils.setSetting(this, Const.SHOW_UPDATE_NOTE, true);
+            Utils.setSetting(this, Const.UPDATE_MESSAGE, "");
             Utils.setSetting(this, Const.SAVED_APP_VERSION, BuildConfig.VERSION_CODE);
         }
 
