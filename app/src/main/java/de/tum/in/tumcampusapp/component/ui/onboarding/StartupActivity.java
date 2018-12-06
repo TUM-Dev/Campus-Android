@@ -72,8 +72,8 @@ public class StartupActivity extends AppCompatActivity {
             Crashlytics.setString("DeviceID", AuthenticationManager.getDeviceID(this));
         }
 
-        int savedAppVersion = Utils.getSettingInt(this, Const.SAVED_APP_VERSION, 0);
-        if (savedAppVersion != BuildConfig.VERSION_CODE) {
+        int savedAppVersion = Utils.getSettingInt(this, Const.SAVED_APP_VERSION, BuildConfig.VERSION_CODE);
+        if (savedAppVersion < BuildConfig.VERSION_CODE) {
             Utils.setSetting(this, Const.SHOW_UPDATE_NOTE, true);
             Utils.setSetting(this, Const.SAVED_APP_VERSION, BuildConfig.VERSION_CODE);
         }
