@@ -238,9 +238,11 @@ public class BuyTicketActivity extends BaseActivity {
         loadingLayout.setVisibility(View.VISIBLE);
         TransitionManager.beginDelayedTransition(loadingLayout);
         paymentButton.setEnabled(false);
+        plusButton.setEnabled(false);
+        minusButton.setEnabled(false);
 
         int ticketTypeId = ticketType.getId();
-        TicketReservation reservation = new TicketReservation(ticketTypeId);
+        TicketReservation reservation = new TicketReservation(ticketTypeId, currentTicketAmount);
 
         TUMCabeVerification verification = TUMCabeVerification.create(this, reservation);
         if (verification == null) {
@@ -263,7 +265,7 @@ public class BuyTicketActivity extends BaseActivity {
                             handleTicketReservationSuccess(ticketType, reservationResponse);
                         } else {
                             if (reservationResponse == null || !response.isSuccessful()) {
-                                handleTicketNotFetched();
+                                handleTicketNotReserved();
                             } else {
                                 handleTicketReservationFailure(R.string.event_imminent_error);
                                 finish();
@@ -285,11 +287,9 @@ public class BuyTicketActivity extends BaseActivity {
         loadingLayout.setVisibility(View.GONE);
         TransitionManager.beginDelayedTransition(loadingLayout);
 
-        paymentButton.setEnabled(true);
-
         Intent intent = new Intent(this, StripePaymentActivity.class);
         intent.putExtra(Const.KEY_TICKET_PRICE, ticketType.formatPrice(currentTicketAmount * ticketType.getPrice()));
-        intent.putExtra(Const.KEY_TICKET_HISTORY, response.getTicketHistory());
+        intent.putIntegerArrayListExtra(Const.KEY_TICKET_IDS, response.getTicketIds());
         intent.putExtra(Const.KEY_TERMS_LINK, ticketType.getPaymentInfo()
                                                         .getTermsLink());
         intent.putExtra(Const.KEY_STRIPE_API_PUBLISHABLE_KEY, ticketType.getPaymentInfo()
@@ -297,7 +297,7 @@ public class BuyTicketActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    private void handleTicketNotFetched() {
+    private void handleTicketNotReserved() {
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.error))
                 .setMessage(getString(R.string.ticket_not_fetched))
@@ -305,6 +305,7 @@ public class BuyTicketActivity extends BaseActivity {
                     loadingLayout.setVisibility(View.GONE);
                     TransitionManager.beginDelayedTransition(loadingLayout);
                     paymentButton.setEnabled(true);
+                    updateTicketAmount();
                 })
                 .create();
 

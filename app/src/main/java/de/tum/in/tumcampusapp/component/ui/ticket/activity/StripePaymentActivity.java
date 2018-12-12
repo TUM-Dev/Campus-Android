@@ -56,7 +56,7 @@ public class StripePaymentActivity extends BaseActivity {
     private PaymentSession paymentSession;
     private boolean didSelectPaymentMethod;
 
-    private int ticketHistory; // Ticket ID, since the ticket was reserved in the prior activity and
+    private List<Integer> ticketIds; // Ticket ID, since the ticket was reserved in the prior activity and
                                // we need the ID to init the purchase
 
     private String ticketPrice;
@@ -72,14 +72,14 @@ public class StripePaymentActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         ticketPrice = getIntent().getStringExtra(Const.KEY_TICKET_PRICE);
-        ticketHistory = getIntent().getIntExtra(Const.KEY_TICKET_HISTORY, -1);
+        ticketIds = getIntent().getIntegerArrayListExtra(Const.KEY_TICKET_IDS);
         termsOfServiceLink = getIntent().getStringExtra(Const.KEY_TERMS_LINK);
         stripePublishableKey = getIntent().getStringExtra(Const.KEY_STRIPE_API_PUBLISHABLE_KEY);
 
-        if (ticketHistory < 0
-                || ticketPrice == null
-                || termsOfServiceLink.isEmpty()
-                || stripePublishableKey == null) {
+        if (ticketIds.isEmpty()
+            || ticketPrice == null
+            || termsOfServiceLink.isEmpty()
+            || stripePublishableKey == null) {
             Utils.showToast(this, R.string.error_something_wrong);
             finish();
             return;
@@ -166,8 +166,8 @@ public class StripePaymentActivity extends BaseActivity {
 
             TUMCabeClient
                     .getInstance(this)
-                    .purchaseTicketStripe(this, ticketHistory,
-                            methodId, cardholder, new Callback<Ticket>() {
+                    .purchaseTicketStripe(this, ticketIds,
+                                          methodId, cardholder, new Callback<Ticket>() {
                                 @Override
                                 public void onResponse(@NonNull Call<Ticket> call,
                                                        @NonNull Response<Ticket> response) {

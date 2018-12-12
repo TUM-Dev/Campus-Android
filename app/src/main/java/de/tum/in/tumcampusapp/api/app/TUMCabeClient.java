@@ -395,9 +395,9 @@ public final class TUMCabeClient {
     // Ticket purchase
 
     public void purchaseTicketStripe(
-            Context context, int ticketHistory, @NonNull String token,
+            Context context, List<Integer> ticketIds, @NonNull String token,
             @NonNull String customerName, Callback<Ticket> cb) throws NoPrivateKey {
-        TicketPurchaseStripe purchase = new TicketPurchaseStripe(ticketHistory, token, customerName);
+        TicketPurchaseStripe purchase = new TicketPurchaseStripe(ticketIds, token, customerName);
         TUMCabeVerification verification = getVerification(context, purchase);
         service.purchaseTicketStripe(verification).enqueue(cb);
     }
