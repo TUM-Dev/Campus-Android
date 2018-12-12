@@ -669,6 +669,10 @@ Signature: %5$s</string>
     <string name="ticket_contingent_exhausted">All tickets of the requested type are already sold.</string>
 
     <string name="choose_ticket_type">Choose your ticket type</string>
+    <string name="ticket_amount_error_title">Purchase restrictions</string>
+    <string name="ticket_amount_information">You can buy a minimum of %1d and a maximum of %2d of ticket type \“%s\”</string>
+    <string name="ticket_price_multiple_tickets">%1s (%2s per ticket)</string>
+    <string name="ticket_amount_label">Amount</string>
 
     <string name="retry">Retry</string>
     <string name="updating_event">Updating event …</string>

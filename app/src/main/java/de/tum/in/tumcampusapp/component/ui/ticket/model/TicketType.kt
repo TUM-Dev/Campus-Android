@@ -27,7 +27,7 @@ data class TicketType(
         var paymentInfo: Payment = Payment()
 ) {
 
-    val formattedPrice: String
-        get() = DecimalFormat("#.00").format(price / 100.0) + " €"
+    fun formatPrice(price: Int): String
+        = DecimalFormat("#.00").format(price / 100.0) + " €"
 
 }

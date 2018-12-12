@@ -5,8 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -20,6 +18,8 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+import androidx.annotation.NonNull;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
@@ -136,7 +136,7 @@ public class ShowTicketActivity extends BaseActivity {
     private void setViewData() {
         titleTextView.setText(event.getTitle());
         dateTextView.setText(event.getFormattedStartDateTime(this));
-        priceTextView.setText(ticketType.getFormattedPrice());
+        priceTextView.setText(ticketType.formatPrice(ticketType.getPrice())); // TODO(bronger) adapt for multiple tickets
 
         String formattedDateTime = ticket.getFormattedRedemptionDate(this);
         String redemptionState = getString(R.string.redeemed_format_string, formattedDateTime);

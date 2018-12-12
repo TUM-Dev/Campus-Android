@@ -491,6 +491,10 @@ Signatur: %5$s</string>
     <string name="price">Preis</string>
     <string name="location">Ort</string>
     <string name="choose_ticket_type">Wähle deinen Ticket-Typ</string>
+    <string name="ticket_amount_information">Du kannst minimal %1d und maximal %2d Tickets der Kategorie \“%s\” kaufen</string>
+    <string name="ticket_price_multiple_tickets">%1s (%2s pro Ticket)</string>
+    <string name="ticket_amount_label">Anzahl</string>
+    <string name="ticket_amount_error_title">Kaufbeschränkung</string>
     <string name="unknown">Unbekannt</string>
 
     <!-- Payment -->
