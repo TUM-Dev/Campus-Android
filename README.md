@@ -1,4 +1,9 @@
-# TumCampusApp [![Build Status](https://travis-ci.org/TUM-Dev/Campus-Android.svg?branch=master)](https://travis-ci.org/TUM-Dev/Campus-Android)
+[![Build Status](https://travis-ci.org/TUM-Dev/Campus-Android.svg?branch=master)](https://travis-ci.org/TUM-Dev/Campus-Android)
+<a href="https://play.google.com/store/apps/details?id=de.tum.in.tumcampus">
+<img src="https://play.google.com/intl/en_us/badges/images/badge_new.png" align="right">
+</a>
+
+# TUM Campus App for Android
 ### An excellent app for students by students
 The TUM Campus App (TCA) is an open source project, which is mainly developed by volunteers with significant contributions by the Android Practical course. The TCA mostly targets phones, but can also be used on tablets or any Android device.
 
