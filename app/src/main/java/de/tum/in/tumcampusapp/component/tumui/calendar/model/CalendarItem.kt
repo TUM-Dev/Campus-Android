@@ -1,12 +1,14 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar.model
 
-import androidx.room.Entity
-import androidx.room.Ignore
-import androidx.room.PrimaryKey
 import android.content.ContentValues
 import android.content.Context
 import android.provider.CalendarContract
 import androidx.core.content.ContextCompat
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
+import com.alamkanak.weekview.WeekViewDisplayable
+import com.alamkanak.weekview.WeekViewEvent
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.IntegratedCalendarEvent
 import org.joda.time.DateTime
@@ -18,17 +20,19 @@ import java.util.regex.Pattern
  * Entity for storing information about lecture events
  */
 @Entity(tableName = "calendar")
-data class CalendarItem(@PrimaryKey
-                        var nr: String = "",
-                        var status: String = "",
-                        var url: String = "",
-                        var title: String = "",
-                        var description: String = "",
-                        var dtstart: DateTime = DateTime(),
-                        var dtend: DateTime = DateTime(),
-                        var location: String = "",
-                        @Ignore
-                        var blacklisted: Boolean = false) {
+data class CalendarItem(
+        @PrimaryKey
+        var nr: String = "",
+        var status: String = "",
+        var url: String = "",
+        var title: String = "",
+        var description: String = "",
+        var dtstart: DateTime = DateTime(),
+        var dtend: DateTime = DateTime(),
+        var location: String = "",
+        @Ignore
+        var blacklisted: Boolean = false
+) : WeekViewDisplayable<CalendarItem> {
 
     val isEditable: Boolean
         get() = url.isBlank()
@@ -113,4 +117,9 @@ data class CalendarItem(@PrimaryKey
     }
 
     fun isCancelled(): Boolean = status == "CANCEL"
+
+    override fun toWeekViewEvent(): WeekViewEvent<CalendarItem> {
+        return WeekViewEvent(nr.toLong(), title, eventStart.toGregorianCalendar(),
+                eventEnd.toGregorianCalendar(), location, 0, false, this)
+    }
 }

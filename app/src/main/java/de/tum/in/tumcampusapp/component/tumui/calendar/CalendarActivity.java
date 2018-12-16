@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.alamkanak.weekview.DateTimeInterpreter;
+import com.alamkanak.weekview.EventClickListener;
 import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewDisplayable;
@@ -50,11 +51,11 @@ import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.QueryLocationsService;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 
@@ -62,8 +63,8 @@ import retrofit2.Call;
  * Activity showing the user's calendar. Calendar items (events) are fetched from TUMOnline and displayed as blocks on a timeline.
  */
 public class CalendarActivity extends ActivityForAccessingTumOnline<EventsResponse>
-        implements OnClickListener, MonthLoader.MonthChangeListener, WeekView.EventClickListener,
-                   CalendarDetailsFragment.OnEventInteractionListener {
+        implements OnClickListener, MonthLoader.MonthChangeListener<CalendarItem>,
+        EventClickListener<CalendarItem>, CalendarDetailsFragment.OnEventInteractionListener {
 
     private static final int REQUEST_SYNC = 0;
     private static final int REQUEST_DELETE = 1;
@@ -243,25 +244,24 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
             return;
         }
 
-        mDisposable.add(
-                Completable.fromAction(() -> CalendarController.syncCalendar(this))
-                           .subscribeOn(Schedulers.io())
-                           .observeOn(AndroidSchedulers.mainThread())
-                           .subscribe(() -> {
-                               if (!isFinishing()) {
-                                   new AlertDialog.Builder(this)
-                                           .setMessage(getString(R.string.dialog_show_calendar))
-                                           .setNegativeButton(getString(R.string.no), null)
-                                           .setPositiveButton(getString(R.string.yes), (dialog, which) -> {
-                                               displayCalendarOnGoogleCalendar();
-                                           })
-                                           .show();
-                               }
-                           }, throwable -> {
-                               Utils.log(throwable);
-                               Utils.showToast(this, R.string.export_to_google_error);
-                           })
-        );
+        Disposable disposable = Completable.fromAction(() -> CalendarController.syncCalendar(this))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> {
+                    if (!isFinishing()) {
+                        new AlertDialog.Builder(this)
+                                .setMessage(getString(R.string.dialog_show_calendar))
+                                .setNegativeButton(getString(R.string.no), null)
+                                .setPositiveButton(getString(R.string.yes), (dialog, which) -> {
+                                    displayCalendarOnGoogleCalendar();
+                                })
+                                .show();
+                    }
+                }, throwable -> {
+                    Utils.log(throwable);
+                    Utils.showToast(this, R.string.export_to_google_error);
+                });
+        mDisposable.add(disposable);
     }
 
     @Override
@@ -314,13 +314,18 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
             icon = R.drawable.ic_outline_calendar_view_day_24px;
             mWeekView.setNumberOfVisibleDays(5);
             // Lets change some dimensions to best fit the view.
-            mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+            mWeekView.setHeaderRowTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+            mWeekView.setTimeColumnTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
             mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+
+            // TODO: Start attributes
+            //mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
         } else {
             icon = R.drawable.ic_outline_view_column_24px;
             mWeekView.setNumberOfVisibleDays(1);
             // Lets change some dimensions to best fit the view.
-            mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
+            mWeekView.setHeaderRowTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
+            mWeekView.setTimeColumnTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
             mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14, getResources().getDisplayMetrics()));
         }
 
@@ -413,23 +418,14 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     }
 
     @Override
-    public List<WeekViewDisplayable> onMonthChange(int newYear, int newMonth) {
+    public List<WeekViewDisplayable<CalendarItem>> onMonthChange(Calendar startDate, Calendar endDate) {
         // Populate the week view with the events of the month to display
-        DateTime begin = DateTimeUtils.dateWithStartOfDay()
-                .withYear(newYear)
-                .withMonthOfYear(newMonth)
-                .withDayOfMonth(1);
-
-        int daysInMonth = begin.dayOfMonth().getMaximumValue();
-        DateTime end = DateTimeUtils.dateWithEndOfDay()
-                .withYear(newYear)
-                .withMonthOfYear(newMonth)
-                .withDayOfMonth(daysInMonth);
-
+        DateTime begin = new DateTime(startDate);
+        DateTime end = new DateTime(endDate);
         return prepareCalendarItems(begin, end);
     }
 
-    private List<WeekViewDisplayable> prepareCalendarItems(DateTime begin, DateTime end) {
+    private List<WeekViewDisplayable<CalendarItem>> prepareCalendarItems(DateTime begin, DateTime end) {
         boolean showCancelledEvents = Utils.getSettingBool(this, Const.CALENDAR_FILTER_CANCELED, true);
         List<CalendarItem> calendarItems = showCancelledEvents
                 ? calendarController.getFromDbBetweenDates(begin, end)
@@ -441,8 +437,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
      * Creates one event out of multiple instances of the same event that have different locations.
      * List must already be sorted so that event duplicates are right after each other.
      */
-    private List<WeekViewDisplayable> mergeSimilarCalendarItems(List<CalendarItem> calendarItems) {
-        List<WeekViewDisplayable> events = new ArrayList<>();
+    private List<WeekViewDisplayable<CalendarItem>> mergeSimilarCalendarItems(List<CalendarItem> calendarItems) {
+        List<WeekViewDisplayable<CalendarItem>> events = new ArrayList<>();
         for (int i = 0; i < calendarItems.size(); i++) {
             CalendarItem calendarItem = calendarItems.get(i);
             StringBuilder location = new StringBuilder();
@@ -452,10 +448,14 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
                 i++;
                 location.append(" + ");
                 location.append(calendarItems.get(i).getLocation());
-
             }
+
             calendarItem.setLocation(location.toString());
-            events.add(new IntegratedCalendarEvent(calendarItem, this));
+
+            WeekViewEvent<CalendarItem> weekViewEvent = calendarItem.toWeekViewEvent();
+            weekViewEvent.setColor(calendarItem.getEventColor(this)); // TODO: Refactor color stuff
+            //events.add(new IntegratedCalendarEvent(calendarItem, this));
+            events.add(weekViewEvent);
         }
         return events;
     }
@@ -527,15 +527,14 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     }
 
     @Override
-    public void onEventClick(WeekViewEvent weekViewEvent, RectF rectF) {
+    public void onEventClick(CalendarItem data, RectF eventRect) {
         // Don't call openEvent if the activity is paused.
         if (isPaused) {
             return;
         }
-        String eventId = String.valueOf(weekViewEvent.getId());
-        openEvent(eventId);
+        openEvent(data);
     }
-    
+
     private void openEvent(String eventId) {
         List<CalendarItem> items = calendarController.getCalendarItemAndDuplicatesById(eventId);
         if (items == null || items.isEmpty()) {
@@ -543,7 +542,11 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
         }
 
         CalendarItem originalItem = items.get(0);
-        detailsFragment = CalendarDetailsFragment.newInstance(originalItem.getNr(), true, this);
+        openEvent(originalItem);
+    }
+    
+    private void openEvent(CalendarItem event) {
+        detailsFragment = CalendarDetailsFragment.newInstance(event.getNr(), true, this);
         detailsFragment.show(getSupportFragmentManager(), null);
     }
 

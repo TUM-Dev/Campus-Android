@@ -17,6 +17,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -49,46 +50,41 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
         return fragment;
     }
 
-    private static int calculateLoadedKey(int year, int month) {
+    private static int calculateLoadedKey(Calendar start) {
+        final int year = start.get(Calendar.YEAR);
+        final int month = start.get(Calendar.MONTH);
         return (year * 16) | (month % 12);
     }
 
     @Override
-    public List<WeekViewDisplayable> onMonthChange(int newYear, int newMonth) {
-        if (!isLoaded(newYear, newMonth)) {
-            loadEventsInBackground(newYear, newMonth);
+    public List<WeekViewDisplayable> onMonthChange(Calendar startDate, Calendar endDate) {
+        if (!isLoaded(startDate)) {
+            loadEventsInBackground(startDate, endDate);
             return new ArrayList<>();
         }
 
-        //Events already have been loaded.
-        return loadedEvents.get(calculateLoadedKey(newYear, newMonth));
+        return loadedEvents.get(calculateLoadedKey(startDate));
     }
 
-    private void loadEventsInBackground(final int newYear, final int newMonth) {
+    private void loadEventsInBackground(final Calendar start, final Calendar end) {
+        // Populate the week view with the events of the month to display
         new Thread(() -> {
-            // Populate the week view with the events of the month to display
-            DateTime start = new DateTime()
-                    .withYear(newYear)
-                    .withMonthOfYear(newMonth)
-                    .withDayOfMonth(1);
-
             DateTimeFormatter format = DateTimeFormat.forPattern("yyyyMMdd")
                     .withLocale(Locale.getDefault());
-            String startTime = format.print(start);
 
-            int daysInMonth = start.dayOfMonth()
-                    .getMaximumValue();
-            DateTime end = start.withDayOfMonth(daysInMonth);
-            String endTime = format.print(end);
+            DateTime startTime = new DateTime(start);
+            DateTime endTime = new DateTime(end);
+
+            String formattedStartTime = format.print(startTime);
+            String formattedEndTime = format.print(endTime);
 
             //Convert to the proper type
-            final List<WeekViewDisplayable> events = fetchEventList(roomApiCode, startTime, endTime);
+            final List<WeekViewDisplayable> events =
+                    fetchEventList(roomApiCode, formattedStartTime, formattedEndTime);
 
-            //Finish loading
             context.runOnUiThread(() -> {
-                loadedEvents.put(calculateLoadedKey(newYear, newMonth), events);
-                //Trigger onMonthChange() again
-                mWeekView.notifyDatasetChanged();
+                loadedEvents.put(calculateLoadedKey(start), events);
+                mWeekView.notifyDataSetChanged();
             });
         }).start();
     }
@@ -113,8 +109,8 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
         return mWeekView;
     }
 
-    private boolean isLoaded(int year, int month) {
-        return loadedEvents.get(calculateLoadedKey(year, month)) != null;
+    private boolean isLoaded(Calendar start) {
+        return loadedEvents.get(calculateLoadedKey(start)) != null;
     }
 
     private List<WeekViewDisplayable> fetchEventList(String roomId, String startDate, String endDate) {

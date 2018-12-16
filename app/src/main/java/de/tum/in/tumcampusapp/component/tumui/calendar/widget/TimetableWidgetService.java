@@ -115,7 +115,7 @@ public class TimetableWidgetService extends RemoteViewsService {
             rv.setInt(R.id.timetable_widget_event, "setBackgroundColor", currentItem.getColor());
 
             // Setup event title
-            rv.setTextViewText(R.id.timetable_widget_event_title, currentItem.getName());
+            rv.setTextViewText(R.id.timetable_widget_event_title, currentItem.getTitle());
 
             // Setup event time
             DateTimeFormatter formatter = DateTimeFormat.shortTime();

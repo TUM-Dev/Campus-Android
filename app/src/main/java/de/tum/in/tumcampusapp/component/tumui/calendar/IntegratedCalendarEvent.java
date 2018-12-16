@@ -12,6 +12,7 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
 /**
  * A class to represent events for the integrated WeekView calendar
  */
+@Deprecated
 public class IntegratedCalendarEvent extends WeekViewEvent {
     private static final float SATURATION_ADJUST = 1.3f;
     private static final float INTENSITY_ADJUST = 0.8f;
