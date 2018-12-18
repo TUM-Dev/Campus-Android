@@ -83,7 +83,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     private MenuItem menuItemSwitchView;
     private MenuItem menuItemFilterCanceled;
 
-    private WeekView mWeekView;
+    private WeekView<CalendarItem> mWeekView;
     private MaterialButton mTodayButton;
 
     private CompositeDisposable mDisposable = new CompositeDisposable();
@@ -249,19 +249,21 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
                     if (!isFinishing()) {
-                        new AlertDialog.Builder(this)
-                                .setMessage(getString(R.string.dialog_show_calendar))
-                                .setNegativeButton(getString(R.string.no), null)
-                                .setPositiveButton(getString(R.string.yes), (dialog, which) -> {
-                                    displayCalendarOnGoogleCalendar();
-                                })
-                                .show();
+                        displayCalendarSyncSuccessDialog();
                     }
                 }, throwable -> {
                     Utils.log(throwable);
                     Utils.showToast(this, R.string.export_to_google_error);
                 });
         mDisposable.add(disposable);
+    }
+
+    private void displayCalendarSyncSuccessDialog() {
+        new AlertDialog.Builder(this)
+                .setMessage(getString(R.string.dialog_show_calendar))
+                .setNegativeButton(R.string.no, null)
+                .setPositiveButton(R.string.yes, (dialog, i) -> displayCalendarOnGoogleCalendar())
+                .show();
     }
 
     @Override
@@ -318,7 +320,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
             mWeekView.setTimeColumnTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
             mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
 
-            // TODO: Start attributes
+            // TODO: Store attributes
             //mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
         } else {
             icon = R.drawable.ic_outline_view_column_24px;
@@ -453,8 +455,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
             calendarItem.setLocation(location.toString());
 
             WeekViewEvent<CalendarItem> weekViewEvent = calendarItem.toWeekViewEvent();
-            weekViewEvent.setColor(calendarItem.getEventColor(this)); // TODO: Refactor color stuff
-            //events.add(new IntegratedCalendarEvent(calendarItem, this));
             events.add(weekViewEvent);
         }
         return events;

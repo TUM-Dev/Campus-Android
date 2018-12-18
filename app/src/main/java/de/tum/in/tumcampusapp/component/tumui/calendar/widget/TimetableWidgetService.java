@@ -17,7 +17,7 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
-import de.tum.in.tumcampusapp.component.tumui.calendar.IntegratedCalendarEvent;
+import de.tum.in.tumcampusapp.component.tumui.calendar.WidgetCalendarItem;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 
@@ -33,7 +33,7 @@ public class TimetableWidgetService extends RemoteViewsService {
 
         private final Context applicationContext;
         private final int appWidgetID;
-        private List<IntegratedCalendarEvent> calendarEvents;
+        private List<WidgetCalendarItem> calendarEvents;
 
         TimetableRemoteViewFactory(Context applicationContext, Intent intent) {
             this.applicationContext = applicationContext;
@@ -57,11 +57,11 @@ public class TimetableWidgetService extends RemoteViewsService {
             }
 
             for (int i = 1; i < calendarEvents.size(); i++) {
-                IntegratedCalendarEvent lastEvent = calendarEvents.get(i - 1);
+                WidgetCalendarItem lastEvent = calendarEvents.get(i - 1);
                 DateTime lastTime = new DateTime(lastEvent.getStartTime()
                                                           .getTimeInMillis());
 
-                IntegratedCalendarEvent thisEvent = calendarEvents.get(i);
+                WidgetCalendarItem thisEvent = calendarEvents.get(i);
                 DateTime thisTime = new DateTime(thisEvent.getStartTime()
                                                           .getTimeInMillis());
 
@@ -89,7 +89,7 @@ public class TimetableWidgetService extends RemoteViewsService {
             RemoteViews rv = new RemoteViews(applicationContext.getPackageName(), R.layout.timetable_widget_item);
 
             // Get the lecture for this view
-            IntegratedCalendarEvent currentItem = this.calendarEvents.get(position);
+            WidgetCalendarItem currentItem = this.calendarEvents.get(position);
             if (currentItem == null) {
                 return null;
             }
