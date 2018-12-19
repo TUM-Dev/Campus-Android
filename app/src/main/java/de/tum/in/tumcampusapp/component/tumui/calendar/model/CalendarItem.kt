@@ -115,15 +115,15 @@ data class CalendarItem(
     }
 
     fun isSameEventButForLocation(other: CalendarItem): Boolean {
-        return title.equals(other.title)
-                && dtstart.equals(other.dtstart)
-                && dtend.equals(other.dtend)
+        return title == other.title
+                && dtstart == other.dtstart
+                && dtend == other.dtend
     }
 
     fun isCancelled(): Boolean = status == "CANCEL"
 
     override fun toWeekViewEvent(): WeekViewEvent<CalendarItem> {
         return WeekViewEvent(nr.toLong(), title, eventStart.toGregorianCalendar(),
-                eventEnd.toGregorianCalendar(), location, 0, false, this)
+                eventEnd.toGregorianCalendar(), location, color ?: 0, false, this)
     }
 }
