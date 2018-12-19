@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey
 import com.alamkanak.weekview.WeekViewDisplayable
 import com.alamkanak.weekview.WeekViewEvent
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.WidgetCalendarItem
+import de.tum.`in`.tumcampusapp.utils.ColorUtils
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import java.util.*
@@ -46,13 +46,13 @@ data class CalendarItem(
     // TODO: Move into EventsColorProvider
     fun getEventColor(context: Context): Int {
         return if (isCancelled()) {
-            WidgetCalendarItem.getDisplayColorFromColor(ContextCompat.getColor(context, R.color.event_canceled))
+            ColorUtils.getDisplayColorFromColor(ContextCompat.getColor(context, R.color.event_canceled))
         } else if (title.endsWith("VO") || title.endsWith("VU")) {
-            WidgetCalendarItem.getDisplayColorFromColor(ContextCompat.getColor(context, R.color.event_lecture))
+            ColorUtils.getDisplayColorFromColor(ContextCompat.getColor(context, R.color.event_lecture))
         } else if (title.endsWith("UE")) {
-            WidgetCalendarItem.getDisplayColorFromColor(ContextCompat.getColor(context, R.color.event_exercise))
+            ColorUtils.getDisplayColorFromColor(ContextCompat.getColor(context, R.color.event_exercise))
         } else {
-            WidgetCalendarItem.getDisplayColorFromColor(ContextCompat.getColor(context, R.color.event_other))
+            ColorUtils.getDisplayColorFromColor(ContextCompat.getColor(context, R.color.event_other))
         }
     }
 

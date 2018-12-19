@@ -1,7 +1,5 @@
 package de.tum.in.tumcampusapp.component.tumui.calendar;
 
-import android.graphics.Color;
-
 import com.alamkanak.weekview.WeekViewDisplayable;
 import com.alamkanak.weekview.WeekViewEvent;
 
@@ -15,9 +13,6 @@ import de.tum.in.tumcampusapp.utils.DateTimeUtils;
  * A class to represent events for the integrated WeekView calendar
  */
 public class WidgetCalendarItem implements WeekViewDisplayable<WidgetCalendarItem> {
-
-    private static final float SATURATION_ADJUST = 1.3f;
-    private static final float INTENSITY_ADJUST = 0.8f;
 
     private final String id;
     private final String title;
@@ -46,21 +41,34 @@ public class WidgetCalendarItem implements WeekViewDisplayable<WidgetCalendarIte
     }
 
     public static WidgetCalendarItem fromSchedule(RoomFinderSchedule schedule) {
+        String id = Long.toString(schedule.getEvent_id());
         DateTime start = DateTimeUtils.INSTANCE.getDateTime(schedule.getStart());
         DateTime end = DateTimeUtils.INSTANCE.getDateTime(schedule.getEnd());
-
-        // TODO int color = getDisplayColorFromColor(ContextCompat.getColor(context, R.color.event_lecture));
-
-        return new WidgetCalendarItem(
-                String.valueOf(schedule.getEvent_id()), schedule.getTitle(), start, end, "");
+        return new WidgetCalendarItem(id, schedule.getTitle(), start, end, "");
     }
 
-    public static int getDisplayColorFromColor(int color) {
-        float[] hsv = new float[3];
-        Color.colorToHSV(color, hsv);
-        hsv[1] = Math.min(hsv[1] * SATURATION_ADJUST, 1.0f);
-        hsv[2] *= INTENSITY_ADJUST;
-        return Color.HSVToColor(hsv);
+    public String getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public DateTime getStartTime() {
+        return startTime;
+    }
+
+    public DateTime getEndTime() {
+        return endTime;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public int getColor() {
+        return color;
     }
 
     public void setColor(int color) {

@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.component.tumui.calendar.widget;
 
-import android.annotation.SuppressLint;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
@@ -21,7 +20,6 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.WidgetCalendarItem;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 
-@SuppressLint("Registered")
 public class TimetableWidgetService extends RemoteViewsService {
 
     @Override
@@ -58,12 +56,10 @@ public class TimetableWidgetService extends RemoteViewsService {
 
             for (int i = 1; i < calendarEvents.size(); i++) {
                 WidgetCalendarItem lastEvent = calendarEvents.get(i - 1);
-                DateTime lastTime = new DateTime(lastEvent.getStartTime()
-                                                          .getTimeInMillis());
+                DateTime lastTime = new DateTime(lastEvent.getStartTime().getMillis());
 
                 WidgetCalendarItem thisEvent = calendarEvents.get(i);
-                DateTime thisTime = new DateTime(thisEvent.getStartTime()
-                                                          .getTimeInMillis());
+                DateTime thisTime = new DateTime(thisEvent.getStartTime().getMillis());
 
                 if (!DateTimeUtils.INSTANCE.isSameDay(lastTime, thisTime)) {
                     thisEvent.setIsFirstOnDay(true);
@@ -94,7 +90,7 @@ public class TimetableWidgetService extends RemoteViewsService {
                 return null;
             }
 
-            DateTime startTime = new DateTime(currentItem.getStartTime().getTimeInMillis());
+            DateTime startTime = new DateTime(currentItem.getStartTime().getMillis());
 
             // Setup the date
             if (currentItem.isFirstOnDay()) {
@@ -121,7 +117,7 @@ public class TimetableWidgetService extends RemoteViewsService {
             DateTimeFormatter formatter = DateTimeFormat.shortTime();
 
             String startTimeText = formatter.print(startTime);
-            DateTime endTime = new DateTime(currentItem.getEndTime().getTimeInMillis());
+            DateTime endTime = new DateTime(currentItem.getEndTime().getMillis());
             String endTimeText = formatter.print(endTime);
 
             String eventTime =
@@ -133,7 +129,7 @@ public class TimetableWidgetService extends RemoteViewsService {
 
             // Setup action to open calendar
             Intent fillInIntent = new Intent();
-            fillInIntent.putExtra(Const.EVENT_TIME, currentItem.getStartTime().getTimeInMillis());
+            fillInIntent.putExtra(Const.EVENT_TIME, currentItem.getStartTime().getMillis());
             rv.setOnClickFillInIntent(R.id.timetable_widget_event, fillInIntent);
 
             return rv;

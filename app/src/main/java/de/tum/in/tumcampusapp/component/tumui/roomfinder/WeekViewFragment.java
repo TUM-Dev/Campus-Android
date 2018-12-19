@@ -22,6 +22,7 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.collection.LongSparseArray;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
@@ -117,7 +118,9 @@ public class WeekViewFragment extends Fragment
             // Convert to the proper type
             List<WeekViewDisplayable<WidgetCalendarItem>> events = new ArrayList<>();
             for (RoomFinderSchedule schedule : schedules) {
-                events.add(WidgetCalendarItem.fromSchedule(schedule, requireContext()));
+                WidgetCalendarItem calendarItem = WidgetCalendarItem.fromSchedule(schedule);
+                calendarItem.setColor(ContextCompat.getColor(requireContext(), R.color.event_lecture));
+                events.add(calendarItem);
             }
 
             return events;
