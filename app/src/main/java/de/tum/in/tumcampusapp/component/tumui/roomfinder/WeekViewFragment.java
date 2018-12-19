@@ -118,7 +118,7 @@ public class WeekViewFragment extends Fragment
             // Convert to the proper type
             List<WeekViewDisplayable<WidgetCalendarItem>> events = new ArrayList<>();
             for (RoomFinderSchedule schedule : schedules) {
-                WidgetCalendarItem calendarItem = WidgetCalendarItem.fromSchedule(schedule);
+                WidgetCalendarItem calendarItem = WidgetCalendarItem.create(schedule);
                 calendarItem.setColor(ContextCompat.getColor(requireContext(), R.color.event_lecture));
                 events.add(calendarItem);
             }

@@ -51,7 +51,7 @@ public class TimetableWidgetService extends RemoteViewsService {
 
             // Set isFirstOnDay flags
             if (!calendarEvents.isEmpty()) {
-                calendarEvents.get(0).setIsFirstOnDay(true);
+                calendarEvents.get(0).setFirstOnDay(true);
             }
 
             for (int i = 1; i < calendarEvents.size(); i++) {
@@ -62,7 +62,7 @@ public class TimetableWidgetService extends RemoteViewsService {
                 DateTime thisTime = new DateTime(thisEvent.getStartTime().getMillis());
 
                 if (!DateTimeUtils.INSTANCE.isSameDay(lastTime, thisTime)) {
-                    thisEvent.setIsFirstOnDay(true);
+                    thisEvent.setFirstOnDay(true);
                 }
             }
         }

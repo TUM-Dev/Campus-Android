@@ -141,7 +141,7 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
         List<WidgetCalendarItem> calendarEvents = new ArrayList<>();
         List<CalendarItem> calendarItems = calendarDao.getNextDays(fromDate, toDate, String.valueOf(widgetId));
         for (CalendarItem calendarItem : calendarItems) {
-            WidgetCalendarItem item = new WidgetCalendarItem(calendarItem);
+            WidgetCalendarItem item = WidgetCalendarItem.create(calendarItem);
             item.setColor(calendarItem.getEventColor(mContext));
             calendarEvents.add(item);
         }
