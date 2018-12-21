@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.component.ui.ticket.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,20 +30,27 @@ import de.tum.in.tumcampusapp.component.ui.ticket.EventDiffUtil;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.EventBetaInfo;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.EventItem;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewHolder> {
+public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
     private static final Pattern TITLE_DATE = Pattern.compile("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*");
+
+    private static final int CARD_INFO = 0;
+    private static final int CARD_HORIZONTAL = 1;
+    private static final int CARD_VERTICAL = 2;
 
     private Context mContext;
     private EventsController mEventsController;
 
-    private List<Event> mEvents = new ArrayList<>();
+    private List<EventItem> mEvents = new ArrayList<>();
+    private EventItem betaInfo = new EventBetaInfo();
 
     public EventsAdapter(Context context) {
         mContext = context;
@@ -51,22 +59,47 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
 
     @NonNull
     @Override
-    public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        int layoutRes;
+        if (viewType == CARD_INFO) {
+            return new CardViewHolder(LayoutInflater.from(parent.getContext())
+                                                    .inflate(R.layout.card_events_info, parent, false));
+        }
+        if (viewType == CARD_HORIZONTAL) {
+            layoutRes = R.layout.card_events_item;
+        } else {
+            layoutRes = R.layout.card_events_item_vertical;
+        }
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.card_events_item, parent, false);
+                                  .inflate(layoutRes, parent, false);
         return new EventViewHolder(view, false);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
-        Event event = mEvents.get(position);
+    public int getItemViewType(int position) {
+        EventItem item = mEvents.get(position);
+        if (item instanceof EventBetaInfo) {
+            return CARD_INFO;
+        }
+        if (((Event) item).getKino() == -1) {
+            return CARD_HORIZONTAL;
+        }
+        return CARD_VERTICAL;
+    }
 
+    @Override
+    public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
+        EventItem eventItem = mEvents.get(position);
+        if (eventItem instanceof EventBetaInfo) {
+            return;
+        }
+        Event event = (Event) eventItem;
         EventCard eventCard = new EventCard(mContext);
         eventCard.setEvent(event);
         holder.setCurrentCard(eventCard);
 
         boolean hasTicket = mEventsController.isEventBooked(event);
-        holder.bind(event, hasTicket);
+        ((EventViewHolder) holder).bind(event, hasTicket);
     }
 
     @Override
@@ -74,13 +107,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         return mEvents.size();
     }
 
-    public void update(List<Event> newEvents) {
+    public void update(List<EventItem> newEvents) {
+        newEvents.add(0, betaInfo);
         DiffUtil.Callback callback = new EventDiffUtil(mEvents, newEvents);
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(callback);
-
-        mEvents.clear();
-        mEvents.addAll(newEvents);
-
+        mEvents = newEvents;
         diffResult.dispatchUpdatesTo(this);
     }
 
@@ -93,7 +124,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         ProgressBar progressBar;
         ImageView imageView;
         TextView titleTextView;
-        TextView localityTextView;
         TextView dateTextView;
         MaterialButton ticketButton;
 
@@ -106,7 +136,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
             optionsButtonGroup = view.findViewById(R.id.cardMoreIconGroup);
             imageView = view.findViewById(R.id.events_img);
             titleTextView = view.findViewById(R.id.events_title);
-            localityTextView = view.findViewById(R.id.events_src_locality);
             dateTextView = view.findViewById(R.id.events_src_date);
             ticketButton = view.findViewById(R.id.ticketButton);
         }
@@ -119,19 +148,19 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
 
             if (showImage) {
                 Picasso.get()
-                        .load(imageUrl)
-                        .into(imageView, new Callback() {
-                            @Override
-                            public void onSuccess() {
-                                progressBar.setVisibility(GONE);
-                            }
+                       .load(imageUrl)
+                       .into(imageView, new Callback() {
+                           @Override
+                           public void onSuccess() {
+                               progressBar.setVisibility(GONE);
+                           }
 
-                            @Override
-                            public void onError(Exception e) {
-                                Utils.log(e);
-                                progressBar.setVisibility(GONE);
-                            }
-                        });
+                           @Override
+                           public void onError(Exception e) {
+                               Utils.log(e);
+                               progressBar.setVisibility(GONE);
+                           }
+                       });
             } else {
                 progressBar.setVisibility(GONE);
                 imageView.setVisibility(GONE);
@@ -140,9 +169,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
             String title = event.getTitle();
             title = TITLE_DATE.matcher(title).replaceAll("");
             titleTextView.setText(title);
-
-            String locality = event.getLocality();
-            localityTextView.setText(locality);
 
             String startTime = event.getFormattedStartDateTime(itemView.getContext());
             dateTextView.setText(startTime);

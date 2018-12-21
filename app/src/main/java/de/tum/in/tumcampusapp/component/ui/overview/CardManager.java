@@ -39,6 +39,7 @@ public final class CardManager {
     public static final int CARD_EDUROAM_FIX = R.layout.card_eduroam_fix;
     public static final int CARD_TOP_NEWS = R.layout.card_top_news;
     public static final int CARD_EVENT = R.layout.card_events_item;
+    public static final int CARD_UPDATE_NOTE = R.layout.card_update_note;
 
     private CardManager() {}
 

@@ -35,6 +35,7 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
+import de.tum.in.tumcampusapp.component.ui.updatenote.model.UpdateNote;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -73,6 +74,7 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_SCHED
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_SEARCH;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_STUDY_ROOMS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_TICKET;
+import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_UPDATE_NOTE;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_WIFI_HEATMAP;
 
 public interface TUMCabeAPIService {
@@ -241,5 +243,9 @@ public interface TUMCabeAPIService {
 
     @GET(API_EVENTS + API_TICKET + "status/{event}")
     Single<List<TicketStatus>> getTicketStats(@Path("event") int event);
+
+    // Update note
+    @GET(API_UPDATE_NOTE + "{version}")
+    Call<UpdateNote> getUpdateNote(@Path("version") int version);
 
 }
