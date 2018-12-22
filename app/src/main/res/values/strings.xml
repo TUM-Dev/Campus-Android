@@ -711,4 +711,5 @@ Signature: %5$s</string>
     <string name="tickets_available_here">Tickets available here!</string>
     <string name="update_note_title">New Features</string>
     <string name="update_note_version">Version %s</string>
+    <string name="action_cant_be_performed">Action can’t be performed</string>
 </resources>
