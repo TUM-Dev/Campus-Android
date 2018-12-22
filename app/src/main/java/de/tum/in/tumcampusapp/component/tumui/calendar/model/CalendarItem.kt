@@ -1,20 +1,20 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar.model
 
 import android.content.ContentValues
-import android.content.Context
 import android.provider.CalendarContract
-import androidx.core.content.ContextCompat
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.alamkanak.weekview.WeekViewDisplayable
 import com.alamkanak.weekview.WeekViewEvent
-import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.utils.ColorUtils
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import java.util.*
 import java.util.regex.Pattern
+
+enum class CalendarItemType {
+    CANCELED, LECTURE, EXERCISE, OTHER
+}
 
 /**
  * Entity for storing information about lecture events
@@ -37,34 +37,28 @@ data class CalendarItem(
     @Ignore
     var color: Int? = null
 
+    val type: CalendarItemType
+        get() {
+            return if (isCanceled) {
+                CalendarItemType.CANCELED
+            } else if (title.endsWith("VO") || title.endsWith("VU")) {
+                CalendarItemType.LECTURE
+            } else if (title.endsWith("UE")) {
+                CalendarItemType.EXERCISE
+            } else {
+                CalendarItemType.OTHER
+            }
+        }
+
     val isEditable: Boolean
         get() = url.isBlank()
 
-    /**
-     * Returns the color of the event
-     */
-    // TODO: Move into EventsColorProvider
-    fun getEventColor(context: Context): Int {
-        return if (isCancelled()) {
-            ColorUtils.getDisplayColorFromColor(ContextCompat.getColor(context, R.color.event_canceled))
-        } else if (title.endsWith("VO") || title.endsWith("VU")) {
-            ColorUtils.getDisplayColorFromColor(ContextCompat.getColor(context, R.color.event_lecture))
-        } else if (title.endsWith("UE")) {
-            ColorUtils.getDisplayColorFromColor(ContextCompat.getColor(context, R.color.event_exercise))
-        } else {
-            ColorUtils.getDisplayColorFromColor(ContextCompat.getColor(context, R.color.event_other))
-        }
-    }
+    val isCanceled: Boolean
+        get() = status == "CANCEL"
 
-    /**
-     * Get event start as Calendar object
-     */
     val eventStart
         get() = dtstart
 
-    /**
-     * Get event end as Calendar object
-     */
     val eventEnd
         get() = dtend
 
@@ -119,8 +113,6 @@ data class CalendarItem(
                 && dtstart == other.dtstart
                 && dtend == other.dtend
     }
-
-    fun isCancelled(): Boolean = status == "CANCEL"
 
     override fun toWeekViewEvent(): WeekViewEvent<CalendarItem> {
         return WeekViewEvent(nr.toLong(), title, eventStart.toGregorianCalendar(),

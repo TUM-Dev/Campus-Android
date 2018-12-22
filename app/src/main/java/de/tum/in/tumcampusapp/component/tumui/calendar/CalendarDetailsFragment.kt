@@ -62,7 +62,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     private fun updateView(calendarItemList: List<CalendarItem>) {
         val calendarItem = calendarItemList[0]
 
-        if (calendarItemList.all { it.isCancelled() }) {
+        if (calendarItemList.all { it.isCanceled }) {
             cancelButtonsContainer.visibility = View.VISIBLE
             descriptionTextView.setTextColor(Color.RED)
         }
@@ -81,7 +81,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
                 }
                 val locationText: TextView = layoutInflater
                         .inflate(R.layout.calendar_location_text, locationLinearLayout, false) as TextView
-                if (item.isCancelled()) {
+                if (item.isCanceled) {
                     locationText.setTextColor(ContextCompat.getColor(requireContext(), R.color.event_canceled))
                     val textForCancelledEvent = "${item.location} (${R.string.event_canceled})"
                     locationText.text = textForCancelledEvent

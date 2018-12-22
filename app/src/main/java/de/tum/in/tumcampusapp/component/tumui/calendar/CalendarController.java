@@ -119,8 +119,10 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
     }
 
     private List<CalendarItem> applyEventColors(List<CalendarItem> calendarItems) {
+        EventColorProvider provider = new EventColorProvider(mContext);
+
         for (CalendarItem calendarItem : calendarItems) {
-            int color = calendarItem.getEventColor(mContext);
+            int color = provider.getColor(calendarItem);
             calendarItem.setColor(color);
         }
         return calendarItems;
@@ -138,11 +140,14 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
         DateTime fromDate = DateTime.now();
         DateTime toDate = fromDate.plusDays(dayCount);
 
+        EventColorProvider provider = new EventColorProvider(mContext);
+
         List<WidgetCalendarItem> calendarEvents = new ArrayList<>();
         List<CalendarItem> calendarItems = calendarDao.getNextDays(fromDate, toDate, String.valueOf(widgetId));
+
         for (CalendarItem calendarItem : calendarItems) {
             WidgetCalendarItem item = WidgetCalendarItem.create(calendarItem);
-            item.setColor(calendarItem.getEventColor(mContext));
+            item.setColor(provider.getColor(calendarItem));
             calendarEvents.add(item);
         }
 
