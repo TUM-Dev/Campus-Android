@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.text.format.DateUtils;
 import android.transition.TransitionManager;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,6 +50,7 @@ import de.tum.in.tumcampusapp.component.ui.transportation.TransportController;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.service.QueryLocationsService;
 import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.FontUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -78,7 +78,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
      * Used as a flag, if there are results fetched from internet
      */
     private boolean isFetched;
-    private boolean mWeekMode;
+    private boolean isWeekMode;
     private DateTime mShowDate;
     private MenuItem menuItemSwitchView;
     private MenuItem menuItemFilterCanceled;
@@ -137,12 +137,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
             }
         }
 
-        // Get setting from sharedprefs and refresh the view with everything
-        mWeekMode = Utils.getSettingBool(this, Const.CALENDAR_WEEK_MODE, false);
+        isWeekMode = Utils.getSettingBool(this, Const.CALENDAR_WEEK_MODE, false);
 
         disableRefresh();
         loadEvents(CacheControl.USE_CACHE);
-
     }
 
     @Override
@@ -229,9 +227,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
         menuItemExportGoogle.setEnabled(isFetched);
         menuItemDeleteCalendar.setEnabled(isFetched);
 
-        boolean bed = Utils.getSettingBool(this, Const.SYNC_CALENDAR, false);
-        menuItemExportGoogle.setVisible(!bed);
-        menuItemDeleteCalendar.setVisible(bed);
+        boolean autoSyncCalendar = Utils.getSettingBool(this, Const.SYNC_CALENDAR, false);
+        menuItemExportGoogle.setVisible(!autoSyncCalendar);
+        menuItemDeleteCalendar.setVisible(autoSyncCalendar);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -271,8 +269,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
         int i = item.getItemId();
         switch (i) {
             case R.id.action_switch_view_mode:
-                mWeekMode = !mWeekMode;
-                Utils.setSetting(this, Const.CALENDAR_WEEK_MODE, mWeekMode);
+                isWeekMode = !isWeekMode;
+                Utils.setSetting(this, Const.CALENDAR_WEEK_MODE, isWeekMode);
                 refreshWeekView();
                 return true;
             case R.id.action_export_calendar:
@@ -309,26 +307,17 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
      * Load up the week view with correct settingsPrefix
      */
     private void refreshWeekView() {
-        setupDateTimeInterpreter(mWeekMode);
+        setupDateTimeInterpreter(isWeekMode);
         int icon;
 
-        if (mWeekMode) {
+        if (isWeekMode) {
             icon = R.drawable.ic_outline_calendar_view_day_24px;
             mWeekView.setNumberOfVisibleDays(5);
-            // Lets change some dimensions to best fit the view.
-            mWeekView.setHeaderRowTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
-            mWeekView.setTimeColumnTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
-            mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
-
-            // TODO: Store attributes
-            //mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+            mWeekView.setEventTextSize(FontUtils.getFontSizeInPx(this, 12));
         } else {
             icon = R.drawable.ic_outline_view_column_24px;
             mWeekView.setNumberOfVisibleDays(1);
-            // Lets change some dimensions to best fit the view.
-            mWeekView.setHeaderRowTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
-            mWeekView.setTimeColumnTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
-            mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14, getResources().getDisplayMetrics()));
+            mWeekView.setEventTextSize(FontUtils.getFontSizeInPx(this, 14));
         }
 
         // Go to current date or the one given in the intent
@@ -339,8 +328,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
         if (menuItemSwitchView != null) {
             menuItemSwitchView.setIcon(icon);
         }
-
-        mWeekView.invalidate();
     }
 
     /**
@@ -399,7 +386,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
      * Async task for deleting the calendar from local Google calendar
      */
     private void deleteCalendarFromGoogle() {
-        //Check Calendar permission for Android 6.0
+        // Check Calendar permission for Android 6.0
         if (!isPermissionGranted(REQUEST_DELETE)) {
             return;
         }
@@ -499,12 +486,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     @Override
     public void onEventDeleted(@NotNull String eventId) {
         TcaDb db = TcaDb.getInstance(this);
-        db.calendarDao()
-          .delete(eventId);
+        db.calendarDao().delete(eventId);
 
         int id = Integer.parseInt(eventId);
-        db.scheduledNotificationsDao()
-          .delete(NotificationType.CALENDAR.getId(), id);
+        db.scheduledNotificationsDao().delete(NotificationType.CALENDAR.getId(), id);
 
         refreshWeekView();
         Utils.showToast(this, R.string.delete_event_confirmation);
