@@ -25,7 +25,6 @@ sealed class Action {
 
 sealed class Result {
     data class EventsLoaded(val events: List<Event>) : Result()
-    data class TicketsLoaded(val tickets: List<Ticket>) : Result()
     object ShowError : Result()
     object HideError : Result()
     object None : Result()
@@ -46,19 +45,14 @@ class EventsViewModel @Inject constructor(
     val viewState: LiveData<EventsViewState> = _viewState
 
     init {
-        val initialViewState = EventsViewState(isLoading = true)
+        val initialViewState = EventsViewState.initial()
 
         val eventsChanges = when (eventType) {
             EventType.ALL -> eventsLocalRepository.getEvents()
             EventType.BOOKED -> eventsLocalRepository.getBookedEvents()
         }
-        val ticketsChanges = ticketsLocalRepository.getAll()
 
-        val databaseChanges = Observable.merge(
-                eventsChanges.map { Result.EventsLoaded(it) },
-                ticketsChanges.map { Result.TicketsLoaded(it) }
-        )
-
+        val databaseChanges = eventsChanges.map(Result::EventsLoaded)
         val actions = refreshRelay.flatMap(this::processAction)
 
         compositeDisposable += Observable.merge(databaseChanges, actions)
@@ -66,8 +60,6 @@ class EventsViewModel @Inject constructor(
                 .distinctUntilChanged()
                 .subscribe(this::render)
     }
-
-    // TODO: When to hide loading indicator?
 
     private fun processAction(action: Action): Observable<Result> {
         return when (action) {
@@ -78,31 +70,21 @@ class EventsViewModel @Inject constructor(
     private fun reduceState(viewState: EventsViewState, result: Result): EventsViewState {
         return when (result) {
             is Result.EventsLoaded -> viewState.toEventsLoaded(result.events)
-            is Result.TicketsLoaded -> viewState.toTicketsLoaded(result.tickets)
             Result.ShowError -> viewState.toError()
-            Result.HideError -> viewState.toData()
+            Result.HideError -> viewState.toNoError()
             Result.None -> viewState // no changes, we return the current view state
         }
     }
 
     private fun fetchEventsAndTickets(isLoggedIn: Boolean): Observable<Result> {
-        val eventsStream = loadAndStoreEvents()
+        return loadAndStoreEvents()
                 .andThen(Observable.just(Result.None as Result))
-                .onErrorResumeNext { t: Throwable -> showErrorWithTimer() }
-
-        val ticketsStream = if (isLoggedIn) {
-            loadAndStoreTickets()
-                    .andThen(Observable.just(Result.None as Result))
-                    .onErrorResumeNext { t: Throwable -> showErrorWithTimer() }
-        } else {
-            Observable.empty()
-        }
-
-        return Observable.merge(eventsStream, ticketsStream)
+                .doOnNext { loadAndStoreTickets(isLoggedIn) }
+                .onErrorResumeNext { t: Throwable -> showErrorForDuration(ERROR_DURATION) }
     }
 
-    private fun showErrorWithTimer(): Observable<Result> {
-        return Observable.timer(4, TimeUnit.SECONDS, Schedulers.computation())
+    private fun showErrorForDuration(duration: Long): Observable<Result> {
+        return Observable.timer(duration, TimeUnit.SECONDS, Schedulers.computation())
                 .map { Result.HideError as Result }
                 .startWith(Result.ShowError)
     }
@@ -113,21 +95,25 @@ class EventsViewModel @Inject constructor(
                 .subscribeOn(Schedulers.io())
                 .flatMap { eventsRemoteRepository.fetchEvents() }
                 .subscribeOn(Schedulers.io())
-                //.map { Result.EventsLoaded(it) }
                 .flatMapCompletable {
                     eventsLocalRepository.storeEvents(it)
                     Completable.complete()
                 }
     }
 
-    private fun loadAndStoreTickets(): Completable {
-        return ticketsRemoteRepository.fetchTickets()
+    private fun loadAndStoreTickets(isLoggedIn: Boolean) {
+        if (isLoggedIn.not()) {
+            return
+        }
+
+        compositeDisposable += ticketsRemoteRepository.fetchTickets()
                 .subscribeOn(Schedulers.io())
                 .doOnNext { loadAndStoreTicketTypes(it) }
                 .flatMapCompletable {
                     ticketsLocalRepository.storeTickets(it)
                     Completable.complete()
                 }
+                .subscribe()
     }
 
     private fun loadAndStoreTicketTypes(tickets: List<Ticket>) {
@@ -147,6 +133,10 @@ class EventsViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.dispose()
+    }
+
+    companion object {
+        private const val ERROR_DURATION: Long = 4
     }
 
 }
