@@ -8,6 +8,7 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Ticket
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
+import io.reactivex.Observable
 import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.Callback
@@ -54,7 +55,7 @@ class EventsRemoteRepository @Inject constructor(
             eventCallback: Callback<List<Event>>,
             ticketCallback: Callback<List<Ticket>>
     ) {
-        eventsLocalRepository.removePastEventsWithoutTicket()
+        // TODO eventsLocalRepository.removePastEventsWithoutTicket()
 
         // Load all events and store them in the cache
         tumCabeClient.fetchEvents(eventCallback)
@@ -71,9 +72,8 @@ class EventsRemoteRepository @Inject constructor(
         }
     }
 
-    fun fetchEvents(callback: Callback<List<Event>>) {
-        eventsLocalRepository.removePastEventsWithoutTicket()
-        tumCabeClient.fetchEvents(callback)
+    fun fetchEvents(): Observable<List<Event>> {
+        return tumCabeClient.fetchEvents()
     }
 
     fun fetchTicketStats(eventId: Int): Single<Int> {

@@ -17,13 +17,17 @@ import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsCard
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.LoginPromptCard
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.ProvidesCard
-import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
+import de.tum.`in`.tumcampusapp.component.ui.ticket.EventCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
 import de.tum.`in`.tumcampusapp.component.ui.updatenote.UpdateNoteCard
 import de.tum.`in`.tumcampusapp.utils.Utils
 import org.jetbrains.anko.doAsync
+import javax.inject.Inject
 
-class CardsRepository(private val context: Context) {
+class CardsRepository @Inject constructor(
+        private val context: Context,
+        private val eventCardsProvider: EventCardsProvider
+) {
 
     private var cards = MutableLiveData<List<Card>>()
 
@@ -73,7 +77,7 @@ class CardsRepository(private val context: Context) {
             add(CafeteriaManager(context))
             add(TransportController(context))
             add(NewsController(context))
-            add(EventsController(context))
+            add(eventCardsProvider)
         }
 
         providers.forEach { provider ->

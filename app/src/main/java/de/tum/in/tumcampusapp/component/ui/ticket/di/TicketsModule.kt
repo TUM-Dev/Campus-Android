@@ -14,13 +14,6 @@ import de.tum.`in`.tumcampusapp.database.TcaDb
 class TicketsModule(private val context: Context) {
 
     @Provides
-    fun provideEventsLocalRepository(
-            database: TcaDb
-    ): EventsLocalRepository {
-        return EventsLocalRepository(database)
-    }
-
-    @Provides
     fun provideEventsRemoteRepository(
             tumCabeClient: TUMCabeClient,
             eventsLocalRepository: EventsLocalRepository,

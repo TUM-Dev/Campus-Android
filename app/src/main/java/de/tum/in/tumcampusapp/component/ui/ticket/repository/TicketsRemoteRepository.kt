@@ -2,12 +2,12 @@ package de.tum.`in`.tumcampusapp.component.ui.ticket.repository
 
 import android.content.Context
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
+import de.tum.`in`.tumcampusapp.api.app.exception.NoPrivateKey
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Ticket
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.TicketType
-import de.tum.`in`.tumcampusapp.utils.Utils
+import io.reactivex.Completable
+import io.reactivex.Observable
 import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import javax.inject.Inject
 
 class TicketsRemoteRepository @Inject constructor(
@@ -16,29 +16,23 @@ class TicketsRemoteRepository @Inject constructor(
         private val ticketsLocalRepository: TicketsLocalRepository
 ) {
 
-    fun fetchTickets(callback: Callback<List<Ticket>>) {
-        // TODO(thellmund) Should not pass Context here, but TUMCabeVerification object (create in AppModule?)
-        tumCabeClient.fetchTickets(context, callback)
+    fun fetchTickets(): Observable<List<Ticket>> = tumCabeClient.fetchTickets(context)
+
+    @Throws(NoPrivateKey::class)
+    fun fetchTicket(ticketId: Int): Call<Ticket> {
+        return tumCabeClient.fetchTicket(context, ticketId)
     }
 
-    fun fetchTicketTypesForTickets(tickets: List<Ticket>) {
-        tickets.forEach { fetchTicketTypesForTicket(it) }
+    fun fetchTicketTypesForTickets(tickets: List<Ticket>): Completable {
+        val sources = tickets.map { fetchTicketTypesForEvent(it.eventId) }
+        return Observable
+                .merge(sources)
+                .ignoreElements()
     }
 
-    private fun fetchTicketTypesForTicket(ticket: Ticket) {
-        tumCabeClient.fetchTicketTypes(ticket.eventId, object : Callback<List<TicketType>> {
-
-            override fun onResponse(call: Call<List<TicketType>>,
-                                    response: Response<List<TicketType>>) {
-                val ticketTypes = response.body() ?: return
-                ticketsLocalRepository.addTicketTypes(ticketTypes)
-            }
-
-            override fun onFailure(call: Call<List<TicketType>>, t: Throwable) {
-                Utils.log(t)
-            }
-
-        })
+    fun fetchTicketTypesForEvent(eventId: Int): Observable<List<TicketType>> {
+        return tumCabeClient.fetchTicketTypes(eventId)
+                .doOnNext(ticketsLocalRepository::addTicketTypes)
     }
 
 }

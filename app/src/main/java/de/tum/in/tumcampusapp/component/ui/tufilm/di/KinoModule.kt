@@ -24,11 +24,6 @@ class KinoModule {
     ): KinoLocalRepository = KinoLocalRepository(database)
 
     @Provides
-    fun provideEventsLocalRepository(
-            database: TcaDb
-    ): EventsLocalRepository = EventsLocalRepository(database)
-
-    @Provides
     fun provideTicketsLocalRepository(
             database: TcaDb
     ): TicketsLocalRepository = TicketsLocalRepository(database)

@@ -366,14 +366,25 @@ public final class TUMCabeClient {
 
     // Getting event information
     public void fetchEvents(Callback<List<Event>> cb) {
-        service.getEvents().enqueue(cb);
+        // TODO remove
+    }
+
+    // Getting event information
+    public Observable<List<Event>> fetchEvents() {
+        return service.getEvents();
     }
 
     // Getting ticket information
 
+    // TODO Remove?
     public void fetchTickets(Context context, Callback<List<Ticket>> cb) throws NoPrivateKey {
         TUMCabeVerification verification = getVerification(context, null);
         service.getTickets(verification).enqueue(cb);
+    }
+
+    public Observable<List<Ticket>> fetchTickets(Context context) throws NoPrivateKey {
+        TUMCabeVerification verification = getVerification(context, null);
+        return service.getTicketsRx(verification);
     }
 
     public Call<Ticket> fetchTicket(Context context, int ticketID) throws NoPrivateKey {
@@ -381,8 +392,8 @@ public final class TUMCabeClient {
         return service.getTicket(ticketID, verification);
     }
 
-    public void fetchTicketTypes(int eventID, Callback<List<TicketType>> cb) {
-        service.getTicketTypes(eventID).enqueue(cb);
+    public Observable<List<TicketType>> fetchTicketTypes(int eventID) {
+        return service.getTicketTypes(eventID);
     }
 
     // Ticket reservation

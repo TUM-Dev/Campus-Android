@@ -14,15 +14,14 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMember
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsViewModel
+import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsViewState
 import de.tum.`in`.tumcampusapp.component.ui.ticket.adapter.EventsAdapter
 import de.tum.`in`.tumcampusapp.component.ui.ticket.di.TicketsModule
-import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.EventType
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
-import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.Const.CHAT_MEMBER
 import de.tum.`in`.tumcampusapp.utils.Utils
-import de.tum.`in`.tumcampusapp.utils.observe
 import de.tum.`in`.tumcampusapp.utils.observeNonNull
 import kotlinx.android.synthetic.main.fragment_events.*
 import javax.inject.Inject
@@ -75,36 +74,32 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.events.observeNonNull(viewLifecycleOwner, this::showEvents)
-        viewModel.error.observe(viewLifecycleOwner, this::showError)
+        viewModel.viewState.observeNonNull(viewLifecycleOwner, this::render)
     }
 
-    private fun showEvents(events: List<Event>) {
-        val isEmpty = events.isEmpty()
+    private fun render(viewState: EventsViewState) {
+        val isEmpty = viewState.events.isEmpty()
         eventsRecyclerView.visibility = if (isEmpty) View.GONE else View.VISIBLE
         placeholderTextView.visibility = if (isEmpty) View.VISIBLE else View.GONE
 
         eventsRefreshLayout.isRefreshing = false
 
-        if (events.isNotEmpty()) {
+        if (viewState.events.isNotEmpty()) {
             val adapter = eventsRecyclerView.adapter as EventsAdapter
-            adapter.update(events)
+            adapter.update(viewState.events)
         } else {
             placeholderTextView.setText(eventType.placeholderResId)
         }
-    }
 
-    private fun showError(errorMessageResId: Int?) {
-        eventsRefreshLayout.isRefreshing = false
-        errorMessageResId?.let {
+        eventsRefreshLayout.isRefreshing = viewState.isLoading
+        viewState.errorResId?.let {
             Utils.showToast(requireContext(), it)
         }
     }
 
     override fun onRefresh() {
-        val isLoggedIn = Utils.getSetting(requireContext(),
-                Const.CHAT_MEMBER, ChatMember::class.java) != null
-        viewModel.fetchEventsAndTickets(isLoggedIn)
+        val isLoggedIn = Utils.getSetting(requireContext(), CHAT_MEMBER, ChatMember::class.java) != null
+        viewModel.refreshEventsAndTickets(isLoggedIn)
     }
 
     companion object {
