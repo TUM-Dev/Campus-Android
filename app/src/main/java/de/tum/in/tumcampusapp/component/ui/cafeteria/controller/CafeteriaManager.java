@@ -43,7 +43,7 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
         List<Card> results = new ArrayList<>();
 
         CafeteriaWithMenus cafeteria = getCafeteriaWithMenus();
-        if (cafeteria == null) {
+        if (cafeteria == null || cafeteria.getMenus().isEmpty()) {
             return results;
         }
 

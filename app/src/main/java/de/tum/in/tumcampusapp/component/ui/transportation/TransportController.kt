@@ -117,6 +117,10 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
         val station = locMan.getStation() ?: return emptyList()
 
         val departures = getDeparturesFromExternal(context, station.id).blockingFirst()
+        if (departures.isEmpty()) {
+            return emptyList()
+        }
+
         val card = MVVCard(context).apply {
             setStation(station)
             setDepartures(departures)
