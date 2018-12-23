@@ -10,7 +10,7 @@ import org.joda.time.DateTime
 /**
  * A class to represent events for the integrated WeekView calendar
  */
-class WidgetCalendarItem private constructor(
+data class WidgetCalendarItem(
         val id: String,
         val title: String,
         val startTime: DateTime,
@@ -23,7 +23,7 @@ class WidgetCalendarItem private constructor(
     var isFirstOnDay: Boolean = false
 
     override fun toWeekViewEvent(): WeekViewEvent<WidgetCalendarItem> {
-        return WeekViewEvent(java.lang.Long.parseLong(id), title, startTime.toGregorianCalendar(),
+        return WeekViewEvent(id.toLong(), title, startTime.toGregorianCalendar(),
                 endTime.toGregorianCalendar(), location, color, false, this)
     }
 
