@@ -46,6 +46,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         injector.ticketsComponent()
                 .ticketsModule(TicketsModule(requireContext()))
                 .eventType(eventType)
+                .eventId(0) // not relevant here
                 .build()
                 .inject(this)
     }
