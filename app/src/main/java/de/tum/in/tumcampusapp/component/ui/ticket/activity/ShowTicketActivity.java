@@ -143,9 +143,6 @@ public class ShowTicketActivity extends BaseActivity {
     }
 
     private void loadTicketData(int eventId) {
-        //int eventId = getIntent().getIntExtra(Const.KEY_EVENT_ID, 0);
-
-
         ticket = ticketsLocalRepo.getTicketByEventId(eventId);
         event = eventsLocalRepo.getEventById(ticket.getEventId());
         ticketType = ticketsLocalRepo.getTicketTypeById(ticket.getTicketTypeId());

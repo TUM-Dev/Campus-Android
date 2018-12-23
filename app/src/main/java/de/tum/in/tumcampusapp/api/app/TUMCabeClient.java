@@ -365,22 +365,11 @@ public final class TUMCabeClient {
     // TICKET SALE
 
     // Getting event information
-    public void fetchEvents(Callback<List<Event>> cb) {
-        // TODO remove
-    }
-
-    // Getting event information
     public Observable<List<Event>> fetchEvents() {
         return service.getEvents();
     }
 
     // Getting ticket information
-
-    // TODO Remove?
-    public void fetchTickets(Context context, Callback<List<Ticket>> cb) throws NoPrivateKey {
-        TUMCabeVerification verification = getVerification(context, null);
-        service.getTickets(verification).enqueue(cb);
-    }
 
     public Observable<List<Ticket>> fetchTickets(Context context) throws NoPrivateKey {
         TUMCabeVerification verification = getVerification(context, null);

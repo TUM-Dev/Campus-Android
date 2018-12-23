@@ -34,7 +34,7 @@ public class EventCardsProvider implements ProvidesCard {
 
     @NotNull
     @Override
-    public List<Card> getCards(@NonNull @NotNull CacheControl cacheControl) {
+    public List<Card> getCards(@NonNull CacheControl cacheControl) {
         List<Card> results = new ArrayList<>();
 
         // Add the next upcoming event that is not the next kino event
