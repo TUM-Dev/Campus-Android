@@ -21,18 +21,11 @@ class TicketsLocalRepository @Inject constructor(
         database.ticketDao().insert(*tickets)
     }
 
-    fun getTicketByEventId(eventId: Int): Ticket {
-        return database.ticketDao().getByEventId(eventId)
-    }
+    fun getTicketByEventId(eventId: Int): Ticket = database.ticketDao().getByEventId(eventId)
 
-    fun isEventBooked(event: Event): Boolean {
-        val ticket = database.ticketDao().getByEventId(event.id)
-        return ticket != null
-    }
+    fun isEventBooked(event: Event): Boolean = database.ticketDao().countEventsWithId(event.id) > 0
 
-    fun getTicketTypeById(id: Int): TicketType {
-        return database.ticketTypeDao().getById(id)
-    }
+    fun getTicketTypeById(id: Int): TicketType = database.ticketTypeDao().getById(id)
 
     fun addTicketTypes(ticketTypes: List<TicketType>) {
         database.ticketTypeDao().insert(ticketTypes)

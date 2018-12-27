@@ -17,25 +17,13 @@ class EventsLocalRepository @Inject constructor(
         database.eventDao().setDismissed(id)
     }
 
-    fun getEvents(): Observable<List<Event>> {
-        return database.eventDao().allFutureEvents
-    }
+    fun getEvents(): Observable<List<Event>> = database.eventDao().allFutureEvents
 
-    /**
-     * @return all events for which a ticket exists
-     */
-    fun getBookedEvents(): Observable<List<Event>> {
-        return database.ticketDao().all
-                .map { it.mapNotNull { ticket -> getEventById(ticket.eventId) } }
-    }
+    fun getBookedEvents(): Observable<List<Event>> = database.eventDao().allBookedEvents
 
-    fun getEventById(id: Int): Event? {
-        return database.eventDao().getEventById(id)
-    }
+    fun getEventById(id: Int): Event? = database.eventDao().getEventById(id)
 
-    fun getNextEventWithoutMovie(): Event? {
-        return database.eventDao().nextEventWithoutMovie
-    }
+    fun getNextEventWithoutMovie(): Event? = database.eventDao().nextEventWithoutMovie
 
     fun removePastEventsWithoutTicket() {
         database.eventDao().removePastEventsWithoutTicket()

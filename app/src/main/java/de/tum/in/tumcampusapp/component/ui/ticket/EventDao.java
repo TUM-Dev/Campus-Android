@@ -18,6 +18,12 @@ public interface EventDao {
 
     @Query("SELECT * " +
             "FROM events " +
+            "WHERE EXISTS (SELECT * FROM tickets WHERE tickets.event_id = events.id) " +
+            "ORDER BY start_time")
+    Observable<List<Event>> getAllBookedEvents();
+
+    @Query("SELECT * " +
+            "FROM events " +
             "WHERE start_time > date('now') " +
             "AND events.kino = -1 " +
             "ORDER BY start_time " +

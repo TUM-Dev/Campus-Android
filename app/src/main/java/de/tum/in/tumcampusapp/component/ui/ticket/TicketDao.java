@@ -18,8 +18,11 @@ public interface TicketDao {
     @Query("SELECT * FROM tickets")
     Observable<List<Ticket>> getAll();
 
-    @Query("SELECT * FROM tickets where event_id = :eventId")
+    @Query("SELECT * FROM tickets WHERE event_id = :eventId")
     Ticket getByEventId(int eventId);
+
+    @Query("SELECT count(*) FROM tickets WHERE event_id = :eventId")
+    int countEventsWithId(int eventId);
 
     @Query("DELETE FROM tickets")
     void flush();
