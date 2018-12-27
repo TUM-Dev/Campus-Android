@@ -110,12 +110,22 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
         }
     }
 
-    public List<CalendarItem> getFromDbBetweenDates(DateTime begin, DateTime end) {
-        return calendarDao.getAllBetweenDates(begin, end);
+    List<CalendarItem> getFromDbBetweenDates(DateTime begin, DateTime end) {
+        return applyEventColors(calendarDao.getAllBetweenDates(begin, end));
     }
 
-    public List<CalendarItem> getFromDbNotCancelledBetweenDates(DateTime begin, DateTime end) {
-        return calendarDao.getAllNotCancelledBetweenDates(begin, end);
+    List<CalendarItem> getFromDbNotCancelledBetweenDates(DateTime begin, DateTime end) {
+        return applyEventColors(calendarDao.getAllNotCancelledBetweenDates(begin, end));
+    }
+
+    private List<CalendarItem> applyEventColors(List<CalendarItem> calendarItems) {
+        EventColorProvider provider = new EventColorProvider(mContext);
+
+        for (CalendarItem calendarItem : calendarItems) {
+            int color = provider.getColor(calendarItem);
+            calendarItem.setColor(color);
+        }
+        return calendarItems;
     }
 
     /**
@@ -126,14 +136,19 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
      * @param widgetId The id of the widget
      * @return List<IntegratedCalendarEvent> List of Events
      */
-    public List<IntegratedCalendarEvent> getNextDaysFromDb(int dayCount, int widgetId) {
+    public List<WidgetCalendarItem> getNextDaysFromDb(int dayCount, int widgetId) {
         DateTime fromDate = DateTime.now();
         DateTime toDate = fromDate.plusDays(dayCount);
 
-        List<IntegratedCalendarEvent> calendarEvents = new ArrayList<>();
+        EventColorProvider provider = new EventColorProvider(mContext);
+
+        List<WidgetCalendarItem> calendarEvents = new ArrayList<>();
         List<CalendarItem> calendarItems = calendarDao.getNextDays(fromDate, toDate, String.valueOf(widgetId));
+
         for (CalendarItem calendarItem : calendarItems) {
-            calendarEvents.add(new IntegratedCalendarEvent(calendarItem, mContext));
+            WidgetCalendarItem item = WidgetCalendarItem.create(calendarItem);
+            item.setColor(provider.getColor(calendarItem));
+            calendarEvents.add(item);
         }
 
         return calendarEvents;
