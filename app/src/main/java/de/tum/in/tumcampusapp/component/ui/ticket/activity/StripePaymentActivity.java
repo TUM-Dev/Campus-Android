@@ -25,7 +25,6 @@ import com.stripe.android.model.Source;
 import com.stripe.android.model.SourceCardData;
 import com.stripe.android.view.PaymentMethodsActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -167,43 +166,41 @@ public class StripePaymentActivity extends BaseActivity {
             TUMCabeClient
                     .getInstance(this)
                     .purchaseTicketStripe(this, ticketIds,
-                                          methodId, cardholder, new Callback<Ticket>() {
-                                @Override
-                                public void onResponse(@NonNull Call<Ticket> call,
-                                                       @NonNull Response<Ticket> response) {
-                                    Ticket ticket = response.body();
-                                    if (ticket != null) {
-                                        handleTicketPurchaseSuccess(ticket);
-                                    }
-                                }
+                                          methodId, cardholder, new Callback<List<Ticket>>() {
+                        @Override
+                        public void onResponse(@NonNull Call<List<Ticket>> call,
+                                               @NonNull Response<List<Ticket>> response) {
+                            List<Ticket> tickets = response.body();
+                            if (!tickets.isEmpty()) {
+                                handleTicketPurchaseSuccess(tickets);
+                            }
+                        }
 
-                                @Override
-                                public void onFailure(@NonNull Call<Ticket> call, @NonNull Throwable t) {
-                                    Utils.log(t);
-                                    handleTicketPurchaseFailure();
-                                }
-                            });
+                        @Override
+                        public void onFailure(@NonNull Call<List<Ticket>> call, @NonNull Throwable t) {
+                            Utils.log(t);
+                            handleTicketPurchaseFailure();
+                        }
+                    });
         } catch (NoPrivateKey e) {
             Utils.log(e);
             handleTicketPurchaseFailure();
         }
     }
 
-    private void handleTicketPurchaseSuccess(@NonNull Ticket ticket) {
+    private void handleTicketPurchaseSuccess(@NonNull List<Ticket> tickets) {
         showLoading(false);
-
-        List<Ticket> tickets = new ArrayList<>();
-        tickets.add(ticket);
 
         EventsController controller = new EventsController(this);
         controller.insert(tickets.toArray(new Ticket[0]));
 
-        openPaymentConfirmation(ticket);
+        openPaymentConfirmation(tickets);
     }
 
-    private void openPaymentConfirmation(Ticket ticket) {
+    private void openPaymentConfirmation(List<Ticket> tickets) {
         Intent intent = new Intent(this, PaymentConfirmationActivity.class);
-        intent.putExtra(Const.KEY_EVENT_ID, ticket.getEventId());
+        intent.putExtra(Const.KEY_EVENT_ID, tickets.get(0).getEventId());
+        intent.putExtra(Const.KEY_TICKET_AMOUNT, tickets.size());
         startActivity(intent);
     }
 

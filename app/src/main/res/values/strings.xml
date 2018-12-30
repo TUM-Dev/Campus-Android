@@ -619,6 +619,11 @@ Signature: %5$s</string>
     <!-- Ticket Activity -->
     <string name="your_ticket">Your Ticket</string>
     <string name="show_ticket">Show Ticket</string>
+    <!-- TODO(bronger) use quantity string everywhere -->
+    <plurals name="show_tickets">
+        <item quantity="one">Show Ticket</item>
+        <item quantity="other">Show Tickets</item>
+    </plurals>
     <string name="buy_ticket">Buy Ticket</string>
     <string name="purchase_details">Details</string>
     <string name="continue_to_payment">Continue to payment</string>
@@ -693,7 +698,11 @@ Signature: %5$s</string>
     <string name="credit_card_format_string" translatable="false">**** **** **** %s</string>
     <string name="remaining_tickets">Remaining tickets</string>
     <string name="thanks_for_your_purchase">Thanks for your purchase</string>
-    <string name="the_ticket_has_been_saved_for_you_in_the_app">The ticket has been saved for you in the app.</string>
+    <string name="tickets_saved_in_app">The ticket has been saved in the app.</string>
+    <plurals name="tickets_saved_in_app">
+        <item quantity="one">@string/tickets_saved_in_app</item>
+        <item quantity="other">The tickets have been saved in the app.</item>
+    </plurals>
     <string name="home">Home</string>
     <string name="about">About</string>
     <string name="due_on_format_string">Due on %s</string>

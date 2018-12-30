@@ -483,6 +483,10 @@ Signatur: %5$s</string>
     <!-- Ticket Activity -->
     <string name="your_ticket">Dein Ticket</string>
     <string name="show_ticket">Ticket anzeigen</string>
+    <plurals name="show_tickets">
+        <item quantity="one">Ticket anzeigen</item>
+        <item quantity="other">Tickets anzeigen</item>
+    </plurals>
     <string name="buy_ticket">Ticket kaufen</string>
     <string name="purchase_details">Details zu Ihrem Kauf:</string>
     <string name="continue_to_payment">Weiter zur Zahlung</string>
@@ -631,7 +635,11 @@ Signatur: %5$s</string>
     <string name="no_bookings_found">Keine Buchungen gefunden</string>
     <string name="ticket">Ticket</string>
     <string name="thanks_for_your_purchase">Danke für deinen Einkauf</string>
-    <string name="the_ticket_has_been_saved_for_you_in_the_app">Das Ticket wurde für dich in der App gespeichert.</string>
+    <string name="tickets_saved_in_app">Das Ticket wurde für dich in der App gespeichert.</string>
+    <plurals name="tickets_saved_in_app">
+        <item quantity="one">@string/tickets_saved_in_app</item>
+        <item quantity="other">Die Tickets wurden in der App gespeichert.</item>
+    </plurals>
     <string name="remaining_tickets">Verbleibende Tickets</string>
     <string name="payment_confirmation">Zahlungsbestätigung</string>
     <string name="about">Über</string>

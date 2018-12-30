@@ -17,10 +17,14 @@ class PaymentConfirmationActivity : BaseActivity(R.layout.activity_payment_confi
         super.onCreate(savedInstanceState)
 
         val eventId = intent.getIntExtra(Const.KEY_EVENT_ID, -1)
+        val ticketAmount = intent.getIntExtra(Const.KEY_TICKET_AMOUNT, 1);
         if (eventId == -1) {
             finish()
             return
         }
+
+        bodyTextView.text = resources.getQuantityString(R.plurals.tickets_saved_in_app, ticketAmount)
+        showTicketButton.text = resources.getQuantityString(R.plurals.show_tickets, ticketAmount)
 
         showTicketButton.setOnClickListener {
             val intent = Intent(this, ShowTicketActivity::class.java)
