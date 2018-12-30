@@ -130,6 +130,7 @@ public class BuyTicketActivity extends BaseActivity {
         int maxAmount = paymentInfo.getMaxTickets();
         int minAmount = paymentInfo.getMinTickets();
 
+        // TODO(bronger) also check how many tickets are still available
         if (currentTicketAmount > maxAmount) {
             currentTicketAmount = maxAmount;
             showTicketAmountInformation(paymentInfo);

@@ -175,9 +175,8 @@ public class EventsController implements ProvidesCard {
         return events;
     }
 
-    public boolean isEventBooked(Event event) {
-        Ticket ticket = ticketDao.getByEventId(event.getId());
-        return ticket != null;
+    public int getTicketCount(Event event) {
+       return ticketDao.getTicketCountForEvent(event.getId());
     }
 
     public Event getEventById(int id) {
@@ -186,7 +185,7 @@ public class EventsController implements ProvidesCard {
 
     // Ticket methods
 
-    public Ticket getTicketByEventId(int eventId) {
+    public List<Ticket> getTicketsByEventId(int eventId) {
         return ticketDao.getByEventId(eventId);
     }
 

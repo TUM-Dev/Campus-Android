@@ -624,6 +624,10 @@ Signature: %5$s</string>
         <item quantity="one">Show Ticket</item>
         <item quantity="other">Show Tickets</item>
     </plurals>
+    <plurals name="tickets">
+        <item quantity="one">Ticket</item>
+        <item quantity="other">%d Tickets</item>
+    </plurals>
     <string name="buy_ticket">Buy Ticket</string>
     <string name="purchase_details">Details</string>
     <string name="continue_to_payment">Continue to payment</string>
@@ -677,6 +681,7 @@ Signature: %5$s</string>
     <string name="ticket_amount_error_title">Purchase restrictions</string>
     <string name="ticket_amount_information">You can buy a minimum of %1d and a maximum of %2d of ticket type \“%s\”</string>
     <string name="ticket_price_multiple_tickets">%1s (%2s per ticket)</string>
+    <string name="price_per_ticket">%s per ticket</string>
     <string name="ticket_amount_label">Amount</string>
 
     <string name="retry">Retry</string>

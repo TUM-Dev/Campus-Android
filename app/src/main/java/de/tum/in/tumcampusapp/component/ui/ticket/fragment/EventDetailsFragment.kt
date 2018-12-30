@@ -76,7 +76,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onResume() {
         super.onResume()
-        if (!eventsController.isEventBooked(event) && EventHelper.isEventImminent(event)) {
+        if (!eventsController.getTicketCount(event) && EventHelper.isEventImminent(event)) {
             ticketButton.visibility = View.GONE
         }
     }
@@ -94,7 +94,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             posterProgressBar.visibility = View.GONE
         }
 
-        if (eventsController.isEventBooked(event)) {
+        if (eventsController.getTicketCount(event)) {
             ticketButton.text = getString(R.string.show_ticket)
             ticketButton.setOnClickListener { showTicket(event) }
         } else {

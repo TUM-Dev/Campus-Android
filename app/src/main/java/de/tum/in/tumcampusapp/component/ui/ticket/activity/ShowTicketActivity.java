@@ -18,7 +18,10 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
-import androidx.annotation.NonNull;
+import org.joda.time.DateTime;
+
+import java.util.List;
+
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
@@ -46,7 +49,7 @@ public class ShowTicketActivity extends BaseActivity {
 
     private EventsController eventsController;
 
-    private Ticket ticket;
+    private List<Ticket> tickets;
     private Event event;
     private TicketType ticketType;
 
@@ -63,8 +66,23 @@ public class ShowTicketActivity extends BaseActivity {
         loadTicketData();
         setViewData();
 
-        createQRCode(ticket.getCode());
+        showQRCode(tickets.size());
         setWindowBrightnessToFull();
+
+        // TODO(bronger) add a way to redeem less tickets
+    }
+
+    private void showQRCode(int nrOfTickets) {
+        StringBuilder qrCodeContent = new StringBuilder();
+
+        for (int i = 0; i < nrOfTickets; i++) {
+            qrCodeContent.append(tickets.get(i).getCode());
+            // don't add semicolon to last item
+            if (i != nrOfTickets - 1) {
+                qrCodeContent.append(';');
+            }
+        }
+        createQRCode(qrCodeContent.toString());
     }
 
     private void initViews() {
@@ -87,21 +105,19 @@ public class ShowTicketActivity extends BaseActivity {
     private void loadRedemptionStatus() {
         try {
             TUMCabeClient.getInstance(this)
-                    .fetchTicket(this, ticket.getId())
-                    .enqueue(new Callback<Ticket>() {
+                    .fetchTickets(this, new Callback<List<Ticket>>() {
                         @Override
-                        public void onResponse(@NonNull Call<Ticket> call,
-                                               @NonNull Response<Ticket> response) {
-                            Ticket ticket = response.body();
-                            if (response.isSuccessful() && ticket != null) {
-                                handleTicketRefreshSuccess(ticket);
+                        public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
+                            List<Ticket> ticket = response.body();
+                            if (response.isSuccessful() && !ticket.isEmpty()) {
+                                handleTicketRefreshSuccess(tickets);
                             } else {
                                 handleTicketRefreshFailure();
                             }
                         }
 
                         @Override
-                        public void onFailure(@NonNull Call<Ticket> call, @NonNull Throwable t) {
+                        public void onFailure(Call<List<Ticket>> call, Throwable t) {
                             Utils.log(t);
                             handleTicketRefreshFailure();
                         }
@@ -111,9 +127,9 @@ public class ShowTicketActivity extends BaseActivity {
         }
     }
 
-    private void handleTicketRefreshSuccess(Ticket ticket) {
-        this.ticket = ticket;
-        eventsController.insert(ticket);
+    private void handleTicketRefreshSuccess(List<Ticket> tickets) {
+        this.tickets = tickets;
+        eventsController.insert(tickets.toArray(new Ticket[0]));
 
         setViewData();
         swipeRefreshLayout.setRefreshing(false);
@@ -128,22 +144,42 @@ public class ShowTicketActivity extends BaseActivity {
         eventsController = new EventsController(this);
         int eventId = getIntent().getIntExtra(Const.KEY_EVENT_ID, 0);
 
-        ticket = eventsController.getTicketByEventId(eventId);
-        event = eventsController.getEventById(ticket.getEventId());
-        ticketType = eventsController.getTicketTypeById(ticket.getTicketTypeId());
+        tickets = eventsController.getTicketsByEventId(eventId);
+        event = eventsController.getEventById(eventId);
+        ticketType = eventsController.getTicketTypeById(tickets.get(0).getTicketTypeId());
     }
 
     private void setViewData() {
-        titleTextView.setText(event.getTitle());
+        titleTextView.setText(tickets.size() + "x " + event.getTitle());
         dateTextView.setText(event.getFormattedStartDateTime(this));
-        priceTextView.setText(ticketType.formatPrice(ticketType.getPrice())); // TODO(bronger) adapt for multiple tickets
-
-        String formattedDateTime = ticket.getFormattedRedemptionDate(this);
-        String redemptionState = getString(R.string.redeemed_format_string, formattedDateTime);
-        redemptionStateTextView.setText(redemptionState);
+        priceTextView.setText(getString(R.string.price_per_ticket, ticketType.formatPrice(ticketType.getPrice())));
+        redemptionStateTextView.setText(getRedemptionState());
 
         locationTextView.setText(event.getLocality());
         locationTextView.setOnClickListener(this::showMap);
+    }
+
+    private String getRedemptionState() {
+        DateTime lastRedemption = null;
+        int nrTicketsRedeemed = 0;
+        for(Ticket t : tickets) {
+            if (t.getRedemption() != null) {
+                nrTicketsRedeemed++;
+                if (lastRedemption == null || t.getRedemption().isAfter(lastRedemption)) {
+                    lastRedemption = t.getRedemption();
+                }
+            }
+        }
+        String redemptionState;
+        String formattedDateTime = Ticket.Companion.getFormattedRedemptionDate(this, lastRedemption);
+        if (nrTicketsRedeemed == 0) {
+            redemptionState = "Not redeemed yet (" + tickets.size() + " available)";
+        } else if (nrTicketsRedeemed < tickets.size()) {
+            redemptionState = nrTicketsRedeemed + " of " + tickets.size() + " redeemed (" + formattedDateTime + ")";
+        } else {
+            redemptionState = "Redeemed at " + formattedDateTime;
+        }
+        return redemptionState;
     }
 
     private void showMap(View view) {
