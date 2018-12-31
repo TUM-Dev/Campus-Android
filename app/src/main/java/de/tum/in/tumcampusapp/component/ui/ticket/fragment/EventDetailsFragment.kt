@@ -76,7 +76,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onResume() {
         super.onResume()
-        if (!eventsController.getTicketCount(event) && EventHelper.isEventImminent(event)) {
+        if (eventsController.getTicketCount(event) == 0 && EventHelper.isEventImminent(event)) {
             ticketButton.visibility = View.GONE
         }
     }
@@ -94,7 +94,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             posterProgressBar.visibility = View.GONE
         }
 
-        if (eventsController.getTicketCount(event)) {
+        if (eventsController.getTicketCount(event) != 0) {
             ticketButton.text = getString(R.string.show_ticket)
             ticketButton.setOnClickListener { showTicket(event) }
         } else {
@@ -135,7 +135,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun addToTUMCalendar() {
-        val event = event ?: return
+        val event = event
         val endTime = event.endTime ?: event.startTime.plus(Event.defaultDuration.toLong())
 
         val intent = Intent(context, CreateEventActivity::class.java).apply {
@@ -150,7 +150,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun addToExternalCalendar() {
-        val event = event ?: return
+        val event = event
         val endTime = event.endTime ?: event.startTime.plus(Event.defaultDuration.toLong())
         val eventEnd = DateTimeUtils.getDateTimeString(endTime)
 

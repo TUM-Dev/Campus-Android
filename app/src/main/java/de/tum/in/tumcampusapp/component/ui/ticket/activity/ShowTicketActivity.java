@@ -68,8 +68,6 @@ public class ShowTicketActivity extends BaseActivity {
 
         showQRCode(tickets.size());
         setWindowBrightnessToFull();
-
-        // TODO(bronger) add a way to redeem less tickets
     }
 
     private void showQRCode(int nrOfTickets) {
@@ -150,7 +148,7 @@ public class ShowTicketActivity extends BaseActivity {
     }
 
     private void setViewData() {
-        titleTextView.setText(tickets.size() + "x " + event.getTitle());
+        titleTextView.setText(getString(R.string.xtickets, tickets.size(), event.getTitle()));
         dateTextView.setText(event.getFormattedStartDateTime(this));
         priceTextView.setText(getString(R.string.price_per_ticket, ticketType.formatPrice(ticketType.getPrice())));
         redemptionStateTextView.setText(getRedemptionState());
@@ -171,13 +169,16 @@ public class ShowTicketActivity extends BaseActivity {
             }
         }
         String redemptionState;
-        String formattedDateTime = Ticket.Companion.getFormattedRedemptionDate(this, lastRedemption);
+        String formattedDateTime = "";
+        if (lastRedemption != null) {
+            formattedDateTime = Ticket.Companion.getFormattedRedemptionDate(this, lastRedemption);
+        }
         if (nrTicketsRedeemed == 0) {
-            redemptionState = "Not redeemed yet (" + tickets.size() + " available)";
+            redemptionState = getString(R.string.not_redeemed_yet);
         } else if (nrTicketsRedeemed < tickets.size()) {
-            redemptionState = nrTicketsRedeemed + " of " + tickets.size() + " redeemed (" + formattedDateTime + ")";
+            redemptionState = getString(R.string.partially_redeemed, nrTicketsRedeemed, tickets.size(), formattedDateTime);
         } else {
-            redemptionState = "Redeemed at " + formattedDateTime;
+            redemptionState = getString(R.string.redeemed_at, formattedDateTime);
         }
         return redemptionState;
     }

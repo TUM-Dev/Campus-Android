@@ -179,7 +179,7 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
             }
 
             ticketButton.setText(itemView.getContext().getResources()
-                                         .getQuantityString(R.plurals.tic, ticketCount));
+                                         .getQuantityString(R.plurals.tickets, ticketCount));
             ticketButton.setVisibility(VISIBLE);
             ticketButton.setOnClickListener(v -> {
                 Context context = itemView.getContext();

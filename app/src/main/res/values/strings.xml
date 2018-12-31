@@ -730,4 +730,8 @@ Signature: %5$s</string>
     <string name="update_note_title">New Features</string>
     <string name="update_note_version">Version %s</string>
     <string name="action_cant_be_performed">Action can’t be performed</string>
+    <string name="not_redeemed_yet">Not redeemed yet</string>
+    <string name="partially_redeemed">%d of %d redeemed (%s)</string>
+    <string name="redeemed_at">Redeemed at %s</string>
+    <string name="xtickets">%dx %s</string>
 </resources>
