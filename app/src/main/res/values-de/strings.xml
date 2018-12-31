@@ -678,4 +678,6 @@ Signatur: %5$s</string>
     <string name="not_redeemed_yet">Noch nicht eingelöst</string>
     <string name="partially_redeemed">%d von %d eingelöst (%s)</string>
     <string name="redeemed_at">Eingelöst um %s</string>
+    <string name="no_tickets_remaining">No tickets remaining</string>
+    <string name="no_tickets_remaining_message">Die Tickets sind gerade leider alle weg. Bei vielen Veranstaltungen gibt es jedoch noch Tickets an der Abendkasse.</string>
 </resources>
