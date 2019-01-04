@@ -140,8 +140,13 @@ public class FeedbackActivity extends BaseActivity {
         }
 
         includeEmail.setChecked(feedback.getIncludeEmail());
-        includeEmail.setText(getResources()
-                .getString(R.string.feedback_include_email_tum_id, feedback.getEmail()));
+        if (TextUtils.isEmpty(lrzId)) {
+            includeEmail.setText(R.string.feedback_include_email);
+            customEmailView.setText(feedback.getEmail());
+        } else {
+            includeEmail.setText(getResources()
+                                         .getString(R.string.feedback_include_email_tum_id, feedback.getEmail()));
+        }
         hideOrShowEmailInput();
 
         includeEmail.setOnClickListener(view -> {
@@ -154,7 +159,6 @@ public class FeedbackActivity extends BaseActivity {
         if (includeEmail.isChecked()) {
             if (TextUtils.isEmpty(lrzId)) {
                 customEmailViewLayout.setVisibility(View.VISIBLE);
-                customEmailView.setText(feedback.getEmail());
             }
         } else {
             customEmailViewLayout.setVisibility(View.GONE);
