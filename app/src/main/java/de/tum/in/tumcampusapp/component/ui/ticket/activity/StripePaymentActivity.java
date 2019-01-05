@@ -36,9 +36,10 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
-import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.TicketEphemeralKeyProvider;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
+import de.tum.in.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository;
+import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
@@ -195,8 +196,8 @@ public class StripePaymentActivity extends BaseActivity {
         List<Ticket> tickets = new ArrayList<>();
         tickets.add(ticket);
 
-        EventsController controller = new EventsController(this);
-        controller.insert(tickets.toArray(new Ticket[0]));
+        TicketsLocalRepository localRepo = new TicketsLocalRepository(TcaDb.getInstance(this));
+        localRepo.insert(tickets.toArray(new Ticket[0]));
 
         openPaymentConfirmation(ticket);
     }

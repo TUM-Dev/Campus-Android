@@ -1,9 +1,13 @@
 package de.tum.`in`.tumcampusapp.component.ui.tufilm.di
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
-import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
 
@@ -20,8 +24,32 @@ class KinoModule {
     ): KinoLocalRepository = KinoLocalRepository(database)
 
     @Provides
+    fun provideTicketsLocalRepository(
+            database: TcaDb
+    ): TicketsLocalRepository = TicketsLocalRepository(database)
+
+    @Provides
+    fun provideTicketsRemoteRepository(
+            context: Context,
+            tumCabeClient: TUMCabeClient,
+            localRepository: TicketsLocalRepository
+    ): TicketsRemoteRepository = TicketsRemoteRepository(context, tumCabeClient, localRepository)
+
+    @Provides
     fun provideEventsRemoteRepository(
-            tumCabeClient: TUMCabeClient
-    ): EventsRemoteRepository = EventsRemoteRepository(tumCabeClient)
+            context: Context,
+            tumCabeClient: TUMCabeClient,
+            eventsLocalRepository: EventsLocalRepository,
+            ticketsLocalRepository: TicketsLocalRepository,
+            ticketsRemoteRepository: TicketsRemoteRepository
+    ): EventsRemoteRepository {
+        return EventsRemoteRepository(
+                context,
+                tumCabeClient,
+                eventsLocalRepository,
+                ticketsLocalRepository,
+                ticketsRemoteRepository
+        )
+    }
 
 }

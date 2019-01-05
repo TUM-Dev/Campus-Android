@@ -218,17 +218,20 @@ public interface TUMCabeAPIService {
     // Getting Event information
 
     @GET(API_EVENTS + "list")
-    Call<List<Event>> getEvents();
+    Observable<List<Event>> getEvents();
 
     // Getting Ticket information
     @POST(API_EVENTS + API_TICKET + "my")
     Call<List<Ticket>> getTickets(@Body TUMCabeVerification verification);
 
+    @POST(API_EVENTS + API_TICKET + "my")
+    Observable<List<Ticket>> getTicketsRx(@Body TUMCabeVerification verification); // TODO
+
     @POST(API_EVENTS + API_TICKET + "{ticketID}")
     Call<Ticket> getTicket(@Path("ticketID") int ticketID, @Body TUMCabeVerification verification);
 
     @GET(API_EVENTS + API_TICKET + "type/{eventID}")
-    Call<List<TicketType>> getTicketTypes(@Path("eventID") int eventID);
+    Observable<List<TicketType>> getTicketTypes(@Path("eventID") int eventID);
 
     // Ticket reservation
     @POST(API_EVENTS + API_TICKET + "reserve")

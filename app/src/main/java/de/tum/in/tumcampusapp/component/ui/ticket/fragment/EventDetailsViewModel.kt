@@ -3,16 +3,20 @@ package de.tum.`in`.tumcampusapp.component.ui.ticket.fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.ticket.di.EventId
+import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
+import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class EventDetailsViewModel(
-        private val eventId: Int,
-        private val eventsRemoteRepository: EventsRemoteRepository
+class EventDetailsViewModel @Inject constructor(
+        @EventId val eventId: Int,
+        private val eventsRemoteRepository: EventsRemoteRepository,
+        private val ticketsLocalRepository: TicketsLocalRepository
 ) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
@@ -33,20 +37,11 @@ class EventDetailsViewModel(
                 }
     }
 
+    fun isEventBooked(event: Event): Boolean = ticketsLocalRepository.isEventBooked(event)
+
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.dispose()
-    }
-
-    class Factory(
-            private val eventId: Int,
-            private val remoteRepo: EventsRemoteRepository
-    ) : ViewModelProvider.Factory {
-
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return EventDetailsViewModel(eventId, remoteRepo) as T
-        }
-
     }
 
 }

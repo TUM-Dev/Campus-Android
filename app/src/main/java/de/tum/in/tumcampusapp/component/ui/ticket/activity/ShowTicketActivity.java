@@ -5,8 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -20,14 +18,20 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+import javax.inject.Inject;
+
+import androidx.annotation.NonNull;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
-import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
+import de.tum.in.tumcampusapp.component.ui.ticket.di.TicketsModule;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
+import de.tum.in.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository;
+import de.tum.in.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository;
+import de.tum.in.tumcampusapp.component.ui.ticket.repository.TicketsRemoteRepository;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
@@ -44,11 +48,18 @@ public class ShowTicketActivity extends BaseActivity {
     private TextView priceTextView;
     private TextView redemptionStateTextView;
 
-    private EventsController eventsController;
-
     private Ticket ticket;
     private Event event;
     private TicketType ticketType;
+
+    @Inject
+    EventsLocalRepository eventsLocalRepo;
+
+    @Inject
+    TicketsRemoteRepository ticketsRemoteRepo;
+
+    @Inject
+    TicketsLocalRepository ticketsLocalRepo;
 
     public ShowTicketActivity() {
         super(R.layout.activity_show_ticket);
@@ -59,8 +70,15 @@ public class ShowTicketActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         getWindow().getDecorView().setBackgroundColor(Color.WHITE);
 
+        int eventId = getIntent().getIntExtra(Const.KEY_EVENT_ID, 0);
+        getInjector().ticketsComponent()
+                .ticketsModule(new TicketsModule(this))
+                .eventId(eventId)
+                .build()
+                .inject(this);
+
         initViews();
-        loadTicketData();
+        loadTicketData(eventId);
         setViewData();
 
         createQRCode(ticket.getCode());
@@ -86,8 +104,8 @@ public class ShowTicketActivity extends BaseActivity {
 
     private void loadRedemptionStatus() {
         try {
-            TUMCabeClient.getInstance(this)
-                    .fetchTicket(this, ticket.getId())
+            ticketsRemoteRepo
+                    .fetchTicket(ticket.getId())
                     .enqueue(new Callback<Ticket>() {
                         @Override
                         public void onResponse(@NonNull Call<Ticket> call,
@@ -113,7 +131,7 @@ public class ShowTicketActivity extends BaseActivity {
 
     private void handleTicketRefreshSuccess(Ticket ticket) {
         this.ticket = ticket;
-        eventsController.insert(ticket);
+        ticketsLocalRepo.insert(ticket);
 
         setViewData();
         swipeRefreshLayout.setRefreshing(false);
@@ -124,13 +142,10 @@ public class ShowTicketActivity extends BaseActivity {
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    private void loadTicketData() {
-        eventsController = new EventsController(this);
-        int eventId = getIntent().getIntExtra(Const.KEY_EVENT_ID, 0);
-
-        ticket = eventsController.getTicketByEventId(eventId);
-        event = eventsController.getEventById(ticket.getEventId());
-        ticketType = eventsController.getTicketTypeById(ticket.getTicketTypeId());
+    private void loadTicketData(int eventId) {
+        ticket = ticketsLocalRepo.getTicketByEventId(eventId);
+        event = eventsLocalRepo.getEventById(ticket.getEventId());
+        ticketType = ticketsLocalRepo.getTicketTypeById(ticket.getTicketTypeId());
     }
 
     private void setViewData() {

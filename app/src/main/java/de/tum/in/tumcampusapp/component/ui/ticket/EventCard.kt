@@ -17,19 +17,25 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.EventDetailsActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.adapter.EventsAdapter
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
+import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoActivity
+import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 
 class EventCard(context: Context) : Card(CardManager.CARD_EVENT, context, "card_event") {
 
     var event: Event? = null
-    private val eventsController = EventsController(context)
+
+    // TODO(thellmund) Inject this
+    private val eventCardsProvider = EventCardsProvider(context, EventsLocalRepository(TcaDb.getInstance(context)))
+    private val localRepo = TicketsLocalRepository(TcaDb.getInstance(context))
 
     override fun updateViewHolder(viewHolder: RecyclerView.ViewHolder) {
         super.updateViewHolder(viewHolder)
 
         val eventViewHolder = viewHolder as? EventsAdapter.EventViewHolder ?: return
-        val hasTicket = eventsController.isEventBooked(event)
+        val hasTicket = event?.let { localRepo.isEventBooked(it) } ?: false
         eventViewHolder.bind(event, hasTicket)
     }
 
@@ -50,7 +56,7 @@ class EventCard(context: Context) : Card(CardManager.CARD_EVENT, context, "card_
 
     override fun discard(editor: SharedPreferences.Editor) {
         event?.let {
-            eventsController.setDismissed(it.id)
+            eventCardsProvider.setDismissed(it.id)
         }
     }
 

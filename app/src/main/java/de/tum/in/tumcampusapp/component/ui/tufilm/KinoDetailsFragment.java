@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.squareup.picasso.Picasso;
@@ -32,9 +31,9 @@ import androidx.lifecycle.ViewModelProviders;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventHelper;
-import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
+import de.tum.in.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.tufilm.di.KinoModule;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.di.ViewModelFactory;
@@ -49,10 +48,12 @@ public class KinoDetailsFragment extends Fragment {
 
     private View rootView;
     private Event event;
-    private EventsController eventsController;
 
     @Inject
     Provider<KinoDetailsViewModel> viewModelProvider;
+
+    @Inject
+    TicketsLocalRepository ticketsLocalRepo;
 
     private KinoDetailsViewModel kinoViewModel;
 
@@ -105,7 +106,6 @@ public class KinoDetailsFragment extends Fragment {
 
     private void showEventTicketDetails(Event event) {
         this.event = event;
-        this.eventsController = new EventsController(getContext());
         initBuyOrShowTicket(event);
 
         rootView.findViewById(R.id.eventInformation).setVisibility(View.VISIBLE);
@@ -116,14 +116,10 @@ public class KinoDetailsFragment extends Fragment {
 
     private void initBuyOrShowTicket(Event event) {
         MaterialButton ticketButton = rootView.findViewById(R.id.buyTicketButton);
-        if (eventsController.isEventBooked(event)) {
+        if (ticketsLocalRepo.isEventBooked(event)) {
             ticketButton.setText(R.string.show_ticket);
             ticketButton.setVisibility(View.VISIBLE);
             ticketButton.setOnClickListener(view -> {
-                if (event == null) {
-                    Toast.makeText(getContext(), R.string.error, Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 Intent intent = new Intent(getContext(), ShowTicketActivity.class);
                 intent.putExtra(KEY_EVENT_ID, event.getId());
                 startActivity(intent);

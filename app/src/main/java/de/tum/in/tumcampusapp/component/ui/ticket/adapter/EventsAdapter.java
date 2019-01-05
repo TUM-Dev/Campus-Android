@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.component.ui.ticket.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,11 +26,12 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventCard;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventDiffUtil;
-import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.EventBetaInfo;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.EventItem;
+import de.tum.in.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository;
+import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
@@ -47,14 +47,14 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
     private static final int CARD_VERTICAL = 2;
 
     private Context mContext;
-    private EventsController mEventsController;
+    private TicketsLocalRepository mTicketsLocalRepo;
 
     private List<EventItem> mEvents = new ArrayList<>();
     private EventItem betaInfo = new EventBetaInfo();
 
     public EventsAdapter(Context context) {
         mContext = context;
-        mEventsController = new EventsController(context);
+        mTicketsLocalRepo = new TicketsLocalRepository(TcaDb.getInstance(context));
     }
 
     @NonNull
@@ -98,7 +98,7 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         eventCard.setEvent(event);
         holder.setCurrentCard(eventCard);
 
-        boolean hasTicket = mEventsController.isEventBooked(event);
+        boolean hasTicket = mTicketsLocalRepo.isEventBooked(event);
         ((EventViewHolder) holder).bind(event, hasTicket);
     }
 
