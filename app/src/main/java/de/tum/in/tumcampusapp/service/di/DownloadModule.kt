@@ -1,9 +1,14 @@
 package de.tum.`in`.tumcampusapp.service.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import dagger.Module
 import dagger.Provides
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
+import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
+import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
+import de.tum.`in`.tumcampusapp.component.tumui.grades.GradesBackgroundUpdater
+import de.tum.`in`.tumcampusapp.component.tumui.grades.GradesStore
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
@@ -51,5 +56,23 @@ class DownloadModule {
     fun provideCafeteriaMenuManager(
             context: Context
     ): CafeteriaMenuManager = CafeteriaMenuManager(context)
+
+    @Provides
+    fun provideGradesStore(
+            sharedPrefs: SharedPreferences
+    ): GradesStore = GradesStore(sharedPrefs)
+
+    @Provides
+    fun provideGradesBackgroundUpdater(
+            context: Context,
+            tumOnlineClient: TUMOnlineClient,
+            notificationScheduler: NotificationScheduler,
+            gradesStore: GradesStore
+    ): GradesBackgroundUpdater = GradesBackgroundUpdater(
+            context,
+            tumOnlineClient,
+            notificationScheduler,
+            gradesStore
+    )
 
 }

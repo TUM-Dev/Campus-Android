@@ -8,6 +8,7 @@ import dagger.Provides
 import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
+import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
 import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
 import de.tum.`in`.tumcampusapp.component.ui.news.RealTopNewsStore
 import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsStore
@@ -91,5 +92,11 @@ class AppModule(private val context: Context) {
     fun provideAuthenticationManager(
             context: Context
     ): AuthenticationManager = AuthenticationManager(context)
+
+    @Singleton
+    @Provides
+    fun provideNotificationScheduler(
+            context: Context
+    ): NotificationScheduler = NotificationScheduler(context)
 
 }
