@@ -21,7 +21,6 @@ import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
-import de.tum.in.tumcampusapp.component.ui.ticket.EventsRemoteRepository;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Payment;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
@@ -29,7 +28,6 @@ import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservation;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
-import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,8 +53,6 @@ public class BuyTicketActivity extends BaseActivity {
 
     private List<TicketType> ticketTypes;
     private int ticketTypeSelected;
-    private int remainingTickets;
-    private boolean ticketInitialized;
 
     public BuyTicketActivity() {
         super(R.layout.activity_buy_ticket);
@@ -90,28 +86,10 @@ public class BuyTicketActivity extends BaseActivity {
                     }
                 });
 
-        updateRemainingTickets();
-    }
-
-    private void updateRemainingTickets() {
-        Single<Integer> unused = new EventsRemoteRepository(
-                TUMCabeClient.getInstance(this)).fetchTicketStats(eventId)
-                                                .doOnSuccess(integer -> {
-                                                    remainingTickets = integer;
-                                                    if (remainingTickets == 0) {
-                                                        showNoTicketsAvailableError();
-                                                    }
-                                                    if (ticketInitialized && !ticketTypes.isEmpty()) {
-                                                        updateTicketAmount();
-                                                    }
-                                                });
     }
 
     private void handleTicketTypesDownloadSuccess(@NonNull List<TicketType> ticketTypes) {
         this.ticketTypes = ticketTypes;
-        ticketTypes.get(0)
-                   .getPaymentInfo()
-                   .setMaxTickets(5); // TODO(bronger) remove, this is just for testing
         eventsController.addTicketTypes(ticketTypes);
         setupUi();
     }
@@ -134,7 +112,6 @@ public class BuyTicketActivity extends BaseActivity {
         minusButton = findViewById(R.id.ticket_amount_minus);
         plusButton = findViewById(R.id.ticket_amount_plus);
         currentTicketAmount = 1;
-        ticketInitialized = true;
 
         updateTicketAmount();
 
@@ -149,10 +126,16 @@ public class BuyTicketActivity extends BaseActivity {
     }
 
     private void updateTicketAmount() {
-        Payment paymentInfo = ticketTypes.get(ticketTypeSelected)
-                                         .getPaymentInfo();
+        TicketType ticketType = ticketTypes.get(ticketTypeSelected);
+        Payment paymentInfo = ticketType.getPaymentInfo();
+        int remainingTickets = ticketType.getContingent() - ticketType.getSold();
+        if (remainingTickets == 0) {
+            showNoTicketsAvailableError();
+        }
+
         int maxAmount = Math.min(paymentInfo.getMaxTickets(), remainingTickets);
         int minAmount = paymentInfo.getMinTickets();
+        Utils.log("min " + minAmount + " max " + paymentInfo.getMaxTickets() + " remaining " + remainingTickets);
 
         if (currentTicketAmount > maxAmount) {
             currentTicketAmount = maxAmount;

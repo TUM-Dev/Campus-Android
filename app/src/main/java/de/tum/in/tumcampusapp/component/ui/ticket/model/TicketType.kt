@@ -24,7 +24,11 @@ data class TicketType(
         var description: String = "",
         @Ignore
         @SerializedName("payment")
-        var paymentInfo: Payment = Payment()
+        var paymentInfo: Payment = Payment(),
+        @Ignore
+        var contingent: Int = 0,
+        @Ignore
+        var sold: Int = 0
 ) {
 
     fun formatPrice(price: Int): String
