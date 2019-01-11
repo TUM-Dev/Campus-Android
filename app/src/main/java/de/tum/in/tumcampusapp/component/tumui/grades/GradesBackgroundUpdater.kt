@@ -36,7 +36,6 @@ class GradesBackgroundUpdater @Inject constructor(
 
         val newGradedCourses = courses - state.existingGrades
         if (newGradedCourses.isNotEmpty()) {
-            gradesStore.storeGradedCourses(courses)
             showGradesNotification(newGradedCourses)
         }
     }
