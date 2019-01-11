@@ -4,10 +4,8 @@ import android.content.Context
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
-import de.tum.`in`.tumcampusapp.component.tumui.grades.model.Exam
 import de.tum.`in`.tumcampusapp.component.tumui.grades.model.ExamList
 import de.tum.`in`.tumcampusapp.utils.Utils
-import org.joda.time.DateTime
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,35 +18,27 @@ class GradesBackgroundUpdater @Inject constructor(
         private val gradesStore: GradesStore
 ) : Callback<ExamList> {
 
-    fun fetchGradesAndNotifyIfNew(forceReload: Boolean) {
-        val cacheControl = if (forceReload) CacheControl.BYPASS_CACHE else CacheControl.USE_CACHE
-        tumOnlineClient.getGrades(cacheControl).enqueue(this)
+    fun fetchGradesAndNotifyIfNecessary() {
+        tumOnlineClient.getGrades(CacheControl.BYPASS_CACHE).enqueue(this)
     }
 
     override fun onResponse(call: Call<ExamList>, response: Response<ExamList>) {
-        val exams = response.body()?.exams.orEmpty()
-        val courses = exams.map { it.course }
-        val onlyOldExams = isLikelyOldExams(exams)
+        val courses = response.body()?.exams.orEmpty().map { it.course }
+        val state = gradesStore.getGradedCourses()
 
-        if (onlyOldExams) {
+        if (state.isFirstRefresh) {
+            // On the first refresh, we store all downloaded grades in the empty GradesStore. We
+            // can't know if any of these grades are "new", so we don't show a notification in this
+            // case.
+            gradesStore.storeGradedCourses(courses)
             return
         }
 
-        val existingCourses = gradesStore.getGradedCourses()
-        val newGradedCourses = existingCourses - courses
-
+        val newGradedCourses = courses - state.existingGrades
         if (newGradedCourses.isNotEmpty()) {
+            gradesStore.storeGradedCourses(courses)
             showGradesNotification(newGradedCourses)
         }
-    }
-
-    private fun isLikelyOldExams(exams: List<Exam>): Boolean {
-        // The grade is of an exam that occurred more than 4 weeks ago. To not notify the user
-        // the first time that they use this feature, we don't show a notification in this case.
-        val newestExam = exams
-                .mapNotNull { it.date }
-                .max() ?: DateTime.now()
-        return newestExam.isBefore(EXAM_THRESHOLD)
     }
 
     private fun showGradesNotification(newGrades: List<String>) {
@@ -59,10 +49,6 @@ class GradesBackgroundUpdater @Inject constructor(
 
     override fun onFailure(call: Call<ExamList>, t: Throwable) {
         Utils.log(t)
-    }
-
-    companion object {
-        private val EXAM_THRESHOLD = DateTime.now().minusWeeks(4)
     }
 
 }

@@ -184,7 +184,7 @@ class DownloadService : JobIntentService() {
     }
 
     private fun downloadGrades(): Boolean {
-        gradesBackgroundUpdater.fetchGradesAndNotifyIfNew(true)
+        gradesBackgroundUpdater.fetchGradesAndNotifyIfNecessary()
         return true
     }
 
