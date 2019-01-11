@@ -18,9 +18,8 @@ class GradesStore @Inject constructor(
     private val gradedCourseNames: List<String>
         get() = sharedPrefs.getStringSet(KEY_GRADED_COURSES, emptySet()).toList()
 
-    fun getGradedCourses(): GradesStoreState {
-        return GradesStoreState(isFirstRefresh, gradedCourseNames)
-    }
+    val state: GradesStoreState
+        get() = GradesStoreState(isFirstRefresh, gradedCourseNames)
 
     fun storeGradedCourses(courses: List<String>) {
         sharedPrefs.edit().putStringSet(KEY_GRADED_COURSES, courses.toSet()).apply()

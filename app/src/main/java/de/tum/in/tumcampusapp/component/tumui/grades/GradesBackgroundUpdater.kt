@@ -24,7 +24,7 @@ class GradesBackgroundUpdater @Inject constructor(
 
     override fun onResponse(call: Call<ExamList>, response: Response<ExamList>) {
         val courses = response.body()?.exams.orEmpty().map { it.course }
-        val state = gradesStore.getGradedCourses()
+        val state = gradesStore.state
 
         if (state.isFirstRefresh) {
             // On the first refresh, we store all downloaded grades in the empty GradesStore. We
