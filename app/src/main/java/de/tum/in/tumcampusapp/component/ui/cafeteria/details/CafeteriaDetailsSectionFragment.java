@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -18,17 +18,18 @@ import javax.inject.Provider;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuCard;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuInflater;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.di.CafeteriaModule;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.di.ViewModelFactory;
 import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * Fragment for each cafeteria-page.
@@ -39,6 +40,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
     Provider<CafeteriaViewModel> viewModelProvider;
 
     private CafeteriaViewModel cafeteriaViewModel;
+    private CafeteriaMenusAdapter adapter;
 
     public static CafeteriaDetailsSectionFragment newInstance(int cafeteriaId, DateTime dateTime) {
         CafeteriaDetailsSectionFragment fragment = new CafeteriaDetailsSectionFragment();
@@ -47,53 +49,6 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         args.putInt(Const.CAFETERIA_ID, cafeteriaId);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    /**
-     * Inflates the cafeteria menu layout.
-     * This is put into an extra static method to be able to
-     * reuse it in {@link CafeteriaMenuCard}
-     *
-     * @param rootView    Parent layout
-     * @param cafeteriaId Cafeteria id
-     * @param date        Date
-     * @param isBigLayout True to show big lines in the Activity, false to show small lines in Card
-     */
-    public static void showMenu(LinearLayout rootView, int cafeteriaId, DateTime date,
-                                boolean isBigLayout, List<CafeteriaMenu> cafeteriaMenus) {
-        final Context context = rootView.getContext();
-
-        if (!isBigLayout) {
-            TextView textView = createOpeningHoursTextView(context, cafeteriaId, date);
-            rootView.addView(textView);
-        }
-
-        // Show cafeteria menu
-        String currentCafeteriaMenuType = "";
-        CafeteriaMenuInflater menuInflater = new CafeteriaMenuInflater(context, rootView, isBigLayout);
-
-        for (CafeteriaMenu cafeteriaMenu : cafeteriaMenus) {
-            boolean isFirstInSection = !cafeteriaMenu.getTypeShort().equals(currentCafeteriaMenuType);
-            View view = menuInflater.inflate(cafeteriaMenu, isFirstInSection);
-
-            if (view != null) {
-                rootView.addView(view);
-            }
-        }
-    }
-
-    private static TextView createOpeningHoursTextView(Context context, int cafeteriaId, DateTime date) {
-        OpenHoursHelper lm = new OpenHoursHelper(context);
-
-        TextView textview;
-        textview = new TextView(context, null, R.style.CardBody);
-        textview.setText(lm.getHoursByIdAsString(context, cafeteriaId, date));
-        textview.setTextColor(ContextCompat.getColor(context, R.color.sections_green));
-
-        int bottomPadding = context.getResources()
-                .getDimensionPixelOffset(R.dimen.material_default_padding);
-        textview.setPadding(0, 0, 0, bottomPadding);
-        return textview;
     }
 
     @Override
@@ -123,14 +78,35 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         TextView dateTextView = view.findViewById(R.id.menuDateTextView);
         dateTextView.setText(menuDateString);
 
-        LinearLayout root = view.findViewById(R.id.layout);
+        RecyclerView recyclerView = view.findViewById(R.id.menusRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        adapter = new CafeteriaMenusAdapter(requireContext(), true);
+        recyclerView.setAdapter(adapter);
+
         int cafeteriaId = getArguments().getInt(Const.CAFETERIA_ID);
 
-        cafeteriaViewModel.getCafeteriaMenus().observe(getViewLifecycleOwner(), cafeteriaMenus -> {
-            showMenu(root, cafeteriaId, menuDate, true, cafeteriaMenus);
-        });
-
+        cafeteriaViewModel.getCafeteriaMenus().observe(getViewLifecycleOwner(), this::showCafeteriaMenus);
         cafeteriaViewModel.fetchCafeteriaMenus(cafeteriaId, menuDate);
+    }
+
+    private void showCafeteriaMenus(List<CafeteriaMenu> cafeteriaMenus) {
+        List<CafeteriaMenu> filtered = new ArrayList<>();
+
+        for (CafeteriaMenu menu : cafeteriaMenus) {
+            boolean shouldShow = Utils.getSettingBool(
+                    requireContext(),
+                    "card_cafeteria_" + menu.getTypeShort(),
+                    "tg".equals(menu.getTypeShort()) || "ae".equals(menu.getTypeShort())
+            );
+
+            if (shouldShow) {
+                filtered.add(menu);
+            }
+        }
+
+        adapter.update(filtered);
     }
 
 }

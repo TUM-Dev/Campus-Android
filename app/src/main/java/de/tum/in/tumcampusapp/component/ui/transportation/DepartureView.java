@@ -72,7 +72,7 @@ public class DepartureView extends LinearLayout {
         }
 
         mSymbolView = findViewById(R.id.line_symbol);
-        mLineView = findViewById(R.id.line_name);
+        mLineView = findViewById(R.id.nameTextView);
         mTimeSwitcher = findViewById(R.id.line_switcher);
 
         // Declare the in and out animations and initialize them

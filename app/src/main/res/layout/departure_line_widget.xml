@@ -34,7 +34,7 @@
     </FrameLayout>
 
     <TextView
-        android:id="@+id/line_name"
+        android:id="@+id/nameTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/material_small_padding"

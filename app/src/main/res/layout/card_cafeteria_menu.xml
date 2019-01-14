@@ -32,31 +32,39 @@
             app:layout_constraintTop_toBottomOf="@id/cafeteriaNameTextView"
             tools:text="Date" />
 
-        <ImageView
-            android:id="@+id/cardMoreIcon"
-            style="@style/CardMoreIcon"
-            app:layout_constraintBottom_toBottomOf="@id/cafeteriaNameTextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/cafeteriaNameTextView" />
+        <TextView
+            android:id="@+id/openingHoursTextView"
+            style="@style/CardDetails"
+            android:layout_width="0dp"
+            app:layout_constraintEnd_toStartOf="@id/cardMoreIcon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/menuDateTextView"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/material_small_padding"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:textColor="@color/sections_green"
+            tools:text="Closes in 45 mins" />
 
-        <LinearLayout
-            android:id="@+id/contentContainerLayout"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/menusRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/material_default_padding"
             android:layout_marginTop="@dimen/material_small_padding"
             android:layout_marginEnd="@dimen/material_default_padding"
             android:layout_marginBottom="@dimen/material_default_padding"
-            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/menuDateTextView"
-            tools:ignore="UselessLeaf">
+            app:layout_constraintTop_toBottomOf="@id/openingHoursTextView" />
 
-            <!-- Cafeteria menu items will be inserted here -->
-
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/cardMoreIcon"
+            style="@style/CardMoreIcon"
+            app:layout_constraintBottom_toBottomOf="@id/cafeteriaNameTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/cafeteriaNameTextView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -16,11 +16,12 @@ import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 
 public class OpenHoursHelper {
 
+    private final Context context;
     private final CafeteriaLocationDao dao;
 
-    OpenHoursHelper(Context context) {
-        dao = TcaDb.getInstance(context)
-                .locationDao();
+    public OpenHoursHelper(Context context) {
+        this.context = context;
+        dao = TcaDb.getInstance(context).locationDao();
     }
 
     /**
@@ -29,12 +30,11 @@ public class OpenHoursHelper {
      * HINT: Currently only works for cafeterias, and institutions
      * that have Mo-Do xx-yy.yy, Fr aa-bb and Mo-Fr xx-yy format
      *
-     * @param context Context
      * @param id      Location ID, e.g. 100
      * @param date    Relative date
      * @return Readable opening string
      */
-    public String getHoursByIdAsString(Context context, int id, DateTime date) {
+    public String getHoursByIdAsString(int id, DateTime date) {
         String result = dao.getHoursById(id);
         if (result == null) {
             return "";

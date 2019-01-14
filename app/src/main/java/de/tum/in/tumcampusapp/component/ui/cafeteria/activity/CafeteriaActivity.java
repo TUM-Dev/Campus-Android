@@ -29,7 +29,7 @@ import androidx.viewpager.widget.ViewPager;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuInflater;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuFormatter;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel;
@@ -231,8 +231,8 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
 
     private void showIngredientsInfo() {
         // Build a alert dialog containing the mapping of ingredients to the numbers
-        String ingredients = getString(R.string.cafeteria_ingredients);
-        SpannableString message = CafeteriaMenuInflater.menuToSpan(this, ingredients);
+        CafeteriaMenuFormatter formatter = new CafeteriaMenuFormatter(this);
+        SpannableString message = formatter.menuToSpan(R.string.cafeteria_ingredients);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.action_ingredients)
