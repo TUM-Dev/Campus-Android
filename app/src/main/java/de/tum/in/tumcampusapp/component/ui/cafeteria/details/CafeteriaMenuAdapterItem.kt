@@ -7,7 +7,7 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaMenuFormatter
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.FavoriteDishDao
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.FavoriteDish
-import kotlinx.android.synthetic.main.card_list_header.view.*
+import kotlinx.android.synthetic.main.cafeteria_menu_header.view.*
 import kotlinx.android.synthetic.main.card_price_line.view.*
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -16,15 +16,22 @@ sealed class CafeteriaMenuAdapterItem {
 
     abstract val id: String
 
-    abstract fun bind(holder: CafeteriaMenusAdapter.ViewHolder)
+    abstract fun bind(
+            holder: CafeteriaMenusAdapter.ViewHolder,
+            listener: (() -> Unit)?
+    )
 
     data class Header(val menu: CafeteriaMenu) : CafeteriaMenuAdapterItem() {
 
         override val id: String
             get() = "header_${menu.id}"
 
-        override fun bind(holder: CafeteriaMenusAdapter.ViewHolder) = with(holder.itemView)  {
+        override fun bind(
+                holder: CafeteriaMenusAdapter.ViewHolder,
+                listener: (() -> Unit)?
+        ) = with(holder.itemView)  {
             headerTextView.text = menu.typeLong.replace("[0-9]", "").trim()
+            setOnClickListener { listener?.invoke() }
         }
 
     }
@@ -40,7 +47,10 @@ sealed class CafeteriaMenuAdapterItem {
         override val id: String
             get() = "item_${menu.id}"
 
-        override fun bind(holder: CafeteriaMenusAdapter.ViewHolder) = with(holder.itemView) {
+        override fun bind(
+                holder: CafeteriaMenusAdapter.ViewHolder,
+                listener: (() -> Unit)?
+        ) = with(holder.itemView) {
             val formatter = CafeteriaMenuFormatter(context)
             val menuName = if (isBigLayout) menu.name else formatter.prepare(menu.name)
             val menuSpan = formatter.menuToSpan(menuName)
@@ -49,6 +59,8 @@ sealed class CafeteriaMenuAdapterItem {
             nameTextView.text = menuSpan
 
             rolePrice?.let { showPrice(this, it) } ?: hidePrice(this)
+
+            setOnClickListener { listener?.invoke() }
         }
 
         private fun showPrice(itemView: View, price: String) = with(itemView) {

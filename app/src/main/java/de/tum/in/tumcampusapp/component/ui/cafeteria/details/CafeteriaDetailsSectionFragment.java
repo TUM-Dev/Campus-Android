@@ -10,9 +10,6 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -26,10 +23,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.di.CafeteriaModule;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.di.ViewModelFactory;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * Fragment for each cafeteria-page.
@@ -40,7 +35,6 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
     Provider<CafeteriaViewModel> viewModelProvider;
 
     private CafeteriaViewModel cafeteriaViewModel;
-    private CafeteriaMenusAdapter adapter;
 
     public static CafeteriaDetailsSectionFragment newInstance(int cafeteriaId, DateTime dateTime) {
         CafeteriaDetailsSectionFragment fragment = new CafeteriaDetailsSectionFragment();
@@ -82,31 +76,13 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        adapter = new CafeteriaMenusAdapter(requireContext(), true);
+        CafeteriaMenusAdapter adapter = new CafeteriaMenusAdapter(requireContext(), true, null);
         recyclerView.setAdapter(adapter);
 
         int cafeteriaId = getArguments().getInt(Const.CAFETERIA_ID);
 
-        cafeteriaViewModel.getCafeteriaMenus().observe(getViewLifecycleOwner(), this::showCafeteriaMenus);
+        cafeteriaViewModel.getCafeteriaMenus().observe(getViewLifecycleOwner(), adapter::update);
         cafeteriaViewModel.fetchCafeteriaMenus(cafeteriaId, menuDate);
-    }
-
-    private void showCafeteriaMenus(List<CafeteriaMenu> cafeteriaMenus) {
-        List<CafeteriaMenu> filtered = new ArrayList<>();
-
-        for (CafeteriaMenu menu : cafeteriaMenus) {
-            boolean shouldShow = Utils.getSettingBool(
-                    requireContext(),
-                    "card_cafeteria_" + menu.getTypeShort(),
-                    "tg".equals(menu.getTypeShort()) || "ae".equals(menu.getTypeShort())
-            );
-
-            if (shouldShow) {
-                filtered.add(menu);
-            }
-        }
-
-        adapter.update(filtered);
     }
 
 }

@@ -27,7 +27,7 @@ class CafeteriaMenuViewHolder(itemView: View) : CardViewHolder(itemView) {
             menusRecyclerView.layoutManager = LinearLayoutManager(context)
             menusRecyclerView.itemAnimator = DefaultItemAnimator()
 
-            adapter = CafeteriaMenusAdapter(context, false)
+            adapter = CafeteriaMenusAdapter(context, false) { performClick() }
             menusRecyclerView.adapter = adapter
 
             isFirstBind = false

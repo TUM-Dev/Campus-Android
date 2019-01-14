@@ -11,11 +11,13 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.FavoriteDishDao
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaPrices
 import de.tum.`in`.tumcampusapp.database.TcaDb
+import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.splitOnChanged
 
 class CafeteriaMenusAdapter(
         private val context: Context,
-        private val isBigLayout: Boolean
+        private val isBigLayout: Boolean,
+        private val onClickListener: (() -> Unit)? = null
 ) : RecyclerView.Adapter<CafeteriaMenusAdapter.ViewHolder>() {
 
     private val dao: FavoriteDishDao by lazy {
@@ -39,15 +41,16 @@ class CafeteriaMenusAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val viewEntity = adapterItems[position]
-        viewEntity.bind(holder)
+        viewEntity.bind(holder, onClickListener)
     }
 
     override fun getItemCount() = adapterItems.size
 
     fun update(menus: List<CafeteriaMenu>) {
         val newItems = menus
-                .splitOnChanged { it.typeShort }
-                .map { createAdapterItemsForSection(it) }
+                .filter(this::shouldShowMenu)
+                .splitOnChanged { it.typeLong }
+                .map(this::createAdapterItemsForSection)
                 .flatten()
         
         val diffResult = DiffUtil.calculateDiff(DiffUtilCallback(adapterItems, newItems))
@@ -56,6 +59,15 @@ class CafeteriaMenusAdapter(
         adapterItems += newItems
 
         diffResult.dispatchUpdatesTo(this)
+    }
+
+    private fun shouldShowMenu(menu: CafeteriaMenu): Boolean {
+        val shouldShowMenuType = Utils.getSettingBool(
+                context,
+                "card_cafeteria_${menu.typeShort}",
+                "tg" == menu.typeShort || "ae" == menu.typeShort
+        )
+        return shouldShowMenuType || isBigLayout
     }
 
     private fun createAdapterItemsForSection(
@@ -67,12 +79,13 @@ class CafeteriaMenusAdapter(
             val isFavorite = dao.checkIfFavoriteDish(it.tag).isNotEmpty()
             CafeteriaMenuAdapterItem.Item(it, isFavorite, rolePrice, isBigLayout, dao)
         }
-        return listOf(header) + items
+
+        return if (header.menu.typeLong.isNotBlank()) listOf(header) + items else items
     }
 
     override fun getItemViewType(position: Int): Int {
         return when (adapterItems[position]) {
-            is CafeteriaMenuAdapterItem.Header -> R.layout.card_list_header
+            is CafeteriaMenuAdapterItem.Header -> R.layout.cafeteria_menu_header
             is CafeteriaMenuAdapterItem.Item -> itemLayout
         }
     }
