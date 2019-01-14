@@ -23,20 +23,19 @@ class GradesBackgroundUpdater @Inject constructor(
     }
 
     override fun onResponse(call: Call<ExamList>, response: Response<ExamList>) {
-        val courses = response.body()?.exams.orEmpty().map { it.course }
-        val state = gradesStore.state
+        val newCourses = response.body()?.exams.orEmpty().map { it.course }
+        val existingCourses = gradesStore.gradedCourses
+        val diff = newCourses - existingCourses
 
-        if (state.isFirstRefresh) {
-            // On the first refresh, we store all downloaded grades in the empty GradesStore. We
-            // can't know if any of these grades are "new", so we don't show a notification in this
-            // case.
-            gradesStore.storeGradedCourses(courses)
+        if (diff.size > NOTIFICATION_THRESHOLD) {
+            // We assume that this is the first time the user's grades are fetched and stored. Since
+            // this likely includes old grades, we don't display a notification.
+            gradesStore.store(newCourses)
             return
         }
 
-        val newGradedCourses = courses - state.existingGrades
-        if (newGradedCourses.isNotEmpty()) {
-            showGradesNotification(newGradedCourses)
+        if (diff.isNotEmpty()) {
+            showGradesNotification(diff)
         }
     }
 
@@ -48,6 +47,10 @@ class GradesBackgroundUpdater @Inject constructor(
 
     override fun onFailure(call: Call<ExamList>, t: Throwable) {
         Utils.log(t)
+    }
+
+    companion object {
+        private const val NOTIFICATION_THRESHOLD = 2
     }
 
 }

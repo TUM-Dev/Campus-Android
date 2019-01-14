@@ -3,25 +3,14 @@ package de.tum.`in`.tumcampusapp.component.tumui.grades
 import android.content.SharedPreferences
 import javax.inject.Inject
 
-data class GradesStoreState(
-        val isFirstRefresh: Boolean,
-        val existingGrades: List<String>
-)
-
 class GradesStore @Inject constructor(
         private val sharedPrefs: SharedPreferences
 ) {
 
-    private val isFirstRefresh: Boolean
-        get() = sharedPrefs.contains(KEY_GRADED_COURSES).not()
+    val gradedCourses: List<String>
+        get() = sharedPrefs.getStringSet(KEY_GRADED_COURSES, emptySet()).toList().sorted()
 
-    private val gradedCourseNames: List<String>
-        get() = sharedPrefs.getStringSet(KEY_GRADED_COURSES, emptySet()).toList()
-
-    val state: GradesStoreState
-        get() = GradesStoreState(isFirstRefresh, gradedCourseNames)
-
-    fun storeGradedCourses(courses: List<String>) {
+    fun store(courses: List<String>) {
         sharedPrefs.edit().putStringSet(KEY_GRADED_COURSES, courses.toSet()).apply()
     }
 

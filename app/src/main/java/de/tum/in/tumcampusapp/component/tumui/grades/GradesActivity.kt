@@ -92,7 +92,7 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
     private fun storeGradedCourses(exams: List<Exam>) {
         val gradesStore = GradesStore(defaultSharedPreferences)
         val courses = exams.map { it.course }
-        gradesStore.storeGradedCourses(courses)
+        gradesStore.store(courses)
     }
 
     /**
