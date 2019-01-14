@@ -58,13 +58,16 @@ sealed class CafeteriaMenuAdapterItem {
             val nameTextView = findViewById<TextView>(R.id.nameTextView)
             nameTextView.text = menuSpan
 
-            rolePrice?.let { showPrice(this, it) } ?: hidePrice(this)
-
             setOnClickListener { listener?.invoke() }
+            rolePrice?.let { showPrice(this, it) } ?: hidePrice(this)
         }
 
-        private fun showPrice(itemView: View, price: String) = with(itemView) {
+        private fun showPrice(
+                itemView: View,
+                price: String
+        ) = with(itemView) {
             priceTextView.text = kotlin.String.format("%s €", price)
+
             favoriteDish.isSelected = isFavorite
             favoriteDish.setOnClickListener { view ->
                 if (!view.isSelected) {

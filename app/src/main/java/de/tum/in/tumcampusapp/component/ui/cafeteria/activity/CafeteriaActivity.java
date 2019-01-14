@@ -89,7 +89,6 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
-        initCafeteriaSpinner();
         sectionsPagerAdapter = new CafeteriaDetailsSectionsPagerAdapter(getSupportFragmentManager());
 
         ViewModelFactory<CafeteriaViewModel> factory = new ViewModelFactory<>(viewModelProvider);
@@ -113,6 +112,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
         adapter.clear();
         adapter.addAll(cafeterias);
         adapter.notifyDataSetChanged();
+        initCafeteriaSpinner();
     }
 
     private ArrayAdapter<Cafeteria> createArrayAdapter() {
@@ -172,6 +172,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
 
     private void updateCafeteriaSpinner(int cafeteriaId) {
         int selectedIndex = NONE_SELECTED;
+
         for (int i = 0; i < mCafeterias.size(); i++) {
             Cafeteria cafeteria = mCafeterias.get(i);
             if (cafeteriaId == NONE_SELECTED || cafeteriaId == cafeteria.getId()) {

@@ -16,7 +16,6 @@
         android:gravity="top"
         android:maxLines="5"
         android:scrollHorizontally="false"
-        android:textIsSelectable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/priceTextView"
         app:layout_constraintStart_toStartOf="parent"
