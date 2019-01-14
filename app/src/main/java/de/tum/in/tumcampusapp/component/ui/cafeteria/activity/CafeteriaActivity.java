@@ -233,7 +233,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
     private void showIngredientsInfo() {
         // Build a alert dialog containing the mapping of ingredients to the numbers
         CafeteriaMenuFormatter formatter = new CafeteriaMenuFormatter(this);
-        SpannableString message = formatter.menuToSpan(R.string.cafeteria_ingredients);
+        SpannableString message = formatter.format(R.string.cafeteria_ingredients, true);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.action_ingredients)
