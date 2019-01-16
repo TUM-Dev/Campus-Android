@@ -658,4 +658,9 @@ Signatur: %5$s</string>
     <string name="update_note_title">Neue Features</string>
     <string name="update_note_version">Version %s</string>
     <string name="action_cant_be_performed">Aktion kann nicht ausgeführt werden</string>
+
+    <plurals name="new_grades_format_string">
+        <item quantity="one">%d neue Note verfügbar</item>
+        <item quantity="other">%d neue Noten verfügbar</item>
+    </plurals>
 </resources>

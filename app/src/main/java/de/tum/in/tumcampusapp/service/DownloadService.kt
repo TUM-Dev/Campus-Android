@@ -9,6 +9,7 @@ import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.app.model.UploadStatus
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
+import de.tum.`in`.tumcampusapp.component.tumui.grades.GradesBackgroundUpdater
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
@@ -64,6 +65,9 @@ class DownloadService : JobIntentService() {
     @Inject
     lateinit var cafeteriaMenuManager: CafeteriaMenuManager
 
+    @Inject
+    lateinit var gradesBackgroundUpdater: GradesBackgroundUpdater
+
     private val disposable = CompositeDisposable()
 
     override fun onCreate() {
@@ -111,7 +115,9 @@ class DownloadService : JobIntentService() {
         val newsSuccess = downloadNews(force)
         val eventsSuccess = downloadEvents()
         val topNewsSuccess = downloadTopNews()
-        return updateNoteSuccess && cafeSuccess && kinoSuccess && newsSuccess && topNewsSuccess && eventsSuccess
+        val gradesSuccess = downloadGrades()
+        return updateNoteSuccess && cafeSuccess && kinoSuccess
+                && newsSuccess && topNewsSuccess && eventsSuccess && gradesSuccess
     }
 
     /**
@@ -174,6 +180,11 @@ class DownloadService : JobIntentService() {
 
     private fun downloadTopNews(): Boolean {
         topNewsRemoteRepository.fetchNewsAlert()
+        return true
+    }
+
+    private fun downloadGrades(): Boolean {
+        gradesBackgroundUpdater.fetchGradesAndNotifyIfNecessary()
         return true
     }
 
