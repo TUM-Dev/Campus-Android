@@ -142,7 +142,7 @@ public class BuyTicketActivity extends BaseActivity implements TicketAmountViewH
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(message)
-                .setNeutralButton(R.string.ok, (dialogInterface, i) -> finish())
+                .setNeutralButton(R.string.ok, null)
                 .create();
 
         if (dialog.getWindow() != null) {
@@ -181,7 +181,7 @@ public class BuyTicketActivity extends BaseActivity implements TicketAmountViewH
     }
 
     private void reserveTicket() {
-        
+
         if (zeroTicketsSelected()) {
             showError(R.string.error_no_ticket_selected, R.string.error_message_select_at_least_one_ticket);
             return;

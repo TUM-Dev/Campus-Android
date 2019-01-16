@@ -37,6 +37,7 @@ class TicketAmountViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
         if (position == 0) {
             ticketAmount = minAmount
+            notifyActivity()
         } else {
             ticketAmount = 0
         }
@@ -84,7 +85,10 @@ class TicketAmountViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         currentAmount.text = ticketAmount.toString()
         updateButtonState()
 
-        // pass the change along to the activity
+        notifyActivity()
+    }
+
+    private fun notifyActivity() {
         if (itemView.context is SelectTicketInterface) {
             (itemView.context as SelectTicketInterface).ticketAmountUpdated(ticketTypePos, ticketAmount)
         } else {
