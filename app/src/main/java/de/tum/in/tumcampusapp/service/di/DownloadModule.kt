@@ -11,6 +11,7 @@ import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
 import de.tum.`in`.tumcampusapp.component.tumui.grades.GradesBackgroundUpdater
+import de.tum.`in`.tumcampusapp.component.tumui.grades.GradesDownloadAction
 import de.tum.`in`.tumcampusapp.component.tumui.grades.GradesStore
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaDownloadAction
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaLocationImportAction
@@ -129,5 +130,10 @@ class DownloadModule {
             notificationScheduler,
             gradesStore
     )
+
+    @Provides
+    fun provideGradesDownloadAction(
+            updater: GradesBackgroundUpdater
+    ): GradesDownloadAction = GradesDownloadAction(updater)
 
 }

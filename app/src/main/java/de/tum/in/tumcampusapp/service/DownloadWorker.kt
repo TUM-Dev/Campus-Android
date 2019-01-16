@@ -10,6 +10,7 @@ import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl.BYPASS_CACHE
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl.USE_CACHE
+import de.tum.`in`.tumcampusapp.component.tumui.grades.GradesDownloadAction
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaDownloadAction
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaLocationImportAction
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsDownloadAction
@@ -21,7 +22,6 @@ import de.tum.`in`.tumcampusapp.service.di.DownloadModule
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
-import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class DownloadWorker(
@@ -42,6 +42,9 @@ class DownloadWorker(
     lateinit var filmDownloadAction: FilmDownloadAction
 
     @Inject
+    lateinit var gradesDownloadAction: GradesDownloadAction
+
+    @Inject
     lateinit var idUploadAction: IdUploadAction
 
     @Inject
@@ -55,6 +58,7 @@ class DownloadWorker(
             cafeteriaLocationImportAction,
             eventsDownloadAction,
             filmDownloadAction,
+            gradesDownloadAction,
             idUploadAction,
             newsDownloadAction,
             topNewsDownloadAction
@@ -96,6 +100,8 @@ class DownloadWorker(
 
     companion object {
 
+        const val TAG = "DOWNLOAD_WORKER"
+
         private const val FORCE_DOWNLOAD = "FORCE_DOWNLOAD"
         private const val FILL_CACHE = "FILL_CACHE"
         private const val LAST_UPDATE = "LAST_UPDATE"
@@ -114,6 +120,7 @@ class DownloadWorker(
                     .putBoolean(FILL_CACHE, fillCache)
                     .build()
             return OneTimeWorkRequestBuilder<DownloadWorker>()
+                    .addTag(TAG)
                     .setConstraints(constraints)
                     .setInputData(data)
                     .build()
@@ -150,14 +157,6 @@ class DownloadWorker(
                 val cacheManager = CacheManager(service.applicationContext)
                 cacheManager.fillCache()
             }
-        }
-
-        @JvmStatic
-        fun getAllDownloadActions(
-                context: Context,
-                disposable: CompositeDisposable
-        ): List<(CacheControl) -> Unit> {
-            return emptyList()
         }
 
     }

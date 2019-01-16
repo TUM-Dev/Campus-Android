@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.work.ExistingPeriodicWorkPolicy.KEEP
 import androidx.work.WorkManager
-import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 
 /**

@@ -1,5 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.onboarding;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
@@ -44,6 +46,19 @@ public class StartupActivity extends AppCompatActivity {
 
     private final AtomicBoolean initializationFinished = new AtomicBoolean(false);
     private int tapCounter; // for easter egg
+
+    /**
+     * Broadcast receiver gets notified once {@link de.tum.in.tumcampusapp.service.DownloadWorker}
+     * has prepared cards to be displayed
+     */
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (DownloadWorker.TAG.equals(intent.getAction())) {
+                openMainActivityIfInitializationFinished();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,8 +129,10 @@ public class StartupActivity extends AppCompatActivity {
             progressBar.show();
         });
 
+        // TODO: Is it even necessary to start the download worker here? It’s run when the broadcast
+        // two lines down is sent.
         // DownloadWorker and listen for finalization
-        startDownloadWorker();
+        // startDownloadWorker();
 
         // Start background service and ensure cards are set
         sendBroadcast(new Intent(this, StartSyncReceiver.class));
