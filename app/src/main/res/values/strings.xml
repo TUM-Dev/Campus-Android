@@ -619,7 +619,6 @@ Signature: %5$s</string>
     <!-- Ticket Activity -->
     <string name="your_ticket">Your Ticket</string>
     <string name="show_ticket">Show Ticket</string>
-    <!-- TODO(bronger) use quantity string everywhere -->
     <plurals name="show_tickets">
         <item quantity="one">Show Ticket</item>
         <item quantity="other">Show Tickets</item>
@@ -638,7 +637,8 @@ Signature: %5$s</string>
     <string name="show_booked_events">Show booked events</string>
     <string name="events_tickets">Events &amp; Tickets</string>
     <string name="ticket_type">Ticket Type</string>
-    <string name="price">Price</string>
+    <string name="select_tickets">Select Tickets</string>
+    <string name="total">Total</string>
     <string name="location">Location</string>
     <string name="event" translatable="false">Event</string>
     <string name="payment_selection">Payment Selection</string>
@@ -680,7 +680,6 @@ Signature: %5$s</string>
     <string name="choose_ticket_type">Choose your ticket type</string>
     <string name="ticket_amount_error_title">Purchase restrictions</string>
     <string name="ticket_amount_information">You can buy a minimum of %1d and a maximum of %2d of ticket type \“%s\”</string>
-    <string name="ticket_price_multiple_tickets">%1s (%2s per ticket)</string>
     <string name="price_per_ticket">%s per ticket</string>
     <string name="ticket_amount_label">Amount</string>
 

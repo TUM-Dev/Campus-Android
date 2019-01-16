@@ -150,7 +150,7 @@ public class ShowTicketActivity extends BaseActivity {
     private void setViewData() {
         titleTextView.setText(getString(R.string.xtickets, tickets.size(), event.getTitle()));
         dateTextView.setText(event.getFormattedStartDateTime(this));
-        priceTextView.setText(getString(R.string.price_per_ticket, ticketType.formatPrice(ticketType.getPrice())));
+        priceTextView.setText(getString(R.string.price_per_ticket, Utils.formatPrice(ticketType.getPrice())));
         redemptionStateTextView.setText(getRedemptionState());
 
         locationTextView.setText(event.getLocality());

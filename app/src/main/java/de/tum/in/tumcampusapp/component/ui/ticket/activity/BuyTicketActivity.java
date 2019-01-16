@@ -4,25 +4,26 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.transition.TransitionManager;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
+import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
+import de.tum.in.tumcampusapp.component.ui.ticket.TicketAmountViewHolder;
+import de.tum.in.tumcampusapp.component.ui.ticket.adapter.TicketAmountAdapter;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
-import de.tum.in.tumcampusapp.component.ui.ticket.model.Payment;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservation;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
@@ -36,7 +37,7 @@ import retrofit2.Response;
  * This activity shows an overview of the available tickets and a selection of all ticket types
  * Directs the user to the PaymentConfirmationActivity or back to EventDetailsActivity
  */
-public class BuyTicketActivity extends BaseActivity {
+public class BuyTicketActivity extends BaseActivity implements TicketAmountViewHolder.SelectTicketInterface {
 
     private EventsController eventsController;
     private int eventId;
@@ -45,14 +46,11 @@ public class BuyTicketActivity extends BaseActivity {
     private FrameLayout loadingLayout;
     private Button paymentButton;
 
-    private TextView ticketAmountTextView;
-    private int currentTicketAmount;
-    private Button minusButton, plusButton;
-
-    private TextView priceView;
+    private RecyclerView ticketAmounts;
+    private TextView totalPriceView;
 
     private List<TicketType> ticketTypes;
-    private int ticketTypeSelected;
+    private Integer[] currentTicketAmounts;
 
     public BuyTicketActivity() {
         super(R.layout.activity_buy_ticket);
@@ -64,6 +62,11 @@ public class BuyTicketActivity extends BaseActivity {
 
         eventsController = new EventsController(this);
         eventId = getIntent().getIntExtra(Const.KEY_EVENT_ID, 0);
+
+        totalPriceView = findViewById(R.id.ticket_total_price);
+        totalPriceView.setText(Utils.formatPrice(0));
+
+        loadingLayout = findViewById(R.id.loading_layout);
 
         // Get ticket type information from API
         TUMCabeClient
@@ -90,16 +93,15 @@ public class BuyTicketActivity extends BaseActivity {
 
     private void handleTicketTypesDownloadSuccess(@NonNull List<TicketType> ticketTypes) {
         this.ticketTypes = ticketTypes;
+        currentTicketAmounts = new Integer[ticketTypes.size()];
         eventsController.addTicketTypes(ticketTypes);
         setupUi();
     }
 
     private void setupUi() {
         initEventTextViews();
-        initTicketTypeSpinner();
         initTicketAmount();
 
-        loadingLayout = findViewById(R.id.loading_layout);
         loadingLayout.setVisibility(View.GONE);
 
         paymentButton = findViewById(R.id.paymentButton);
@@ -107,70 +109,35 @@ public class BuyTicketActivity extends BaseActivity {
     }
 
     private void initTicketAmount() {
-        priceView = findViewById(R.id.ticket_details_price);
-        ticketAmountTextView = findViewById(R.id.ticket_amount_number_text_view);
-        minusButton = findViewById(R.id.ticket_amount_minus);
-        plusButton = findViewById(R.id.ticket_amount_plus);
-        currentTicketAmount = 1;
-
-        updateTicketAmount();
-
-        minusButton.setOnClickListener(view -> {
-            currentTicketAmount--;
-            updateTicketAmount();
-        });
-        plusButton.setOnClickListener(view -> {
-            currentTicketAmount++;
-            updateTicketAmount();
-        });
+        ticketAmounts = findViewById(R.id.ticket_amounts);
+        ticketAmounts.setLayoutManager(new LinearLayoutManager(this));
+        ticketAmounts.setHasFixedSize(true);
+        ticketAmounts.setAdapter(new TicketAmountAdapter(ticketTypes));
+        ticketAmounts.setNestedScrollingEnabled(false);
+        int spacing = Math.round(getResources().getDimension(R.dimen.material_small_padding));
+        ticketAmounts.addItemDecoration(new EqualSpacingItemDecoration(spacing));
     }
 
-    private void updateTicketAmount() {
-        TicketType ticketType = ticketTypes.get(ticketTypeSelected);
-        Payment paymentInfo = ticketType.getPaymentInfo();
-        int remainingTickets = ticketType.getContingent() - ticketType.getSold();
-        if (remainingTickets == 0) {
-            showNoTicketsAvailableError();
-        }
-
-        int maxAmount = Math.min(paymentInfo.getMaxTickets(), remainingTickets);
-        int minAmount = paymentInfo.getMinTickets();
-        Utils.log("min " + minAmount + " max " + paymentInfo.getMaxTickets() + " remaining " + remainingTickets);
-
-        if (currentTicketAmount > maxAmount) {
-            currentTicketAmount = maxAmount;
-            showTicketAmountInformation(paymentInfo);
-        }
-        if (currentTicketAmount < minAmount) {
-            currentTicketAmount = minAmount;
-            showTicketAmountInformation(paymentInfo);
-        }
-
-        // Don't show buttons for more/less tickets if only a fixed amount can be bought
-        plusButton.setVisibility(minAmount == maxAmount ? View.GONE : View.VISIBLE);
-        minusButton.setVisibility(minAmount == maxAmount ? View.GONE : View.VISIBLE);
-        plusButton.setEnabled(currentTicketAmount != maxAmount);
-        minusButton.setEnabled(currentTicketAmount != minAmount);
-
-        ticketAmountTextView.setText(currentTicketAmount + "");
-        updatePrices();
+    @Override
+    public void ticketAmountUpdated(int ticketTypePosition, int amount) {
+        currentTicketAmounts[ticketTypePosition] = amount;
+        totalPriceView.setText(Utils.formatPrice(getTotalPrice()));
     }
 
-    private void showTicketAmountInformation(Payment paymentInfo) {
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(R.string.ticket_amount_error_title)
-                .setMessage(getString(
-                        R.string.ticket_amount_information,
-                        paymentInfo.getMinTickets(),
-                        paymentInfo.getMaxTickets(), ticketTypes.get(ticketTypeSelected)
-                                                                .getDescription()))
-                .setPositiveButton(R.string.ok, null)
-                .create();
-        if (dialog.getWindow() != null) {
-            dialog.getWindow()
-                  .setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+    private int getTotalPrice() {
+        if (currentTicketAmounts == null) {
+            Utils.log("currentTicketAmounts not initialized");
+            return 0;
         }
-        dialog.show();
+        int sum = 0;
+        for (int i = 0; i < ticketTypes.size(); i++) {
+            Integer count = currentTicketAmounts[i];
+            if (count != null && count > 0) {
+                int pricePerTicket = ticketTypes.get(i).getPrice();
+                sum += pricePerTicket * count;
+            }
+        }
+        return sum;
     }
 
     private void showNoTicketsAvailableError() {
@@ -202,33 +169,6 @@ public class BuyTicketActivity extends BaseActivity {
         dateView.setText(formattedStartTime);
     }
 
-    private void initTicketTypeSpinner() {
-        ticketTypeSelected = 0;
-        ticketTypeSpinner = findViewById(R.id.ticket_type_spinner);
-        ticketTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ticketTypeSelected = position;
-                updateTicketAmount();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // do nothing here for now
-            }
-        });
-
-        ArrayList<String> ticketTypeNames = new ArrayList<>();
-        for (TicketType ticketType : ticketTypes) {
-            ticketTypeNames.add(ticketType.getDescription());
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_spinner_dropdown_item, ticketTypeNames);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        ticketTypeSpinner.setAdapter(adapter);
-    }
-
     private TicketType getTicketTypeForName(String ticketTypeName) {
         for (TicketType ticketType : ticketTypes) {
             if (ticketType.getDescription()
@@ -239,16 +179,12 @@ public class BuyTicketActivity extends BaseActivity {
         return null;
     }
 
-    private void updatePrices() {
-        TicketType ticketType = ticketTypes.get(ticketTypeSelected);
-        String priceString = ticketType.formatPrice(ticketType.getPrice() * currentTicketAmount);
-        if (currentTicketAmount == 1) {
-            priceView.setText(priceString);
-        } else {
-            String perTicketPrice = ticketType.formatPrice(ticketType.getPrice());
-            priceView.setText(getString(R.string.ticket_price_multiple_tickets, priceString, perTicketPrice));
+    private Integer[] getTicketTypeIds() {
+        Integer[] ids = new Integer[ticketTypes.size()];
+        for (int i = 0; i < ids.length; i++) {
+            ids[i] = ticketTypes.get(i).getId();
         }
-
+        return ids;
     }
 
     private void reserveTicket() {
@@ -258,14 +194,12 @@ public class BuyTicketActivity extends BaseActivity {
             return;
         }
 
+        /* don't allow user to click anything */
         loadingLayout.setVisibility(View.VISIBLE);
         TransitionManager.beginDelayedTransition(loadingLayout);
         paymentButton.setEnabled(false);
-        plusButton.setEnabled(false);
-        minusButton.setEnabled(false);
 
-        int ticketTypeId = ticketType.getId();
-        TicketReservation reservation = new TicketReservation(ticketTypeId, currentTicketAmount);
+        TicketReservation reservation = new TicketReservation(getTicketTypeIds(), currentTicketAmounts);
 
         TUMCabeVerification verification = TUMCabeVerification.create(this, reservation);
         if (verification == null) {
@@ -311,7 +245,7 @@ public class BuyTicketActivity extends BaseActivity {
         TransitionManager.beginDelayedTransition(loadingLayout);
 
         Intent intent = new Intent(this, StripePaymentActivity.class);
-        intent.putExtra(Const.KEY_TICKET_PRICE, ticketType.formatPrice(currentTicketAmount * ticketType.getPrice()));
+        intent.putExtra(Const.KEY_TICKET_PRICE, Utils.formatPrice(getTotalPrice()));
         intent.putIntegerArrayListExtra(Const.KEY_TICKET_IDS, response.getTicketIds());
         intent.putExtra(Const.KEY_TERMS_LINK, ticketType.getPaymentInfo()
                                                         .getTermsLink());
@@ -328,7 +262,6 @@ public class BuyTicketActivity extends BaseActivity {
                     loadingLayout.setVisibility(View.GONE);
                     TransitionManager.beginDelayedTransition(loadingLayout);
                     paymentButton.setEnabled(true);
-                    updateTicketAmount();
                 })
                 .create();
 
@@ -347,6 +280,5 @@ public class BuyTicketActivity extends BaseActivity {
         paymentButton.setEnabled(true);
         Utils.showToast(this, messageResId);
     }
-
 }
 

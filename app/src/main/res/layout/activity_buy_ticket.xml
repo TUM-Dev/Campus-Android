@@ -45,80 +45,47 @@
                     android:layout_marginStart="@dimen/material_default_padding"
                     android:layout_marginTop="@dimen/material_large_padding"
                     android:fontFamily="sans-serif-medium"
-                    android:text="@string/ticket_type"
+                    android:text="@string/select_tickets"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/color_primary"
-                    app:layout_constraintBottom_toTopOf="@id/ticket_type_spinner_container"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
 
-                <FrameLayout
-                    android:id="@+id/ticket_type_spinner_container"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/ticket_amounts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/material_default_padding"
-                    android:layout_marginStart="@dimen/material_default_padding"
-                    android:layout_marginTop="@dimen/material_small_padding"
-                    android:background="@drawable/spinner_border_background"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/ticket_type_spinner_container_header">
-
-                    <Spinner
-                        android:id="@+id/ticket_type_spinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:prompt="@string/events"/>
-
-                </FrameLayout>
+                    app:layout_constraintTop_toBottomOf="@id/ticket_type_spinner_container_header"
+                    app:layout_constraintStart_toStartOf="parent"/>
 
                 <TextView
-                    android:id="@+id/ticket_amount_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0px"
+                    android:id="@+id/ticket_details_price_title"
+                    android:layout_width="0pt"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/material_default_padding"
-                    android:layout_marginTop="@dimen/material_large_padding"
+                    android:layout_marginTop="@dimen/material_default_padding"
                     android:fontFamily="sans-serif-medium"
-                    android:text="@string/ticket_amount_label"
+                    android:text="@string/total"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/text_dark_secondary"
+                    app:layout_constraintEnd_toEndOf="@id/guideline"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/ticket_type_spinner_container"/>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/ticket_amount_minus"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/material_default_padding"
-                    app:icon="@drawable/ic_minus"
-                    app:layout_constraintStart_toEndOf="@id/guideline"
-                    app:layout_constraintTop_toTopOf="@id/ticket_amount_text_view"
-                    app:layout_constraintBottom_toBottomOf="@id/ticket_amount_text_view"/>
+                    app:layout_constraintTop_toBottomOf="@id/ticket_amounts"/>
 
                 <TextView
-                    android:id="@+id/ticket_amount_number_text_view"
-                    android:layout_width="0dp"
+                    android:id="@+id/ticket_total_price"
+                    android:layout_width="0pt"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/material_default_padding"
+                    android:layout_marginEnd="@dimen/material_default_padding"
                     android:layout_marginStart="@dimen/material_default_padding"
-                    android:layout_gravity="center_horizontal"
-                    android:textStyle="bold"
-                    android:text="1"
-                    app:layout_constraintStart_toEndOf="@id/ticket_amount_minus"
-                    app:layout_constraintTop_toTopOf="@id/ticket_amount_text_view"
-                    app:layout_constraintBottom_toBottomOf="@id/ticket_amount_text_view"/>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/ticket_amount_plus"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/material_default_padding"
-                    app:icon="@drawable/ic_add"
-                    app:layout_constraintStart_toEndOf="@id/ticket_amount_number_text_view"
-                    app:layout_constraintTop_toTopOf="@id/ticket_amount_text_view"
-                    app:layout_constraintBottom_toBottomOf="@id/ticket_amount_text_view"/>
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/text_dark_primary"
+                    app:layout_constraintBaseline_toBaselineOf="@id/ticket_details_price_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/guideline"
+                    tools:text="Price"/>
 
                 <TextView
                     android:id="@+id/details_header_text_view"
@@ -133,7 +100,7 @@
                     android:textColor="@color/color_primary"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/ticket_amount_number_text_view"/>
+                    app:layout_constraintTop_toBottomOf="@id/ticket_details_price_title"/>
 
                 <TextView
                     android:id="@+id/ticket_details_event_title"
@@ -218,34 +185,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/guideline"
                     tools:text="Date"/>
-
-                <TextView
-                    android:id="@+id/ticket_details_price_title"
-                    android:layout_width="0pt"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/material_default_padding"
-                    android:layout_marginTop="@dimen/material_default_padding"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="@string/price"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/text_dark_secondary"
-                    app:layout_constraintEnd_toEndOf="@id/guideline"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/ticket_details_date"/>
-
-                <TextView
-                    android:id="@+id/ticket_details_price"
-                    android:layout_width="0pt"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/material_default_padding"
-                    android:layout_marginEnd="@dimen/material_default_padding"
-                    android:layout_marginStart="@dimen/material_default_padding"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/text_dark_primary"
-                    app:layout_constraintBaseline_toBaselineOf="@id/ticket_details_price_title"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/guideline"
-                    tools:text="123"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/paymentButton"

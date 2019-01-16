@@ -11,12 +11,12 @@ import android.graphics.Canvas
 import android.os.BatteryManager
 import android.os.Build
 import android.preference.PreferenceManager
-import androidx.core.content.ContextCompat
-import androidx.core.content.pm.PackageInfoCompat
 import android.text.Html
 import android.text.Spanned
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.content.pm.PackageInfoCompat
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.BuildConfig
 import org.jetbrains.anko.defaultSharedPreferences
@@ -24,6 +24,7 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.text.DecimalFormat
 import java.util.regex.Pattern
 
 /**
@@ -483,4 +484,7 @@ object Utils {
         icon.draw(canvas)
         return bitmap
     }
+
+    @JvmStatic
+    fun formatPrice(price: Int): String = DecimalFormat("#0.00").format(price / 100.0) + " €"
 }

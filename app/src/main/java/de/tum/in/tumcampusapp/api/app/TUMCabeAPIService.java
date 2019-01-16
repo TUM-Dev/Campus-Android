@@ -231,7 +231,7 @@ public interface TUMCabeAPIService {
     Call<List<TicketType>> getTicketTypes(@Path("eventID") int eventID);
 
     // Ticket reservation
-    @POST(API_EVENTS + API_TICKET + "reserve")
+    @POST(API_EVENTS + API_TICKET + "reserve/multiple")
     Call<TicketReservationResponse> reserveTicket(@Body TUMCabeVerification verification);
 
     // Ticket purchase

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/ticket_amount_minus"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/material_small_padding"
+        app:icon="@drawable/ic_minus"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/current_ticket_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/ticket_amount_minus"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/material_small_padding"
+        android:layout_toEndOf="@+id/ticket_amount_minus"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/ticket_amount_minus"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="1"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/ticket_amount_plus"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/material_small_padding"
+        android:layout_toEndOf="@+id/current_ticket_amount"
+        app:icon="@drawable/ic_add"
+        app:layout_constraintStart_toEndOf="@id/current_ticket_amount"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/ticket_type_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/ticket_amount_minus"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="@dimen/material_small_padding"
+        android:layout_marginEnd="@dimen/material_default_padding"
+        android:layout_toEndOf="@+id/ticket_amount_plus"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/black"
+        tools:text="Student"/>
+
+    <TextView
+        android:id="@+id/price_per_ticket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/ticket_type_name"
+        android:layout_alignStart="@id/ticket_type_name"
+        android:layout_below="@id/ticket_type_name"
+        android:layout_marginBottom="@dimen/material_small_padding"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        tools:text="3,20€ per ticket"/>
+
+</RelativeLayout>

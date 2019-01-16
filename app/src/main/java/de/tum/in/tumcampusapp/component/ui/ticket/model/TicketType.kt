@@ -5,7 +5,6 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import androidx.room.RoomWarnings
 import com.google.gson.annotations.SerializedName
-import java.text.DecimalFormat
 
 /**
  * Ticket
@@ -29,9 +28,4 @@ data class TicketType(
         var contingent: Int = 0,
         @Ignore
         var sold: Int = 0
-) {
-
-    fun formatPrice(price: Int): String
-        = DecimalFormat("#.00").format(price / 100.0) + " €"
-
-}
+)
