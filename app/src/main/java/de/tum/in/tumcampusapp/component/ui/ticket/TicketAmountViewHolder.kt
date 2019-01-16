@@ -32,9 +32,14 @@ class TicketAmountViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         this.ticketType = ticketType
         ticketTypePos = position
 
-        ticketAmount = 0
         minAmount = ticketType.paymentInfo.minTickets
         maxAmount = ticketType.paymentInfo.maxTickets
+
+        if (position == 0) {
+            ticketAmount = minAmount
+        } else {
+            ticketAmount = 0
+        }
 
         // init text views
         ticketTypeName.text = ticketType.description
