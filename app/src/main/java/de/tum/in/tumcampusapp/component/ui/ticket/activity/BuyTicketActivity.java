@@ -6,7 +6,6 @@ import android.transition.TransitionManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.List;
@@ -42,11 +41,9 @@ public class BuyTicketActivity extends BaseActivity implements TicketAmountViewH
     private EventsController eventsController;
     private int eventId;
 
-    private Spinner ticketTypeSpinner;
     private FrameLayout loadingLayout;
     private Button paymentButton;
 
-    private RecyclerView ticketAmounts;
     private TextView totalPriceView;
 
     private List<TicketType> ticketTypes;
@@ -109,7 +106,7 @@ public class BuyTicketActivity extends BaseActivity implements TicketAmountViewH
     }
 
     private void initTicketAmount() {
-        ticketAmounts = findViewById(R.id.ticket_amounts);
+        RecyclerView ticketAmounts = findViewById(R.id.ticket_amounts);
         ticketAmounts.setLayoutManager(new LinearLayoutManager(this));
         ticketAmounts.setHasFixedSize(true);
         ticketAmounts.setAdapter(new TicketAmountAdapter(ticketTypes));
@@ -133,17 +130,18 @@ public class BuyTicketActivity extends BaseActivity implements TicketAmountViewH
         for (int i = 0; i < ticketTypes.size(); i++) {
             Integer count = currentTicketAmounts[i];
             if (count != null && count > 0) {
-                int pricePerTicket = ticketTypes.get(i).getPrice();
+                int pricePerTicket = ticketTypes.get(i)
+                                                .getPrice();
                 sum += pricePerTicket * count;
             }
         }
         return sum;
     }
 
-    private void showNoTicketsAvailableError() {
+    private void showError(int title, int message) {
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.no_tickets_remaining))
-                .setMessage(getString(R.string.no_tickets_remaining_message))
+                .setTitle(title)
+                .setMessage(message)
                 .setNeutralButton(R.string.ok, (dialogInterface, i) -> finish())
                 .create();
 
@@ -169,28 +167,23 @@ public class BuyTicketActivity extends BaseActivity implements TicketAmountViewH
         dateView.setText(formattedStartTime);
     }
 
-    private TicketType getTicketTypeForName(String ticketTypeName) {
-        for (TicketType ticketType : ticketTypes) {
-            if (ticketType.getDescription()
-                          .equals(ticketTypeName)) {
-                return ticketType;
-            }
-        }
-        return null;
-    }
-
     private Integer[] getTicketTypeIds() {
         Integer[] ids = new Integer[ticketTypes.size()];
         for (int i = 0; i < ids.length; i++) {
-            ids[i] = ticketTypes.get(i).getId();
+            ids[i] = ticketTypes.get(i)
+                                .getId();
         }
         return ids;
     }
 
+    private boolean zeroTicketsSelected() {
+        return getTotalPrice() == 0;
+    }
+
     private void reserveTicket() {
-        TicketType ticketType = getTicketTypeForName((String) ticketTypeSpinner.getSelectedItem());
-        if (ticketType == null) {
-            Utils.showToast(this, R.string.internal_error);
+        
+        if (zeroTicketsSelected()) {
+            showError(R.string.error_no_ticket_selected, R.string.error_message_select_at_least_one_ticket);
             return;
         }
 
@@ -219,7 +212,7 @@ public class BuyTicketActivity extends BaseActivity implements TicketAmountViewH
                         if (response.isSuccessful()
                             && reservationResponse != null
                             && reservationResponse.getError() == null) {
-                            handleTicketReservationSuccess(ticketType, reservationResponse);
+                            handleTicketReservationSuccess(reservationResponse);
                         } else {
                             if (reservationResponse == null || !response.isSuccessful()) {
                                 handleTicketNotReserved();
@@ -239,18 +232,19 @@ public class BuyTicketActivity extends BaseActivity implements TicketAmountViewH
                 });
     }
 
-    private void handleTicketReservationSuccess(TicketType ticketType,
-                                                TicketReservationResponse response) {
+    private void handleTicketReservationSuccess(TicketReservationResponse response) {
         loadingLayout.setVisibility(View.GONE);
         TransitionManager.beginDelayedTransition(loadingLayout);
 
         Intent intent = new Intent(this, StripePaymentActivity.class);
         intent.putExtra(Const.KEY_TICKET_PRICE, Utils.formatPrice(getTotalPrice()));
         intent.putIntegerArrayListExtra(Const.KEY_TICKET_IDS, response.getTicketIds());
-        intent.putExtra(Const.KEY_TERMS_LINK, ticketType.getPaymentInfo()
-                                                        .getTermsLink());
-        intent.putExtra(Const.KEY_STRIPE_API_PUBLISHABLE_KEY, ticketType.getPaymentInfo()
-                                                                        .getStripePublicKey());
+        intent.putExtra(Const.KEY_TERMS_LINK, ticketTypes.get(0)
+                                                         .getPaymentInfo()
+                                                         .getTermsLink());
+        intent.putExtra(Const.KEY_STRIPE_API_PUBLISHABLE_KEY, ticketTypes.get(0)
+                                                                         .getPaymentInfo()
+                                                                         .getStripePublicKey());
         startActivity(intent);
     }
 

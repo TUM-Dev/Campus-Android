@@ -680,4 +680,6 @@ Signatur: %5$s</string>
     <string name="redeemed_at">Eingelöst um %s</string>
     <string name="no_tickets_remaining">No tickets remaining</string>
     <string name="no_tickets_remaining_message">Die Tickets sind gerade leider alle weg. Bei vielen Veranstaltungen gibt es jedoch noch Tickets an der Abendkasse.</string>
+    <string name="error_message_select_at_least_one_ticket">Please select at least one ticket from one of the categories.</string>
+    <string name="error_no_ticket_selected">No tickets selected</string>
 </resources>
