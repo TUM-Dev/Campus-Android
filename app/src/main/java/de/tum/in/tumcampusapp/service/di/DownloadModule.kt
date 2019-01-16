@@ -29,6 +29,7 @@ import de.tum.`in`.tumcampusapp.component.ui.tufilm.FilmDownloadAction
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
+import de.tum.`in`.tumcampusapp.service.DownloadWorker
 
 /**
  * This module provides dependencies that are needed in the download functionality, namely
@@ -135,5 +136,21 @@ class DownloadModule {
     fun provideGradesDownloadAction(
             updater: GradesBackgroundUpdater
     ): GradesDownloadAction = GradesDownloadAction(updater)
+
+    @Provides
+    fun provideWorkerActions(
+            cafeteriaDownloadAction: CafeteriaDownloadAction,
+            cafeteriaLocationImportAction: CafeteriaLocationImportAction,
+            eventsDownloadAction: EventsDownloadAction,
+            filmDownloadAction: FilmDownloadAction,
+            gradesDownloadAction: GradesDownloadAction,
+            idUploadAction: IdUploadAction,
+            newsDownloadAction: NewsDownloadAction,
+            topNewsDownloadAction: TopNewsDownloadAction
+    ): DownloadWorker.WorkerActions = DownloadWorker.WorkerActions(
+            cafeteriaDownloadAction, cafeteriaLocationImportAction,
+            eventsDownloadAction, filmDownloadAction, gradesDownloadAction,
+            idUploadAction, newsDownloadAction, topNewsDownloadAction
+    )
 
 }

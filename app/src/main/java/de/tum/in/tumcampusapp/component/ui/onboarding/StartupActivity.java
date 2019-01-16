@@ -1,7 +1,5 @@
 package de.tum.in.tumcampusapp.component.ui.onboarding;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
@@ -12,14 +10,17 @@ import com.crashlytics.android.Crashlytics;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.inject.Inject;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.ContentLoadingProgressBar;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
+import androidx.lifecycle.LiveDataReactiveStreams;
+import androidx.lifecycle.Observer;
+import de.tum.in.tumcampusapp.App;
 import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
@@ -27,9 +28,13 @@ import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.ui.overview.MainActivity;
 import de.tum.in.tumcampusapp.service.DownloadWorker;
 import de.tum.in.tumcampusapp.service.StartSyncReceiver;
+import de.tum.in.tumcampusapp.service.di.DownloadModule;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.fabric.sdk.android.Fabric;
+import io.reactivex.Flowable;
+import io.reactivex.schedulers.Schedulers;
+import kotlin.Unit;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -47,23 +52,22 @@ public class StartupActivity extends AppCompatActivity {
     private final AtomicBoolean initializationFinished = new AtomicBoolean(false);
     private int tapCounter; // for easter egg
 
-    /**
-     * Broadcast receiver gets notified once {@link de.tum.in.tumcampusapp.service.DownloadWorker}
-     * has prepared cards to be displayed
-     */
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (DownloadWorker.TAG.equals(intent.getAction())) {
-                openMainActivityIfInitializationFinished();
-            }
-        }
-    };
+    private Observer<Unit> downloadCompletionHandler = ignored ->
+            openMainActivityIfInitializationFinished();
+
+    @Inject
+    DownloadWorker.WorkerActions workerActions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startup);
+
+        ((App) getApplicationContext()).getAppComponent()
+                .downloadComponent()
+                .downloadModule(new DownloadModule())
+                .build()
+                .inject(this);
 
         // Only use Crashlytics if we are not compiling debug
         boolean isDebuggable = (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
@@ -129,10 +133,15 @@ public class StartupActivity extends AppCompatActivity {
             progressBar.show();
         });
 
-        // TODO: Is it even necessary to start the download worker here? It’s run when the broadcast
-        // two lines down is sent.
         // DownloadWorker and listen for finalization
-        // startDownloadWorker();
+        Flowable<Unit> actionsFlowable = Flowable
+                .fromCallable(this::performAllWorkerActions)
+                .onErrorReturnItem(Unit.INSTANCE)
+                .subscribeOn(Schedulers.io());
+
+        runOnUiThread(() -> LiveDataReactiveStreams.fromPublisher(actionsFlowable)
+                .observe(this, downloadCompletionHandler)
+        );
 
         // Start background service and ensure cards are set
         sendBroadcast(new Intent(this, StartSyncReceiver.class));
@@ -141,17 +150,11 @@ public class StartupActivity extends AppCompatActivity {
         requestLocationPermission();
     }
 
-    private void startDownloadWorker() {
-        OneTimeWorkRequest request = DownloadWorker.getWorkRequest(CacheControl.USE_CACHE);
-        WorkManager manager = WorkManager.getInstance();
-        manager.enqueue(request);
-
-        // Listen to the work status of the worker, so we can open the main activity once it finishes
-        manager.getStatusByIdLiveData(request.getId()).observe(this, workStatus1 -> {
-            if (workStatus1.getState().isFinished()) {
-                openMainActivityIfInitializationFinished();
-            }
-        });
+    private Unit performAllWorkerActions() {
+        for (DownloadWorker.Action action : workerActions.getActions()) {
+            action.execute(CacheControl.USE_CACHE);
+        }
+        return Unit.INSTANCE;
     }
 
     /**

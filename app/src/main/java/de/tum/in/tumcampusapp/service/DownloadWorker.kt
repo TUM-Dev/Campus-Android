@@ -5,18 +5,10 @@ import androidx.work.*
 import androidx.work.ListenableWorker.Result.RETRY
 import androidx.work.ListenableWorker.Result.SUCCESS
 import androidx.work.NetworkType.CONNECTED
-import de.tum.`in`.tumcampusapp.api.app.IdUploadAction
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl.BYPASS_CACHE
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl.USE_CACHE
-import de.tum.`in`.tumcampusapp.component.tumui.grades.GradesDownloadAction
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaDownloadAction
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaLocationImportAction
-import de.tum.`in`.tumcampusapp.component.ui.news.NewsDownloadAction
-import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsDownloadAction
-import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsDownloadAction
-import de.tum.`in`.tumcampusapp.component.ui.tufilm.FilmDownloadAction
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.service.di.DownloadModule
 import de.tum.`in`.tumcampusapp.utils.CacheManager
@@ -30,39 +22,7 @@ class DownloadWorker(
 ) : Worker(context, workerParams) {
 
     @Inject
-    lateinit var cafeteriaDownloadAction: CafeteriaDownloadAction
-
-    @Inject
-    lateinit var cafeteriaLocationImportAction: CafeteriaLocationImportAction
-
-    @Inject
-    lateinit var eventsDownloadAction: EventsDownloadAction
-
-    @Inject
-    lateinit var filmDownloadAction: FilmDownloadAction
-
-    @Inject
-    lateinit var gradesDownloadAction: GradesDownloadAction
-
-    @Inject
-    lateinit var idUploadAction: IdUploadAction
-
-    @Inject
-    lateinit var newsDownloadAction: NewsDownloadAction
-
-    @Inject
-    lateinit var topNewsDownloadAction: TopNewsDownloadAction
-
-    private val downloadActions = listOf(
-            cafeteriaDownloadAction,
-            cafeteriaLocationImportAction,
-            eventsDownloadAction,
-            filmDownloadAction,
-            gradesDownloadAction,
-            idUploadAction,
-            newsDownloadAction,
-            topNewsDownloadAction
-    )
+    lateinit var downloadActions: DownloadWorker.WorkerActions
 
     init {
         Utils.log("DownloadService service has started")
@@ -91,12 +51,14 @@ class DownloadWorker(
      * @return if all downloads were successful
      */
     private fun downloadAll(behaviour: CacheControl) {
-        downloadActions.forEach { it.execute(behaviour) }
+        downloadActions.actions.forEach { it.execute(behaviour) }
     }
 
     interface Action {
         fun execute(cacheBehaviour: CacheControl)
     }
+
+    class WorkerActions(vararg val actions: Action)
 
     companion object {
 
