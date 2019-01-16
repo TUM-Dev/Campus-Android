@@ -5,7 +5,6 @@ import android.R.layout.simple_spinner_dropdown_item
 import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
-import androidx.viewpager.widget.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +12,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.viewpager.widget.ViewPager
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumCabe
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity
@@ -62,10 +62,7 @@ class StudyRoomsActivity : ActivityForAccessingTumCabe<List<StudyRoomGroup>>(
 
     override fun onRefresh() = loadStudyRooms()
 
-    /**
-     * A new study room group has been selected -> Switch.
-     */
-    override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
         groupId = groups[pos].id
         changeViewPagerAdapter(groupId)
     }

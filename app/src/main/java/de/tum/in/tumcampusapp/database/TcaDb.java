@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.database;
 
 import android.content.Context;
-import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -20,7 +19,6 @@ import de.tum.in.tumcampusapp.component.other.general.model.Recent;
 import de.tum.in.tumcampusapp.component.other.locations.BuildingToGpsDao;
 import de.tum.in.tumcampusapp.component.other.locations.RoomLocationsDao;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
-import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarDao;
 import de.tum.in.tumcampusapp.component.tumui.calendar.WidgetsTimetableBlacklistDao;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
@@ -61,8 +59,6 @@ import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
 import de.tum.in.tumcampusapp.database.migrations.Migration2to3;
 import de.tum.in.tumcampusapp.database.migrations.Migration3to4;
-import de.tum.in.tumcampusapp.service.SendMessageWorker;
-import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.utils.CacheManager;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -173,15 +169,6 @@ public abstract class TcaDb extends RoomDatabase {
      * @param c context
      */
     public static void resetDb(Context c) {
-        // Stop all services, since they might have instantiated Managers and cause SQLExceptions
-        Class<?>[] services = new Class<?>[]{
-                CalendarController.QueryLocationsService.class,
-                SendMessageWorker.class,
-                SilenceService.class};
-        for (Class<?> service : services) {
-            c.stopService(new Intent(c, service));
-        }
-
         // Stop all work tasks in WorkManager, since they might access the DB
         try {
             WorkManager.getInstance().cancelAllWork().wait();

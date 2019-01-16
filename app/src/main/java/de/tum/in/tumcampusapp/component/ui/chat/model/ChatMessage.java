@@ -6,6 +6,7 @@ import android.os.Parcelable;
 
 import org.joda.time.DateTime;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -55,7 +56,7 @@ public class ChatMessage implements Parcelable {
      * @param text   ChatNotification message text
      * @param member Member who sent the message
      */
-    public ChatMessage(String text, ChatMember member) {
+    public ChatMessage(String text, @NonNull ChatMember member) {
         super();
         this.text = text;
         this.member = member;

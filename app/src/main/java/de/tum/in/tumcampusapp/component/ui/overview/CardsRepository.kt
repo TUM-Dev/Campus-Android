@@ -1,8 +1,8 @@
 package de.tum.`in`.tumcampusapp.component.ui.overview
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import android.content.Context
 import com.crashlytics.android.Crashlytics
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
@@ -17,12 +17,17 @@ import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsCard
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.LoginPromptCard
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.ProvidesCard
-import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
+import de.tum.`in`.tumcampusapp.component.ui.ticket.EventCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
+import de.tum.`in`.tumcampusapp.component.ui.updatenote.UpdateNoteCard
 import de.tum.`in`.tumcampusapp.utils.Utils
 import org.jetbrains.anko.doAsync
+import javax.inject.Inject
 
-class CardsRepository(private val context: Context) {
+class CardsRepository @Inject constructor(
+        private val context: Context,
+        private val eventCardsProvider: EventCardsProvider
+) {
 
     private var cards = MutableLiveData<List<Card>>()
 
@@ -60,6 +65,7 @@ class CardsRepository(private val context: Context) {
             add(SupportCard(context).getIfShowOnStart())
             add(EduroamCard(context).getIfShowOnStart())
             add(EduroamFixCard(context).getIfShowOnStart())
+            add(UpdateNoteCard(context).getIfShowOnStart())
         }
 
         val providers = ArrayList<ProvidesCard>().apply {
@@ -68,11 +74,10 @@ class CardsRepository(private val context: Context) {
                 add(TuitionFeeManager(context))
                 add(ChatRoomController(context))
             }
-
             add(CafeteriaManager(context))
             add(TransportController(context))
             add(NewsController(context))
-            add(EventsController(context))
+            add(eventCardsProvider)
         }
 
         providers.forEach { provider ->

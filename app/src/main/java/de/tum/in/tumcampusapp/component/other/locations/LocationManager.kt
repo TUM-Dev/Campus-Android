@@ -19,6 +19,8 @@ import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationRes
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
+import de.tum.`in`.tumcampusapp.utils.tryOrNull
+import org.jetbrains.anko.doAsync
 import java.io.IOException
 import java.lang.Double.parseDouble
 import java.util.*
@@ -211,29 +213,21 @@ class LocationManager(c: Context) {
 
     /**
      * This method tries to get the list of BuildingToGps by querying database or requesting the server.
-     * If both two ways fail, it returns Optional.absent().
+     * If both two ways fail, it returns an empty list.
      * we have to fetch buildings to gps mapping first.
      * @return The list of BuildingToGps
      */
-    private val orFetchBuildingsToGps: List<BuildingToGps>
-        get() {
-            var result: List<BuildingToGps>? = buildingToGpsDao.all
-            if (result!!.isEmpty()) {
-                try {
-                    result = TUMCabeClient.getInstance(mContext).building2Gps
-                    if (result == null) {
-                        return emptyList()
-                    }
-                    for (map in result) {
-                        buildingToGpsDao.insert(map)
-                    }
-                } catch (e: IOException) {
-                    Utils.log(e)
-                    return ArrayList()
-                }
-            }
-            return result
+    private fun fetchBuildingsToGps(): List<BuildingToGps> {
+        val results = buildingToGpsDao.all.orEmpty()
+        if (results.isNotEmpty()) {
+            return results
         }
+
+        val newResults = tryOrNull { TUMCabeClient.getInstance(mContext).building2Gps }
+        return newResults.orEmpty().also {
+            buildingToGpsDao.insert(*it.toTypedArray())
+        }
+    }
 
     /**
      * Get Building ID accroding to the current location
@@ -241,7 +235,11 @@ class LocationManager(c: Context) {
      *
      * @return the id of current building
      */
-    fun getBuildingIDFromCurrentLocation(): String? = getBuildingIDFromLocation(getCurrentOrNextLocation())
+    fun fetchBuildingIDFromCurrentLocation(callback: (String?) -> Unit) {
+        doAsync {
+            fetchBuildingIDFromLocation(getCurrentOrNextLocation(), callback)
+        }
+    }
 
     /**
      * This might be battery draining
@@ -332,11 +330,10 @@ class LocationManager(c: Context) {
      * @param location the give location
      * @return the id of current building
      */
-    private fun getBuildingIDFromLocation(location: Location): String? {
-        val buildingToGpsList = orFetchBuildingsToGps
-
+    private fun fetchBuildingIDFromLocation(location: Location, block: (String?) -> Unit) {
+        val buildingToGpsList = fetchBuildingsToGps()
         if (buildingToGpsList.isEmpty()) {
-            return null
+            block(null)
         }
 
         val lat = location.latitude
@@ -357,11 +354,8 @@ class LocationManager(c: Context) {
             }
         }
 
-        return if (bestDistance < 1000) {
-            bestBuilding
-        } else {
-            null
-        }
+        val result = bestBuilding.takeIf { bestDistance < 1_000 }
+        block(result)
     }
 
     companion object {

@@ -15,15 +15,17 @@ import androidx.room.RoomWarnings
  */
 @Entity
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
-data class Cafeteria(@field:PrimaryKey
-                     var id: Int = -1,
-                     var name: String = "",
-                     var address: String = "",
-                     var latitude: Double = -1.0,
-                     var longitude: Double = -1.0) : Comparable<Cafeteria> {
+data class Cafeteria(
+        @field:PrimaryKey
+        var id: Int = -1,
+        var name: String = "",
+        var address: String = "",
+        var latitude: Double = -1.0,
+        var longitude: Double = -1.0
+) : Comparable<Cafeteria> {
 
     // Used for ordering cafeterias
-    var distance: Float = 0.toFloat()
+    var distance: Float = 0f
 
     override fun toString(): String = name
 

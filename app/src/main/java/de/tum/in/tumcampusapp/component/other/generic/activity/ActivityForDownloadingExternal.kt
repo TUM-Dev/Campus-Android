@@ -6,7 +6,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl.BYPASS_CACHE
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaDownloadAction
+import de.tum.`in`.tumcampusapp.service.DownloadWorker
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.Flowable
@@ -22,13 +22,12 @@ import io.reactivex.schedulers.Schedulers
  *
  * @param layoutId Resource id of the xml layout that should be used to inflate the activity
  */
-abstract class ActivityForDownloadingExternal(layoutId: Int) :
-        ProgressActivity<Void>(layoutId) {
+abstract class ActivityForDownloadingExternal(layoutId: Int) : ProgressActivity<Void>(layoutId) {
 
     /**
-     * The action to be executed, e.g. [CafeteriaDownloadAction]
+     * The [DownloadWorker.Action] to be executed
      */
-    protected lateinit var method: (CacheControl) -> Unit
+    abstract val method: DownloadWorker.Action?
 
     /**
      * Gets notifications from the DownloadWorker, if downloading was successful or not
@@ -59,14 +58,14 @@ abstract class ActivityForDownloadingExternal(layoutId: Int) :
         }
 
         showLoadingStart()
-        LiveDataReactiveStreams.fromPublisher<Unit>(
-                Flowable.fromCallable {
-                    method(forceDownload)
-                }.doOnError {
-                    errorHandler()
-                }.onErrorReturnItem(Unit)
-                        .subscribeOn(Schedulers.io())
-        ).observe(this, completionHandler)
+        LiveDataReactiveStreams
+                .fromPublisher<Unit>(
+                        Flowable.fromCallable { method?.execute(forceDownload) }
+                                .doOnError { errorHandler() }
+                                .onErrorReturnItem(Unit)
+                                .subscribeOn(Schedulers.io())
+                )
+                .observe(this, completionHandler)
     }
 
 }

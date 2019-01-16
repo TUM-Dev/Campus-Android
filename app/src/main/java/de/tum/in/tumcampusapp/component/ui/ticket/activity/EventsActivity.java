@@ -1,13 +1,15 @@
 package de.tum.in.tumcampusapp.component.ui.ticket.activity;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Arrays;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -15,42 +17,36 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
-import de.tum.in.tumcampusapp.component.ui.ticket.EventsDownloadAction;
+import de.tum.in.tumcampusapp.component.ui.ticket.di.TicketsModule;
 import de.tum.in.tumcampusapp.component.ui.ticket.fragment.EventsFragment;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.EventType;
-import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.Utils;
+import de.tum.in.tumcampusapp.service.DownloadWorker;
 
 public class EventsActivity extends ActivityForDownloadingExternal {
 
     private String SHOW_BETA_INFO = "ts_show_beta_info";
     private ViewPager viewPager;
 
+    @Inject
+    DownloadWorker.Action eventsDownloadAction;
+
     public EventsActivity() {
         super(R.layout.activity_events);
-        method = new EventsDownloadAction(this);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getInjector().ticketsComponent()
+                .ticketsModule(new TicketsModule(this))
+                .build()
+                .inject(this);
 
         viewPager = findViewById(R.id.viewPager);
         setupViewPager(viewPager);
 
         TabLayout eventTab = findViewById(R.id.event_tab);
         eventTab.setupWithViewPager(viewPager);
-
-        // Make the beta info only show once, until dismissed. Then hide directly.
-        TextView betaInfo = findViewById(R.id.ticket_beta);
-        if (Utils.getSettingBool(this, SHOW_BETA_INFO, true)) {
-            betaInfo.setOnClickListener(view -> {
-                view.setVisibility(View.GONE);
-                Utils.setSetting(this, SHOW_BETA_INFO, false);
-            });
-        } else {
-            betaInfo.setVisibility(View.GONE);
-        }
 
         eventTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -66,6 +62,12 @@ public class EventsActivity extends ActivityForDownloadingExternal {
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+    }
+
+    @Nullable
+    @Override
+    public DownloadWorker.Action getMethod() {
+        return eventsDownloadAction;
     }
 
     private void setupViewPager(ViewPager viewPager) {

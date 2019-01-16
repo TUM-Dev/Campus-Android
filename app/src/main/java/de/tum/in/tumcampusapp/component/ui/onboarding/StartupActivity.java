@@ -8,7 +8,6 @@ import android.widget.ImageView;
 
 import com.crashlytics.android.Crashlytics;
 
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.NonNull;
@@ -17,8 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.ContentLoadingProgressBar;
-import androidx.lifecycle.LiveDataReactiveStreams;
-import androidx.lifecycle.Observer;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
@@ -29,11 +28,6 @@ import de.tum.in.tumcampusapp.service.StartSyncReceiver;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.fabric.sdk.android.Fabric;
-import io.reactivex.Flowable;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -50,10 +44,6 @@ public class StartupActivity extends AppCompatActivity {
 
     private final AtomicBoolean initializationFinished = new AtomicBoolean(false);
     private int tapCounter; // for easter egg
-    private CompositeDisposable mDisposable = new CompositeDisposable();
-
-    private Observer<Unit> downloadCompletionHandler = ignored ->
-            openMainActivityIfInitializationFinished();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +56,13 @@ public class StartupActivity extends AppCompatActivity {
             Fabric.with(this, new Crashlytics());
             Crashlytics.setString("TUMID", Utils.getSetting(this, Const.LRZ_ID, ""));
             Crashlytics.setString("DeviceID", AuthenticationManager.getDeviceID(this));
+        }
+
+        int savedAppVersion = Utils.getSettingInt(this, Const.SAVED_APP_VERSION, BuildConfig.VERSION_CODE);
+        if (savedAppVersion < BuildConfig.VERSION_CODE) {
+            Utils.setSetting(this, Const.SHOW_UPDATE_NOTE, true);
+            Utils.setSetting(this, Const.UPDATE_MESSAGE, "");
+            Utils.setSetting(this, Const.SAVED_APP_VERSION, BuildConfig.VERSION_CODE);
         }
 
         initEasterEgg();
@@ -118,24 +115,26 @@ public class StartupActivity extends AppCompatActivity {
         });
 
         // DownloadWorker and listen for finalization
-        List<Function1<CacheControl, Unit>> downloadActions =
-                DownloadWorker.getAllDownloadActions(this, mDisposable);
-        runOnUiThread(() ->
-                LiveDataReactiveStreams.fromPublisher(Flowable.fromCallable(() -> {
-                            for (Function1<CacheControl, Unit> action : downloadActions) {
-                                action.invoke(CacheControl.USE_CACHE);
-                            }
-                            return Unit.INSTANCE;
-                        }).onErrorReturnItem(Unit.INSTANCE)
-                        .subscribeOn(Schedulers.io())
-                ).observe(this, downloadCompletionHandler)
-        );
+        startDownloadWorker();
 
         // Start background service and ensure cards are set
         sendBroadcast(new Intent(this, StartSyncReceiver.class));
 
         // Request Permissions for Android 6.0
         requestLocationPermission();
+    }
+
+    private void startDownloadWorker() {
+        OneTimeWorkRequest request = DownloadWorker.getWorkRequest(CacheControl.USE_CACHE);
+        WorkManager manager = WorkManager.getInstance();
+        manager.enqueue(request);
+
+        // Listen to the work status of the worker, so we can open the main activity once it finishes
+        manager.getStatusByIdLiveData(request.getId()).observe(this, workStatus1 -> {
+            if (workStatus1.getState().isFinished()) {
+                openMainActivityIfInitializationFinished();
+            }
+        });
     }
 
     /**
@@ -155,19 +154,18 @@ public class StartupActivity extends AppCompatActivity {
 
             // Display an AlertDialog with an explanation and a button to trigger the request.
             runOnUiThread(() -> {
-                AlertDialog dialog = new AlertDialog.Builder(this)
-                        .setMessage(getString(R.string.permission_location_explanation))
-                        .setPositiveButton(R.string.ok, (dialogInterface, id) ->
-                                ActivityCompat.requestPermissions(
-                                        this, PERMISSIONS_LOCATION, REQUEST_LOCATION)
-                        )
+                AlertDialog dialog = new AlertDialog.Builder(this, R.style.Theme_MaterialComponents_Light_Dialog)
+                        .setMessage(R.string.permission_location_explanation)
+                        .setPositiveButton(R.string.ok, (dialogInterface, id) -> {
+                            ActivityCompat.requestPermissions(
+                                    this, PERMISSIONS_LOCATION, REQUEST_LOCATION);
+                        })
                         .create();
 
                 if (dialog.getWindow() != null) {
                     dialog.getWindow().setBackgroundDrawableResource(
                             R.drawable.rounded_corners_background);
                 }
-
                 dialog.show();
             });
         } else {

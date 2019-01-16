@@ -16,7 +16,6 @@ object Const {
     const val DATE = "date"
     const val ERROR = "error"
     const val MESSAGE = "message"
-    const val FORCE_DOWNLOAD = "force_download"
     const val LRZ_ID = "lrz_id"
     const val NEWS = "news"
     const val EVENTS = "events"
@@ -82,14 +81,12 @@ object Const {
 
     const val SILENCE_SERVICE_JOB_ID = 1002
     const val SEND_WIFI_SERVICE_JOB_ID = 1003
+    const val DOWNLOAD_SERVICE_JOB_ID = 1004
+    const val FILL_CACHE_SERVICE_JOB_ID = 1005
+    const val QUERY_LOCATIONS_SERVICE_JOB_ID = 1006
 
-    const val FEEDBACK_MESSAGE = "feedback_message"
-    const val FEEDBACK_PIC_PATHS = "feedback_paths"
-    const val FEEDBACK_INCL_EMAIL = "feedback_include_email"
-    const val FEEDBACK_INCL_LOCATION = "feedback_incl_location"
-    const val FEEDBACK_TOPIC = "feedback_topic"
-    const val FEEDBACK_EMAIL = "feedback_reply_to"
-    const val FEEDBACK_IMG_COMPRESSION_QUALITY = 50;
+    const val FEEDBACK = "feedback"
+    const val FEEDBACK_IMG_COMPRESSION_QUALITY = 50
     const val FEEDBACK_TOPIC_GENERAL = "general"
     const val FEEDBACK_TOPIC_APP = "tca"
 
@@ -126,6 +123,7 @@ object Const {
     const val EVENT_TIME = "event_time"
 
     const val KINO_DATE = "kinoDate"
+    const val KINO_ID = "kinoId"
 
     const val CALENDAR_MONTHS_BEFORE = 2
     const val CALENDAR_MONTHS_AFTER = 2
@@ -161,4 +159,8 @@ object Const {
     const val SHOW_DRAWER = "showDrawer"
 
     const val KEY_NOTIFICATION_TYPE_ID = "type_id"
+
+    const val SHOW_UPDATE_NOTE = "showUpdateNote"
+    const val UPDATE_MESSAGE = "updateNoteMessage"
+    const val SAVED_APP_VERSION = "savedAppVersion"
 }

@@ -1,7 +1,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    style="@style/StandardCard">
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   style="@style/StandardCard">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -76,27 +76,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/material_default_padding"
             android:layout_marginEnd="@dimen/material_default_padding"
+            android:layout_marginBottom="@dimen/material_default_padding"
             android:drawablePadding="@dimen/material_default_padding"
-            app:layout_constraintBottom_toTopOf="@id/events_src_locality"
             app:layout_constraintEnd_toStartOf="@id/ticketButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/events_title"
-            tools:text="Date" />
-
-        <TextView
-            android:id="@+id/events_src_locality"
-            style="@style/CardBody"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/material_default_padding"
-            android:layout_marginEnd="@dimen/material_default_padding"
-            android:layout_marginBottom="@dimen/material_default_padding"
-            android:drawablePadding="@dimen/material_default_padding"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/ticketButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/events_src_date"
-            tools:text="Locality" />
+            tools:text="Date" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/ticketButton"

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   style="@style/StandardCard">
+
+    <TextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ticket_beta"
+        style="@style/InfoBox"
+        android:autoLink="email"
+        android:text="@string/ticket_sale_beta"
+        android:textColorLink="@android:color/white"/>
+</com.google.android.material.card.MaterialCardView>

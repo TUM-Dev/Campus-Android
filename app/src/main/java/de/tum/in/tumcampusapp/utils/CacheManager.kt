@@ -7,6 +7,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventsResponse
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LecturesResponse
 import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomController
+import de.tum.`in`.tumcampusapp.service.QueryLocationsService
 import okhttp3.Cache
 import org.jetbrains.anko.doAsync
 import retrofit2.Call
@@ -45,7 +46,7 @@ class CacheManager(private val context: Context) {
 
     private fun loadRoomLocations() {
         doAsync {
-            CalendarController.QueryLocationsService.loadGeo(context)
+            QueryLocationsService.enqueueWork(context)
         }
     }
 

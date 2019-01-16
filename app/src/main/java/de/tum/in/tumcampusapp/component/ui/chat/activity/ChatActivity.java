@@ -21,6 +21,8 @@ import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -45,12 +47,12 @@ import de.tum.in.tumcampusapp.component.ui.chat.repository.ChatMessageLocalRepos
 import de.tum.in.tumcampusapp.component.ui.chat.repository.ChatMessageRemoteRepository;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.service.DownloadWorker;
 import de.tum.in.tumcampusapp.service.SendMessageWorker;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
-import kotlin.Unit;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -90,7 +92,12 @@ public class ChatActivity extends ActivityForDownloadingExternal
     public ChatActivity() {
         super(R.layout.activity_chat);
         // TODO: Const.CURRENT_CHAT_ROOM was previously non-existent
-        method = cacheControl -> Unit.INSTANCE;
+    }
+
+    @Nullable
+    @Override
+    public DownloadWorker.Action getMethod() {
+        return null;
     }
 
     @Override
@@ -111,7 +118,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
         currentChatMember = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
 
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(currentChatRoom.getName().substring(4));
+            getSupportActionBar().setTitle(currentChatRoom.getTitle());
         }
     }
 
@@ -252,7 +259,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
             // If currently in a room which does not match the one from the notification --> Switch
             currentChatRoom = room;
             if (getSupportActionBar() != null) {
-                getSupportActionBar().setSubtitle(currentChatRoom.getName().substring(4));
+                getSupportActionBar().setSubtitle(currentChatRoom.getTitle());
             }
             chatHistoryAdapter = null;
             getNextHistoryFromServer(true);
@@ -285,7 +292,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
     private void openAddChatMemberActivity() {
         Intent intent = new Intent(this, AddChatMemberActivity.class);
         intent.putExtra(Const.CURRENT_CHAT_ROOM, currentChatRoom.getId());
-        intent.putExtra(Const.CHAT_ROOM_NAME, currentChatRoom.getName());
+        intent.putExtra(Const.CHAT_ROOM_NAME, currentChatRoom.getCombinedName());
         startActivity(intent);
     }
 
@@ -293,7 +300,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.leave_chat_room)
                 .setMessage(getResources().getString(R.string.leave_chat_room_body))
-                .setPositiveButton(R.string.leave, (dialogInterface, i) -> removeUserFromChatRoom())
+                .setPositiveButton(R.string.leave, (dialogInterface, i) -> leaveChatRoom())
                 .setNegativeButton(android.R.string.cancel, null)
                 .create();
 
@@ -304,7 +311,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
         dialog.show();
     }
 
-    private void removeUserFromChatRoom() {
+    private void leaveChatRoom() {
         TUMCabeVerification verification = TUMCabeVerification.create(this, null);
         if (verification == null) {
             return;
@@ -336,6 +343,11 @@ public class ChatActivity extends ActivityForDownloadingExternal
     }
 
     private void sendMessage(String text) {
+        if (currentChatMember == null) {
+            Utils.showToast(this, R.string.chat_message_send_error);
+            return;
+        }
+
         final ChatMessage message = new ChatMessage(text, currentChatMember);
         message.setRoom(currentChatRoom.getId());
         message.setSendingStatus(ChatMessage.STATUS_SENDING);

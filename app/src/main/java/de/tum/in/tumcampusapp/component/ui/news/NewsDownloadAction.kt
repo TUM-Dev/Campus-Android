@@ -1,13 +1,15 @@
 package de.tum.`in`.tumcampusapp.component.ui.news
 
-import android.content.Context
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
+import de.tum.`in`.tumcampusapp.service.DownloadWorker
+import javax.inject.Inject
 
-class NewsDownloadAction(context: Context) :
-        (CacheControl) -> Unit {
+class NewsDownloadAction @Inject constructor(
+        private val newsController: NewsController
+) : DownloadWorker.Action {
 
-    private val newsController = NewsController(context)
-    override fun invoke(cacheBehaviour: CacheControl) {
+    override fun execute(cacheBehaviour: CacheControl) {
         newsController.downloadFromExternal(cacheBehaviour)
     }
+
 }

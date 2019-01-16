@@ -1,13 +1,16 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket
 
-import android.content.Context
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
+import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsRemoteRepository
+import de.tum.`in`.tumcampusapp.service.DownloadWorker
+import javax.inject.Inject
 
-class EventsDownloadAction(context: Context) :
-        (CacheControl) -> Unit {
+class EventsDownloadAction @Inject constructor(
+        private val eventsRemoteRepository: EventsRemoteRepository
+) : DownloadWorker.Action {
 
-    private val eventsController = EventsController(context)
-    override fun invoke(cacheBehaviour: CacheControl) {
-        eventsController.downloadFromService()
+    override fun execute(cacheBehaviour: CacheControl) {
+        eventsRemoteRepository.fetchEventsAndTickets()
     }
+
 }

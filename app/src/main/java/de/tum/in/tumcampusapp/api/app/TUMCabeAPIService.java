@@ -34,8 +34,10 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
+import de.tum.in.tumcampusapp.component.ui.updatenote.model.UpdateNote;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -71,6 +73,7 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_SCHED
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_SEARCH;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_STUDY_ROOMS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_TICKET;
+import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_UPDATE_NOTE;
 
 public interface TUMCabeAPIService {
 
@@ -209,26 +212,26 @@ public interface TUMCabeAPIService {
     // Getting Event information
 
     @GET(API_EVENTS + "list")
-    Call<List<Event>> getEvents();
+    Observable<List<Event>> getEvents();
 
     // Getting Ticket information
-
     @POST(API_EVENTS + API_TICKET + "my")
     Call<List<Ticket>> getTickets(@Body TUMCabeVerification verification);
+
+    @POST(API_EVENTS + API_TICKET + "my")
+    Observable<List<Ticket>> getTicketsRx(@Body TUMCabeVerification verification); // TODO
 
     @POST(API_EVENTS + API_TICKET + "{ticketID}")
     Call<Ticket> getTicket(@Path("ticketID") int ticketID, @Body TUMCabeVerification verification);
 
     @GET(API_EVENTS + API_TICKET + "type/{eventID}")
-    Call<List<TicketType>> getTicketTypes(@Path("eventID") int eventID);
+    Observable<List<TicketType>> getTicketTypes(@Path("eventID") int eventID);
 
     // Ticket reservation
-
     @POST(API_EVENTS + API_TICKET + "reserve")
     Call<TicketReservationResponse> reserveTicket(@Body TUMCabeVerification verification);
 
     // Ticket purchase
-
     @POST(API_EVENTS + API_TICKET + "payment/stripe/purchase")
     Call<Ticket> purchaseTicketStripe(@Body TUMCabeVerification verification);
 
@@ -236,6 +239,10 @@ public interface TUMCabeAPIService {
     Call<HashMap<String, Object>> retrieveEphemeralKey(@Body TUMCabeVerification verification);
 
     @GET(API_EVENTS + API_TICKET + "status/{event}")
-    Call<List<TicketStatus>> getTicketStats(@Path("event") int event);
+    Single<List<TicketStatus>> getTicketStats(@Path("event") int event);
+
+    // Update note
+    @GET(API_UPDATE_NOTE + "{version}")
+    Call<UpdateNote> getUpdateNote(@Path("version") int version);
 
 }

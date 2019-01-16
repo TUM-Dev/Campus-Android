@@ -1,21 +1,16 @@
 package de.tum.`in`.tumcampusapp.component.ui.news
 
-import android.content.Context
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
-import de.tum.`in`.tumcampusapp.utils.tumCabeClient
-import io.reactivex.disposables.CompositeDisposable
+import de.tum.`in`.tumcampusapp.service.DownloadWorker
+import javax.inject.Inject
 
-class TopNewsDownloadAction(private val context: Context, disposable: CompositeDisposable) :
-        (CacheControl) -> Unit {
+class TopNewsDownloadAction @Inject constructor(
+        private val remoteRepository: TopNewsRemoteRepository
+) : DownloadWorker.Action {
 
-    private val topNewsViewModel: TopNewsViewModel
-    init {
-        TopNewsRemoteRepository.tumCabeClient = context.tumCabeClient
-        topNewsViewModel = TopNewsViewModel(TopNewsRemoteRepository, disposable)
+    override fun execute(cacheBehaviour: CacheControl) {
+        remoteRepository.fetchNewsAlert()
     }
 
-    override fun invoke(cacheBehaviour: CacheControl) {
-        topNewsViewModel.getNewsAlertFromService(context)
-    }
 }

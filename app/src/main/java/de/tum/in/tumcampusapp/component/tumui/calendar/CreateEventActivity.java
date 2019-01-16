@@ -5,16 +5,14 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.button.MaterialButton;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.button.MaterialButton;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -24,6 +22,9 @@ import org.joda.time.format.DateTimeFormatter;
 import java.net.UnknownHostException;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.exception.RequestLimitReachedException;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline;
@@ -192,7 +193,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
                              .withMinuteOfHour(minute);
                 end = end.withMillis(start.getMillis() + eventLength);
                 updateTimeViews();
-            }, start.getHourOfDay(), start.getMinuteOfDay(), true).show();
+            }, start.getHourOfDay(), start.getMinuteOfHour(), true).show();
         });
 
         endTimeView.setOnClickListener(view -> {
@@ -201,7 +202,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
                 end = end.withHourOfDay(hour)
                          .withMinuteOfHour(minute);
                 updateTimeViews();
-            }, end.getHourOfDay(), end.getMinuteOfDay(), true).show();
+            }, end.getHourOfDay(), end.getMinuteOfHour(), true).show();
         });
     }
 

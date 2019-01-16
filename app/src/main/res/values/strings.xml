@@ -709,4 +709,7 @@ Signature: %5$s</string>
     <string name="stripe_terms_of_service_checkbox">I agree to the terms of service.</string>
     <string name="stripe_terms_of_service_button">Terms of Service</string>
     <string name="tickets_available_here">Tickets available here!</string>
+    <string name="update_note_title">New Features</string>
+    <string name="update_note_version">Version %s</string>
+    <string name="action_cant_be_performed">Action can’t be performed</string>
 </resources>

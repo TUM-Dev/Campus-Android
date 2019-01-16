@@ -3,19 +3,21 @@ package de.tum.`in`.tumcampusapp.api.app
 import android.content.Context
 import de.tum.`in`.tumcampusapp.api.app.model.UploadStatus
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
+import de.tum.`in`.tumcampusapp.service.DownloadWorker
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
-import de.tum.`in`.tumcampusapp.utils.tumCabeClient
+import javax.inject.Inject
 
 /**
  * Asks to verify private key, uploads fcm token and obfuscated ids (if missing)
  */
-class IdUploadAction(private val context: Context) :
-        (CacheControl) -> Unit {
+class IdUploadAction @Inject constructor(
+        private val context: Context,
+        private val authManager: AuthenticationManager,
+        private val tumCabeClient: TUMCabeClient
+) : DownloadWorker.Action {
 
-    private val tumCabeClient = context.tumCabeClient
-
-    override fun invoke(cacheBehaviour: CacheControl) {
+    override fun execute(cacheBehaviour: CacheControl) {
         val lrzId = Utils.getSetting(context, Const.LRZ_ID, "")
 
         val uploadStatus = tumCabeClient.getUploadStatus(lrzId) ?: return
@@ -24,7 +26,7 @@ class IdUploadAction(private val context: Context) :
         // upload FCM Token if not uploaded or invalid
         if (uploadStatus.fcmToken != UploadStatus.UPLOADED) {
             Utils.log("upload fcm token")
-            AuthenticationManager(context).tryToUploadFcmToken()
+            authManager.tryToUploadFcmToken()
         }
 
         if (lrzId.isEmpty()) {
@@ -41,6 +43,7 @@ class IdUploadAction(private val context: Context) :
         }
 
         // upload obfuscated ids
-        AuthenticationManager(context).uploadObfuscatedIds(uploadStatus)
+        authManager.uploadObfuscatedIds(uploadStatus)
     }
+
 }

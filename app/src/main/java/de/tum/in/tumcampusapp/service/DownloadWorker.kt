@@ -16,24 +16,60 @@ import de.tum.`in`.tumcampusapp.component.ui.news.NewsDownloadAction
 import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsDownloadAction
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsDownloadAction
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.FilmDownloadAction
+import de.tum.`in`.tumcampusapp.di.injector
+import de.tum.`in`.tumcampusapp.service.di.DownloadModule
 import de.tum.`in`.tumcampusapp.utils.CacheManager
-import de.tum.`in`.tumcampusapp.utils.Const.FORCE_DOWNLOAD
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.disposables.CompositeDisposable
+import javax.inject.Inject
 
-class DownloadWorker(context: Context, workerParams: WorkerParameters) :
-        Worker(context, workerParams) {
+class DownloadWorker(
+        context: Context,
+        workerParams: WorkerParameters
+) : Worker(context, workerParams) {
 
-    private val disposable = CompositeDisposable()
+    @Inject
+    lateinit var cafeteriaDownloadAction: CafeteriaDownloadAction
 
-    private val downloadActions = getAllDownloadActions(applicationContext, disposable)
+    @Inject
+    lateinit var cafeteriaLocationImportAction: CafeteriaLocationImportAction
+
+    @Inject
+    lateinit var eventsDownloadAction: EventsDownloadAction
+
+    @Inject
+    lateinit var filmDownloadAction: FilmDownloadAction
+
+    @Inject
+    lateinit var idUploadAction: IdUploadAction
+
+    @Inject
+    lateinit var newsDownloadAction: NewsDownloadAction
+
+    @Inject
+    lateinit var topNewsDownloadAction: TopNewsDownloadAction
+
+    private val downloadActions = listOf(
+            cafeteriaDownloadAction,
+            cafeteriaLocationImportAction,
+            eventsDownloadAction,
+            filmDownloadAction,
+            idUploadAction,
+            newsDownloadAction,
+            topNewsDownloadAction
+    )
 
     init {
         Utils.log("DownloadService service has started")
     }
 
     override fun doWork(): Result {
+        injector.downloadComponent()
+                .downloadModule(DownloadModule())
+                .build()
+                .inject(this)
+
         return try {
             download(inputData, this)
             Utils.setSetting(applicationContext, LAST_UPDATE, System.currentTimeMillis())
@@ -44,11 +80,6 @@ class DownloadWorker(context: Context, workerParams: WorkerParameters) :
         }
     }
 
-    override fun onStopped(cancelled: Boolean) {
-        super.onStopped(cancelled)
-        disposable.clear()
-    }
-
     /**
      * Download all external data and returns whether the download was successful
      *
@@ -56,23 +87,31 @@ class DownloadWorker(context: Context, workerParams: WorkerParameters) :
      * @return if all downloads were successful
      */
     private fun downloadAll(behaviour: CacheControl) {
-        downloadActions.forEach { action ->
-            action(behaviour)
-        }
+        downloadActions.forEach { it.execute(behaviour) }
+    }
+
+    interface Action {
+        fun execute(cacheBehaviour: CacheControl)
     }
 
     companion object {
-        private const val LAST_UPDATE = "last_update"
+
+        private const val FORCE_DOWNLOAD = "FORCE_DOWNLOAD"
+        private const val FILL_CACHE = "FILL_CACHE"
+        private const val LAST_UPDATE = "LAST_UPDATE"
 
         @JvmOverloads
         @JvmStatic
-        fun getWorkRequest(behaviour: CacheControl = USE_CACHE)
-                : OneTimeWorkRequest {
+        fun getWorkRequest(
+                behaviour: CacheControl = USE_CACHE,
+                fillCache: Boolean = false
+        ): OneTimeWorkRequest {
             val constraints = Constraints.Builder()
                     .setRequiredNetworkType(CONNECTED)
                     .build()
             val data = Data.Builder()
                     .putBoolean(FORCE_DOWNLOAD, behaviour == BYPASS_CACHE)
+                    .putBoolean(FILL_CACHE, fillCache)
                     .build()
             return OneTimeWorkRequestBuilder<DownloadWorker>()
                     .setConstraints(constraints)
@@ -87,7 +126,7 @@ class DownloadWorker(context: Context, workerParams: WorkerParameters) :
          * @return time when BackgroundService was executed last time
          */
         @JvmStatic
-        fun lastUpdate(context: Context): Long = Utils.getSettingLong(context, LAST_UPDATE, 0L)
+        fun lastUpdate(context: Context) = Utils.getSettingLong(context, LAST_UPDATE, 0L)
 
         /**
          * Download the data for a specific intent
@@ -95,37 +134,32 @@ class DownloadWorker(context: Context, workerParams: WorkerParameters) :
          */
         @Synchronized
         private fun download(data: Data, service: DownloadWorker) {
-            val force = if (data.getBoolean(FORCE_DOWNLOAD, false)) {
-                CacheControl.BYPASS_CACHE
-            } else {
-                USE_CACHE
-            }
+            val force = if (data.getBoolean(FORCE_DOWNLOAD, false)) BYPASS_CACHE else USE_CACHE
 
-            // Check if device has a internet connection
             val backgroundServicePermitted = Utils.isBackgroundServicePermitted(service.applicationContext)
             if (!NetUtils.isConnected(service.applicationContext) || !backgroundServicePermitted) {
                 return
             }
+
             service.downloadAll(force)
-            if (!AccessTokenManager.hasValidAccessToken(service.applicationContext)) {
-                return
+
+            val hasValidToken = AccessTokenManager.hasValidAccessToken(service.applicationContext)
+            val shouldFillCache = data.getBoolean(FILL_CACHE, false)
+
+            if (hasValidToken && shouldFillCache) {
+                val cacheManager = CacheManager(service.applicationContext)
+                cacheManager.fillCache()
             }
-            val cacheManager = CacheManager(service.applicationContext)
-            cacheManager.fillCache()
         }
 
         @JvmStatic
-        fun getAllDownloadActions(context: Context, disposable: CompositeDisposable):
-                List<(CacheControl) -> Unit> {
-            return listOf(
-                    CafeteriaDownloadAction(context, disposable),
-                    CafeteriaLocationImportAction(context),
-                    EventsDownloadAction(context),
-                    FilmDownloadAction(context, disposable),
-                    IdUploadAction(context),
-                    NewsDownloadAction(context),
-                    TopNewsDownloadAction(context, disposable)
-            )
+        fun getAllDownloadActions(
+                context: Context,
+                disposable: CompositeDisposable
+        ): List<(CacheControl) -> Unit> {
+            return emptyList()
         }
+
     }
+
 }

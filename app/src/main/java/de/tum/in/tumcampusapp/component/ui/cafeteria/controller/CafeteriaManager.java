@@ -1,31 +1,27 @@
 package de.tum.in.tumcampusapp.component.ui.cafeteria.controller;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuCard;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Utils;
-import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Cafeteria Manager, handles database stuff, external imports
@@ -33,23 +29,12 @@ import io.reactivex.disposables.CompositeDisposable;
 public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
 
     private Context mContext;
-    private final CafeteriaViewModel cafeteriaViewModel;
-    private final CompositeDisposable compositeDisposable;
+    private final CafeteriaLocalRepository localRepository;
 
-    /**
-     * Constructor, open/create database, create table if necessary
-     *
-     * @param context Context
-     */
     public CafeteriaManager(Context context) {
         mContext = context;
         TcaDb db = TcaDb.getInstance(context);
-        compositeDisposable = new CompositeDisposable();
-        CafeteriaLocalRepository localRepository = CafeteriaLocalRepository.INSTANCE;
-        localRepository.setDb(db);
-        CafeteriaRemoteRepository remoteRepository = CafeteriaRemoteRepository.INSTANCE;
-        remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(context));
-        cafeteriaViewModel = new CafeteriaViewModel(localRepository, remoteRepository, compositeDisposable);
+        localRepository = new CafeteriaLocalRepository(db);
     }
 
     @NotNull
@@ -58,7 +43,7 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
         List<Card> results = new ArrayList<>();
 
         CafeteriaWithMenus cafeteria = getCafeteriaWithMenus();
-        if (cafeteria == null) {
+        if (cafeteria == null || cafeteria.getMenus().isEmpty()) {
             return results;
         }
 
@@ -81,7 +66,7 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
         if (cafeteriaId == -1) {
             return null;
         }
-        return cafeteriaViewModel.getCafeteriaWithMenus(cafeteriaId);
+        return localRepository.getCafeteriaWithMenus(cafeteriaId);
     }
 
     /**
@@ -109,12 +94,11 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
     private List<CafeteriaMenu> getCafeteriaMenusByCafeteriaId(int cafeteriaId) {
         CafeteriaWithMenus cafeteria = new CafeteriaWithMenus(cafeteriaId);
 
-        List<DateTime> menuDates = CafeteriaLocalRepository.INSTANCE.getAllMenuDates();
+        List<DateTime> menuDates = localRepository.getAllMenuDates();
         cafeteria.setMenuDates(menuDates);
 
         DateTime nextMenuDate = cafeteria.getNextMenuDate();
-        List<CafeteriaMenu> menus =
-                CafeteriaLocalRepository.INSTANCE.getCafeteriaMenus(cafeteriaId, nextMenuDate);
+        List<CafeteriaMenu> menus = localRepository.getCafeteriaMenus(cafeteriaId, nextMenuDate);
         cafeteria.setMenus(menus);
 
         return cafeteria.getMenus();

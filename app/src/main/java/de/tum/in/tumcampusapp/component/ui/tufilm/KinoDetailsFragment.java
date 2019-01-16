@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.component.ui.news;
+package de.tum.in.tumcampusapp.component.ui.tufilm;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,28 +18,28 @@ import com.google.android.material.button.MaterialButton;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import java.util.List;
 import java.util.Locale;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.component.ui.news.repository.KinoLocalRepository;
-import de.tum.in.tumcampusapp.component.ui.news.repository.KinoRemoteRepository;
+import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventHelper;
+import de.tum.in.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
-import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
+import de.tum.in.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository;
+import de.tum.in.tumcampusapp.component.ui.tufilm.di.KinoModule;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
-import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.di.ViewModelFactory;
 import de.tum.in.tumcampusapp.utils.Const;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
+import static de.tum.in.tumcampusapp.utils.Const.KEY_EVENT_ID;
 
 /**
  * Fragment for KinoDetails. Manages content that gets shown on the pagerView
@@ -49,8 +49,13 @@ public class KinoDetailsFragment extends Fragment {
     private View rootView;
     private Event event;
 
-    private KinoViewModel kinoViewModel;
-    private final CompositeDisposable disposables = new CompositeDisposable();
+    @Inject
+    Provider<KinoDetailsViewModel> viewModelProvider;
+
+    @Inject
+    TicketsLocalRepository ticketsLocalRepo;
+
+    private KinoDetailsViewModel kinoViewModel;
 
     public static KinoDetailsFragment newInstance(int position) {
         KinoDetailsFragment fragment = new KinoDetailsFragment();
@@ -63,9 +68,18 @@ public class KinoDetailsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        KinoLocalRepository.db = TcaDb.getInstance(context);
-        kinoViewModel = new KinoViewModel(
-                KinoLocalRepository.INSTANCE, KinoRemoteRepository.INSTANCE, disposables);
+        ((BaseActivity) requireActivity()).getInjector()
+                .kinoComponent()
+                .kinoModule(new KinoModule())
+                .build()
+                .inject(this);
+
+        ViewModelFactory<KinoDetailsViewModel> factory = new ViewModelFactory<>(viewModelProvider);
+        kinoViewModel = ViewModelProviders.of(this, factory).get(KinoDetailsViewModel.class);
+
+        kinoViewModel.getKino().observe(this, this::showMovieDetails);
+        kinoViewModel.getEvent().observe(this, this::showEventTicketDetails);
+        kinoViewModel.getTicketCount().observe(this, this::showTicketCount);
     }
 
     @Override
@@ -78,87 +92,71 @@ public class KinoDetailsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (event != null && EventHelper.Companion.isEventImminent(event)) {
-            rootView.findViewById(R.id.buyTicketButton).setVisibility(View.GONE);
-            rootView.findViewById(R.id.eventInformation).setVisibility(View.GONE);
+        if (event != null) {
+            initBuyOrShowTicket(event);
         }
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        int position = getArguments().getInt(Const.POSITION);
-        Disposable disposable = kinoViewModel
-                .getKinoByPosition(position)
-                .subscribe(this::showMovieDetails);
-        disposables.add(disposable);
+        final int position = getArguments().getInt(Const.POSITION);
+        kinoViewModel.fetchKinoByPosition(position);
     }
 
     private void showEventTicketDetails(Event event) {
         this.event = event;
-        if (EventHelper.Companion.isEventImminent(event)) {
-            return;
-        }
-        rootView.findViewById(R.id.eventInformation).setVisibility(View.VISIBLE);
-        MaterialButton buyButton = rootView.findViewById(R.id.buyTicketButton);
-        buyButton.setVisibility(View.VISIBLE);
-        buyButton.setOnClickListener(
-                view -> EventHelper.Companion.buyTicket(this.event, buyButton, getContext()));
+        initBuyOrShowTicket(event);
 
+        rootView.findViewById(R.id.eventInformation).setVisibility(View.VISIBLE);
         ((TextView) rootView.findViewById(R.id.locationTextView)).setText(event.getLocality());
-        loadAvailableTicketCount(event);
+
+        kinoViewModel.fetchTicketCount(event.getId());
     }
 
-    private void loadAvailableTicketCount(Event event) {
-        TUMCabeClient.getInstance(getContext())
-                .fetchTicketStats(event.getId(), new Callback<List<TicketStatus>>() {
-                    @Override
-                    public void onResponse(Call<List<TicketStatus>> call, Response<List<TicketStatus>> response) {
-                        List<TicketStatus> statusList = response.body();
-                        if (statusList == null) {
-                            if (!isDetached()) {
-                                ((TextView) rootView.findViewById(R.id.remainingTicketsTextView))
-                                        .setText(R.string.unknown);
-                            }
-                        }
-                        int sum = 0;
-                        for (TicketStatus status : statusList) {
-                            sum += status.getAvailableTicketCount();
-                        }
-                        String text = String.format(Locale.getDefault(), "%d", sum);
-                        if (!isDetached()) {
-                            ((TextView) rootView.findViewById(R.id.remainingTicketsTextView))
-                                    .setText(text);
-                        }
-                    }
+    private void initBuyOrShowTicket(Event event) {
+        MaterialButton ticketButton = rootView.findViewById(R.id.buyTicketButton);
+        if (ticketsLocalRepo.isEventBooked(event)) {
+            ticketButton.setText(R.string.show_ticket);
+            ticketButton.setVisibility(View.VISIBLE);
+            ticketButton.setOnClickListener(view -> {
+                Intent intent = new Intent(getContext(), ShowTicketActivity.class);
+                intent.putExtra(KEY_EVENT_ID, event.getId());
+                startActivity(intent);
+            });
+        } else if (!EventHelper.Companion.isEventImminent(event)) {
+            ticketButton.setText(R.string.buy_ticket);
+            ticketButton.setVisibility(View.VISIBLE);
+            ticketButton.setOnClickListener(
+                    view -> EventHelper.Companion.buyTicket(this.event, ticketButton, getContext()));
+        }
+    }
 
-                    @Override
-                    public void onFailure(Call<List<TicketStatus>> call, Throwable t) {
-                        if (!isDetached()) {
-                            ((TextView) rootView.findViewById(R.id.remainingTicketsTextView))
-                                    .setText(R.string.unknown);
-                        }
-                    }
-                });
+    private void showTicketCount(@Nullable Integer count) {
+        String text;
+
+        if (count != null) {
+            text = String.format(Locale.getDefault(), "%d", count);
+        } else {
+            text = getString(R.string.unknown);
+        }
+
+        ((TextView) rootView.findViewById(R.id.remainingTicketsTextView)).setText(text);
     }
 
     private void showMovieDetails(Kino kino) {
-        Disposable disposable = kinoViewModel
-                .getEventByMovieId(kino.getId())
-                .subscribe(this::showEventTicketDetails);
-        disposables.add(disposable);
+        kinoViewModel.fetchEventByMovieId(kino.getId());
 
         loadPoster(kino);
 
         TextView dateTextView = rootView.findViewById(R.id.dateTextView);
-        dateTextView.setText(kino.getFormattedDate());
+        dateTextView.setText(kino.getFormattedShortDate());
 
         TextView runtimeTextView = rootView.findViewById(R.id.runtimeTextView);
         runtimeTextView.setText(kino.getRuntime());
 
         TextView ratingTextView = rootView.findViewById(R.id.ratingTextView);
-        ratingTextView.setText(kino.getRating());
+        ratingTextView.setText(kino.getFormattedRating());
 
         int colorPrimary = ContextCompat.getColor(requireContext(), R.color.color_primary);
         setCompoundDrawablesTint(dateTextView, colorPrimary);
@@ -223,16 +221,10 @@ public class KinoDetailsFragment extends Fragment {
         }
     }
 
-    public void showTrailer(Kino kino) {
+    private void showTrailer(Kino kino) {
         String url = kino.getTrailerSearchUrl();
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         requireActivity().startActivity(intent);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        disposables.dispose();
     }
 
 }

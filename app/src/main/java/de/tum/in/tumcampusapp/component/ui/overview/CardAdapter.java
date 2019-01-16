@@ -1,13 +1,13 @@
 package de.tum.in.tumcampusapp.component.ui.overview;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.component.tumui.calendar.NextLectureCard;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.TuitionFeesCard;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuCard;
@@ -21,6 +21,7 @@ import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventCard;
 import de.tum.in.tumcampusapp.component.ui.transportation.MVVCard;
+import de.tum.in.tumcampusapp.component.ui.updatenote.UpdateNoteCard;
 
 /**
  * Adapter for the cards start page used in {@link MainActivity}
@@ -62,6 +63,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
                 return TopNewsCard.inflateViewHolder(viewGroup);
             case CardManager.CARD_EVENT:
                 return EventCard.inflateViewHolder(viewGroup);
+            case CardManager.CARD_UPDATE_NOTE:
+                return UpdateNoteCard.inflateViewHolder(viewGroup);
             default:
                 throw new UnsupportedOperationException();
         }

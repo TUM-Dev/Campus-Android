@@ -48,10 +48,12 @@ import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketPurchaseStripe;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
+import de.tum.in.tumcampusapp.component.ui.updatenote.model.UpdateNote;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -88,6 +90,7 @@ public final class TUMCabeClient {
     static final String API_CAFETERIAS = "mensen/";
     static final String API_KINOS = "kino/";
     static final String API_NEWS = "news/";
+    static final String API_UPDATE_NOTE = "updatenote/";
     static final String API_EVENTS = "event/";
     static final String API_TICKET = "ticket/";
     static final String API_STUDY_ROOMS = "studyroom/list";
@@ -193,7 +196,7 @@ public final class TUMCabeClient {
                 .body();
     }
 
-    Observable<TUMCabeStatus> uploadObfuscatedIds(String lrzId, ObfuscatedIdsUpload ids){
+    Observable<TUMCabeStatus> uploadObfuscatedIds(String lrzId, ObfuscatedIdsUpload ids) {
         return service.uploadObfuscatedIds(lrzId, ids);
     }
 
@@ -300,10 +303,11 @@ public final class TUMCabeClient {
                 .body();
     }
 
-    public void sendFeedback(Feedback feedback, String[] imagePaths, Callback<Success> cb) {
-        service.sendFeedback(feedback)
-                .enqueue(cb);
+    public void sendFeedback(Feedback feedback, Callback<Success> cb) {
+        service.sendFeedback(feedback).enqueue(cb);
+    }
 
+    public void sendFeedbackImages(Feedback feedback, String[] imagePaths, Callback<Success> cb) {
         for (int i = 0; i < imagePaths.length; i++) {
             File file = new File(imagePaths[i]);
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
@@ -355,15 +359,15 @@ public final class TUMCabeClient {
     // TICKET SALE
 
     // Getting event information
-    public void fetchEvents(Callback<List<Event>> cb) {
-        service.getEvents().enqueue(cb);
+    public Observable<List<Event>> fetchEvents() {
+        return service.getEvents();
     }
 
     // Getting ticket information
 
-    public void fetchTickets(Context context, Callback<List<Ticket>> cb) throws NoPrivateKey {
+    public Observable<List<Ticket>> fetchTickets(Context context) throws NoPrivateKey {
         TUMCabeVerification verification = getVerification(context, null);
-        service.getTickets(verification).enqueue(cb);
+        return service.getTicketsRx(verification);
     }
 
     public Call<Ticket> fetchTicket(Context context, int ticketID) throws NoPrivateKey {
@@ -371,8 +375,8 @@ public final class TUMCabeClient {
         return service.getTicket(ticketID, verification);
     }
 
-    public void fetchTicketTypes(int eventID, Callback<List<TicketType>> cb) {
-        service.getTicketTypes(eventID).enqueue(cb);
+    public Observable<List<TicketType>> fetchTicketTypes(int eventID) {
+        return service.getTicketTypes(eventID);
     }
 
     // Ticket reservation
@@ -399,8 +403,12 @@ public final class TUMCabeClient {
         service.retrieveEphemeralKey(verification).enqueue(cb);
     }
 
-    public void fetchTicketStats(int event, Callback<List<TicketStatus>> cb) {
-        service.getTicketStats(event).enqueue(cb);
+    public Single<List<TicketStatus>> fetchTicketStats(int event) {
+        return service.getTicketStats(event);
+    }
+
+    public UpdateNote getUpdateNote(int version) throws IOException {
+        return service.getUpdateNote(version).execute().body();
     }
 
 }

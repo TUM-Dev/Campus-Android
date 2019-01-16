@@ -8,23 +8,22 @@ import java.util.concurrent.TimeUnit
 /**
  * Worker to sync data periodically in background
  */
-class BackgroundWorker(context: Context, workerParams: WorkerParameters) :
-        Worker(context, workerParams) {
+class BackgroundWorker(
+        context: Context,
+        workerParams: WorkerParameters
+) : Worker(context, workerParams) {
 
-    /**
-     * Starts [DownloadWorker] with appropriate extras
-     */
     override fun doWork(): ListenableWorker.Result {
-        // Trigger periodic download in background
+        val downloadWorkRequest = DownloadWorker.getWorkRequest()
         WorkManager.getInstance()
-                .beginUniqueWork(UNIQUE_DOWNLOAD, ExistingWorkPolicy.KEEP,
-                        DownloadWorker.getWorkRequest()
-                ).enqueue()
+                .beginUniqueWork(UNIQUE_DOWNLOAD, ExistingWorkPolicy.KEEP, downloadWorkRequest)
+                .enqueue()
 
         return SUCCESS
     }
 
     companion object {
+
         private const val UNIQUE_DOWNLOAD = "BACKGROUND_DOWNLOAD"
 
         fun getWorkRequest(): PeriodicWorkRequest {
@@ -35,5 +34,7 @@ class BackgroundWorker(context: Context, workerParams: WorkerParameters) :
                     .setConstraints(constraints)
                     .build()
         }
+
     }
+
 }
