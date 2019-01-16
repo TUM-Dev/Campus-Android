@@ -1,12 +1,17 @@
 package de.tum.`in`.tumcampusapp.service.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.AssetManager
 import dagger.Module
 import dagger.Provides
 import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
 import de.tum.`in`.tumcampusapp.api.app.IdUploadAction
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
+import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
+import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
+import de.tum.`in`.tumcampusapp.component.tumui.grades.GradesBackgroundUpdater
+import de.tum.`in`.tumcampusapp.component.tumui.grades.GradesStore
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaDownloadAction
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaLocationImportAction
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
@@ -26,7 +31,7 @@ import de.tum.`in`.tumcampusapp.database.TcaDb
 
 /**
  * This module provides dependencies that are needed in the download functionality, namely
- * [DownloadService]. It mainly includes data repositories and manager classes.
+ * [DownloadWorker]. It mainly includes data repositories and manager classes.
  */
 @Module
 class DownloadModule {
@@ -106,5 +111,23 @@ class DownloadModule {
     fun provideTopNewsDownloadAction(
             remoteRepository: TopNewsRemoteRepository
     ): TopNewsDownloadAction = TopNewsDownloadAction(remoteRepository)
+
+    @Provides
+    fun provideGradesStore(
+            sharedPrefs: SharedPreferences
+    ): GradesStore = GradesStore(sharedPrefs)
+
+    @Provides
+    fun provideGradesBackgroundUpdater(
+            context: Context,
+            tumOnlineClient: TUMOnlineClient,
+            notificationScheduler: NotificationScheduler,
+            gradesStore: GradesStore
+    ): GradesBackgroundUpdater = GradesBackgroundUpdater(
+            context,
+            tumOnlineClient,
+            notificationScheduler,
+            gradesStore
+    )
 
 }

@@ -3,6 +3,8 @@ package de.tum.`in`.tumcampusapp.component.tumui.grades
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.LayoutTransition
+import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.util.ArrayMap
@@ -20,6 +22,7 @@ import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAcce
 import de.tum.`in`.tumcampusapp.component.tumui.grades.model.Exam
 import de.tum.`in`.tumcampusapp.component.tumui.grades.model.ExamList
 import kotlinx.android.synthetic.main.activity_grades.*
+import org.jetbrains.anko.defaultSharedPreferences
 import java.text.NumberFormat
 import java.util.*
 
@@ -82,6 +85,14 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
 
         isFetched = true
         invalidateOptionsMenu()
+
+        storeGradedCourses(response.exams)
+    }
+
+    private fun storeGradedCourses(exams: List<Exam>) {
+        val gradesStore = GradesStore(defaultSharedPreferences)
+        val courses = exams.map { it.course }
+        gradesStore.store(courses)
     }
 
     /**
@@ -382,6 +393,8 @@ class GradesActivity : ActivityForAccessingTumOnline<ExamList>(R.layout.activity
     companion object {
         private const val KEY_SHOW_BAR_CHART = "showPieChart"
         private const val KEY_SPINNER_POSITION = "spinnerPosition"
+
+        fun newIntent(context: Context) = Intent(context, GradesActivity::class.java)
 
         private val GRADE_COLORS = intArrayOf(
                 R.color.grade_1_0, R.color.grade_1_3, R.color.grade_1_4, R.color.grade_1_7,
