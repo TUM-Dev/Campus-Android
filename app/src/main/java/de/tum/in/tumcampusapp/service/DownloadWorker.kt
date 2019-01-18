@@ -26,14 +26,13 @@ class DownloadWorker(
 
     init {
         Utils.log("DownloadService service has started")
-    }
-
-    override fun doWork(): Result {
         injector.downloadComponent()
                 .downloadModule(DownloadModule())
                 .build()
                 .inject(this)
+    }
 
+    override fun doWork(): Result {
         return try {
             download(inputData, this)
             Utils.setSetting(applicationContext, LAST_UPDATE, System.currentTimeMillis())
