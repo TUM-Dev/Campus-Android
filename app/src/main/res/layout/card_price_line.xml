@@ -8,7 +8,7 @@
     android:layout_marginBottom="@dimen/material_tiny_padding">
 
     <TextView
-        android:id="@+id/line_name"
+        android:id="@+id/nameTextView"
         style="@style/CardBody"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -16,40 +16,39 @@
         android:gravity="top"
         android:maxLines="5"
         android:scrollHorizontally="false"
-        android:textIsSelectable="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/line_price"
+        app:layout_constraintEnd_toStartOf="@id/priceTextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Lorem ipsum dolor sit" />
 
     <TextView
-        android:id="@+id/line_price"
+        android:id="@+id/priceTextView"
         style="@style/CardBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/material_default_padding"
+        android:layout_marginStart="@dimen/material_small_padding"
         android:gravity="end"
         android:textColor="@color/sections_green"
-        app:layout_constraintBottom_toBottomOf="@id/line_name"
+        app:layout_constraintBottom_toBottomOf="@id/nameTextView"
         app:layout_constraintEnd_toStartOf="@id/favoriteDish"
-        app:layout_constraintStart_toEndOf="@id/line_name"
-        app:layout_constraintTop_toTopOf="@id/line_name"
+        app:layout_constraintStart_toEndOf="@id/nameTextView"
+        app:layout_constraintTop_toTopOf="@id/nameTextView"
         tools:text="Price" />
 
     <ImageView
         android:id="@+id/favoriteDish"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="@dimen/material_default_padding"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:padding="@dimen/material_tiny_padding"
+        android:layout_marginStart="@dimen/material_small_padding"
         android:background="?android:selectableItemBackgroundBorderless"
         android:clickable="true"
         android:focusable="true"
-        android:padding="@dimen/material_small_padding"
         android:src="@drawable/star_toggle"
-        app:layout_constraintBottom_toBottomOf="@id/line_name"
+        app:layout_constraintBottom_toBottomOf="@id/nameTextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/line_price"
-        app:layout_constraintTop_toTopOf="@id/line_name" />
+        app:layout_constraintStart_toEndOf="@id/priceTextView"
+        app:layout_constraintTop_toTopOf="@id/nameTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
