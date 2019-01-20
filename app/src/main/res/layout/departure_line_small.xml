@@ -21,7 +21,7 @@
         tools:textColor="@android:color/white" />
 
     <TextView
-        android:id="@+id/line_name"
+        android:id="@+id/nameTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"

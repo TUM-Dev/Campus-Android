@@ -53,7 +53,7 @@ class RealTopNewsStore @Inject constructor(
     }
 
     override fun setEnabled(isEnabled: Boolean) {
-        sharedPrefs.edit().putBoolean(CardManager.SHOW_TOP_NEWS, true).apply()
+        sharedPrefs.edit().putBoolean(CardManager.SHOW_TOP_NEWS, isEnabled).apply()
     }
 
     override fun getNewsAlert(): NewsAlert? {

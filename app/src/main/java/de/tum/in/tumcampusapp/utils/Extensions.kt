@@ -135,3 +135,22 @@ fun TextView.addCompoundDrawablesWithIntrinsicBounds(
 operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
     this.add(disposable)
 }
+
+fun <T1, T2> List<T1>.splitOnChanged(transform: (T1) -> T2): List<List<T1>> {
+    val results = mutableListOf<MutableList<T1>>()
+    var latestValue: T2? = null
+
+    for (item in this) {
+        val currentSubList = results.lastOrNull() ?: mutableListOf()
+        val value = transform(item)
+        if (value != latestValue) {
+            // Add item to a new sub-list
+            results.add(mutableListOf(item))
+            latestValue = value
+        } else {
+            // Add item to existing sub-list
+            currentSubList.add(item)
+        }
+    }
+    return results.toList()
+}

@@ -1,9 +1,9 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria.model
 
+import android.content.Context
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.RoomWarnings
-import android.content.Context
 import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTime
 import java.util.regex.Pattern
@@ -43,6 +43,9 @@ data class CafeteriaMenu(
 
     private val formattedName: String
         get() = REMOVE_PARENTHESES_PATTERN.matcher(name).replaceAll("").trim()
+
+    val tag: String
+        get() = "${name}__$cafeteriaId"
 
     val menuType: MenuType
         get() {
