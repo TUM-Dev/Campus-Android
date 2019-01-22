@@ -24,6 +24,7 @@ import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.di.TicketsModule;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.EventType;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservation;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
@@ -73,9 +74,9 @@ public class BuyTicketActivity extends BaseActivity {
         getInjector().ticketsComponent()
                 .ticketsModule(new TicketsModule(this))
                 .eventId(eventId)
+                .eventType(EventType.ALL) // not important here
                 .build()
                 .inject(this);
-
 
         // Get ticket type information from API
         Disposable disposable = ticketsRemoteRepo.fetchTicketTypesForEvent(eventId)
