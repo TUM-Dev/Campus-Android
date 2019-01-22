@@ -6,13 +6,9 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.BuyTicketActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.StripePaymentActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.fragment.EventDetailsFragment
-import de.tum.`in`.tumcampusapp.component.ui.ticket.fragment.EventsFragment
-import de.tum.`in`.tumcampusapp.component.ui.ticket.model.EventType
 
 @Subcomponent(modules = [TicketsModule::class])
 interface TicketsComponent {
-
-    fun inject(eventsFragment: EventsFragment)
 
     fun inject(eventDetailsFragment: EventDetailsFragment)
 
@@ -26,9 +22,6 @@ interface TicketsComponent {
     interface Builder {
 
         fun ticketsModule(ticketsModule: TicketsModule): TicketsComponent.Builder
-
-        @BindsInstance
-        fun eventType(eventType: EventType): TicketsComponent.Builder
 
         @BindsInstance
         fun eventId(@EventId eventId: Int): TicketsComponent.Builder

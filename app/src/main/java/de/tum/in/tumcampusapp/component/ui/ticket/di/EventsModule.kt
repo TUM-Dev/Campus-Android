@@ -11,7 +11,7 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsRemoteRepo
 import de.tum.`in`.tumcampusapp.database.TcaDb
 
 @Module
-class TicketsModule {
+class EventsModule {
 
     @Provides
     fun provideTicketsLocalRepository(

@@ -16,7 +16,7 @@ import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMember
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsViewModel
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsViewState
 import de.tum.`in`.tumcampusapp.component.ui.ticket.adapter.EventsAdapter
-import de.tum.`in`.tumcampusapp.component.ui.ticket.di.TicketsModule
+import de.tum.`in`.tumcampusapp.component.ui.ticket.di.EventsModule
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.EventType
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
@@ -43,10 +43,9 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        injector.ticketsComponent()
-                .ticketsModule(TicketsModule(requireContext()))
+        injector.eventsComponent()
+                .eventsModule(EventsModule())
                 .eventType(eventType)
-                .eventId(0) // not relevant here
                 .build()
                 .inject(this)
     }
