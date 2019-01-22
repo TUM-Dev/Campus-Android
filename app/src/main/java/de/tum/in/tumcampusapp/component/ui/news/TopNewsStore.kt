@@ -5,6 +5,7 @@ import de.tum.`in`.tumcampusapp.component.ui.news.model.NewsAlert
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
+import org.joda.time.DateTime
 import javax.inject.Inject
 
 /**
@@ -60,7 +61,10 @@ class RealTopNewsStore @Inject constructor(
         val showTopNews = sharedPrefs.getBoolean(CardManager.SHOW_TOP_NEWS, true)
 
         val displayUntil = sharedPrefs.getString(Const.NEWS_ALERT_SHOW_UNTIL, "")
-        val until = DateTimeUtils.parseIsoDateWithMillis(displayUntil)
+        var until: DateTime? = null
+        try {
+            until = DateTimeUtils.parseIsoDateWithMillis(displayUntil)
+        } catch (e: Exception) { }
 
         if (until == null || until.isBeforeNow || showTopNews.not()) {
             return null
