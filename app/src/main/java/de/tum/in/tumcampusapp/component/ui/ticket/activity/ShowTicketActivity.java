@@ -5,7 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -22,15 +24,20 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
+import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
+import de.tum.in.tumcampusapp.component.ui.ticket.BoughtTicketViewHolder;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
-import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketInfo;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
@@ -44,14 +51,12 @@ public class ShowTicketActivity extends BaseActivity {
     private ImageView ticketQrCodeImageView;
     private TextView titleTextView;
     private TextView dateTextView;
-    private TextView priceTextView;
     private TextView redemptionStateTextView;
 
     private EventsController eventsController;
 
-    private List<Ticket> tickets;
+    private List<TicketInfo> tickets;
     private Event event;
-    private TicketType ticketType;
 
     public ShowTicketActivity() {
         super(R.layout.activity_show_ticket);
@@ -74,7 +79,7 @@ public class ShowTicketActivity extends BaseActivity {
         StringBuilder qrCodeContent = new StringBuilder();
 
         for (int i = 0; i < nrOfTickets; i++) {
-            qrCodeContent.append(tickets.get(i).getCode());
+            qrCodeContent.append(tickets.get(i).getTicket().get(0).getCode());
             // don't add semicolon to last item
             if (i != nrOfTickets - 1) {
                 qrCodeContent.append(';');
@@ -87,7 +92,6 @@ public class ShowTicketActivity extends BaseActivity {
         titleTextView = findViewById(R.id.ticket_event_title);
         locationTextView = findViewById(R.id.ticket_event_location);
         dateTextView = findViewById(R.id.ticket_event_date_time);
-        priceTextView = findViewById(R.id.ticket_event_price);
         redemptionStateTextView = findViewById(R.id.ticket_event_redemption_state);
         ticketQrCodeImageView = findViewById(R.id.ticket_qr_code);
 
@@ -106,8 +110,8 @@ public class ShowTicketActivity extends BaseActivity {
                     .fetchTickets(this, new Callback<List<Ticket>>() {
                         @Override
                         public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
-                            List<Ticket> ticket = response.body();
-                            if (response.isSuccessful() && !ticket.isEmpty()) {
+                            List<Ticket> tickets = response.body();
+                            if (response.isSuccessful() && !tickets.isEmpty()) {
                                 handleTicketRefreshSuccess(tickets);
                             } else {
                                 handleTicketRefreshFailure();
@@ -126,8 +130,8 @@ public class ShowTicketActivity extends BaseActivity {
     }
 
     private void handleTicketRefreshSuccess(List<Ticket> tickets) {
-        this.tickets = tickets;
         eventsController.insert(tickets.toArray(new Ticket[0]));
+        this.tickets = eventsController.getTicketsByEventId(event.getId());
 
         setViewData();
         swipeRefreshLayout.setRefreshing(false);
@@ -144,27 +148,53 @@ public class ShowTicketActivity extends BaseActivity {
 
         tickets = eventsController.getTicketsByEventId(eventId);
         event = eventsController.getEventById(eventId);
-        ticketType = eventsController.getTicketTypeById(tickets.get(0).getTicketTypeId());
     }
 
     private void setViewData() {
         titleTextView.setText(getString(R.string.xtickets, tickets.size(), event.getTitle()));
         dateTextView.setText(event.getFormattedStartDateTime(this));
-        priceTextView.setText(getString(R.string.price_per_ticket, Utils.formatPrice(ticketType.getPrice())));
         redemptionStateTextView.setText(getRedemptionState());
 
         locationTextView.setText(event.getLocality());
         locationTextView.setOnClickListener(this::showMap);
+
+        RecyclerView ticketAmounts = findViewById(R.id.ticket_event_ticket_list);
+        ticketAmounts.setLayoutManager(new LinearLayoutManager(this));
+        ticketAmounts.setHasFixedSize(true);
+        ticketAmounts.setAdapter(new RecyclerView.Adapter<BoughtTicketViewHolder>() {
+            List<TicketInfo> ticketInfos;
+
+            @NonNull
+            @Override
+            public BoughtTicketViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
+                View v = LayoutInflater.from(parent.getContext())
+                                       .inflate(R.layout.bought_ticket_row, parent, false);
+                return new BoughtTicketViewHolder(v);
+            }
+
+            @Override
+            public void onBindViewHolder(@NonNull BoughtTicketViewHolder viewHolder, int i) {
+                viewHolder.bind(ticketInfos.get(i));
+            }
+
+            @Override
+            public int getItemCount() {
+                return ticketInfos.size();
+            }
+        });
+        ticketAmounts.setNestedScrollingEnabled(false);
+        int spacing = Math.round(getResources().getDimension(R.dimen.material_small_padding));
+        ticketAmounts.addItemDecoration(new EqualSpacingItemDecoration(spacing));
     }
 
     private String getRedemptionState() {
         DateTime lastRedemption = null;
         int nrTicketsRedeemed = 0;
-        for(Ticket t : tickets) {
-            if (t.getRedemption() != null) {
+        for(TicketInfo t : tickets) {
+            if (t.getTicket().get(0).getRedemption() != null) {
                 nrTicketsRedeemed++;
-                if (lastRedemption == null || t.getRedemption().isAfter(lastRedemption)) {
-                    lastRedemption = t.getRedemption();
+                if (lastRedemption == null || t.getTicket().get(0).getRedemption().isAfter(lastRedemption)) {
+                    lastRedemption = t.getTicket().get(0).getRedemption();
                 }
             }
         }

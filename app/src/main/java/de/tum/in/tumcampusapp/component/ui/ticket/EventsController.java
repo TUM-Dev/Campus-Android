@@ -20,6 +20,7 @@ import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketInfo;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -185,7 +186,7 @@ public class EventsController implements ProvidesCard {
 
     // Ticket methods
 
-    public List<Ticket> getTicketsByEventId(int eventId) {
+    public List<TicketInfo> getTicketsByEventId(int eventId) {
         return ticketDao.getByEventId(eventId);
     }
 

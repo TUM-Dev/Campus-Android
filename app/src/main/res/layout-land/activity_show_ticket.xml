@@ -68,6 +68,12 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Large"
                             tools:text="Title" />
 
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/ticket_event_ticket_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            tools:layout_height="100dp"/>
+
                         <TextView
                             android:id="@+id/ticket_event_date_time"
                             android:layout_width="match_parent"
@@ -77,17 +83,9 @@
                             tools:text="20.04.2018 12:45" />
 
                         <TextView
-                            android:id="@+id/ticket_event_price"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                            tools:text="Price: 10€" />
-
-                        <TextView
                             android:id="@+id/ticket_event_location"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/material_default_padding"
                             android:textAppearance="@style/TextAppearance.AppCompat.Large"
                             tools:text="location" />
 
