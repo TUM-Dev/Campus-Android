@@ -18,13 +18,14 @@ public interface KinoDao {
     @Query("SELECT * FROM kino ORDER BY date")
     Flowable<List<Kino>> getAll();
 
-    @Query("SELECT id FROM kino ORDER BY id DESC LIMIT 1")
+    @Query("SELECT id FROM kino ORDER BY date DESC LIMIT 1")
     String getLatestId();
 
     @Query("SELECT count(*) FROM kino WHERE date < :date ORDER BY date DESC")
     int getPositionByDate(String date);
 
-    @Query("SELECT count(*) FROM kino WHERE id < :id ORDER BY date DESC")
+    /* Using the id directly does not work since it is stored as a string and it is therefore not ordered properly */
+    @Query("SELECT count(*) FROM kino WHERE date < (Select date FROM kino WHERE id = :id LIMIT 1) ORDER BY date DESC")
     int getPositionById(String id);
 
     @Query("SELECT * FROM kino ORDER BY date LIMIT 1 OFFSET :position")
