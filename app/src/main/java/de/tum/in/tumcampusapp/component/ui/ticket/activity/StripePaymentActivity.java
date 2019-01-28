@@ -272,9 +272,7 @@ public class StripePaymentActivity extends BaseActivity {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     requestAutofillIfEmptyCardholder();
                 }
-
-                loadingLayout.setVisibility(View.GONE);
-                TransitionManager.beginDelayedTransition(loadingLayout);
+                showLoading(false);
             }
         }, this));
     }

@@ -155,7 +155,7 @@ public class EventsController implements ProvidesCard {
      * @return all events for which a ticket exists
      */
     public MediatorLiveData<List<Event>> getBookedEvents() {
-        LiveData<List<Ticket>> tickets = ticketDao.getAll();
+        LiveData<List<Ticket>> tickets = ticketDao.getOneTicketPerEvent();
         MediatorLiveData<List<Event>> events = new MediatorLiveData<>();
 
         events.addSource(tickets, newTickets -> {
