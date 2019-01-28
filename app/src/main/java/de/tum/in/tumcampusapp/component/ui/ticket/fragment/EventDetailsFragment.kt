@@ -53,7 +53,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         injector.ticketsComponent()
-                .ticketsModule(TicketsModule(requireContext()))
+                .ticketsModule(TicketsModule())
                 .eventId(event.id)
                 .build()
                 .inject(this)
