@@ -14,7 +14,7 @@ class BoughtTicketViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     private val ticketPriceTextView: TextView by lazy { itemView.findViewById<TextView>(R.id.price_per_ticket) }
 
     fun bind(ticketInfo: TicketInfo) {
-        amountTextView.text = ticketInfo.count.toString()
+        amountTextView.text = itemView.context.getString(R.string.amount_x, ticketInfo.count)
         ticketTypeNameTextView.text = ticketInfo.ticketType?.description
         ticketPriceTextView.text = Utils.formatPrice(ticketInfo.ticketType?.price ?: 0)
     }

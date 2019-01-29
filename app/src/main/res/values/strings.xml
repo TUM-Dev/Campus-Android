@@ -732,9 +732,9 @@ Signature: %5$s</string>
     <string name="not_redeemed_yet">Not redeemed yet</string>
     <string name="partially_redeemed">%d of %d redeemed (%s)</string>
     <string name="redeemed_at">Redeemed at %s</string>
-    <string name="xtickets" translatable="false">%dx %s</string>
     <string name="no_tickets_remaining">No tickets remaining</string>
     <string name="no_tickets_remaining_message">Unfortunately you were a little too late, there are not tickets available anymore. For many events you can still buy a ticket on site.</string>
     <string name="error_message_select_at_least_one_ticket">Please select at least one ticket from one of the categories.</string>
     <string name="error_no_ticket_selected">No tickets selected</string>
+    <string name="amount_x" translatable="false">%dx</string>
 </resources>

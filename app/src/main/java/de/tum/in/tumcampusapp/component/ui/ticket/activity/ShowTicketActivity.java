@@ -5,9 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -24,7 +22,6 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -33,8 +30,8 @@ import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
-import de.tum.in.tumcampusapp.component.ui.ticket.BoughtTicketViewHolder;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
+import de.tum.in.tumcampusapp.component.ui.ticket.adapter.BoughtTicketAdapter;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketInfo;
@@ -52,6 +49,7 @@ public class ShowTicketActivity extends BaseActivity {
     private TextView titleTextView;
     private TextView dateTextView;
     private TextView redemptionStateTextView;
+    private RecyclerView ticketAmounts;
 
     private EventsController eventsController;
 
@@ -66,7 +64,6 @@ public class ShowTicketActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().getDecorView().setBackgroundColor(Color.WHITE);
-
         initViews();
         loadTicketData();
         setViewData();
@@ -94,6 +91,13 @@ public class ShowTicketActivity extends BaseActivity {
         dateTextView = findViewById(R.id.ticket_event_date_time);
         redemptionStateTextView = findViewById(R.id.ticket_event_redemption_state);
         ticketQrCodeImageView = findViewById(R.id.ticket_qr_code);
+        ticketAmounts = findViewById(R.id.ticket_event_ticket_list);
+
+        ticketAmounts.setLayoutManager(new LinearLayoutManager(this));
+        ticketAmounts.setHasFixedSize(true);
+        ticketAmounts.setNestedScrollingEnabled(false);
+        int spacing = Math.round(getResources().getDimension(R.dimen.material_tiny_padding));
+        ticketAmounts.addItemDecoration(new EqualSpacingItemDecoration(spacing));
 
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorSchemeResources(
@@ -151,40 +155,14 @@ public class ShowTicketActivity extends BaseActivity {
     }
 
     private void setViewData() {
-        titleTextView.setText(getString(R.string.xtickets, tickets.size(), event.getTitle()));
+        titleTextView.setText(event.getTitle());
         dateTextView.setText(event.getFormattedStartDateTime(this));
         redemptionStateTextView.setText(getRedemptionState());
 
         locationTextView.setText(event.getLocality());
         locationTextView.setOnClickListener(this::showMap);
 
-        RecyclerView ticketAmounts = findViewById(R.id.ticket_event_ticket_list);
-        ticketAmounts.setLayoutManager(new LinearLayoutManager(this));
-        ticketAmounts.setHasFixedSize(true);
-        ticketAmounts.setAdapter(new RecyclerView.Adapter<BoughtTicketViewHolder>() {
-            List<TicketInfo> ticketInfos;
-
-            @NonNull
-            @Override
-            public BoughtTicketViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-                View v = LayoutInflater.from(parent.getContext())
-                                       .inflate(R.layout.bought_ticket_row, parent, false);
-                return new BoughtTicketViewHolder(v);
-            }
-
-            @Override
-            public void onBindViewHolder(@NonNull BoughtTicketViewHolder viewHolder, int i) {
-                viewHolder.bind(ticketInfos.get(i));
-            }
-
-            @Override
-            public int getItemCount() {
-                return ticketInfos.size();
-            }
-        });
-        ticketAmounts.setNestedScrollingEnabled(false);
-        int spacing = Math.round(getResources().getDimension(R.dimen.material_small_padding));
-        ticketAmounts.addItemDecoration(new EqualSpacingItemDecoration(spacing));
+        ticketAmounts.setAdapter(new BoughtTicketAdapter(tickets));
     }
 
     private String getRedemptionState() {
