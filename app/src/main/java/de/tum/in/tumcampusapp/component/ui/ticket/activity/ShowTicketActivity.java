@@ -53,7 +53,7 @@ public class ShowTicketActivity extends BaseActivity {
 
     private EventsController eventsController;
 
-    private List<TicketInfo> tickets;
+    private List<TicketInfo> ticketInfoList;
     private Event event;
 
     public ShowTicketActivity() {
@@ -68,20 +68,24 @@ public class ShowTicketActivity extends BaseActivity {
         loadTicketData();
         setViewData();
 
-        showQRCode(tickets.size());
+        showQRCode();
         setWindowBrightnessToFull();
     }
 
-    private void showQRCode(int nrOfTickets) {
+    private void showQRCode() {
         StringBuilder qrCodeContent = new StringBuilder();
 
-        for (int i = 0; i < nrOfTickets; i++) {
-            qrCodeContent.append(tickets.get(i).getTicket().get(0).getCode());
-            // don't add semicolon to last item
-            if (i != nrOfTickets - 1) {
-                qrCodeContent.append(';');
+        for (int i = 0; i < ticketInfoList.size(); i++) {
+            List<Ticket> ticketsOfSingleType = ticketInfoList.get(i).getTickets();
+            for (int j = 0; j < ticketsOfSingleType.size(); j++) {
+                qrCodeContent.append(ticketsOfSingleType.get(j).getCode());
+                // don't add semicolon to last item
+                if (i != ticketInfoList.size() - 1 || j != ticketsOfSingleType.size() -1) {
+                    qrCodeContent.append(';');
+                }
             }
         }
+        Utils.log(qrCodeContent.toString());
         createQRCode(qrCodeContent.toString());
     }
 
@@ -135,7 +139,7 @@ public class ShowTicketActivity extends BaseActivity {
 
     private void handleTicketRefreshSuccess(List<Ticket> tickets) {
         eventsController.insert(tickets.toArray(new Ticket[0]));
-        this.tickets = eventsController.getTicketsByEventId(event.getId());
+        this.ticketInfoList = eventsController.getTicketsByEventId(event.getId());
 
         setViewData();
         swipeRefreshLayout.setRefreshing(false);
@@ -150,7 +154,7 @@ public class ShowTicketActivity extends BaseActivity {
         eventsController = new EventsController(this);
         int eventId = getIntent().getIntExtra(Const.KEY_EVENT_ID, 0);
 
-        tickets = eventsController.getTicketsByEventId(eventId);
+        ticketInfoList = eventsController.getTicketsByEventId(eventId);
         event = eventsController.getEventById(eventId);
     }
 
@@ -162,17 +166,17 @@ public class ShowTicketActivity extends BaseActivity {
         locationTextView.setText(event.getLocality());
         locationTextView.setOnClickListener(this::showMap);
 
-        ticketAmounts.setAdapter(new BoughtTicketAdapter(tickets));
+        ticketAmounts.setAdapter(new BoughtTicketAdapter(ticketInfoList));
     }
 
     private String getRedemptionState() {
         DateTime lastRedemption = null;
         int nrTicketsRedeemed = 0;
-        for(TicketInfo t : tickets) {
-            if (t.getTicket().get(0).getRedemption() != null) {
+        for(TicketInfo t : ticketInfoList) {
+            if (t.getTickets().get(0).getRedemption() != null) {
                 nrTicketsRedeemed++;
-                if (lastRedemption == null || t.getTicket().get(0).getRedemption().isAfter(lastRedemption)) {
-                    lastRedemption = t.getTicket().get(0).getRedemption();
+                if (lastRedemption == null || t.getTickets().get(0).getRedemption().isAfter(lastRedemption)) {
+                    lastRedemption = t.getTickets().get(0).getRedemption();
                 }
             }
         }
@@ -183,8 +187,8 @@ public class ShowTicketActivity extends BaseActivity {
         }
         if (nrTicketsRedeemed == 0) {
             redemptionState = getString(R.string.not_redeemed_yet);
-        } else if (nrTicketsRedeemed < tickets.size()) {
-            redemptionState = getString(R.string.partially_redeemed, nrTicketsRedeemed, tickets.size(), formattedDateTime);
+        } else if (nrTicketsRedeemed < ticketInfoList.size()) {
+            redemptionState = getString(R.string.partially_redeemed, nrTicketsRedeemed, ticketInfoList.size(), formattedDateTime);
         } else {
             redemptionState = getString(R.string.redeemed_at, formattedDateTime);
         }
