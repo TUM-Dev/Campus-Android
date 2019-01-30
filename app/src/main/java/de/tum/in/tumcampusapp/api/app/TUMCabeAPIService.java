@@ -235,7 +235,7 @@ public interface TUMCabeAPIService {
     Call<TicketReservationResponse> reserveTicket(@Body TUMCabeVerification verification);
 
     // Ticket purchase
-    @POST(API_EVENTS + API_TICKET + "payment/stripe/purchase")
+    @POST(API_EVENTS + API_TICKET + "payment/stripe/purchase/multiple")
     Call<List<Ticket>> purchaseTicketStripe(@Body TUMCabeVerification verification);
 
     @POST(API_EVENTS + API_TICKET + "payment/stripe/ephemeralkey")
