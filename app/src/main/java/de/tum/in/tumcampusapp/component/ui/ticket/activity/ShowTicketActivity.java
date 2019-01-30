@@ -73,20 +73,9 @@ public class ShowTicketActivity extends BaseActivity {
     }
 
     private void showQRCode() {
-        StringBuilder qrCodeContent = new StringBuilder();
-
-        for (int i = 0; i < ticketInfoList.size(); i++) {
-            List<Ticket> ticketsOfSingleType = ticketInfoList.get(i).getTickets();
-            for (int j = 0; j < ticketsOfSingleType.size(); j++) {
-                qrCodeContent.append(ticketsOfSingleType.get(j).getCode());
-                // don't add semicolon to last item
-                if (i != ticketInfoList.size() - 1 || j != ticketsOfSingleType.size() -1) {
-                    qrCodeContent.append(';');
-                }
-            }
-        }
-        Utils.log(qrCodeContent.toString());
-        createQRCode(qrCodeContent.toString());
+        String qrCodeContent = ticketInfoList.get(0).getTickets().get(0).getCode();
+        Utils.log(qrCodeContent);
+        createQRCode(qrCodeContent);
     }
 
     private void initViews() {
