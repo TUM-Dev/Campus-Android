@@ -235,6 +235,7 @@ public class BuyTicketActivity extends BaseActivity implements TicketAmountViewH
     private void handleTicketReservationSuccess(TicketReservationResponse response) {
         loadingLayout.setVisibility(View.GONE);
         TransitionManager.beginDelayedTransition(loadingLayout);
+        paymentButton.setEnabled(true);
 
         Intent intent = new Intent(this, StripePaymentActivity.class);
         intent.putExtra(Const.KEY_TICKET_PRICE, Utils.formatPrice(getTotalPrice()));
