@@ -50,7 +50,7 @@ class RealTopNewsStore @Inject constructor(
 ) : TopNewsStore {
 
     override fun isEnabled(): Boolean {
-        return sharedPrefs.getBoolean(CardManager.SHOW_TOP_NEWS, true)
+        return sharedPrefs.getBoolean(CardManager.SHOW_TOP_NEWS, false)
     }
 
     override fun setEnabled(isEnabled: Boolean) {
@@ -58,15 +58,13 @@ class RealTopNewsStore @Inject constructor(
     }
 
     override fun getNewsAlert(): NewsAlert? {
-        val showTopNews = sharedPrefs.getBoolean(CardManager.SHOW_TOP_NEWS, true)
+        if (!isEnabled()) {
+            return null
+        }
 
         val displayUntil = sharedPrefs.getString(Const.NEWS_ALERT_SHOW_UNTIL, "")
-        var until: DateTime? = null
-        try {
-            until = DateTimeUtils.parseIsoDateWithMillis(displayUntil)
-        } catch (e: Exception) { }
-
-        if (until == null || until.isBeforeNow || showTopNews.not()) {
+        val until: DateTime? = DateTimeUtils.parseIsoDateWithMillis(displayUntil)
+        if (until == null || until.isBeforeNow) {
             return null
         }
 
@@ -76,6 +74,11 @@ class RealTopNewsStore @Inject constructor(
     }
 
     override fun store(newsAlert: NewsAlert) {
+        if (newsAlert.displayUntil.isBlank()) {
+            setEnabled(false)
+            return
+        }
+
         val oldShowUntil = sharedPrefs.getString(Const.NEWS_ALERT_SHOW_UNTIL, "")
         val oldImage = sharedPrefs.getString(Const.NEWS_ALERT_IMAGE, "")
 
@@ -88,7 +91,7 @@ class RealTopNewsStore @Inject constructor(
         // --> Card should be displayed again
         val update = oldShowUntil != newsAlert.displayUntil || oldImage != newsAlert.url
         if (update) {
-            sharedPrefs.edit().putBoolean(CardManager.SHOW_TOP_NEWS, true).apply()
+            setEnabled(true)
         }
 
         sharedPrefs.edit().putString(Const.NEWS_ALERT_SHOW_UNTIL, newsAlert.displayUntil).apply()
