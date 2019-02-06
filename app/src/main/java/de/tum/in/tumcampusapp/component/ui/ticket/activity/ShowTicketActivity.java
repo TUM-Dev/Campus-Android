@@ -22,19 +22,22 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
-import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.adapter.BoughtTicketAdapter;
+import de.tum.in.tumcampusapp.component.ui.ticket.di.TicketsModule;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketInfo;
+import de.tum.in.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository;
+import de.tum.in.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository;
+import de.tum.in.tumcampusapp.component.ui.ticket.repository.TicketsRemoteRepository;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
@@ -51,10 +54,17 @@ public class ShowTicketActivity extends BaseActivity {
     private TextView redemptionStateTextView;
     private RecyclerView ticketAmounts;
 
-    private EventsController eventsController;
-
     private List<TicketInfo> ticketInfoList;
     private Event event;
+
+    @Inject
+    EventsLocalRepository eventsLocalRepo;
+
+    @Inject
+    TicketsRemoteRepository ticketsRemoteRepo;
+
+    @Inject
+    TicketsLocalRepository ticketsLocalRepo;
 
     public ShowTicketActivity() {
         super(R.layout.activity_show_ticket);
@@ -64,8 +74,16 @@ public class ShowTicketActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().getDecorView().setBackgroundColor(Color.WHITE);
+
+        int eventId = getIntent().getIntExtra(Const.KEY_EVENT_ID, 0);
+        getInjector().ticketsComponent()
+                .ticketsModule(new TicketsModule())
+                .eventId(eventId)
+                .build()
+                .inject(this);
+
         initViews();
-        loadTicketData();
+        loadTicketData(eventId);
         setViewData();
 
         showQRCode();
@@ -102,34 +120,31 @@ public class ShowTicketActivity extends BaseActivity {
     }
 
     private void loadRedemptionStatus() {
-        try {
-            TUMCabeClient.getInstance(this)
-                    .fetchTickets(this, new Callback<List<Ticket>>() {
-                        @Override
-                        public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
-                            List<Ticket> tickets = response.body();
-                            if (response.isSuccessful() && !tickets.isEmpty()) {
-                                handleTicketRefreshSuccess(tickets);
-                            } else {
-                                handleTicketRefreshFailure();
-                            }
-                        }
 
-                        @Override
-                        public void onFailure(Call<List<Ticket>> call, Throwable t) {
-                            Utils.log(t);
+        ticketsRemoteRepo
+                .fetchTickets()
+                .enqueue(new Callback<List<Ticket>>() {
+                    @Override
+                    public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
+                        List<Ticket> tickets = response.body();
+                        if (response.isSuccessful() && !tickets.isEmpty()) {
+                            handleTicketRefreshSuccess(tickets);
+                        } else {
                             handleTicketRefreshFailure();
                         }
-                    });
-        } catch (NoPrivateKey e) {
-            Utils.log(e);
-        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Ticket>> call, Throwable t) {
+                        Utils.log(t);
+                        handleTicketRefreshFailure();
+                    }
+                });
     }
 
     private void handleTicketRefreshSuccess(List<Ticket> tickets) {
-        eventsController.insert(tickets.toArray(new Ticket[0]));
-        this.ticketInfoList = eventsController.getTicketsByEventId(event.getId());
-
+        ticketsLocalRepo.insert(tickets.toArray(new Ticket[0]));
+        this.ticketInfoList = ticketsLocalRepo.getTicketsByEventId(event.getId());
         setViewData();
         swipeRefreshLayout.setRefreshing(false);
     }
@@ -139,12 +154,9 @@ public class ShowTicketActivity extends BaseActivity {
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    private void loadTicketData() {
-        eventsController = new EventsController(this);
-        int eventId = getIntent().getIntExtra(Const.KEY_EVENT_ID, 0);
-
-        ticketInfoList = eventsController.getTicketsByEventId(eventId);
-        event = eventsController.getEventById(eventId);
+    private void loadTicketData(int eventId) {
+        ticketInfoList = ticketsLocalRepo.getTicketsByEventId(eventId);
+        event = eventsLocalRepo.getEventById(eventId);
     }
 
     private void setViewData() {
@@ -161,7 +173,7 @@ public class ShowTicketActivity extends BaseActivity {
     private String getRedemptionState() {
         DateTime lastRedemption = null;
         int nrTicketsRedeemed = 0;
-        for(TicketInfo t : ticketInfoList) {
+        for (TicketInfo t : ticketInfoList) {
             if (t.getTickets().get(0).getRedemption() != null) {
                 nrTicketsRedeemed++;
                 if (lastRedemption == null || t.getTickets().get(0).getRedemption().isAfter(lastRedemption)) {

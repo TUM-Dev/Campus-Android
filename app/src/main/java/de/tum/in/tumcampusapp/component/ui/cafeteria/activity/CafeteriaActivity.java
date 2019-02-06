@@ -29,7 +29,7 @@ import androidx.viewpager.widget.ViewPager;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuInflater;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuFormatter;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel;
@@ -89,7 +89,6 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
-        initCafeteriaSpinner();
         sectionsPagerAdapter = new CafeteriaDetailsSectionsPagerAdapter(getSupportFragmentManager());
 
         ViewModelFactory<CafeteriaViewModel> factory = new ViewModelFactory<>(viewModelProvider);
@@ -113,6 +112,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
         adapter.clear();
         adapter.addAll(cafeterias);
         adapter.notifyDataSetChanged();
+        initCafeteriaSpinner();
     }
 
     private ArrayAdapter<Cafeteria> createArrayAdapter() {
@@ -172,6 +172,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
 
     private void updateCafeteriaSpinner(int cafeteriaId) {
         int selectedIndex = NONE_SELECTED;
+
         for (int i = 0; i < mCafeterias.size(); i++) {
             Cafeteria cafeteria = mCafeterias.get(i);
             if (cafeteriaId == NONE_SELECTED || cafeteriaId == cafeteria.getId()) {
@@ -231,8 +232,8 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
 
     private void showIngredientsInfo() {
         // Build a alert dialog containing the mapping of ingredients to the numbers
-        String ingredients = getString(R.string.cafeteria_ingredients);
-        SpannableString message = CafeteriaMenuInflater.menuToSpan(this, ingredients);
+        CafeteriaMenuFormatter formatter = new CafeteriaMenuFormatter(this);
+        SpannableString message = formatter.format(R.string.cafeteria_ingredients, true);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.action_ingredients)

@@ -675,6 +675,7 @@ Signatur: %5$s</string>
     <string name="update_note_title">Neue Features</string>
     <string name="update_note_version">Version %s</string>
     <string name="action_cant_be_performed">Aktion kann nicht ausgeführt werden</string>
+
     <string name="not_redeemed_yet">Noch nicht eingelöst</string>
     <string name="partially_redeemed">%d von %d eingelöst (%s)</string>
     <string name="redeemed_at">Eingelöst um %s</string>
@@ -682,4 +683,9 @@ Signatur: %5$s</string>
     <string name="no_tickets_remaining_message">Die Tickets sind gerade leider alle weg. Bei vielen Veranstaltungen gibt es jedoch noch Tickets an der Abendkasse.</string>
     <string name="error_message_select_at_least_one_ticket">Please select at least one ticket from one of the categories.</string>
     <string name="error_no_ticket_selected">No tickets selected</string>
+
+    <plurals name="new_grades_format_string">
+        <item quantity="one">%d neue Note verfügbar</item>
+        <item quantity="other">%d neue Noten verfügbar</item>
+    </plurals>
 </resources>

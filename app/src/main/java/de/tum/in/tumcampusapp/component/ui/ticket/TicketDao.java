@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.component.ui.ticket;
 
 import java.util.List;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -15,9 +14,6 @@ public interface TicketDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Ticket... ticket);
-
-    @Query("SELECT * FROM tickets GROUP BY event_id")
-    LiveData<List<Ticket>> getOneTicketPerEvent();
 
     @Query("SELECT count(*) as count, t.*, tt.* FROM tickets t, ticket_types tt "
            + "WHERE t.event_id = :eventId "

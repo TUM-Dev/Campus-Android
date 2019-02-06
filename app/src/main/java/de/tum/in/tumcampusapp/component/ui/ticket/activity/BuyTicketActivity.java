@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,15 +21,21 @@ import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
-import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.TicketAmountViewHolder;
 import de.tum.in.tumcampusapp.component.ui.ticket.adapter.TicketAmountAdapter;
+import de.tum.in.tumcampusapp.component.ui.ticket.di.TicketsModule;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservation;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
+import de.tum.in.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository;
+import de.tum.in.tumcampusapp.component.ui.ticket.repository.TicketsRemoteRepository;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,7 +46,6 @@ import retrofit2.Response;
  */
 public class BuyTicketActivity extends BaseActivity implements TicketAmountViewHolder.SelectTicketInterface {
 
-    private EventsController eventsController;
     private int eventId;
 
     private FrameLayout loadingLayout;
@@ -49,6 +56,14 @@ public class BuyTicketActivity extends BaseActivity implements TicketAmountViewH
     private List<TicketType> ticketTypes;
     private Integer[] currentTicketAmounts;
 
+    @Inject
+    TicketsRemoteRepository ticketsRemoteRepo;
+
+    @Inject
+    EventsLocalRepository eventsLocalRepo;
+
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
     public BuyTicketActivity() {
         super(R.layout.activity_buy_ticket);
     }
@@ -56,8 +71,6 @@ public class BuyTicketActivity extends BaseActivity implements TicketAmountViewH
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        eventsController = new EventsController(this);
         eventId = getIntent().getIntExtra(Const.KEY_EVENT_ID, 0);
 
         totalPriceView = findViewById(R.id.ticket_total_price);
@@ -65,33 +78,28 @@ public class BuyTicketActivity extends BaseActivity implements TicketAmountViewH
 
         loadingLayout = findViewById(R.id.loading_layout);
 
+        getInjector().ticketsComponent()
+                .ticketsModule(new TicketsModule())
+                .eventId(eventId)
+                .build()
+                .inject(this);
+
         // Get ticket type information from API
-        TUMCabeClient
-                .getInstance(this)
-                .fetchTicketTypes(eventId, new Callback<List<TicketType>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<List<TicketType>> call,
-                                           @NonNull Response<List<TicketType>> response) {
-                        List<TicketType> results = response.body();
-                        if (results != null) {
-                            handleTicketTypesDownloadSuccess(results);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<List<TicketType>> call, @NonNull Throwable t) {
-                        Utils.log(t);
-                        Utils.showToast(BuyTicketActivity.this, R.string.error_something_wrong);
-                        finish();
-                    }
+        Disposable disposable = ticketsRemoteRepo.fetchTicketTypesForEvent(eventId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnError(Utils::log)
+                .subscribe(this::handleTicketTypesDownloadSuccess, throwable -> {
+                    Utils.showToast(BuyTicketActivity.this, R.string.error_something_wrong);
+                    finish();
                 });
-
+         compositeDisposable.add(disposable);
     }
 
     private void handleTicketTypesDownloadSuccess(@NonNull List<TicketType> ticketTypes) {
         this.ticketTypes = ticketTypes;
+
         currentTicketAmounts = new Integer[ticketTypes.size()];
-        eventsController.addTicketTypes(ticketTypes);
         setupUi();
     }
 
@@ -158,7 +166,7 @@ public class BuyTicketActivity extends BaseActivity implements TicketAmountViewH
         TextView locationView = findViewById(R.id.ticket_details_location);
         TextView dateView = findViewById(R.id.ticket_details_date);
 
-        Event event = eventsController.getEventById(eventId);
+        Event event = eventsLocalRepo.getEventById(eventId);
 
         eventView.setText(event.getTitle());
         locationView.setText(event.getLocality());
@@ -274,6 +282,12 @@ public class BuyTicketActivity extends BaseActivity implements TicketAmountViewH
 
         paymentButton.setEnabled(true);
         Utils.showToast(this, messageResId);
+    }
+
+    @Override
+    protected void onDestroy() {
+        compositeDisposable.dispose();
+        super.onDestroy();
     }
 }
 

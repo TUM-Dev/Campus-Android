@@ -35,9 +35,10 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
-import de.tum.in.tumcampusapp.component.ui.ticket.EventsController;
 import de.tum.in.tumcampusapp.component.ui.ticket.TicketEphemeralKeyProvider;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
+import de.tum.in.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository;
+import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
@@ -62,6 +63,8 @@ public class StripePaymentActivity extends BaseActivity {
     private String termsOfServiceLink;
     private String stripePublishableKey;
 
+    private TicketsLocalRepository localTicketRepo;
+
     public StripePaymentActivity() {
         super(R.layout.activity_payment_stripe);
     }
@@ -69,6 +72,8 @@ public class StripePaymentActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        localTicketRepo = new TicketsLocalRepository(TcaDb.getInstance(this));
 
         ticketPrice = getIntent().getStringExtra(Const.KEY_TICKET_PRICE);
         ticketIds = getIntent().getIntegerArrayListExtra(Const.KEY_TICKET_IDS);
@@ -190,10 +195,7 @@ public class StripePaymentActivity extends BaseActivity {
 
     private void handleTicketPurchaseSuccess(@NonNull List<Ticket> tickets) {
         showLoading(false);
-
-        EventsController controller = new EventsController(this);
-        controller.insert(tickets.toArray(new Ticket[0]));
-
+        localTicketRepo.insert(tickets.toArray(new Ticket[0]));
         openPaymentConfirmation(tickets);
     }
 

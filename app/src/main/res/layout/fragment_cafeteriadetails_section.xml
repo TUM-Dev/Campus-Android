@@ -20,7 +20,10 @@
             android:layout_height="wrap_content"
             tools:text="Monday, August 20, 2018" />
 
-        <!-- Content will be inserted here -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/menusRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

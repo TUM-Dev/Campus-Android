@@ -8,10 +8,13 @@ import dagger.Provides
 import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
+import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
 import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
 import de.tum.`in`.tumcampusapp.component.ui.news.RealTopNewsStore
 import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsStore
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardsRepository
+import de.tum.`in`.tumcampusapp.component.ui.ticket.EventCardsProvider
+import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import javax.inject.Singleton
 
@@ -66,14 +69,34 @@ class AppModule(private val context: Context) {
 
     @Singleton
     @Provides
+    fun provideEventsLocalRepository(
+            database: TcaDb
+    ): EventsLocalRepository = EventsLocalRepository(database)
+
+    @Singleton
+    @Provides
+    fun provideEventCardsProvider(
+            context: Context,
+            eventsLocalRepository: EventsLocalRepository
+    ): EventCardsProvider = EventCardsProvider(context, eventsLocalRepository)
+
+    @Singleton
+    @Provides
     fun provideCardsRepository(
-            context: Context
-    ): CardsRepository = CardsRepository(context)
+            context: Context,
+            eventCardsProvider: EventCardsProvider
+    ): CardsRepository = CardsRepository(context, eventCardsProvider)
 
     @Singleton
     @Provides
     fun provideAuthenticationManager(
             context: Context
     ): AuthenticationManager = AuthenticationManager(context)
+
+    @Singleton
+    @Provides
+    fun provideNotificationScheduler(
+            context: Context
+    ): NotificationScheduler = NotificationScheduler(context)
 
 }

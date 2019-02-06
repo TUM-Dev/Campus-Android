@@ -1,5 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket.fragment
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -13,13 +14,13 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.squareup.picasso.Picasso
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CreateEventActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventHelper
-import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsController
-import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity
+import de.tum.`in`.tumcampusapp.component.ui.ticket.di.TicketsModule
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
+import de.tum.`in`.tumcampusapp.di.ViewModelFactory
+import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Const.KEY_EVENT_ID
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
@@ -27,6 +28,8 @@ import de.tum.`in`.tumcampusapp.utils.into
 import de.tum.`in`.tumcampusapp.utils.observe
 import kotlinx.android.synthetic.main.fragment_event_details.*
 import kotlinx.android.synthetic.main.fragment_event_details.view.*
+import javax.inject.Inject
+import javax.inject.Provider
 
 /**
  * Fragment for displaying information about an [Event]. Manages content that's shown in the
@@ -39,14 +42,21 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 ?: throw IllegalStateException("No event provided to EventDetailsFragment")
     }
 
-    private val eventsController: EventsController by lazy {
-        EventsController(requireContext())
+    private val viewModel: EventDetailsViewModel by lazy {
+        val factory = ViewModelFactory(viewModelProviders)
+        ViewModelProviders.of(this, factory).get(EventDetailsViewModel::class.java)
     }
 
-    private val viewModel: EventDetailsViewModel by lazy {
-        val remoteRepo = EventsRemoteRepository(TUMCabeClient.getInstance(requireContext()))
-        val factory = EventDetailsViewModel.Factory(event.id, remoteRepo)
-        ViewModelProviders.of(this, factory).get(EventDetailsViewModel::class.java)
+    @Inject
+    lateinit var viewModelProviders: Provider<EventDetailsViewModel>
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        injector.ticketsComponent()
+                .ticketsModule(TicketsModule())
+                .eventId(event.id)
+                .build()
+                .inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -60,7 +70,6 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 R.color.tum_A100,
                 R.color.tum_A200
         )
-
         return view
     }
 
@@ -76,7 +85,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onResume() {
         super.onResume()
-        if (eventsController.getTicketCount(event) == 0 && EventHelper.isEventImminent(event)) {
+        if (!viewModel.isEventBooked(event) && EventHelper.isEventImminent(event)) {
             ticketButton.visibility = View.GONE
         }
     }
@@ -94,7 +103,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             posterProgressBar.visibility = View.GONE
         }
 
-        if (eventsController.getTicketCount(event) != 0) {
+        if (viewModel.isEventBooked(event)) {
             ticketButton.text = getString(R.string.show_ticket)
             ticketButton.setOnClickListener { showTicket(event) }
         } else {
