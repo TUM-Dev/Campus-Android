@@ -96,24 +96,24 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.preference:preference:1.0.0'
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
 
     // Android arch components
-    implementation 'androidx.room:room-rxjava2:2.1.0-alpha02'
-    implementation 'androidx.room:room-runtime:2.1.0-alpha02'
+    implementation 'androidx.room:room-rxjava2:2.1.0-alpha04'
+    implementation 'androidx.room:room-runtime:2.1.0-alpha04'
     implementation 'androidx.lifecycle:lifecycle-runtime:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
-    kapt 'androidx.room:room-compiler:2.1.0-alpha02'
+    kapt 'androidx.room:room-compiler:2.1.0-alpha04'
 
     // Play services
-    implementation 'com.google.android.gms:play-services-base:16.0.1'
+    implementation 'com.google.android.gms:play-services-base:16.1.0'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:16.0.5'
+    implementation 'com.google.firebase:firebase-core:16.0.7'
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.6'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.8'
 
     // Helpers
     implementation 'com.google.code.gson:gson:2.8.5'
@@ -161,7 +161,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.23.0'
     testImplementation 'org.assertj:assertj-core:3.11.1'
-    testImplementation 'androidx.room:room-testing:2.1.0-alpha02'
+    testImplementation 'androidx.room:room-testing:2.1.0-alpha04'
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 
     testImplementation 'com.android.support.test:rules:1.0.2'
