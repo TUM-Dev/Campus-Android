@@ -663,4 +663,6 @@ Signatur: %5$s</string>
         <item quantity="one">%d neue Note verfügbar</item>
         <item quantity="other">%d neue Noten verfügbar</item>
     </plurals>
+
+    <string name="stuy_room_placeholder_text">Hier werden gerade neue Lernräume eingerichtet!</string>
 </resources>
