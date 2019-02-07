@@ -72,21 +72,21 @@ public class MvvDepartureListTest {
     @Test
     public void testEmptyValue() {
         MvvDepartureList stationList = gson.fromJson(emptyResultExample, MvvDepartureList.class);
-        List<MvvDeparture> departureList = stationList.getDepartures();
+        List<MvvDeparture> departureList = stationList.getDepartureList();
         Assert.assertEquals(null, departureList);
     }
 
     @Test
     public void testMultiValue1() {
         MvvDepartureList stationList = gson.fromJson(multiValueResultExample1, MvvDepartureList.class);
-        List<MvvDeparture> departureList = stationList.getDepartures();
+        List<MvvDeparture> departureList = stationList.getDepartureList();
         Assert.assertEquals(40, departureList.size());
     }
 
     @Test
     public void testMultiValue2() {
         MvvDepartureList stationList = gson.fromJson(multiValueResultExample2 + multiValueResultExample2_episode2, MvvDepartureList.class);
-        List<MvvDeparture> departureList = stationList.getDepartures();
+        List<MvvDeparture> departureList = stationList.getDepartureList();
         Assert.assertEquals(40, departureList.size());
     }
 }

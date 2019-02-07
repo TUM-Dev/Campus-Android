@@ -3,9 +3,6 @@ package de.tum.in.tumcampusapp.component.ui.transportation;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +10,9 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
 import de.tum.in.tumcampusapp.component.other.navigation.SystemIntent;
@@ -76,6 +76,7 @@ public class MVVCard extends Card {
 
     @Override
     protected boolean shouldShow(@NonNull SharedPreferences prefs) {
+        // Card is only hidden for an hour when discarded
         final long prevDate = prefs.getLong(MVV_TIME, 0);
         return prevDate + DateUtils.HOUR_IN_MILLIS < System.currentTimeMillis();
     }
