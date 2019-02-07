@@ -115,9 +115,8 @@ class DownloadService : JobIntentService() {
         val newsSuccess = downloadNews(force)
         val eventsSuccess = downloadEvents()
         val topNewsSuccess = downloadTopNews()
-        val gradesSuccess = downloadGrades()
         return updateNoteSuccess && cafeSuccess && kinoSuccess
-                && newsSuccess && topNewsSuccess && eventsSuccess && gradesSuccess
+                && newsSuccess && topNewsSuccess && eventsSuccess
     }
 
     /**
@@ -255,6 +254,7 @@ class DownloadService : JobIntentService() {
                         if (AccessTokenManager.hasValidAccessToken(service)) {
                             val cacheManager = CacheManager(service)
                             cacheManager.fillCache()
+                            success = success && service.downloadGrades()
                         }
                     }
                 }

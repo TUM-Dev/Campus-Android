@@ -76,8 +76,9 @@ public class StartupActivity extends AppCompatActivity {
         if (savedAppVersion < BuildConfig.VERSION_CODE) {
             Utils.setSetting(this, Const.SHOW_UPDATE_NOTE, true);
             Utils.setSetting(this, Const.UPDATE_MESSAGE, "");
-            Utils.setSetting(this, Const.SAVED_APP_VERSION, BuildConfig.VERSION_CODE);
         }
+        // Always set current app version, otherwise it will never be initialized and the update note is never displayed
+        Utils.setSetting(this, Const.SAVED_APP_VERSION, BuildConfig.VERSION_CODE);
 
         initEasterEgg();
 

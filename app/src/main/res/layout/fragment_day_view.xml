@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.alamkanak.weekview.WeekView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.alamkanak.weekview.WeekView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/weekView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:textSize="14sp"
     app:columnGap="2dp"
     app:dayBackgroundColor="#05000000"
     app:eventTextColor="@android:color/white"
     app:headerRowPadding="12dp"
     app:hourHeight="40dp"
     app:numberOfVisibleDays="1"
-    app:textSize="14sp"
     app:timeColumnBackgroundColor="#ffffffff"
     app:timeColumnPadding="8dp"
-    app:todayBackgroundColor="#1848adff" />
+    app:todayBackgroundColor="#1848adff"/>
