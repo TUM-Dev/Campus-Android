@@ -28,7 +28,15 @@ class StudyRoomGroupManager(context: Context) {
             groupsDao.insert(*groups.toTypedArray())
 
             groups.forEach { group ->
-                roomsDao.insert(*group.rooms.toTypedArray())
+                group.rooms.forEach { room ->
+                    // only insert rooms that have data
+                    if (room.code != ""
+                            && room.name != ""
+                            && room.buildingName != ""
+                            && room.id != -1) {
+                        roomsDao.insert(room)
+                    }
+                }
             }
 
             callback()
