@@ -1,0 +1,32 @@
+The TUM Campus Apps is being developed by students and volunteers. It can be used on both smartphones and tablets and offers the following features to help you through your daily university life:
+- Lecture appointments
+- News from organizations relevant to the TU Munich
+- Information about events and TU Film tickets
+- Cafeteria menus
+- MVV departure times
+- Campus maps
+- Find study rooms
+... and more!
+
+The app is intended for both students and employees!
+
+Developers and other involved people:
+https://github.com/TCA-Team/TumCampusApp/blob/master/CONTRIBUTORS.md
+
+Support: https://www.facebook.com/TUMCampus / app@tum.de
+
+Disclaimer: This is not an official app of the TU Munich and there is consequentially no official support or liability. 
+
+Chat Terms: https://app.tum.de/landing/chatterms/
+
+Permissions and what they are used for:
+- Location services: so we can show you nearest Cafeteria / MVV departures
+- Calendar access: to sync your lecture calendar with your local calendar
+- Contacts: so you can add people from the person search to your address book
+- Detailed WiFi information: so we can help you set up eduroam access
+- Camera: so you can join chat rooms by scanning a QR code and add images to the feedback form
+- Storage: to provide offline access and faster loading
+- Disable sleep mode: to receive messages when the display is turned off
+
+License: GNU GPL v3 - http://www.gnu.org/licenses/gpl.html
+The source code is available on GitHub: https://github.com/TCA-Team/
