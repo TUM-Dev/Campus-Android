@@ -22,7 +22,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <!-- TODO(bronger) smaller text size, less padding, add scrolling -->
             <include
                 layout="@layout/layout_all_errors"
                 android:layout_width="match_parent"
