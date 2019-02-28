@@ -29,13 +29,35 @@
                     android:layout_height="match_parent"
                     android:background="@color/spinner_background"
                     android:contentDescription="@string/kino_cover_description"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop"
+                    android:visibility="visible" />
 
-                <ProgressBar
-                    android:id="@+id/kino_cover_progress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/kino_cover_placeholder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/kino_movie_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/material_tiny_padding"
+                        android:layout_marginTop="@dimen/material_default_padding"
+                        android:layout_marginEnd="@dimen/material_tiny_padding"
+                        android:gravity="center_horizontal"
+                        android:text="Avengers: Endgame"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ProgressBar
+                        android:id="@+id/kino_cover_progress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0px"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/kino_movie_title" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </FrameLayout>
 
