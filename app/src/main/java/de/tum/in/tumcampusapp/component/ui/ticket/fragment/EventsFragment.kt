@@ -80,7 +80,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun render(viewState: EventsViewState) {
         val isEmpty = viewState.events.isEmpty()
         eventsRecyclerView.visibility = if (isEmpty) View.GONE else View.VISIBLE
-        placeholderTextView.visibility = if (isEmpty) View.VISIBLE else View.GONE
+        eventPlaceholder.visibility = if (isEmpty) View.VISIBLE else View.GONE
 
         eventsRefreshLayout.isRefreshing = false
 
@@ -88,7 +88,8 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             val adapter = eventsRecyclerView.adapter as EventsAdapter
             adapter.update(viewState.events)
         } else {
-            placeholderTextView.setText(eventType.placeholderResId)
+            placeholderTextView.setText(eventType.placeholderTextId)
+            placeholderImage.setImageResource(eventType.placeholderImageId)
         }
 
         eventsRefreshLayout.isRefreshing = viewState.isLoading
