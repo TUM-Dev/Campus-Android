@@ -149,6 +149,9 @@ public class KinoDetailsFragment extends Fragment {
 
         loadPoster(kino);
 
+        TextView titleTextview = rootView.findViewById(R.id.kino_movie_title);
+        titleTextview.setText(kino.getTitle().split(":", 2)[1]);
+
         TextView dateTextView = rootView.findViewById(R.id.dateTextView);
         dateTextView.setText(kino.getFormattedShortDate());
 
@@ -190,6 +193,7 @@ public class KinoDetailsFragment extends Fragment {
         trailerButton.setOnClickListener(v -> showTrailer(kino));
 
         ImageView posterView = rootView.findViewById(R.id.kino_cover);
+        View placeholder = rootView.findViewById(R.id.kino_cover_placeholder);
         ProgressBar progressBar = rootView.findViewById(R.id.kino_cover_progress);
 
         Picasso.get()
@@ -197,7 +201,7 @@ public class KinoDetailsFragment extends Fragment {
                 .into(new Target() {
                     @Override
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        progressBar.setVisibility(View.GONE);
+                        placeholder.setVisibility(View.GONE);
                         posterView.setImageBitmap(bitmap);
                     }
 

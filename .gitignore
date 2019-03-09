@@ -12,3 +12,6 @@
 gradlew
 /app/release/
 fastlane/report.xml
+
+vendor/
+.bundle
