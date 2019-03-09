@@ -38,7 +38,7 @@ public class EventsActivity extends ActivityForDownloadingExternal {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getInjector().ticketsComponent()
-                .ticketsModule(new TicketsModule(this))
+                .ticketsModule(new TicketsModule())
                 .build()
                 .inject(this);
 

@@ -13,6 +13,8 @@ interface TicketsComponent {
 
     fun inject(eventDetailsFragment: EventDetailsFragment)
 
+    fun inject(eventsActivity: EventsActivity)
+
     fun inject(buyTicketActivity: BuyTicketActivity)
 
     fun inject(stripePaymentActivity: StripePaymentActivity)
