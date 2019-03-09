@@ -25,13 +25,14 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.work.WorkManager;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.di.ViewModelFactory;
-import de.tum.in.tumcampusapp.service.DownloadService;
+import de.tum.in.tumcampusapp.service.DownloadWorker;
 import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.NetUtils;
@@ -137,9 +138,7 @@ public class MainActivity extends BaseActivity
     }
 
     public void downloadNewsAlert() {
-        Intent downloadService = new Intent();
-        downloadService.putExtra(Const.ACTION_EXTRA, Const.DOWNLOAD_ALL_FROM_EXTERNAL);
-        DownloadService.enqueueWork(this, downloadService);
+        WorkManager.getInstance().enqueue(DownloadWorker.getWorkRequest());
     }
 
     @Override

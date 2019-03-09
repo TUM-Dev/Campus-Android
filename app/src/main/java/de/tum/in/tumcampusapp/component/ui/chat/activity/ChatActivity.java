@@ -21,6 +21,8 @@ import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -28,6 +30,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.work.WorkManager;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
@@ -44,7 +47,8 @@ import de.tum.in.tumcampusapp.component.ui.chat.repository.ChatMessageLocalRepos
 import de.tum.in.tumcampusapp.component.ui.chat.repository.ChatMessageRemoteRepository;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.service.SendMessageService;
+import de.tum.in.tumcampusapp.service.DownloadWorker;
+import de.tum.in.tumcampusapp.service.SendMessageWorker;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Observable;
@@ -86,7 +90,14 @@ public class ChatActivity extends ActivityForDownloadingExternal
     };
 
     public ChatActivity() {
-        super(Const.CURRENT_CHAT_ROOM, R.layout.activity_chat);
+        super(R.layout.activity_chat);
+        // TODO: Const.CURRENT_CHAT_ROOM was previously non-existent
+    }
+
+    @Nullable
+    @Override
+    public DownloadWorker.Action getMethod() {
+        return null;
     }
 
     @Override
@@ -343,7 +354,8 @@ public class ChatActivity extends ActivityForDownloadingExternal
         chatHistoryAdapter.add(message);
         chatMessageViewModel.addToUnsent(message);
 
-        SendMessageService.enqueueWork(this, new Intent());
+        WorkManager.getInstance()
+                .enqueue(SendMessageWorker.getWorkRequest());
     }
 
     @Override

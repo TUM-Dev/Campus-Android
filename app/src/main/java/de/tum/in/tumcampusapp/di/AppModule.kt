@@ -3,6 +3,7 @@ package de.tum.`in`.tumcampusapp.di
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import dagger.Module
 import dagger.Provides
 import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
@@ -98,5 +99,11 @@ class AppModule(private val context: Context) {
     fun provideNotificationScheduler(
             context: Context
     ): NotificationScheduler = NotificationScheduler(context)
+
+    @Singleton
+    @Provides
+    fun provideLocalBroadcastManager(
+            context: Context
+    ): LocalBroadcastManager = LocalBroadcastManager.getInstance(context)
 
 }

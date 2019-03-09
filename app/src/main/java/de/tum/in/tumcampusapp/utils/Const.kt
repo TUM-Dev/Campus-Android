@@ -6,24 +6,19 @@ package de.tum.`in`.tumcampusapp.utils
 object Const {
     const val MENSA_FOR_FAVORITEDISH = "FavoriteDishCafeteriaID"
     const val ACCESS_TOKEN = "access_token"
-    const val ACTION_EXTRA = "action"
     const val BACKGROUND_MODE = "background_mode"
     const val CAFETERIA_ID = "cafeteriasId"
     const val CAFETERIA_DATE = "cafeteriaDate"
     const val CAFETERIAS = "cafeterias"
     const val CALENDAR_WEEK_MODE = "calender_week_mode"
     const val EVENT_BOOKED_MODE = "event_booked_mode"
-    const val COMPLETED = "completed"
     const val DATABASE_NAME = "tca.db"
     const val DATE = "date"
-    const val DOWNLOAD_ALL_FROM_EXTERNAL = "download_all_from_external"
     const val ERROR = "error"
     const val MESSAGE = "message"
-    const val FORCE_DOWNLOAD = "force_download"
     const val LRZ_ID = "lrz_id"
     const val NEWS = "news"
     const val EVENTS = "events"
-    const val KINO = "kino"
     const val STUDY_ROOM_GROUP_ID = "study_room_group_id"
     const val ROLE = "card_role"
     const val SILENCE_ON = "silence_on"
@@ -55,7 +50,6 @@ object Const {
     const val FCM_REG_ID_LAST_TRANSMISSION = "gcm_registration_id_last_transmission"
     const val FCM_INSTANCE_ID = "gcm_instance_id"
     const val FCM_TOKEN_ID = "gcm_token_id"
-    const val APP_LAUNCHES = "app_launches"
     const val SYNC_CALENDAR = "sync_calendar"
     const val PREFERENCE_SCREEN = "preference_screen"
     const val P_TOKEN = "pToken"
@@ -85,8 +79,6 @@ object Const {
     const val NOTIFICATION_CHANNEL_MVV = "mvv"
     const val NOTIFICATION_CHANNEL_EMERGENCY = "emergency"
 
-    const val BACKGROUND_SERVICE_JOB_ID = 1000
-    const val SEND_MESSAGE_SERVICE_JOB_ID = 1001
     const val SILENCE_SERVICE_JOB_ID = 1002
     const val SEND_WIFI_SERVICE_JOB_ID = 1003
     const val DOWNLOAD_SERVICE_JOB_ID = 1004
@@ -94,7 +86,7 @@ object Const {
     const val QUERY_LOCATIONS_SERVICE_JOB_ID = 1006
 
     const val FEEDBACK = "feedback"
-    const val FEEDBACK_IMG_COMPRESSION_QUALITY = 50;
+    const val FEEDBACK_IMG_COMPRESSION_QUALITY = 50
     const val FEEDBACK_TOPIC_GENERAL = "general"
     const val FEEDBACK_TOPIC_APP = "tca"
 
@@ -105,9 +97,6 @@ object Const {
     const val MUNICH_GEOFENCE = "geofence_munich_id"
 
     const val TUM_ID_PATTERN = "^[a-z]{2}[0-9]{2}[a-z]{3}$"
-
-    const val WIFI_SCANS_ALLOWED = "WIFI_SCANS_ALLOWED"
-    const val WIFI_SCAN_MINIMUM_BATTERY_LEVEL = "WIFI_SCAN_MINIMUM_BATTERY_LEVEL"
 
     const val CARD_POSITION_PREFERENCE_SUFFIX = "_card_position"
     const val DISCARD_SETTINGS_START = "discard_settings_start"
@@ -142,7 +131,6 @@ object Const {
     const val PDF_TITLE = "pdfTitle"
     const val PDF_PATH = "pdfPath"
 
-    const val TOP_NEWS = "topNewsDownload"
     const val NEWS_ALERT_IMAGE = "newsAlertImageURL"
     const val NEWS_ALERT_LINK = "newsAlertLink"
     const val NEWS_ALERT_SHOW_UNTIL = "newsAlertShowUntil"

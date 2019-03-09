@@ -608,27 +608,7 @@
         </receiver>
 
         <service
-            android:name=".service.DownloadService"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service
             android:name=".service.SilenceService"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service
-            android:name=".service.SendMessageService"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service
-            android:name=".service.SendWifiMeasurementService"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service
-            android:name=".service.BackgroundService"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service
-            android:name=".service.FillCacheService"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service

@@ -52,13 +52,11 @@ public class CafeteriaMenuManager {
     /**
      * Download cafeteria menus from external interface (JSON)
      *
-     * @param force True to force download over normal sync period, else false
+     * @param cacheControl BYPASS_CACHE to force download over normal sync period, else false
      */
-    public void downloadMenus(boolean force) {
+    public void downloadMenus(CacheControl cacheControl) {
         // Responses from the cafeteria API are cached for one day. If the download is forced,
         // we add a "no-cache" header to the request.
-        CacheControl cacheControl = force ? CacheControl.BYPASS_CACHE : CacheControl.USE_CACHE;
-
         CafeteriaAPIClient
                 .getInstance(mContext)
                 .getMenus(cacheControl)

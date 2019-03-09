@@ -10,7 +10,6 @@ import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
-import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Success;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordinate;
@@ -75,7 +74,6 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_SEARC
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_STUDY_ROOMS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_TICKET;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_UPDATE_NOTE;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_WIFI_HEATMAP;
 
 public interface TUMCabeAPIService {
 
@@ -142,10 +140,6 @@ public interface TUMCabeAPIService {
 
     @GET(API_DEVICE + "uploaded/{lrzId}")
     Call<UploadStatus> getUploadStatus(@Path("lrzId") String lrzId);
-
-    //WifiHeatmap
-    @POST(API_WIFI_HEATMAP + "create_measurements/")
-    Call<TUMCabeStatus> createMeasurements(@Body List<WifiMeasurement> wifiMeasurementList);
 
     // Barrier free contacts
     @GET(API_BARRIER_FREE + API_BARRIER_FREE_CONTACT)

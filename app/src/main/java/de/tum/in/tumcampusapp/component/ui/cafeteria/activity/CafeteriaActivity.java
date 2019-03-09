@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
@@ -36,6 +37,7 @@ import de.tum.in.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.di.CafeteriaModule;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.di.ViewModelFactory;
+import de.tum.in.tumcampusapp.service.DownloadWorker;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
@@ -68,8 +70,11 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
     @Inject
     CafeteriaManager cafeteriaManager;
 
+    @Inject
+    DownloadWorker.Action cafeteriaDownloadAction;
+
     public CafeteriaActivity() {
-        super(Const.CAFETERIAS, R.layout.activity_cafeteria);
+        super(R.layout.activity_cafeteria);
     }
 
     @Override
@@ -105,6 +110,12 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal
                 showContentLayout();
             }
         });
+    }
+
+    @Nullable
+    @Override
+    public DownloadWorker.Action getMethod() {
+        return cafeteriaDownloadAction;
     }
 
     private void updateCafeteria(List<Cafeteria> cafeterias) {

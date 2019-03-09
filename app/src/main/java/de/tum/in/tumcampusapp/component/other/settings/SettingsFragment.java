@@ -36,8 +36,8 @@ import de.tum.in.tumcampusapp.component.ui.news.NewsController;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.onboarding.StartupActivity;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.service.BackgroundService;
 import de.tum.in.tumcampusapp.service.SilenceService;
+import de.tum.in.tumcampusapp.service.StartSyncReceiver;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
@@ -90,7 +90,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
         // Register the change listener to react immediately on changes
         PreferenceManager.getDefaultSharedPreferences(mContext)
-                         .registerOnSharedPreferenceChangeListener(this);
+                .registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
             final CheckBoxPreference pref = new CheckBoxPreference(mContext);
             pref.setKey("card_news_source_" + newsSource.getId());
             pref.setDefaultValue(true);
-            
+
             // reserve space so that when the icon is loaded the text is not moved again
             pref.setIconSpaceReserved(true);
 
@@ -122,7 +122,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                     try {
                         Bitmap bmp = Picasso.get().load(url).get();
                         mContext.runOnUiThread(() -> {
-                            if(isAdded()){
+                            if (isAdded()) {
                                 pref.setIcon(new BitmapDrawable(getResources(), bmp));
                             }
                         });
@@ -202,11 +202,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
         // If the background mode was activated, start the service. This will invoke
         // the service to call onHandleIntent which updates all background data
         if (key.equals(Const.BACKGROUND_MODE)) {
-            Intent service = new Intent(mContext, BackgroundService.class);
             if (sharedPreferences.getBoolean(key, false)) {
-                mContext.startService(service);
+                StartSyncReceiver.startBackground(mContext);
             } else {
-                mContext.stopService(service);
+                StartSyncReceiver.cancelBackground();
             }
         }
     }

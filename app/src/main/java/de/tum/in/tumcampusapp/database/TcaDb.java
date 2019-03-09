@@ -1,13 +1,14 @@
 package de.tum.in.tumcampusapp.database;
 
 import android.content.Context;
-import android.content.Intent;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.room.migration.Migration;
+import androidx.work.WorkManager;
 import de.tum.in.tumcampusapp.component.notifications.persistence.ActiveAlarm;
 import de.tum.in.tumcampusapp.component.notifications.persistence.ActiveAlarmsDao;
 import de.tum.in.tumcampusapp.component.notifications.persistence.ScheduledNotification;
@@ -18,8 +19,6 @@ import de.tum.in.tumcampusapp.component.other.general.model.Recent;
 import de.tum.in.tumcampusapp.component.other.locations.BuildingToGpsDao;
 import de.tum.in.tumcampusapp.component.other.locations.RoomLocationsDao;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
-import de.tum.in.tumcampusapp.component.other.wifimeasurement.WifiMeasurementDao;
-import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarDao;
 import de.tum.in.tumcampusapp.component.tumui.calendar.WidgetsTimetableBlacklistDao;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
@@ -59,13 +58,10 @@ import de.tum.in.tumcampusapp.component.ui.tufilm.KinoDao;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
 import de.tum.in.tumcampusapp.database.migrations.Migration2to3;
-import de.tum.in.tumcampusapp.service.BackgroundService;
-import de.tum.in.tumcampusapp.service.DownloadService;
-import de.tum.in.tumcampusapp.service.QueryLocationsService;
-import de.tum.in.tumcampusapp.service.SendMessageService;
-import de.tum.in.tumcampusapp.service.SilenceService;
+import de.tum.in.tumcampusapp.database.migrations.Migration3to4;
 import de.tum.in.tumcampusapp.utils.CacheManager;
 import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.Utils;
 import de.tum.in.tumcampusapp.utils.sync.SyncDao;
 import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
@@ -86,7 +82,6 @@ import de.tum.in.tumcampusapp.utils.sync.model.Sync;
         CalendarItem.class,
         RoomLocations.class,
         WidgetsTimetableBlacklist.class,
-        WifiMeasurement.class,
         Recent.class,
         StudyRoomGroup.class,
         StudyRoom.class,
@@ -101,11 +96,13 @@ import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 public abstract class TcaDb extends RoomDatabase {
     private static final Migration[] migrations = {
             new Migration1to2(),
-            new Migration2to3()
+            new Migration2to3(),
+            new Migration3to4()
     };
 
     private static TcaDb instance;
 
+    @NonNull
     public static synchronized TcaDb getInstance(Context context) {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(), TcaDb.class, Const.DATABASE_NAME)
@@ -148,8 +145,6 @@ public abstract class TcaDb extends RoomDatabase {
 
     public abstract WidgetsTimetableBlacklistDao widgetsTimetableBlacklistDao();
 
-    public abstract WifiMeasurementDao wifiMeasurementDao();
-
     public abstract RecentsDao recentsDao();
 
     public abstract StudyRoomGroupDao studyRoomGroupDao();
@@ -174,15 +169,11 @@ public abstract class TcaDb extends RoomDatabase {
      * @param c context
      */
     public static void resetDb(Context c) {
-        // Stop all services, since they might have instantiated Managers and cause SQLExceptions
-        Class<?>[] services = new Class<?>[]{
-                QueryLocationsService.class,
-                SendMessageService.class,
-                SilenceService.class,
-                DownloadService.class,
-                BackgroundService.class};
-        for (Class<?> service : services) {
-            c.stopService(new Intent(c, service));
+        // Stop all work tasks in WorkManager, since they might access the DB
+        try {
+            WorkManager.getInstance().cancelAllWork().wait();
+        } catch (InterruptedException e) {
+            Utils.log(e);
         }
 
         // Clear our cache table

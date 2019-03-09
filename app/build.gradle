@@ -102,6 +102,8 @@ dependencies {
     implementation 'androidx.room:room-runtime:2.1.0-alpha04'
     implementation 'androidx.lifecycle:lifecycle-runtime:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'android.arch.lifecycle:reactivestreams:1.1.1'
+    implementation 'android.arch.work:work-runtime-ktx:1.0.0'
     kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
     kapt 'androidx.room:room-compiler:2.1.0-alpha04'
 

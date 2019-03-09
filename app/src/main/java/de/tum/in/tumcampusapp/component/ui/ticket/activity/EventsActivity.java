@@ -4,8 +4,12 @@ import android.os.Bundle;
 
 import com.google.android.material.tabs.TabLayout;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Arrays;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -13,22 +17,30 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
+import de.tum.in.tumcampusapp.component.ui.ticket.di.TicketsModule;
 import de.tum.in.tumcampusapp.component.ui.ticket.fragment.EventsFragment;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.EventType;
-import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.service.DownloadWorker;
 
 public class EventsActivity extends ActivityForDownloadingExternal {
 
     private String SHOW_BETA_INFO = "ts_show_beta_info";
     private ViewPager viewPager;
 
+    @Inject
+    DownloadWorker.Action eventsDownloadAction;
+
     public EventsActivity() {
-        super(Const.EVENTS, R.layout.activity_events);
+        super(R.layout.activity_events);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getInjector().ticketsComponent()
+                .ticketsModule(new TicketsModule())
+                .build()
+                .inject(this);
 
         viewPager = findViewById(R.id.viewPager);
         setupViewPager(viewPager);
@@ -50,6 +62,12 @@ public class EventsActivity extends ActivityForDownloadingExternal {
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+    }
+
+    @Nullable
+    @Override
+    public DownloadWorker.Action getMethod() {
+        return eventsDownloadAction;
     }
 
     private void setupViewPager(ViewPager viewPager) {
