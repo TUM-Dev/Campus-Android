@@ -31,14 +31,13 @@ public class MensaWidget extends AppWidgetProvider {
     private CafeteriaManager mensaManager;
 
     @Override
-    public void onReceive(Context context, Intent intent) {
-        super.onReceive(context, intent);
-        localRepository = new CafeteriaLocalRepository(TcaDb.getInstance(context));
-        mensaManager = new CafeteriaManager(context);
-    }
-
-    @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        if (localRepository == null) {
+            localRepository = new CafeteriaLocalRepository(TcaDb.getInstance(context));
+        }
+        if (mensaManager == null) {
+            mensaManager = new CafeteriaManager(context);
+        }
         int cafeteriaId = mensaManager.getBestMatchMensaId();
         Cafeteria cafeteria = localRepository.getCafeteria(cafeteriaId);
 
