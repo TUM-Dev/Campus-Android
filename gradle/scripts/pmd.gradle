@@ -38,7 +38,7 @@ afterEvaluate {
 
             ignoreFailures = true
 
-            dependsOn(variant.javaCompile)
+            dependsOn(variant.javaCompileProvider.get())
         }
         tasks.getByName('check').dependsOn(task)
     }
