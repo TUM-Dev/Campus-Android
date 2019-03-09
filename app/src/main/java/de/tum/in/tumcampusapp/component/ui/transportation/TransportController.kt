@@ -178,7 +178,7 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
             return MvvClient.getInstance(context)
                     .getDepartures(stationID)
                     .onErrorReturn { MvvDepartureList(emptyList()) }
-                    .map { it.departures.orEmpty() }
+                    .map { it.departureList.orEmpty() }
                     .map { it.map { mvvDeparture -> Departure.create(mvvDeparture) } }
                     .map { it.sortedBy { departure -> departure.countDown } }
         }

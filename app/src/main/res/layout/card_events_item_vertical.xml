@@ -43,10 +43,10 @@
             android:layout_width="160dp"
             android:layout_height="240dp"
             android:scaleType="centerCrop"
+            android:background="@color/tum_light_gray"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:background="@android:color/darker_gray"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ProgressBar
             android:id="@+id/poster_progress_bar"

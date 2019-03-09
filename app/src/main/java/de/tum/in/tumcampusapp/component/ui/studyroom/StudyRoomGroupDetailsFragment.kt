@@ -1,12 +1,12 @@
 package de.tum.`in`.tumcampusapp.component.ui.studyroom
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.GridEqualSpacingDecoration
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -27,8 +27,13 @@ class StudyRoomGroupDetailsFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val rootView = inflater.inflate(R.layout.fragment_item_detail, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_study_rooms, container, false)
         val studyRooms = StudyRoomGroupManager(requireContext()).getAllStudyRoomsForGroup(groupId)
+
+        if (studyRooms.isEmpty()) {
+            rootView.findViewById<View>(R.id.study_room_placeholder).visibility = View.VISIBLE
+            return rootView
+        }
 
         rootView.findViewById<RecyclerView>(R.id.fragment_item_detail_recyclerview).apply {
             val spanCount = 2
@@ -38,7 +43,6 @@ class StudyRoomGroupDetailsFragment : Fragment() {
             val spacing = Math.round(resources.getDimension(R.dimen.material_card_view_padding))
             addItemDecoration(GridEqualSpacingDecoration(spacing, spanCount))
         }
-
         return rootView
     }
 }

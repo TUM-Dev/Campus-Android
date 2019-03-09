@@ -71,11 +71,10 @@ public class BuyTicketActivity extends BaseActivity {
         eventId = getIntent().getIntExtra(Const.KEY_EVENT_ID, 0);
 
         getInjector().ticketsComponent()
-                .ticketsModule(new TicketsModule(this))
+                .ticketsModule(new TicketsModule())
                 .eventId(eventId)
                 .build()
                 .inject(this);
-
 
         // Get ticket type information from API
         Disposable disposable = ticketsRemoteRepo.fetchTicketTypesForEvent(eventId)
