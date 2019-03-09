@@ -148,9 +148,14 @@ class DownloadModule {
             newsDownloadAction: NewsDownloadAction,
             topNewsDownloadAction: TopNewsDownloadAction
     ): DownloadWorker.WorkerActions = DownloadWorker.WorkerActions(
-            cafeteriaDownloadAction, cafeteriaLocationImportAction,
-            eventsDownloadAction, filmDownloadAction, gradesDownloadAction,
-            idUploadAction, newsDownloadAction, topNewsDownloadAction
+            cafeteriaDownloadAction,
+            cafeteriaLocationImportAction,
+            eventsDownloadAction,
+            filmDownloadAction,
+            gradesDownloadAction,
+            idUploadAction,
+            newsDownloadAction,
+            topNewsDownloadAction
     )
 
 }
