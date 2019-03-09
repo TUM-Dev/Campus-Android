@@ -2,8 +2,8 @@ package de.tum.`in`.tumcampusapp.service
 
 import android.content.Context
 import androidx.work.*
-import androidx.work.ListenableWorker.Result.RETRY
-import androidx.work.ListenableWorker.Result.SUCCESS
+import androidx.work.ListenableWorker.Result.retry
+import androidx.work.ListenableWorker.Result.success
 import androidx.work.NetworkType.CONNECTED
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
@@ -36,10 +36,10 @@ class DownloadWorker(
         return try {
             download(inputData, this)
             Utils.setSetting(applicationContext, LAST_UPDATE, System.currentTimeMillis())
-            SUCCESS
+            success()
         } catch (e: Exception) {
             Utils.log(e)
-            RETRY
+            retry()
         }
     }
 

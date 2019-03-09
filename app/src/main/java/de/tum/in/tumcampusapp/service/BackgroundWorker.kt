@@ -2,7 +2,7 @@ package de.tum.`in`.tumcampusapp.service
 
 import android.content.Context
 import androidx.work.*
-import androidx.work.ListenableWorker.Result.SUCCESS
+import androidx.work.ListenableWorker.Result.success
 import java.util.concurrent.TimeUnit
 
 /**
@@ -19,7 +19,7 @@ class BackgroundWorker(
                 .beginUniqueWork(UNIQUE_DOWNLOAD, ExistingWorkPolicy.KEEP, downloadWorkRequest)
                 .enqueue()
 
-        return SUCCESS
+        return success()
     }
 
     companion object {

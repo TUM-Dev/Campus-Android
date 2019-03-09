@@ -36,14 +36,14 @@ class SendMessageWorker(context: Context, workerParams: WorkerParameters) :
                     .asSequence()
                     .onEach { it.signature = authenticationManager.sign(it.text) }
                     .forEach { viewModel.sendMessage(it.room, it, applicationContext) }
-            SUCCESS
+            success()
         } catch (noPrivateKey: NoPrivateKey) {
             // Retrying doesn't make any sense
-            FAILURE
+            failure()
         } catch (e: Exception) {
             Utils.log(e)
             // Maybe the server is currently busy, but we really want to send the messages
-            RETRY
+            retry()
         }
     }
 

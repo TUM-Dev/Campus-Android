@@ -35,13 +35,6 @@ class TicketsModule {
     }
 
     @Provides
-    fun provideTicketsLocalRepository(
-            database: TcaDb
-    ): TicketsLocalRepository {
-        return TicketsLocalRepository(database)
-    }
-
-    @Provides
     fun provideEventsDownloadAction(
             remoteRepository: EventsRemoteRepository
     ): DownloadWorker.Action = EventsDownloadAction(remoteRepository)
