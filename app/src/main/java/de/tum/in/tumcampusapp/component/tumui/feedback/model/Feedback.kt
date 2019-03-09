@@ -21,17 +21,18 @@ import kotlin.collections.ArrayList
 data class Feedback(
         val id: String = UUID.randomUUID().toString(),
         var topic: String = Const.FEEDBACK_TOPIC_GENERAL,
-        var message: String = "",
-        var email: String = "",
+        var message: String? = null,
+        var email: String? = null,
         var includeEmail: Boolean = false,
         var includeLocation: Boolean = false,
-        var latitude: Double = 0.toDouble(),
-        var longitude: Double = 0.toDouble(),
+        var latitude: Double? = null,
+        var longitude: Double? = null,
         val osVersion: String = Build.VERSION.RELEASE,
         val appVersion: String = BuildConfig.VERSION_NAME,
         var imageCount: Int = 0,
         @Transient // don't send this
-        var picturePaths: List<String> = ArrayList()): Parcelable {
+        var picturePaths: List<String> = ArrayList()
+): Parcelable {
 
     constructor(parcel: Parcel) : this() {
         topic = parcel.readString()!!
@@ -39,8 +40,13 @@ data class Feedback(
         email = parcel.readString()!!
         includeEmail = parcel.readInt() == 1
         includeLocation = parcel.readInt() == 1
-        latitude = parcel.readDouble()
-        longitude = parcel.readDouble()
+
+        val hasLocation = parcel.readByte() == 1.toByte()
+        if (hasLocation) {
+            latitude = parcel.readDouble()
+            longitude = parcel.readDouble()
+        }
+
         imageCount = parcel.readInt()
         parcel.readStringList(picturePaths)
     }
@@ -51,8 +57,21 @@ data class Feedback(
         parcel.writeString(email)
         parcel.writeInt(if (includeEmail) 1 else 0)
         parcel.writeInt(if (includeLocation) 1 else 0)
-        parcel.writeDouble(latitude)
-        parcel.writeDouble(longitude)
+
+        if (latitude != null && longitude != null) {
+            parcel.writeByte(1)
+        } else {
+            parcel.writeByte(0)
+        }
+
+        latitude?.let {
+            parcel.writeDouble(it)
+        }
+
+        longitude?.let {
+            parcel.writeDouble(it)
+        }
+
         parcel.writeInt(imageCount)
         parcel.writeStringList(picturePaths)
     }
