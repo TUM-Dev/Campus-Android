@@ -9,6 +9,10 @@ data class EventsViewState(
         val isLoading: Boolean = false
 ) {
 
+    fun toLoading(): EventsViewState {
+        return copy(isLoading = true)
+    }
+
     fun toEventsLoaded(events: List<Event>): EventsViewState {
         return copy(events = events, isLoading = false)
     }
