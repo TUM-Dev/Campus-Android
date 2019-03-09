@@ -718,4 +718,5 @@ Signature: %5$s</string>
         <item quantity="one">%d new grade available %s</item>
         <item quantity="other">%d new grades available: %s</item>
     </plurals>
+    <string name="not_specified">Not specified</string>
 </resources>
