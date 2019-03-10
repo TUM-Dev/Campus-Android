@@ -17,18 +17,18 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
-import de.tum.in.tumcampusapp.component.ui.ticket.di.TicketsModule;
+import de.tum.in.tumcampusapp.component.ui.ticket.EventsDownloadAction;
 import de.tum.in.tumcampusapp.component.ui.ticket.fragment.EventsFragment;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.EventType;
 import de.tum.in.tumcampusapp.service.DownloadWorker;
+import de.tum.in.tumcampusapp.service.di.DownloadModule;
 
 public class EventsActivity extends ActivityForDownloadingExternal {
 
-    private String SHOW_BETA_INFO = "ts_show_beta_info";
     private ViewPager viewPager;
 
     @Inject
-    DownloadWorker.Action eventsDownloadAction;
+    EventsDownloadAction eventsDownloadAction;
 
     public EventsActivity() {
         super(R.layout.activity_events);
@@ -37,8 +37,8 @@ public class EventsActivity extends ActivityForDownloadingExternal {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getInjector().ticketsComponent()
-                .ticketsModule(new TicketsModule())
+        getInjector().downloadComponent()
+                .downloadModule(new DownloadModule())
                 .build()
                 .inject(this);
 
@@ -107,6 +107,7 @@ public class EventsActivity extends ActivityForDownloadingExternal {
         }
 
     }
+
 }
 
 

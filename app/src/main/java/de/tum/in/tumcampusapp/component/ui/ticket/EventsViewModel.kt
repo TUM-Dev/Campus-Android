@@ -24,6 +24,7 @@ sealed class Action {
 }
 
 sealed class Result {
+    object ShowLoading : Result()
     data class EventsLoaded(val events: List<Event>) : Result()
     object ShowError : Result()
     object HideError : Result()
@@ -69,6 +70,7 @@ class EventsViewModel @Inject constructor(
 
     private fun reduceState(viewState: EventsViewState, result: Result): EventsViewState {
         return when (result) {
+            Result.ShowLoading -> viewState.toLoading()
             is Result.EventsLoaded -> viewState.toEventsLoaded(result.events)
             Result.ShowError -> viewState.toError()
             Result.HideError -> viewState.toNoError()
@@ -79,6 +81,7 @@ class EventsViewModel @Inject constructor(
     private fun fetchEventsAndTickets(isLoggedIn: Boolean): Observable<Result> {
         return loadAndStoreEvents()
                 .andThen(Observable.just(Result.None as Result))
+                .startWith(Result.ShowLoading)
                 .doOnNext { loadAndStoreTickets(isLoggedIn) }
                 .onErrorResumeNext { t: Throwable -> showErrorForDuration(ERROR_DURATION) }
     }
