@@ -327,6 +327,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
                             new ChatRoomController(ChatActivity.this).leave(currentChatRoom);
 
                             Intent intent = new Intent(ChatActivity.this, ChatRoomsActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                             finish();
                         } else {

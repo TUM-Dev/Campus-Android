@@ -8,13 +8,14 @@ import android.content.pm.PackageManager.NameNotFoundException
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
-import androidx.core.content.pm.PackageInfoCompat
 import android.text.format.DateUtils
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.content.pm.PackageInfoCompat
 import de.psdev.licensesdialog.LicensesDialog
 import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.R
@@ -22,6 +23,7 @@ import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import kotlinx.android.synthetic.main.activity_information.*
+import org.jetbrains.anko.textColor
 
 /**
  * Provides information about this app and all contributors
@@ -109,9 +111,12 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
         val tableRow = TableRow(this)
         tableRow.layoutParams = rowParams
 
+        val textColor = ContextCompat.getColor(this, R.color.text_dark_primary)
+
         val labelTextView = TextView(this).apply {
             text = label
             layoutParams = rowParams
+            this.textColor = textColor
 
             val padding = resources.getDimensionPixelSize(R.dimen.material_small_padding)
             setPadding(0, 0, padding, 0)
@@ -122,6 +127,7 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
             text = value
             layoutParams = rowParams
             isClickable = true
+            this.textColor = textColor
 
             setOnLongClickListener {
                 val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager

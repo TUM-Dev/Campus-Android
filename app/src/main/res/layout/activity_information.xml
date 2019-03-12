@@ -33,6 +33,7 @@
                     android:autoLink="all"
                     android:lineSpacingMultiplier="1.1"
                     android:text="@string/app_info_text"
+                    android:textColor="@color/text_dark_primary"
                     android:textSize="15sp" />
 
                 <com.google.android.material.button.MaterialButton
@@ -104,6 +105,7 @@
                     android:focusable="true"
                     android:lineSpacingMultiplier="1.1"
                     android:text="@string/add_info"
+                    android:textColor="@color/text_dark_primary"
                     android:textSize="@dimen/large_text_size" />
 
                 <TableLayout
@@ -113,10 +115,13 @@
                     android:layout_marginStart="@dimen/material_default_padding"
                     android:layout_marginEnd="@dimen/material_default_padding"
                     android:layout_marginBottom="@dimen/material_default_padding"
+                    android:textColor="@color/text_dark_primary"
                     android:visibility="invisible" />
 
             </LinearLayout>
+
         </ScrollView>
+
     </LinearLayout>
 
 </androidx.drawerlayout.widget.DrawerLayout>

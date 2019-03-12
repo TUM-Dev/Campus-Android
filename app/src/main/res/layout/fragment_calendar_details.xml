@@ -48,6 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"
                 android:textAppearance="@android:style/TextAppearance.Large"
+                android:textColor="@color/text_dark_primary"
                 tools:text="Title" />
 
         </LinearLayout>
@@ -85,7 +86,9 @@
             android:layout_marginBottom="@dimen/material_small_padding"
             android:drawableStart="@drawable/ic_outline_access_time_24px"
             android:drawablePadding="@dimen/material_default_padding"
+            android:drawableTint="@color/text_dark_primary"
             android:textAppearance="@android:style/TextAppearance.Medium"
+            android:textColor="@color/text_dark_primary"
             tools:text="Date" />
 
         <TextView
@@ -99,7 +102,9 @@
             android:layout_marginBottom="@dimen/material_default_padding"
             android:drawableStart="@drawable/ic_action_info_black"
             android:drawablePadding="@dimen/material_default_padding"
+            android:drawableTint="@color/text_dark_primary"
             android:textAppearance="@android:style/TextAppearance.Medium"
+            android:textColor="@color/text_dark_primary"
             tools:text="Description" />
 
         <LinearLayout

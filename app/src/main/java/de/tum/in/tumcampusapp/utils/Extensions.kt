@@ -1,8 +1,14 @@
 package de.tum.`in`.tumcampusapp.utils
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.drawable.Drawable
+import android.os.Build
+import android.os.Build.VERSION.SDK_INT
+import android.os.Build.VERSION_CODES.M
+import android.os.Build.VERSION_CODES.O
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -153,4 +159,18 @@ fun <T1, T2> List<T1>.splitOnChanged(transform: (T1) -> T2): List<List<T1>> {
         }
     }
     return results.toList()
+}
+
+fun Activity.toggleLightDarkSystemWindows() {
+    val view = window.decorView
+    val mode = view.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+    if (mode == Configuration.UI_MODE_NIGHT_YES) {
+        if (SDK_INT >= M) {
+            var flags = window.decorView.systemUiVisibility xor View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            if (SDK_INT >= O) {
+                flags = flags xor View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+            }
+            window.decorView.systemUiVisibility = flags
+        }
+    }
 }

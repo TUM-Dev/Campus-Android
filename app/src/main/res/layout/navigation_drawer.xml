@@ -8,4 +8,5 @@
     android:fitsSystemWindows="true"
     app:itemBackground="@drawable/navigation_drawer_item_background_selector"
     app:itemIconTint="@color/navigation_drawer_icon_tint"
-    app:itemTextColor="@color/navigation_drawer_item_text" />
+    app:itemTextColor="@color/navigation_drawer_item_text"
+    app:theme="@style/NavigationView" />

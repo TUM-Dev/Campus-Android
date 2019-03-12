@@ -4,19 +4,18 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
-import android.preference.PreferenceManager
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.navigation.NavigationView
-import androidx.core.app.NavUtils
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.app.NavUtils
+import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.navigation.NavigationView
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import de.tum.`in`.tumcampusapp.R
@@ -30,6 +29,8 @@ import de.tum.`in`.tumcampusapp.di.app
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.closeDrawers
+import de.tum.`in`.tumcampusapp.utils.toggleLightDarkSystemWindows
+import org.jetbrains.anko.defaultSharedPreferences
 import java.util.*
 
 /**
@@ -62,8 +63,8 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity(),
         setContentView(layoutId)
         setUpToolbar()
         setUpDrawer()
-        PreferenceManager.getDefaultSharedPreferences(this)
-                .registerOnSharedPreferenceChangeListener(this)
+        toggleLightDarkSystemWindows()
+        defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this)
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {

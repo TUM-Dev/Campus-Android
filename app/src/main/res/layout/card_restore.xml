@@ -22,6 +22,7 @@
             android:layout_gravity="center_horizontal"
             android:drawableStart="@drawable/ic_action_restore"
             android:drawablePadding="@dimen/material_default_padding"
+            android:drawableTint="@color/text_dark_primary"
             android:text="@string/restore_all_cards"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 

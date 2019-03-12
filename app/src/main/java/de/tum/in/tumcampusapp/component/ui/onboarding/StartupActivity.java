@@ -30,6 +30,7 @@ import de.tum.in.tumcampusapp.service.DownloadWorker;
 import de.tum.in.tumcampusapp.service.StartSyncReceiver;
 import de.tum.in.tumcampusapp.service.di.DownloadModule;
 import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.ExtensionsKt;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.fabric.sdk.android.Fabric;
 import io.reactivex.Flowable;
@@ -68,6 +69,8 @@ public class StartupActivity extends AppCompatActivity {
                 .downloadModule(new DownloadModule())
                 .build()
                 .inject(this);
+
+        ExtensionsKt.toggleLightDarkSystemWindows(this);
 
         // Only use Crashlytics if we are not compiling debug
         boolean isDebuggable = (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));

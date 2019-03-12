@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,10 +7,10 @@
     android:clickable="true"
     android:focusable="true"
     android:orientation="horizontal"
-    android:paddingBottom="8dp"
-    android:paddingEnd="16dp"
     android:paddingStart="16dp"
-    android:paddingTop="8dp">
+    android:paddingTop="8dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="8dp">
 
     <ImageView
         android:id="@+id/iconImageView"
@@ -19,6 +18,7 @@
         android:layout_height="24dp"
         android:layout_gravity="center_vertical"
         android:alpha="0.5"
+        android:tint="@color/text_dark_primary"
         tools:src="@drawable/ic_outline_phone_24px" />
 
     <LinearLayout
@@ -33,16 +33,18 @@
             android:id="@+id/labelTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:alpha="0.6"
             android:textAllCaps="true"
-            android:textColor="@color/text_dark_gray"
-            tools:text="Phone"/>
+            android:textColor="@color/text_dark_primary"
+            tools:text="Phone" />
 
         <TextView
             android:id="@+id/valueTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-            tools:text="+49 151 12345678"/>
+            android:textColor="@color/text_dark_primary"
+            tools:text="+49 151 12345678" />
 
     </LinearLayout>
 

@@ -16,6 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="0dp"
+        android:layout_marginEnd="@dimen/material_default_padding"
+        android:textColor="@color/text_dark_primary"
         tools:text="Title" />
 
     <TextView
@@ -23,12 +25,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/material_tiny_padding"
+        android:textColor="@color/text_dark_secondary"
         tools:text="Time" />
 
     <TextView
         android:id="@+id/lectureLocationTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/text_dark_secondary"
         tools:text="Location" />
 
 </LinearLayout>

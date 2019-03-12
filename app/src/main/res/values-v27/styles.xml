@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/tum_light_gray</item>
         <item name="colorPrimaryDark">@color/tum_light_gray</item>
@@ -15,7 +16,8 @@
 
         <!-- Light navigation bar -->
         <item name="android:windowLightNavigationBar">true</item>
-        <item name="android:navigationBarColor">@android:color/primary_text_dark</item>
+        <item name="android:navigationBarColor">@color/default_window_background</item>
         <item name="android:navigationBarDividerColor">@color/navigation_bar_divider</item>
     </style>
+
 </resources>

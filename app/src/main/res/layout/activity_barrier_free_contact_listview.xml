@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/material_small_padding"
-    android:paddingEnd="@dimen/material_default_padding"
     android:paddingStart="@dimen/material_default_padding"
-    android:paddingTop="@dimen/material_small_padding">
+    android:paddingTop="@dimen/material_small_padding"
+    android:paddingEnd="@dimen/material_default_padding"
+    android:paddingBottom="@dimen/material_small_padding">
 
     <TextView
         android:id="@+id/barrierfreeContactNameTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
+        android:textColor="@color/text_dark_primary"
         android:textSize="@dimen/large_text_size"
         android:textStyle="bold"
-        tools:text="Person Name"/>
+        tools:text="Person Name" />
 
     <TextView
         android:id="@+id/barrierfreeContactPhoneTextView"
@@ -26,7 +25,7 @@
         android:layout_marginTop="@dimen/material_small_padding"
         android:autoLink="phone"
         android:textSize="@dimen/semilarge_text_size"
-        tools:text="Person Phone Number"/>
+        tools:text="Person Phone Number" />
 
     <TextView
         android:id="@+id/barrierfreeContactEmailTextView"
@@ -35,7 +34,7 @@
         android:layout_marginTop="@dimen/material_tiny_padding"
         android:autoLink="email"
         android:textSize="@dimen/semilarge_text_size"
-        tools:text="Person E-mail"/>
+        tools:text="Person E-mail" />
 
     <TextView
         android:id="@+id/barrierfreeContactMoreTextView"
@@ -45,9 +44,10 @@
         android:clickable="true"
         android:focusable="true"
         android:onClick="onClick"
+        android:textColor="@color/text_dark_secondary"
         android:textSize="@dimen/semilarge_text_size"
         android:visibility="gone"
         tools:text="Person More info"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
 </LinearLayout>

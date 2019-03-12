@@ -20,7 +20,7 @@
             android:drawableStart="@drawable/ic_action_info_black"
             android:drawablePadding="@dimen/material_default_padding"
             android:text="@string/favorite_dish_info"
-            android:textColor="#000000" />
+            android:textColor="@color/text_dark_primary" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/notificationSettingsRecyclerView"

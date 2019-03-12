@@ -37,13 +37,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
+                android:background="@color/default_window_background"
                 android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/etMessage"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/text_dark_primary"
                     android:layout_marginStart="@dimen/material_small_padding"
                     android:layout_marginTop="@dimen/material_tiny_padding"
                     android:layout_marginBottom="@dimen/material_tiny_padding"

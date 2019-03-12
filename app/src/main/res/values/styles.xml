@@ -7,15 +7,24 @@
         <item name="android:windowBackground">@color/default_window_background</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
         <item name="android:textCursorDrawable">@drawable/cursor_text_field_colorful</item>
+        <item name="alertDialogTheme">@style/AlertDialogStyle</item>
 
         <!-- Light system UI -->
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>O
         <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="AlertDialogStyle" parent="Theme.MaterialComponents.Dialog.Alert">
+        <item name="android:textColorPrimary">@color/text_dark_primary</item>
+        <item name="android:windowBackground">@drawable/rounded_corners_background</item>
     </style>
 
     <style name="AppTheme.NoDrawerLayout" parent="AppTheme">
         <item name="android:statusBarColor">@color/tum_light_gray</item>
+        <item name="android:textColor">@color/text_dark_primary</item>
+        <item name="android:textColorSecondary">@color/text_dark_secondary</item>
+        <item name="android:tint">@color/text_dark_secondary</item>
     </style>
 
     <style name="TumToolbar" parent="ThemeOverlay.AppCompat.Dark">
@@ -45,15 +54,15 @@
     </style>
 
     <style name="AppThemeStartup" parent="Theme.MaterialComponents.NoActionBar">
-        <item name="colorPrimaryDark">@android:color/white</item>
-        <item name="android:windowBackground">@android:color/white</item>
+        <item name="colorPrimaryDark">@color/default_window_background</item>
+        <item name="android:windowBackground">@color/default_window_background</item>
 
         <!-- Light system UI -->
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
 
         <!-- Light navigation bar -->
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
-        <item name="android:navigationBarColor">@android:color/white</item>
+        <item name="android:navigationBarColor">@color/default_window_background</item>
     </style>
 
     <style name="AppThemeFullscreen" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -168,7 +177,7 @@
         <item name="android:gravity">center</item>
         <item name="android:transitionName">@string/transition_card</item>
         <item name="android:clipToPadding">true</item>
-        <item name="cardBackgroundColor">#FFFFFF</item>
+        <item name="cardBackgroundColor">@color/cardBackground</item>
         <item name="cardElevation">0dp</item>
         <item name="strokeWidth">1dp</item>
         <item name="strokeColor">@color/spinner_border</item>
@@ -237,7 +246,8 @@
     <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog">
         <item name="android:statusBarColor" tools:targetApi="lollipop">@android:color/transparent
         </item>
-        <item name="android:navigationBarColor" tools:targetApi="lollipop">@android:color/white
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">
+            @color/default_window_background
         </item>
     </style>
 
@@ -251,6 +261,10 @@
         <item name="android:drawableTint">@android:color/white</item>
         <item name="android:background">@drawable/info_box_background</item>
         <item name="android:padding">@dimen/material_default_padding</item>
+    </style>
+
+    <style name="NavigationView">
+        <item name="android:textColorSecondary">@color/text_dark_secondary</item>
     </style>
 
 </resources>

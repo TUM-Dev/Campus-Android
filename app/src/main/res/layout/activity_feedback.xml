@@ -34,15 +34,19 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:buttonTint="@color/checkboxColor"
                     android:checked="true"
-                    android:text="@string/general" />
+                    android:text="@string/general"
+                    android:textColor="@color/text_dark_primary" />
 
                 <androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/tumCampusAppRadioButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/tca" />
+                    android:buttonTint="@color/checkboxColor"
+                    android:text="@string/tca"
+                    android:textColor="@color/text_dark_primary" />
 
             </RadioGroup>
 
@@ -53,6 +57,7 @@
                 android:layout_marginTop="@dimen/material_large_padding"
                 android:layout_marginBottom="@dimen/material_default_padding"
                 android:hint="@string/feedback_hint"
+                android:textColorHint="@color/text_dark_secondary"
                 app:boxStrokeColor="@color/input_layout_border"
                 app:boxStrokeWidth="@dimen/input_layout_border">
 
@@ -65,6 +70,7 @@
                     android:maxHeight="300dp"
                     android:minHeight="200dp"
                     android:scrollbars="vertical"
+                    android:textColor="@color/text_dark_primary"
                     android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -75,8 +81,8 @@
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatImageButton
-                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/feedback_add_image"
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="@dimen/add_thumbnail_button_size"
                     android:layout_height="@dimen/add_thumbnail_button_size"
                     android:layout_gravity="center_vertical"
@@ -108,8 +114,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/material_small_padding"
+                android:buttonTint="@color/checkboxColor"
                 android:checked="true"
-                android:text="@string/feedback_include_email" />
+                android:text="@string/feedback_include_email"
+                android:textColor="@color/text_dark_primary" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/feedback_custom_email_layout"
@@ -119,6 +127,7 @@
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="@dimen/material_small_padding"
                 android:hint="@string/feedback_email_hint"
+                android:textColorHint="@color/text_dark_secondary"
                 android:visibility="gone"
                 app:boxStrokeColor="@color/input_layout_border"
                 app:boxStrokeWidth="@dimen/input_layout_border"
@@ -139,8 +148,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/material_small_padding"
+                android:buttonTint="@color/checkboxColor"
                 android:checked="false"
-                android:text="@string/feedback_include_location" />
+                android:text="@string/feedback_include_location"
+                android:textColor="@color/text_dark_primary" />
 
             <com.google.android.material.button.MaterialButton
                 style="@style/Widget.MaterialComponents.Button"

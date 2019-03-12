@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
+    android:background="@color/default_window_background"
     android:orientation="horizontal"
     android:paddingStart="@dimen/material_default_padding"
     android:paddingTop="@dimen/material_small_padding"
@@ -20,21 +20,23 @@
             android:id="@+id/courseNameTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
             android:textColor="@color/text_light_blue"
             android:textSize="@dimen/large_text_size"
-            android:textStyle="bold"
             tools:text="Course name" />
 
         <TextView
             android:id="@+id/examDateTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/text_dark_primary"
             tools:text="Exam date" />
 
         <TextView
             android:id="@+id/additionalInfoTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/text_dark_primary"
             tools:text="Examiner" />
 
     </LinearLayout>
@@ -46,7 +48,7 @@
         android:layout_gravity="center_vertical"
         android:background="@drawable/grade_background"
         android:gravity="center"
-        android:textColor="#FFFFFF"
+        android:textColor="@android:color/white"
         android:textSize="22sp"
         android:textStyle="bold"
         tools:text="1,0" />

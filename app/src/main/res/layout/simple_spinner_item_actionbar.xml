@@ -5,7 +5,7 @@
     style="?android:attr/spinnerItemStyle"
     android:layout_width="match_parent"
     android:layout_height="?android:listPreferredItemHeightSmall"
-    android:background="@android:color/white"
+    android:background="@color/default_window_background"
     android:ellipsize="end"
     android:gravity="center_vertical"
     android:maxLines="1"

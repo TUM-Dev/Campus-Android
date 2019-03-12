@@ -14,8 +14,8 @@ import de.tum.in.tumcampusapp.utils.Const;
 /**
  * Provides the preferences, encapsulated into an own activity.
  */
-public class UserPreferencesActivity extends BaseActivity implements
-                                                          PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
+public class UserPreferencesActivity extends BaseActivity
+        implements PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
 
     public UserPreferencesActivity() {
         super(R.layout.activity_user_preferences);
@@ -29,8 +29,8 @@ public class UserPreferencesActivity extends BaseActivity implements
         Intent intent = getIntent();
         Bundle args = new Bundle();
         if (intent != null && intent.getExtras() != null) {
-            args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, intent.getExtras()
-                                                                               .getString(Const.PREFERENCE_SCREEN));
+            args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT,
+                    intent.getExtras().getString(Const.PREFERENCE_SCREEN));
         }
 
         if (savedInstanceState == null) {
@@ -48,7 +48,8 @@ public class UserPreferencesActivity extends BaseActivity implements
     }
 
     @Override
-    public boolean onPreferenceStartScreen(PreferenceFragmentCompat preferenceFragmentCompat, PreferenceScreen preferenceScreen) {
+    public boolean onPreferenceStartScreen(PreferenceFragmentCompat preferenceFragment,
+                                           PreferenceScreen preferenceScreen) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
         SettingsFragment fragment = new SettingsFragment();

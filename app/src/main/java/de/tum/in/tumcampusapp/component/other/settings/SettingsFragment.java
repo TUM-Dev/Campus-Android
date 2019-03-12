@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -71,9 +70,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
             // Click listener for preference list entries. Used to simulate a button
             // (since it is not possible to add a button to the preferences screen)
             findPreference(BUTTON_LOGOUT).setOnPreferenceClickListener(this);
-
             setSummary("card_default_campus");
             setSummary("silent_mode_set_to");
+            setSummary("dark_mode");
             setSummary("background_mode_set_to");
         } else if (rootKey.equals("card_cafeteria")) {
             setSummary("card_cafeteria_default_G");
@@ -98,7 +97,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
         super.onViewCreated(view, savedInstanceState);
 
         // Set the default white background in the view so as to avoid transparency
-        view.setBackgroundColor(Color.WHITE);
+        final int color = ContextCompat.getColor(requireContext(), R.color.default_window_background);
+        view.setBackgroundColor(color);
     }
 
     private void populateNewsSources() {

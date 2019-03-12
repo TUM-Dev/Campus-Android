@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/tum_light_gray"
+    android:background="@color/drawerHeaderBackground"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat">

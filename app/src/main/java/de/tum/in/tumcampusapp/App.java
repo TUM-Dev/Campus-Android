@@ -8,10 +8,15 @@ import com.squareup.picasso.Picasso;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import de.tum.in.tumcampusapp.component.notifications.NotificationUtils;
 import de.tum.in.tumcampusapp.di.AppComponent;
 import de.tum.in.tumcampusapp.di.AppModule;
 import de.tum.in.tumcampusapp.di.DaggerAppComponent;
+import de.tum.in.tumcampusapp.utils.Const;
+import de.tum.in.tumcampusapp.utils.Utils;
+
+import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO;
 
 public class App extends Application {
 
@@ -25,6 +30,7 @@ public class App extends Application {
         NotificationUtils.setupNotificationChannels(this);
         JodaTimeAndroid.init(this);
         setupStrictMode();
+        setupNightMode();
     }
 
     private void buildAppComponent() {
@@ -64,6 +70,12 @@ public class App extends Application {
                                            .penaltyLog()
                                            .build());
         }
+    }
+
+    private void setupNightMode() {
+        final int darkMode = Utils.getSettingInt(this, Const.KEY_DARK_MODE, MODE_NIGHT_NO);
+        // TODO AppCompatDelegate.setDefaultNightMode(darkMode);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
     }
 
     public AppComponent getAppComponent() {

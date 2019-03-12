@@ -5,11 +5,11 @@
 
     <color name="pop_up_background">#FAFAFA</color>
 
-    <color name="cardBackground">@android:color/white</color>
-    <color name="drawerHeaderBackground">@color/tum_light_gray</color>
-    <color name="checkboxColor">@android:color/black</color>
-    <color name="averageGradeBackground">#EEEEEE</color>
-    <color name="averageGradeText">#757575</color>
+    <color name="cardBackground">#282828</color>
+    <color name="drawerHeaderBackground">@color/default_window_background</color>
+    <color name="checkboxColor">@android:color/white</color>
+    <color name="averageGradeBackground">#616161</color>
+    <color name="averageGradeText">#EEEEEE</color>
 
     <color name="tum_50">#E6F0F8</color>
     <color name="tum_100">#B3D1EB</color>
@@ -26,7 +26,7 @@
     <color name="tum_A400">#2A7FC8</color>
     <color name="tum_A700">#004C8E</color>
 
-    <color name="tum_light_gray">#F4F4F4</color>
+    <color name="tum_light_gray">@color/default_window_background</color>
     <color name="tum_dark_gray">#E6E6E6</color>
     <color name="tum_blue">@color/tum_500</color>
 
@@ -34,34 +34,34 @@
     <color name="github">#24292E</color>
     <color name="email">#757575</color>
 
-    <color name="placeholder">#E2E2E2</color>
-    <color name="list_divider">#EEEEEE</color>
+    <color name="placeholder">#494949</color>
+    <color name="list_divider">#616161</color>
 
-    <color name="spinner_background">#FFFFFF</color>
-    <color name="spinner_border">#E0E0E0</color>
+    <color name="spinner_background">#373737</color>
+    <color name="spinner_border">#494949</color>
 
     <color name="input_layout_border">@color/color_primary</color>
 
-    <color name="navigation_drawer_item_background">#EDEDED</color>
-    <color name="navigation_drawer_icon_tint">#757575</color>
-    <color name="navigation_drawer_item_text">#222222</color>
+    <color name="navigation_drawer_item_background">#373737</color>
+    <color name="navigation_drawer_icon_tint">#8A8A8A</color>
+    <color name="navigation_drawer_item_text">#DDDDDD</color>
 
-    <color name="study_room_free">#C8E6C9</color>
-    <color name="study_room_occupied">#FFCDD2</color>
+    <color name="study_room_free">#A3E0A5</color>
+    <color name="study_room_occupied">#FFB7BE</color>
 
     <color name="status_bar_background">#F2F2F2</color>
-    <color name="navigation_bar_divider">#E0E0E0</color>
+    <color name="navigation_bar_divider">#494949</color>
 
     <color name="startup_progress_bar">#a5a5a5</color>
 
-    <color name="card_more_icon">#A5A5A5</color>
+    <color name="card_more_icon">#5A5A5A</color>
     
     <!-- Default colors -->
-    <color name="text_dark_primary">#DE000000</color> <!--DE for 87% opacity-->
-    <color name="text_dark_secondary">#8A000000</color> <!--8A for 54% opacity-->
+    <color name="text_dark_primary">#DEFFFFFF</color> <!--DE for 87% opacity-->
+    <color name="text_dark_secondary">#8AFFFFFF</color> <!--8A for 54% opacity-->s
 
-    <color name="default_window_background">@android:color/white</color>
-    <color name="secondary_window_background">#F2F2F2</color>
+    <color name="default_window_background">#282828</color>
+    <color name="secondary_window_background">#282828</color>
     <color name="semitransparent_dark_background">#4D000000</color>
 
     <!-- official TUM accent colors (style guide) -->
@@ -87,32 +87,13 @@
     <color name="chat_incoming">#FFFFFF</color>
     <color name="chat_outgoing">#c5e775</color>
 
-    <color name="launcher_background">#0064BB</color>
+    <color name="launcher_background">#0064BB</color>s
 
     <color name="star_selected">#ffd600</color>
     <color name="star_unselected">@color/text_light_gray</color>
 
     <color name="error">#FFFF0000</color>
     <color name="valid">#7cbc49</color>
-  
-    <color name="grade_1.0">#318f11</color>
-    <color name="grade_1.3">#5dab12</color>
-    <color name="grade_1.4">#5dab12</color>
-    <color name="grade_1.7">#86c415</color>
-    <color name="grade_2.0">#c6e618</color>
-    <color name="grade_2.3">#fdf01a</color>
-    <color name="grade_2.4">#fdf01a</color>
-    <color name="grade_2.7">#fddf18</color>
-    <color name="grade_3.0">#fdbf19</color>
-    <color name="grade_3.3">#fcad18</color>
-    <color name="grade_3.4">#fcad18</color>
-    <color name="grade_3.7">#fb6515</color>
-    <color name="grade_4.0">#d50000</color>
-    <color name="grade_4.3">#c62828</color>
-    <color name="grade_4.4">#c62828</color>
-    <color name="grade_4.7">#b71c1c</color>
-    <color name="grade_5.0">#000000</color>
-    <color name="grade_default">@color/sections_gray</color>
 
     <color name="event_canceled">@color/grade_4.0</color>
     <color name="event_lecture">#86c415</color>

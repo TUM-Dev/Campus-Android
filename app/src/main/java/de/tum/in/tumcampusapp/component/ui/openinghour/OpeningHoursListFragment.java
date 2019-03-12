@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.component.ui.openinghour;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import androidx.fragment.app.ListFragment;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -11,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import androidx.fragment.app.ListFragment;
 import de.tum.in.tumcampusapp.R;
 
 /**
@@ -97,7 +97,7 @@ public class OpeningHoursListFragment extends ListFragment {
                           getString(R.string.mensa_pasing),
                           getString(R.string.mensa_weihenstephan)};
 
-        setListAdapter(new ArrayAdapter<>(getActivity(), layout, android.R.id.text1, names));
+        setListAdapter(new ArrayAdapter<>(requireActivity(), layout, android.R.id.text1, names));
     }
 
     @Override

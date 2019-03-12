@@ -21,6 +21,7 @@
             android:layout_height="@dimen/icon_default"
             android:layout_gravity="center"
             android:alpha="0.6"
+            android:tint="@color/text_dark_primary"
             app:srcCompat="@drawable/ic_outline_location_on_24px" />
 
     </LinearLayout>

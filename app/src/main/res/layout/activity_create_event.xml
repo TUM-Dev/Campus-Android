@@ -31,7 +31,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/material_default_padding"
-                    android:hint="@string/event_title">
+                    android:hint="@string/event_title"
+                    android:textColorHint="@color/text_dark_secondary">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/event_title"
@@ -40,6 +41,8 @@
                         android:imeOptions="actionDone"
                         android:inputType="textAutoComplete|textCapSentences"
                         android:maxLines="1"
+                        android:textColor="@color/text_dark_primary"
+                        android:textColorHint="@color/text_dark_secondary"
                         android:textCursorDrawable="@drawable/cursor_text_field_colorful"
                         android:textSize="20sp" />
 
@@ -117,7 +120,8 @@
                     android:layout_height="0dp"
                     android:layout_margin="@dimen/material_default_padding"
                     android:layout_weight="1"
-                    android:hint="@string/comment">
+                    android:hint="@string/comment"
+                    android:textColorHint="@color/text_dark_secondary">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/event_description"
@@ -127,6 +131,8 @@
                         android:gravity="top"
                         android:imeOptions="normal"
                         android:inputType="textMultiLine|textAutoCorrect|textAutoComplete|textCapSentences"
+                        android:textColor="@color/text_dark_primary"
+                        android:textColorHint="@color/text_dark_secondary"
                         android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
 
                 </com.google.android.material.textfield.TextInputLayout>

@@ -60,6 +60,7 @@
                             android:fontFamily="sans-serif-medium"
                             android:gravity="center_horizontal"
                             android:padding="@dimen/padding_default"
+                            android:textColor="@color/text_dark_primary"
                             android:textSize="@dimen/large_text_size"
                             tools:text="Mr. Prof. Dr. Bernd Brügge" />
 
