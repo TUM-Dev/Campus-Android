@@ -18,6 +18,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.CheckBoxPreference;
@@ -157,6 +158,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
             ListPreference listPreference = (ListPreference) pref;
             String entry = listPreference.getEntry().toString();
             listPreference.setSummary(entry);
+
+            if (key.equals("dark_mode")) {
+                final int mode = Integer.parseInt(listPreference.getValue());
+                AppCompatDelegate.setDefaultNightMode(mode);
+                requireActivity().recreate();
+                return;
+            }
         }
 
         // When newspread selection changes

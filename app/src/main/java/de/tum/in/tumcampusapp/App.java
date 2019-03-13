@@ -74,8 +74,7 @@ public class App extends Application {
 
     private void setupNightMode() {
         final int darkMode = Utils.getSettingInt(this, Const.KEY_DARK_MODE, MODE_NIGHT_NO);
-        // TODO AppCompatDelegate.setDefaultNightMode(darkMode);
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        AppCompatDelegate.setDefaultNightMode(darkMode);
     }
 
     public AppComponent getAppComponent() {

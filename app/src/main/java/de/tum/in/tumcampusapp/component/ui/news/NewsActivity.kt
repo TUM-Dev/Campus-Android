@@ -4,7 +4,6 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
@@ -13,6 +12,7 @@ import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForDown
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration
 import de.tum.`in`.tumcampusapp.component.ui.news.di.NewsModule
 import de.tum.`in`.tumcampusapp.service.DownloadWorker
+import de.tum.`in`.tumcampusapp.utils.Dialogs
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import javax.inject.Inject
@@ -117,16 +117,7 @@ class NewsActivity : ActivityForDownloadingExternal(
                         title to Utils.getSettingBool(this, "news_source_$id", true) }
                     .unzip()
 
-            val dialog = AlertDialog.Builder(this)
-                    .setMultiChoiceItems(items.toTypedArray(), checkedItems.toBooleanArray(), this)
-                    .create()
-
-            if (dialog.window != null) {
-                dialog.window!!.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-            }
-
-            dialog.show()
-
+            Dialogs.showMultiChoiceDialog(this, items, checkedItems, this)
             return true
         }
         return super.onOptionsItemSelected(item)

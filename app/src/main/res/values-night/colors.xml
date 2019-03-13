@@ -5,7 +5,7 @@
 
     <color name="pop_up_background">#FAFAFA</color>
 
-    <color name="cardBackground">#282828</color>
+    <color name="cardBackground">#212121</color>
     <color name="drawerHeaderBackground">@color/default_window_background</color>
     <color name="checkboxColor">@android:color/white</color>
     <color name="averageGradeBackground">#616161</color>
@@ -28,7 +28,7 @@
 
     <color name="tum_light_gray">@color/default_window_background</color>
     <color name="tum_dark_gray">#E6E6E6</color>
-    <color name="tum_blue">@color/tum_500</color>
+    <color name="tum_blue">@color/tum_400</color>
 
     <color name="facebook">#3B5998</color>
     <color name="github">#24292E</color>
@@ -38,7 +38,7 @@
     <color name="list_divider">#616161</color>
 
     <color name="spinner_background">#373737</color>
-    <color name="spinner_border">#494949</color>
+    <color name="spinner_border">#323232</color>
 
     <color name="input_layout_border">@color/color_primary</color>
 
@@ -60,8 +60,8 @@
     <color name="text_dark_primary">#DEFFFFFF</color> <!--DE for 87% opacity-->
     <color name="text_dark_secondary">#8AFFFFFF</color> <!--8A for 54% opacity-->s
 
-    <color name="default_window_background">#282828</color>
-    <color name="secondary_window_background">#282828</color>
+    <color name="default_window_background">#212121</color>
+    <color name="secondary_window_background">#212121</color>
     <color name="semitransparent_dark_background">#4D000000</color>
 
     <!-- official TUM accent colors (style guide) -->
