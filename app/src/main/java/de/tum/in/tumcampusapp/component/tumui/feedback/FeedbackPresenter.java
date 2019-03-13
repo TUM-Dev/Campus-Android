@@ -30,6 +30,7 @@ import de.tum.in.tumcampusapp.component.tumui.feedback.model.FeedbackResult;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.ImageUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
+import io.reactivex.disposables.CompositeDisposable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,6 +47,8 @@ public class FeedbackPresenter implements FeedbackContract.Presenter {
     static final int PERMISSION_LOCATION = 13;
     static final int PERMISSION_CAMERA = 14;
     static final int PERMISSION_FILES = 15;
+
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private Call<FeedbackResult> sendFeedbackCall;
     private List<Call<FeedbackResult>> sendImagesCalls = new ArrayList<>();
@@ -72,6 +75,15 @@ public class FeedbackPresenter implements FeedbackContract.Presenter {
     @Override
     public void attachView(@NotNull FeedbackContract.View view) {
         this.view = view;
+
+        compositeDisposable.add(view.getMessage().subscribe(feedback::setMessage));
+        compositeDisposable.add(view.getTopicInput().subscribe(integer -> {
+            if (integer == R.id.tumInGeneralRadioButton) {
+                feedback.setTopic(Const.FEEDBACK_TOPIC_GENERAL);
+            } else {
+                feedback.setTopic(Const.FEEDBACK_TOPIC_APP);
+            }
+        }));
     }
 
     @Override
@@ -331,6 +343,7 @@ public class FeedbackPresenter implements FeedbackContract.Presenter {
             call.cancel();
         }
 
+        compositeDisposable.dispose();
         view = null;
     }
 

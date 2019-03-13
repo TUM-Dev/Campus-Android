@@ -4,10 +4,13 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.model.Feedback
+import io.reactivex.Observable
 
 interface FeedbackContract {
 
     interface View {
+        fun getTopicInput(): Observable<Int>
+        fun getMessage(): Observable<String>
         fun setFeedback(message: String)
         fun showEmptyMessageError()
         fun showSendConfirmationDialog()

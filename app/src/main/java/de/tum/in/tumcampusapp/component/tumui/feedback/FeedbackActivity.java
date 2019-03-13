@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.jakewharton.rxbinding3.widget.RxRadioGroup;
+import com.jakewharton.rxbinding3.widget.RxTextView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -33,6 +35,7 @@ import de.tum.in.tumcampusapp.component.tumui.feedback.di.FeedbackModule;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
+import io.reactivex.Observable;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static android.widget.Toast.LENGTH_SHORT;
@@ -46,6 +49,7 @@ import static de.tum.in.tumcampusapp.component.tumui.feedback.FeedbackPresenter.
 public class FeedbackActivity extends BaseActivity
         implements FeedbackContract.View, FeedbackThumbnailsAdapter.RemoveListener {
 
+    private RadioGroup radioGroup;
     private CheckBox includeEmailCheckbox;
     private CheckBox includeLocationCheckbox;
     private TextInputLayout customEmailViewLayout;
@@ -74,17 +78,18 @@ public class FeedbackActivity extends BaseActivity
                 .build()
                 .inject(this);
 
-        presenter.attachView(this);
-
-        if (savedInstanceState != null) {
-            presenter.onRestoreInstanceState(savedInstanceState);
-        }
-
+        radioGroup = findViewById(R.id.radioButtonsGroup);
         feedbackTextView = findViewById(R.id.feedback_message);
         customEmailViewLayout = findViewById(R.id.feedback_custom_email_layout);
         customEmailTextView = findViewById(R.id.feedback_custom_email);
         includeEmailCheckbox = findViewById(R.id.feedback_include_email);
         includeLocationCheckbox = findViewById(R.id.feedback_include_location);
+
+        presenter.attachView(this);
+
+        if (savedInstanceState != null) {
+            presenter.onRestoreInstanceState(savedInstanceState);
+        }
 
         initFeedbackType();
         initIncludeLocation();
@@ -152,6 +157,20 @@ public class FeedbackActivity extends BaseActivity
             alertDialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
         }
         alertDialog.show();
+    }
+
+    @NotNull
+    @Override
+    public Observable<String> getMessage() {
+        return RxTextView
+                .textChanges(feedbackTextView)
+                .map(CharSequence::toString);
+    }
+
+    @NotNull
+    @Override
+    public Observable<Integer> getTopicInput() {
+        return RxRadioGroup.checkedChanges(radioGroup);
     }
 
     @Override
@@ -279,7 +298,7 @@ public class FeedbackActivity extends BaseActivity
                 .setMessage(R.string.feedback_sending_error)
                 .setIcon(R.drawable.ic_error_outline)
                 .setPositiveButton(R.string.try_again, (dialog, i) -> presenter.getFeedback())
-                .setNegativeButton(R.string.ok, null)
+                .setNegativeButton(R.string.cancel, null)
                 .create();
 
         if (errorDialog.getWindow() != null) {
@@ -299,9 +318,9 @@ public class FeedbackActivity extends BaseActivity
     @Override
     public void showSendConfirmationDialog() {
         AlertDialog alertDialog = new AlertDialog.Builder(this)
-                .setTitle(R.string.send_feedback_question)
+                .setMessage(R.string.send_feedback_question)
                 .setPositiveButton(R.string.send, (dialog, i) -> presenter.onConfirmSend())
-                .setNegativeButton(R.string.no, null)
+                .setNegativeButton(R.string.cancel, null)
                 .create();
 
         if (alertDialog.getWindow() != null) {
