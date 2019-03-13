@@ -20,6 +20,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -27,6 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
+import de.tum.in.tumcampusapp.component.tumui.feedback.di.FeedbackModule;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -52,7 +55,8 @@ public class FeedbackActivity extends BaseActivity
     private FeedbackThumbnailsAdapter thumbnailsAdapter;
     private AlertDialog progressDialog;
 
-    private FeedbackContract.Presenter presenter;
+    @Inject
+    FeedbackContract.Presenter presenter;
 
     public FeedbackActivity() {
         super(R.layout.activity_feedback);
@@ -63,7 +67,13 @@ public class FeedbackActivity extends BaseActivity
         super.onCreate(savedInstanceState);
 
         String lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
-        presenter = new FeedbackPresenter(this, lrzId);
+        getInjector()
+                .feedbackComponent()
+                .feedbackModule(new FeedbackModule())
+                .lrzId(lrzId)
+                .build()
+                .inject(this);
+
         presenter.attachView(this);
 
         if (savedInstanceState != null) {

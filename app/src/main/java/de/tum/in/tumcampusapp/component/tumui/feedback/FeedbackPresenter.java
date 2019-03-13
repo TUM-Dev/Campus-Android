@@ -39,7 +39,7 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.M;
 
-class FeedbackPresenter implements FeedbackContract.Presenter {
+public class FeedbackPresenter implements FeedbackContract.Presenter {
 
     static final int REQUEST_TAKE_PHOTO = 11;
     static final int REQUEST_GALLERY = 12;
@@ -62,7 +62,7 @@ class FeedbackPresenter implements FeedbackContract.Presenter {
 
     private Feedback feedback = new Feedback();
 
-    FeedbackPresenter(Context context, String lrzId) {
+    public FeedbackPresenter(Context context, String lrzId) {
         this.context = context;
         this.lrzId = lrzId;
         this.locationManager = new LocationManager(context);
