@@ -25,7 +25,7 @@ interface FeedbackContract {
 
     interface Presenter {
         fun attachView(view: FeedbackContract.View)
-        fun init(savedInstanceState: Bundle)
+        fun onRestoreInstanceState(savedInstanceState: Bundle)
         fun initEmail()
         fun getFeedback(): Feedback
         fun getLrzId(): String
@@ -37,6 +37,7 @@ interface FeedbackContract {
         fun onNewImageSelected(uri: Uri?)
         fun takePicture()
         fun openGallery()
+        fun onSaveInstanceState(outState: Bundle)
         fun detachView()
     }
 

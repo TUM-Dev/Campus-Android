@@ -50,7 +50,7 @@ public class FeedbackActivity extends BaseActivity
     private TextInputEditText customEmailTextView;
 
     private FeedbackThumbnailsAdapter thumbnailsAdapter;
-    private AlertDialog progressDialog; // TODO Use ProgressDialog
+    private AlertDialog progressDialog;
 
     private FeedbackContract.Presenter presenter;
 
@@ -67,7 +67,7 @@ public class FeedbackActivity extends BaseActivity
         presenter.attachView(this);
 
         if (savedInstanceState != null) {
-            presenter.init(savedInstanceState);
+            presenter.onRestoreInstanceState(savedInstanceState);
         }
 
         feedbackTextView = findViewById(R.id.feedback_message);
@@ -89,7 +89,7 @@ public class FeedbackActivity extends BaseActivity
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(Const.FEEDBACK, presenter.getFeedback());
+        presenter.onSaveInstanceState(outState);
     }
 
     private void initPictureGalley() {

@@ -75,7 +75,7 @@ class FeedbackPresenter implements FeedbackContract.Presenter {
     }
 
     @Override
-    public void init(@NonNull Bundle savedInstanceState) {
+    public void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(Const.FEEDBACK)) {
             feedback = savedInstanceState.getParcelable(Const.FEEDBACK);
 
@@ -338,6 +338,11 @@ class FeedbackPresenter implements FeedbackContract.Presenter {
         for (String path : feedback.getPicturePaths()) {
             new File(path).delete();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NotNull Bundle outState) {
+        outState.putParcelable(Const.FEEDBACK, feedback);
     }
 
 }
