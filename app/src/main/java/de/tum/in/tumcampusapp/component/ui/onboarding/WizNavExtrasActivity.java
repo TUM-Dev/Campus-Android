@@ -24,6 +24,7 @@ import de.tum.in.tumcampusapp.component.ui.chat.ChatRoomController;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.service.SilenceService;
+import de.tum.in.tumcampusapp.utils.CacheManager;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
@@ -74,6 +75,10 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         } else {
             groupChatMode.setChecked(false);
             groupChatMode.setEnabled(false);
+        }
+
+        if (AccessTokenManager.hasValidAccessToken(this)) {
+            new CacheManager(this).fillCache();
         }
     }
 
