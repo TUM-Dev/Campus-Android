@@ -3,20 +3,20 @@ package de.tum.in.tumcampusapp.component.ui.onboarding;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
 import android.view.View;
 import android.widget.Toast;
 
 import java.net.UnknownHostException;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.api.tumonline.exception.InactiveTokenException;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ProgressActivity;
 import de.tum.in.tumcampusapp.component.tumui.person.model.Identity;
 import de.tum.in.tumcampusapp.component.tumui.person.model.IdentitySet;
+import de.tum.in.tumcampusapp.component.tumui.person.model.ObfuscatedIds;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
@@ -89,22 +89,25 @@ public class WizNavCheckTokenActivity extends ProgressActivity<Void> {
         Identity identity = identitySet.getIds().get(0);
         Utils.setSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, identity.toString());
 
+        ObfuscatedIds ids = identity.getObfuscated_ids();
         // Save the TUMonline ID to preferences
-        Utils.setSetting(this, Const.TUMO_PIDENT_NR, identity.getObfuscated_ids()
-                .getStudierende()); // Switch to identity.getObfuscated_id() in the future
-        Utils.setSetting(this, Const.TUMO_STUDENT_ID, identity.getObfuscated_ids()
-                .getStudierende());
-        Utils.setSetting(this, Const.TUMO_EXTERNAL_ID, identity.getObfuscated_ids()
-                .getExtern());
-        Utils.setSetting(this, Const.TUMO_EMPLOYEE_ID, identity.getObfuscated_ids()
-                .getBedienstete());
-        if (!identity.getObfuscated_ids().getBedienstete().isEmpty()
-                && identity.getObfuscated_ids().getStudierende().isEmpty()
-                && identity.getObfuscated_ids().getExtern().isEmpty()) {
+
+        // Switch to identity.getObfuscated_id() in the future
+        Utils.setSetting(this, Const.TUMO_PIDENT_NR, ids.getStudierende());
+        Utils.setSetting(this, Const.TUMO_STUDENT_ID, ids.getStudierende());
+        Utils.setSetting(this, Const.TUMO_EMPLOYEE_ID, ids.getBedienstete());
+        Utils.setSetting(this, Const.TUMO_EXTERNAL_ID, ids.getExtern()); // usually alumni
+
+        if (!ids.getBedienstete().isEmpty()
+                && ids.getStudierende().isEmpty()
+                && ids.getExtern().isEmpty()) {
             Utils.setSetting(this, Const.EMPLOYEE_MODE, true);
+            // only preset cafeteria prices if the user is only an employee
+            // since we can't determine which id is active (given once and never removed)
+            Utils.setSetting(this, Const.ROLE, "1");
         }
 
-        // can't upload the obfuscated ids here since we might not have a (chat) member yet
+        // Note: we can't upload the obfuscated ids here since we might not have a (chat) member yet
 
         startActivity(new Intent(this, WizNavExtrasActivity.class));
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
