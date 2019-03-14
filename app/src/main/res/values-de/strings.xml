@@ -496,15 +496,23 @@ Signatur: %5$s</string>
     <string name="continue_to_payment">Weiter zur Zahlung</string>
     <string name="order_summary">Bestellungsübersicht</string>
     <string name="ticket_type">Tickettyp</string>
-    <string name="select_tickets">Tickets auswählen</string>
+    <string name="select_tickets">Tickets Auswählen</string>
     <string name="total">Gesamt</string>
     <string name="location">Ort</string>
     <string name="choose_ticket_type">Wähle deinen Ticket-Typ</string>
-    <string name="ticket_amount_information">Du kannst minimal %1d und maximal %2d Tickets der Kategorie \“%s\” kaufen</string>
-    <string name="price_per_ticket">je %s</string>
-    <string name="ticket_amount_label">Anzahl</string>
-    <string name="ticket_amount_error_title">Kaufbeschränkung</string>
+    <string name="price_per_ticket">%s pro Ticket</string>
+    <string name="ticket_amount_error_title">Kaufeinschränkungen</string>
     <string name="unknown">Unbekannt</string>
+    <string name="not_redeemed_yet">Noch nicht eingelöst</string>
+    <string name="partially_redeemed">%d von %d eingelöst (%s)</string>
+    <string name="redeemed_at">Eingelöst um %s</string>
+    <string name="no_tickets_remaining">Keine Tickets mehr vorhanden</string>
+    <string name="no_tickets_remaining_message">Du warst leider zu spät dran und die Tickets sind hier bereits ausverkauft. Bei vielen Events kannst du aber noch Tickets an der Abendkasse erwerben.</string>
+    <string name="error_message_select_at_least_one_ticket">Bitte wähle mindestens ein Ticket aus einer der Kategorien aus.</string>
+    <string name="error_no_ticket_selected">Keine Tickets ausgewählt</string>
+    <string name="ticket_amount_information">Es können maximal %d Tickets pro Person vom Typ \“%s\” gekauft werden.</string>
+    <string name="ticket_amount_label">Betrag</string>
+    <string name="tickets_saved_in_app">Das Ticket wurde in der App gespeichert.</string>
 
     <!-- Payment -->
     <string name="creditcard">Kreditkarte</string>
@@ -640,7 +648,6 @@ Signatur: %5$s</string>
     <string name="no_bookings_found">Keine Buchungen gefunden</string>
     <string name="ticket">Ticket</string>
     <string name="thanks_for_your_purchase">Danke für deinen Einkauf</string>
-    <string name="tickets_saved_in_app">Das Ticket wurde für dich in der App gespeichert.</string>
     <plurals name="tickets_saved_in_app">
         <item quantity="one">@string/tickets_saved_in_app</item>
         <item quantity="other">Die Tickets wurden in der App gespeichert.</item>
@@ -675,14 +682,6 @@ Signatur: %5$s</string>
     <string name="update_note_title">Neue Features</string>
     <string name="update_note_version">Version %s</string>
     <string name="action_cant_be_performed">Aktion kann nicht ausgeführt werden</string>
-
-    <string name="not_redeemed_yet">Noch nicht eingelöst</string>
-    <string name="partially_redeemed">%d von %d eingelöst (%s)</string>
-    <string name="redeemed_at">Eingelöst um %s</string>
-    <string name="no_tickets_remaining">No tickets remaining</string>
-    <string name="no_tickets_remaining_message">Die Tickets sind gerade leider alle weg. Bei vielen Veranstaltungen gibt es jedoch noch Tickets an der Abendkasse.</string>
-    <string name="error_message_select_at_least_one_ticket">Please select at least one ticket from one of the categories.</string>
-    <string name="error_no_ticket_selected">No tickets selected</string>
 
     <plurals name="new_grades_format_string">
         <item quantity="one">%d neue Note verfügbar</item>
