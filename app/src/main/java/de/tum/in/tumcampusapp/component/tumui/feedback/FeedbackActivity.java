@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.component.tumui.feedback;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -14,6 +13,7 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.jakewharton.rxbinding3.widget.RxCompoundButton;
 import com.jakewharton.rxbinding3.widget.RxRadioGroup;
 import com.jakewharton.rxbinding3.widget.RxTextView;
 
@@ -91,7 +91,6 @@ public class FeedbackActivity extends BaseActivity
             presenter.onRestoreInstanceState(savedInstanceState);
         }
 
-        initFeedbackType();
         initIncludeLocation();
         initPictureGalley();
 
@@ -173,6 +172,18 @@ public class FeedbackActivity extends BaseActivity
         return RxRadioGroup.checkedChanges(radioGroup);
     }
 
+    @NotNull
+    @Override
+    public Observable<Boolean> getIncludeEmail() {
+        return RxCompoundButton.checkedChanges(includeEmailCheckbox);
+    }
+
+    @NotNull
+    @Override
+    public Observable<Boolean> getIncludeLocation() {
+        return RxCompoundButton.checkedChanges(includeLocationCheckbox);
+    }
+
     @Override
     public void setFeedback(@NotNull String message) {
         feedbackTextView.setText(message);
@@ -194,7 +205,6 @@ public class FeedbackActivity extends BaseActivity
         requestPermissions(new String[] { permission }, requestCode);
     }
 
-    @SuppressLint("NewApi")
     private void initIncludeLocation() {
         includeLocationCheckbox.setChecked(presenter.getFeedback().getIncludeLocation());
     }
@@ -210,38 +220,14 @@ public class FeedbackActivity extends BaseActivity
         } else {
             includeEmailCheckbox.setText(getString(R.string.feedback_include_email_tum_id, email));
         }
-
-        toggleEmailInput();
-
-        includeEmailCheckbox.setOnClickListener(view -> {
-            final boolean includesEmail = presenter.getFeedback().getIncludeEmail();
-            presenter.getFeedback().setIncludeEmail(!includesEmail);
-            toggleEmailInput();
-        });
     }
 
-    private void toggleEmailInput() {
-        if (includeEmailCheckbox.isChecked() && presenter.getLrzId().isEmpty()) {
+    @Override
+    public void showEmailInput(boolean show) {
+        if (show) {
             customEmailViewLayout.setVisibility(View.VISIBLE);
         } else {
             customEmailViewLayout.setVisibility(View.GONE);
-        }
-    }
-
-    private void initFeedbackType() {
-        RadioGroup radioGroup = findViewById(R.id.radioButtonsGroup);
-        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            String topic = checkedId == R.id.tumInGeneralRadioButton
-                    ? Const.FEEDBACK_TOPIC_GENERAL : Const.FEEDBACK_TOPIC_APP;
-            presenter.getFeedback().setTopic(topic);
-        });
-
-        String topic = presenter.getFeedback().getTopic();
-        radioGroup.clearCheck();
-        if (topic.equals(Const.FEEDBACK_TOPIC_GENERAL)) {
-            radioGroup.check(R.id.tumInGeneralRadioButton);
-        } else {
-            radioGroup.check(R.id.tumCampusAppRadioButton);
         }
     }
 

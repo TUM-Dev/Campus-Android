@@ -11,7 +11,10 @@ interface FeedbackContract {
     interface View {
         fun getTopicInput(): Observable<Int>
         fun getMessage(): Observable<String>
+        fun getIncludeEmail(): Observable<Boolean>
+        fun getIncludeLocation(): Observable<Boolean>
         fun setFeedback(message: String)
+        fun showEmailInput(show: Boolean)
         fun showEmptyMessageError()
         fun showSendConfirmationDialog()
         fun showWarning(message: String)

@@ -77,13 +77,23 @@ public class FeedbackPresenter implements FeedbackContract.Presenter {
         this.view = view;
 
         compositeDisposable.add(view.getMessage().subscribe(feedback::setMessage));
-        compositeDisposable.add(view.getTopicInput().subscribe(integer -> {
-            if (integer == R.id.tumInGeneralRadioButton) {
-                feedback.setTopic(Const.FEEDBACK_TOPIC_GENERAL);
-            } else {
-                feedback.setTopic(Const.FEEDBACK_TOPIC_APP);
-            }
-        }));
+        compositeDisposable.add(view.getTopicInput().subscribe(this::updateFeedbackTopic));
+
+        compositeDisposable.add(view.getIncludeLocation().subscribe(feedback::setIncludeLocation));
+        compositeDisposable.add(view.getIncludeEmail().subscribe(this::onIncludeEmailChanged));
+    }
+
+    private void updateFeedbackTopic(int topicButton) {
+        if (topicButton == R.id.tumInGeneralRadioButton) {
+            feedback.setTopic(Const.FEEDBACK_TOPIC_GENERAL);
+        } else {
+            feedback.setTopic(Const.FEEDBACK_TOPIC_APP);
+        }
+    }
+
+    private void onIncludeEmailChanged(boolean includeEmail) {
+        feedback.setIncludeEmail(includeEmail);
+        view.showEmailInput(includeEmail && lrzId.isEmpty());
     }
 
     @Override
@@ -152,7 +162,7 @@ public class FeedbackPresenter implements FeedbackContract.Presenter {
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
 
-        Intent chooser = Intent.createChooser(intent, "Select file"); // TODO String
+        Intent chooser = Intent.createChooser(intent, "Select file");
         view.openGallery(chooser);
     }
 
@@ -195,7 +205,7 @@ public class FeedbackPresenter implements FeedbackContract.Presenter {
         imagesSent = 0;
 
         if (feedback.getIncludeEmail() && !isEmailValid(feedback.getEmail())) {
-            view.showWarning("Email is not valid");
+            view.showWarning(context.getString(R.string.invalid_email));
             return;
         }
 
