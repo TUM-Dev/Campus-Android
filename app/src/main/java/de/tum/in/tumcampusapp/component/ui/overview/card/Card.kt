@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.preference.PreferenceManager
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationDestination
 import de.tum.`in`.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX
@@ -107,7 +106,7 @@ abstract class Card(
      * Sets preferences so that this card does not show up again until
      * reactivated manually by the user
      */
-    fun hideAlways() {
+    open fun hideAlways() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val e = prefs.edit()
         e.putBoolean(settingsPrefix + "_start", false)

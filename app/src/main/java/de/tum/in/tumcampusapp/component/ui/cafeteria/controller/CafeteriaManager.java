@@ -7,10 +7,10 @@ import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import androidx.annotation.NonNull;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
@@ -45,8 +45,10 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
     public List<Card> getCards(@NonNull CacheControl cacheControl) {
         List<Card> results = new ArrayList<>();
 
-        Set<String> cafeteriaIds = PreferenceManager.getDefaultSharedPreferences(mContext)
-                                                    .getStringSet("cafeteria_cards_selection", new HashSet<>(20));
+        // ids have to be added to a new set because the data would be changed otherwise
+        Collection<String> cafeteriaIds = new HashSet<>(20);
+        cafeteriaIds.addAll(PreferenceManager.getDefaultSharedPreferences(mContext)
+                                             .getStringSet("cafeteria_cards_selection", new HashSet<>(0)));
 
         // adding the location based id to the set now makes sure that the cafeteria is not shown twice
         if (cafeteriaIds.contains(Const.CAFETERIA_BY_LOCATION_SETTINGS_ID)){
