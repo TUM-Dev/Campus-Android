@@ -38,7 +38,7 @@
             </androidx.preference.PreferenceCategory>
 
             <androidx.preference.PreferenceCategory
-                android:title="Select Cafeteria Cards"
+                android:title="@string/settings_chose_cafeteria_cards"
                 android:key="cafeteria_cards" />
 
             <androidx.preference.PreferenceCategory

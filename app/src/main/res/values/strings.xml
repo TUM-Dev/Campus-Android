@@ -722,4 +722,5 @@ Signature: %5$s</string>
     <string name="settings_cafeteria_depending_on_location">Depending on Location</string>
     <string name="cafeteria_cards_settings_summary">Cards for the selected locations will always be shown on the main screen</string>
     <string name="cafeteria_cards_settings_title">Select Locations</string>
+    <string name="settings_chose_cafeteria_cards">Choose Cafeteria Cards</string>
 </resources>

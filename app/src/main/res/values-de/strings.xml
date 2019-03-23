@@ -670,4 +670,5 @@ Signatur: %5$s</string>
     <string name="settings_cafeteria_depending_on_location">Standortabhängig</string>
     <string name="cafeteria_cards_settings_summary">Karten für die ausgewählten Orte werden immer in der Übersicht angezeigt</string>
     <string name="cafeteria_cards_settings_title">Wähle Speisepläne</string>
+    <string name="settings_chose_cafeteria_cards">Mensakarten wählen</string>
 </resources>
