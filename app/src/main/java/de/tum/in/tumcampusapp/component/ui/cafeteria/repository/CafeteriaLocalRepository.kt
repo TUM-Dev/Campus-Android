@@ -41,6 +41,8 @@ class CafeteriaLocalRepository @Inject constructor(
 
     fun getAllCafeterias(): Flowable<List<Cafeteria>> = database.cafeteriaDao().all
 
+    fun getAllCafeteriasNow(): List<Cafeteria> = database.cafeteriaDao().allNow
+
     fun getCafeteria(id: Int): Cafeteria? = database.cafeteriaDao().getById(id)
 
     fun addCafeteria(vararg cafeteria: Cafeteria) = executor.execute {

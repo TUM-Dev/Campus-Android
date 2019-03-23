@@ -15,6 +15,9 @@ import android.view.View;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -23,14 +26,18 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.ListPreference;
+import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreferenceCompat;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.eduroam.SetupEduroamActivity;
 import de.tum.in.tumcampusapp.component.ui.news.NewsController;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
@@ -40,6 +47,8 @@ import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.service.StartSyncReceiver;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
+
+import static de.tum.in.tumcampusapp.utils.Const.CAFETERIA_BY_LOCATION_SETTINGS_ID;
 
 public class SettingsFragment extends PreferenceFragmentCompat
         implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
@@ -58,6 +67,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
         populateNewsSources();
         setUpEmployeeSettings();
+        initCafeteriaCardSelections();
 
         // Disables silence service if the app is used without TUMOnline access
         SwitchPreferenceCompat silentSwitch =
@@ -99,6 +109,34 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
         // Set the default white background in the view so as to avoid transparency
         view.setBackgroundColor(Color.WHITE);
+    }
+
+    private void initCafeteriaCardSelections() {
+        CafeteriaLocalRepository repository = new CafeteriaLocalRepository(TcaDb.getInstance(getContext()));
+        List<Cafeteria> cafeterias = repository.getAllCafeteriasNow();
+        Collections.sort(cafeterias, Cafeteria::compareTo);
+
+        String[] cafeteriaNames = new String[cafeterias.size() + 1];
+        String[] cafeteriaIds = new String[cafeterias.size() + 1];
+
+        cafeteriaNames[0] = getString(R.string.settings_cafeteria_depending_on_location);
+        cafeteriaIds[0] = CAFETERIA_BY_LOCATION_SETTINGS_ID;
+        Collection<String> defaultValue = new HashSet<>(1);
+        defaultValue.add(CAFETERIA_BY_LOCATION_SETTINGS_ID);
+
+        for (int i = 0; i < cafeterias.size(); i++) {
+            cafeteriaNames[i+1] = cafeterias.get(i).getName();
+            cafeteriaIds[i+1] = Integer.toString(cafeterias.get(i).getId());
+        }
+        MultiSelectListPreference multiSelectPref = new MultiSelectListPreference(getContext());
+        multiSelectPref.setDefaultValue(defaultValue);
+        multiSelectPref.setIconSpaceReserved(true);
+        multiSelectPref.setKey("cafeteria_cards_selection");
+        multiSelectPref.setTitle(R.string.cafeteria_cards_settings_title);
+        multiSelectPref.setSummary(R.string.cafeteria_cards_settings_summary);
+        multiSelectPref.setEntries(cafeteriaNames);
+        multiSelectPref.setEntryValues(cafeteriaIds);
+        ((PreferenceGroup) findPreference("cafeteria_cards")).addPreference(multiSelectPref);
     }
 
     private void populateNewsSources() {
