@@ -78,6 +78,9 @@ android {
     sourceSets {
         androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
+    androidExtensions {
+        experimental = true
+    }
 }
 
 def retrofitVersion = '2.5.0'
