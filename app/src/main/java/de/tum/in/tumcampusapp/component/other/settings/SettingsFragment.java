@@ -15,9 +15,7 @@ import android.view.View;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -30,7 +28,6 @@ import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreferenceCompat;
 import de.tum.in.tumcampusapp.R;
@@ -121,22 +118,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
         cafeteriaNames[0] = getString(R.string.settings_cafeteria_depending_on_location);
         cafeteriaIds[0] = CAFETERIA_BY_LOCATION_SETTINGS_ID;
-        Collection<String> defaultValue = new HashSet<>(1);
-        defaultValue.add(CAFETERIA_BY_LOCATION_SETTINGS_ID);
-
         for (int i = 0; i < cafeterias.size(); i++) {
-            cafeteriaNames[i+1] = cafeterias.get(i).getName();
-            cafeteriaIds[i+1] = Integer.toString(cafeterias.get(i).getId());
+            cafeteriaNames[i + 1] = cafeterias.get(i).getName();
+            cafeteriaIds[i + 1] = Integer.toString(cafeterias.get(i).getId());
         }
-        MultiSelectListPreference multiSelectPref = new MultiSelectListPreference(getContext());
-        multiSelectPref.setDefaultValue(defaultValue);
-        multiSelectPref.setIconSpaceReserved(true);
-        multiSelectPref.setKey(Const.CAFETERIA_CARDS_SETTING);
-        multiSelectPref.setTitle(R.string.cafeteria_cards_settings_title);
-        multiSelectPref.setSummary(R.string.cafeteria_cards_settings_summary);
+        MultiSelectListPreference multiSelectPref =
+                (MultiSelectListPreference) findPreference(Const.CAFETERIA_CARDS_SETTING);
         multiSelectPref.setEntries(cafeteriaNames);
         multiSelectPref.setEntryValues(cafeteriaIds);
-        ((PreferenceGroup) findPreference("cafeteria_cards")).addPreference(multiSelectPref);
     }
 
     private void populateNewsSources() {
