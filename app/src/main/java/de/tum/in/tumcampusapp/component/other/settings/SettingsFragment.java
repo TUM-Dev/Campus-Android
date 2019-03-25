@@ -112,8 +112,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     private void initCafeteriaCardSelections() {
         CafeteriaLocalRepository repository = new CafeteriaLocalRepository(TcaDb.getInstance(getContext()));
-        List<Cafeteria> cafeterias = repository.getAllCafeteriasNow();
-        Collections.sort(cafeterias, Cafeteria::compareTo);
+        List<Cafeteria> cafeterias = repository.getAllCafeterias().blockingFirst();
+        Collections.sort(cafeterias, (c1, c2) -> c1.getName().compareTo(c2.getName()));
 
         String[] cafeteriaNames = new String[cafeterias.size() + 1];
         String[] cafeteriaIds = new String[cafeterias.size() + 1];
