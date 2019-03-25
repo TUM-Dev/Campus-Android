@@ -10,13 +10,16 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -44,8 +47,6 @@ import de.tum.in.tumcampusapp.service.SilenceService;
 import de.tum.in.tumcampusapp.service.StartSyncReceiver;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
-
-import static de.tum.in.tumcampusapp.utils.Const.CAFETERIA_BY_LOCATION_SETTINGS_ID;
 
 public class SettingsFragment extends PreferenceFragmentCompat
         implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
@@ -87,6 +88,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
             setSummary("card_cafeteria_default_K");
             setSummary("card_cafeteria_default_W");
             setSummary("card_role");
+            setCafeteriaCardsSummary(findPreference(Const.CAFETERIA_CARDS_SETTING));
         } else if (rootKey.equals("card_mvv")) {
             setSummary("card_stations_default_G");
             setSummary("card_stations_default_C");
@@ -117,7 +119,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         String[] cafeteriaIds = new String[cafeterias.size() + 1];
 
         cafeteriaNames[0] = getString(R.string.settings_cafeteria_depending_on_location);
-        cafeteriaIds[0] = CAFETERIA_BY_LOCATION_SETTINGS_ID;
+        cafeteriaIds[0] = Const.CAFETERIA_BY_LOCATION_SETTINGS_ID;
         for (int i = 0; i < cafeterias.size(); i++) {
             cafeteriaNames[i + 1] = cafeterias.get(i).getName();
             cafeteriaIds[i + 1] = Integer.toString(cafeterias.get(i).getId());
@@ -126,6 +128,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 (MultiSelectListPreference) findPreference(Const.CAFETERIA_CARDS_SETTING);
         multiSelectPref.setEntries(cafeteriaNames);
         multiSelectPref.setEntryValues(cafeteriaIds);
+        multiSelectPref.setOnPreferenceChangeListener((preference, newValue) -> {
+            ((MultiSelectListPreference)preference).setValues((Set<String>) newValue);
+            setCafeteriaCardsSummary(preference);
+            return false;
+        });
     }
 
     private void populateNewsSources() {
@@ -243,6 +250,22 @@ public class SettingsFragment extends PreferenceFragmentCompat
             ListPreference listPref = (ListPreference) pref;
             String entry = listPref.getEntry().toString();
             listPref.setSummary(entry);
+        }
+    }
+
+    private void setCafeteriaCardsSummary(Preference preference) {
+        MultiSelectListPreference multiSelectPreference = (MultiSelectListPreference) preference;
+        Set<String> values =  multiSelectPreference.getValues();
+        if (values.isEmpty()) {
+            multiSelectPreference.setSummary(R.string.settings_no_location_selected);
+        } else {
+            ArrayList<String> valueNames = new ArrayList<>(values.size());
+            CharSequence[] entryNames = multiSelectPreference.getEntries();
+            for (String v: values) {
+                valueNames.add(entryNames[multiSelectPreference.findIndexOfValue(v)].toString());
+            }
+            Collections.sort(valueNames);
+            multiSelectPreference.setSummary(TextUtils.join(", ", valueNames));
         }
     }
 
