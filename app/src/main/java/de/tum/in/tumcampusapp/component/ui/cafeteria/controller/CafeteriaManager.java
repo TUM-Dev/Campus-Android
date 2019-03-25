@@ -48,7 +48,7 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
         // ids have to be added to a new set because the data would be changed otherwise
         Collection<String> cafeteriaIds = new HashSet<>(20);
         cafeteriaIds.addAll(PreferenceManager.getDefaultSharedPreferences(mContext)
-                                             .getStringSet("cafeteria_cards_selection", new HashSet<>(0)));
+                                             .getStringSet(Const.CAFETERIA_CARDS_SETTING, new HashSet<>(0)));
 
         // adding the location based id to the set now makes sure that the cafeteria is not shown twice
         if (cafeteriaIds.contains(Const.CAFETERIA_BY_LOCATION_SETTINGS_ID)){
@@ -58,7 +58,7 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
 
         for (String id: cafeteriaIds) {
             int cafeteria = Integer.parseInt(id);
-            if (cafeteria == -1){
+            if (cafeteria == Const.NO_CAFETERIA_FOUND){
                 // no cafeteria based on the location could be found
                 continue;
             }
@@ -81,7 +81,7 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
      */
     public List<CafeteriaMenu> getBestMatchCafeteriaMenus() {
         int cafeteriaId = getBestMatchMensaId();
-        if (cafeteriaId == -1) {
+        if (cafeteriaId == Const.NO_CAFETERIA_FOUND) {
             return Collections.emptyList();
         }
 
@@ -91,7 +91,7 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
     public int getBestMatchMensaId() {
         // Choose which mensa should be shown
         int cafeteriaId = new LocationManager(mContext).getCafeteria();
-        if (cafeteriaId == -1) {
+        if (cafeteriaId == Const.NO_CAFETERIA_FOUND) {
             Utils.log("could not get a Cafeteria from locationManager!");
         }
         return cafeteriaId;

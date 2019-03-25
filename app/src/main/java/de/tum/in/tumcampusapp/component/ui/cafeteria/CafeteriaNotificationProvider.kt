@@ -34,7 +34,7 @@ class CafeteriaNotificationProvider(context: Context) : NotificationProvider(con
 
     override fun buildNotification(): AppNotification? {
         val cafeteriaId = LocationManager(context).getCafeteria()
-        if (cafeteriaId == -1) {
+        if (cafeteriaId == Const.NO_CAFETERIA_FOUND) {
             return null
         }
 

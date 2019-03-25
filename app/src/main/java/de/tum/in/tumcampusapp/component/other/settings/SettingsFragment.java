@@ -131,7 +131,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         MultiSelectListPreference multiSelectPref = new MultiSelectListPreference(getContext());
         multiSelectPref.setDefaultValue(defaultValue);
         multiSelectPref.setIconSpaceReserved(true);
-        multiSelectPref.setKey("cafeteria_cards_selection");
+        multiSelectPref.setKey(Const.CAFETERIA_CARDS_SETTING);
         multiSelectPref.setTitle(R.string.cafeteria_cards_settings_title);
         multiSelectPref.setSummary(R.string.cafeteria_cards_settings_summary);
         multiSelectPref.setEntries(cafeteriaNames);

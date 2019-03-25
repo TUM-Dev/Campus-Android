@@ -164,4 +164,7 @@ object Const {
     const val SHOW_UPDATE_NOTE = "showUpdateNote"
     const val UPDATE_MESSAGE = "updateNoteMessage"
     const val SAVED_APP_VERSION = "savedAppVersion"
+
+    const val CAFETERIA_CARDS_SETTING = "cafeteria_cards_selection"
+    const val NO_CAFETERIA_FOUND = -1
 }

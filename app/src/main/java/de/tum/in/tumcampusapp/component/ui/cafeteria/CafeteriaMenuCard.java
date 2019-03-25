@@ -101,13 +101,13 @@ public class CafeteriaMenuCard extends Card {
     public void hideAlways() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         String id = Integer.toString(mCafeteria.getId());
-        Set<String> ids = prefs.getStringSet("cafeteria_cards_selection", new HashSet<>());
+        Set<String> ids = prefs.getStringSet(Const.CAFETERIA_CARDS_SETTING, new HashSet<>());
         if (ids.contains(id)) {
             ids.remove(id);
         } else {
             ids.remove(Const.CAFETERIA_BY_LOCATION_SETTINGS_ID);
         }
-        prefs.edit().putStringSet("cafeteria_cards_selection", ids).apply();
+        prefs.edit().putStringSet(Const.CAFETERIA_CARDS_SETTING, ids).apply();
     }
 
 }
