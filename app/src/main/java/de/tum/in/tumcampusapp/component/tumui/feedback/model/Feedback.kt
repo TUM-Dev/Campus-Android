@@ -1,5 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.tumui.feedback.model
 
+import android.location.Location
 import android.os.Build
 import android.os.Parcelable
 import de.tum.`in`.tumcampusapp.BuildConfig
@@ -33,4 +34,11 @@ data class Feedback(
         var imageCount: Int = 0,
         @Transient // don't send this
         var picturePaths: List<String> = ArrayList()
-) : Parcelable
+) : Parcelable {
+
+    fun setLocation(location: Location) {
+        latitude = location.latitude
+        longitude = location.longitude
+    }
+
+}

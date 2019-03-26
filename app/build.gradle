@@ -138,6 +138,7 @@ dependencies {
     implementation 'com.trello.rxlifecycle3:rxlifecycle:3.0.0'
     implementation 'com.jakewharton.rxrelay2:rxrelay:2.1.0'
     implementation 'com.jakewharton.rxbinding3:rxbinding-material:3.0.0-alpha2'
+    implementation 'com.patloew.rxlocation:rxlocation:1.0.5'
 
     // Transport
     implementation 'com.squareup.okhttp3:logging-interceptor:3.13.1'

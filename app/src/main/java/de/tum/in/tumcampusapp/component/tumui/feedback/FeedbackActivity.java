@@ -1,6 +1,8 @@
 package de.tum.in.tumcampusapp.component.tumui.feedback;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,11 +13,19 @@ import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.jakewharton.rxbinding3.widget.RxCompoundButton;
 import com.jakewharton.rxbinding3.widget.RxRadioGroup;
 import com.jakewharton.rxbinding3.widget.RxTextView;
+import com.patloew.rxlocation.RxLocation;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -24,11 +34,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.tumui.feedback.di.FeedbackModule;
@@ -182,6 +187,14 @@ public class FeedbackActivity extends BaseActivity
     @Override
     public Observable<Boolean> getIncludeLocation() {
         return RxCompoundButton.checkedChanges(includeLocationCheckbox);
+    }
+
+    @SuppressLint("MissingPermission")
+    @NotNull
+    @Override
+    public Observable<Location> getLocation() {
+        LocationRequest locationRequest = LocationRequest.create();
+        return new RxLocation(this).location().updates(locationRequest);
     }
 
     @Override

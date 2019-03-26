@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.feedback
 
 import android.content.Intent
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.model.Feedback
@@ -13,6 +14,7 @@ interface FeedbackContract {
         fun getMessage(): Observable<String>
         fun getIncludeEmail(): Observable<Boolean>
         fun getIncludeLocation(): Observable<Boolean>
+        fun getLocation(): Observable<Location>
         fun setFeedback(message: String)
         fun showEmailInput(show: Boolean)
         fun showEmptyMessageError()

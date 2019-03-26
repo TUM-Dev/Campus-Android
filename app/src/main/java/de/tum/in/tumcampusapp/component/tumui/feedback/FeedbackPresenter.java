@@ -10,6 +10,11 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Patterns;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,10 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
@@ -81,6 +82,7 @@ public class FeedbackPresenter implements FeedbackContract.Presenter {
 
         compositeDisposable.add(view.getIncludeLocation().subscribe(feedback::setIncludeLocation));
         compositeDisposable.add(view.getIncludeEmail().subscribe(this::onIncludeEmailChanged));
+        compositeDisposable.add(view.getLocation().subscribe(feedback::setLocation));
     }
 
     private void updateFeedbackTopic(int topicButton) {
