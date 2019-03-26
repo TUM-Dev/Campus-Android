@@ -36,9 +36,18 @@ data class Feedback(
         var picturePaths: List<String> = ArrayList()
 ) : Parcelable {
 
-    fun setLocation(location: Location) {
-        latitude = location.latitude
-        longitude = location.longitude
-    }
+    var location: Location?
+        get() {
+            val lat = latitude ?: return null
+            val lng = longitude ?: return null
+            return Location("").apply {
+                latitude = lat
+                longitude = lng
+            }
+        }
+        set(value) {
+            latitude = value?.latitude
+            longitude = value?.longitude
+        }
 
 }

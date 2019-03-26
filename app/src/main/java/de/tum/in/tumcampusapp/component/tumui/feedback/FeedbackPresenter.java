@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.component.tumui.feedback;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -25,7 +24,6 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
-import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.FeedbackResult;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -57,7 +55,6 @@ public class FeedbackPresenter implements FeedbackContract.Presenter {
     private FeedbackContract.View view;
 
     private final Context context;
-    private LocationManager locationManager;
     private TUMCabeClient tumCabeClient;
 
     private String lrzId;
@@ -66,11 +63,10 @@ public class FeedbackPresenter implements FeedbackContract.Presenter {
 
     private Feedback feedback = new Feedback();
 
-    public FeedbackPresenter(Context context, String lrzId) {
+    public FeedbackPresenter(Context context, String lrzId, TUMCabeClient tumCabeClient) {
         this.context = context;
         this.lrzId = lrzId;
-        this.locationManager = new LocationManager(context);
-        this.tumCabeClient = TUMCabeClient.getInstance(context);
+        this.tumCabeClient = tumCabeClient;
     }
 
     @Override
@@ -191,14 +187,10 @@ public class FeedbackPresenter implements FeedbackContract.Presenter {
             feedback.setLatitude(null);
             feedback.setLongitude(null);
         } else {
-            Location location = locationManager.getLastLocation();
-            if (location == null) {
+            if (feedback.getLocation() == null) {
                 showNoLocationAccessDialog();
                 return;
             }
-
-            feedback.setLatitude(location.getLatitude());
-            feedback.setLongitude(location.getLongitude());
         }
 
         final int images = feedback.getPicturePaths().size();
