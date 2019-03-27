@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +11,12 @@ import android.view.ViewGroup;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
 import de.tum.in.tumcampusapp.component.other.navigation.SystemActivity;
@@ -82,14 +86,28 @@ public class CafeteriaMenuCard extends Card {
     @Override
     public void discard(@NonNull Editor editor) {
         DateTime date = mCafeteria.getNextMenuDate();
-        editor.putLong(CAFETERIA_DATE, date.getMillis());
+        editor.putLong(CAFETERIA_DATE + "_" + mCafeteria.getId(), date.getMillis());
     }
 
     @Override
     protected boolean shouldShow(@NonNull SharedPreferences prefs) {
-        final long prevDate = prefs.getLong(CAFETERIA_DATE, 0);
+        // the card reappears when the day is over and a new menu will be shown
+        final long prevDate = prefs.getLong(CAFETERIA_DATE + "_" + mCafeteria.getId(), 0);
         DateTime date = mCafeteria.getNextMenuDate();
         return prevDate < date.getMillis();
+    }
+
+    @Override
+    public void hideAlways() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String id = Integer.toString(mCafeteria.getId());
+        Set<String> ids = prefs.getStringSet(Const.CAFETERIA_CARDS_SETTING, new HashSet<>());
+        if (ids.contains(id)) {
+            ids.remove(id);
+        } else {
+            ids.remove(Const.CAFETERIA_BY_LOCATION_SETTINGS_ID);
+        }
+        prefs.edit().putStringSet(Const.CAFETERIA_CARDS_SETTING, ids).apply();
     }
 
 }

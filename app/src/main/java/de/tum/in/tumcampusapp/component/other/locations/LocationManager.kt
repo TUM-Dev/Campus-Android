@@ -184,7 +184,7 @@ class LocationManager(c: Context) {
         }
 
         val allCafeterias = getCafeterias()
-        return if (allCafeterias.isEmpty()) -1 else allCafeterias[0].id
+        return if (allCafeterias.isEmpty()) Const.NO_CAFETERIA_FOUND else allCafeterias[0].id
     }
 
     /**

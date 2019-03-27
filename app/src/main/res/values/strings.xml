@@ -719,4 +719,8 @@ Signature: %5$s</string>
         <item quantity="other">%d new grades available: %s</item>
     </plurals>
     <string name="not_specified">Not specified</string>
+    <string name="settings_cafeteria_depending_on_location">Depending on Location</string>
+    <string name="cafeteria_cards_settings_title">Select cafeterias to be shown</string>
+    <string name="settings_chose_cafeteria_cards">Choose Cafeteria Cards</string>
+    <string name="settings_no_location_selected">No Location Selected</string>
 </resources>

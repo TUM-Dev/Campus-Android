@@ -666,4 +666,9 @@ Signatur: %5$s</string>
     <string name="not_specified">Keine Angabe</string>
 
     <string name="stuy_room_placeholder_text">Hier werden gerade neue Lernräume eingerichtet!</string>
+
+    <string name="settings_cafeteria_depending_on_location">Standortabhängig</string>
+    <string name="cafeteria_cards_settings_title">Wähle Speisepläne</string>
+    <string name="settings_chose_cafeteria_cards">Mensakarten wählen</string>
+    <string name="settings_no_location_selected">Kein Standort ausgewählt</string>
 </resources>

@@ -27,6 +27,9 @@
         <item>Garching-Forschungszentrum</item>
         <item>Garching-Technische Universität</item>
     </string-array>
+    <string-array name="cafeteria_cards_default" translatable="false">
+        <item>-1</item>
+    </string-array>
 
     <!-- Campus Stammgelände -->
     <string-array name="stations_C" translatable="false">
