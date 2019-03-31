@@ -27,6 +27,7 @@ import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
+import de.tum.in.tumcampusapp.component.ui.openinghour.OpeningHours;
 import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
@@ -47,6 +48,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE_BUILDINGS_TO_GPS;
@@ -208,6 +210,10 @@ public interface TUMCabeAPIService {
     Call<List<StudyRoomGroup>> getStudyRoomGroups();
 
     // TICKET SALE
+
+    // openingHours\
+    @GET("Api/openingtimes")
+    Observable<OpeningHours.Result> displayCategory(@Query("category") String category);
 
     // Getting Event information
 
