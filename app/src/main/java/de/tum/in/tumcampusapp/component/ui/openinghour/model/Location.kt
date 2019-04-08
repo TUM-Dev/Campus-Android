@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.component.ui.cafeteria.model
+package de.tum.`in`.tumcampusapp.component.ui.openinghour.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

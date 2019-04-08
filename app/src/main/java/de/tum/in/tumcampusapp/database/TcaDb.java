@@ -32,7 +32,7 @@ import de.tum.in.tumcampusapp.component.ui.cafeteria.FavoriteDishDao;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.FavoriteDish;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Location;
+import de.tum.in.tumcampusapp.component.ui.openinghour.model.Location;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatMessageDao;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatRoomDao;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;

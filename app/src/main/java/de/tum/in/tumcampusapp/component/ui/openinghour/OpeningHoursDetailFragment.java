@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaLocationDao;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Location;
+import de.tum.in.tumcampusapp.component.ui.openinghour.model.Location;
 import de.tum.in.tumcampusapp.database.TcaDb;
 
 /**

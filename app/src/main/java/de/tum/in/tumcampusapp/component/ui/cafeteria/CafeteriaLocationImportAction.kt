@@ -2,7 +2,7 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria
 
 import android.content.res.AssetManager
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Location
+import de.tum.`in`.tumcampusapp.component.ui.openinghour.model.Location
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.service.DownloadWorker
 import de.tum.`in`.tumcampusapp.utils.Utils
