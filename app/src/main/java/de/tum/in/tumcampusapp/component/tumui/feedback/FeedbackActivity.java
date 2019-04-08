@@ -115,7 +115,8 @@ public class FeedbackActivity extends BaseActivity
         pictureList.setLayoutManager(new LinearLayoutManager(this, HORIZONTAL, false));
 
         List<String> imagePaths = presenter.getFeedback().getPicturePaths();
-        thumbnailsAdapter = new FeedbackThumbnailsAdapter(imagePaths, this);
+        final int thumbnailSize = (int) getResources().getDimension(R.dimen.thumbnail_size);
+        thumbnailsAdapter = new FeedbackThumbnailsAdapter(imagePaths, this, thumbnailSize);
         pictureList.setAdapter(thumbnailsAdapter);
 
         findViewById(R.id.feedback_add_image).setOnClickListener(view -> showImageOptionsDialog());
@@ -348,8 +349,7 @@ public class FeedbackActivity extends BaseActivity
 
     @Override
     public void onImageAdded(@NotNull String path) {
-        final int thumbnailSize = (int) getResources().getDimension(R.dimen.thumbnail_size);
-        thumbnailsAdapter.addImage(path, thumbnailSize);
+        thumbnailsAdapter.addImage(path);
     }
 
     @Override

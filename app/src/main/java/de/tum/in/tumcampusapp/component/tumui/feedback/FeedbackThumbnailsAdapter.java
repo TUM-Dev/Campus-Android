@@ -21,10 +21,16 @@ public class FeedbackThumbnailsAdapter extends RecyclerView.Adapter<FeedbackThum
     private ArrayMap<String, Bitmap> pathsToThumbnails = new ArrayMap<>();
 
     private RemoveListener listener;
+    private int thumbnailSize;
 
-    FeedbackThumbnailsAdapter(List<String> paths, RemoveListener listener) {
+    FeedbackThumbnailsAdapter(List<String> paths, RemoveListener listener, int thumbnailSize) {
         this.listener = listener;
         this.paths = paths;
+        this.thumbnailSize = thumbnailSize;
+
+        for (String path: paths) {
+            pathsToThumbnails.put(path, createThumbnail(path, thumbnailSize));
+        }
     }
 
     @NotNull
@@ -47,7 +53,7 @@ public class FeedbackThumbnailsAdapter extends RecyclerView.Adapter<FeedbackThum
         notifyDataSetChanged();
     }
 
-    void addImage(String path, int thumbnailSize) {
+    void addImage(String path) {
         Bitmap thumbnail = createThumbnail(path, thumbnailSize);
         pathsToThumbnails.put(path, thumbnail);
 
