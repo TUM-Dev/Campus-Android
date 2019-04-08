@@ -18,6 +18,7 @@ class LocationImportAction @Inject constructor(
     @Throws(IOException::class)
     override fun execute(cacheBehaviour: CacheControl) {
         val openingHours = tumCabeClient.fetchOpeningHours()
+        database.locationDao().removeCache()
         database.locationDao().replaceInto(openingHours)
     }
 
