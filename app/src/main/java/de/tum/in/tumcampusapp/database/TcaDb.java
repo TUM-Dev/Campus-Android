@@ -26,7 +26,7 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBla
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocations;
 import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaDao;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaLocationDao;
+import de.tum.in.tumcampusapp.component.ui.openinghour.LocationDao;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuDao;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.FavoriteDishDao;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
@@ -131,7 +131,7 @@ public abstract class TcaDb extends RoomDatabase {
 
     public abstract TicketTypeDao ticketTypeDao();
 
-    public abstract CafeteriaLocationDao locationDao();
+    public abstract LocationDao locationDao();
 
     public abstract ChatMessageDao chatMessageDao();
 

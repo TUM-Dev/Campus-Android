@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaLocationDao;
 import de.tum.in.tumcampusapp.component.ui.openinghour.model.Location;
 import de.tum.in.tumcampusapp.database.TcaDb;
 
@@ -63,8 +62,8 @@ public class OpeningHoursDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_item_detail, container, false);
 
         // click on category in list
-        CafeteriaLocationDao dao = TcaDb.getInstance(getActivity())
-                                        .locationDao();
+        LocationDao dao = TcaDb.getInstance(getActivity())
+                               .locationDao();
         String[] categories = {"library", "info", "cafeteria_gar", "cafeteria_grh", "cafeteria", "cafeteria_pas", "cafeteria_wst"};
         List<Location> locations = dao.getAllOfCategory(categories[mItemId]);
 
