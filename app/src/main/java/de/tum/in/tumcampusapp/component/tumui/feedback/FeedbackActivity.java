@@ -13,12 +13,6 @@ import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -34,6 +28,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.tumui.feedback.di.FeedbackModule;
@@ -371,6 +370,9 @@ public class FeedbackActivity extends BaseActivity
         switch (requestCode) {
             case PERMISSION_LOCATION: {
                 includeLocationCheckbox.setChecked(isGranted);
+                if (isGranted) {
+                    presenter.listenForLocation();
+                }
                 return;
             }
             case PERMISSION_CAMERA: {

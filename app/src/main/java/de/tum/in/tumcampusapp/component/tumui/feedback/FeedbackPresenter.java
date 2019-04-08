@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.component.tumui.feedback;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -34,6 +35,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.os.Build.VERSION.SDK_INT;
@@ -76,8 +78,14 @@ public class FeedbackPresenter implements FeedbackContract.Presenter {
         compositeDisposable.add(view.getMessage().subscribe(feedback::setMessage));
         compositeDisposable.add(view.getTopicInput().subscribe(this::updateFeedbackTopic));
 
-        compositeDisposable.add(view.getIncludeLocation().subscribe(feedback::setIncludeLocation));
         compositeDisposable.add(view.getIncludeEmail().subscribe(this::onIncludeEmailChanged));
+        compositeDisposable.add(view.getIncludeLocation().subscribe(this::onIncludeLocationChanged));
+        if (SDK_INT < M || checkPermission(ACCESS_FINE_LOCATION)) {
+            listenForLocation();
+        }
+    }
+
+    public void listenForLocation() {
         compositeDisposable.add(view.getLocation().subscribe(feedback::setLocation));
     }
 
@@ -86,6 +94,13 @@ public class FeedbackPresenter implements FeedbackContract.Presenter {
             feedback.setTopic(Const.FEEDBACK_TOPIC_GENERAL);
         } else {
             feedback.setTopic(Const.FEEDBACK_TOPIC_APP);
+        }
+    }
+
+    private void onIncludeLocationChanged(boolean includeLocation) {
+        feedback.setIncludeLocation(includeLocation);
+        if (includeLocation && (SDK_INT < M || checkPermission(ACCESS_FINE_LOCATION))) {
+            listenForLocation();
         }
     }
 

@@ -45,6 +45,7 @@ interface FeedbackContract {
         fun onNewImageSelected(uri: Uri?)
         fun takePicture()
         fun openGallery()
+        fun listenForLocation()
         fun onSaveInstanceState(outState: Bundle)
         fun detachView()
     }
