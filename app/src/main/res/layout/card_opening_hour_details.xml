@@ -86,8 +86,7 @@
             android:drawablePadding="@dimen/material_small_padding"
             android:drawableTint="@color/text_dark_gray"
             android:layout_gravity="top"
-            android:lineHeight="24dp"
-            android:textIsSelectable="true"/>
+            android:lineHeight="24dp"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/openLinkButton"

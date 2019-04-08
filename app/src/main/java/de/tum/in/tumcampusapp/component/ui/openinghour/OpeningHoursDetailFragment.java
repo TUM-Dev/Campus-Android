@@ -124,7 +124,7 @@ public class OpeningHoursDetailFragment extends Fragment {
         infoView.setText(infoText);
 
         // link email addresses and phone numbers (e.g. 089-123456)
-        Linkify.addLinks(infoView, Linkify.EMAIL_ADDRESSES);
+        Linkify.addLinks(infoView, Linkify.EMAIL_ADDRESSES|Linkify.WEB_URLS);
         Linkify.addLinks(infoView, Pattern.compile("[0-9-]{6,}"), "tel:");
     }
 
