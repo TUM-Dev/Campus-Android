@@ -33,6 +33,7 @@ import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotificationLocation;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeContact;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeMoreInfo;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Location;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
@@ -99,6 +100,7 @@ public final class TUMCabeClient {
     private static final String API_CHAT = "chat/";
     static final String API_CHAT_ROOMS = API_CHAT + "rooms/";
     static final String API_CHAT_MEMBERS = API_CHAT + "members/";
+    static final String API_OPENING_HOURS = "openingtimes/";
 
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;
@@ -409,6 +411,12 @@ public final class TUMCabeClient {
 
     public UpdateNote getUpdateNote(int version) throws IOException {
         return service.getUpdateNote(version).execute().body();
+    }
+
+    public List<Location> fetchOpeningHours() throws IOException {
+        return service.getOpeningHours()
+                      .execute()
+                      .body();
     }
 
 }
