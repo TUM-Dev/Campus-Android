@@ -11,7 +11,7 @@ import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
-import de.tum.in.tumcampusapp.component.tumui.feedback.model.Success;
+import de.tum.in.tumcampusapp.component.tumui.feedback.model.FeedbackResult;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderMap;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom;
@@ -183,11 +183,11 @@ public interface TUMCabeAPIService {
                                                  @Path("start") String start, @Path("end") String end);
 
     @POST(API_FEEDBACK)
-    Call<Success> sendFeedback(@Body Feedback feedback);
+    Call<FeedbackResult> sendFeedback(@Body Feedback feedback);
 
     @Multipart
     @POST(API_FEEDBACK + "{id}/{image}/")
-    Call<Success> sendFeedbackImage(@Part MultipartBody.Part image, @Path("image") int imageNr, @Path("id") String feedbackId);
+    Call<FeedbackResult> sendFeedbackImage(@Part MultipartBody.Part image, @Path("image") int imageNr, @Path("id") String feedbackId);
 
     @GET(API_CAFETERIAS)
     Observable<List<Cafeteria>> getCafeterias();

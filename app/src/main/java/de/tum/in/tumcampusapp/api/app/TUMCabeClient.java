@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,7 +24,7 @@ import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
-import de.tum.in.tumcampusapp.component.tumui.feedback.model.Success;
+import de.tum.in.tumcampusapp.component.tumui.feedback.model.FeedbackResult;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderMap;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom;
@@ -303,19 +304,21 @@ public final class TUMCabeClient {
                 .body();
     }
 
-    public void sendFeedback(Feedback feedback, Callback<Success> cb) {
-        service.sendFeedback(feedback).enqueue(cb);
+    public Call<FeedbackResult> sendFeedback(Feedback feedback) {
+        return service.sendFeedback(feedback);
     }
 
-    public void sendFeedbackImages(Feedback feedback, String[] imagePaths, Callback<Success> cb) {
+    public List<Call<FeedbackResult>> sendFeedbackImages(Feedback feedback, String[] imagePaths) {
+        List<Call<FeedbackResult>> calls = new ArrayList<>();
         for (int i = 0; i < imagePaths.length; i++) {
             File file = new File(imagePaths[i]);
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
             MultipartBody.Part body = MultipartBody.Part.createFormData("feedback_image", i + ".png", reqFile);
 
-            service.sendFeedbackImage(body, i + 1, feedback.getId())
-                    .enqueue(cb);
+            Call<FeedbackResult> call = service.sendFeedbackImage(body, i + 1, feedback.getId());
+            calls.add(call);
         }
+        return calls;
     }
 
     public void searchChatMember(String query, Callback<List<ChatMember>> callback) {

@@ -154,3 +154,5 @@ fun <T1, T2> List<T1>.splitOnChanged(transform: (T1) -> T2): List<List<T1>> {
     }
     return results.toList()
 }
+
+

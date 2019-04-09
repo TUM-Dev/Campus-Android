@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ImageView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.makeramen.roundedimageview.RoundedImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="@dimen/thumbnail_size"
     android:layout_height="@dimen/thumbnail_size"
-    android:layout_marginEnd="@dimen/material_small_padding"
     android:layout_marginStart="@dimen/material_small_padding"
-    android:background="@drawable/rounded_corners_background"
-    android:scaleType="centerCrop"/>
+    android:layout_marginEnd="@dimen/material_small_padding"
+    android:scaleType="centerCrop"
+    app:riv_corner_radius="@dimen/material_corner_radius" />
