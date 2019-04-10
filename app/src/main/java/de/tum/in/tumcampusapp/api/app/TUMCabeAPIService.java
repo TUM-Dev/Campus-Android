@@ -228,12 +228,12 @@ public interface TUMCabeAPIService {
     Observable<List<TicketType>> getTicketTypes(@Path("eventID") int eventID);
 
     // Ticket reservation
-    @POST(API_EVENTS + API_TICKET + "reserve")
+    @POST(API_EVENTS + API_TICKET + "reserve/multiple")
     Call<TicketReservationResponse> reserveTicket(@Body TUMCabeVerification verification);
 
     // Ticket purchase
-    @POST(API_EVENTS + API_TICKET + "payment/stripe/purchase")
-    Call<Ticket> purchaseTicketStripe(@Body TUMCabeVerification verification);
+    @POST(API_EVENTS + API_TICKET + "payment/stripe/purchase/multiple")
+    Call<List<Ticket>> purchaseTicketStripe(@Body TUMCabeVerification verification);
 
     @POST(API_EVENTS + API_TICKET + "payment/stripe/ephemeralkey")
     Call<HashMap<String, Object>> retrieveEphemeralKey(@Body TUMCabeVerification verification);

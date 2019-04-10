@@ -98,8 +98,8 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         eventCard.setEvent(event);
         holder.setCurrentCard(eventCard);
 
-        boolean hasTicket = mTicketsLocalRepo.isEventBooked(event);
-        ((EventViewHolder) holder).bind(event, hasTicket);
+        int ticketCount = mTicketsLocalRepo.getTicketCount(event);
+        ((EventViewHolder) holder).bind(event, ticketCount);
     }
 
     @Override
@@ -140,7 +140,7 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
             ticketButton = view.findViewById(R.id.ticketButton);
         }
 
-        public void bind(Event event, boolean hasTicket) {
+        public void bind(Event event, int ticketCount) {
             String imageUrl = event.getImageUrl();
             boolean showImage = imageUrl != null && !imageUrl.isEmpty();
 
@@ -173,11 +173,13 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
             String startTime = event.getFormattedStartDateTime(itemView.getContext());
             dateTextView.setText(startTime);
 
-            if (!hasTicket) {
+            if (ticketCount == 0) {
                 ticketButton.setVisibility(GONE);
                 return;
             }
 
+            ticketButton.setText(itemView.getContext().getResources()
+                    .getQuantityString(R.plurals.tickets, ticketCount, ticketCount));
             ticketButton.setVisibility(VISIBLE);
             ticketButton.setOnClickListener(v -> {
                 Context context = itemView.getContext();

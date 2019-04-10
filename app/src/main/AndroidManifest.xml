@@ -470,33 +470,6 @@
             android:parentActivityName=".component.tumui.feedback.FeedbackActivity"
             android:theme="@style/AppTheme.NoDrawerLayout" />
         <activity
-            android:name=".component.ui.studycard.CardsActivity"
-            android:label="@string/title_activity_cards"
-            android:parentActivityName=".component.ui.overview.MainActivity"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
-        </activity>
-        <activity
-            android:name=".component.ui.studycard.CardsDetailActivity"
-            android:label="@string/title_activity_cards_detail"
-            android:parentActivityName=".component.ui.studycard.CardsActivity"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.studycard.CardsActivity" />
-        </activity>
-        <activity
-            android:name=".component.ui.studycard.CardsQuizActivity"
-            android:label="@string/title_activity_cards_quiz"
-            android:parentActivityName=".component.ui.studycard.CardsActivity"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.studycard.CardsActivity" />
-        </activity>
-        <activity
             android:name=".component.tumui.calendar.CreateEventActivity"
             android:label="@string/activity_create_event_title"
             android:parentActivityName=".component.tumui.calendar.CalendarActivity" />

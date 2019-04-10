@@ -4,24 +4,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.transition.TransitionManager;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
+import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
+import de.tum.in.tumcampusapp.component.ui.ticket.TicketAmountViewHolder;
+import de.tum.in.tumcampusapp.component.ui.ticket.adapter.TicketAmountAdapter;
 import de.tum.in.tumcampusapp.component.ui.ticket.di.TicketsModule;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
@@ -43,15 +44,17 @@ import retrofit2.Response;
  * This activity shows an overview of the available tickets and a selection of all ticket types
  * Directs the user to the PaymentConfirmationActivity or back to EventDetailsActivity
  */
-public class BuyTicketActivity extends BaseActivity {
+public class BuyTicketActivity extends BaseActivity implements TicketAmountViewHolder.SelectTicketInterface {
 
     private int eventId;
 
-    private Spinner ticketTypeSpinner;
     private FrameLayout loadingLayout;
     private Button paymentButton;
 
+    private TextView totalPriceView;
+
     private List<TicketType> ticketTypes;
+    private Integer[] currentTicketAmounts;
 
     @Inject
     TicketsRemoteRepository ticketsRemoteRepo;
@@ -70,6 +73,11 @@ public class BuyTicketActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         eventId = getIntent().getIntExtra(Const.KEY_EVENT_ID, 0);
 
+        totalPriceView = findViewById(R.id.ticket_total_price);
+        totalPriceView.setText(Utils.formatPrice(0));
+
+        loadingLayout = findViewById(R.id.loading_layout);
+
         getInjector().ticketsComponent()
                 .ticketsModule(new TicketsModule())
                 .eventId(eventId)
@@ -85,23 +93,72 @@ public class BuyTicketActivity extends BaseActivity {
                     Utils.showToast(BuyTicketActivity.this, R.string.error_something_wrong);
                     finish();
                 });
-        compositeDisposable.add(disposable);
+         compositeDisposable.add(disposable);
     }
 
     private void handleTicketTypesDownloadSuccess(@NonNull List<TicketType> ticketTypes) {
         this.ticketTypes = ticketTypes;
+
+        currentTicketAmounts = new Integer[ticketTypes.size()];
         setupUi();
     }
 
     private void setupUi() {
         initEventTextViews();
-        initTicketTypeSpinner();
+        initTicketAmount();
 
-        loadingLayout = findViewById(R.id.loading_layout);
         loadingLayout.setVisibility(View.GONE);
 
         paymentButton = findViewById(R.id.paymentButton);
         paymentButton.setOnClickListener(v -> reserveTicket());
+    }
+
+    private void initTicketAmount() {
+        RecyclerView ticketAmounts = findViewById(R.id.ticket_amounts);
+        ticketAmounts.setLayoutManager(new LinearLayoutManager(this));
+        ticketAmounts.setHasFixedSize(true);
+        ticketAmounts.setAdapter(new TicketAmountAdapter(ticketTypes));
+        ticketAmounts.setNestedScrollingEnabled(false);
+        int spacing = Math.round(getResources().getDimension(R.dimen.material_small_padding));
+        ticketAmounts.addItemDecoration(new EqualSpacingItemDecoration(spacing));
+    }
+
+    @Override
+    public void ticketAmountUpdated(int ticketTypePosition, int amount) {
+        currentTicketAmounts[ticketTypePosition] = amount;
+        totalPriceView.setText(Utils.formatPrice(getTotalPrice()));
+    }
+
+    private int getTotalPrice() {
+        if (currentTicketAmounts == null) {
+            Utils.log("currentTicketAmounts not initialized");
+            return 0;
+        }
+        int sum = 0;
+        for (int i = 0; i < ticketTypes.size(); i++) {
+            Integer count = currentTicketAmounts[i];
+            if (count != null && count > 0) {
+                int pricePerTicket = ticketTypes.get(i)
+                                                .getPrice();
+                sum += pricePerTicket * count;
+            }
+        }
+        return sum;
+    }
+
+    private void showError(int title, int message) {
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setNeutralButton(R.string.ok, null)
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow()
+                  .setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        dialog.show();
     }
 
     private void initEventTextViews() {
@@ -118,62 +175,32 @@ public class BuyTicketActivity extends BaseActivity {
         dateView.setText(formattedStartTime);
     }
 
-    private void initTicketTypeSpinner() {
-        ticketTypeSpinner = findViewById(R.id.ticket_type_spinner);
-        ticketTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String ticketTypeName = (String) parent.getItemAtPosition(position);
-                setTicketTypeInformation(ticketTypeName);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // do nothing here for now
-            }
-        });
-
-        ArrayList<String> ticketTypeNames = new ArrayList<>();
-        for (TicketType ticketType : ticketTypes) {
-            ticketTypeNames.add(ticketType.getDescription());
+    private Integer[] getTicketTypeIds() {
+        Integer[] ids = new Integer[ticketTypes.size()];
+        for (int i = 0; i < ids.length; i++) {
+            ids[i] = ticketTypes.get(i)
+                                .getId();
         }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_spinner_dropdown_item, ticketTypeNames);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        ticketTypeSpinner.setAdapter(adapter);
+        return ids;
     }
 
-    private TicketType getTicketTypeForName(String ticketTypeName) {
-        for (TicketType ticketType : ticketTypes) {
-            if (ticketType.getDescription().equals(ticketTypeName)) {
-                return ticketType;
-            }
-        }
-        return null;
-    }
-
-    private void setTicketTypeInformation(String ticketTypeName) {
-        TextView priceView = findViewById(R.id.ticket_details_price);
-        TicketType ticketType = getTicketTypeForName(ticketTypeName);
-        String priceString = ticketType == null ? getString(R.string.not_valid) : ticketType.getFormattedPrice();
-
-        priceView.setText(priceString);
+    private boolean zeroTicketsSelected() {
+        return getTotalPrice() == 0;
     }
 
     private void reserveTicket() {
-        TicketType ticketType = getTicketTypeForName((String) ticketTypeSpinner.getSelectedItem());
-        if (ticketType == null) {
-            Utils.showToast(this, R.string.internal_error);
+
+        if (zeroTicketsSelected()) {
+            showError(R.string.error_no_ticket_selected, R.string.error_message_select_at_least_one_ticket);
             return;
         }
 
+        /* don't allow user to click anything */
         loadingLayout.setVisibility(View.VISIBLE);
         TransitionManager.beginDelayedTransition(loadingLayout);
         paymentButton.setEnabled(false);
 
-        int ticketTypeId = ticketType.getId();
-        TicketReservation reservation = new TicketReservation(ticketTypeId);
+        TicketReservation reservation = new TicketReservation(getTicketTypeIds(), currentTicketAmounts);
 
         TUMCabeVerification verification = TUMCabeVerification.create(this, reservation);
         if (verification == null) {
@@ -191,12 +218,12 @@ public class BuyTicketActivity extends BaseActivity {
                         // but has not fetched it from the server yet
                         TicketReservationResponse reservationResponse = response.body();
                         if (response.isSuccessful()
-                                && reservationResponse != null
-                                && reservationResponse.getError() == null) {
-                            handleTicketReservationSuccess(ticketType, reservationResponse);
+                            && reservationResponse != null
+                            && reservationResponse.getError() == null) {
+                            handleTicketReservationSuccess(reservationResponse);
                         } else {
                             if (reservationResponse == null || !response.isSuccessful()) {
-                                handleTicketNotFetched();
+                                handleTicketNotReserved();
                             } else {
                                 handleTicketReservationFailure(R.string.event_imminent_error);
                                 finish();
@@ -213,22 +240,24 @@ public class BuyTicketActivity extends BaseActivity {
                 });
     }
 
-    private void handleTicketReservationSuccess(TicketType ticketType,
-                                                TicketReservationResponse response) {
+    private void handleTicketReservationSuccess(TicketReservationResponse response) {
         loadingLayout.setVisibility(View.GONE);
         TransitionManager.beginDelayedTransition(loadingLayout);
-
         paymentButton.setEnabled(true);
 
         Intent intent = new Intent(this, StripePaymentActivity.class);
-        intent.putExtra(Const.KEY_TICKET_PRICE, ticketType.getFormattedPrice());
-        intent.putExtra(Const.KEY_TICKET_HISTORY, response.getTicketHistory());
-        intent.putExtra(Const.KEY_TERMS_LINK, ticketType.getPaymentInfo().getTermsLink());
-        intent.putExtra(Const.KEY_STRIPE_API_PUBLISHABLE_KEY, ticketType.getPaymentInfo().getStripePublicKey());
+        intent.putExtra(Const.KEY_TICKET_PRICE, Utils.formatPrice(getTotalPrice()));
+        intent.putIntegerArrayListExtra(Const.KEY_TICKET_IDS, response.getTicketIds());
+        intent.putExtra(Const.KEY_TERMS_LINK, ticketTypes.get(0)
+                                                         .getPaymentInfo()
+                                                         .getTermsLink());
+        intent.putExtra(Const.KEY_STRIPE_API_PUBLISHABLE_KEY, ticketTypes.get(0)
+                                                                         .getPaymentInfo()
+                                                                         .getStripePublicKey());
         startActivity(intent);
     }
 
-    private void handleTicketNotFetched() {
+    private void handleTicketNotReserved() {
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.error))
                 .setMessage(getString(R.string.ticket_not_fetched))
@@ -240,7 +269,8 @@ public class BuyTicketActivity extends BaseActivity {
                 .create();
 
         if (dialog.getWindow() != null) {
-            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+            dialog.getWindow()
+                  .setBackgroundDrawableResource(R.drawable.rounded_corners_background);
         }
 
         dialog.show();

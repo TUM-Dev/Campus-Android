@@ -368,7 +368,12 @@ public final class TUMCabeClient {
 
     // Getting ticket information
 
-    public Observable<List<Ticket>> fetchTickets(Context context) throws NoPrivateKey {
+    public Call<List<Ticket>> fetchTickets(Context context) throws NoPrivateKey {
+        TUMCabeVerification verification = getVerification(context, null);
+        return service.getTickets(verification);
+    }
+
+    public Observable<List<Ticket>> fetchTicketsRx(Context context) throws NoPrivateKey {
         TUMCabeVerification verification = getVerification(context, null);
         return service.getTicketsRx(verification);
     }
@@ -392,9 +397,9 @@ public final class TUMCabeClient {
     // Ticket purchase
 
     public void purchaseTicketStripe(
-            Context context, int ticketHistory, @NonNull String token,
-            @NonNull String customerName, Callback<Ticket> cb) throws NoPrivateKey {
-        TicketPurchaseStripe purchase = new TicketPurchaseStripe(ticketHistory, token, customerName);
+            Context context, List<Integer> ticketIds, @NonNull String token,
+            @NonNull String customerName, Callback<List<Ticket>> cb) throws NoPrivateKey {
+        TicketPurchaseStripe purchase = new TicketPurchaseStripe(ticketIds, token, customerName);
         TUMCabeVerification verification = getVerification(context, purchase);
         service.purchaseTicketStripe(verification).enqueue(cb);
     }

@@ -116,7 +116,7 @@ public class KinoDetailsFragment extends Fragment {
 
     private void initBuyOrShowTicket(Event event) {
         MaterialButton ticketButton = rootView.findViewById(R.id.buyTicketButton);
-        if (ticketsLocalRepo.isEventBooked(event)) {
+        if (ticketsLocalRepo.getTicketCount(event) != 0) {
             ticketButton.setText(R.string.show_ticket);
             ticketButton.setVisibility(View.VISIBLE);
             ticketButton.setOnClickListener(view -> {

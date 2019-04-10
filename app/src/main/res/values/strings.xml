@@ -619,6 +619,14 @@ Signature: %5$s</string>
     <!-- Ticket Activity -->
     <string name="your_ticket">Your Ticket</string>
     <string name="show_ticket">Show Ticket</string>
+    <plurals name="show_tickets">
+        <item quantity="one">Show Ticket</item>
+        <item quantity="other">Show Tickets</item>
+    </plurals>
+    <plurals name="tickets">
+        <item quantity="one">Ticket</item>
+        <item quantity="other">%d Tickets</item>
+    </plurals>
     <string name="buy_ticket">Buy Ticket</string>
     <string name="purchase_details">Details</string>
     <string name="continue_to_payment">Continue to payment</string>
@@ -629,7 +637,8 @@ Signature: %5$s</string>
     <string name="show_booked_events">Show booked events</string>
     <string name="events_tickets">Events &amp; Tickets</string>
     <string name="ticket_type">Ticket Type</string>
-    <string name="price">Price</string>
+    <string name="select_tickets">Select Tickets</string>
+    <string name="total">Total</string>
     <string name="location">Location</string>
     <string name="event" translatable="false">Event</string>
     <string name="payment_selection">Payment Selection</string>
@@ -669,6 +678,10 @@ Signature: %5$s</string>
     <string name="ticket_contingent_exhausted">All tickets of the requested type are already sold.</string>
 
     <string name="choose_ticket_type">Choose your ticket type</string>
+    <string name="ticket_amount_error_title">Purchase restrictions</string>
+    <string name="ticket_amount_information">You can buy a minimum of %1d and a maximum of %2d of ticket type \“%s\”</string>
+    <string name="price_per_ticket">%s per ticket</string>
+    <string name="ticket_amount_label">Amount</string>
 
     <string name="retry">Retry</string>
     <string name="updating_event">Updating event …</string>
@@ -689,7 +702,11 @@ Signature: %5$s</string>
     <string name="credit_card_format_string" translatable="false">**** **** **** %s</string>
     <string name="remaining_tickets">Remaining tickets</string>
     <string name="thanks_for_your_purchase">Thanks for your purchase</string>
-    <string name="the_ticket_has_been_saved_for_you_in_the_app">The ticket has been saved for you in the app.</string>
+    <string name="tickets_saved_in_app">The ticket has been saved in the app.</string>
+    <plurals name="tickets_saved_in_app">
+        <item quantity="one">@string/tickets_saved_in_app</item>
+        <item quantity="other">The tickets have been saved in the app.</item>
+    </plurals>
     <string name="home">Home</string>
     <string name="about">About</string>
     <string name="due_on_format_string">Due on %s</string>
@@ -712,6 +729,14 @@ Signature: %5$s</string>
     <string name="update_note_title">New Features</string>
     <string name="update_note_version">Version %s</string>
     <string name="action_cant_be_performed">Action can’t be performed</string>
+    <string name="not_redeemed_yet">Not redeemed yet</string>
+    <string name="partially_redeemed">%d of %d redeemed (%s)</string>
+    <string name="redeemed_at">Redeemed at %s</string>
+    <string name="no_tickets_remaining">No tickets remaining</string>
+    <string name="no_tickets_remaining_message">Unfortunately you were a little too late, there are not tickets available anymore. For many events you can still buy a ticket on site.</string>
+    <string name="error_message_select_at_least_one_ticket">Please select at least one ticket from one of the categories.</string>
+    <string name="error_no_ticket_selected">No tickets selected</string>
+    <string name="amount_x" translatable="false">%dx</string>
     <string name="stuy_room_placeholder_text">New study rooms are being created in this location!</string>
 
     <plurals name="new_grades_format_string">

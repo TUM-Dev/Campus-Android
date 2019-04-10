@@ -18,17 +18,23 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+import org.joda.time.DateTime;
+
+import java.util.List;
+
 import javax.inject.Inject;
 
-import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
+import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
+import de.tum.in.tumcampusapp.component.ui.ticket.adapter.BoughtTicketAdapter;
 import de.tum.in.tumcampusapp.component.ui.ticket.di.TicketsModule;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
-import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketInfo;
 import de.tum.in.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.ticket.repository.TicketsRemoteRepository;
@@ -45,12 +51,11 @@ public class ShowTicketActivity extends BaseActivity {
     private ImageView ticketQrCodeImageView;
     private TextView titleTextView;
     private TextView dateTextView;
-    private TextView priceTextView;
     private TextView redemptionStateTextView;
+    private RecyclerView ticketAmounts;
 
-    private Ticket ticket;
+    private List<TicketInfo> ticketInfoList;
     private Event event;
-    private TicketType ticketType;
 
     @Inject
     EventsLocalRepository eventsLocalRepo;
@@ -81,17 +86,29 @@ public class ShowTicketActivity extends BaseActivity {
         loadTicketData(eventId);
         setViewData();
 
-        createQRCode(ticket.getCode());
+        showQRCode();
         setWindowBrightnessToFull();
+    }
+
+    private void showQRCode() {
+        String qrCodeContent = ticketInfoList.get(0).getTickets().get(0).getCode();
+        Utils.log(qrCodeContent);
+        createQRCode(qrCodeContent);
     }
 
     private void initViews() {
         titleTextView = findViewById(R.id.ticket_event_title);
         locationTextView = findViewById(R.id.ticket_event_location);
         dateTextView = findViewById(R.id.ticket_event_date_time);
-        priceTextView = findViewById(R.id.ticket_event_price);
         redemptionStateTextView = findViewById(R.id.ticket_event_redemption_state);
         ticketQrCodeImageView = findViewById(R.id.ticket_qr_code);
+        ticketAmounts = findViewById(R.id.ticket_event_ticket_list);
+
+        ticketAmounts.setLayoutManager(new LinearLayoutManager(this));
+        ticketAmounts.setHasFixedSize(true);
+        ticketAmounts.setNestedScrollingEnabled(false);
+        int spacing = Math.round(getResources().getDimension(R.dimen.material_tiny_padding));
+        ticketAmounts.addItemDecoration(new EqualSpacingItemDecoration(spacing));
 
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorSchemeResources(
@@ -103,36 +120,31 @@ public class ShowTicketActivity extends BaseActivity {
     }
 
     private void loadRedemptionStatus() {
-        try {
-            ticketsRemoteRepo
-                    .fetchTicket(ticket.getId())
-                    .enqueue(new Callback<Ticket>() {
-                        @Override
-                        public void onResponse(@NonNull Call<Ticket> call,
-                                               @NonNull Response<Ticket> response) {
-                            Ticket ticket = response.body();
-                            if (response.isSuccessful() && ticket != null) {
-                                handleTicketRefreshSuccess(ticket);
-                            } else {
-                                handleTicketRefreshFailure();
-                            }
-                        }
 
-                        @Override
-                        public void onFailure(@NonNull Call<Ticket> call, @NonNull Throwable t) {
-                            Utils.log(t);
+        ticketsRemoteRepo
+                .fetchTickets()
+                .enqueue(new Callback<List<Ticket>>() {
+                    @Override
+                    public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
+                        List<Ticket> tickets = response.body();
+                        if (response.isSuccessful() && !tickets.isEmpty()) {
+                            handleTicketRefreshSuccess(tickets);
+                        } else {
                             handleTicketRefreshFailure();
                         }
-                    });
-        } catch (NoPrivateKey e) {
-            Utils.log(e);
-        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Ticket>> call, Throwable t) {
+                        Utils.log(t);
+                        handleTicketRefreshFailure();
+                    }
+                });
     }
 
-    private void handleTicketRefreshSuccess(Ticket ticket) {
-        this.ticket = ticket;
-        ticketsLocalRepo.insert(ticket);
-
+    private void handleTicketRefreshSuccess(List<Ticket> tickets) {
+        ticketsLocalRepo.insert(tickets.toArray(new Ticket[0]));
+        this.ticketInfoList = ticketsLocalRepo.getTicketsByEventId(event.getId());
         setViewData();
         swipeRefreshLayout.setRefreshing(false);
     }
@@ -143,22 +155,45 @@ public class ShowTicketActivity extends BaseActivity {
     }
 
     private void loadTicketData(int eventId) {
-        ticket = ticketsLocalRepo.getTicketByEventId(eventId);
-        event = eventsLocalRepo.getEventById(ticket.getEventId());
-        ticketType = ticketsLocalRepo.getTicketTypeById(ticket.getTicketTypeId());
+        ticketInfoList = ticketsLocalRepo.getTicketsByEventId(eventId);
+        event = eventsLocalRepo.getEventById(eventId);
     }
 
     private void setViewData() {
         titleTextView.setText(event.getTitle());
         dateTextView.setText(event.getFormattedStartDateTime(this));
-        priceTextView.setText(ticketType.getFormattedPrice());
-
-        String formattedDateTime = ticket.getFormattedRedemptionDate(this);
-        String redemptionState = getString(R.string.redeemed_format_string, formattedDateTime);
-        redemptionStateTextView.setText(redemptionState);
+        redemptionStateTextView.setText(getRedemptionState());
 
         locationTextView.setText(event.getLocality());
         locationTextView.setOnClickListener(this::showMap);
+
+        ticketAmounts.setAdapter(new BoughtTicketAdapter(ticketInfoList));
+    }
+
+    private String getRedemptionState() {
+        DateTime lastRedemption = null;
+        int nrTicketsRedeemed = 0;
+        for (TicketInfo t : ticketInfoList) {
+            if (t.getTickets().get(0).getRedemption() != null) {
+                nrTicketsRedeemed++;
+                if (lastRedemption == null || t.getTickets().get(0).getRedemption().isAfter(lastRedemption)) {
+                    lastRedemption = t.getTickets().get(0).getRedemption();
+                }
+            }
+        }
+        String redemptionState;
+        String formattedDateTime = "";
+        if (lastRedemption != null) {
+            formattedDateTime = Ticket.Companion.getFormattedRedemptionDate(this, lastRedemption);
+        }
+        if (nrTicketsRedeemed == 0) {
+            redemptionState = getString(R.string.not_redeemed_yet);
+        } else if (nrTicketsRedeemed < ticketInfoList.size()) {
+            redemptionState = getString(R.string.partially_redeemed, nrTicketsRedeemed, ticketInfoList.size(), formattedDateTime);
+        } else {
+            redemptionState = getString(R.string.redeemed_at, formattedDateTime);
+        }
+        return redemptionState;
     }
 
     private void showMap(View view) {

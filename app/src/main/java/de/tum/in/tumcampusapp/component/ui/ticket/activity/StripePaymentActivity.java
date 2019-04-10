@@ -25,7 +25,6 @@ import com.stripe.android.model.Source;
 import com.stripe.android.model.SourceCardData;
 import com.stripe.android.view.PaymentMethodsActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -57,12 +56,14 @@ public class StripePaymentActivity extends BaseActivity {
     private PaymentSession paymentSession;
     private boolean didSelectPaymentMethod;
 
-    private int ticketHistory; // Ticket ID, since the ticket was reserved in the prior activity and
+    private List<Integer> ticketIds; // Ticket ID, since the ticket was reserved in the prior activity and
                                // we need the ID to init the purchase
 
     private String ticketPrice;
     private String termsOfServiceLink;
     private String stripePublishableKey;
+
+    private TicketsLocalRepository localTicketRepo;
 
     public StripePaymentActivity() {
         super(R.layout.activity_payment_stripe);
@@ -72,15 +73,17 @@ public class StripePaymentActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        localTicketRepo = new TicketsLocalRepository(TcaDb.getInstance(this));
+
         ticketPrice = getIntent().getStringExtra(Const.KEY_TICKET_PRICE);
-        ticketHistory = getIntent().getIntExtra(Const.KEY_TICKET_HISTORY, -1);
+        ticketIds = getIntent().getIntegerArrayListExtra(Const.KEY_TICKET_IDS);
         termsOfServiceLink = getIntent().getStringExtra(Const.KEY_TERMS_LINK);
         stripePublishableKey = getIntent().getStringExtra(Const.KEY_STRIPE_API_PUBLISHABLE_KEY);
 
-        if (ticketHistory < 0
-                || ticketPrice == null
-                || termsOfServiceLink.isEmpty()
-                || stripePublishableKey == null) {
+        if (ticketIds.isEmpty()
+            || ticketPrice == null
+            || termsOfServiceLink.isEmpty()
+            || stripePublishableKey == null) {
             Utils.showToast(this, R.string.error_something_wrong);
             finish();
             return;
@@ -167,44 +170,39 @@ public class StripePaymentActivity extends BaseActivity {
 
             TUMCabeClient
                     .getInstance(this)
-                    .purchaseTicketStripe(this, ticketHistory,
-                            methodId, cardholder, new Callback<Ticket>() {
-                                @Override
-                                public void onResponse(@NonNull Call<Ticket> call,
-                                                       @NonNull Response<Ticket> response) {
-                                    Ticket ticket = response.body();
-                                    if (ticket != null) {
-                                        handleTicketPurchaseSuccess(ticket);
-                                    }
-                                }
+                    .purchaseTicketStripe(this, ticketIds,
+                                          methodId, cardholder, new Callback<List<Ticket>>() {
+                        @Override
+                        public void onResponse(@NonNull Call<List<Ticket>> call,
+                                               @NonNull Response<List<Ticket>> response) {
+                            List<Ticket> tickets = response.body();
+                            if (!tickets.isEmpty()) {
+                                handleTicketPurchaseSuccess(tickets);
+                            }
+                        }
 
-                                @Override
-                                public void onFailure(@NonNull Call<Ticket> call, @NonNull Throwable t) {
-                                    Utils.log(t);
-                                    handleTicketPurchaseFailure();
-                                }
-                            });
+                        @Override
+                        public void onFailure(@NonNull Call<List<Ticket>> call, @NonNull Throwable t) {
+                            Utils.log(t);
+                            handleTicketPurchaseFailure();
+                        }
+                    });
         } catch (NoPrivateKey e) {
             Utils.log(e);
             handleTicketPurchaseFailure();
         }
     }
 
-    private void handleTicketPurchaseSuccess(@NonNull Ticket ticket) {
+    private void handleTicketPurchaseSuccess(@NonNull List<Ticket> tickets) {
         showLoading(false);
-
-        List<Ticket> tickets = new ArrayList<>();
-        tickets.add(ticket);
-
-        TicketsLocalRepository localRepo = new TicketsLocalRepository(TcaDb.getInstance(this));
-        localRepo.insert(tickets.toArray(new Ticket[0]));
-
-        openPaymentConfirmation(ticket);
+        localTicketRepo.insert(tickets.toArray(new Ticket[0]));
+        openPaymentConfirmation(tickets);
     }
 
-    private void openPaymentConfirmation(Ticket ticket) {
+    private void openPaymentConfirmation(List<Ticket> tickets) {
         Intent intent = new Intent(this, PaymentConfirmationActivity.class);
-        intent.putExtra(Const.KEY_EVENT_ID, ticket.getEventId());
+        intent.putExtra(Const.KEY_EVENT_ID, tickets.get(0).getEventId());
+        intent.putExtra(Const.KEY_TICKET_AMOUNT, tickets.size());
         startActivity(intent);
     }
 
@@ -276,9 +274,7 @@ public class StripePaymentActivity extends BaseActivity {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     requestAutofillIfEmptyCardholder();
                 }
-
-                loadingLayout.setVisibility(View.GONE);
-                TransitionManager.beginDelayedTransition(loadingLayout);
+                showLoading(false);
             }
         }, this));
     }

@@ -70,7 +70,6 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 R.color.tum_A100,
                 R.color.tum_A200
         )
-
         return view
     }
 
@@ -145,7 +144,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun addToTUMCalendar() {
-        val event = event ?: return
+        val event = event
         val endTime = event.endTime ?: event.startTime.plus(Event.defaultDuration.toLong())
 
         val intent = Intent(context, CreateEventActivity::class.java).apply {
@@ -160,7 +159,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun addToExternalCalendar() {
-        val event = event ?: return
+        val event = event
         val endTime = event.endTime ?: event.startTime.plus(Event.defaultDuration.toLong())
         val eventEnd = DateTimeUtils.getDateTimeString(endTime)
 

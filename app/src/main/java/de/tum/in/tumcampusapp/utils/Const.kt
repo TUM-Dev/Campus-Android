@@ -154,7 +154,8 @@ object Const {
     const val KEY_EVENT_ID = "eventId"
     const val KEY_CARD_HOLDER = "cardholder"
     const val KEY_TICKET_PRICE = "ticketPrice"
-    const val KEY_TICKET_HISTORY = "ticketHistory"
+    const val KEY_TICKET_IDS = "ticketIds"
+    const val KEY_TICKET_AMOUNT = "numberOfTickets"
     const val KEY_TERMS_LINK = "termsOfServiceLink"
 
     const val SHOW_DRAWER = "showDrawer"

@@ -483,15 +483,36 @@ Signatur: %5$s</string>
     <!-- Ticket Activity -->
     <string name="your_ticket">Dein Ticket</string>
     <string name="show_ticket">Ticket anzeigen</string>
+    <plurals name="show_tickets">
+        <item quantity="one">Ticket anzeigen</item>
+        <item quantity="other">Tickets anzeigen</item>
+    </plurals>
+    <plurals name="tickets">
+        <item quantity="one">Ticket</item>
+        <item quantity="other">%d Tickets</item>
+    </plurals>
     <string name="buy_ticket">Ticket kaufen</string>
     <string name="purchase_details">Details zu Ihrem Kauf:</string>
     <string name="continue_to_payment">Weiter zur Zahlung</string>
     <string name="order_summary">Bestellungsübersicht</string>
     <string name="ticket_type">Tickettyp</string>
-    <string name="price">Preis</string>
+    <string name="select_tickets">Tickets Auswählen</string>
+    <string name="total">Gesamt</string>
     <string name="location">Ort</string>
     <string name="choose_ticket_type">Wähle deinen Ticket-Typ</string>
+    <string name="price_per_ticket">%s pro Ticket</string>
+    <string name="ticket_amount_error_title">Kaufeinschränkungen</string>
     <string name="unknown">Unbekannt</string>
+    <string name="not_redeemed_yet">Noch nicht eingelöst</string>
+    <string name="partially_redeemed">%d von %d eingelöst (%s)</string>
+    <string name="redeemed_at">Eingelöst um %s</string>
+    <string name="no_tickets_remaining">Keine Tickets mehr vorhanden</string>
+    <string name="no_tickets_remaining_message">Du warst leider zu spät dran und die Tickets sind hier bereits ausverkauft. Bei vielen Events kannst du aber noch Tickets an der Abendkasse erwerben.</string>
+    <string name="error_message_select_at_least_one_ticket">Bitte wähle mindestens ein Ticket aus einer der Kategorien aus.</string>
+    <string name="error_no_ticket_selected">Keine Tickets ausgewählt</string>
+    <string name="ticket_amount_information">Es können maximal %d Tickets pro Person vom Typ \“%s\” gekauft werden.</string>
+    <string name="ticket_amount_label">Betrag</string>
+    <string name="tickets_saved_in_app">Das Ticket wurde in der App gespeichert.</string>
 
     <!-- Payment -->
     <string name="creditcard">Kreditkarte</string>
@@ -627,7 +648,10 @@ Signatur: %5$s</string>
     <string name="no_bookings_found">Keine Buchungen gefunden</string>
     <string name="ticket">Ticket</string>
     <string name="thanks_for_your_purchase">Danke für deinen Einkauf</string>
-    <string name="the_ticket_has_been_saved_for_you_in_the_app">Das Ticket wurde für dich in der App gespeichert.</string>
+    <plurals name="tickets_saved_in_app">
+        <item quantity="one">@string/tickets_saved_in_app</item>
+        <item quantity="other">Die Tickets wurden in der App gespeichert.</item>
+    </plurals>
     <string name="remaining_tickets">Verbleibende Tickets</string>
     <string name="payment_confirmation">Zahlungsbestätigung</string>
     <string name="about">Über</string>
