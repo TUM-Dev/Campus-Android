@@ -38,7 +38,7 @@ import javax.inject.Provider
 class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private val event: Event by lazy {
-        arguments?.getParcelable(Const.KEY_EVENT)
+        arguments?.getParcelable<Event>(Const.KEY_EVENT)
                 ?: throw IllegalStateException("No event provided to EventDetailsFragment")
     }
 
