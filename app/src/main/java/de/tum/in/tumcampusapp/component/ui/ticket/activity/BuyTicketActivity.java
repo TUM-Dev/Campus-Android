@@ -146,6 +146,21 @@ public class BuyTicketActivity extends BaseActivity implements TicketAmountViewH
         return sum;
     }
 
+    private int getTotalTickets() {
+        if (currentTicketAmounts == null) {
+            Utils.log("currentTicketAmounts not initialized");
+            return 0;
+        }
+        int sum = 0;
+        for (int i = 0; i < ticketTypes.size(); i++) {
+            Integer count = currentTicketAmounts[i];
+            if (count != null && count > 0) {
+                sum += count;
+            }
+        }
+        return sum;
+    }
+
     private void showError(int title, int message) {
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(title)
@@ -185,7 +200,7 @@ public class BuyTicketActivity extends BaseActivity implements TicketAmountViewH
     }
 
     private boolean zeroTicketsSelected() {
-        return getTotalPrice() == 0;
+        return getTotalTickets() == 0;
     }
 
     private void reserveTicket() {
