@@ -65,7 +65,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
 import de.tum.in.tumcampusapp.utils.sync.SyncDao;
 import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
-@Database(version = 3, entities = {
+@Database(version = 4, entities = {
         Cafeteria.class,
         CafeteriaMenu.class,
         FavoriteDish.class,
