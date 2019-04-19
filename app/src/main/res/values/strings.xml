@@ -317,7 +317,7 @@
     <string name="closed">Closed</string>
 
     <!-- Kino -->
-    <string name="kino" translatable="false">tu film</string>
+    <string name="kino" translatable="false">der tu film</string>
     <string name="imdb_rating">IMDb-Rating</string>
     <string name="year">Year of release</string>
     <string name="runtime">Runtime</string>
@@ -435,7 +435,7 @@ Signature: %5$s</string>
     <string name="ok">OK</string>
     <string name="alarm_date_published_on">Published on:</string>
     <string name="chat_not_setup">Chat is not setup properly, please rerun the wizard via the settings!</string>
-    <string name="www" translatable="false">TU Film</string>
+    <string name="www" translatable="false">der tu film</string>
     <string name="more_info">More Information</string>
     <string name="event_plan">Event plan</string>
     <string name="please_connect_to_internet">Please connect to internet in order to proceed the first app start</string>
