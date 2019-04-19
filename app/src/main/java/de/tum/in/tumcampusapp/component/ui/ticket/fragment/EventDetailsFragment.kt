@@ -95,6 +95,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         if (viewModel.isEventBooked(event)) {
             ticketButton.text = getString(R.string.show_ticket)
+            ticketButton.text = resources.getQuantityText(R.plurals.show_tickets, viewModel.getNumEventsBooked(event))
             ticketButton.setOnClickListener { showTicket(event) }
         } else {
             ticketButton.text = getString(R.string.buy_ticket)
