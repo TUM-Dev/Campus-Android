@@ -156,7 +156,7 @@ public class KinoDetailsFragment extends Fragment {
                 remainingTicketsTextView.setText(String.format(Locale.getDefault(), "%d", count));
                 remainingTicketsTextView.setVisibility(View.VISIBLE);
             } else {
-                ticketButton.setVisibility(View.GONE);
+                ticketButton.setVisibility((ticketBoughtCount <= 0) ? View.GONE : View.VISIBLE);
                 remainingTicketsHeaderView.setVisibility(View.VISIBLE);
                 remainingTicketsTextView.setText(R.string.no_tickets_remaining_tufilm_message);
                 remainingTicketsTextView.setVisibility(View.VISIBLE);

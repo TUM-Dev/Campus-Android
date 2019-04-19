@@ -133,7 +133,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 remainingTicketsContainer.visibility = View.VISIBLE
                 remainingTicketsTextView.text = count.toString()
             } else {
-                ticketButton.visibility = View.GONE
+                ticketButton.visibility = if(!viewModel.isEventBooked(event)) View.GONE else View.VISIBLE
                 remainingTicketsContainer.visibility = View.VISIBLE
                 remainingTicketsTextView.text = getString(R.string.no_tickets_remaining_message)
             }
