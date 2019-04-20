@@ -65,7 +65,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
         populateNewsSources();
         setUpEmployeeSettings();
-        initCafeteriaCardSelections();
 
         // Disables silence service if the app is used without TUMOnline access
         SwitchPreferenceCompat silentSwitch =
@@ -88,7 +87,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
             setSummary("card_cafeteria_default_K");
             setSummary("card_cafeteria_default_W");
             setSummary("card_role");
-            setCafeteriaCardsSummary(findPreference(Const.CAFETERIA_CARDS_SETTING));
+            initCafeteriaCardSelections();
         } else if (rootKey.equals("card_mvv")) {
             setSummary("card_stations_default_G");
             setSummary("card_stations_default_C");
@@ -133,6 +132,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
             setCafeteriaCardsSummary(preference);
             return false;
         });
+
+        setCafeteriaCardsSummary(findPreference(Const.CAFETERIA_CARDS_SETTING));
     }
 
     private void populateNewsSources() {
