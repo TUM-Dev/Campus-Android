@@ -668,7 +668,7 @@ Signatur: %5$s</string>
     <string name="chat_message_try_again">Die Nachricht konnte nicht gesendet werden. Erneut versuchen?</string>
     <string name="leave">Verlassen</string>
     <string name="today">Heute</string>
-    <string name="ticket_sale_beta">Der Ticketverkauf befindet sich momentan im Testbetrieb und es können Fehler auftreten. Solltet ihr Probleme haben, könnt ihr uns unter app@tum.de erreichen. Derzeit kann nur ein Vorverkaufticket pro Student digital gekauft werden. Es gibt weiterhin Karten an der Abendkasse, selbst wenn digital das Kontigent erschöpft ist.</string>
+    <string name="ticket_sale_beta">Der Ticketverkauf befindet sich momentan im Testbetrieb und es können Fehler auftreten. Solltet ihr Probleme haben, könnt ihr uns unter app@tum.de erreichen. Es gibt weiterhin Karten an der Abendkasse, selbst wenn digital das Kontigent erschöpft ist.</string>
     <string name="next_lecture_show_more">Zeige %d weitere …</string>
     <string name="next_lecture_hide">Verbergen</string>
     <string name="employee_mode">Mitarbeitermodus</string>
