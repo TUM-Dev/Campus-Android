@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -285,7 +286,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 startActivity(new Intent(getContext(), SetupEduroamActivity.class));
                 break;
             case BUTTON_LOGOUT:
-                showLogoutDialog();
+                showLogoutDialog(R.string.logout_title, R.string.logout_message);
                 break;
             default:
                 return false;
@@ -294,9 +295,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
         return true;
     }
 
-    private void showLogoutDialog() {
+    private void showLogoutDialog(int title, int message) {
         AlertDialog dialog = new AlertDialog.Builder(mContext)
-                .setMessage(R.string.logout_message)
+                .setTitle(title)
+                .setMessage(message)
                 .setPositiveButton(R.string.logout, ((dialogInterface, i) -> logout()))
                 .setNegativeButton(R.string.cancel, null)
                 .create();
@@ -309,12 +311,20 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
 
     private void logout() {
-        clearData();
+
+        try {
+            clearData();
+        } catch (Exception e) {
+            Utils.log(e);
+            showLogoutDialog(R.string.logout_error_title, R.string.logout_try_again);
+            return;
+        }
+
         startActivity(new Intent(mContext, StartupActivity.class));
         mContext.finish();
     }
 
-    private void clearData() {
+    private void clearData() throws ExecutionException, InterruptedException {
         TcaDb.resetDb(mContext);
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);

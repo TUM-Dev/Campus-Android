@@ -93,7 +93,10 @@
     <string name="open_wizard_detail">The Startup-Wizard helps you in order to set the basic preferences for accessing TUMonline services and the layout of this App.</string>
     <string name="account" translatable="false">Account</string>
     <string name="logout">Log out</string>
+    <string name="logout_title">Disconnect from TUMonline</string>
     <string name="logout_message">Are you sure you want to log out?</string>
+    <string name="logout_error_title">Logout failed</string>
+    <string name="logout_try_again">Do you want to try again?</string>
     <string name="employee_mode">Employee Mode</string>
     <string name="employee_mode_info">Some unnecessary items like grades and tuition fees are hidden in this mode.</string>
     <string name="clear_cache">Clear Cache</string>
