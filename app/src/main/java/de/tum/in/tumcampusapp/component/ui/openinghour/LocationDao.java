@@ -1,16 +1,15 @@
-package de.tum.in.tumcampusapp.component.ui.cafeteria;
+package de.tum.in.tumcampusapp.component.ui.openinghour;
+
+import java.util.List;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-
-import java.util.List;
-
-import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Location;
+import de.tum.in.tumcampusapp.component.ui.openinghour.model.Location;
 
 @Dao
-public interface CafeteriaLocationDao {
+public interface LocationDao {
 
     @Query("SELECT hours FROM location WHERE id = :id")
     String getHoursById(int id);
@@ -22,7 +21,7 @@ public interface CafeteriaLocationDao {
     boolean isEmpty();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void replaceInto(Location location);
+    void replaceInto(List<Location> location);
 
     @Query("DELETE FROM location")
     void removeCache();

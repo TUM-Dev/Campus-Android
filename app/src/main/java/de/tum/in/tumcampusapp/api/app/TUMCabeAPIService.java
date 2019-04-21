@@ -21,6 +21,7 @@ import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotificationLocation;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeContact;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeMoreInfo;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
+import de.tum.in.tumcampusapp.component.ui.openinghour.model.Location;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
@@ -66,6 +67,7 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_LOCATIONS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_MEMBERS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_NEWS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_NOTIFICATIONS;
+import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_OPENING_HOURS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_AVAILABLE_MAPS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_COORDINATES;
@@ -244,5 +246,9 @@ public interface TUMCabeAPIService {
     // Update note
     @GET(API_UPDATE_NOTE + "{version}")
     Call<UpdateNote> getUpdateNote(@Path("version") int version);
+
+    // Opening Hours
+    @GET(API_OPENING_HOURS)
+    Call<List<Location>> getOpeningHours();
 
 }

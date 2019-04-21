@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:id="@+id/card_view"
+                                                   style="@style/StandardCard">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+
+        android:minHeight="?android:attr/listPreferredItemHeight"
+        android:paddingStart="@dimen/material_default_padding"
+        android:paddingTop="@dimen/material_default_padding"
+        android:paddingEnd="@dimen/material_default_padding"
+        android:paddingBottom="@dimen/material_small_padding">
+
+        <TextView
+            android:id="@+id/headerTextView"
+            style="@style/CardTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/text_dark_primary"
+            tools:text="Location Name" />
+
+        <TextView
+            android:id="@+id/opening_hours_hours"
+            style="@style/CardBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:text="Opening Hours"
+            android:drawableStart="@drawable/ic_outline_access_time_24px"
+            android:drawablePadding="@dimen/material_small_padding"
+            android:drawableTint="@color/text_dark_gray"/>
+
+        <TextView
+            android:id="@+id/opening_hours_location"
+            style="@style/CardBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/material_tiny_padding"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:text="Location"
+            android:drawableStart="@drawable/ic_outline_location_on_24px"
+            android:drawablePadding="@dimen/material_small_padding"
+            android:drawableTint="@color/text_dark_gray"
+            android:textIsSelectable="true"/>
+
+        <TextView
+            android:id="@+id/opening_hours_room"
+            style="@style/CardBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/material_tiny_padding"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:text="Room"
+            android:drawableStart="@drawable/ic_room_icon"
+            android:drawablePadding="@dimen/material_small_padding"
+            android:drawableTint="@color/text_dark_gray"/>
+
+        <TextView
+            android:id="@+id/opening_hours_transport"
+            style="@style/CardBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/material_tiny_padding"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:text="Transport"
+            android:drawableStart="@drawable/ic_outline_train_24px"
+            android:drawablePadding="@dimen/material_small_padding"
+            android:drawableTint="@color/text_dark_gray"/>
+
+        <TextView
+            android:id="@+id/opening_hours_info"
+            style="@style/CardBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/material_small_padding"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:text="Additional Information\nand more"
+            android:drawableStart="@drawable/ic_action_info_black"
+            android:drawablePadding="@dimen/material_small_padding"
+            android:drawableTint="@color/text_dark_gray"
+            android:layout_gravity="top"
+            android:lineHeight="24dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/openLinkButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/material_tiny_padding"
+            android:onClick="openLink"
+            android:textAllCaps="false"
+            android:textColor="#006c90"
+            android:layout_gravity="right"
+            app:cornerRadius="@dimen/material_corner_radius"
+            tools:text="@string/website" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

@@ -1,8 +1,9 @@
-package de.tum.`in`.tumcampusapp.component.ui.cafeteria.model
+package de.tum.`in`.tumcampusapp.component.ui.openinghour.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.RoomWarnings
+import com.google.gson.annotations.SerializedName
 
 /**
  * New Location
@@ -25,8 +26,11 @@ data class Location(@PrimaryKey
                     var name: String = "",
                     var address: String = "",
                     var room: String = "",
+                    @SerializedName("transport_station")
                     var transport: String = "",
+                    @SerializedName("opening_hours")
                     var hours: String = "",
+                    @SerializedName("infos")
                     var remark: String = "",
                     var url: String = "") {
 
