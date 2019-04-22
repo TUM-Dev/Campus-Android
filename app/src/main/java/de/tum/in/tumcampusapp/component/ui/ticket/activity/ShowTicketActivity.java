@@ -35,6 +35,7 @@ import de.tum.in.tumcampusapp.component.ui.ticket.di.TicketsModule;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketInfo;
+import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.ticket.repository.TicketsRemoteRepository;
@@ -155,6 +156,10 @@ public class ShowTicketActivity extends BaseActivity {
     }
 
     private void loadTicketData(int eventId) {
+        List<TicketType> ticketTypes = ticketsLocalRepo.getTicketTypesByEventId(eventId);
+        if (ticketTypes.isEmpty()) {
+            ticketsLocalRepo.addTicketTypes(ticketsRemoteRepo.fetchTicketTypesForEvent(eventId).blockingSingle());
+        }
         ticketInfoList = ticketsLocalRepo.getTicketsByEventId(eventId);
         event = eventsLocalRepo.getEventById(eventId);
     }

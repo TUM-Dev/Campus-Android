@@ -20,7 +20,7 @@ class TicketsLocalRepository @Inject constructor(
 
     fun getTicketsByEventId(eventId: Int): List<TicketInfo> = database.ticketDao().getByEventId(eventId)
 
-    fun getTicketTypeById(id: Int): TicketType = database.ticketTypeDao().getById(id)
+    fun getTicketTypesByEventId(eventId: Int): List<TicketType> = database.ticketTypeDao().getByEventId(eventId)
 
     fun addTicketTypes(ticketTypes: List<TicketType>) {
         database.ticketTypeDao().insert(ticketTypes)
