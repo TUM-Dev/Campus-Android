@@ -2,6 +2,8 @@ package de.tum.in.tumcampusapp.database;
 
 import android.content.Context;
 
+import java.util.concurrent.ExecutionException;
+
 import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
@@ -26,13 +28,11 @@ import de.tum.in.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBla
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.RoomLocations;
 import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaDao;
-import de.tum.in.tumcampusapp.component.ui.openinghour.LocationDao;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuDao;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.FavoriteDishDao;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.FavoriteDish;
-import de.tum.in.tumcampusapp.component.ui.openinghour.model.Location;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatMessageDao;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatRoomDao;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
@@ -41,6 +41,8 @@ import de.tum.in.tumcampusapp.component.ui.news.NewsDao;
 import de.tum.in.tumcampusapp.component.ui.news.NewsSourcesDao;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
+import de.tum.in.tumcampusapp.component.ui.openinghour.LocationDao;
+import de.tum.in.tumcampusapp.component.ui.openinghour.model.Location;
 import de.tum.in.tumcampusapp.component.ui.studyroom.StudyRoomDao;
 import de.tum.in.tumcampusapp.component.ui.studyroom.StudyRoomGroupDao;
 import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoom;
@@ -61,7 +63,6 @@ import de.tum.in.tumcampusapp.database.migrations.Migration2to3;
 import de.tum.in.tumcampusapp.database.migrations.Migration3to4;
 import de.tum.in.tumcampusapp.utils.CacheManager;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.Utils;
 import de.tum.in.tumcampusapp.utils.sync.SyncDao;
 import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
@@ -168,13 +169,10 @@ public abstract class TcaDb extends RoomDatabase {
      *
      * @param c context
      */
-    public static void resetDb(Context c) {
+    public static void resetDb(Context c) throws ExecutionException, InterruptedException {
         // Stop all work tasks in WorkManager, since they might access the DB
-        try {
-            WorkManager.getInstance().cancelAllWork().wait();
-        } catch (InterruptedException e) {
-            Utils.log(e);
-        }
+
+        WorkManager.getInstance().cancelAllWork().getResult().get();
 
         // Clear our cache table
         CacheManager cacheManager = new CacheManager(c);
