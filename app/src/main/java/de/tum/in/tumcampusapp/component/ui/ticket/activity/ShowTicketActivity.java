@@ -158,7 +158,7 @@ public class ShowTicketActivity extends BaseActivity {
     private void loadTicketData(int eventId) {
         List<TicketType> ticketTypes = ticketsLocalRepo.getTicketTypeByEventId(eventId);
         if (ticketTypes.isEmpty()) {
-            ticketsLocalRepo.addTicketTypes(ticketsRemoteRepo.fetchTicketTypesForEvent(23).blockingSingle());
+            ticketsLocalRepo.addTicketTypes(ticketsRemoteRepo.fetchTicketTypesForEvent(eventId).blockingSingle());
         }
         ticketInfoList = ticketsLocalRepo.getTicketsByEventId(eventId);
         event = eventsLocalRepo.getEventById(eventId);
