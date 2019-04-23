@@ -28,6 +28,7 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsRemoteRepos
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.FilmDownloadAction
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.updatenote.UpdateNoteDownloadAction
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.service.DownloadWorker
 
@@ -115,6 +116,11 @@ class DownloadModule {
     ): TopNewsDownloadAction = TopNewsDownloadAction(remoteRepository)
 
     @Provides
+    fun provideUpdateNoteDownloadAction(
+            context: Context
+    ): UpdateNoteDownloadAction = UpdateNoteDownloadAction(context)
+
+    @Provides
     fun provideGradesStore(
             sharedPrefs: SharedPreferences
     ): GradesStore = GradesStore(sharedPrefs)
@@ -146,7 +152,8 @@ class DownloadModule {
             gradesDownloadAction: GradesDownloadAction,
             idUploadAction: IdUploadAction,
             newsDownloadAction: NewsDownloadAction,
-            topNewsDownloadAction: TopNewsDownloadAction
+            topNewsDownloadAction: TopNewsDownloadAction,
+            updateNoteDownloadAction: UpdateNoteDownloadAction
     ): DownloadWorker.WorkerActions = DownloadWorker.WorkerActions(
             cafeteriaDownloadAction,
             locationImportAction,
@@ -155,7 +162,8 @@ class DownloadModule {
             gradesDownloadAction,
             idUploadAction,
             newsDownloadAction,
-            topNewsDownloadAction
+            topNewsDownloadAction,
+            updateNoteDownloadAction
     )
 
 }
