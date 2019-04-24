@@ -680,6 +680,8 @@
 
         <receiver android:name="de.tum.in.tumcampusapp.component.notifications.receivers.NotificationAlarmReceiver" />
 
+        <receiver android:name=".component.tumui.grades.GradeNotificationDeleteReceiver" />
+
     </application>
 
 </manifest>
