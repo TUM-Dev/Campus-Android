@@ -16,7 +16,7 @@ import org.joda.time.ReadableInstant;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.overview.card.StickyCard;
-import de.tum.in.tumcampusapp.service.DownloadService;
+import de.tum.in.tumcampusapp.service.DownloadWorker;
 import de.tum.in.tumcampusapp.utils.NetUtils;
 
 /**
@@ -40,7 +40,7 @@ public class NoInternetCard extends StickyCard {
 
         View v = viewHolder.itemView;
         TextView lastUpdate = v.findViewById(R.id.card_last_update);
-        ReadableInstant lastUpdated = new DateTime(DownloadService.lastUpdate(getContext()));
+        ReadableInstant lastUpdated = new DateTime(DownloadWorker.lastUpdate(getContext()));
         final String time = DateUtils.getRelativeTimeSpanString(lastUpdated.getMillis(),
                 System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS)
                 .toString();

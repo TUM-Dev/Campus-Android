@@ -10,12 +10,17 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -23,6 +28,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.ListPreference;
+import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
@@ -31,13 +37,15 @@ import androidx.preference.SwitchPreferenceCompat;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.eduroam.SetupEduroamActivity;
 import de.tum.in.tumcampusapp.component.ui.news.NewsController;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.onboarding.StartupActivity;
 import de.tum.in.tumcampusapp.database.TcaDb;
-import de.tum.in.tumcampusapp.service.BackgroundService;
 import de.tum.in.tumcampusapp.service.SilenceService;
+import de.tum.in.tumcampusapp.service.StartSyncReceiver;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
@@ -80,6 +88,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
             setSummary("card_cafeteria_default_K");
             setSummary("card_cafeteria_default_W");
             setSummary("card_role");
+            initCafeteriaCardSelections();
         } else if (rootKey.equals("card_mvv")) {
             setSummary("card_stations_default_G");
             setSummary("card_stations_default_C");
@@ -90,7 +99,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
         // Register the change listener to react immediately on changes
         PreferenceManager.getDefaultSharedPreferences(mContext)
-                         .registerOnSharedPreferenceChangeListener(this);
+                .registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -99,6 +108,33 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
         // Set the default white background in the view so as to avoid transparency
         view.setBackgroundColor(Color.WHITE);
+    }
+
+    private void initCafeteriaCardSelections() {
+        CafeteriaLocalRepository repository = new CafeteriaLocalRepository(TcaDb.getInstance(getContext()));
+        List<Cafeteria> cafeterias = repository.getAllCafeterias().blockingFirst();
+        Collections.sort(cafeterias, (c1, c2) -> c1.getName().compareTo(c2.getName()));
+
+        String[] cafeteriaNames = new String[cafeterias.size() + 1];
+        String[] cafeteriaIds = new String[cafeterias.size() + 1];
+
+        cafeteriaNames[0] = getString(R.string.settings_cafeteria_depending_on_location);
+        cafeteriaIds[0] = Const.CAFETERIA_BY_LOCATION_SETTINGS_ID;
+        for (int i = 0; i < cafeterias.size(); i++) {
+            cafeteriaNames[i + 1] = cafeterias.get(i).getName();
+            cafeteriaIds[i + 1] = Integer.toString(cafeterias.get(i).getId());
+        }
+        MultiSelectListPreference multiSelectPref =
+                (MultiSelectListPreference) findPreference(Const.CAFETERIA_CARDS_SETTING);
+        multiSelectPref.setEntries(cafeteriaNames);
+        multiSelectPref.setEntryValues(cafeteriaIds);
+        multiSelectPref.setOnPreferenceChangeListener((preference, newValue) -> {
+            ((MultiSelectListPreference)preference).setValues((Set<String>) newValue);
+            setCafeteriaCardsSummary(preference);
+            return false;
+        });
+
+        setCafeteriaCardsSummary(findPreference(Const.CAFETERIA_CARDS_SETTING));
     }
 
     private void populateNewsSources() {
@@ -111,7 +147,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
             final CheckBoxPreference pref = new CheckBoxPreference(mContext);
             pref.setKey("card_news_source_" + newsSource.getId());
             pref.setDefaultValue(true);
-            
+
             // reserve space so that when the icon is loaded the text is not moved again
             pref.setIconSpaceReserved(true);
 
@@ -122,7 +158,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                     try {
                         Bitmap bmp = Picasso.get().load(url).get();
                         mContext.runOnUiThread(() -> {
-                            if(isAdded()){
+                            if (isAdded()) {
                                 pref.setIcon(new BitmapDrawable(getResources(), bmp));
                             }
                         });
@@ -202,11 +238,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
         // If the background mode was activated, start the service. This will invoke
         // the service to call onHandleIntent which updates all background data
         if (key.equals(Const.BACKGROUND_MODE)) {
-            Intent service = new Intent(mContext, BackgroundService.class);
             if (sharedPreferences.getBoolean(key, false)) {
-                mContext.startService(service);
+                StartSyncReceiver.startBackground(mContext);
             } else {
-                mContext.stopService(service);
+                StartSyncReceiver.cancelBackground();
             }
         }
     }
@@ -217,6 +252,22 @@ public class SettingsFragment extends PreferenceFragmentCompat
             ListPreference listPref = (ListPreference) pref;
             String entry = listPref.getEntry().toString();
             listPref.setSummary(entry);
+        }
+    }
+
+    private void setCafeteriaCardsSummary(Preference preference) {
+        MultiSelectListPreference multiSelectPreference = (MultiSelectListPreference) preference;
+        Set<String> values =  multiSelectPreference.getValues();
+        if (values.isEmpty()) {
+            multiSelectPreference.setSummary(R.string.settings_no_location_selected);
+        } else {
+            ArrayList<String> valueNames = new ArrayList<>(values.size());
+            CharSequence[] entryNames = multiSelectPreference.getEntries();
+            for (String v: values) {
+                valueNames.add(entryNames[multiSelectPreference.findIndexOfValue(v)].toString());
+            }
+            Collections.sort(valueNames);
+            multiSelectPreference.setSummary(TextUtils.join(", ", valueNames));
         }
     }
 
@@ -235,7 +286,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 startActivity(new Intent(getContext(), SetupEduroamActivity.class));
                 break;
             case BUTTON_LOGOUT:
-                showLogoutDialog();
+                showLogoutDialog(R.string.logout_title, R.string.logout_message);
                 break;
             default:
                 return false;
@@ -244,9 +295,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
         return true;
     }
 
-    private void showLogoutDialog() {
+    private void showLogoutDialog(int title, int message) {
         AlertDialog dialog = new AlertDialog.Builder(mContext)
-                .setMessage(R.string.logout_message)
+                .setTitle(title)
+                .setMessage(message)
                 .setPositiveButton(R.string.logout, ((dialogInterface, i) -> logout()))
                 .setNegativeButton(R.string.cancel, null)
                 .create();
@@ -259,12 +311,20 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
 
     private void logout() {
-        clearData();
+
+        try {
+            clearData();
+        } catch (Exception e) {
+            Utils.log(e);
+            showLogoutDialog(R.string.logout_error_title, R.string.logout_try_again);
+            return;
+        }
+
         startActivity(new Intent(mContext, StartupActivity.class));
         mContext.finish();
     }
 
-    private void clearData() {
+    private void clearData() throws ExecutionException, InterruptedException {
         TcaDb.resetDb(mContext);
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);

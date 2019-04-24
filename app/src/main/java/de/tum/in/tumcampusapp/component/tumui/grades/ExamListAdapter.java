@@ -47,8 +47,14 @@ public class ExamListAdapter extends SimpleStickyListHeadersAdapter<Exam> {
             int gradeColor = exam.getGradeColor(context);
             holder.gradeTextView.getBackground().setTint(gradeColor);
 
+            String date;
+            if (exam.getDate() == null) {
+                date = context.getString(R.string.not_specified);
+            } else {
+                date = DF.print(exam.getDate());
+            }
             holder.examDateTextView.setText(String.format(
-                    "%s: %s", context.getString(R.string.date), DF.print(exam.getDate())));
+                    "%s: %s", context.getString(R.string.date), date));
 
             holder.additionalInfoTextView.setText(String.format("%s: %s, %s: %s",
                     context.getString(R.string.examiner), exam.getExaminer(),

@@ -1,48 +1,70 @@
 package de.tum.in.tumcampusapp.component.tumui.feedback;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.location.Location;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.jakewharton.rxbinding3.widget.RxCompoundButton;
+import com.jakewharton.rxbinding3.widget.RxRadioGroup;
+import com.jakewharton.rxbinding3.widget.RxTextView;
+import com.patloew.rxlocation.RxLocation;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
+import de.tum.in.tumcampusapp.component.tumui.feedback.di.FeedbackModule;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
 import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.ImageUtils;
 import de.tum.in.tumcampusapp.utils.Utils;
+import io.reactivex.Observable;
 
-import static de.tum.in.tumcampusapp.component.tumui.feedback.FeedbackController.PERMISSION_CAMERA;
-import static de.tum.in.tumcampusapp.component.tumui.feedback.FeedbackController.PERMISSION_FILES;
-import static de.tum.in.tumcampusapp.component.tumui.feedback.FeedbackController.PERMISSION_LOCATION;
-import static de.tum.in.tumcampusapp.component.tumui.feedback.FeedbackController.REQUEST_GALLERY;
-import static de.tum.in.tumcampusapp.component.tumui.feedback.FeedbackController.REQUEST_TAKE_PHOTO;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static android.widget.Toast.LENGTH_SHORT;
+import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
+import static de.tum.in.tumcampusapp.component.tumui.feedback.FeedbackPresenter.PERMISSION_CAMERA;
+import static de.tum.in.tumcampusapp.component.tumui.feedback.FeedbackPresenter.PERMISSION_FILES;
+import static de.tum.in.tumcampusapp.component.tumui.feedback.FeedbackPresenter.PERMISSION_LOCATION;
+import static de.tum.in.tumcampusapp.component.tumui.feedback.FeedbackPresenter.REQUEST_GALLERY;
+import static de.tum.in.tumcampusapp.component.tumui.feedback.FeedbackPresenter.REQUEST_TAKE_PHOTO;
 
-public class FeedbackActivity extends BaseActivity {
+public class FeedbackActivity extends BaseActivity
+        implements FeedbackContract.View, FeedbackThumbnailsAdapter.RemoveListener {
 
-    private CheckBox includeEmail, includeLocation;
+    private RadioGroup radioGroup;
+    private CheckBox includeEmailCheckbox;
+    private CheckBox includeLocationCheckbox;
     private TextInputLayout customEmailViewLayout;
-    private TextInputEditText feedbackView, customEmailView;
+    private TextInputEditText feedbackTextView;
+    private TextInputEditText customEmailTextView;
 
-    private RecyclerView.Adapter thumbnailsAdapter;
+    private FeedbackThumbnailsAdapter thumbnailsAdapter;
+    private AlertDialog progressDialog;
 
-    private FeedbackController controller;
-    private Feedback feedback;
-    private String lrzId;
+    @Inject
+    FeedbackContract.Presenter presenter;
 
     public FeedbackActivity() {
         super(R.layout.activity_feedback);
@@ -52,218 +74,328 @@ public class FeedbackActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        controller = new FeedbackController(this);
+        String lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
+        getInjector()
+                .feedbackComponent()
+                .feedbackModule(new FeedbackModule())
+                .lrzId(lrzId)
+                .build()
+                .inject(this);
 
-        boolean loadingSavedState = savedInstanceState != null;
-        if (loadingSavedState) {
-            feedback = savedInstanceState.getParcelable(Const.FEEDBACK);
-        } else {
-            feedback = new Feedback();
+        radioGroup = findViewById(R.id.radioButtonsGroup);
+        feedbackTextView = findViewById(R.id.feedback_message);
+        customEmailViewLayout = findViewById(R.id.feedback_custom_email_layout);
+        customEmailTextView = findViewById(R.id.feedback_custom_email);
+        includeEmailCheckbox = findViewById(R.id.feedback_include_email);
+        includeLocationCheckbox = findViewById(R.id.feedback_include_location);
+
+        presenter.attachView(this);
+
+        if (savedInstanceState != null) {
+            presenter.onRestoreInstanceState(savedInstanceState);
         }
 
-        feedbackView = findViewById(R.id.feedback_message);
-        customEmailViewLayout = findViewById(R.id.feedback_custom_email_layout);
-        customEmailView = findViewById(R.id.feedback_custom_email);
-        includeEmail = findViewById(R.id.feedback_include_email);
-        includeLocation = findViewById(R.id.feedback_include_location);
-
-        lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
-
-        feedbackView.setText(feedback.getMessage());
-        initFeedbackType();
         initIncludeLocation();
-        initIncludeEmail(loadingSavedState);
         initPictureGalley();
+
+        if (savedInstanceState == null) {
+            presenter.initEmail();
+        }
+        initIncludeEmail();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(Const.FEEDBACK, getFeedback());
-    }
-
-    private Feedback getFeedback() {
-        if (feedback == null) {
-            feedback = new Feedback();
-        }
-        // get values that we don't observe
-        feedback.setMessage(feedbackView.getText().toString());
-        if (lrzId == null || lrzId.isEmpty()) {
-            feedback.setEmail(customEmailView.getText().toString());
-        }
-        feedback.setIncludeLocation(includeLocation.isChecked());
-        if (controller.getLocation() != null) {
-            feedback.setLatitude(controller.getLocation().getLatitude());
-            feedback.setLongitude(controller.getLocation().getLongitude());
-        }
-        return feedback;
+        presenter.onSaveInstanceState(outState);
     }
 
     private void initPictureGalley() {
         RecyclerView pictureList = findViewById(R.id.feedback_image_list);
-        pictureList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        pictureList.setLayoutManager(new LinearLayoutManager(this, HORIZONTAL, false));
 
-        thumbnailsAdapter = new FeedbackThumbnailsAdapter(feedback.getPicturePaths());
+        List<String> imagePaths = presenter.getFeedback().getPicturePaths();
+        final int thumbnailSize = (int) getResources().getDimension(R.dimen.thumbnail_size);
+        thumbnailsAdapter = new FeedbackThumbnailsAdapter(imagePaths, this, thumbnailSize);
         pictureList.setAdapter(thumbnailsAdapter);
 
-        findViewById(R.id.feedback_add_image).setOnClickListener(
-                view -> controller.showPictureOptionsDialog(FeedbackActivity.this));
-    }
-
-    @SuppressLint("NewApi")
-    private void initIncludeLocation() {
-        includeLocation.setOnClickListener(view -> {
-            if (includeLocation.isChecked()
-                    && controller.checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, this)) {
-                controller.saveLocation();
-            } else if (!includeLocation.isChecked()) {
-                controller.stopListeningForLocation();
-            }
-        });
-
-        includeLocation.setChecked(feedback.getIncludeLocation());
-        if (includeLocation.isChecked()
-                && controller.checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, this)) {
-            controller.saveLocation();
-        }
-    }
-
-    private void initIncludeEmail(boolean loadingSavedState) {
-        if (!loadingSavedState) {
-            // set initial values based on lrzId availability
-            if (lrzId != null && !lrzId.isEmpty()) {
-                feedback.setEmail(lrzId + "@mytum.de");
-                feedback.setIncludeEmail(true);
-            } else {
-                feedback.setIncludeEmail(false);
-            }
-        }
-
-        includeEmail.setChecked(feedback.getIncludeEmail());
-        if (TextUtils.isEmpty(lrzId)) {
-            includeEmail.setText(R.string.feedback_include_email);
-            customEmailView.setText(feedback.getEmail());
-        } else {
-            includeEmail.setText(getResources()
-                                         .getString(R.string.feedback_include_email_tum_id, feedback.getEmail()));
-        }
-        hideOrShowEmailInput();
-
-        includeEmail.setOnClickListener(view -> {
-            feedback.setIncludeEmail(!feedback.getIncludeEmail());
-            hideOrShowEmailInput();
-        });
-    }
-
-    private void hideOrShowEmailInput() {
-        if (includeEmail.isChecked()) {
-            if (TextUtils.isEmpty(lrzId)) {
-                customEmailViewLayout.setVisibility(View.VISIBLE);
-            }
-        } else {
-            customEmailViewLayout.setVisibility(View.GONE);
-        }
-    }
-
-    private void initFeedbackType() {
-        RadioGroup radioGroup = findViewById(R.id.radioButtonsGroup);
-        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            feedback.setTopic(checkedId == R.id.tumInGeneralRadioButton
-                    ? Const.FEEDBACK_TOPIC_GENERAL
-                    : Const.FEEDBACK_TOPIC_APP);
-        });
-
-        int selectedButtonId = (feedback.getTopic().equals(Const.FEEDBACK_TOPIC_GENERAL))
-                ? R.id.tumInGeneralRadioButton
-                : R.id.tumCampusAppRadioButton;
-        radioGroup.check(-1); // Clear the selection
-        radioGroup.check(selectedButtonId);
+        findViewById(R.id.feedback_add_image).setOnClickListener(view -> showImageOptionsDialog());
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        controller.stopListeningForLocation();
-    }
+    public void onThumbnailRemoved(String path) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View view = View.inflate(this, R.layout.picture_dialog, null);
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        for (String path : feedback.getPicturePaths()) {
-            new File(path).delete();
-        }
-    }
+        ImageView imageView = view.findViewById(R.id.feedback_big_image);
+        imageView.setImageURI(Uri.fromFile(new File(path)));
 
-    public void onSendClicked(View view) {
-        getFeedback();
+        builder.setView(view)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.feedback_remove_image, (dialog, i) -> removeThumbnail(path));
 
-        if (feedback.getMessage().trim().isEmpty()) {
-            if (feedback.getPicturePaths().isEmpty()) {
-                feedbackView.setError(getString(R.string.feedback_empty));
-            } else {
-                feedbackView.setError(getString(R.string.feedback_img_without_text));
-            }
-        }
-
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(R.string.send_feedback_question)
-                .setPositiveButton(R.string.send,
-                        (dialogInterface, i)
-                                -> controller.sendFeedback(this, feedback, lrzId))
-                .setNegativeButton(R.string.no, null)
-                .create();
+        AlertDialog dialog = builder.create();
         if (dialog.getWindow() != null) {
             dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
         }
         dialog.show();
     }
 
+    private void removeThumbnail(String path) {
+        presenter.removeImage(path);
+    }
+
+    private void showImageOptionsDialog() {
+        String[] options = {
+                getString(R.string.feedback_take_picture),
+                getString(R.string.gallery)
+        };
+
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.feedback_add_picture)
+                .setItems(options, (dialog, index) -> presenter.onImageOptionSelected(index))
+                .setNegativeButton(R.string.cancel, null)
+                .create();
+
+        if (alertDialog.getWindow() != null) {
+            alertDialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+        alertDialog.show();
+    }
+
+    @NotNull
+    @Override
+    public Observable<String> getMessage() {
+        return RxTextView
+                .textChanges(feedbackTextView)
+                .map(CharSequence::toString);
+    }
+
+    @NotNull
+    @Override
+    public Observable<Integer> getTopicInput() {
+        return RxRadioGroup.checkedChanges(radioGroup);
+    }
+
+    @NotNull
+    @Override
+    public Observable<Boolean> getIncludeEmail() {
+        return RxCompoundButton.checkedChanges(includeEmailCheckbox);
+    }
+
+    @NotNull
+    @Override
+    public Observable<Boolean> getIncludeLocation() {
+        return RxCompoundButton.checkedChanges(includeLocationCheckbox);
+    }
+
+    @SuppressLint("MissingPermission")
+    @NotNull
+    @Override
+    public Observable<Location> getLocation() {
+        LocationRequest locationRequest = LocationRequest.create();
+        return new RxLocation(this).location().updates(locationRequest);
+    }
+
+    @Override
+    public void setFeedback(@NotNull String message) {
+        feedbackTextView.setText(message);
+    }
+
+    @Override
+    public void openCamera(@NotNull Intent intent) {
+        startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+    }
+
+    @Override
+    public void openGallery(@NotNull Intent intent) {
+        startActivityForResult(intent, REQUEST_GALLERY);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void showPermissionRequestDialog(@NotNull String permission, int requestCode) {
+        requestPermissions(new String[] { permission }, requestCode);
+    }
+
+    private void initIncludeLocation() {
+        includeLocationCheckbox.setChecked(presenter.getFeedback().getIncludeLocation());
+    }
+
+    private void initIncludeEmail() {
+        Feedback feedback = presenter.getFeedback();
+        String email = feedback.getEmail();
+        includeEmailCheckbox.setChecked(feedback.getIncludeEmail());
+
+        if (presenter.getLrzId().isEmpty()) {
+            includeEmailCheckbox.setText(R.string.feedback_include_email);
+            customEmailTextView.setText(email);
+        } else {
+            includeEmailCheckbox.setText(getString(R.string.feedback_include_email_tum_id, email));
+        }
+    }
+
+    @Override
+    public void showEmailInput(boolean show) {
+        if (show) {
+            customEmailViewLayout.setVisibility(View.VISIBLE);
+        } else {
+            customEmailViewLayout.setVisibility(View.GONE);
+        }
+    }
+
+    public void onSendClicked(View view) {
+        presenter.onSendFeedback();
+    }
+
+    @Override
+    public void showEmptyMessageError() {
+        feedbackTextView.setError(getString(R.string.feedback_empty));
+    }
+
+    @Override
+    public void showWarning(@NotNull String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showDialog(@NotNull String title, @NotNull String message) {
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(R.string.ok, null)
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        dialog.show();
+    }
+
+    @Override
+    public void showProgressDialog() {
+        progressDialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.feedback_sending)
+                .setView(new ProgressBar(this))
+                .setCancelable(false)
+                .setNeutralButton(R.string.cancel, null)
+                .create();
+
+        if (progressDialog.getWindow() != null) {
+            progressDialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        progressDialog.show();
+    }
+
+    @Override
+    public void showSendErrorDialog() {
+        progressDialog.dismiss();
+
+        AlertDialog errorDialog = new AlertDialog.Builder(this)
+                .setMessage(R.string.feedback_sending_error)
+                .setIcon(R.drawable.ic_error_outline)
+                .setPositiveButton(R.string.try_again, (dialog, i) -> presenter.getFeedback())
+                .setNegativeButton(R.string.cancel, null)
+                .create();
+
+        if (errorDialog.getWindow() != null) {
+            errorDialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        errorDialog.show();
+    }
+
+    @Override
+    public void onFeedbackSent() {
+        progressDialog.dismiss();
+        Toast.makeText(this, R.string.feedback_send_success, LENGTH_SHORT).show();
+        finish();
+    }
+
+    @Override
+    public void showSendConfirmationDialog() {
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
+                .setMessage(R.string.send_feedback_question)
+                .setPositiveButton(R.string.send, (dialog, i) -> presenter.onConfirmSend())
+                .setNegativeButton(R.string.cancel, null)
+                .create();
+
+        if (alertDialog.getWindow() != null) {
+            alertDialog.getWindow()
+                    .setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+        }
+
+        alertDialog.show();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_TAKE_PHOTO) {
-                ImageUtils.rescaleBitmap(this, controller.getCurrentPhotoPath());
-                feedback.getPicturePaths().add(controller.getCurrentPhotoPath());
-                thumbnailsAdapter.notifyDataSetChanged();
-            } else if (requestCode == REQUEST_GALLERY) {
-                String filePath = ImageUtils.rescaleBitmap(this, data.getData());
-                feedback.getPicturePaths().add(filePath);
-                thumbnailsAdapter.notifyDataSetChanged();
-            }
+        if (resultCode != RESULT_OK) {
+            return;
         }
+
+        switch (requestCode) {
+            case REQUEST_TAKE_PHOTO:
+                presenter.onNewImageTaken();
+                break;
+            case REQUEST_GALLERY:
+                Uri filePath = data.getData();
+                presenter.onNewImageSelected(filePath);
+                break;
+        }
+    }
+
+    @Override
+    public void onImageAdded(@NotNull String path) {
+        thumbnailsAdapter.addImage(path);
+    }
+
+    @Override
+    public void onImageRemoved(int position) {
+        thumbnailsAdapter.removeImage(position);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
+        if (grantResults.length == 0) {
+            return;
+        }
+
+        final boolean isGranted = grantResults[0] == PERMISSION_GRANTED;
+
         switch (requestCode) {
             case PERMISSION_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    controller.saveLocation();
-                    includeLocation.setChecked(true);
-                } else {
-                    includeLocation.setChecked(false);
+                includeLocationCheckbox.setChecked(isGranted);
+                if (isGranted) {
+                    presenter.listenForLocation();
                 }
                 return;
             }
             case PERMISSION_CAMERA: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    controller.startTakingPicture(this);
+                if (isGranted) {
+                    presenter.takePicture();
                 }
                 return;
             }
             case PERMISSION_FILES: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    controller.openGallery(this);
+                if (isGranted) {
+                    presenter.openGallery();
                 }
                 return;
             }
-            default: // don't do anything
+            default:
+                break;
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        presenter.detachView();
+        super.onDestroy();
+    }
+
 }

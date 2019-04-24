@@ -72,13 +72,6 @@ class CafeteriaViewModel @Inject constructor(
                 .subscribe(_menuDates::postValue, Utils::log)
     }
 
-    /**
-     * Fetches [CafeteriaMenu]s for the provided cafeteria ID at the requested date from the
-     * database and posts its result to [cafeteriaMenus].
-     *
-     * @param id The ID of the [Cafeteria]
-     * @param date The [DateTime] for which to fetch the [CafeteriaMenu]
-     */
     fun fetchCafeteriaMenus(id: Int, date: DateTime) {
         compositeDisposable += Flowable.fromCallable { localRepository.getCafeteriaMenus(id, date) }
                 .subscribeOn(Schedulers.io())

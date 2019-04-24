@@ -33,16 +33,15 @@
                 android:layout_height="0dp"
                 android:layout_weight="1">
 
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="@dimen/material_default_padding">
+                    android:layout_height="wrap_content">
 
                     <ImageView
                         android:id="@+id/ticket_qr_code"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:layout_margin="@dimen/material_default_padding"
                         android:scaleType="fitCenter"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintDimensionRatio="H,1:1"
@@ -50,55 +49,59 @@
                         app:layout_constraintTop_toTopOf="parent"
                         tools:src="@drawable/qr_code_demo" />
 
-                    <LinearLayout
+                    <ScrollView
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
                         android:layout_margin="@dimen/material_default_padding"
-                        android:orientation="vertical"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/ticket_qr_code"
                         app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:id="@+id/ticket_event_title"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="sans-serif-medium"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                            tools:text="Title" />
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/ticket_event_date_time"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/material_default_padding"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                            tools:text="20.04.2018 12:45" />
+                            <TextView
+                                android:id="@+id/ticket_event_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-medium"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                                tools:text="Title" />
 
-                        <TextView
-                            android:id="@+id/ticket_event_price"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                            tools:text="Price: 10€" />
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/ticket_event_ticket_list"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                tools:layout_height="200dp" />
 
-                        <TextView
-                            android:id="@+id/ticket_event_location"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/material_default_padding"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                            tools:text="location" />
+                            <TextView
+                                android:id="@+id/ticket_event_date_time"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/material_default_padding"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                                tools:text="20.04.2018 12:45" />
 
-                        <TextView
-                            android:id="@+id/ticket_event_redemption_state"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                            tools:text="Redeemed: No" />
+                            <TextView
+                                android:id="@+id/ticket_event_location"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                                tools:text="location" />
 
-                    </LinearLayout>
+                            <TextView
+                                android:id="@+id/ticket_event_redemption_state"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/material_small_padding"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                                tools:text="Redeemed: No" />
+
+                        </LinearLayout>
+                    </ScrollView>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -93,7 +93,10 @@
     <string name="open_wizard_detail">The Startup-Wizard helps you in order to set the basic preferences for accessing TUMonline services and the layout of this App.</string>
     <string name="account" translatable="false">Account</string>
     <string name="logout">Log out</string>
+    <string name="logout_title">Disconnect from TUMonline</string>
     <string name="logout_message">Are you sure you want to log out?</string>
+    <string name="logout_error_title">Logout failed</string>
+    <string name="logout_try_again">Do you want to try again?</string>
     <string name="employee_mode">Employee Mode</string>
     <string name="employee_mode_info">Some unnecessary items like grades and tuition fees are hidden in this mode.</string>
     <string name="clear_cache">Clear Cache</string>
@@ -619,6 +622,14 @@ Signature: %5$s</string>
     <!-- Ticket Activity -->
     <string name="your_ticket">Your Ticket</string>
     <string name="show_ticket">Show Ticket</string>
+    <plurals name="show_tickets">
+        <item quantity="one">Show Ticket</item>
+        <item quantity="other">Show Tickets</item>
+    </plurals>
+    <plurals name="tickets">
+        <item quantity="one">Ticket</item>
+        <item quantity="other">%d Tickets</item>
+    </plurals>
     <string name="buy_ticket">Buy Ticket</string>
     <string name="purchase_details">Details</string>
     <string name="continue_to_payment">Continue to payment</string>
@@ -629,7 +640,8 @@ Signature: %5$s</string>
     <string name="show_booked_events">Show booked events</string>
     <string name="events_tickets">Events &amp; Tickets</string>
     <string name="ticket_type">Ticket Type</string>
-    <string name="price">Price</string>
+    <string name="select_tickets">Select Tickets</string>
+    <string name="total">Total</string>
     <string name="location">Location</string>
     <string name="event" translatable="false">Event</string>
     <string name="payment_selection">Payment Selection</string>
@@ -669,6 +681,10 @@ Signature: %5$s</string>
     <string name="ticket_contingent_exhausted">All tickets of the requested type are already sold.</string>
 
     <string name="choose_ticket_type">Choose your ticket type</string>
+    <string name="ticket_amount_error_title">Purchase restrictions</string>
+    <string name="ticket_amount_information">You can buy a minimum of %1d and a maximum of %2d of ticket type \“%s\”</string>
+    <string name="price_per_ticket">%s per ticket</string>
+    <string name="ticket_amount_label">Amount</string>
 
     <string name="retry">Retry</string>
     <string name="updating_event">Updating event …</string>
@@ -689,7 +705,11 @@ Signature: %5$s</string>
     <string name="credit_card_format_string" translatable="false">**** **** **** %s</string>
     <string name="remaining_tickets">Remaining tickets</string>
     <string name="thanks_for_your_purchase">Thanks for your purchase</string>
-    <string name="the_ticket_has_been_saved_for_you_in_the_app">The ticket has been saved for you in the app.</string>
+    <string name="tickets_saved_in_app">The ticket has been saved in the app.</string>
+    <plurals name="tickets_saved_in_app">
+        <item quantity="one">@string/tickets_saved_in_app</item>
+        <item quantity="other">The tickets have been saved in the app.</item>
+    </plurals>
     <string name="home">Home</string>
     <string name="about">About</string>
     <string name="due_on_format_string">Due on %s</string>
@@ -701,7 +721,7 @@ Signature: %5$s</string>
     <string name="chat_message_send_error">Message couldn’t be sent</string>
     <string name="chat_message_try_again">The message couldn’t be send. Try again?</string>
     <string name="today">Today</string>
-    <string name="ticket_sale_beta">The ticket sale is still in beta and might have some side effects and errors. In case you experience any troubles, please contact us at app@tum.de. For now only one ticket can be bought per student digitally. You can still buy tickets at the box office just before the event, even if there are no more tickets here in the app.</string>
+    <string name="ticket_sale_beta">The ticket sale is still in beta and might have some side effects and errors. In case you experience any troubles, please contact us at app@tum.de. You can still buy tickets at the box office just before the event, even if there are no more tickets here in the app.</string>
     <string name="next_lecture_hide">Hide</string>
     <string name="next_lecture_show_more">Show %d more …</string>
     <string name="show_in_calendar">Show in Calendar</string>
@@ -712,10 +732,24 @@ Signature: %5$s</string>
     <string name="update_note_title">New Features</string>
     <string name="update_note_version">Version %s</string>
     <string name="action_cant_be_performed">Action can’t be performed</string>
+    <string name="not_redeemed_yet">Not redeemed yet</string>
+    <string name="partially_redeemed">%d of %d redeemed (%s)</string>
+    <string name="redeemed_at">Redeemed at %s</string>
+    <string name="no_tickets_remaining">No tickets remaining</string>
+    <string name="no_tickets_remaining_message">Unfortunately you were a little too late, there are not tickets available anymore. For many events you can still buy a ticket on site.</string>
+    <string name="error_message_select_at_least_one_ticket">Please select at least one ticket from one of the categories.</string>
+    <string name="error_no_ticket_selected">No tickets selected</string>
+    <string name="amount_x" translatable="false">%dx</string>
     <string name="stuy_room_placeholder_text">New study rooms are being created in this location!</string>
 
     <plurals name="new_grades_format_string">
         <item quantity="one">%d new grade available %s</item>
         <item quantity="other">%d new grades available: %s</item>
     </plurals>
+    <string name="not_specified">Not specified</string>
+    <string name="invalid_email">Invalid e-mail address</string>
+    <string name="settings_cafeteria_depending_on_location">Depending on Location</string>
+    <string name="cafeteria_cards_settings_title">Select cafeterias to be shown</string>
+    <string name="settings_chose_cafeteria_cards">Choose Cafeteria Cards</string>
+    <string name="settings_no_location_selected">No Location Selected</string>
 </resources>

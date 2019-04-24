@@ -15,13 +15,13 @@ class DateTimeConverter : TypeConverter<DateTime?> {
     )
 
     override fun read(value: String?): DateTime? {
-        value?.let {
-            return parseString(it)
+        if (value.isNullOrEmpty()) {
+            return null
         }
-        return null
+        return parseString(value)
     }
 
-    private fun parseString(value: String): DateTime {
+    private fun parseString(value: String): DateTime? {
         formats.forEach { format ->
             val dateTime = tryOrNull { DateTimeFormat.forPattern(format).parseDateTime(value) }
             dateTime?.let {

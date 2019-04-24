@@ -12,20 +12,36 @@
             android:id="@+id/eventsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/default_window_background"/>
+            android:background="@color/default_window_background" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <TextView
-        android:id="@+id/placeholderTextView"
+    <LinearLayout
+        android:id="@+id/eventPlaceholder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="@dimen/material_default_padding"
-        android:fontFamily="sans-serif-medium"
-        android:gravity="center_horizontal"
-        android:text="@string/no_events_found"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:visibility="gone" />
+        android:orientation="vertical"
+        android:visibility="visible" >
+        <ImageView
+            android:id="@+id/placeholderImage"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_margin="@dimen/material_default_padding"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/popcorn_placeholder"/>
+        <TextView
+            android:id="@+id/placeholderTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/material_default_padding"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center_horizontal"
+            android:text="@string/no_events_found"
+            android:textColor="@color/text_light_gray"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+    </LinearLayout>
+
 
 </FrameLayout>

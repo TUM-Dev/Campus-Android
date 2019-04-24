@@ -1,10 +1,11 @@
 package de.tum.`in`.tumcampusapp.component.tumui.feedback.model
 
+import android.location.Location
 import android.os.Build
-import android.os.Parcel
 import android.os.Parcelable
 import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.utils.Const
+import kotlinx.android.parcel.Parcelize
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -18,54 +19,35 @@ import kotlin.collections.ArrayList
  * @param osVersion helpful info if bugs are submitted
  * @param appVersion helpful info if bugs are submitted
  */
+@Parcelize
 data class Feedback(
         val id: String = UUID.randomUUID().toString(),
         var topic: String = Const.FEEDBACK_TOPIC_GENERAL,
-        var message: String = "",
-        var email: String = "",
+        var message: String? = null,
+        var email: String? = null,
         var includeEmail: Boolean = false,
         var includeLocation: Boolean = false,
-        var latitude: Double = 0.toDouble(),
-        var longitude: Double = 0.toDouble(),
+        var latitude: Double? = null,
+        var longitude: Double? = null,
         val osVersion: String = Build.VERSION.RELEASE,
         val appVersion: String = BuildConfig.VERSION_NAME,
         var imageCount: Int = 0,
         @Transient // don't send this
-        var picturePaths: List<String> = ArrayList()): Parcelable {
+        var picturePaths: List<String> = ArrayList()
+) : Parcelable {
 
-    constructor(parcel: Parcel) : this() {
-        topic = parcel.readString()!!
-        message = parcel.readString()!!
-        email = parcel.readString()!!
-        includeEmail = parcel.readInt() == 1
-        includeLocation = parcel.readInt() == 1
-        latitude = parcel.readDouble()
-        longitude = parcel.readDouble()
-        imageCount = parcel.readInt()
-        parcel.readStringList(picturePaths)
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(topic)
-        parcel.writeString(message)
-        parcel.writeString(email)
-        parcel.writeInt(if (includeEmail) 1 else 0)
-        parcel.writeInt(if (includeLocation) 1 else 0)
-        parcel.writeDouble(latitude)
-        parcel.writeDouble(longitude)
-        parcel.writeInt(imageCount)
-        parcel.writeStringList(picturePaths)
-    }
-
-    override fun describeContents() = 0
-
-    companion object CREATOR : Parcelable.Creator<Feedback> {
-        override fun createFromParcel(parcel: Parcel): Feedback {
-            return Feedback(parcel)
+    var location: Location?
+        get() {
+            val lat = latitude ?: return null
+            val lng = longitude ?: return null
+            return Location("").apply {
+                latitude = lat
+                longitude = lng
+            }
+        }
+        set(value) {
+            latitude = value?.latitude
+            longitude = value?.longitude
         }
 
-        override fun newArray(size: Int): Array<Feedback?> {
-            return arrayOfNulls(size)
-        }
-    }
 }

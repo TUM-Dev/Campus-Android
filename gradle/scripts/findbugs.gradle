@@ -15,7 +15,7 @@ afterEvaluate {
                 html.enabled = false
             }
 
-            def variantCompile = variant.javaCompile
+            def variantCompile = variant.javaCompileProvider.get()
             classes = fileTree(variantCompile.destinationDir)
             source = variantCompile.source
             classpath = variantCompile.classpath.plus(project.files(android.bootClasspath))

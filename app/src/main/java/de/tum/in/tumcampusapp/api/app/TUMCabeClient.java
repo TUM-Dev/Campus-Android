@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,9 +23,8 @@ import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
-import de.tum.in.tumcampusapp.component.other.wifimeasurement.model.WifiMeasurement;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
-import de.tum.in.tumcampusapp.component.tumui.feedback.model.Success;
+import de.tum.in.tumcampusapp.component.tumui.feedback.model.FeedbackResult;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderMap;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom;
@@ -34,6 +34,7 @@ import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotificationLocation;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeContact;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeMoreInfo;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
+import de.tum.in.tumcampusapp.component.ui.openinghour.model.Location;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
@@ -100,6 +101,7 @@ public final class TUMCabeClient {
     private static final String API_CHAT = "chat/";
     static final String API_CHAT_ROOMS = API_CHAT + "rooms/";
     static final String API_CHAT_MEMBERS = API_CHAT + "members/";
+    static final String API_OPENING_HOURS = "openingtimes/";
 
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;
@@ -248,11 +250,6 @@ public final class TUMCabeClient {
         }
     }
 
-    public void createMeasurements(List<WifiMeasurement> wifiMeasurementList, Callback<TUMCabeStatus> cb) {
-        service.createMeasurements(wifiMeasurementList)
-                .enqueue(cb);
-    }
-
     public List<BarrierfreeContact> getBarrierfreeContactList() throws IOException {
         return service.getBarrierfreeContactList()
                 .execute()
@@ -309,19 +306,21 @@ public final class TUMCabeClient {
                 .body();
     }
 
-    public void sendFeedback(Feedback feedback, Callback<Success> cb) {
-        service.sendFeedback(feedback).enqueue(cb);
+    public Call<FeedbackResult> sendFeedback(Feedback feedback) {
+        return service.sendFeedback(feedback);
     }
 
-    public void sendFeedbackImages(Feedback feedback, String[] imagePaths, Callback<Success> cb) {
+    public List<Call<FeedbackResult>> sendFeedbackImages(Feedback feedback, String[] imagePaths) {
+        List<Call<FeedbackResult>> calls = new ArrayList<>();
         for (int i = 0; i < imagePaths.length; i++) {
             File file = new File(imagePaths[i]);
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
             MultipartBody.Part body = MultipartBody.Part.createFormData("feedback_image", i + ".png", reqFile);
 
-            service.sendFeedbackImage(body, i + 1, feedback.getId())
-                    .enqueue(cb);
+            Call<FeedbackResult> call = service.sendFeedbackImage(body, i + 1, feedback.getId());
+            calls.add(call);
         }
+        return calls;
     }
 
     public void searchChatMember(String query, Callback<List<ChatMember>> callback) {
@@ -371,7 +370,12 @@ public final class TUMCabeClient {
 
     // Getting ticket information
 
-    public Observable<List<Ticket>> fetchTickets(Context context) throws NoPrivateKey {
+    public Call<List<Ticket>> fetchTickets(Context context) throws NoPrivateKey {
+        TUMCabeVerification verification = getVerification(context, null);
+        return service.getTickets(verification);
+    }
+
+    public Observable<List<Ticket>> fetchTicketsRx(Context context) throws NoPrivateKey {
         TUMCabeVerification verification = getVerification(context, null);
         return service.getTicketsRx(verification);
     }
@@ -395,9 +399,9 @@ public final class TUMCabeClient {
     // Ticket purchase
 
     public void purchaseTicketStripe(
-            Context context, int ticketHistory, @NonNull String token,
-            @NonNull String customerName, Callback<Ticket> cb) throws NoPrivateKey {
-        TicketPurchaseStripe purchase = new TicketPurchaseStripe(ticketHistory, token, customerName);
+            Context context, List<Integer> ticketIds, @NonNull String token,
+            @NonNull String customerName, Callback<List<Ticket>> cb) throws NoPrivateKey {
+        TicketPurchaseStripe purchase = new TicketPurchaseStripe(ticketIds, token, customerName);
         TUMCabeVerification verification = getVerification(context, purchase);
         service.purchaseTicketStripe(verification).enqueue(cb);
     }
@@ -415,6 +419,12 @@ public final class TUMCabeClient {
 
     public UpdateNote getUpdateNote(int version) throws IOException {
         return service.getUpdateNote(version).execute().body();
+    }
+
+    public List<Location> fetchOpeningHours() throws IOException {
+        return service.getOpeningHours()
+                      .execute()
+                      .body();
     }
 
 }

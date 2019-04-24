@@ -1,16 +1,18 @@
 package de.tum.in.tumcampusapp.component.ui.cafeteria.controller;
 
 import android.content.Context;
+import android.preference.PreferenceManager;
 
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
@@ -21,6 +23,7 @@ import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRe
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.ProvidesCard;
 import de.tum.in.tumcampusapp.database.TcaDb;
+import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
@@ -42,15 +45,28 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
     public List<Card> getCards(@NonNull CacheControl cacheControl) {
         List<Card> results = new ArrayList<>();
 
-        CafeteriaWithMenus cafeteria = getCafeteriaWithMenus();
-        if (cafeteria == null || cafeteria.getMenus().isEmpty()) {
-            return results;
+        // ids have to be added to a new set because the data would be changed otherwise
+        Collection<String> cafeteriaIds = new HashSet<>(20);
+        cafeteriaIds.addAll(PreferenceManager.getDefaultSharedPreferences(mContext)
+                                             .getStringSet(Const.CAFETERIA_CARDS_SETTING, new HashSet<>(0)));
+
+        // adding the location based id to the set now makes sure that the cafeteria is not shown twice
+        if (cafeteriaIds.contains(Const.CAFETERIA_BY_LOCATION_SETTINGS_ID)){
+            cafeteriaIds.remove(Const.CAFETERIA_BY_LOCATION_SETTINGS_ID);
+            cafeteriaIds.add(Integer.toString(new LocationManager(mContext).getCafeteria()));
         }
 
-        CafeteriaMenuCard card = new CafeteriaMenuCard(mContext);
-        card.setCafeteriaWithMenus(cafeteria);
+        for (String id: cafeteriaIds) {
+            int cafeteria = Integer.parseInt(id);
+            if (cafeteria == Const.NO_CAFETERIA_FOUND){
+                // no cafeteria based on the location could be found
+                continue;
+            }
+            CafeteriaMenuCard card = new CafeteriaMenuCard(mContext);
+            card.setCafeteriaWithMenus(localRepository.getCafeteriaWithMenus(cafeteria));
+            results.add(card.getIfShowOnStart());
+        }
 
-        results.add(card.getIfShowOnStart());
         return results;
     }
 
@@ -59,23 +75,13 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
         return Utils.getSettingBool(mContext, "card_cafeteria_phone", true);
     }
 
-    @Nullable
-    private CafeteriaWithMenus getCafeteriaWithMenus() {
-        // Choose which mensa should be shown
-        int cafeteriaId = new LocationManager(mContext).getCafeteria();
-        if (cafeteriaId == -1) {
-            return null;
-        }
-        return localRepository.getCafeteriaWithMenus(cafeteriaId);
-    }
-
     /**
      * Returns a list of {@link CafeteriaMenu}s of the best-matching cafeteria. If there's no
      * best-matching cafeteria, it returns an empty list.
      */
     public List<CafeteriaMenu> getBestMatchCafeteriaMenus() {
         int cafeteriaId = getBestMatchMensaId();
-        if (cafeteriaId == -1) {
+        if (cafeteriaId == Const.NO_CAFETERIA_FOUND) {
             return Collections.emptyList();
         }
 
@@ -85,7 +91,7 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
     public int getBestMatchMensaId() {
         // Choose which mensa should be shown
         int cafeteriaId = new LocationManager(mContext).getCafeteria();
-        if (cafeteriaId == -1) {
+        if (cafeteriaId == Const.NO_CAFETERIA_FOUND) {
             Utils.log("could not get a Cafeteria from locationManager!");
         }
         return cafeteriaId;

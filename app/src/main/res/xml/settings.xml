@@ -37,7 +37,19 @@
 
             </androidx.preference.PreferenceCategory>
 
-            <androidx.preference.PreferenceCategory android:title="@string/default_cafeteria">
+            <androidx.preference.PreferenceCategory
+                android:key="cafeteria_cards"
+                android:title="@string/settings_chose_cafeteria_cards">
+                <androidx.preference.MultiSelectListPreference
+                    android:defaultValue="@array/cafeteria_cards_default"
+                    android:iconSpaceReserved="true"
+                    android:key="cafeteria_cards_selection"
+                    android:title="@string/cafeteria_cards_settings_title" />
+            </androidx.preference.PreferenceCategory>
+
+            <androidx.preference.PreferenceCategory
+                android:key="cafeteria_defaults"
+                android:title="@string/default_cafeteria">
 
                 <androidx.preference.ListPreference
                     android:defaultValue="422"
@@ -343,9 +355,9 @@
     <androidx.preference.PreferenceCategory android:title="@string/account">
 
         <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
             android:icon="@drawable/ic_outline_people_outline_24px"
             android:key="employee_mode"
-            android:defaultValue="false"
             android:summary="@string/employee_mode_info"
             android:title="@string/employee_mode" />
         <androidx.preference.Preference

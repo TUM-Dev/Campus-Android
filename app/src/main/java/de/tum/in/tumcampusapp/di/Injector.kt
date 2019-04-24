@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Service
 import android.content.Context
 import androidx.fragment.app.Fragment
+import androidx.work.Worker
 import de.tum.`in`.tumcampusapp.App
 
 val Context.app: App
@@ -17,3 +18,6 @@ val Fragment.injector: AppComponent
 
 val Service.injector: AppComponent
     get() = app.appComponent
+
+val Worker.injector: AppComponent
+    get() = (applicationContext as App).appComponent
