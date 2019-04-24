@@ -23,7 +23,7 @@ class GradeNotificationDeleteReceiver : BroadcastReceiver() {
                 .build()
                 .inject(this)
 
-        val newGrades = intent.getStringArrayListExtra(KEY_NUMBER_OF_GRADES)
+        val newGrades = intent.getStringArrayListExtra(KEY_NEW_GRADES)
         val existingGrades = gradesStore.gradedCourses
         val updatedGrades = existingGrades + newGrades
         gradesStore.store(updatedGrades)
@@ -31,11 +31,11 @@ class GradeNotificationDeleteReceiver : BroadcastReceiver() {
 
     companion object {
 
-        private const val KEY_NUMBER_OF_GRADES = "KEY_NUMBER_OF_GRADES";
+        private const val KEY_NEW_GRADES = "KEY_NEW_GRADES";
 
         fun newIntent(context: Context, newGrades: List<String>): Intent {
             return Intent(context, GradeNotificationDeleteReceiver::class.java)
-                    .putStringArrayListExtra(KEY_NUMBER_OF_GRADES, newGrades as ArrayList<String>)
+                    .putStringArrayListExtra(KEY_NEW_GRADES, newGrades as ArrayList<String>)
         }
 
     }
