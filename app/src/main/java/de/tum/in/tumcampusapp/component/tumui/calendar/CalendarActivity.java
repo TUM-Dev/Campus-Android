@@ -106,6 +106,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
         // month every time the month changes on the week view.
         mWeekView.setMonthChangeListener(this);
         mWeekView.setOnEventClickListener(this);
+
         mWeekView.setScrollListener((newFirstVisibleDay, oldFirstVisibleDay) -> {
             LocalDate visibleDay = new LocalDate(newFirstVisibleDay);
             LocalDate today = LocalDate.now();
@@ -116,7 +117,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
         });
 
         mTodayButton = findViewById(R.id.todayButton);
-        mTodayButton.setOnClickListener(view -> refreshWeekView());
+        mTodayButton.setOnClickListener(view -> mWeekView.goToToday());
 
         // The week view adds a horizontal bar below the Toolbar. When refreshing, the refresh
         // spinner covers it. Therefore, we adjust the spinner's end position.
