@@ -16,12 +16,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.EventClickListener;
-import com.alamkanak.weekview.MonthLoader;
+import com.alamkanak.weekview.MonthChangeListener;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewDisplayable;
-import com.alamkanak.weekview.WeekViewEvent;
 import com.google.android.material.button.MaterialButton;
 
 import org.jetbrains.annotations.NotNull;
@@ -35,10 +39,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.notifications.persistence.NotificationType;
@@ -63,7 +63,7 @@ import retrofit2.Call;
  * Activity showing the user's calendar. Calendar items (events) are fetched from TUMOnline and displayed as blocks on a timeline.
  */
 public class CalendarActivity extends ActivityForAccessingTumOnline<EventsResponse>
-        implements OnClickListener, MonthLoader.MonthChangeListener<CalendarItem>,
+        implements OnClickListener, MonthChangeListener<CalendarItem>,
         EventClickListener<CalendarItem>, CalendarDetailsFragment.OnEventInteractionListener {
 
     private static final int REQUEST_SYNC = 0;
@@ -106,6 +106,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
         // month every time the month changes on the week view.
         mWeekView.setMonthChangeListener(this);
         mWeekView.setOnEventClickListener(this);
+
         mWeekView.setScrollListener((newFirstVisibleDay, oldFirstVisibleDay) -> {
             LocalDate visibleDay = new LocalDate(newFirstVisibleDay);
             LocalDate today = LocalDate.now();
@@ -116,7 +117,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
         });
 
         mTodayButton = findViewById(R.id.todayButton);
-        mTodayButton.setOnClickListener(view -> refreshWeekView());
+        mTodayButton.setOnClickListener(view -> mWeekView.goToToday());
 
         // The week view adds a horizontal bar below the Toolbar. When refreshing, the refresh
         // spinner covers it. Therefore, we adjust the spinner's end position.
@@ -406,8 +407,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
                .show();
     }
 
+    @NotNull
     @Override
-    public List<WeekViewDisplayable<CalendarItem>> onMonthChange(Calendar startDate, Calendar endDate) {
+    public List<WeekViewDisplayable<CalendarItem>> onMonthChange(@NotNull Calendar startDate,
+                                                                 @NotNull Calendar endDate) {
         // Populate the week view with the events of the month to display
         DateTime begin = new DateTime(startDate);
         DateTime end = new DateTime(endDate);
@@ -428,10 +431,12 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
      */
     private List<WeekViewDisplayable<CalendarItem>> mergeSimilarCalendarItems(List<CalendarItem> calendarItems) {
         List<WeekViewDisplayable<CalendarItem>> events = new ArrayList<>();
+
         for (int i = 0; i < calendarItems.size(); i++) {
             CalendarItem calendarItem = calendarItems.get(i);
             StringBuilder location = new StringBuilder();
             location.append(calendarItem.getLocation());
+
             while (i + 1 < calendarItems.size()
                     && calendarItem.isSameEventButForLocation(calendarItems.get(i + 1))) {
                 i++;
@@ -440,9 +445,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
             }
 
             calendarItem.setLocation(location.toString());
-
-            WeekViewEvent<CalendarItem> weekViewEvent = calendarItem.toWeekViewEvent();
-            events.add(weekViewEvent);
+            events.add(calendarItem);
         }
         return events;
     }
@@ -455,8 +458,13 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
      */
     private void setupDateTimeInterpreter(final boolean shortDate) {
         mWeekView.setDateTimeInterpreter(new DateTimeInterpreter() {
+
+            private DateTimeFormatter timeFormat =
+                    DateTimeFormat.forPattern("HH:mm").withLocale(Locale.getDefault());
+
+            @NotNull
             @Override
-            public String interpretDate(Calendar date) {
+            public String interpretDate(@NotNull Calendar date) {
                 final String weekDayFormat;
                 if (shortDate) { // 3 characters
                     weekDayFormat = "E";
@@ -466,6 +474,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
                 String weekDay = DateTimeFormat.forPattern(weekDayFormat)
                                                .withLocale(Locale.getDefault())
                                                .print(new DateTime(date.getTimeInMillis()));
+
                 String dateString = DateUtils.formatDateTime(
                         CalendarActivity.this, date.getTimeInMillis(),
                         DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_NO_YEAR);
@@ -473,12 +482,11 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
                 return weekDay.toUpperCase(Locale.getDefault()) + ' ' + dateString;
             }
 
+            @NotNull
             @Override
             public String interpretTime(int hour) {
-                DateTimeFormatter hourFormat = DateTimeFormat.forPattern("HH:mm")
-                                                             .withLocale(Locale.getDefault());
                 DateTime time = new DateTime().withTime(hour, 0, 0, 0);
-                return hourFormat.print(time);
+                return timeFormat.print(time);
             }
         });
     }
@@ -512,7 +520,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<EventsRespon
     }
 
     @Override
-    public void onEventClick(CalendarItem data, RectF eventRect) {
+    public void onEventClick(CalendarItem data, @NotNull RectF eventRect) {
         // Don't call openEvent if the activity is paused.
         if (isPaused) {
             return;
