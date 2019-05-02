@@ -108,7 +108,9 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
     }
 
     public void update(List<EventItem> newEvents) {
-        newEvents.add(0, betaInfo);
+        if (newEvents.isEmpty() || !(newEvents.get(0) instanceof EventBetaInfo)) {
+            newEvents.add(0, betaInfo);
+        }
         DiffUtil.Callback callback = new EventDiffUtil(mEvents, newEvents);
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(callback);
         mEvents = newEvents;
