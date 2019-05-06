@@ -164,6 +164,12 @@ dependencies {
     implementation 'com.google.dagger:dagger:2.21'
     kapt 'com.google.dagger:dagger-compiler:2.21'
 
+    // LeakCanary
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-1'
+
+    // DebugDatabase
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
+
     // Testing
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.23.4'
