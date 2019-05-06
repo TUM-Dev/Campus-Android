@@ -127,7 +127,7 @@ data class CalendarItem(
                 .setTextColor(textColor)
                 .setTextStrikeThrough(isCanceled)
                 .setBorderWidth(borderWidth)
-                .setBorderColor(color ?: 0)
+                .setBorderColor(color)
                 .build()
 
         return WeekViewEvent.Builder<CalendarItem>()
