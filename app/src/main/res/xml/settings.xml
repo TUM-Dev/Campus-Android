@@ -361,15 +361,6 @@
             android:summary="@string/employee_mode_info"
             android:title="@string/employee_mode" />
 
-        <androidx.preference.ListPreference
-            android:icon="@drawable/ic_outline_palette_24px"
-            android:key="dark_mode"
-            android:defaultValue="1"
-            android:entries="@array/dark_modes"
-            android:entryValues="@array/dark_mode_values"
-            android:summary="Test bla bla"
-            android:title="Appearance" />
-
         <androidx.preference.Preference
             android:icon="@drawable/ic_outline_exit_to_app_24px"
             android:key="button_logout"

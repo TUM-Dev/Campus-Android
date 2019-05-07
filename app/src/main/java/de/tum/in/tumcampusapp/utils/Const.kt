@@ -166,8 +166,6 @@ object Const {
     const val UPDATE_MESSAGE = "updateNoteMessage"
     const val SAVED_APP_VERSION = "savedAppVersion"
 
-    const val KEY_DARK_MODE = "dark_mode"
-
     const val CAFETERIA_CARDS_SETTING = "cafeteria_cards_selection"
     const val NO_CAFETERIA_FOUND = -1
 }

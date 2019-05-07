@@ -12,18 +12,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.squareup.picasso.Picasso;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.CheckBoxPreference;
@@ -34,6 +24,16 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreferenceCompat;
+
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarController;
@@ -81,7 +81,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
             findPreference(BUTTON_LOGOUT).setOnPreferenceClickListener(this);
             setSummary("card_default_campus");
             setSummary("silent_mode_set_to");
-            setSummary("dark_mode");
             setSummary("background_mode_set_to");
         } else if (rootKey.equals("card_cafeteria")) {
             setSummary("card_cafeteria_default_G");
@@ -194,13 +193,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
             ListPreference listPreference = (ListPreference) pref;
             String entry = listPreference.getEntry().toString();
             listPreference.setSummary(entry);
-
-            if (key.equals("dark_mode")) {
-                final int mode = Integer.parseInt(listPreference.getValue());
-                AppCompatDelegate.setDefaultNightMode(mode);
-                requireActivity().recreate();
-                return;
-            }
         }
 
         // When newspread selection changes

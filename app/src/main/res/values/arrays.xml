@@ -156,17 +156,5 @@
         <item>4,0</item>
         <item>5,0</item>
     </string-array>
-
-    <string-array name="dark_modes">
-        <item>Light</item>
-        <item>Dark</item>
-        <item>Automatic</item>
-    </string-array>
-
-    <string-array name="dark_mode_values" translatable="false">
-        <item>1</item>
-        <item>2</item>
-        <item>0</item>
-    </string-array>
 </resources>
 
