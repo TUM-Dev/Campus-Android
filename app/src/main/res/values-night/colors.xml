@@ -7,6 +7,8 @@
 
     <color name="cardBackground">#1f1f1f</color>
     <color name="toolbar_background">#1f1f1f</color>
+    <color name="theme_adjusted_color_primary">@color/tum_400</color>
+
     <color name="drawerHeaderBackground">@color/default_window_background</color>
     <color name="checkboxColor">@android:color/white</color>
     <color name="averageGradeBackground">#616161</color>

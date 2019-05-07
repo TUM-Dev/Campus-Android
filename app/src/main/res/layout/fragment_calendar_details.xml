@@ -167,7 +167,7 @@
                 android:gravity="start|center_vertical"
                 android:text="@string/show_in_calendar"
                 android:textAllCaps="false"
-                android:textColor="@color/color_primary"
+                android:textColor="@color/theme_adjusted_color_primary"
                 android:theme="@style/AppTheme"
                 app:cornerRadius="@dimen/material_corner_radius" />
 
