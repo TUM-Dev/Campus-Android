@@ -16,7 +16,8 @@ class TicketsRemoteRepository @Inject constructor(
         private val ticketsLocalRepository: TicketsLocalRepository
 ) {
 
-    fun fetchTickets(): Observable<List<Ticket>> = tumCabeClient.fetchTickets(context)
+    fun fetchTickets(): Call<List<Ticket>> = tumCabeClient.fetchTickets(context)
+    fun fetchTicketsRx(): Observable<List<Ticket>> = tumCabeClient.fetchTicketsRx(context)
 
     @Throws(NoPrivateKey::class)
     fun fetchTicket(ticketId: Int): Call<Ticket> {

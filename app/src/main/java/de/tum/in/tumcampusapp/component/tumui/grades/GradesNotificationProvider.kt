@@ -34,10 +34,15 @@ class GradesNotificationProvider(
         val intent = GradesActivity.newIntent(context)
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, FLAG_UPDATE_CURRENT)
 
+        val deleteIntent = GradeNotificationDeleteReceiver.newIntent(context, newGrades)
+        val deletePendingIntent = PendingIntent.getBroadcast(
+                context, DELETE_REQUEST_CODE, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
         val notification = getNotificationBuilder()
                 .setContentTitle(title)
                 .setContentText(text)
                 .setContentIntent(pendingIntent)
+                .setDeleteIntent(deletePendingIntent)
                 .build()
 
         // We can pass 0 as the notification ID because only one notification at a time
@@ -47,6 +52,7 @@ class GradesNotificationProvider(
 
     companion object {
         private const val GROUP_KEY_GRADES = "de.tum.in.tumcampus.GRADES"
+        private const val DELETE_REQUEST_CODE = 0
     }
 
 }

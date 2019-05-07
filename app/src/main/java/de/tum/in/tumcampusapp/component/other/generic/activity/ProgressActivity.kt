@@ -235,8 +235,11 @@ abstract class ProgressActivity<T>(
         val request = NetworkRequest.Builder()
                 .addCapability(internetCapability)
                 .build()
-        connectivityManager.registerNetworkCallback(request, networkCallback)
-        registered = true
+
+        if (registered.not()) {
+            connectivityManager.registerNetworkCallback(request, networkCallback)
+            registered = true
+        }
     }
 
     protected fun showEmptyResponseLayout(messageResId: Int, iconResId: Int? = null) {

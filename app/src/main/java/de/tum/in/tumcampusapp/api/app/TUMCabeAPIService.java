@@ -11,7 +11,7 @@ import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
-import de.tum.in.tumcampusapp.component.tumui.feedback.model.Success;
+import de.tum.in.tumcampusapp.component.tumui.feedback.model.FeedbackResult;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderMap;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom;
@@ -21,6 +21,7 @@ import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotificationLocation;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeContact;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeMoreInfo;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
+import de.tum.in.tumcampusapp.component.ui.openinghour.model.Location;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
@@ -66,6 +67,7 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_LOCATIONS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_MEMBERS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_NEWS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_NOTIFICATIONS;
+import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_OPENING_HOURS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_AVAILABLE_MAPS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_COORDINATES;
@@ -183,11 +185,11 @@ public interface TUMCabeAPIService {
                                                  @Path("start") String start, @Path("end") String end);
 
     @POST(API_FEEDBACK)
-    Call<Success> sendFeedback(@Body Feedback feedback);
+    Call<FeedbackResult> sendFeedback(@Body Feedback feedback);
 
     @Multipart
     @POST(API_FEEDBACK + "{id}/{image}/")
-    Call<Success> sendFeedbackImage(@Part MultipartBody.Part image, @Path("image") int imageNr, @Path("id") String feedbackId);
+    Call<FeedbackResult> sendFeedbackImage(@Part MultipartBody.Part image, @Path("image") int imageNr, @Path("id") String feedbackId);
 
     @GET(API_CAFETERIAS)
     Observable<List<Cafeteria>> getCafeterias();
@@ -228,12 +230,12 @@ public interface TUMCabeAPIService {
     Observable<List<TicketType>> getTicketTypes(@Path("eventID") int eventID);
 
     // Ticket reservation
-    @POST(API_EVENTS + API_TICKET + "reserve")
+    @POST(API_EVENTS + API_TICKET + "reserve/multiple")
     Call<TicketReservationResponse> reserveTicket(@Body TUMCabeVerification verification);
 
     // Ticket purchase
-    @POST(API_EVENTS + API_TICKET + "payment/stripe/purchase")
-    Call<Ticket> purchaseTicketStripe(@Body TUMCabeVerification verification);
+    @POST(API_EVENTS + API_TICKET + "payment/stripe/purchase/multiple")
+    Call<List<Ticket>> purchaseTicketStripe(@Body TUMCabeVerification verification);
 
     @POST(API_EVENTS + API_TICKET + "payment/stripe/ephemeralkey")
     Call<HashMap<String, Object>> retrieveEphemeralKey(@Body TUMCabeVerification verification);
@@ -244,5 +246,9 @@ public interface TUMCabeAPIService {
     // Update note
     @GET(API_UPDATE_NOTE + "{version}")
     Call<UpdateNote> getUpdateNote(@Path("version") int version);
+
+    // Opening Hours
+    @GET(API_OPENING_HOURS)
+    Call<List<Location>> getOpeningHours();
 
 }

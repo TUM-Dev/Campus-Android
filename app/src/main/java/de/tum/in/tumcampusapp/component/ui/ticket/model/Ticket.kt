@@ -1,13 +1,12 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket.model
 
+import android.content.Context
+import android.text.format.DateFormat
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.RoomWarnings
-import android.content.Context
-import android.text.format.DateFormat
 import com.google.gson.annotations.SerializedName
-import de.tum.`in`.tumcampusapp.R
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
@@ -36,14 +35,12 @@ data class Ticket(
         var redemption: DateTime? = null
 ) {
 
-    fun getFormattedRedemptionDate(context: Context): String? {
-        return if (redemption != null) {
-            val date = DateTimeFormat.shortDate().print(redemption)
+    companion object {
+        fun getFormattedRedemptionDate(context: Context, redemptionDate: DateTime): String? {
+            val date = DateTimeFormat.shortDate().print(redemptionDate)
             val pattern = if (DateFormat.is24HourFormat(context)) "H:mm" else "h:mm aa"
-            val time = DateTimeFormat.forPattern(pattern).print(redemption)
-            "$date, $time"
-        } else {
-            context.getString(R.string.no)
+            val time = DateTimeFormat.forPattern(pattern).print(redemptionDate)
+            return "$date, $time"
         }
     }
 

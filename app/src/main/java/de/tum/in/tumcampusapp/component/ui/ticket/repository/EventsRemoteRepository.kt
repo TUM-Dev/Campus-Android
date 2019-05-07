@@ -40,7 +40,7 @@ class EventsRemoteRepository @Inject constructor(
     @SuppressLint("CheckResult")
     private fun fetchAndStoreTickets() {
         try {
-            tumCabeClient.fetchTickets(context)
+            tumCabeClient.fetchTicketsRx(context)
                     .subscribeOn(Schedulers.io())
                     .doOnNext { ticketsRemoteRepository.fetchTicketTypesForTickets(it) }
                     .subscribe(ticketsLocalRepository::storeTickets, Utils::log)

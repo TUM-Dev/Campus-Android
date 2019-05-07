@@ -10,6 +10,7 @@ object Const {
     const val CAFETERIA_ID = "cafeteriasId"
     const val CAFETERIA_DATE = "cafeteriaDate"
     const val CAFETERIAS = "cafeterias"
+    const val CAFETERIA_BY_LOCATION_SETTINGS_ID = "-1"
     const val CALENDAR_WEEK_MODE = "calender_week_mode"
     const val EVENT_BOOKED_MODE = "event_booked_mode"
     const val DATABASE_NAME = "tca.db"
@@ -153,7 +154,8 @@ object Const {
     const val KEY_EVENT_ID = "eventId"
     const val KEY_CARD_HOLDER = "cardholder"
     const val KEY_TICKET_PRICE = "ticketPrice"
-    const val KEY_TICKET_HISTORY = "ticketHistory"
+    const val KEY_TICKET_IDS = "ticketIds"
+    const val KEY_TICKET_AMOUNT = "numberOfTickets"
     const val KEY_TERMS_LINK = "termsOfServiceLink"
 
     const val SHOW_DRAWER = "showDrawer"
@@ -165,4 +167,7 @@ object Const {
     const val SAVED_APP_VERSION = "savedAppVersion"
 
     const val KEY_DARK_MODE = "dark_mode"
+
+    const val CAFETERIA_CARDS_SETTING = "cafeteria_cards_selection"
+    const val NO_CAFETERIA_FOUND = -1
 }

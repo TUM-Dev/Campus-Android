@@ -35,8 +35,8 @@ class EventCard(context: Context) : Card(CardManager.CARD_EVENT, context, "card_
         super.updateViewHolder(viewHolder)
 
         val eventViewHolder = viewHolder as? EventsAdapter.EventViewHolder ?: return
-        val hasTicket = event?.let { localRepo.isEventBooked(it) } ?: false
-        eventViewHolder.bind(event, hasTicket)
+        val ticketCount = event?.let { localRepo.getTicketCount(it) } ?: 0
+        eventViewHolder.bind(event, ticketCount)
     }
 
     override fun getNavigationDestination(): NavigationDestination? {

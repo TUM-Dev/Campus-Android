@@ -10,14 +10,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaLocationDao;
+import de.tum.in.tumcampusapp.component.ui.openinghour.LocationDao;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 
 public class OpenHoursHelper {
 
     private final Context context;
-    private final CafeteriaLocationDao dao;
+    private final LocationDao dao;
 
     public OpenHoursHelper(Context context) {
         this.context = context;

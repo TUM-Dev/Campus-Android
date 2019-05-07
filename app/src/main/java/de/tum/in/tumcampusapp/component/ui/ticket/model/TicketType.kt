@@ -5,7 +5,6 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import androidx.room.RoomWarnings
 import com.google.gson.annotations.SerializedName
-import java.text.DecimalFormat
 
 /**
  * Ticket
@@ -24,10 +23,9 @@ data class TicketType(
         var description: String = "",
         @Ignore
         @SerializedName("payment")
-        var paymentInfo: Payment = Payment()
-) {
-
-    val formattedPrice: String
-        get() = DecimalFormat("#.00").format(price / 100.0) + " €"
-
-}
+        var paymentInfo: Payment = Payment(),
+        @Ignore
+        var contingent: Int = 0,
+        @Ignore
+        var sold: Int = 0
+)

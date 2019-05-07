@@ -14,7 +14,6 @@ import de.tum.`in`.tumcampusapp.component.tumui.grades.GradesBackgroundUpdater
 import de.tum.`in`.tumcampusapp.component.tumui.grades.GradesDownloadAction
 import de.tum.`in`.tumcampusapp.component.tumui.grades.GradesStore
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaDownloadAction
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaLocationImportAction
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
@@ -23,11 +22,13 @@ import de.tum.`in`.tumcampusapp.component.ui.news.NewsDownloadAction
 import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsDownloadAction
 import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsStore
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.openinghour.LocationImportAction
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsDownloadAction
 import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.FilmDownloadAction
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.updatenote.UpdateNoteDownloadAction
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.service.DownloadWorker
 
@@ -82,10 +83,10 @@ class DownloadModule {
     ): CafeteriaDownloadAction = CafeteriaDownloadAction(menuManager, remoteRepository)
 
     @Provides
-    fun provideCafeteriaLocationImportAction(
-            assetManager: AssetManager,
-            database: TcaDb
-    ): CafeteriaLocationImportAction = CafeteriaLocationImportAction(assetManager, database)
+    fun provideLocationImportAction(
+            database: TcaDb,
+            tumCabeClient: TUMCabeClient
+    ): LocationImportAction = LocationImportAction(database, tumCabeClient)
 
     @Provides
     fun provideEventsDownloadAction(
@@ -115,6 +116,11 @@ class DownloadModule {
     ): TopNewsDownloadAction = TopNewsDownloadAction(remoteRepository)
 
     @Provides
+    fun provideUpdateNoteDownloadAction(
+            context: Context
+    ): UpdateNoteDownloadAction = UpdateNoteDownloadAction(context)
+
+    @Provides
     fun provideGradesStore(
             sharedPrefs: SharedPreferences
     ): GradesStore = GradesStore(sharedPrefs)
@@ -140,22 +146,24 @@ class DownloadModule {
     @Provides
     fun provideWorkerActions(
             cafeteriaDownloadAction: CafeteriaDownloadAction,
-            cafeteriaLocationImportAction: CafeteriaLocationImportAction,
+            locationImportAction: LocationImportAction,
             eventsDownloadAction: EventsDownloadAction,
             filmDownloadAction: FilmDownloadAction,
             gradesDownloadAction: GradesDownloadAction,
             idUploadAction: IdUploadAction,
             newsDownloadAction: NewsDownloadAction,
-            topNewsDownloadAction: TopNewsDownloadAction
+            topNewsDownloadAction: TopNewsDownloadAction,
+            updateNoteDownloadAction: UpdateNoteDownloadAction
     ): DownloadWorker.WorkerActions = DownloadWorker.WorkerActions(
             cafeteriaDownloadAction,
-            cafeteriaLocationImportAction,
+            locationImportAction,
             eventsDownloadAction,
             filmDownloadAction,
             gradesDownloadAction,
             idUploadAction,
             newsDownloadAction,
-            topNewsDownloadAction
+            topNewsDownloadAction,
+            updateNoteDownloadAction
     )
 
 }

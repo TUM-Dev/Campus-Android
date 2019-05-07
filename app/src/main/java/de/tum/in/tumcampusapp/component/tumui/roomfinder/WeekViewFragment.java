@@ -5,10 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.alamkanak.weekview.MonthLoader;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+
+import com.alamkanak.weekview.MonthChangeListener;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewDisplayable;
 
+import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -16,14 +22,11 @@ import org.joda.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.collection.LongSparseArray;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.component.tumui.calendar.WidgetCalendarItem;
@@ -31,10 +34,9 @@ import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderSchedul
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 
-public class WeekViewFragment extends Fragment
-        implements MonthLoader.MonthChangeListener<WidgetCalendarItem> {
+public class WeekViewFragment extends Fragment implements MonthChangeListener<WidgetCalendarItem> {
 
-    private final LongSparseArray<List<WeekViewDisplayable<WidgetCalendarItem>>> loadedEvents = new LongSparseArray<>();
+    private final Map<Calendar, List<WeekViewDisplayable<WidgetCalendarItem>>> eventsCache = new HashMap<>();
 
     private String roomApiCode;
     private WeekView<WidgetCalendarItem> mWeekView;
@@ -68,17 +70,25 @@ public class WeekViewFragment extends Fragment
         mWeekView.goToHour(8);
     }
 
+    @NotNull
     @Override
-    public List<WeekViewDisplayable<WidgetCalendarItem>> onMonthChange(Calendar startDate, Calendar endDate) {
+    public List<WeekViewDisplayable<WidgetCalendarItem>> onMonthChange(@NotNull Calendar startDate,
+                                                                       @NotNull Calendar endDate) {
         if (!isLoaded(startDate)) {
             loadEventsInBackground(startDate, endDate);
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
-        return loadedEvents.get(startDate.getTimeInMillis());
+
+        List<WeekViewDisplayable<WidgetCalendarItem>> results = eventsCache.get(startDate);
+        if (results == null) {
+            throw new IllegalStateException();
+        }
+
+        return results;
     }
 
     private boolean isLoaded(Calendar start) {
-        return loadedEvents.get(start.getTimeInMillis()) != null;
+        return eventsCache.get(start) != null;
     }
 
     private void loadEventsInBackground(final Calendar start, final Calendar end) {
@@ -98,7 +108,7 @@ public class WeekViewFragment extends Fragment
                     fetchEventList(roomApiCode, formattedStartTime, formattedEndTime);
 
             requireActivity().runOnUiThread(() -> {
-                loadedEvents.put(start.getTimeInMillis(), events);
+                eventsCache.put(start, events);
                 mWeekView.notifyDataSetChanged();
             });
         }).start();
