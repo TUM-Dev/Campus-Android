@@ -3,20 +3,19 @@ package de.tum.in.tumcampusapp;
 import android.app.Application;
 import android.os.StrictMode;
 
+import androidx.appcompat.app.AppCompatDelegate;
+
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
-import androidx.appcompat.app.AppCompatDelegate;
 import de.tum.in.tumcampusapp.component.notifications.NotificationUtils;
 import de.tum.in.tumcampusapp.di.AppComponent;
 import de.tum.in.tumcampusapp.di.AppModule;
 import de.tum.in.tumcampusapp.di.DaggerAppComponent;
-import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.Utils;
 
-import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO;
+import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
 
 public class App extends Application {
 
@@ -73,8 +72,8 @@ public class App extends Application {
     }
 
     private void setupNightMode() {
-        final int darkMode = Utils.getSettingInt(this, Const.KEY_DARK_MODE, MODE_NIGHT_NO);
-        AppCompatDelegate.setDefaultNightMode(darkMode);
+        // TODO final int darkMode = Utils.getSettingInt(this, Const.KEY_DARK_MODE, MODE_NIGHT_NO);
+        AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM);
     }
 
     public AppComponent getAppComponent() {

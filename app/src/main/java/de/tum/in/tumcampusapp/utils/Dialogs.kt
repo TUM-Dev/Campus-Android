@@ -15,7 +15,7 @@ object Dialogs {
             checkedItems: List<Boolean>,
             listener: DialogInterface.OnMultiChoiceClickListener
     ) {
-        val dialog = AlertDialog.Builder(context, R.style.AlertDialogStyle)
+        val dialog = AlertDialog.Builder(context)
                 .setMultiChoiceItems(items.toTypedArray(), checkedItems.toBooleanArray(), listener)
                 .create()
 

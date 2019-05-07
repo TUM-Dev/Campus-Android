@@ -1,13 +1,12 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/tum_light_gray</item>
         <item name="colorPrimaryDark">@color/tum_light_gray</item>
         <item name="colorAccent">@color/tum_blue</item>
         <item name="android:windowBackground">@color/default_window_background</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
         <item name="android:textCursorDrawable">@drawable/cursor_text_field_colorful</item>
-        <item name="alertDialogTheme">@style/AlertDialogStyle</item>
 
         <!-- Light system UI -->
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
@@ -15,27 +14,16 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
-    <style name="AlertDialogStyle" parent="Theme.MaterialComponents.Dialog.Alert">
-        <item name="colorPrimary">@color/tum_light_gray</item>
-        <item name="colorPrimaryDark">@color/tum_light_gray</item>
-        <item name="colorAccent">@color/tum_blue</item>
-        <item name="android:windowBackground">@drawable/rounded_corners_background</item>
-        <item name="android:textColorPrimary">@color/text_dark_primary</item>
-        <item name="android:textColorSecondary">@color/text_dark_primary</item>
-        <item name="android:textColorAlertDialogListItem">@color/text_dark_primary</item>
-    </style>
-
     <style name="AppTheme.NoDrawerLayout" parent="AppTheme">
         <item name="android:statusBarColor">@color/tum_light_gray</item>
         <item name="android:textColor">@color/text_dark_primary</item>
         <item name="android:textColorSecondary">@color/text_dark_secondary</item>
         <item name="android:tint">@color/text_dark_secondary</item>
-        <item name="alertDialogTheme">@style/AlertDialogStyle</item>
     </style>
 
     <style name="TumToolbar" parent="ThemeOverlay.AppCompat.Dark">
-        <item name="android:textColorPrimary">@color/color_primary</item>
-        <item name="android:textColorSecondary">@color/color_primary</item>
+        <item name="android:textColorPrimary">@color/tum_400</item>
+        <item name="android:textColorSecondary">@color/tum_400</item>
         <item name="android:textCursorDrawable">@drawable/cursor_text_field_colorful</item>
     </style>
 

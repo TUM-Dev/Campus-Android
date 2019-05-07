@@ -5,7 +5,8 @@
 
     <color name="pop_up_background">#FAFAFA</color>
 
-    <color name="cardBackground">#212121</color>
+    <color name="cardBackground">#1f1f1f</color>
+    <color name="toolbar_background">#1f1f1f</color>
     <color name="drawerHeaderBackground">@color/default_window_background</color>
     <color name="checkboxColor">@android:color/white</color>
     <color name="averageGradeBackground">#616161</color>
@@ -57,10 +58,10 @@
     <color name="card_more_icon">#5A5A5A</color>
     
     <!-- Default colors -->
-    <color name="text_dark_primary">#DEFFFFFF</color> <!--DE for 87% opacity-->
-    <color name="text_dark_secondary">#8AFFFFFF</color> <!--8A for 54% opacity-->s
+    <color name="text_dark_primary">#DEE0E0E0</color> <!--DE for 87% opacity-->
+    <color name="text_dark_secondary">#8AE0E0E0</color> <!--8A for 54% opacity-->
 
-    <color name="default_window_background">#212121</color>
+    <color name="default_window_background">#121212</color>
     <color name="secondary_window_background">#212121</color>
     <color name="semitransparent_dark_background">#4D000000</color>
 
