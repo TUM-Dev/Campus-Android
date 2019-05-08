@@ -30,6 +30,7 @@ import de.tum.`in`.tumcampusapp.di.app
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.closeDrawers
+import kotlinx.android.synthetic.main.drawer_header.*
 import java.util.*
 
 /**
@@ -48,6 +49,10 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity(),
 
     private val drawerList: NavigationView? by lazy {
         findViewById<NavigationView>(R.id.left_drawer)
+    }
+
+    private val drawerMenuHelper: DrawerMenuHelper by lazy {
+        DrawerMenuHelper(this)
     }
 
     private var drawerToggle: ActionBarDrawerToggle? = null
@@ -70,7 +75,7 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity(),
         if (key == Const.EMPLOYEE_MODE && drawerList != null) {
             // Update the drawer contents (not the header).
             (drawerList as NavigationView).menu.clear()
-            DrawerMenuHelper(this).populateMenu(drawerList as NavigationView)
+            drawerMenuHelper.populateMenu(drawerList as NavigationView)
         }
     }
 
@@ -105,8 +110,7 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity(),
             val headerView = it.inflateHeaderView(R.layout.drawer_header)
             headerView?.let { view -> setupDrawerHeader(view) }
 
-            val helper = DrawerMenuHelper(this)
-            helper.populateMenu(it)
+            drawerMenuHelper.populateMenu(it)
 
             it.setNavigationItemSelectedListener { item ->
                 drawerLayout?.closeDrawers { NavigationManager.open(this, item) }
@@ -121,13 +125,12 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity(),
     }
 
     private fun setupDrawerHeader(headerView: View) {
-        val background = headerView.findViewById<ImageView>(R.id.background)
+        val imageView = headerView.findViewById<CircleImageView>(R.id.profileImageView)
         val nameTextView = headerView.findViewById<TextView>(R.id.nameTextView)
         val emailTextView = headerView.findViewById<TextView>(R.id.emailTextView)
         val loginButton = headerView.findViewById<MaterialButton>(R.id.loginButton)
 
         val isLoggedIn = AccessTokenManager.hasValidAccessToken(this)
-        background.visibility = if (isLoggedIn) View.VISIBLE else View.GONE
 
         if (isLoggedIn) {
             val name = Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, "")
@@ -149,6 +152,7 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity(),
         } else {
             nameTextView.visibility = View.GONE
             emailTextView.visibility = View.GONE
+            imageView.visibility = View.GONE
 
             loginButton.visibility = View.VISIBLE
             loginButton.setOnClickListener {

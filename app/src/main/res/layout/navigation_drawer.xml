@@ -7,5 +7,5 @@
     android:layout_gravity="start"
     android:fitsSystemWindows="true"
     app:itemBackground="@drawable/navigation_drawer_item_background_selector"
-    app:itemIconTint="@color/navigation_drawer_icon_tint"
-    app:itemTextColor="@color/navigation_drawer_item_text" />
+    app:itemIconTint="@color/navigation_drawer_icon_tint_selector"
+    app:itemTextColor="@color/navigation_drawer_item_text_selector" />

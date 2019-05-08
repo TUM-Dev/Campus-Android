@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/navigation_drawer_item_background" />
-</shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:right="@dimen/material_small_padding">
+        <shape>
+            <corners
+                android:bottomRightRadius="400dp"
+                android:topRightRadius="400dp" />
+            <solid android:color="@color/navigation_drawer_item_background_selector" />
+        </shape>
+    </item>
+</layer-list>
