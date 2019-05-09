@@ -2,12 +2,12 @@ package de.tum.`in`.tumcampusapp.component.other.navigation
 
 import android.content.Intent
 import android.os.Bundle
-import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
+import androidx.appcompat.app.AppCompatActivity
 
 sealed class NavigationDestination
 
 data class SystemActivity(
-        val clazz: Class<out BaseActivity>,
+        val clazz: Class<out AppCompatActivity>,
         val options: Bundle?
 ) : NavigationDestination()
 
