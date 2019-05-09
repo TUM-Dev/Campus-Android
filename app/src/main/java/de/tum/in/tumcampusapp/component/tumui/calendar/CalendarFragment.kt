@@ -8,7 +8,10 @@ import android.os.Bundle
 import android.provider.CalendarContract
 import android.text.format.DateUtils
 import android.transition.TransitionManager
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat.checkSelfPermission
 import com.alamkanak.weekview.*
@@ -70,12 +73,6 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(R.layout.
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
-
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_calendar, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

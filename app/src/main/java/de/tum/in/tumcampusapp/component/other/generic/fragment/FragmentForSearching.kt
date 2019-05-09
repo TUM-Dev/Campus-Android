@@ -34,14 +34,14 @@ abstract class FragmentForSearching<T>(
 
     private var openSearch: Boolean = false
 
-    protected abstract fun onStartSearch()
-
-    protected abstract fun onStartSearch(query: String?)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
+
+    protected abstract fun onStartSearch()
+
+    protected abstract fun onStartSearch(query: String?)
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
         super.onPrepareOptionsMenu(menu)
@@ -52,7 +52,6 @@ abstract class FragmentForSearching<T>(
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.menu_search, menu)
 
         searchItem = checkNotNull(menu?.findItem(R.id.action_search))
@@ -105,6 +104,8 @@ abstract class FragmentForSearching<T>(
                 return true
             }
         })
+
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     /**

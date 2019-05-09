@@ -17,7 +17,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getInjector().inject(this);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager()

@@ -13,9 +13,9 @@ import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
  */
 abstract class FragmentForSearchingTumOnline<T>(
         layoutId: Int,
-        auth: String,
-        minLen: Int
-) : FragmentForSearching<T>(layoutId, auth, minLen) {
+        authority: String,
+        minLength: Int
+) : FragmentForSearching<T>(layoutId, authority, minLength) {
 
     protected val apiClient: TUMOnlineClient by lazy {
         TUMOnlineClient.getInstance(requireContext())
