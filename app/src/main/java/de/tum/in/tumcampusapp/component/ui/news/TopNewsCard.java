@@ -11,17 +11,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.Nullable;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
 import de.tum.in.tumcampusapp.component.other.navigation.SystemIntent;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
+import de.tum.in.tumcampusapp.component.ui.overview.CardInteractionListener;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
@@ -41,9 +43,11 @@ public class TopNewsCard extends Card {
         this.newsAlert = topNewsStore.getNewsAlert();
     }
 
-    public static CardViewHolder inflateViewHolder(ViewGroup parent) {
-        return new CardViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.card_top_news, parent, false));
+    public static CardViewHolder inflateViewHolder(ViewGroup parent,
+                                                   CardInteractionListener interactionListener) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.card_top_news, parent, false);
+        return new CardViewHolder(view, interactionListener);
     }
 
     private void updateImageView() {
@@ -62,7 +66,7 @@ public class TopNewsCard extends Card {
 
                     @Override
                     public void onError(Exception e) {
-                        discardCard();
+                        discard();
                     }
                 });
     }

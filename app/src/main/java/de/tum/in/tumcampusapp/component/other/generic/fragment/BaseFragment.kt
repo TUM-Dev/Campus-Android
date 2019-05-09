@@ -1,40 +1,39 @@
-package de.tum.`in`.tumcampusapp.component.other.generic.activity
+package de.tum.`in`.tumcampusapp.component.other.generic.fragment
 
 import android.graphics.Color
-import android.net.ConnectivityManager.NetworkCallback
+import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkRequest
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.LayoutRes
+import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.*
 import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.*
-import de.tum.`in`.tumcampusapp.utils.NetUtils.internetCapability
+import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.setImageResourceOrHide
 import de.tum.`in`.tumcampusapp.utils.setTextOrHide
 import org.jetbrains.anko.connectivityManager
+import org.jetbrains.anko.support.v4.runOnUiThread
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.net.UnknownHostException
 
-/**
- * Generic class which handles can handle a long running background task
- *
- * @param T The type of object that is to be retrieved via the [apiCall]
- */
-abstract class ProgressActivity<T>(
-        layoutId: Int
-) : BaseActivity(layoutId), SwipeRefreshLayout.OnRefreshListener {
+abstract class BaseFragment<T>(
+        @LayoutRes private val layoutId: Int
+) : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private var apiCall: Call<T>? = null
     private var hadSuccessfulRequest = false
@@ -77,18 +76,25 @@ abstract class ProgressActivity<T>(
 
     private var registered: Boolean = false
 
-    private val networkCallback: NetworkCallback = object : NetworkCallback() {
+    private val networkCallback: ConnectivityManager.NetworkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network?) {
-            runOnUiThread(this@ProgressActivity::onRefresh)
+            runOnUiThread {
+                this@BaseFragment.onRefresh()
+            }
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View? = inflater.inflate(layoutId, container, false)
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         // If content is refreshable setup the SwipeRefreshLayout
         swipeRefreshLayout?.apply {
-            setOnRefreshListener(this@ProgressActivity)
+            setOnRefreshListener(this@BaseFragment)
             setColorSchemeResources(
                     R.color.color_primary,
                     R.color.tum_A100,
@@ -98,7 +104,7 @@ abstract class ProgressActivity<T>(
     }
 
     /**
-     * Fetches a call from TUMonline and uses the provided listener if the request was successful.
+     * Fetches a call and uses the provided listener if the request was successful.
      *
      * @param call The [Call] to fetch
      */
@@ -154,7 +160,7 @@ abstract class ProgressActivity<T>(
     protected fun onDownloadUnsuccessful(statusCode: Int) {
         if (statusCode == 503) {
             // The service is unavailable
-            showError(R.string.error_tum_online_unavailable)
+            showErrorSnackbar(R.string.error_tum_online_unavailable)
         } else {
             showErrorSnackbar(R.string.error_unknown)
         }
@@ -233,11 +239,11 @@ abstract class ProgressActivity<T>(
         }
 
         val request = NetworkRequest.Builder()
-                .addCapability(internetCapability)
+                .addCapability(NetUtils.internetCapability)
                 .build()
 
         if (registered.not()) {
-            connectivityManager.registerNetworkCallback(request, networkCallback)
+            requireActivity().connectivityManager.registerNetworkCallback(request, networkCallback)
             registered = true
         }
     }
@@ -275,37 +281,6 @@ abstract class ProgressActivity<T>(
     }
 
     /**
-     * Shows progress layout or sets [SwipeRefreshLayout]'s state to refreshing
-     * if present in the xml layout
-     */
-    protected fun showLoadingStart() {
-        if (registered) {
-            connectivityManager.unregisterNetworkCallback(networkCallback)
-            registered = false
-        }
-
-        swipeRefreshLayout?.let {
-            it.isRefreshing = true
-            return
-        }
-
-        errorLayoutsContainer.visibility = View.VISIBLE
-        errorLayout.visibility = View.GONE
-        progressLayout.visibility = View.VISIBLE
-    }
-
-    /**
-     * Indicates that the background progress ended by hiding error and progress layout
-     * and setting [SwipeRefreshLayout]'s state to completed
-     */
-    protected fun showLoadingEnded() {
-        errorLayoutsContainer.visibility = View.GONE
-        progressLayout.visibility = View.GONE
-        errorLayout.visibility = View.GONE
-        swipeRefreshLayout?.isRefreshing = false
-    }
-
-    /**
      * Enables [SwipeRefreshLayout]
      */
     protected fun enableRefresh() {
@@ -331,13 +306,51 @@ abstract class ProgressActivity<T>(
         onRefresh()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        apiCall?.cancel()
+    /**
+     * Shows a full-screen progress indicator or sets [SwipeRefreshLayout] to refreshing, if present
+     */
+    protected fun showLoadingStart() {
         if (registered) {
-            connectivityManager.unregisterNetworkCallback(networkCallback)
+            requireActivity().connectivityManager.unregisterNetworkCallback(networkCallback)
             registered = false
         }
+
+        swipeRefreshLayout?.let {
+            it.isRefreshing = true
+            return
+        }
+
+        errorLayoutsContainer.visibility = View.VISIBLE
+        errorLayout.visibility = View.GONE
+        progressLayout.visibility = View.VISIBLE
+    }
+
+    /**
+     * Indicates that the background progress ended by hiding error and progress layout
+     * and stopping the refreshing of [SwipeRefreshLayout]
+     */
+    protected fun showLoadingEnded() {
+        errorLayoutsContainer.visibility = View.GONE
+        progressLayout.visibility = View.GONE
+        errorLayout.visibility = View.GONE
+        swipeRefreshLayout?.isRefreshing = false
+    }
+
+    override fun onDestroyView() {
+        apiCall?.cancel()
+        super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        if (registered) {
+            requireActivity().connectivityManager.unregisterNetworkCallback(networkCallback)
+            registered = false
+        }
+        super.onDestroy()
+    }
+
+    private fun <V: View> Fragment.findViewById(layoutId: Int): V {
+        return requireActivity().findViewById(layoutId)
     }
 
 }

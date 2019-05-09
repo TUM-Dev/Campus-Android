@@ -4,10 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.ViewGroup;
 
 import org.joda.time.DateTime;
 
@@ -15,6 +16,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
 import de.tum.in.tumcampusapp.component.other.navigation.SystemIntent;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
+import de.tum.in.tumcampusapp.component.ui.overview.CardInteractionListener;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
@@ -37,9 +39,10 @@ public class NewsCard extends Card {
         super(type, context, "card_news");
     }
 
-    public static CardViewHolder inflateViewHolder(ViewGroup parent, int viewType) {
+    public static CardViewHolder inflateViewHolder(ViewGroup parent, int viewType,
+                                                   CardInteractionListener interactionListener) {
         mNewsInflater = new NewsInflater(parent.getContext());
-        return mNewsInflater.onCreateNewsView(parent, viewType, true);
+        return mNewsInflater.onCreateNewsView(parent, viewType, true, interactionListener);
     }
 
     @Override

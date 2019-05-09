@@ -5,12 +5,16 @@ import android.content.Intent
 import android.net.wifi.WifiConfiguration
 import android.view.View
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.utils.Const
 import kotlinx.android.synthetic.main.card_eduroam_fix.view.*
 import org.jetbrains.anko.wifiManager
 
-class EduroamFixCardViewHolder(itemView: View) : CardViewHolder(itemView) {
+class EduroamFixCardViewHolder(
+        itemView: View,
+        interactionListener: CardInteractionListener
+) : CardViewHolder(itemView, interactionListener) {
 
     fun bind(eduroam: WifiConfiguration?, errors: List<String>) = with(itemView) {
         if (errors.isNotEmpty()) {

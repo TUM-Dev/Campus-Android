@@ -16,6 +16,7 @@ import com.squareup.picasso.Target
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.news.model.News
 import de.tum.`in`.tumcampusapp.component.ui.news.model.NewsSources
+import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.FilmCard
 import de.tum.`in`.tumcampusapp.utils.addCompoundDrawablesWithIntrinsicBounds
@@ -24,8 +25,9 @@ import java.util.regex.Pattern
 
 class NewsViewHolder(
         itemView: View,
+        interactionListener: CardInteractionListener?,
         private val showOptionsButton: Boolean = true
-) : CardViewHolder(itemView) {
+) : CardViewHolder(itemView, interactionListener) {
 
     private val optionsButtonGroup: Group by lazy { itemView.findViewById<Group>(R.id.cardMoreIconGroup) }
     private val imageView: ImageView? by lazy { itemView.findViewById<ImageView>(R.id.news_img) }

@@ -14,8 +14,10 @@ import de.tum.`in`.tumcampusapp.component.ui.chat.activity.ChatActivity
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMessage
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatRoom
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatRoomDbRow
+import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager.CARD_CHAT
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
+import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import java.util.*
@@ -81,9 +83,17 @@ class ChatMessagesCard(context: Context,
     override fun discard(editor: Editor) = chatMessageDao.markAsRead(mRoomId)
 
     companion object {
-        fun inflateViewHolder(parent: ViewGroup) =
-                ChatMessagesCardViewHolder(LayoutInflater.from(parent.context)
-                        .inflate(R.layout.card_chat_messages, parent, false))
+
+        @JvmStatic
+        fun inflateViewHolder(
+                parent: ViewGroup,
+                interactionListener: CardInteractionListener
+        ): CardViewHolder {
+            val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.card_chat_messages, parent, false)
+            return ChatMessagesCardViewHolder(view, interactionListener)
+        }
+
     }
 
 }

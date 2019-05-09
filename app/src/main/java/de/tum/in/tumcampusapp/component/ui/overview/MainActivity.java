@@ -1,50 +1,19 @@
 package de.tum.in.tumcampusapp.component.ui.overview;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.ConnectivityManager.NetworkCallback;
-import android.net.Network;
-import android.net.NetworkRequest;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.View;
 
-import com.google.android.material.snackbar.Snackbar;
-
-import java.util.List;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
-
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.ViewCompat;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.work.WorkManager;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
-import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
-import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
-import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
-import de.tum.in.tumcampusapp.di.ViewModelFactory;
-import de.tum.in.tumcampusapp.service.DownloadWorker;
-import de.tum.in.tumcampusapp.service.SilenceService;
-import de.tum.in.tumcampusapp.utils.Const;
-import de.tum.in.tumcampusapp.utils.NetUtils;
-import de.tum.in.tumcampusapp.utils.Utils;
 
 /**
  * Main activity displaying the cards and providing navigation with navigation drawer
  */
 public class MainActivity extends BaseActivity
-        implements SwipeRefreshLayout.OnRefreshListener, CardInteractionListener {
+        /*implements SwipeRefreshLayout.OnRefreshListener, CardInteractionListener*/ {
 
-    private boolean mIsConnectivityChangeReceiverRegistered;
+    /*private boolean mIsConnectivityChangeReceiverRegistered;
 
     private RecyclerView mCardsView;
     private CardAdapter mAdapter;
@@ -61,7 +30,7 @@ public class MainActivity extends BaseActivity
         public void onAvailable(Network network) {
             runOnUiThread(MainActivity.this::refreshCards);
         }
-    };
+    };*/
 
     public MainActivity() {
         super(R.layout.activity_main);
@@ -72,10 +41,17 @@ public class MainActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         getInjector().inject(this);
 
-        connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.contentFrame, MainFragment.newInstance())
+                    .commit();
+        }
+
+        /*connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         // Setup pull to refresh
-        mSwipeRefreshLayout = findViewById(R.id.ptr_layout);
+        mSwipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setRefreshing(true);
         mSwipeRefreshLayout.setColorSchemeResources(
@@ -84,7 +60,7 @@ public class MainActivity extends BaseActivity
                 R.color.tum_A200);
 
         // Setup card RecyclerView
-        mCardsView = findViewById(R.id.cards_view);
+        mCardsView = findViewById(R.id.cardsRecyclerView);
         registerForContextMenu(mCardsView);
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -115,10 +91,10 @@ public class MainActivity extends BaseActivity
             if (cards != null) {
                 onNewCardsAvailable(cards);
             }
-        });
+        });*/
     }
 
-    private void onNewCardsAvailable(List<Card> cards) {
+    /*private void onNewCardsAvailable(List<Card> cards) {
         mSwipeRefreshLayout.setRefreshing(false);
         mAdapter.updateItems(cards);
 
@@ -160,36 +136,36 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    /**
+    *//**
      * Show progress indicator and start updating cards in background
-     */
+     *//*
     public void refreshCards() {
         mSwipeRefreshLayout.setRefreshing(true);
         onRefresh();
         downloadNewsAlert();
     }
 
-    /**
+    *//**
      * Starts updating cards in background
      * Called when {@link SwipeRefreshLayout} gets triggered.
-     */
+     *//*
     @Override
     public void onRefresh() {
         viewModel.refreshCards();
     }
 
-    /**
+    *//**
      * Executed when the RestoreCard is pressed
-     */
+     *//*
     public void restoreCards(View view) {
         CardManager.restoreCards(this);
         refreshCards();
     }
 
-    /**
+    *//**
      * Smoothly scrolls the RecyclerView to the top and dispatches nestedScrollingEvents to show
      * the Toolbar
-     */
+     *//*
     private void showToolbar() {
         mCardsView.startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
         mCardsView.dispatchNestedFling(0, Integer.MIN_VALUE, true);
@@ -206,12 +182,12 @@ public class MainActivity extends BaseActivity
         mAdapter.remove(position);
     }
 
-    /**
+    *//**
      * A touch helper class, Handles swipe to dismiss events
-     */
-    private class MainActivityTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
+     *//*
+    public class MainActivityTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
 
-        MainActivityTouchHelperCallback() {
+        public MainActivityTouchHelperCallback() {
             super(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         }
 
@@ -268,12 +244,13 @@ public class MainActivity extends BaseActivity
                                 // and therefore, we didn't really dismiss the card
 
                                 if (card != null) {
-                                    card.discardCard();
+                                    card.discard();
                                 }
                             }
                         }
                     })
                     .show();
         }
-    }
+    }*/
+
 }

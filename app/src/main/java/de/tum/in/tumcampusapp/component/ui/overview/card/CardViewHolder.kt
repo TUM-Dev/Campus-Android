@@ -2,25 +2,27 @@ package de.tum.`in`.tumcampusapp.component.ui.overview.card
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.PopupMenu
-import androidx.recyclerview.widget.RecyclerView
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
+import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
 import de.tum.`in`.tumcampusapp.component.other.settings.UserPreferencesActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.utils.Const
 
-open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+open class CardViewHolder @JvmOverloads constructor(
+        itemView: View,
+        private val listener: CardInteractionListener? = null
+) : RecyclerView.ViewHolder(itemView) {
 
     var currentCard: Card? = null
 
     private val context: Context by lazy { itemView.context }
-    private val listener: CardInteractionListener? by lazy { context as? CardInteractionListener }
 
     protected val activity: AppCompatActivity by lazy { context as AppCompatActivity }
 
@@ -66,7 +68,7 @@ open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private fun alwaysHideCard() {
         currentCard?.hideAlways()
-        currentCard?.discardCard()
+        currentCard?.discard()
         listener?.onAlwaysHideCard(adapterPosition)
     }
 

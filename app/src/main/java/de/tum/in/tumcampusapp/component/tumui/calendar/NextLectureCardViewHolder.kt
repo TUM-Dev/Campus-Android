@@ -4,11 +4,15 @@ import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.utils.addCompoundDrawablesWithIntrinsicBounds
 import kotlinx.android.synthetic.main.card_next_lecture_item.view.*
 
-class NextLectureCardViewHolder(itemView: View) : CardViewHolder(itemView) {
+class NextLectureCardViewHolder(
+        itemView: View,
+        interactionListener: CardInteractionListener
+) : CardViewHolder(itemView, interactionListener) {
 
     private var isExpanded = false
     private var didBind = false

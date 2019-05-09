@@ -6,11 +6,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaMenusAdapter
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.OpenHoursHelper
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
+import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import kotlinx.android.synthetic.main.card_cafeteria_menu.view.*
 import org.joda.time.format.DateTimeFormat
 
-class CafeteriaMenuViewHolder(itemView: View) : CardViewHolder(itemView) {
+class CafeteriaMenuViewHolder(
+        itemView: View,
+        interactionListener: CardInteractionListener
+) : CardViewHolder(itemView, interactionListener) {
 
     private lateinit var adapter: CafeteriaMenusAdapter
 

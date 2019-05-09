@@ -11,6 +11,7 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationDestination
 import de.tum.`in`.tumcampusapp.component.other.navigation.SystemActivity
 import de.tum.`in`.tumcampusapp.component.other.navigation.SystemIntent
+import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
@@ -63,10 +64,13 @@ class EventCard(context: Context) : Card(CardManager.CARD_EVENT, context, "card_
     companion object {
 
         @JvmStatic
-        fun inflateViewHolder(parent: ViewGroup): CardViewHolder {
+        fun inflateViewHolder(
+                parent: ViewGroup,
+                interactionListener: CardInteractionListener
+        ): CardViewHolder {
             val card = LayoutInflater.from(parent.context)
                     .inflate(R.layout.card_events_item, parent, false)
-            return EventsAdapter.EventViewHolder(card, true)
+            return EventsAdapter.EventViewHolder(card, interactionListener, true)
         }
 
     }

@@ -9,6 +9,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.Group;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.button.MaterialButton;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -17,12 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.Group;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.ui.overview.CardInteractionListener;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventCard;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventDiffUtil;
@@ -60,11 +62,13 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
     @NonNull
     @Override
     public CardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        int layoutRes;
         if (viewType == CARD_INFO) {
-            return new CardViewHolder(LayoutInflater.from(parent.getContext())
-                                                    .inflate(R.layout.card_events_info, parent, false));
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.card_events_info, parent, false);
+            return new CardViewHolder(view);
         }
+
+        int layoutRes;
         if (viewType == CARD_HORIZONTAL) {
             layoutRes = R.layout.card_events_item;
         } else {
@@ -72,7 +76,7 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         }
         View view = LayoutInflater.from(parent.getContext())
                                   .inflate(layoutRes, parent, false);
-        return new EventViewHolder(view, false);
+        return new EventViewHolder(view, null, false);
     }
 
     @Override
@@ -129,8 +133,10 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
         TextView dateTextView;
         MaterialButton ticketButton;
 
-        public EventViewHolder(View view, boolean showOptionsButton) {
-            super(view);
+        public EventViewHolder(View view,
+                               CardInteractionListener interactionListener,
+                               boolean showOptionsButton) {
+            super(view, interactionListener);
             this.showOptionsButton = showOptionsButton;
 
             cardView = (CardView) view;

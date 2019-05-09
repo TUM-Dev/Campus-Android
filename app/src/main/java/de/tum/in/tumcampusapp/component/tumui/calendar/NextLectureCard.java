@@ -2,11 +2,12 @@ package de.tum.in.tumcampusapp.component.tumui.calendar;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.joda.time.DateTime;
 
@@ -15,6 +16,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.calendar.model.CalendarItem;
+import de.tum.in.tumcampusapp.component.ui.overview.CardInteractionListener;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
@@ -31,10 +33,11 @@ public class NextLectureCard extends Card {
         calendarController = new CalendarController(context);
     }
 
-    public static CardViewHolder inflateViewHolder(ViewGroup parent) {
+    public static CardViewHolder inflateViewHolder(ViewGroup parent,
+                                                   CardInteractionListener interactionListener) {
         View view = LayoutInflater.from(parent.getContext())
                                   .inflate(R.layout.card_next_lecture_item, parent, false);
-        return new NextLectureCardViewHolder(view);
+        return new NextLectureCardViewHolder(view, interactionListener);
     }
 
     @Override

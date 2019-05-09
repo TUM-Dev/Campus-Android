@@ -12,20 +12,11 @@
 
         <include layout="@layout/toolbar" />
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/ptr_layout"
+        <FrameLayout
+            android:id="@+id/contentFrame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/cards_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/default_window_background"
-                android:scrollbars="none" />
-
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
