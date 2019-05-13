@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar.model
 
 import android.content.ContentValues
+import android.graphics.Color
 import android.provider.CalendarContract
 import androidx.room.Entity
 import androidx.room.Ignore
@@ -115,7 +116,29 @@ data class CalendarItem(
     }
 
     override fun toWeekViewEvent(): WeekViewEvent<CalendarItem> {
-        return WeekViewEvent(nr.toLong(), title, eventStart.toGregorianCalendar(),
-                eventEnd.toGregorianCalendar(), location, color ?: 0, false, this)
+        val color = checkNotNull(color) { "No color provided for CalendarItem" }
+
+        val backgroundColor = if (isCanceled) Color.WHITE else color
+        val textColor = if (isCanceled) color else Color.WHITE
+        val borderWidth = if (isCanceled) 2 else 0
+
+        val style = WeekViewEvent.Style.Builder()
+                .setBackgroundColor(backgroundColor)
+                .setTextColor(textColor)
+                .setTextStrikeThrough(isCanceled)
+                .setBorderWidth(borderWidth)
+                .setBorderColor(color)
+                .build()
+
+        return WeekViewEvent.Builder<CalendarItem>()
+                .setId(nr.toLong())
+                .setTitle(title)
+                .setStartTime(eventStart.toGregorianCalendar())
+                .setEndTime(eventEnd.toGregorianCalendar())
+                .setLocation(location)
+                .setStyle(style)
+                .setAllDay(false)
+                .setData(this)
+                .build()
     }
 }

@@ -155,7 +155,7 @@ dependencies {
     implementation 'me.dm7.barcodescanner:zxing:1.9.13'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     implementation 'de.psdev.licensesdialog:licensesdialog:2.0.0'
-    implementation 'com.github.thellmund:Android-Week-View:3.3'
+    implementation 'com.github.thellmund:Android-Week-View:3.4'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     implementation 'com.makeramen:roundedimageview:2.3.0'
