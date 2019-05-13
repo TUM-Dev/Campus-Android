@@ -2,13 +2,13 @@ package de.tum.`in`.tumcampusapp.component.ui.overview.card
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.PopupMenu
-import androidx.recyclerview.widget.RecyclerView
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
+import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
 import de.tum.`in`.tumcampusapp.component.other.settings.UserPreferencesActivity
@@ -65,9 +65,12 @@ open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
 
     private fun alwaysHideCard() {
+        if (adapterPosition != RecyclerView.NO_POSITION) {
+            listener?.onAlwaysHideCard(adapterPosition)
+        }
+
         currentCard?.hideAlways()
         currentCard?.discardCard()
-        listener?.onAlwaysHideCard(adapterPosition)
     }
 
 }

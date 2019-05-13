@@ -77,9 +77,6 @@
     <color name="card_pressed">#fff8f8f8</color>
     <color name="card_activated">@color/tum_100</color>
 
-    <color name="borderless_button_normal">@color/tum_300</color>
-    <color name="borderless_button_pressed">@color/tum_400</color>
-
     <color name="chat_incoming">#FFFFFF</color>
     <color name="chat_outgoing">#c5e775</color>
 

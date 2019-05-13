@@ -29,14 +29,17 @@ import java.security.spec.X509EncodedKeySpec
 /**
  * TUM alerting system
  */
-class AlarmPushNotification(payload: String, context: Context, notification: Int) :
-        PushNotification(context, ALERT, notification, true) {
+class AlarmPushNotification(
+        payload: String,
+        appContext: Context,
+        notification: Int
+) : PushNotification(appContext, ALERT, notification, true) {
 
     private val alert: FcmAlert = Gson().fromJson(payload, FcmAlert::class.java)
     private val notificationFromServer: FcmNotification?
         get() {
             return tryOrNull {
-                TUMCabeClient.getInstance(context)
+                TUMCabeClient.getInstance(appContext)
                         .getNotification(notificationId)
             }
         }
@@ -59,16 +62,16 @@ class AlarmPushNotification(payload: String, context: Context, notification: Int
             }
 
             // FcmNotification sound
-            val sound = Uri.parse("android.resource://${context.packageName}/${R.raw.message}")
-            val alarm = Intent(context, AlarmActivity::class.java).apply {
+            val sound = Uri.parse("android.resource://${appContext.packageName}/${R.raw.message}")
+            val alarm = Intent(appContext, AlarmActivity::class.java).apply {
                 putExtra("info", info)
                 putExtra("alert", alert)
             }
-            val pending = getActivity(context, 0, alarm, FLAG_UPDATE_CURRENT)
+            val pending = getActivity(appContext, 0, alarm, FLAG_UPDATE_CURRENT)
             // Strip any html tags from the description
             val strippedDescription = Utils.stripHtml(info.description)
 
-            return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_EMERGENCY)
+            return NotificationCompat.Builder(appContext, Const.NOTIFICATION_CHANNEL_EMERGENCY)
                     .setSmallIcon(defaultIcon)
                     .setContentTitle(info.title)
                     .setStyle(NotificationCompat.BigTextStyle().bigText(strippedDescription))
@@ -78,7 +81,7 @@ class AlarmPushNotification(payload: String, context: Context, notification: Int
                     .setLights(-0xffff01, 500, 500)
                     .setSound(sound)
                     .setAutoCancel(true)
-                    .setColor(ContextCompat.getColor(context, R.color.color_primary))
+                    .setColor(ContextCompat.getColor(appContext, R.color.color_primary))
                     .build()
         }
 

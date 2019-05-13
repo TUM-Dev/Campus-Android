@@ -2,6 +2,8 @@ package de.tum.in.tumcampusapp.component.ui.news;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 
@@ -12,7 +14,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import androidx.annotation.NonNull;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.notifications.NotificationScheduler;
@@ -75,7 +76,9 @@ public class NewsController implements ProvidesCard, ProvidesNotifications {
         // Load all news sources
         try {
             List<NewsSources> sources = api.getNewsSources();
-            newsSourcesDao.insert(sources);
+            if (sources != null) {
+                newsSourcesDao.insert(sources);
+            }
         } catch (IOException e) {
             Utils.log(e);
             return;
@@ -84,7 +87,9 @@ public class NewsController implements ProvidesCard, ProvidesNotifications {
         // Load all news since the last sync
         try {
             List<News> news = api.getNews(getLastId());
-            newsDao.insert(news);
+            if (news != null) {
+                newsDao.insert(news);
+            }
             showNewsNotification(news, latestNewsDate);
         } catch (IOException e) {
             Utils.log(e);

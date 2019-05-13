@@ -219,13 +219,14 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/appointmentsButton"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
+            android:enabled="false"
             android:text="@string/lectures_appointments"
             android:textAllCaps="false"
-            android:textColor="@color/color_primary"
+            android:textColor="@color/selector_button_text"
             app:cornerRadius="@dimen/material_corner_radius" />
 
     </FrameLayout>
