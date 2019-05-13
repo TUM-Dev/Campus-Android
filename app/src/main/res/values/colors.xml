@@ -24,6 +24,8 @@
     <color name="tum_dark_gray">#E6E6E6</color>
     <color name="tum_blue">@color/tum_500</color>
 
+    <color name="tum_500_alpha_15">#260065BD</color>
+
     <color name="facebook">#3B5998</color>
     <color name="github">#24292E</color>
     <color name="email">#757575</color>
