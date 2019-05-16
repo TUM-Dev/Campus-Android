@@ -23,8 +23,20 @@ data class WidgetCalendarItem(
     var isFirstOnDay: Boolean = false
 
     override fun toWeekViewEvent(): WeekViewEvent<WidgetCalendarItem> {
-        return WeekViewEvent(id.toLong(), title, startTime.toGregorianCalendar(),
-                endTime.toGregorianCalendar(), location, color, false, this)
+        val style = WeekViewEvent.Style.Builder()
+                .setBackgroundColor(color)
+                .build()
+
+        return WeekViewEvent.Builder<WidgetCalendarItem>()
+                .setId(id.toLong())
+                .setTitle(title)
+                .setStartTime(startTime.toGregorianCalendar())
+                .setEndTime(endTime.toGregorianCalendar())
+                .setLocation(location)
+                .setAllDay(false)
+                .setStyle(style)
+                .setData(this)
+                .build()
     }
 
     companion object {

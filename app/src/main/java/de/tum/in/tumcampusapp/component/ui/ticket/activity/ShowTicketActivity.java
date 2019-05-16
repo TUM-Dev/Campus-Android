@@ -11,6 +11,10 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.Writer;
@@ -24,9 +28,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
@@ -41,9 +42,8 @@ import de.tum.in.tumcampusapp.component.ui.ticket.repository.TicketsLocalReposit
 import de.tum.in.tumcampusapp.component.ui.ticket.repository.TicketsRemoteRepository;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public class ShowTicketActivity extends BaseActivity {
 
@@ -66,6 +66,8 @@ public class ShowTicketActivity extends BaseActivity {
 
     @Inject
     TicketsLocalRepository ticketsLocalRepo;
+
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public ShowTicketActivity() {
         super(R.layout.activity_show_ticket);
@@ -121,26 +123,10 @@ public class ShowTicketActivity extends BaseActivity {
     }
 
     private void loadRedemptionStatus() {
-
-        ticketsRemoteRepo
+        Disposable d = ticketsRemoteRepo
                 .fetchTickets()
-                .enqueue(new Callback<List<Ticket>>() {
-                    @Override
-                    public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
-                        List<Ticket> tickets = response.body();
-                        if (response.isSuccessful() && !tickets.isEmpty()) {
-                            handleTicketRefreshSuccess(tickets);
-                        } else {
-                            handleTicketRefreshFailure();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<Ticket>> call, Throwable t) {
-                        Utils.log(t);
-                        handleTicketRefreshFailure();
-                    }
-                });
+                .subscribe(this::handleTicketRefreshSuccess, t -> handleTicketRefreshFailure());
+        compositeDisposable.add(d);
     }
 
     private void handleTicketRefreshSuccess(List<Ticket> tickets) {
@@ -230,6 +216,11 @@ public class ShowTicketActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        compositeDisposable.dispose();
+        super.onDestroy();
+    }
 }
 
 

@@ -53,13 +53,21 @@ class FcmReceiverService : FirebaseMessagingService() {
      * We handle type specific actions in the respective classes
      * See: https://github.com/TCA-Team/TumCampusApp/wiki/GCM-Message-format
      */
-    private fun createPushNotificationOfType(type: Int, notificationId: Int, payload: String):
-            PushNotification? {
+    private fun createPushNotificationOfType(
+            type: Int,
+            notificationId: Int,
+            payload: String
+    ): PushNotification? {
+        // Apparently, using the service context can cause issues here:
+        // https://stackoverflow.com/questions/48770750/strange-crash-when-starting-notification
+        val appContext = applicationContext
+
         return when (type) {
-            CHAT_NOTIFICATION -> ChatPushNotification.fromJson(payload, this, notificationId)
-            UPDATE -> UpdatePushNotification(payload, this, notificationId)
-            ALERT -> AlarmPushNotification(payload, this, notificationId)
-            else -> { // Nothing to do, just confirm the retrieved notificationId
+            CHAT_NOTIFICATION -> ChatPushNotification.fromJson(payload, appContext, notificationId)
+            UPDATE -> UpdatePushNotification(payload, appContext, notificationId)
+            ALERT -> AlarmPushNotification(payload, appContext, notificationId)
+            else -> {
+                // Nothing to do, just confirm the retrieved notificationId
                 try {
                     TUMCabeClient
                             .getInstance(this)
@@ -101,9 +109,9 @@ class FcmReceiverService : FirebaseMessagingService() {
      * @param pushNotification the PushNotification containing a notification to post
      */
     private fun postNotification(pushNotification: PushNotification) {
-        pushNotification.notification?.also {
-            applicationContext.notificationManager
-                    .notify(pushNotification.displayNotificationId, it)
+        pushNotification.notification?.let {
+            val manager = applicationContext.notificationManager
+            manager.notify(pushNotification.displayNotificationId, it)
         }
     }
 

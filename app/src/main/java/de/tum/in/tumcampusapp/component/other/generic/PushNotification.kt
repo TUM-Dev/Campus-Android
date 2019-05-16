@@ -10,11 +10,11 @@ import java.io.IOException
 
 /**
  * A generic push notification received via our backend server
- * @param context       current context
+ * @param appContext    application context
  * @param type          the concrete type ID of the notification
  * @param confirmation  if the notification needs to be confirmed to the backend
  */
-abstract class PushNotification(protected val context: Context,
+abstract class PushNotification(protected val appContext: Context,
                                 @PushNotificationType
                                 protected val type: Int,
                                 protected val notificationId: Int,
@@ -41,7 +41,7 @@ abstract class PushNotification(protected val context: Context,
             return
         }
         Utils.logv("Confirmed notificationId $notificationId")
-        TUMCabeClient.getInstance(context)
+        TUMCabeClient.getInstance(appContext)
                 .confirm(notificationId)
     }
 }

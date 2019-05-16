@@ -148,6 +148,7 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation "com.tickaroo.tikxml:retrofit-converter:$tikXmlVersion"
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
+    implementation 'com.squareup.okio:okio:2.2.2'
 
     // UI
     implementation 'se.emilsjolander:stickylistheaders:2.7.0'
@@ -155,7 +156,7 @@ dependencies {
     implementation 'me.dm7.barcodescanner:zxing:1.9.13'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     implementation 'de.psdev.licensesdialog:licensesdialog:2.0.0'
-    implementation 'com.github.thellmund:Android-Week-View:3.3'
+    implementation 'com.github.thellmund:Android-Week-View:3.4'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     implementation 'com.makeramen:roundedimageview:2.3.0'
@@ -163,6 +164,12 @@ dependencies {
     // Dagger
     implementation 'com.google.dagger:dagger:2.21'
     kapt 'com.google.dagger:dagger-compiler:2.21'
+
+    // LeakCanary
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-1'
+
+    // DebugDatabase
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 
     // Testing
     testImplementation 'junit:junit:4.12'

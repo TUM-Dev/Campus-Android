@@ -5,17 +5,19 @@ import android.os.StrictMode;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
+import com.crashlytics.android.Crashlytics;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
-import de.tum.in.tumcampusapp.component.notifications.NotificationUtils;
 import de.tum.in.tumcampusapp.di.AppComponent;
 import de.tum.in.tumcampusapp.di.AppModule;
 import de.tum.in.tumcampusapp.di.DaggerAppComponent;
+import io.reactivex.plugins.RxJavaPlugins;
 
 import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+import static de.tum.in.tumcampusapp.component.notifications.NotificationUtils.setupNotificationChannels;
 
 public class App extends Application {
 
@@ -26,8 +28,9 @@ public class App extends Application {
         super.onCreate();
         buildAppComponent();
         setupPicasso();
-        NotificationUtils.setupNotificationChannels(this);
+        setupNotificationChannels(this);
         JodaTimeAndroid.init(this);
+        initRxJavaErrorHandler();
         setupStrictMode();
         setupNightMode();
     }
@@ -73,6 +76,10 @@ public class App extends Application {
 
     private void setupNightMode() {
         AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM);
+    }
+
+    private void initRxJavaErrorHandler() {
+        RxJavaPlugins.setErrorHandler(Crashlytics::logException);
     }
 
     public AppComponent getAppComponent() {

@@ -3,7 +3,8 @@ package de.tum.`in`.tumcampusapp.models.tumo
 import com.tickaroo.tikxml.TikXml
 import de.tum.`in`.tumcampusapp.TestApp
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.IdentitySet
-import okio.Okio
+import okio.buffer
+import okio.source
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -21,8 +22,8 @@ class IdentityTest {
                 .build()
 
         val inputStream = ByteArrayInputStream(XML_RESPONSE.toByteArray())
-        val source = Okio.source(inputStream)
-        val bufferedSource = Okio.buffer(source)
+        val source = inputStream.source()
+        val bufferedSource = source.buffer()
 
         val res = tikXml.read(bufferedSource, IdentitySet::class.java)
         assert(res.ids.size == 1)

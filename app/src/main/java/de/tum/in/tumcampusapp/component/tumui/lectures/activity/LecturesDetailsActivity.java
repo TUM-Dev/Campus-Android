@@ -2,10 +2,12 @@ package de.tum.in.tumcampusapp.component.tumui.lectures.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.button.MaterialButton;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
 
@@ -42,6 +44,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
     private TextView examinationAidsTextView;
     private TextView dateTextView;
     private TextView targetsTextView;
+    private MaterialButton appointmentsButton;
 
     private LectureDetails currentItem;
     private String mLectureId;
@@ -65,7 +68,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
         dateTextView = findViewById(R.id.dateTextView);
         examinationAidsTextView = findViewById(R.id.examinationAidsTextView);
 
-        MaterialButton appointmentsButton = findViewById(R.id.appointmentsButton);
+        appointmentsButton = findViewById(R.id.appointmentsButton);
         appointmentsButton.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
 
@@ -146,6 +149,8 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
         } else {
             examinationAidsTextView.setText(aids);
         }
+
+        appointmentsButton.setEnabled(true);
     }
 
 }
