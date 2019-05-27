@@ -21,6 +21,7 @@ import com.google.gson.annotations.SerializedName
 @Entity
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
 data class Location(@PrimaryKey
+                    @SerializedName("reference_id")
                     var id: Int = -1,
                     var category: String = "",
                     var name: String = "",
