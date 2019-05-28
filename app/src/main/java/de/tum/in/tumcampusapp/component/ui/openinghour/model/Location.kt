@@ -32,14 +32,6 @@ data class Location(@PrimaryKey
                     var hours: String = "",
                     @SerializedName("infos")
                     var remark: String = "",
-                    var url: String = "") {
-
-    companion object {
-
-        @JvmStatic fun fromCSVRow(row: Array<out String>) =
-                Location(row[0].toInt(), row[1], row[2],
-                        row[3], row[4], row[5], row[6], row[7], row[8])
-
-    }
-
-}
+                    var url: String = "",
+                    @SerializedName("reference_id")
+                    var reference: Int = -1)
