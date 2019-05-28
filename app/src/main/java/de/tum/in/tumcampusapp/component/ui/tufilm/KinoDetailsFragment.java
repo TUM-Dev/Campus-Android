@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.Locale;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -30,6 +32,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
+import de.tum.in.tumcampusapp.component.tumui.feedback.FeedbackContract;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventHelper;
 import de.tum.in.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
@@ -116,9 +119,10 @@ public class KinoDetailsFragment extends Fragment {
 
     private void initBuyOrShowTicket(Event event) {
         MaterialButton ticketButton = rootView.findViewById(R.id.buyTicketButton);
-        if (ticketsLocalRepo.getTicketCount(event) != 0) {
-            ticketButton.setText(R.string.show_ticket);
-            ticketButton.setVisibility(View.VISIBLE);
+        int ticketBoughtCount = ticketsLocalRepo.getTicketCount(event);
+
+        if (ticketBoughtCount > 0) {
+            ticketButton.setText(getResources().getQuantityString(R.plurals.show_tickets, ticketBoughtCount));
             ticketButton.setOnClickListener(view -> {
                 Intent intent = new Intent(getContext(), ShowTicketActivity.class);
                 intent.putExtra(KEY_EVENT_ID, event.getId());
@@ -126,22 +130,38 @@ public class KinoDetailsFragment extends Fragment {
             });
         } else if (!EventHelper.Companion.isEventImminent(event)) {
             ticketButton.setText(R.string.buy_ticket);
-            ticketButton.setVisibility(View.VISIBLE);
             ticketButton.setOnClickListener(
                     view -> EventHelper.Companion.buyTicket(this.event, ticketButton, getContext()));
         }
     }
 
     private void showTicketCount(@Nullable Integer count) {
-        String text;
+        TextView remainingTicketsTextView = rootView.findViewById(R.id.remainingTicketsTextView);
+        TextView remainingTicketsHeaderView = rootView.findViewById(R.id.remainingTicketsHeaderTextView);
+        MaterialButton ticketButton = rootView.findViewById(R.id.buyTicketButton);
+        int ticketBoughtCount = ticketsLocalRepo.getTicketCount(event);
 
-        if (count != null) {
-            text = String.format(Locale.getDefault(), "%d", count);
+        if(EventHelper.Companion.isEventImminent(event)) {
+            ticketButton.setVisibility((ticketBoughtCount <= 0) ? View.GONE : View.VISIBLE);
+            remainingTicketsHeaderView.setVisibility(View.GONE);
+            remainingTicketsTextView.setVisibility(View.GONE);
         } else {
-            text = getString(R.string.unknown);
+            if (count == null || count < 0) {
+                ticketButton.setVisibility((ticketBoughtCount <= 0) ? View.GONE : View.VISIBLE);
+                remainingTicketsHeaderView.setVisibility(View.GONE);
+                remainingTicketsTextView.setVisibility(View.GONE);
+            } else if(count > 0) {
+                ticketButton.setVisibility(View.VISIBLE);
+                remainingTicketsHeaderView.setVisibility(View.VISIBLE);
+                remainingTicketsTextView.setText(String.format(Locale.getDefault(), "%d", count));
+                remainingTicketsTextView.setVisibility(View.VISIBLE);
+            } else {
+                ticketButton.setVisibility((ticketBoughtCount <= 0) ? View.GONE : View.VISIBLE);
+                remainingTicketsHeaderView.setVisibility(View.VISIBLE);
+                remainingTicketsTextView.setText(R.string.no_tickets_remaining_tufilm_message);
+                remainingTicketsTextView.setVisibility(View.VISIBLE);
+            }
         }
-
-        ((TextView) rootView.findViewById(R.id.remainingTicketsTextView)).setText(text);
     }
 
     private void showMovieDetails(Kino kino) {
@@ -230,5 +250,4 @@ public class KinoDetailsFragment extends Fragment {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         requireActivity().startActivity(intent);
     }
-
 }

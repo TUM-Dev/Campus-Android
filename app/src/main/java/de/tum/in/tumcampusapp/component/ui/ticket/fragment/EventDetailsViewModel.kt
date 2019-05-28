@@ -37,7 +37,9 @@ class EventDetailsViewModel @Inject constructor(
                 }
     }
 
-    fun isEventBooked(event: Event): Boolean = ticketsLocalRepository.getTicketCount(event) != 0
+    fun isEventBooked(event: Event): Boolean = ticketsLocalRepository.getTicketCount(event) > 0
+
+    fun getNumEventsBooked(event: Event): Int = ticketsLocalRepository.getTicketCount(event)
 
     override fun onCleared() {
         super.onCleared()

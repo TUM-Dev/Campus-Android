@@ -320,7 +320,7 @@
     <string name="closed">Closed</string>
 
     <!-- Kino -->
-    <string name="kino" translatable="false">tu film</string>
+    <string name="kino" translatable="false">der tu film</string>
     <string name="imdb_rating">IMDb-Rating</string>
     <string name="year">Year of release</string>
     <string name="runtime">Runtime</string>
@@ -328,8 +328,9 @@
     <string name="director">Director</string>
     <string name="actors">Actors</string>
     <string name="description">Description</string>
-
     <string name="no_movies">No upcoming movies</string>
+    <string name="no_tickets_remaining_tufilm_message">Unfortunately there are no more online tickets available for this movie.\nAdditional tickets can be purchased at our evening box office or our advance ticket sales desks.</string>
+
     <!-- Eduroam card -->
     <string name="eduroam" translatable="false">Eduroam</string>
     <string name="setup">Setup</string>
@@ -437,7 +438,7 @@ Signature: %5$s</string>
     <string name="ok">OK</string>
     <string name="alarm_date_published_on">Published on:</string>
     <string name="chat_not_setup">Chat is not setup properly, please rerun the wizard via the settings!</string>
-    <string name="www" translatable="false">TU Film</string>
+    <string name="www" translatable="false">der tu film</string>
     <string name="more_info">More Information</string>
     <string name="event_plan">Event plan</string>
     <string name="please_connect_to_internet">Please connect to internet in order to proceed the first app start</string>
@@ -736,7 +737,7 @@ Signature: %5$s</string>
     <string name="partially_redeemed">%d of %d redeemed (%s)</string>
     <string name="redeemed_at">Redeemed at %s</string>
     <string name="no_tickets_remaining">No tickets remaining</string>
-    <string name="no_tickets_remaining_message">Unfortunately you were a little too late, there are not tickets available anymore. For many events you can still buy a ticket on site.</string>
+    <string name="no_tickets_remaining_message">Unfortunately there are no more online tickets available for this event.\nFor many events you can still purchase tickets on site.</string>
     <string name="error_message_select_at_least_one_ticket">Please select at least one ticket from one of the categories.</string>
     <string name="error_no_ticket_selected">No tickets selected</string>
     <string name="amount_x" translatable="false">%dx</string>
