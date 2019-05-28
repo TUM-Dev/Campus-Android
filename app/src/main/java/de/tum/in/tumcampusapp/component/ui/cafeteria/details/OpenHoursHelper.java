@@ -35,7 +35,7 @@ public class OpenHoursHelper {
      * @return Readable opening string
      */
     public String getHoursByIdAsString(int id, DateTime date) {
-        String result = dao.getHoursById(id);
+        String result = dao.getHoursByReferenceId(id);
         if (result == null) {
             return "";
         }
@@ -115,9 +115,9 @@ public class OpenHoursHelper {
 
     private static DateTime strToCal(DateTime date, String time) {
         DateTime opens = date;
-        if (time.contains(".")) {
-            int hour = Integer.parseInt(time.substring(0, time.indexOf('.')));
-            int min = Integer.parseInt(time.substring(time.indexOf('.') + 1));
+        if (time.contains(":")) {
+            int hour = Integer.parseInt(time.substring(0, time.indexOf(':')));
+            int min = Integer.parseInt(time.substring(time.indexOf(':') + 1));
             opens = opens
                     .withHourOfDay(hour)
                     .withMinuteOfHour(min);
