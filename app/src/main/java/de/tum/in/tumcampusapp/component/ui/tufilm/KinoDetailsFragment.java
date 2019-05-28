@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -20,7 +19,6 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.Locale;
-import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -32,10 +30,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
-import de.tum.in.tumcampusapp.component.tumui.feedback.FeedbackContract;
 import de.tum.in.tumcampusapp.component.ui.ticket.EventHelper;
 import de.tum.in.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
+import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository;
 import de.tum.in.tumcampusapp.component.ui.tufilm.di.KinoModule;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
@@ -82,7 +80,7 @@ public class KinoDetailsFragment extends Fragment {
 
         kinoViewModel.getKino().observe(this, this::showMovieDetails);
         kinoViewModel.getEvent().observe(this, this::showEventTicketDetails);
-        kinoViewModel.getTicketCount().observe(this, this::showTicketCount);
+        kinoViewModel.getAggregatedTicketStatus().observe(this, this::showTicketCount);
     }
 
     @Override
@@ -135,7 +133,7 @@ public class KinoDetailsFragment extends Fragment {
         }
     }
 
-    private void showTicketCount(@Nullable Integer count) {
+    private void showTicketCount(@Nullable TicketStatus status) {
         TextView remainingTicketsTextView = rootView.findViewById(R.id.remainingTicketsTextView);
         TextView remainingTicketsHeaderView = rootView.findViewById(R.id.remainingTicketsHeaderTextView);
         MaterialButton ticketButton = rootView.findViewById(R.id.buyTicketButton);
@@ -146,14 +144,14 @@ public class KinoDetailsFragment extends Fragment {
             remainingTicketsHeaderView.setVisibility(View.GONE);
             remainingTicketsTextView.setVisibility(View.GONE);
         } else {
-            if (count == null || count < 0) {
+            if (status == null || status.getContingent() < 0) {
                 ticketButton.setVisibility((ticketBoughtCount <= 0) ? View.GONE : View.VISIBLE);
                 remainingTicketsHeaderView.setVisibility(View.GONE);
                 remainingTicketsTextView.setVisibility(View.GONE);
-            } else if(count > 0) {
+            } else if(status.getContingent() - status.getSold() > 0) {
                 ticketButton.setVisibility(View.VISIBLE);
                 remainingTicketsHeaderView.setVisibility(View.VISIBLE);
-                remainingTicketsTextView.setText(String.format(Locale.getDefault(), "%d", count));
+                remainingTicketsTextView.setText(String.format(Locale.getDefault(), "%d", status));
                 remainingTicketsTextView.setVisibility(View.VISIBLE);
             } else {
                 ticketButton.setVisibility((ticketBoughtCount <= 0) ? View.GONE : View.VISIBLE);

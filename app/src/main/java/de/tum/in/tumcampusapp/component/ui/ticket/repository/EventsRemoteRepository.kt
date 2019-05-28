@@ -6,6 +6,7 @@ import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMember
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Ticket
+import de.tum.`in`.tumcampusapp.component.ui.ticket.payload.TicketStatus
 import de.tum.`in`.tumcampusapp.utils.Const.CHAT_MEMBER
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.Completable
@@ -62,9 +63,9 @@ class EventsRemoteRepository @Inject constructor(
         return tumCabeClient.fetchEvents()
     }
 
-    fun fetchTicketStats(eventId: Int): Single<Int> {
+    fun fetchTicketStats(eventId: Int): Single<TicketStatus> {
         return tumCabeClient.fetchTicketStats(eventId)
-                .map { it.sumBy { status -> status.availableTicketCount } }
+                .map { it.reduceRight {s, a -> TicketStatus(-1, a.contingent + s.contingent, a.sold + s.sold) } }
     }
 
 }

@@ -19,10 +19,14 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.EventHelper
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.di.TicketsModule
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
+import de.tum.`in`.tumcampusapp.component.ui.ticket.payload.TicketStatus
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
-import de.tum.`in`.tumcampusapp.utils.*
+import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Const.KEY_EVENT_ID
+import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
+import de.tum.`in`.tumcampusapp.utils.into
+import de.tum.`in`.tumcampusapp.utils.observe
 import kotlinx.android.synthetic.main.fragment_event_details.*
 import kotlinx.android.synthetic.main.fragment_event_details.view.*
 import javax.inject.Inject
@@ -73,7 +77,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         showEventDetails(event)
-        viewModel.ticketCount.observe(viewLifecycleOwner, this::showTicketCount)
+        viewModel.aggregatedTicketStatus.observe(viewLifecycleOwner, this::showTicketCount)
     }
 
     override fun onRefresh() {
@@ -95,7 +99,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         if (viewModel.isEventBooked(event)) {
             ticketButton.text = getString(R.string.show_ticket)
-            ticketButton.text = resources.getQuantityText(R.plurals.show_tickets, viewModel.getNumEventsBooked(event))
+            ticketButton.text = resources.getQuantityText(R.plurals.show_tickets, viewModel.getBookedTicketCount(event))
             ticketButton.setOnClickListener { showTicket(event) }
         } else {
             ticketButton.text = getString(R.string.buy_ticket)
@@ -121,18 +125,18 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         startActivity(intent)
     }
 
-    private fun showTicketCount(count: Int?) {
+    private fun showTicketCount(status: TicketStatus?) {
         if(EventHelper.isEventImminent(event)) {
             ticketButton.visibility = if(!viewModel.isEventBooked(event)) View.GONE else View.VISIBLE
             remainingTicketsContainer.visibility = View.GONE
         } else {
-            if (count == null || count < 0) {
+            if (status == null || status.contingent < 0) {
                 if(!viewModel.isEventBooked(event)) ticketButton.visibility = View.GONE
                 remainingTicketsContainer.visibility = View.GONE
-            } else if(count > 0) {
+            } else if(status.contingent - status.sold > 0) {
                 ticketButton.visibility = View.VISIBLE
                 remainingTicketsContainer.visibility = View.VISIBLE
-                remainingTicketsTextView.text = count.toString()
+                remainingTicketsTextView.text = status.toString()
             } else {
                 ticketButton.visibility = if(!viewModel.isEventBooked(event)) View.GONE else View.VISIBLE
                 remainingTicketsContainer.visibility = View.VISIBLE
