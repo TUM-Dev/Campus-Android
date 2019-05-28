@@ -20,7 +20,12 @@ class CafeteriaMenuViewHolder(itemView: View) : CardViewHolder(itemView) {
 
         val openHoursHelper = OpenHoursHelper(context)
         val openingHours = openHoursHelper.getHoursByIdAsString(cafeteria.id, cafeteria.nextMenuDate)
-        openingHoursTextView.text = openingHours
+        if (openingHours.isEmpty()) {
+            openingHoursTextView.visibility = View.GONE
+        } else {
+            openingHoursTextView.visibility = View.VISIBLE
+            openingHoursTextView.text = openingHours
+        }
 
         if (this@CafeteriaMenuViewHolder::adapter.isInitialized.not()) {
             menusRecyclerView.layoutManager = LinearLayoutManager(context)
