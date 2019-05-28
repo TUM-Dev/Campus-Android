@@ -3,13 +3,16 @@ package de.tum.`in`.tumcampusapp.component.tumui.tutionfees
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import com.google.android.material.button.MaterialButton
-import androidx.core.content.ContextCompat
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import com.google.android.material.button.MaterialButton
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model.TuitionList
+import de.tum.`in`.tumcampusapp.component.ui.openinghour.OpeningHoursDetailFragment
+import de.tum.`in`.tumcampusapp.database.TcaDb
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import java.util.*
@@ -22,6 +25,10 @@ class TuitionFeesActivity : ActivityForAccessingTumOnline<TuitionList>(R.layout.
     private val amountTextView by lazy { findViewById<TextView>(R.id.amountTextView) }
     private val deadlineTextView by lazy { findViewById<TextView>(R.id.deadlineTextView) }
     private val semesterTextView by lazy { findViewById<TextView>(R.id.semesterTextView) }
+    private val sszInfoParent by lazy { findViewById<LinearLayout>(R.id.ssz_info_placeholder) }
+
+    private val sszFeesLocationId = 34
+
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +41,14 @@ class TuitionFeesActivity : ActivityForAccessingTumOnline<TuitionList>(R.layout.
         }
 
         refreshData(CacheControl.USE_CACHE)
+        showSSZInfo()
+    }
+
+    private fun showSSZInfo() {
+        val sszCard = layoutInflater.inflate(R.layout.card_opening_hour_details, sszInfoParent)
+        val dao = TcaDb.getInstance(sszInfoParent.context).locationDao()
+        val sszLocation = dao.getLocationByReferenceId(sszFeesLocationId)
+        OpeningHoursDetailFragment.bindLocationToView(sszCard, sszLocation)
     }
 
     override fun onRefresh() {
