@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.fragment_barrierfree_info.barrierFreeListV
 class BarrierFreeInfoFragment : BaseFragment<Unit>(R.layout.fragment_barrierfree_info) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         barrierFreeListView.setOnItemClickListener { _, _, position, _ ->
             val intent = when (position) {
                 0 -> Intent(requireContext(), BarrierFreeContactActivity::class.java)

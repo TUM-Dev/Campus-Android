@@ -4,25 +4,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-
-import androidx.fragment.app.ListFragment;
 
 import org.jetbrains.annotations.NotNull;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.other.generic.fragment.BaseFragment;
 import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
 import de.tum.in.tumcampusapp.component.other.navigation.NavigationManager;
 import de.tum.in.tumcampusapp.component.other.navigation.SystemActivity;
+import kotlin.Unit;
 
-/**
- * A list fragment representing a list of Items. This fragment also supports
- * tablet devices by allowing list items to be given an 'activated' state upon
- * selection. This helps indicate which item is currently being viewed in a
- * {@link OpeningHoursDetailFragment}.
- */
-public class OpeningHoursListFragment extends ListFragment {
+public class OpeningHoursListFragment extends BaseFragment<Unit>
+        implements AdapterView.OnItemClickListener {
 
     /**
      * The serialization (saved instance state) Bundle key representing the
@@ -34,6 +28,13 @@ public class OpeningHoursListFragment extends ListFragment {
      * The current activated item position. Only used on tablets.
      */
     private int mActivatedPosition = AdapterView.INVALID_POSITION;
+
+    private ListView listView;
+    private ArrayAdapter<String> adapter;
+
+    public OpeningHoursListFragment() {
+        super(R.layout.fragment_opening_hours_list);
+    }
 
     public static OpeningHoursListFragment newInstance() {
         return new OpeningHoursListFragment();
@@ -52,18 +53,13 @@ public class OpeningHoursListFragment extends ListFragment {
                           getString(R.string.mensa_city),
                           getString(R.string.mensa_pasing),
                           getString(R.string.mensa_weihenstephan)};
-
-        setListAdapter(new ArrayAdapter<>(requireContext(), layout, android.R.id.text1, names));
+        adapter = new ArrayAdapter<>(requireContext(), layout, android.R.id.text1, names);
     }
 
     @Override
-    public void onListItemClick(ListView listView, View view, int position, long id) {
-        super.onListItemClick(listView, view, position, id);
-
-        // Notify the active callbacks interface (the activity, if the
-        // fragment is attached to one) that an item has been selected.
-        final ListAdapter adapter = getListAdapter();
-        onItemSelected(position, adapter.getItem(position).toString());
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        String item = adapter.getItem(position);
+        onItemSelected(position, item);
     }
 
     private void onItemSelected(int id, String name) {
@@ -89,6 +85,10 @@ public class OpeningHoursListFragment extends ListFragment {
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        listView = requireActivity().findViewById(R.id.listView);
+        listView.setOnItemClickListener(this);
+        listView.setAdapter(adapter);
+
         // Restore the previously serialized activated item position.
         if (savedInstanceState != null && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
             setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
@@ -97,9 +97,9 @@ public class OpeningHoursListFragment extends ListFragment {
 
     private void setActivatedPosition(int position) {
         if (position == AdapterView.INVALID_POSITION) {
-            getListView().setItemChecked(mActivatedPosition, false);
+            listView.setItemChecked(mActivatedPosition, false);
         } else {
-            getListView().setItemChecked(position, true);
+            listView.setItemChecked(position, true);
         }
 
         mActivatedPosition = position;

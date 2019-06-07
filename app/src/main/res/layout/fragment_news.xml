@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <include layout="@layout/toolbar"/>
+
     <include
         layout="@layout/layout_all_errors"
         android:layout_width="match_parent"

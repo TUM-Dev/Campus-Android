@@ -38,7 +38,9 @@ class RoomFinderFragment : FragmentForSearchingInBackground<List<RoomFinderRoom>
         }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         adapter = RoomFinderListAdapter(requireContext(), recents)
+
         listView.setOnItemClickListener { _, _, position, _ ->
             val room = listView.adapter.getItem(position) as RoomFinderRoom
             openRoomDetails(room)

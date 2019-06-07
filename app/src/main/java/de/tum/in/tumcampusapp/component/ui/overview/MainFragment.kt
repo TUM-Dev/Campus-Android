@@ -7,10 +7,7 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkRequest
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +17,7 @@ import androidx.work.WorkManager
 import com.google.android.material.snackbar.Snackbar
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration
+import de.tum.`in`.tumcampusapp.component.other.generic.fragment.BaseFragment
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
@@ -30,13 +28,15 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.observe
-import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.android.synthetic.main.fragment_main.cardsRecyclerView
 import org.jetbrains.anko.connectivityManager
 import org.jetbrains.anko.support.v4.runOnUiThread
 import javax.inject.Inject
 import javax.inject.Provider
 
-class MainFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, CardInteractionListener {
+class MainFragment : BaseFragment<Unit>(
+    R.layout.fragment_main
+), SwipeRefreshLayout.OnRefreshListener, CardInteractionListener {
 
     private var isConnectivityChangeReceiverRegistered = false
 
@@ -65,17 +65,12 @@ class MainFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, CardInter
         injector.inject(this)
     }
 
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_main, container, false)
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        swipeRefreshLayout.setOnRefreshListener(this)
-        swipeRefreshLayout.isRefreshing = true
-        swipeRefreshLayout.setColorSchemeResources(
+
+        swipeRefreshLayout?.setOnRefreshListener(this)
+        swipeRefreshLayout?.isRefreshing = true
+        swipeRefreshLayout?.setColorSchemeResources(
                 R.color.color_primary,
                 R.color.tum_A100,
                 R.color.tum_A200)
@@ -110,13 +105,13 @@ class MainFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, CardInter
     }
 
     private fun refreshCards() {
-        swipeRefreshLayout.isRefreshing = true
+        swipeRefreshLayout?.isRefreshing = true
         onRefresh()
         downloadNewsAlert()
     }
 
     private fun onNewCardsAvailable(cards: List<Card>) {
-        swipeRefreshLayout.isRefreshing = false
+        swipeRefreshLayout?.isRefreshing = false
         cardsAdapter.updateItems(cards)
 
         if (!NetUtils.isConnected(requireContext()) && !isConnectivityChangeReceiverRegistered) {

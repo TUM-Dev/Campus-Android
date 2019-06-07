@@ -28,6 +28,7 @@ class PersonSearchFragment : FragmentForSearchingTumOnline<PersonList>(
         }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         recentsDao = TcaDb.getInstance(requireContext()).recentsDao()
 
         personsRecyclerView.setHasFixedSize(true)
