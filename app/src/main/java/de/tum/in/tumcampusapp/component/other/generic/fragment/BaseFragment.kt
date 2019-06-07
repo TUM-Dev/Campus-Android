@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.button.MaterialButton
@@ -23,6 +24,7 @@ import de.tum.`in`.tumcampusapp.api.tumonline.exception.InvalidTokenException
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.MissingPermissionException
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.RequestLimitReachedException
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.TokenLimitReachedException
+import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.EmptyViewState
 import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.ErrorViewState
 import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.FailedTokenViewState
@@ -45,6 +47,10 @@ abstract class BaseFragment<T>(
 
     private var apiCall: Call<T>? = null
     private var hadSuccessfulRequest = false
+
+    private val toolbar: Toolbar? by lazy {
+        requireActivity().findViewById<Toolbar?>(R.id.main_toolbar)
+    }
 
     private val contentView: ViewGroup by lazy {
         requireActivity().findViewById<ViewGroup>(android.R.id.content).getChildAt(0) as ViewGroup
@@ -82,6 +88,9 @@ abstract class BaseFragment<T>(
         requireActivity().findViewById<FrameLayout>(R.id.progress_layout)
     }
 
+    private val baseActivity: BaseActivity
+        get() = requireActivity() as BaseActivity
+
     private var registered: Boolean = false
 
     private val networkCallback: ConnectivityManager.NetworkCallback = object : ConnectivityManager.NetworkCallback() {
@@ -100,6 +109,7 @@ abstract class BaseFragment<T>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupToolbar()
         // If content is refreshable setup the SwipeRefreshLayout
         swipeRefreshLayout?.apply {
             setOnRefreshListener(this@BaseFragment)
@@ -108,6 +118,16 @@ abstract class BaseFragment<T>(
                     R.color.tum_A100,
                     R.color.tum_A200
             )
+        }
+    }
+
+    private fun setupToolbar() {
+        val toolbar = toolbar ?: return
+        baseActivity.setSupportActionBar(toolbar)
+
+        baseActivity.supportActionBar?.let {
+            it.setDisplayHomeAsUpEnabled(true)
+            it.setHomeButtonEnabled(true)
         }
     }
 
@@ -251,7 +271,7 @@ abstract class BaseFragment<T>(
                 .build()
 
         if (registered.not()) {
-            requireActivity().connectivityManager.registerNetworkCallback(request, networkCallback)
+            baseActivity.connectivityManager.registerNetworkCallback(request, networkCallback)
             registered = true
         }
     }
@@ -319,7 +339,7 @@ abstract class BaseFragment<T>(
      */
     protected fun showLoadingStart() {
         if (registered) {
-            requireActivity().connectivityManager.unregisterNetworkCallback(networkCallback)
+            baseActivity.connectivityManager.unregisterNetworkCallback(networkCallback)
             registered = false
         }
 
@@ -351,7 +371,7 @@ abstract class BaseFragment<T>(
 
     override fun onDestroy() {
         if (registered) {
-            requireActivity().connectivityManager.unregisterNetworkCallback(networkCallback)
+            baseActivity.connectivityManager.unregisterNetworkCallback(networkCallback)
             registered = false
         }
         super.onDestroy()
