@@ -19,9 +19,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
-import de.tum.in.tumcampusapp.component.other.navigation.SystemActivity;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity;
+import de.tum.in.tumcampusapp.component.other.navigation.NavDestination;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.fragment.CafeteriaFragment;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus;
 import de.tum.in.tumcampusapp.component.ui.overview.CardInteractionListener;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
@@ -80,10 +79,10 @@ public class CafeteriaMenuCard extends Card {
 
     @Nullable
     @Override
-    public NavigationDestination getNavigationDestination() {
+    public NavDestination getNavigationDestination() {
         Bundle bundle = new Bundle();
         bundle.putInt(Const.CAFETERIA_ID, mCafeteria.getId());
-        return new SystemActivity(CafeteriaActivity.class, bundle);
+        return new NavDestination.Fragment(CafeteriaFragment.class, bundle);
     }
 
     @Override

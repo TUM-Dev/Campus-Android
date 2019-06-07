@@ -8,11 +8,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -42,15 +45,15 @@ import retrofit2.Response
 import java.net.UnknownHostException
 
 abstract class BaseFragment<T>(
-        @LayoutRes private val layoutId: Int
+        @LayoutRes private val layoutId: Int,
+        @StringRes private val titleResId: Int
 ) : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private var apiCall: Call<T>? = null
     private var hadSuccessfulRequest = false
 
-    private val toolbar: Toolbar? by lazy {
-        requireActivity().findViewById<Toolbar?>(R.id.main_toolbar)
-    }
+    private val toolbar: Toolbar?
+        get() = requireActivity().findViewById<Toolbar?>(R.id.main_toolbar)
 
     private val contentView: ViewGroup by lazy {
         requireActivity().findViewById<ViewGroup>(android.R.id.content).getChildAt(0) as ViewGroup
@@ -119,6 +122,11 @@ abstract class BaseFragment<T>(
                     R.color.tum_A200
             )
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        toolbar?.setTitle(titleResId)
     }
 
     private fun setupToolbar() {
@@ -362,6 +370,29 @@ abstract class BaseFragment<T>(
         progressLayout.visibility = View.GONE
         errorLayout.visibility = View.GONE
         swipeRefreshLayout?.isRefreshing = false
+    }
+
+    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
+        var animation = super.onCreateAnimation(transit, enter, nextAnim)
+        if (animation == null && nextAnim != 0) {
+            animation = AnimationUtils.loadAnimation(activity, nextAnim)
+        }
+
+        if (animation != null) {
+            view?.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+
+            animation.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation?) = Unit
+
+                override fun onAnimationEnd(animation: Animation?) {
+                    view?.setLayerType(View.LAYER_TYPE_NONE, null)
+                }
+
+                override fun onAnimationRepeat(animation: Animation?) = Unit
+            })
+        }
+
+        return animation
     }
 
     override fun onDestroyView() {

@@ -46,7 +46,8 @@ import java.io.IOException
 import java.net.UnknownHostException
 
 class ChatRoomsFragment : FragmentForAccessingTumOnline<LecturesResponse>(
-    R.layout.fragment_chat_rooms
+    R.layout.fragment_chat_rooms,
+    R.string.chat_rooms
 ) {
 
     private var currentMode = ChatRoom.MODE_JOINED

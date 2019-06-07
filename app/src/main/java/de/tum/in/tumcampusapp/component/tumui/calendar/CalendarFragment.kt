@@ -14,7 +14,12 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat.checkSelfPermission
-import com.alamkanak.weekview.*
+import com.alamkanak.weekview.DateTimeInterpreter
+import com.alamkanak.weekview.ScrollListener
+import com.alamkanak.weekview.WeekView
+import com.alamkanak.weekview.WeekViewDisplayable
+import com.alamkanak.weekview.setMonthChangeListener
+import com.alamkanak.weekview.setOnEventClickListener
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
@@ -33,14 +38,18 @@ import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_calendar.*
+import kotlinx.android.synthetic.main.fragment_calendar.todayButton
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
-import java.util.*
+import java.util.ArrayList
+import java.util.Calendar
+import java.util.Locale
 
-class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(R.layout.fragment_calendar),
-        CalendarDetailsFragment.OnEventInteractionListener {
+class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
+    R.layout.fragment_calendar,
+    R.string.calendar
+), CalendarDetailsFragment.OnEventInteractionListener {
 
     private val calendarController: CalendarController by lazy {
         CalendarController(requireContext())

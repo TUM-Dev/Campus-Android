@@ -20,7 +20,10 @@ import kotlinx.android.synthetic.main.fragment_events.viewPager
 import java.util.Arrays
 import javax.inject.Inject
 
-class EventsFragment : FragmentForDownloadingExternal(R.layout.fragment_events) {
+class EventsFragment : FragmentForDownloadingExternal(
+    R.layout.fragment_events,
+    R.string.events_tickets
+) {
 
     @Inject
     lateinit var eventsDownloadAction: EventsDownloadAction

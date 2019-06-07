@@ -16,7 +16,10 @@ import kotlinx.android.synthetic.main.fragment_person_search.personsRecyclerView
 import kotlinx.android.synthetic.main.fragment_person_search.recentsHeader
 
 class PersonSearchFragment : FragmentForSearchingTumOnline<PersonList>(
-    R.layout.fragment_person_search, PersonSearchSuggestionProvider.AUTHORITY, 3
+    R.layout.fragment_person_search,
+    R.string.person_search,
+    PersonSearchSuggestionProvider.AUTHORITY,
+    minLength = 3
 ) {
 
     private lateinit var recentsDao: RecentsDao

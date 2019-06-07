@@ -37,7 +37,8 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 class CafeteriaFragment : FragmentForDownloadingExternal(
-    R.layout.fragment_cafeteria
+    R.layout.fragment_cafeteria,
+    R.string.cafeteria
 ), AdapterView.OnItemSelectedListener {
 
     @Inject

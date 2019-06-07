@@ -1,5 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.other.generic.fragment
 
+import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
@@ -9,10 +11,11 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 abstract class FragmentForSearchingInBackground<T>(
-        layoutId: Int,
-        auth: String,
-        minLen: Int
-) : FragmentForSearching<T>(layoutId, auth, minLen) {
+    @LayoutRes layoutId: Int,
+    @StringRes titleResId: Int,
+    auth: String,
+    minLen: Int
+) : FragmentForSearching<T>(layoutId, titleResId, auth, minLen) {
 
     private var compositeDisposable = CompositeDisposable()
 

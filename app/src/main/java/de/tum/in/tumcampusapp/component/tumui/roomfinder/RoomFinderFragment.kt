@@ -20,7 +20,10 @@ import java.io.Serializable
 import java.util.regex.Pattern
 
 class RoomFinderFragment : FragmentForSearchingInBackground<List<RoomFinderRoom>>(
-    R.layout.fragment_roomfinder, RoomFinderSuggestionProvider.AUTHORITY, 3
+    R.layout.fragment_roomfinder,
+    R.string.roomfinder,
+    RoomFinderSuggestionProvider.AUTHORITY,
+    minLen = 3
 ) {
 
     private val recentsDao by lazy { TcaDb.getInstance(requireContext()).recentsDao() }

@@ -35,7 +35,8 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 class MainFragment : BaseFragment<Unit>(
-    R.layout.fragment_main
+    R.layout.fragment_main,
+    R.string.home
 ), SwipeRefreshLayout.OnRefreshListener, CardInteractionListener {
 
     private var isConnectivityChangeReceiverRegistered = false

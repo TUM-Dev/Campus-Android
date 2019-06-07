@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.component.ui.openinghour;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -10,9 +11,6 @@ import org.jetbrains.annotations.NotNull;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.fragment.BaseFragment;
-import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
-import de.tum.in.tumcampusapp.component.other.navigation.NavigationManager;
-import de.tum.in.tumcampusapp.component.other.navigation.SystemActivity;
 import kotlin.Unit;
 
 public class OpeningHoursListFragment extends BaseFragment<Unit>
@@ -33,7 +31,7 @@ public class OpeningHoursListFragment extends BaseFragment<Unit>
     private ArrayAdapter<String> adapter;
 
     public OpeningHoursListFragment() {
-        super(R.layout.fragment_opening_hours_list);
+        super(R.layout.fragment_opening_hours_list, R.string.opening_hours);
     }
 
     public static OpeningHoursListFragment newInstance() {
@@ -63,13 +61,13 @@ public class OpeningHoursListFragment extends BaseFragment<Unit>
     }
 
     private void onItemSelected(int id, String name) {
-        Bundle options = new Bundle();
-        options.putInt(OpeningHoursDetailFragment.ARG_ITEM_ID, id);
-        options.putString(OpeningHoursDetailFragment.ARG_ITEM_CONTENT, name);
+        Bundle args = new Bundle();
+        args.putInt(OpeningHoursDetailFragment.ARG_ITEM_ID, id);
+        args.putString(OpeningHoursDetailFragment.ARG_ITEM_CONTENT, name);
 
-        NavigationDestination destination =
-                new SystemActivity(OpeningHoursDetailActivity.class, options);
-        NavigationManager.open(requireContext(), destination);
+        Intent intent = new Intent(requireContext(), OpeningHoursDetailActivity.class);
+        intent.putExtras(args);
+        requireContext().startActivity(intent);
     }
 
     @Override

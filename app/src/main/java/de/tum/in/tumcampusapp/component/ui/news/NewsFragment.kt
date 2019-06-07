@@ -22,7 +22,10 @@ import kotlinx.android.synthetic.main.fragment_news.newsRecyclerView
 import java.lang.Math.round
 import javax.inject.Inject
 
-class NewsFragment : FragmentForDownloadingExternal(R.layout.fragment_news) {
+class NewsFragment : FragmentForDownloadingExternal(
+    R.layout.fragment_news,
+    R.string.news
+) {
 
     @Inject
     lateinit var newsController: NewsController

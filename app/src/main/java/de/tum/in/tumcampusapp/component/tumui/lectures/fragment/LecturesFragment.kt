@@ -12,12 +12,13 @@ import de.tum.`in`.tumcampusapp.component.tumui.lectures.activity.LecturesDetail
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.adapter.LecturesListAdapter
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.Lecture
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LecturesResponse
-import kotlinx.android.synthetic.main.fragment_lectures.*
+import kotlinx.android.synthetic.main.fragment_lectures.lecturesListView
 
 class LecturesFragment : FragmentForSearchingTumOnline<LecturesResponse>(
-        R.layout.fragment_lectures,
-        authority = LectureSearchSuggestionProvider.AUTHORITY,
-        minLength = 4
+    R.layout.fragment_lectures,
+    R.string.my_lectures,
+    authority = LectureSearchSuggestionProvider.AUTHORITY,
+    minLength = 4
 ) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

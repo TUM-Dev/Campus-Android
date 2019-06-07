@@ -28,10 +28,8 @@ open class CardViewHolder @JvmOverloads constructor(
 
     init {
         itemView.setOnClickListener {
-            val destination = currentCard?.getNavigationDestination()
-            destination?.let { dest ->
-                NavigationManager.open(activity, dest)
-            }
+            val destination = currentCard?.getNavigationDestination() ?: return@setOnClickListener
+            NavigationManager.open(activity, destination)
         }
 
         val moreIcon = itemView.findViewById<ImageView>(R.id.cardMoreIcon)

@@ -1,9 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.news;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -13,8 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.joda.time.DateTime;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
-import de.tum.in.tumcampusapp.component.other.navigation.SystemIntent;
+import de.tum.in.tumcampusapp.component.other.navigation.NavDestination;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.overview.CardInteractionListener;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
@@ -91,15 +88,14 @@ public class NewsCard extends Card {
 
     @Nullable
     @Override
-    public NavigationDestination getNavigationDestination() {
+    public NavDestination getNavigationDestination() {
         String url = mNews.getLink();
         if (url.isEmpty()) {
             Utils.showToast(getContext(), R.string.no_link_existing);
             return null;
         }
 
-        Intent data = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        return new SystemIntent(data);
+        return new NavDestination.Link(url);
     }
 
     @Override

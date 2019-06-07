@@ -16,7 +16,8 @@ import kotlinx.android.synthetic.main.fragment_study_rooms.spinnerContainer
 import org.jetbrains.anko.support.v4.runOnUiThread
 
 class StudyRoomsFragment : FragmentForAccessingTumCabe<List<StudyRoomGroup>>(
-    R.layout.fragment_study_rooms
+    R.layout.fragment_study_rooms,
+    R.string.study_rooms
 ), AdapterView.OnItemSelectedListener {
 
     private val sectionsPagerAdapter by lazy { StudyRoomsPagerAdapter(requireFragmentManager()) }

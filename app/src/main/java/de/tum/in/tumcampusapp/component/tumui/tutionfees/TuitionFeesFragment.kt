@@ -9,13 +9,17 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.FragmentForAccessingTumOnline
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model.TuitionList
-import kotlinx.android.synthetic.main.fragment_tuition_fees.*
+import kotlinx.android.synthetic.main.fragment_tuition_fees.amountTextView
+import kotlinx.android.synthetic.main.fragment_tuition_fees.deadlineTextView
+import kotlinx.android.synthetic.main.fragment_tuition_fees.financialAidButton
+import kotlinx.android.synthetic.main.fragment_tuition_fees.semesterTextView
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import java.util.*
+import java.util.Locale
 
 class TuitionFeesFragment : FragmentForAccessingTumOnline<TuitionList>(
-        R.layout.fragment_tuition_fees
+    R.layout.fragment_tuition_fees,
+    R.string.tuition_fees
 ) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

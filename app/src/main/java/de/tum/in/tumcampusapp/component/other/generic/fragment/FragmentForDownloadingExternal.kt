@@ -1,5 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.other.generic.fragment
 
+import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -22,8 +24,9 @@ import io.reactivex.schedulers.Schedulers
  * @param layoutId Resource id of the xml layout that should be used to inflate the activity
  */
 abstract class FragmentForDownloadingExternal(
-        layoutId: Int
-) : BaseFragment<Void>(layoutId) {
+    @LayoutRes layoutId: Int,
+    @StringRes titleResId: Int
+) : BaseFragment<Void>(layoutId, titleResId) {
 
     /**
      * The [DownloadWorker.Action] to be executed

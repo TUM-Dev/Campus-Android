@@ -10,17 +10,20 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW
 import android.view.MenuItem.SHOW_AS_ACTION_IF_ROOM
+import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
 import androidx.appcompat.widget.SearchView
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
+import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseNavigationActivity
 import de.tum.`in`.tumcampusapp.utils.Utils
 import org.jetbrains.anko.searchManager
 
 abstract class FragmentForSearching<T>(
-        layoutId: Int,
-        private val authority: String,
-        private val minLength: Int
-) : BaseFragment<T>(layoutId) {
+    @LayoutRes layoutId: Int,
+    @StringRes titleResId: Int,
+    private val authority: String,
+    private val minLength: Int
+) : BaseFragment<T>(layoutId, titleResId) {
 
     /**
      * Last search query
@@ -87,7 +90,7 @@ abstract class FragmentForSearching<T>(
         searchView.setOnCloseListener {
             searchItem.collapseActionView()
             query = null
-            val activity = requireActivity() as BaseActivity
+            val activity = requireActivity() as BaseNavigationActivity
             activity.enableDrawer(false)
             onStartSearch()
             false
@@ -95,7 +98,7 @@ abstract class FragmentForSearching<T>(
 
         searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
-                val activity = requireActivity() as BaseActivity
+                val activity = requireActivity() as BaseNavigationActivity
                 activity.enableDrawer(false)
                 return true
             }
@@ -103,7 +106,7 @@ abstract class FragmentForSearching<T>(
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 query = null
                 onStartSearch()
-                val activity = requireActivity() as BaseActivity
+                val activity = requireActivity() as BaseNavigationActivity
                 activity.enableDrawer(true)
                 return true
             }

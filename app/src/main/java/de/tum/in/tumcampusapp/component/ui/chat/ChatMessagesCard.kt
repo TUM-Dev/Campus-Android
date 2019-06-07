@@ -8,8 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationDestination
-import de.tum.`in`.tumcampusapp.component.other.navigation.SystemActivity
+import de.tum.`in`.tumcampusapp.component.other.navigation.NavDestination
 import de.tum.`in`.tumcampusapp.component.ui.chat.activity.ChatActivity
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMessage
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatRoom
@@ -20,7 +19,7 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
-import java.util.*
+import java.util.ArrayList
 
 /**
  * Card that shows the cafeteria menu
@@ -69,13 +68,13 @@ class ChatMessagesCard(context: Context,
         mRoomId = roomId
     }
 
-    override fun getNavigationDestination(): NavigationDestination? {
+    override fun getNavigationDestination(): NavDestination? {
         val bundle = Bundle().apply {
             val chatRoom = ChatRoom(mRoomIdString).apply { id = mRoomId }
             val value = Gson().toJson(chatRoom)
             putString(Const.CURRENT_CHAT_ROOM, value)
         }
-        return SystemActivity(ChatActivity::class.java, bundle)
+        return NavDestination.Activity(ChatActivity::class.java, bundle)
     }
 
     override fun getId() = mRoomId

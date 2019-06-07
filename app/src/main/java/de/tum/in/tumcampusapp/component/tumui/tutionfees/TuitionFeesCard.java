@@ -16,8 +16,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
-import de.tum.in.tumcampusapp.component.other.navigation.SystemActivity;
+import de.tum.in.tumcampusapp.component.other.navigation.NavDestination;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
 import de.tum.in.tumcampusapp.component.ui.overview.CardInteractionListener;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
@@ -62,8 +61,8 @@ public class TuitionFeesCard extends Card {
 
     @Nullable
     @Override
-    public NavigationDestination getNavigationDestination() {
-        return new SystemActivity(TuitionFeesActivity.class, null);
+    public NavDestination getNavigationDestination() {
+        return new NavDestination.Fragment(TuitionFeesFragment.class);
     }
 
     @Override

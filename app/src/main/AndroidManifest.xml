@@ -126,6 +126,10 @@
             android:label="@string/home"
             android:launchMode="singleTop" />
         <activity
+            android:name=".component.other.generic.activity.BaseNavigationActivity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTop" />
+        <activity
             android:name=".component.ui.news.NewsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/news"
@@ -389,7 +393,7 @@
         <activity
             android:name=".component.tumui.calendar.CalendarActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/schedule"
+            android:label="@string/calendar"
             android:launchMode="singleTop"
             android:parentActivityName=".component.ui.overview.MainActivity">
             <meta-data

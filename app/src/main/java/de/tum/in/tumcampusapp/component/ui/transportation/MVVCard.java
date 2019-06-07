@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.transportation;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.text.format.DateUtils;
@@ -15,8 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
-import de.tum.in.tumcampusapp.component.other.navigation.SystemIntent;
+import de.tum.in.tumcampusapp.component.other.navigation.NavDestination;
 import de.tum.in.tumcampusapp.component.ui.overview.CardInteractionListener;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
@@ -68,8 +68,9 @@ public class MVVCard extends Card {
 
     @Nullable
     @Override
-    public NavigationDestination getNavigationDestination() {
-        return new SystemIntent(mStation.getIntent(getContext()));
+    public NavDestination getNavigationDestination() {
+        Intent intent = mStation.getIntent(getContext());
+        return new NavDestination.Activity(TransportationDetailsActivity.class, intent.getExtras());
     }
 
     @Override

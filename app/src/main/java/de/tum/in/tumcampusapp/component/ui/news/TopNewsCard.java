@@ -1,9 +1,7 @@
 package de.tum.in.tumcampusapp.component.ui.news;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +18,7 @@ import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.Nullable;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
-import de.tum.in.tumcampusapp.component.other.navigation.SystemIntent;
+import de.tum.in.tumcampusapp.component.other.navigation.NavDestination;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.component.ui.overview.CardInteractionListener;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
@@ -78,13 +75,12 @@ public class TopNewsCard extends Card {
 
     @Nullable
     @Override
-    public NavigationDestination getNavigationDestination() {
+    public NavDestination getNavigationDestination() {
         if (newsAlert == null || newsAlert.getLink().isEmpty()) {
             return null;
         }
 
-        Intent data = new Intent(Intent.ACTION_VIEW, Uri.parse(newsAlert.getLink()));
-        return new SystemIntent(data);
+        return new NavDestination.Link(newsAlert.getLink());
     }
 
     @Override

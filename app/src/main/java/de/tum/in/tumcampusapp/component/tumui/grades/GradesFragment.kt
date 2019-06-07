@@ -37,7 +37,10 @@ import org.jetbrains.anko.support.v4.defaultSharedPreferences
 import java.text.NumberFormat
 import java.util.Locale
 
-class GradesFragment : FragmentForAccessingTumOnline<ExamList>(R.layout.fragment_grades) {
+class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
+    R.layout.fragment_grades,
+    R.string.my_grades
+) {
 
     private var spinnerPosition = 0
     private var isFetched = false
