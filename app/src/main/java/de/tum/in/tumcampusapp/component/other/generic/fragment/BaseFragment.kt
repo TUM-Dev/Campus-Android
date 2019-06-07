@@ -18,8 +18,16 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.api.tumonline.exception.*
-import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.*
+import de.tum.`in`.tumcampusapp.api.tumonline.exception.InactiveTokenException
+import de.tum.`in`.tumcampusapp.api.tumonline.exception.InvalidTokenException
+import de.tum.`in`.tumcampusapp.api.tumonline.exception.MissingPermissionException
+import de.tum.`in`.tumcampusapp.api.tumonline.exception.RequestLimitReachedException
+import de.tum.`in`.tumcampusapp.api.tumonline.exception.TokenLimitReachedException
+import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.EmptyViewState
+import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.ErrorViewState
+import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.FailedTokenViewState
+import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.NoInternetViewState
+import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.UnknownErrorViewState
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.setImageResourceOrHide
@@ -39,23 +47,23 @@ abstract class BaseFragment<T>(
     private var hadSuccessfulRequest = false
 
     private val contentView: ViewGroup by lazy {
-        findViewById<ViewGroup>(android.R.id.content).getChildAt(0) as ViewGroup
+        requireActivity().findViewById<ViewGroup>(android.R.id.content).getChildAt(0) as ViewGroup
     }
 
     protected val swipeRefreshLayout: SwipeRefreshLayout? by lazy {
-        findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
+        requireActivity().findViewById<SwipeRefreshLayout?>(R.id.swipeRefreshLayout)
     }
 
     private val errorLayoutsContainer: FrameLayout by lazy {
-        findViewById<FrameLayout>(R.id.errors_layout)
+        requireActivity().findViewById<FrameLayout>(R.id.errors_layout)
     }
 
     private val errorLayout: LinearLayout by lazy {
-        findViewById<LinearLayout>(R.id.error_layout)
+        requireActivity().findViewById<LinearLayout>(R.id.error_layout)
     }
 
     private val errorIconImageView: ImageView by lazy {
-        findViewById<ImageView>(R.id.iconImageView)
+        requireActivity().findViewById<ImageView>(R.id.iconImageView)
     }
 
     private val errorHeaderTextView: TextView by lazy {
@@ -71,7 +79,7 @@ abstract class BaseFragment<T>(
     }
 
     private val progressLayout: FrameLayout by lazy {
-        findViewById<FrameLayout>(R.id.progress_layout)
+        requireActivity().findViewById<FrameLayout>(R.id.progress_layout)
     }
 
     private var registered: Boolean = false
@@ -347,10 +355,6 @@ abstract class BaseFragment<T>(
             registered = false
         }
         super.onDestroy()
-    }
-
-    private fun <V: View> Fragment.findViewById(layoutId: Int): V {
-        return requireActivity().findViewById(layoutId)
     }
 
 }

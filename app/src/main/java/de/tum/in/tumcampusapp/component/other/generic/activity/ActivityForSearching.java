@@ -19,6 +19,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
  * Generic class for searching. Provides basic functions for a {@link SearchView}
  * and typical processes related to search.
  */
+@Deprecated
 public abstract class ActivityForSearching<T> extends ProgressActivity<T> {
     /**
      * Search authority and minimum query length

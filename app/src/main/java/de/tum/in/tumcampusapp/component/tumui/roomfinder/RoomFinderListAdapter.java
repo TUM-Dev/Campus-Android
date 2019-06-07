@@ -1,6 +1,6 @@
 package de.tum.in.tumcampusapp.component.tumui.roomfinder;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -21,8 +21,8 @@ public class RoomFinderListAdapter extends SimpleStickyListHeadersAdapter<RoomFi
         TextView tvBuildingTitle;
     }
 
-    public RoomFinderListAdapter(Activity activity, List<RoomFinderRoom> d) {
-        super(activity, d);
+    public RoomFinderListAdapter(Context context, List<RoomFinderRoom> items) {
+        super(context, items);
     }
 
     @Override

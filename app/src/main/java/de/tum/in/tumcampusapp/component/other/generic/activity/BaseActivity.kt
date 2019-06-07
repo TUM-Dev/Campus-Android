@@ -171,7 +171,7 @@ abstract class BaseActivity(private val layoutId: Int) : AppCompatActivity(),
         }
     }
 
-    protected fun enableDrawer(isEnabled: Boolean) {
+    public fun enableDrawer(isEnabled: Boolean) {
         val mode = if (isEnabled) {
             DrawerLayout.LOCK_MODE_UNLOCKED
         } else {

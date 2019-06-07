@@ -35,7 +35,7 @@ abstract class FragmentForSearchingInBackground<T>(
      * @param query Query to search for
      * @return Loaded results
      */
-    protected abstract fun onSearchInBackground(query: String?): T?
+    protected abstract fun onSearchInBackground(query: String): T?
 
     /**
      * Gets called after background task has finished. The

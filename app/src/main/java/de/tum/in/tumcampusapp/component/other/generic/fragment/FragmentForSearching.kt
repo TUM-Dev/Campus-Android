@@ -12,6 +12,7 @@ import android.view.MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW
 import android.view.MenuItem.SHOW_AS_ACTION_IF_ROOM
 import androidx.appcompat.widget.SearchView
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.utils.Utils
 import org.jetbrains.anko.searchManager
 
@@ -86,21 +87,24 @@ abstract class FragmentForSearching<T>(
         searchView.setOnCloseListener {
             searchItem.collapseActionView()
             query = null
-            // TODO enableDrawer(true)
+            val activity = requireActivity() as BaseActivity
+            activity.enableDrawer(false)
             onStartSearch()
             false
         }
 
         searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
-                // TODO enableDrawer(false)
+                val activity = requireActivity() as BaseActivity
+                activity.enableDrawer(false)
                 return true
             }
 
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 query = null
                 onStartSearch()
-                // TODO enableDrawer(true)
+                val activity = requireActivity() as BaseActivity
+                activity.enableDrawer(true)
                 return true
             }
         })

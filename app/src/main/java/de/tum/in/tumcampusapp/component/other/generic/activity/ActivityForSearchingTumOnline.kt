@@ -11,6 +11,7 @@ import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
  *
  * @param T The type of object that is loaded from the TUMonline API
  */
+@Deprecated("Use BaseActivity and a suitable BaseFragment class")
 abstract class ActivityForSearchingTumOnline<T>(
         layoutId: Int,
         auth: String,
