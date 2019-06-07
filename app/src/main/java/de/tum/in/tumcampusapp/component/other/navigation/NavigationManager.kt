@@ -3,10 +3,10 @@ package de.tum.`in`.tumcampusapp.component.other.navigation
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import androidx.core.app.TaskStackBuilder
-import androidx.appcompat.app.AppCompatActivity
-import android.view.MenuItem
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarActivity
@@ -48,8 +48,7 @@ object NavigationManager {
             KinoActivity::class.java
     )
 
-    // TODO: Documentation
-
+    @JvmStatic
     fun open(current: Activity, menuItem: MenuItem) {
         current.startActivity(menuItem.intent)
 
@@ -58,6 +57,7 @@ object NavigationManager {
         }
     }
 
+    @JvmStatic
     fun open(context: Context, destination: NavigationDestination) {
         when (destination) {
             is SystemActivity -> openActivity(context, destination)
