@@ -10,11 +10,6 @@ import de.tum.`in`.tumcampusapp.component.other.generic.drawer.NavItem
 
 object NavigationManager {
 
-    fun popBackToHome(context: Context) {
-        val activity = context as? BaseNavigationActivity ?: return
-        activity.supportFragmentManager.popBackStack()
-    }
-
     fun open(context: Context, navItem: NavItem) {
         when (navItem) {
             is NavItem.FragmentDestination -> open(context, navItem)

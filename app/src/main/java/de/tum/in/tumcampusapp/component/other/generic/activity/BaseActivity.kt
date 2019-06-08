@@ -35,19 +35,11 @@ abstract class BaseActivity(
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
-            // NavigationManager.closeActivity(this)
             onBackPressed()
             return true
         }
 
         return super.onOptionsItemSelected(item)
     }
-
-    /*override fun onBackPressed() {
-        val handled = NavigationManager.onBackPressed(this)
-        if (!handled) {
-            super.onBackPressed()
-        }
-    }*/
 
 }

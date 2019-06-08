@@ -1,12 +1,12 @@
 package de.tum.`in`.tumcampusapp.component.other.generic.drawer
 
+import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
-import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
 import de.tum.`in`.tumcampusapp.component.other.settings.UserPreferencesActivity
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarFragment
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackActivity
@@ -26,112 +26,100 @@ import de.tum.`in`.tumcampusapp.component.ui.studyroom.StudyRoomsFragment
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.EventsFragment
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
-import de.tum.`in`.tumcampusapp.utils.add
 import de.tum.`in`.tumcampusapp.utils.allItems
+import de.tum.`in`.tumcampusapp.utils.plusAssign
 
-class DrawerMenuHelper(private val activity: AppCompatActivity) {
+class DrawerMenuHelper(
+    private val activity: AppCompatActivity,
+    private val navigationView: NavigationView
+) {
 
     private val currentFragment: Fragment?
         get() = activity.supportFragmentManager.findFragmentById(R.id.contentFrame)
 
+    private val navigationMenu: Menu
+        get() = navigationView.menu
+
     private val allItems = mutableListOf<NavItem>()
 
-    fun populateMenu(navigationView: NavigationView) {
-        val hasTUMOAccess = AccessTokenManager.hasValidAccessToken(activity)
-        val chatEnabled = Utils.getSettingBool(activity, Const.GROUP_CHAT_ENABLED, false)
-        val employeeMode = Utils.getSettingBool(activity, Const.EMPLOYEE_MODE, false)
+    fun populateMenu() {
+        val hasTumOnlineAccess = AccessTokenManager.hasValidAccessToken(activity)
+        val isChatEnabled = Utils.getSettingBool(activity, Const.GROUP_CHAT_ENABLED, false)
+        val isEmployeeMode = Utils.getSettingBool(activity, Const.EMPLOYEE_MODE, false)
 
-        val navigationMenu = navigationView.menu
+        navigationMenu.clear()
         allItems.clear()
 
-        navigationMenu.add(HOME)
-        allItems.add(HOME)
+        navigationMenu += HOME
+        allItems += HOME
 
         val myTumMenu = navigationMenu.addSubMenu(R.string.my_tum)
-        if (hasTUMOAccess) {
-            var items = MY_TUM.filterNot {
-                it.needsChatAccess && !chatEnabled }
-            if (employeeMode) {
-                items = items.filterNot { it.hideForEmployees }
-            }
-            items.forEach {
-                myTumMenu.add(it)
-                allItems.add(it)
+        if (hasTumOnlineAccess) {
+            val candidates = MY_TUM
+                .filterNot { !isChatEnabled && it.needsChatAccess }
+                .filterNot { isEmployeeMode && it.hideForEmployees }
+
+            for (candidate in candidates) {
+                myTumMenu += candidate
+                allItems += candidate
             }
         }
 
-        // General information which mostly can be used without a TUMonline token
-        val commonTumMenu = navigationMenu.addSubMenu(R.string.common_info)
-        COMMON_TUM
-                .filterNot { it.needsTUMOAccess && !hasTUMOAccess }
-                .forEach {
-                    commonTumMenu.add(it)
-                    allItems.add(it)
-                }
+        val generalMenu = navigationMenu.addSubMenu(R.string.common_info)
+        val generalCandidates = GENERAL.filterNot { it.needsTUMOAccess && !hasTumOnlineAccess }
+        for (candidate in generalCandidates) {
+            generalMenu += candidate
+            allItems += candidate
+        }
 
-        // App related menu entries
         val aboutMenu = navigationMenu.addSubMenu(R.string.about)
-        ABOUT.forEach {
-            aboutMenu.add(it)
-            allItems.add(it)
+        for (item in ABOUT) {
+            aboutMenu += item
+            allItems += item
         }
 
-        // Highlight the currently selected activity.
-        val currentIndex = allItems
-            .mapNotNull { it as? NavItem.FragmentDestination }
-            .indexOfFirst { it.fragment == currentFragment?.javaClass }
-            .takeIf { it != -1 }
-
-        currentIndex?.let { index ->
-            navigationMenu.allItems[index].apply {
-                isCheckable = true
-                isChecked = true
-            }
-        }
+        highlightCurrentItem()
     }
 
-    fun updateNavDrawer(navigationView: NavigationView) {
-        val navigationMenu = navigationView.menu
-        navigationMenu.allItems.forEach {
-            it.isChecked = false
-        }
-
-        // Highlight the currently selected activity.
-        val currentIndex = allItems
-            .mapNotNull { it as? NavItem.FragmentDestination }
-            .indexOfFirst { it.fragment == currentFragment?.javaClass }
-            .takeIf { it != -1 }
-
-        currentIndex?.let { index ->
-            navigationMenu.allItems[index].apply {
-                isCheckable = true
-                isChecked = true
-            }
-        }
-    }
-
-    fun open(menuItem: MenuItem) {
+    fun findNavItem(menuItem: MenuItem): NavItem {
         if (menuItem.title == activity.getString(HOME.titleRes)) {
-            NavigationManager.popBackToHome(activity)
-            return
+            return HOME
         }
 
-        for (item in MY_TUM + COMMON_TUM) {
+        for (item in MY_TUM + GENERAL) {
             if (menuItem.title == activity.getString(item.titleRes)) {
-                NavigationManager.open(activity, item)
-                return
+                return item
             }
         }
 
         for (item in ABOUT) {
             if (menuItem.title == activity.getString(item.titleRes)) {
-                NavigationManager.open(activity, item)
-                return
+                return item
             }
+        }
+
+        throw IllegalArgumentException("Invalid menu item ${menuItem.title} provided")
+    }
+
+    fun updateNavDrawer() {
+        highlightCurrentItem()
+    }
+
+    private fun highlightCurrentItem() {
+        val items = navigationMenu.allItems
+        items.forEach { it.isChecked = false }
+
+        val currentIndex = allItems
+            .mapNotNull { it as? NavItem.FragmentDestination }
+            .indexOfFirst { it.fragment == currentFragment?.javaClass }
+
+        if (currentIndex != -1) {
+            items[currentIndex].isCheckable = true
+            items[currentIndex].isChecked = true
         }
     }
 
-    companion object {
+    private companion object {
 
         private val HOME = NavItem.FragmentDestination(R.string.home, R.drawable.ic_outline_home_24px, MainFragment::class.java)
 
@@ -143,7 +131,7 @@ class DrawerMenuHelper(private val activity: AppCompatActivity) {
                 NavItem.FragmentDestination(R.string.tuition_fees, R.drawable.ic_money, TuitionFeesFragment::class.java, true, hideForEmployees = true)
         )
 
-        private val COMMON_TUM = arrayOf(
+        private val GENERAL = arrayOf(
                 NavItem.FragmentDestination(R.string.menues, R.drawable.ic_cutlery, CafeteriaFragment::class.java),
                 NavItem.FragmentDestination(R.string.study_rooms, R.drawable.ic_outline_group_work_24px, StudyRoomsFragment::class.java),
                 NavItem.FragmentDestination(R.string.roomfinder, R.drawable.ic_outline_location_on_24px, RoomFinderFragment::class.java),

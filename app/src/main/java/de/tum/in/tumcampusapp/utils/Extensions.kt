@@ -56,16 +56,8 @@ val Menu.allItems: List<MenuItem>
         }
     }
 
-fun Menu.add(item: NavItem) {
-    when (item) {
-        is NavItem.FragmentDestination -> {
-            add(item.titleRes).apply { setIcon(item.iconRes) }
-        }
-        is NavItem.ActivityDestination -> {
-            add(item.titleRes).apply { setIcon(item.iconRes)             }
-        }
-    }
-
+operator fun Menu.plusAssign(item: NavItem) {
+    add(item.titleRes).apply { setIcon(item.iconRes) }
 }
 
 fun TextView.setTextOrHide(resId: Int?) {
