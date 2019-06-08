@@ -3,7 +3,6 @@ package de.tum.`in`.tumcampusapp.component.other.generic.drawer
 import android.content.Context
 import android.content.Intent
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.navigation.NavigationView
@@ -22,13 +21,12 @@ class DrawerHeaderInflater(
 
     fun inflater(navigationView: NavigationView) {
         val headerView = navigationView.inflateHeaderView(R.layout.drawer_header)
-        val background = headerView.findViewById<ImageView>(R.id.background)
+        val imageView = headerView.findViewById<CircleImageView>(R.id.profileImageView)
         val nameTextView = headerView.findViewById<TextView>(R.id.nameTextView)
         val emailTextView = headerView.findViewById<TextView>(R.id.emailTextView)
         val loginButton = headerView.findViewById<MaterialButton>(R.id.loginButton)
 
         val isLoggedIn = AccessTokenManager.hasValidAccessToken(context)
-        background.visibility = if (isLoggedIn) View.VISIBLE else View.GONE
 
         if (isLoggedIn) {
             val name = Utils.getSetting(context, Const.CHAT_ROOM_DISPLAY_NAME, "")
@@ -50,6 +48,7 @@ class DrawerHeaderInflater(
         } else {
             nameTextView.visibility = View.GONE
             emailTextView.visibility = View.GONE
+            imageView.visibility = View.GONE
 
             loginButton.visibility = View.VISIBLE
             loginButton.setOnClickListener {

@@ -61,12 +61,13 @@ import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.database.migrations.Migration1to2;
 import de.tum.in.tumcampusapp.database.migrations.Migration2to3;
 import de.tum.in.tumcampusapp.database.migrations.Migration3to4;
+import de.tum.in.tumcampusapp.database.migrations.Migration4to5;
 import de.tum.in.tumcampusapp.utils.CacheManager;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.sync.SyncDao;
 import de.tum.in.tumcampusapp.utils.sync.model.Sync;
 
-@Database(version = 4, entities = {
+@Database(version = 5, entities = {
         Cafeteria.class,
         CafeteriaMenu.class,
         FavoriteDish.class,
@@ -98,7 +99,8 @@ public abstract class TcaDb extends RoomDatabase {
     private static final Migration[] migrations = {
             new Migration1to2(),
             new Migration2to3(),
-            new Migration3to4()
+            new Migration3to4(),
+            new Migration4to5()
     };
 
     private static TcaDb instance;

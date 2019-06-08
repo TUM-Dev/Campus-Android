@@ -34,13 +34,13 @@ import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotificationLocation;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeContact;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeMoreInfo;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
-import de.tum.in.tumcampusapp.component.ui.openinghour.model.Location;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
+import de.tum.in.tumcampusapp.component.ui.openinghour.model.Location;
 import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
@@ -370,14 +370,9 @@ public final class TUMCabeClient {
 
     // Getting ticket information
 
-    public Call<List<Ticket>> fetchTickets(Context context) throws NoPrivateKey {
+    public Observable<List<Ticket>> fetchTickets(Context context) throws NoPrivateKey {
         TUMCabeVerification verification = getVerification(context, null);
         return service.getTickets(verification);
-    }
-
-    public Observable<List<Ticket>> fetchTicketsRx(Context context) throws NoPrivateKey {
-        TUMCabeVerification verification = getVerification(context, null);
-        return service.getTicketsRx(verification);
     }
 
     public Call<Ticket> fetchTicket(Context context, int ticketID) throws NoPrivateKey {
@@ -421,8 +416,8 @@ public final class TUMCabeClient {
         return service.getUpdateNote(version).execute().body();
     }
 
-    public List<Location> fetchOpeningHours() throws IOException {
-        return service.getOpeningHours()
+    public List<Location> fetchOpeningHours(String language) throws IOException {
+        return service.getOpeningHours(language)
                       .execute()
                       .body();
     }

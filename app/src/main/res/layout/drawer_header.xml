@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/tum_light_gray"
@@ -9,71 +8,21 @@
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat">
 
-    <ImageView
-        android:id="@+id/background"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="@dimen/material_default_padding"
-        android:layout_marginBottom="@dimen/material_default_padding"
-        android:src="@drawable/uhrenturm"
-        app:layout_constraintBottom_toBottomOf="@id/rainbow_bar"
-        app:layout_constraintDimensionRatio="H, 1.3:1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.5" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profileImageView"
-        android:layout_width="@dimen/icon_large"
-        android:layout_height="@dimen/icon_large"
-        android:layout_marginStart="@dimen/material_default_padding"
-        android:layout_marginTop="@dimen/material_default_padding"
-        android:layout_marginEnd="@dimen/material_default_padding"
-        android:background="@drawable/circle_background"
-        android:src="@drawable/photo_not_available"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <include layout="@layout/view_header_logged_in" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/loginButton"
-        style="@style/Widget.MaterialComponents.Button"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/material_default_padding"
-        android:layout_marginTop="@dimen/material_default_padding"
+        android:layout_margin="@dimen/material_default_padding"
         android:text="@string/tumonline_login"
         android:textAllCaps="false"
-        android:textColor="@android:color/white"
+        android:visibility="gone"
         app:cornerRadius="@dimen/material_corner_radius"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/profileImageView"
         app:strokeColor="@android:color/white" />
-
-    <TextView
-        android:id="@+id/nameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/material_default_padding"
-        android:layout_marginTop="@dimen/material_default_padding"
-        android:layout_marginEnd="@dimen/material_default_padding"
-        android:fontFamily="sans-serif-medium"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/text_dark_primary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/loginButton"
-        tools:text="Name" />
-
-    <TextView
-        android:id="@+id/emailTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/material_default_padding"
-        android:layout_marginEnd="@dimen/material_default_padding"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="@color/text_dark_secondary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nameTextView"
-        tools:text="E-mail" />
 
     <View
         android:id="@+id/divider"
@@ -81,15 +30,14 @@
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/material_default_padding"
         android:background="@color/placeholder"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emailTextView" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <include
         layout="@layout/rainbow_bar"
         android:layout_width="match_parent"
         android:layout_height="4dp"
-        android:layout_marginTop="@dimen/material_default_padding"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/divider" />
+        app:layout_constraintBottom_toBottomOf="@id/divider" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,13 +21,16 @@ import de.tum.`in`.tumcampusapp.service.FcmReceiverService.Companion.UPDATE
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.tryOrNull
 
-class UpdatePushNotification(payload: String, context: Context, notification: Int) :
-        PushNotification(context, UPDATE, notification, true) {
+class UpdatePushNotification(
+        payload: String,
+        appContext: Context,
+        notification: Int
+) : PushNotification(appContext, UPDATE, notification, true) {
 
     private val data: FcmUpdate? = Gson().fromJson(payload, FcmUpdate::class.java)
     private val notificationFromServer: FcmNotification?
         get() = tryOrNull {
-            TUMCabeClient.getInstance(context)
+            TUMCabeClient.getInstance(appContext)
                     .getNotification(notificationId)
         }
 
@@ -50,23 +53,23 @@ class UpdatePushNotification(payload: String, context: Context, notification: In
             }
             val info = notificationFromServer ?: return null
 
-            val sound = Uri.parse("android.resource://${context.packageName}/${R.raw.message}")
-            val alarm = Intent(context, MainActivity::class.java)
-            val pending = PendingIntent.getActivity(context, 0, alarm, PendingIntent.FLAG_UPDATE_CURRENT)
+            val sound = Uri.parse("android.resource://${appContext.packageName}/${R.raw.message}")
+            val alarm = Intent(appContext, MainActivity::class.java)
+            val pending = PendingIntent.getActivity(appContext, 0, alarm, PendingIntent.FLAG_UPDATE_CURRENT)
 
             val description = if (info.description.isNotEmpty()) {
                 info.description
             } else {
-                String.format(context.getString(R.string.update_notification_description), data.releaseDate)
+                String.format(appContext.getString(R.string.update_notification_description), data.releaseDate)
             }
 
             val title = if (info.title.isNotEmpty()) {
                 info.title
             } else {
-                context.getString(R.string.update)
+                appContext.getString(R.string.update)
             }
 
-            return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
+            return NotificationCompat.Builder(appContext, Const.NOTIFICATION_CHANNEL_DEFAULT)
                     .setSmallIcon(defaultIcon)
                     .setContentTitle(title)
                     .setStyle(NotificationCompat.BigTextStyle().bigText(description))
@@ -76,7 +79,7 @@ class UpdatePushNotification(payload: String, context: Context, notification: In
                     .setLights(-0xffff01, 500, 500)
                     .setSound(sound)
                     .setAutoCancel(true)
-                    .setColor(ContextCompat.getColor(context, R.color.color_primary))
+                    .setColor(ContextCompat.getColor(appContext, R.color.color_primary))
                     .build()
         }
 }

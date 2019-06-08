@@ -24,6 +24,8 @@
     <color name="tum_dark_gray">#E6E6E6</color>
     <color name="tum_blue">@color/tum_500</color>
 
+    <color name="tum_500_alpha_15">#260065BD</color>
+
     <color name="facebook">#3B5998</color>
     <color name="github">#24292E</color>
     <color name="email">#757575</color>
@@ -74,9 +76,6 @@
 
     <color name="card_pressed">#fff8f8f8</color>
     <color name="card_activated">@color/tum_100</color>
-
-    <color name="borderless_button_normal">@color/tum_300</color>
-    <color name="borderless_button_pressed">@color/tum_400</color>
 
     <color name="chat_incoming">#FFFFFF</color>
     <color name="chat_outgoing">#c5e775</color>

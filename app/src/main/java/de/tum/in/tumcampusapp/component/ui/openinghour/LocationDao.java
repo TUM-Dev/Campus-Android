@@ -11,8 +11,8 @@ import de.tum.in.tumcampusapp.component.ui.openinghour.model.Location;
 @Dao
 public interface LocationDao {
 
-    @Query("SELECT hours FROM location WHERE id = :id")
-    String getHoursById(int id);
+    @Query("SELECT hours FROM location WHERE reference  = :id")
+    String getHoursByReferenceId(int id);
 
     @Query("SELECT * FROM location WHERE category = :category ORDER BY name")
     List<Location> getAllOfCategory(String category);

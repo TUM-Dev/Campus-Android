@@ -65,9 +65,12 @@ open class CardViewHolder @JvmOverloads constructor(
     }
 
     private fun alwaysHideCard() {
+        if (adapterPosition != RecyclerView.NO_POSITION) {
+            listener?.onAlwaysHideCard(adapterPosition)
+        }
+
         currentCard?.hideAlways()
         currentCard?.discard()
-        listener?.onAlwaysHideCard(adapterPosition)
     }
 
 }

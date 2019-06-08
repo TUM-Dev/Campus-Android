@@ -34,18 +34,21 @@ import org.jetbrains.anko.notificationManager
 /**
  * Creates/modifies the notificationId when there is a new chat message.
  */
-class ChatPushNotification(private val fcmChatPayload: FcmChat, context: Context, notification: Int) :
-        PushNotification(context, CHAT_NOTIFICATION, notification, true) {
+class ChatPushNotification(
+        private val fcmChatPayload: FcmChat,
+        appContext: Context,
+        notification: Int
+) : PushNotification(appContext, CHAT_NOTIFICATION, notification, true) {
 
     private val passedChatRoom by lazy {
         tryOrNull {
-            TUMCabeClient.getInstance(context)
+            TUMCabeClient.getInstance(appContext)
                     .getChatRoom(fcmChatPayload.room)
         }
     }
 
     private val chatMessageDao by lazy {
-        TcaDb.getInstance(context)
+        TcaDb.getInstance(appContext)
                 .chatMessageDao()
     }
 
@@ -70,10 +73,10 @@ class ChatPushNotification(private val fcmChatPayload: FcmChat, context: Context
 
     @SuppressLint("CheckResult")
     private fun getNewMessages(chatRoom: ChatRoom, messageId: Int) {
-        val verification = TUMCabeVerification.create(context, null) ?: return
+        val verification = TUMCabeVerification.create(appContext, null) ?: return
 
-        ChatMessageLocalRepository.db = TcaDb.getInstance(context)
-        ChatMessageRemoteRepository.tumCabeClient = TUMCabeClient.getInstance(context)
+        ChatMessageLocalRepository.db = TcaDb.getInstance(appContext)
+        ChatMessageRemoteRepository.tumCabeClient = TUMCabeClient.getInstance(appContext)
         val chatMessageViewModel = ChatMessageViewModel(ChatMessageLocalRepository, ChatMessageRemoteRepository)
 
         if (messageId == -1) {
@@ -96,18 +99,18 @@ class ChatPushNotification(private val fcmChatPayload: FcmChat, context: Context
         val intent = Intent(Const.CHAT_BROADCAST_NAME).apply {
             putExtra("FcmChat", R.string.extras)
         }
-        LocalBroadcastManager.getInstance(context)
+        LocalBroadcastManager.getInstance(appContext)
                 .sendBroadcast(intent)
         val messagesText = messages?.asReversed()?.map { it.text }
         val notificationText = messagesText?.joinToString("\n")
         // Put the data into the intent
-        val notificationIntent = Intent(context, ChatActivity::class.java).apply {
+        val notificationIntent = Intent(appContext, ChatActivity::class.java).apply {
             putExtra(Const.CURRENT_CHAT_ROOM, Gson().toJson(chatRoom))
         }
 
-        val taskStackBuilder = TaskStackBuilder.create(context).apply {
-            addNextIntent(Intent(context, MainActivity::class.java))
-            addNextIntent(Intent(context, ChatRoomsActivity::class.java))
+        val taskStackBuilder = TaskStackBuilder.create(appContext).apply {
+            addNextIntent(Intent(appContext, MainActivity::class.java))
+            addNextIntent(Intent(appContext, ChatRoomsActivity::class.java))
             addNextIntent(notificationIntent)
         }
 
@@ -124,29 +127,29 @@ class ChatPushNotification(private val fcmChatPayload: FcmChat, context: Context
             return
         }
 
-        if (!Utils.getSettingBool(context, "card_chat_phone", true) || fcmChatPayload.message != -1) {
+        if (!Utils.getSettingBool(appContext, "card_chat_phone", true) || fcmChatPayload.message != -1) {
             return
         }
         val contentIntent = taskStackBuilder.getPendingIntent(0, FLAG_UPDATE_CURRENT or FLAG_ONE_SHOT)
 
         // FcmNotification sound
-        val sound = Uri.parse("android.resource://${context.packageName}/${R.raw.message}")
+        val sound = Uri.parse("android.resource://${appContext.packageName}/${R.raw.message}")
 
         /* TODO(jacqueline8711): Create the reply action and add the remote input
-        String replyLabel = context.getResources().getString(R.string.reply_label);
+        String replyLabel = appContext.getResources().getString(R.string.reply_label);
         RemoteInput remoteInput = new RemoteInput.Builder(ChatActivity.EXTRA_VOICE_REPLY)
                 .setLabel(replyLabel)
                 .build();
         NotificationCompat.Action action = new NotificationCompat.Action.Builder(R.drawable.ic_reply,
-                                                                                context.getString(R.string.reply_label),
+                                                                                appContext.getString(R.string.reply_label),
                                                                                 contentIntent)
                         .addRemoteInput(remoteInput)
                         .build();*/
 
         // Create a nice notificationId
-        val n = NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_CHAT)
+        val n = NotificationCompat.Builder(appContext, Const.NOTIFICATION_CHANNEL_CHAT)
                 .setSmallIcon(defaultIcon)
-                .setLargeIcon(Utils.getLargeIcon(context, R.drawable.ic_chat_with_lines))
+                .setLargeIcon(Utils.getLargeIcon(appContext, R.drawable.ic_chat_with_lines))
                 .setContentTitle(chatRoom.title)
                 .setStyle(NotificationCompat.BigTextStyle().bigText(text))
                 .setContentText(text)
@@ -155,10 +158,10 @@ class ChatPushNotification(private val fcmChatPayload: FcmChat, context: Context
                 .setLights(-0xffff01, 500, 500)
                 .setSound(sound)
                 .setAutoCancel(true)
-                .setColor(ContextCompat.getColor(context, R.color.color_primary))
+                .setColor(ContextCompat.getColor(appContext, R.color.color_primary))
                 .build()
 
-        context.notificationManager.notify(displayNotificationId, n)
+        appContext.notificationManager.notify(displayNotificationId, n)
     }
 
     companion object {
@@ -173,7 +176,7 @@ class ChatPushNotification(private val fcmChatPayload: FcmChat, context: Context
             // Message part is only present if we have a updated message
             val message = extras.getString("message")?.toIntOrNull() ?: -1
 
-            return ChatPushNotification(context = context, notification = notification,
+            return ChatPushNotification(appContext = context, notification = notification,
                     fcmChatPayload = FcmChat().apply {
                         this.room = room
                         this.member = member
@@ -190,7 +193,7 @@ class ChatPushNotification(private val fcmChatPayload: FcmChat, context: Context
             val fcmChatPayload = tryOrNull {
                 Gson().fromJson(payload, FcmChat::class.java)
             } ?: return null
-            return ChatPushNotification(context = context, notification = notification,
+            return ChatPushNotification(appContext = context, notification = notification,
                     fcmChatPayload = fcmChatPayload)
         }
     }

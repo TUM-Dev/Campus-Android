@@ -12,18 +12,18 @@ sealed class NavItem(
 ) {
 
     class FragmentDestination(
-        val fragment: Class<out Fragment>,
         titleRes: Int,
         iconRes: Int,
+        val fragment: Class<out Fragment>,
         needsTUMOAccess: Boolean = false,
         needsChatAccess: Boolean = false,
         hideForEmployees: Boolean = false
     ) : NavItem(titleRes, iconRes, needsTUMOAccess, needsChatAccess, hideForEmployees)
 
     class ActivityDestination(
-        val activity: Class<out BaseActivity>,
         titleRes: Int,
         iconRes: Int,
+        val activity: Class<out BaseActivity>,
         needsTUMOAccess: Boolean = false,
         needsChatAccess: Boolean = false,
         hideForEmployees: Boolean = false

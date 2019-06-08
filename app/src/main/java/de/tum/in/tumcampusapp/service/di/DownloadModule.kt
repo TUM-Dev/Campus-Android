@@ -84,9 +84,10 @@ class DownloadModule {
 
     @Provides
     fun provideLocationImportAction(
+            context: Context,
             database: TcaDb,
             tumCabeClient: TUMCabeClient
-    ): LocationImportAction = LocationImportAction(database, tumCabeClient)
+    ): LocationImportAction = LocationImportAction(context, database, tumCabeClient)
 
     @Provides
     fun provideEventsDownloadAction(

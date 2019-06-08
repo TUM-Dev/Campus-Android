@@ -218,10 +218,7 @@ public interface TUMCabeAPIService {
 
     // Getting Ticket information
     @POST(API_EVENTS + API_TICKET + "my")
-    Call<List<Ticket>> getTickets(@Body TUMCabeVerification verification);
-
-    @POST(API_EVENTS + API_TICKET + "my")
-    Observable<List<Ticket>> getTicketsRx(@Body TUMCabeVerification verification); // TODO
+    Observable<List<Ticket>> getTickets(@Body TUMCabeVerification verification);
 
     @POST(API_EVENTS + API_TICKET + "{ticketID}")
     Call<Ticket> getTicket(@Path("ticketID") int ticketID, @Body TUMCabeVerification verification);
@@ -248,7 +245,7 @@ public interface TUMCabeAPIService {
     Call<UpdateNote> getUpdateNote(@Path("version") int version);
 
     // Opening Hours
-    @GET(API_OPENING_HOURS)
-    Call<List<Location>> getOpeningHours();
+    @GET(API_OPENING_HOURS + "{language}")
+    Call<List<Location>> getOpeningHours(@Path("language") String language);
 
 }

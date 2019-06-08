@@ -109,7 +109,7 @@ class EventsViewModel @Inject constructor(
             return
         }
 
-        compositeDisposable += ticketsRemoteRepository.fetchTicketsRx()
+        compositeDisposable += ticketsRemoteRepository.fetchTickets()
                 .subscribeOn(Schedulers.io())
                 .doOnNext { loadAndStoreTicketTypes(it) }
                 .flatMapCompletable {
