@@ -245,7 +245,7 @@ public interface TUMCabeAPIService {
     Call<UpdateNote> getUpdateNote(@Path("version") int version);
 
     // Opening Hours
-    @GET(API_OPENING_HOURS)
-    Call<List<Location>> getOpeningHours();
+    @GET(API_OPENING_HOURS + "{language}")
+    Call<List<Location>> getOpeningHours(@Path("language") String language);
 
 }

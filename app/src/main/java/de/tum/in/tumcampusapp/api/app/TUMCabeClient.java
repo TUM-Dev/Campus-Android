@@ -2,9 +2,6 @@ package de.tum.in.tumcampusapp.api.app;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -16,6 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
 import de.tum.in.tumcampusapp.api.app.model.DeviceUploadFcmToken;
@@ -417,8 +416,8 @@ public final class TUMCabeClient {
         return service.getUpdateNote(version).execute().body();
     }
 
-    public List<Location> fetchOpeningHours() throws IOException {
-        return service.getOpeningHours()
+    public List<Location> fetchOpeningHours(String language) throws IOException {
+        return service.getOpeningHours(language)
                       .execute()
                       .body();
     }

@@ -714,7 +714,7 @@ Signature: %5$s</string>
     <string name="home">Home</string>
     <string name="about">About</string>
     <string name="due_on_format_string">Due on %s</string>
-    <string name="student_financial_aid">Student Financial Aid</string>
+    <string name="student_financial_aid">Fees + Financial Aid</string>
     <string name="released">Released</string>
 
     <string name="including_format_string">including %s</string>
@@ -753,4 +753,7 @@ Signature: %5$s</string>
     <string name="cafeteria_cards_settings_title">Select cafeterias to be shown</string>
     <string name="settings_chose_cafeteria_cards">Choose Cafeteria Cards</string>
     <string name="settings_no_location_selected">No Location Selected</string>
+
+    // for opening hours
+    <string name="language">en</string>
 </resources>

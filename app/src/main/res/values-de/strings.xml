@@ -658,7 +658,7 @@ Signatur: %5$s</string>
     <string name="about">Über</string>
     <string name="due_on_format_string">Fällig am %s</string>
     <string name="home">Übersicht</string>
-    <string name="student_financial_aid">Studienfinanzierung</string>
+    <string name="student_financial_aid">Studienfinanzierung und Beiträge</string>
     <string name="released">Veröffentlicht</string>
 
     <string name="new_items_format_string">%d neue Meldungen</string>
@@ -700,4 +700,7 @@ Signatur: %5$s</string>
     <string name="cafeteria_cards_settings_title">Wähle Speisepläne</string>
     <string name="settings_chose_cafeteria_cards">Mensakarten wählen</string>
     <string name="settings_no_location_selected">Kein Standort ausgewählt</string>
+
+    // for opening hours
+    <string name="language">de</string>
 </resources>
