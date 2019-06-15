@@ -66,8 +66,7 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
                 // no cafeteria based on the location could be found
                 continue;
             }
-            CafeteriaMenuCard card = new CafeteriaMenuCard(mContext);
-            card.setCafeteriaWithMenus(localRepository.getCafeteriaWithMenus(cafeteria));
+            CafeteriaMenuCard card = new CafeteriaMenuCard(mContext, localRepository.getCafeteriaWithMenus(cafeteria));
             results.add(card.getIfShowOnStart());
         }
 

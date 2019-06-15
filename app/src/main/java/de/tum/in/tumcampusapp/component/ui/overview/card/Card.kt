@@ -13,7 +13,7 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 
 /**
  * Base class for all cards
- * @param type Individual integer for each card type
+ * @param cardType Individual integer for each card type
  * @param context Android Context
  * @param settingsPrefix Preference key prefix used for all preferences belonging to that card
  */

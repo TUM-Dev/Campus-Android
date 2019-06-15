@@ -38,8 +38,7 @@ class NewsViewHolder(
     private val ticketsTextView: TextView? by lazy { itemView.findViewById<TextView>(R.id.tickets_available)}
 
     fun bind(newsItem: News, newsSource: NewsSources, hasEvent: Boolean) = with(itemView) {
-        val card = if (newsItem.isFilm) FilmCard(context) else NewsCard(context)
-        card.setNews(newsItem)
+        val card = if (newsItem.isFilm) FilmCard(context, newsItem) else NewsCard(context = context, news = newsItem)
         currentCard = card
 
         val dateFormatter = DateTimeFormat.mediumDate()
@@ -96,11 +95,11 @@ class NewsViewHolder(
         if (imageUrl.isNotEmpty()) {
             loadNewsImage(imageUrl)
         } else {
-            imageView?.visibility = View.GONE
+            imageView?.visibility = GONE
         }
 
         val showTitle = newsItem.isNewspread.not()
-        titleTextView?.visibility = if (showTitle) VISIBLE else View.GONE
+        titleTextView?.visibility = if (showTitle) VISIBLE else GONE
 
         if (showTitle) {
             titleTextView?.text = newsItem.title
@@ -114,7 +113,7 @@ class NewsViewHolder(
                     override fun onSuccess() = Unit
 
                     override fun onError(e: Exception?) {
-                        imageView?.visibility = View.GONE
+                        imageView?.visibility = GONE
                     }
                 })
     }
