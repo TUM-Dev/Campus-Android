@@ -172,9 +172,6 @@ public class NewsController implements ProvidesCard, ProvidesNotifications {
 
     /**
      * Gather all sources that should be displayed
-     *
-     * @param context
-     * @return
      */
     private Collection<Integer> getActiveSources(Context context) {
         Collection<Integer> sources = new ArrayList<>();
@@ -204,12 +201,10 @@ public class NewsController implements ProvidesCard, ProvidesNotifications {
         for (News n : news) {
             NewsCard card;
             if (n.isFilm()) {
-                card = new FilmCard(context);
+                card = new FilmCard(context, n);
             } else {
-                card = new NewsCard(context);
+                card = new NewsCard(context, n);
             }
-
-            card.setNews(n);
             results.add(card.getIfShowOnStart());
         }
 
