@@ -22,6 +22,7 @@ import io.reactivex.schedulers.Schedulers
  *
  * @param layoutId Resource id of the xml layout that should be used to inflate the activity
  */
+@Deprecated("Use BaseActivity and a suitable BaseFragment class")
 abstract class ActivityForDownloadingExternal(layoutId: Int) : ProgressActivity<Void>(layoutId) {
 
     /**

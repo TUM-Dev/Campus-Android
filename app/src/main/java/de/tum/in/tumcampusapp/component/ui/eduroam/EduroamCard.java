@@ -8,15 +8,18 @@ import android.content.pm.PackageManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
-import androidx.annotation.NonNull;
-import com.google.android.material.button.MaterialButton;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.button.MaterialButton;
+
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.ui.overview.CardInteractionListener;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
@@ -31,10 +34,11 @@ public class EduroamCard extends Card {
         super(CardManager.CARD_EDUROAM, context, "card_eduroam");
     }
 
-    public static CardViewHolder inflateViewHolder(ViewGroup parent) {
+    public static CardViewHolder inflateViewHolder(ViewGroup parent,
+                                                   CardInteractionListener interactionListener) {
         View view = LayoutInflater.from(parent.getContext())
                                   .inflate(R.layout.card_eduroam, parent, false);
-        return new CardViewHolder(view);
+        return new CardViewHolder(view, interactionListener);
     }
 
     @Override

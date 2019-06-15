@@ -1,9 +1,6 @@
 package de.tum.`in`.tumcampusapp.utils
 
-import android.content.Context
-import android.content.Intent
 import android.graphics.drawable.Drawable
-import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -16,7 +13,7 @@ import androidx.lifecycle.Observer
 import com.google.android.material.button.MaterialButton
 import com.squareup.picasso.Callback
 import com.squareup.picasso.RequestCreator
-import de.tum.`in`.tumcampusapp.component.other.generic.drawer.SideNavigationItem
+import de.tum.`in`.tumcampusapp.component.other.generic.drawer.NavItem
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
@@ -59,12 +56,8 @@ val Menu.allItems: List<MenuItem>
         }
     }
 
-fun Menu.add(context: Context, item: SideNavigationItem, options: Bundle = Bundle()) {
-    add(item.titleRes)
-            .apply {
-                setIcon(item.iconRes)
-                intent = Intent(context, item.activity).apply { putExtras(options) }
-            }
+operator fun Menu.plusAssign(item: NavItem) {
+    add(item.titleRes).apply { setIcon(item.iconRes) }
 }
 
 fun TextView.setTextOrHide(resId: Int?) {

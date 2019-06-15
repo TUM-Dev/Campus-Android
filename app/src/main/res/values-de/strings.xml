@@ -114,7 +114,7 @@
     <string name="drawer_open">Öffnen</string>
     <string name="drawer_close">Schließen</string>
     <string name="my_tum">Mein TUM</string>
-    <string name="schedule">Kalender</string>
+    <string name="calendar">Kalender</string>
     <string name="my_lectures">Meine Vorlesungen</string>
     <string name="chat_rooms">Chatrooms</string>
     <string name="tuition_fees">Rückmeldung</string>

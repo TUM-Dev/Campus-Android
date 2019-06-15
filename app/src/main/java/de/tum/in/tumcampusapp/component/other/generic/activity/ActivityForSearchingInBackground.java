@@ -13,6 +13,7 @@ import io.reactivex.schedulers.Schedulers;
  * Generic class which can handle a long running search in background.
  * Class parameter should be the class that holds the results of the background task.
  */
+@Deprecated
 public abstract class ActivityForSearchingInBackground<T> extends ActivityForSearching<T> {
 
     private Disposable searchDisposable;

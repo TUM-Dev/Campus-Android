@@ -1,47 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/eventsRefreshLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/eventsRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/default_window_background" />
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <LinearLayout
-        android:id="@+id/eventPlaceholder"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:visibility="visible" >
-        <ImageView
-            android:id="@+id/placeholderImage"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_margin="@dimen/material_default_padding"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/popcorn_placeholder"/>
-        <TextView
-            android:id="@+id/placeholderTextView"
+        android:elevation="@dimen/material_default_elevation">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/main_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/white"
+            android:theme="@style/TumToolbar"
+            app:popupTheme="@style/TumToolbarPopUp" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/event_tab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/material_default_padding"
-            android:fontFamily="sans-serif-medium"
-            android:gravity="center_horizontal"
-            android:text="@string/no_events_found"
-            android:textColor="@color/text_light_gray"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-    </LinearLayout>
+            android:background="@android:color/white"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark"
+            app:tabIndicatorColor="@color/color_primary"
+            app:tabIndicatorHeight="2dp"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@color/color_primary"
+            app:tabTextColor="@color/text_dark_secondary" />
 
+    </com.google.android.material.appbar.AppBarLayout>
 
-</FrameLayout>
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+</LinearLayout>

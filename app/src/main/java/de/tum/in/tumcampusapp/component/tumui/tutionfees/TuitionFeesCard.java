@@ -3,21 +3,22 @@ package de.tum.in.tumcampusapp.component.tumui.tutionfees;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
-import de.tum.in.tumcampusapp.component.other.navigation.SystemActivity;
+import de.tum.in.tumcampusapp.component.other.navigation.NavDestination;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.model.Tuition;
+import de.tum.in.tumcampusapp.component.ui.overview.CardInteractionListener;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
@@ -37,10 +38,11 @@ public class TuitionFeesCard extends Card {
         super(CardManager.CARD_TUITION_FEE, context, "card_tuition_fee");
     }
 
-    public static CardViewHolder inflateViewHolder(ViewGroup parent) {
+    public static CardViewHolder inflateViewHolder(ViewGroup parent,
+                                                   CardInteractionListener interactionListener) {
         View view = LayoutInflater.from(parent.getContext())
                                   .inflate(R.layout.card_tuition_fees, parent, false);
-        return new CardViewHolder(view);
+        return new CardViewHolder(view, interactionListener);
     }
 
     @Override
@@ -59,8 +61,8 @@ public class TuitionFeesCard extends Card {
 
     @Nullable
     @Override
-    public NavigationDestination getNavigationDestination() {
-        return new SystemActivity(TuitionFeesActivity.class, null);
+    public NavDestination getNavigationDestination() {
+        return new NavDestination.Fragment(TuitionFeesFragment.class);
     }
 
     @Override

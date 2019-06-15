@@ -1,11 +1,11 @@
 package de.tum.in.tumcampusapp.component.ui.tufilm;
 
 import android.content.Context;
-import android.content.Intent;
+import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 
-import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
-import de.tum.in.tumcampusapp.component.other.navigation.SystemIntent;
+import de.tum.in.tumcampusapp.component.other.navigation.NavDestination;
 import de.tum.in.tumcampusapp.component.ui.news.NewsCard;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -19,10 +19,10 @@ public class FilmCard extends NewsCard {
 
     @Nullable
     @Override
-    public NavigationDestination getNavigationDestination() {
-        Intent intent = new Intent(getContext(), KinoActivity.class);
-        intent.putExtra(Const.KINO_DATE, DateTimeUtils.INSTANCE.getDateTimeString(getDate()));
-        return new SystemIntent(intent);
+    public NavDestination getNavigationDestination() {
+        Bundle args = new Bundle();
+        args.putString(Const.KINO_DATE, DateTimeUtils.getDateTimeString(getDate()));
+        return new NavDestination.Activity(KinoActivity.class, args);
     }
 
 }

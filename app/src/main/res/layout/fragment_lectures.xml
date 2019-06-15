@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar" />
+
+    <include
+        layout="@layout/layout_all_errors"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+            android:id="@+id/lecturesListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:importantForAutofill="noExcludeDescendants"
+            android:scrollbars="vertical" />
+
+        <!-- TODO remove importantForAutofill (workaround) once library is fixed -->
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</LinearLayout>

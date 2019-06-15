@@ -6,17 +6,19 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiEnterpriseConfig;
 import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.ui.overview.CardInteractionListener;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
@@ -38,10 +40,11 @@ public class EduroamFixCard extends Card {
         errors = new ArrayList<>();
     }
 
-    public static CardViewHolder inflateViewHolder(ViewGroup parent) {
+    public static CardViewHolder inflateViewHolder(ViewGroup parent,
+                                                   CardInteractionListener interactionListener) {
         View view = LayoutInflater.from(parent.getContext())
                                   .inflate(R.layout.card_eduroam_fix, parent, false);
-        return new EduroamFixCardViewHolder(view);
+        return new EduroamFixCardViewHolder(view, interactionListener);
     }
 
     @Override

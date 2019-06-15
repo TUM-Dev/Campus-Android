@@ -1,28 +1,20 @@
 package de.tum.in.tumcampusapp.component.ui.openinghour;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.ListFragment;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import de.tum.in.tumcampusapp.R;
+import org.jetbrains.annotations.NotNull;
 
-/**
- * A list fragment representing a list of Items. This fragment also supports
- * tablet devices by allowing list items to be given an 'activated' state upon
- * selection. This helps indicate which item is currently being viewed in a
- * {@link OpeningHoursDetailFragment}.
- * <p/>
- * Activities containing this fragment MUST implement the {@link Callbacks}
- * interface.
- */
-public class OpeningHoursListFragment extends ListFragment {
+import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.other.generic.fragment.BaseFragment;
+import kotlin.Unit;
+
+public class OpeningHoursListFragment extends BaseFragment<Unit>
+        implements AdapterView.OnItemClickListener {
 
     /**
      * The serialization (saved instance state) Bundle key representing the
@@ -33,56 +25,19 @@ public class OpeningHoursListFragment extends ListFragment {
     /**
      * The current activated item position. Only used on tablets.
      */
-    private int mActivatedPosition = ListView.INVALID_POSITION;
+    private int mActivatedPosition = AdapterView.INVALID_POSITION;
 
-    /**
-     * The fragment's current callback object, which is notified of list item
-     * clicks.
-     */
-    private Callbacks mCallbacks = S_DUMMY_CALLBACKS;
-
-    /**
-     * A callback interface that all activities containing this fragment must
-     * implement. This mechanism allows activities to be notified of item
-     * selections.
-     */
-    public interface Callbacks {
-        /**
-         * Callback for when an item has been selected.
-         *
-         * @param pos  Index of the item
-         * @param name Name of the item
-         */
-        void onItemSelected(int pos, String name);
-    }
-
-    /**
-     * A dummy implementation of the {@link Callbacks} interface that does
-     * nothing. Used only when this fragment is not attached to an activity.
-     */
-    private static final Callbacks S_DUMMY_CALLBACKS = (id, name) -> {
-        // Dummy callback
-    };
+    private ListView listView;
+    private ArrayAdapter<String> adapter;
 
     public OpeningHoursListFragment() {
-        /*
-         * Mandatory empty constructor for the fragment manager to instantiate the
-         * fragment (e.g. upon screen orientation changes).
-         */
+        super(R.layout.fragment_opening_hours_list, R.string.opening_hours);
     }
 
-    @Override
-    public void onAttach(Context activity) {
-        super.onAttach(activity);
-
-        // Activities containing this fragment must implement its callbacks.
-        if (!(activity instanceof Callbacks)) {
-            throw new IllegalStateException("Activity must implement fragment's callbacks.");
-        }
-        mCallbacks = (Callbacks) activity;
+    public static OpeningHoursListFragment newInstance() {
+        return new OpeningHoursListFragment();
     }
 
-    @SuppressLint("InlinedApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,31 +51,27 @@ public class OpeningHoursListFragment extends ListFragment {
                           getString(R.string.mensa_city),
                           getString(R.string.mensa_pasing),
                           getString(R.string.mensa_weihenstephan)};
-
-        setListAdapter(new ArrayAdapter<>(getActivity(), layout, android.R.id.text1, names));
+        adapter = new ArrayAdapter<>(requireContext(), layout, android.R.id.text1, names);
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        String item = adapter.getItem(position);
+        onItemSelected(position, item);
+    }
 
-        // Reset the active callbacks interface to the dummy implementation.
-        mCallbacks = S_DUMMY_CALLBACKS;
+    private void onItemSelected(int id, String name) {
+        Bundle args = new Bundle();
+        args.putInt(OpeningHoursDetailFragment.ARG_ITEM_ID, id);
+        args.putString(OpeningHoursDetailFragment.ARG_ITEM_CONTENT, name);
+
+        Intent intent = new Intent(requireContext(), OpeningHoursDetailActivity.class);
+        intent.putExtras(args);
+        requireContext().startActivity(intent);
     }
 
     @Override
-    public void onListItemClick(ListView listView, View view, int position, long id) {
-        super.onListItemClick(listView, view, position, id);
-
-        // Notify the active callbacks interface (the activity, if the
-        // fragment is attached to one) that an item has been selected.
-        final ListAdapter adapter = getListAdapter();
-        mCallbacks.onItemSelected(position, adapter.getItem(position)
-                                                   .toString());
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mActivatedPosition != AdapterView.INVALID_POSITION) {
             // Serialize and persist the activated item position.
@@ -129,8 +80,12 @@ public class OpeningHoursListFragment extends ListFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        listView = requireActivity().findViewById(R.id.listView);
+        listView.setOnItemClickListener(this);
+        listView.setAdapter(adapter);
 
         // Restore the previously serialized activated item position.
         if (savedInstanceState != null && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
@@ -140,23 +95,12 @@ public class OpeningHoursListFragment extends ListFragment {
 
     private void setActivatedPosition(int position) {
         if (position == AdapterView.INVALID_POSITION) {
-            getListView().setItemChecked(mActivatedPosition, false);
+            listView.setItemChecked(mActivatedPosition, false);
         } else {
-            getListView().setItemChecked(position, true);
+            listView.setItemChecked(position, true);
         }
 
         mActivatedPosition = position;
     }
 
-    /**
-     * Turns on activate-on-click mode. When this mode is on, list items will be
-     * given the 'activated' state when touched.
-     */
-    public void setActivateOnItemClick(boolean activateOnItemClick) {
-        // When setting CHOICE_MODE_SINGLE, ListView will automatically
-        // give items the 'activated' state when touched.
-        getListView().setChoiceMode(
-                activateOnItemClick ? AbsListView.CHOICE_MODE_SINGLE
-                                    : AbsListView.CHOICE_MODE_NONE);
-    }
 }

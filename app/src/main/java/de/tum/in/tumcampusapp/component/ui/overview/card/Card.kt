@@ -6,7 +6,7 @@ import android.content.SharedPreferences.Editor
 import android.preference.PreferenceManager
 import androidx.recyclerview.widget.DiffUtil
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationDestination
+import de.tum.`in`.tumcampusapp.component.other.navigation.NavDestination
 import de.tum.`in`.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX
 import de.tum.`in`.tumcampusapp.utils.Const.DISCARD_SETTINGS_START
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -50,9 +50,9 @@ abstract class Card(
             Utils.setSetting(context, "${this.javaClass.simpleName}$CARD_POSITION_PREFERENCE_SUFFIX", position)
 
     /**
-     * Returns the [NavigationDestination] when the card is clicked, or null if nothing should happen
+     * Returns the [NavDestination] when the card is clicked, or null if nothing should happen
      */
-    open fun getNavigationDestination(): NavigationDestination? {
+    open fun getNavigationDestination(): NavDestination? {
         return null
     }
 
@@ -69,7 +69,7 @@ abstract class Card(
     /**
      * Should be called after the user has dismissed the card
      */
-    fun discardCard() {
+    fun discard() {
         val prefs = context.getSharedPreferences(DISCARD_SETTINGS_START, 0)
         val editor = prefs.edit()
         discard(editor)

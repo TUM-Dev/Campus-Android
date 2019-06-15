@@ -2,12 +2,13 @@ package de.tum.in.tumcampusapp.component.ui.overview;
 
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import de.tum.in.tumcampusapp.component.tumui.calendar.NextLectureCard;
 import de.tum.in.tumcampusapp.component.tumui.tutionfees.TuitionFeesCard;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.CafeteriaMenuCard;
@@ -28,6 +29,12 @@ import de.tum.in.tumcampusapp.component.ui.updatenote.UpdateNoteCard;
  */
 public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
+    private CardInteractionListener interactionListener;
+
+    public CardAdapter(CardInteractionListener interactionListener) {
+        this.interactionListener = interactionListener;
+    }
+
     private List<Card> mItems = new ArrayList<>();
 
     @NonNull
@@ -35,36 +42,36 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
     public CardViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         switch (viewType) {
             case CardManager.CARD_CAFETERIA:
-                return CafeteriaMenuCard.inflateViewHolder(viewGroup);
+                return CafeteriaMenuCard.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_TUITION_FEE:
-                return TuitionFeesCard.inflateViewHolder(viewGroup);
+                return TuitionFeesCard.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_NEXT_LECTURE:
-                return NextLectureCard.inflateViewHolder(viewGroup);
+                return NextLectureCard.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_RESTORE:
-                return RestoreCard.inflateViewHolder(viewGroup);
+                return RestoreCard.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_NO_INTERNET:
-                return NoInternetCard.inflateViewHolder(viewGroup);
+                return NoInternetCard.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_MVV:
-                return MVVCard.inflateViewHolder(viewGroup);
+                return MVVCard.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_NEWS: //Fallthrough
             case CardManager.CARD_NEWS_FILM:
-                return NewsCard.inflateViewHolder(viewGroup, viewType);
+                return NewsCard.inflateViewHolder(viewGroup, viewType, interactionListener);
             case CardManager.CARD_EDUROAM:
-                return EduroamCard.inflateViewHolder(viewGroup);
+                return EduroamCard.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_EDUROAM_FIX:
-                return EduroamFixCard.inflateViewHolder(viewGroup);
+                return EduroamFixCard.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_CHAT:
-                return ChatMessagesCard.Companion.inflateViewHolder(viewGroup);
+                return ChatMessagesCard.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_SUPPORT:
-                return SupportCard.inflateViewHolder(viewGroup);
+                return SupportCard.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_LOGIN:
-                return LoginPromptCard.inflateViewHolder(viewGroup);
+                return LoginPromptCard.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_TOP_NEWS:
-                return TopNewsCard.inflateViewHolder(viewGroup);
+                return TopNewsCard.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_EVENT:
-                return EventCard.inflateViewHolder(viewGroup);
+                return EventCard.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_UPDATE_NOTE:
-                return UpdateNoteCard.inflateViewHolder(viewGroup);
+                return UpdateNoteCard.inflateViewHolder(viewGroup, interactionListener);
             default:
                 throw new UnsupportedOperationException();
         }

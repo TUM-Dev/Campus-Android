@@ -15,21 +15,21 @@ import de.tum.`in`.tumcampusapp.component.other.settings.UserPreferencesActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.utils.Const
 
-open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+open class CardViewHolder @JvmOverloads constructor(
+        itemView: View,
+        private val listener: CardInteractionListener? = null
+) : RecyclerView.ViewHolder(itemView) {
 
     var currentCard: Card? = null
 
     private val context: Context by lazy { itemView.context }
-    private val listener: CardInteractionListener? by lazy { context as? CardInteractionListener }
 
     protected val activity: AppCompatActivity by lazy { context as AppCompatActivity }
 
     init {
         itemView.setOnClickListener {
-            val destination = currentCard?.getNavigationDestination()
-            destination?.let { dest ->
-                NavigationManager.open(activity, dest)
-            }
+            val destination = currentCard?.getNavigationDestination() ?: return@setOnClickListener
+            NavigationManager.open(activity, destination)
         }
 
         val moreIcon = itemView.findViewById<ImageView>(R.id.cardMoreIcon)
@@ -70,7 +70,7 @@ open class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         }
 
         currentCard?.hideAlways()
-        currentCard?.discardCard()
+        currentCard?.discard()
     }
 
 }

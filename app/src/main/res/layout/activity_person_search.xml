@@ -5,51 +5,10 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <!-- The main content view -->
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/contentFrame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <!-- The toolbar aka SupportActionBar -->
-        <include layout="@layout/toolbar" />
-
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/ptr_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="vertical">
-
-                <include
-                    layout="@layout/layout_all_errors"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent" />
-
-                <TextView
-                    android:id="@+id/recentsHeader"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="8dp"
-                    android:text="@string/recents"
-                    android:textAllCaps="true"
-                    android:textColor="@color/text_dark_gray" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/personsRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    </LinearLayout>
+        android:layout_height="match_parent" />
 
     <!-- The navigation drawer -->
     <include layout="@layout/navigation_drawer" />

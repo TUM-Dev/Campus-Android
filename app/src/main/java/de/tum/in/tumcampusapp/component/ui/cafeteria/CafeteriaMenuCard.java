@@ -8,20 +8,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.other.navigation.NavigationDestination;
-import de.tum.in.tumcampusapp.component.other.navigation.SystemActivity;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity;
+import de.tum.in.tumcampusapp.component.other.navigation.NavDestination;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.fragment.CafeteriaFragment;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus;
+import de.tum.in.tumcampusapp.component.ui.overview.CardInteractionListener;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
@@ -40,11 +41,12 @@ public class CafeteriaMenuCard extends Card {
         super(CardManager.CARD_CAFETERIA, context, "card_cafeteria");
     }
 
-    public static CardViewHolder inflateViewHolder(ViewGroup parent) {
+    public static CardViewHolder inflateViewHolder(ViewGroup parent,
+                                                   CardInteractionListener interactionListener) {
         View view = LayoutInflater
                 .from(parent.getContext())
                 .inflate(R.layout.card_cafeteria_menu, parent, false);
-        return new CafeteriaMenuViewHolder(view);
+        return new CafeteriaMenuViewHolder(view, interactionListener);
     }
 
     @Override
@@ -77,10 +79,10 @@ public class CafeteriaMenuCard extends Card {
 
     @Nullable
     @Override
-    public NavigationDestination getNavigationDestination() {
+    public NavDestination getNavigationDestination() {
         Bundle bundle = new Bundle();
         bundle.putInt(Const.CAFETERIA_ID, mCafeteria.getId());
-        return new SystemActivity(CafeteriaActivity.class, bundle);
+        return new NavDestination.Fragment(CafeteriaFragment.class, bundle);
     }
 
     @Override

@@ -13,8 +13,8 @@ import androidx.core.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.RequestLimitReachedException
+import de.tum.`in`.tumcampusapp.component.other.navigation.NavDestination
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
-import de.tum.`in`.tumcampusapp.component.other.navigation.SystemActivity
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity
@@ -24,7 +24,17 @@ import de.tum.`in`.tumcampusapp.utils.Const.CALENDAR_ID_PARAM
 import de.tum.`in`.tumcampusapp.utils.Const.CALENDAR_SHOWN_IN_CALENDAR_ACTIVITY_PARAM
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.ui.RoundedBottomSheetDialogFragment
-import kotlinx.android.synthetic.main.fragment_calendar_details.*
+import kotlinx.android.synthetic.main.fragment_calendar_details.buttonsContainer
+import kotlinx.android.synthetic.main.fragment_calendar_details.cancelButtonsContainer
+import kotlinx.android.synthetic.main.fragment_calendar_details.dateTextView
+import kotlinx.android.synthetic.main.fragment_calendar_details.deleteButton
+import kotlinx.android.synthetic.main.fragment_calendar_details.descriptionTextView
+import kotlinx.android.synthetic.main.fragment_calendar_details.editButton
+import kotlinx.android.synthetic.main.fragment_calendar_details.locationIcon
+import kotlinx.android.synthetic.main.fragment_calendar_details.locationLinearLayout
+import kotlinx.android.synthetic.main.fragment_calendar_details.showInCalendarButton
+import kotlinx.android.synthetic.main.fragment_calendar_details.showInCalendarButtonContainer
+import kotlinx.android.synthetic.main.fragment_calendar_details.titleTextView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -116,10 +126,8 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     }
 
     private fun openEventInCalendarActivity(calendarItem: CalendarItem) {
-        val bundle = Bundle().apply {
-            putLong(Const.EVENT_TIME, calendarItem.eventStart.millis)
-        }
-        val destination = SystemActivity(CalendarActivity::class.java, bundle)
+        val args = Bundle().apply { putLong(Const.EVENT_TIME, calendarItem.eventStart.millis) }
+        val destination = NavDestination.Fragment(CalendarFragment::class.java, args)
         NavigationManager.open(requireContext(), destination)
     }
 

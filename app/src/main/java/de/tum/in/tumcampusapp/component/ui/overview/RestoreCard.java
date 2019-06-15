@@ -18,10 +18,11 @@ public class RestoreCard extends StickyCard {
         super(CardManager.CARD_RESTORE, context);
     }
 
-    public static CardViewHolder inflateViewHolder(ViewGroup parent) {
+    public static CardViewHolder inflateViewHolder(ViewGroup parent,
+                                                   CardInteractionListener interactionListener) {
         View view = LayoutInflater.from(parent.getContext())
-                                  .inflate(R.layout.card_restore, parent, false);
-        return new CardViewHolder(view);
+                .inflate(R.layout.card_restore, parent, false);
+        return new CardViewHolder(view, interactionListener);
     }
 
     @Override
