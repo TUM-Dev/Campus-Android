@@ -2,6 +2,7 @@ package de.tum.`in`.tumcampusapp.component.other.settings
 
 import android.Manifest.permission.READ_CALENDAR
 import android.Manifest.permission.WRITE_CALENDAR
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager.PERMISSION_GRANTED
@@ -30,6 +31,7 @@ import de.tum.`in`.tumcampusapp.component.ui.eduroam.SetupEduroamActivity
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.StartupActivity
 import de.tum.`in`.tumcampusapp.database.TcaDb
+import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.service.SilenceService
 import de.tum.`in`.tumcampusapp.service.StartSyncReceiver
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -37,15 +39,21 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.notificationManager
 import java.util.concurrent.ExecutionException
+import javax.inject.Inject
 
 class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener,
     SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private val cafeteriaLocalRepository: CafeteriaLocalRepository by lazy {
-        CafeteriaLocalRepository(TcaDb.getInstance(requireContext()))
-    }
+    @Inject
+    lateinit var cafeteriaLocalRepository: CafeteriaLocalRepository
 
-    private val newsController: NewsController by lazy { NewsController(requireContext()) }
+    @Inject
+    lateinit var newsController: NewsController
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        injector.inject(this)
+    }
 
     override fun onCreatePreferences(
         savedInstanceState: Bundle?,
