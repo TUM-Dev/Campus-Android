@@ -36,7 +36,7 @@ open class NewsCard @JvmOverloads constructor(
         get() = news.date
 
     override fun getId(): Int {
-        return Integer.parseInt(news.id)
+        return news.id.toInt()
     }
 
     override fun updateViewHolder(viewHolder: RecyclerView.ViewHolder) {
@@ -65,7 +65,7 @@ open class NewsCard @JvmOverloads constructor(
 
     companion object {
         private lateinit var mNewsInflater: NewsInflater
-
+        @JvmStatic
         fun inflateViewHolder(parent: ViewGroup, viewType: Int, interactionListener: CardInteractionListener): CardViewHolder {
             mNewsInflater = NewsInflater(parent.context)
             return mNewsInflater.onCreateNewsView(parent, viewType, true, interactionListener)

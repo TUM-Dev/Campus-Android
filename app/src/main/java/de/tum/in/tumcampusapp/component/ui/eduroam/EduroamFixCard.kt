@@ -7,10 +7,8 @@ import android.net.wifi.WifiEnterpriseConfig.Eap.PEAP
 import android.net.wifi.WifiEnterpriseConfig.Eap.TTLS
 import android.net.wifi.WifiEnterpriseConfig.Phase2.MSCHAPV2
 import android.net.wifi.WifiEnterpriseConfig.Phase2.PAP
-import android.net.wifi.WifiManager
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.M
-import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -21,10 +19,14 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
+import org.jetbrains.anko.defaultSharedPreferences
+import org.jetbrains.anko.wifiManager
 import java.util.*
 import java.util.regex.Pattern
 
-class EduroamFixCard(context: Context) : Card(CardManager.CARD_EDUROAM_FIX, context, "card_eduroam_fix_start") {
+class EduroamFixCard(
+        context: Context
+) : Card(CardManager.CARD_EDUROAM_FIX, context, "card_eduroam_fix_start") {
 
     private val errors: MutableList<String> = ArrayList()
     private lateinit var eduroam: WifiConfiguration
@@ -68,16 +70,14 @@ class EduroamFixCard(context: Context) : Card(CardManager.CARD_EDUROAM_FIX, cont
 
     override fun shouldShow(prefs: SharedPreferences): Boolean {
         // Check if wifi is turned on at all, as we cannot say if it was configured if its off
-        val wifi = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        return if (!wifi.isWifiEnabled) {
+        return if (!context.wifiManager.isWifiEnabled) {
             false
         } else !isConfigValid()
 
     }
 
     override fun discard(editor: SharedPreferences.Editor) {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        prefs.edit().putBoolean("card_eduroam_fix_start", false).apply()
+        context.defaultSharedPreferences.edit().putBoolean("card_eduroam_fix_start", false).apply()
     }
 
     override fun getId(): Int {
@@ -122,7 +122,7 @@ class EduroamFixCard(context: Context) : Card(CardManager.CARD_EDUROAM_FIX, cont
     companion object {
         private const val RADIUS_DNS = "radius.lrz.de"
         private const val AT_SIGN = "@"
-
+        @JvmStatic
         fun inflateViewHolder(parent: ViewGroup, interactionListener: CardInteractionListener): CardViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.card_eduroam_fix, parent, false)
             return EduroamFixCardViewHolder(view, interactionListener)

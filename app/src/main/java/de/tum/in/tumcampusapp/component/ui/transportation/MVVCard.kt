@@ -51,6 +51,7 @@ class MVVCard(context: Context, val station: StationResult, val departures: List
 
     companion object {
         private const val MVV_TIME = "mvv_time"
+        @JvmStatic
         fun inflateViewHolder(parent: ViewGroup, interactionListener: CardInteractionListener): CardViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.card_mvv, parent, false)
             return MVVCardViewHolder(view, interactionListener)

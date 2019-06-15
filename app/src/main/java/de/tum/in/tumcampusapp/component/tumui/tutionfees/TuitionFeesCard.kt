@@ -21,7 +21,10 @@ import org.joda.time.format.DateTimeFormat
 /**
  * Card that shows information about your fees that have to be paid or have been paid
  */
-class TuitionFeesCard(context: Context, val tuition: Tuition) : Card(CardManager.CARD_TUITION_FEE, context, "card_tuition_fee") {
+class TuitionFeesCard(
+        context: Context,
+        private val tuition: Tuition
+) : Card(CardManager.CARD_TUITION_FEE, context, "card_tuition_fee") {
 
     override val optionsMenuResId: Int
         get() = R.menu.card_popup_menu
@@ -83,6 +86,7 @@ class TuitionFeesCard(context: Context, val tuition: Tuition) : Card(CardManager
         private const val LAST_FEE_FRIST = "fee_frist"
         private const val LAST_FEE_SOLL = "fee_soll"
 
+        @JvmStatic
         fun inflateViewHolder(parent: ViewGroup, interactionListener: CardInteractionListener): CardViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.card_tuition_fees, parent, false)
             return CardViewHolder(view, interactionListener)

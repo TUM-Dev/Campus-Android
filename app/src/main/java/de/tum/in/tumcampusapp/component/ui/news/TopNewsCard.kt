@@ -2,7 +2,6 @@ package de.tum.`in`.tumcampusapp.component.ui.news
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +19,7 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
+import org.jetbrains.anko.defaultSharedPreferences
 
 /**
  * Shows important news
@@ -31,7 +31,7 @@ class TopNewsCard(context: Context) : Card(CardManager.CARD_TOP_NEWS, context, "
     private val newsAlert: NewsAlert?
 
     init {
-        this.topNewsStore = RealTopNewsStore(PreferenceManager.getDefaultSharedPreferences(context))
+        this.topNewsStore = RealTopNewsStore(context.defaultSharedPreferences)
         this.newsAlert = topNewsStore.getNewsAlert()
     }
 
@@ -83,6 +83,7 @@ class TopNewsCard(context: Context) : Card(CardManager.CARD_TOP_NEWS, context, "
     }
 
     companion object {
+        @JvmStatic
         fun inflateViewHolder(parent: ViewGroup, interactionListener: CardInteractionListener): CardViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.card_top_news, parent, false)
             return CardViewHolder(view, interactionListener)

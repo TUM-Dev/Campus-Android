@@ -36,6 +36,7 @@ class LoginPromptCard(context: Context) : Card(CardManager.CARD_LOGIN, context, 
     }
 
     companion object {
+        @JvmStatic
         fun inflateViewHolder(parent: ViewGroup, interactionListener: CardInteractionListener): CardViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.card_login_prompt, parent, false)
             view.findViewById<View>(R.id.loginButton).setOnClickListener {

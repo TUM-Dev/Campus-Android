@@ -32,6 +32,7 @@ class SupportCard(context: Context) : Card(CardManager.CARD_SUPPORT, context, ""
     }
 
     companion object {
+        @JvmStatic
         fun inflateViewHolder(parent: ViewGroup, interactionListener: CardInteractionListener): CardViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.card_support, parent, false)
             view.findViewById<View>(R.id.facebook_button).setOnClickListener { v ->

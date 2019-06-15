@@ -30,12 +30,12 @@ class NextLectureCard(context: Context) : Card(CardManager.CARD_NEXT_LECTURE, co
     }
 
     override fun discard(editor: SharedPreferences.Editor) {
-        val item = lectures[lectures.size - 1]
+        val item = lectures.lastOrNull() ?: return
         editor.putLong(NEXT_LECTURE_DATE, item.start.millis)
     }
 
     override fun shouldShow(prefs: SharedPreferences): Boolean {
-        val item = lectures[0]
+        val item = lectures.firstOrNull() ?: return false
         val prevTime = prefs.getLong(NEXT_LECTURE_DATE, 0)
         return item.start.millis > prevTime
     }
@@ -45,15 +45,14 @@ class NextLectureCard(context: Context) : Card(CardManager.CARD_NEXT_LECTURE, co
     }
 
     fun setLectures(calendarItems: List<CalendarItem>) {
-        for (calendarItem in calendarItems) {
-            val item = CardCalendarItem(
+        calendarItems.mapTo(lectures) { calendarItem ->
+            CardCalendarItem(
                     id = calendarItem.nr,
                     start = calendarItem.dtstart,
                     end = calendarItem.dtend,
                     title = calendarItem.getFormattedTitle(),
                     locations = calendarController.getLocationsForEvent(calendarItem.nr)
             )
-            lectures.add(item)
         }
     }
 
@@ -79,6 +78,7 @@ class NextLectureCard(context: Context) : Card(CardManager.CARD_NEXT_LECTURE, co
 
     companion object {
         private const val NEXT_LECTURE_DATE = "next_date"
+        @JvmStatic
         fun inflateViewHolder(parent: ViewGroup, interactionListener: CardInteractionListener): CardViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.card_next_lecture_item, parent, false)
             return NextLectureCardViewHolder(view, interactionListener)
