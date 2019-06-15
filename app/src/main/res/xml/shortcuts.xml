@@ -26,7 +26,7 @@
         android:shortcutId="calendar"
         android:enabled="true"
         android:icon="@drawable/ic_calendar_shortcut"
-        android:shortcutShortLabel="@string/schedule"
+        android:shortcutShortLabel="@string/calendar"
         tools:targetApi="n_mr1">
         <intent
             android:action="android.intent.action.VIEW"

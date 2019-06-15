@@ -5,10 +5,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
@@ -24,7 +25,8 @@ public class SupportCard extends Card {
         super(CardManager.CARD_SUPPORT, context, "");
     }
 
-    public static CardViewHolder inflateViewHolder(ViewGroup parent) {
+    public static CardViewHolder inflateViewHolder(ViewGroup parent,
+                                                   CardInteractionListener interactionListener) {
         final View view = LayoutInflater.from(parent.getContext())
                                         .inflate(R.layout.card_support, parent, false);
 
@@ -56,7 +58,7 @@ public class SupportCard extends Card {
                  .startActivity(Intent.createChooser(intent, "Send Email"));
             });
 
-        return new CardViewHolder(view);
+        return new CardViewHolder(view, interactionListener);
     }
 
     @Override

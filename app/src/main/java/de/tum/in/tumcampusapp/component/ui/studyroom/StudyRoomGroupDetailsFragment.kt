@@ -27,7 +27,7 @@ class StudyRoomGroupDetailsFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val rootView = inflater.inflate(R.layout.fragment_study_rooms, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_study_room_group_details, container, false)
         val studyRooms = StudyRoomGroupManager(requireContext()).getAllStudyRoomsForGroup(groupId)
 
         if (studyRooms.isEmpty()) {

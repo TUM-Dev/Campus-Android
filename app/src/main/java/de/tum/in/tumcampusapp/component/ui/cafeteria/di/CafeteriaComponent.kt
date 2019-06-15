@@ -1,20 +1,19 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria.di
 
 import dagger.Subcomponent
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionFragment
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.fragment.CafeteriaFragment
 
 @Subcomponent(modules = [CafeteriaModule::class])
 interface CafeteriaComponent {
 
-    fun inject(cafeteriaActivity: CafeteriaActivity)
-
+    fun inject(cafeteriaFragment: CafeteriaFragment)
     fun inject(cafeteriaDetailsSectionFragment: CafeteriaDetailsSectionFragment)
 
     @Subcomponent.Builder
     interface Builder {
 
-        fun cafeteriaModule(cafeteriaModule: CafeteriaModule): CafeteriaComponent.Builder
+        fun cafeteriaModule(cafeteriaModule: CafeteriaModule): Builder
 
         fun build(): CafeteriaComponent
 

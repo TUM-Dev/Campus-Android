@@ -23,11 +23,15 @@ import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.utils.Const.CHAT_MEMBER
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.observeNonNull
-import kotlinx.android.synthetic.main.fragment_events.*
+import kotlinx.android.synthetic.main.fragment_events_list.eventPlaceholder
+import kotlinx.android.synthetic.main.fragment_events_list.eventsRecyclerView
+import kotlinx.android.synthetic.main.fragment_events_list.eventsRefreshLayout
+import kotlinx.android.synthetic.main.fragment_events_list.placeholderImage
+import kotlinx.android.synthetic.main.fragment_events_list.placeholderTextView
 import javax.inject.Inject
 import javax.inject.Provider
 
-class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
+class EventsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private val eventType: EventType by lazy {
         arguments?.getSerializable(KEY_EVENT_TYPE) as EventType
@@ -52,7 +56,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_events, container, false)
+        return inflater.inflate(R.layout.fragment_events_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(view) {
@@ -64,7 +68,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         val spacing = Math.round(resources.getDimension(R.dimen.material_card_view_padding))
         eventsRecyclerView.addItemDecoration(EqualSpacingItemDecoration(spacing))
 
-        eventsRefreshLayout.setOnRefreshListener(this@EventsFragment)
+        eventsRefreshLayout.setOnRefreshListener(this@EventsListFragment)
         eventsRefreshLayout.setColorSchemeResources(
                 R.color.color_primary,
                 R.color.tum_A100,
@@ -108,8 +112,8 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         private const val KEY_EVENT_TYPE = "type"
 
         @JvmStatic
-        fun newInstance(eventType: EventType): EventsFragment {
-            return EventsFragment().apply {
+        fun newInstance(eventType: EventType): EventsListFragment {
+            return EventsListFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(KEY_EVENT_TYPE, eventType)
                 }

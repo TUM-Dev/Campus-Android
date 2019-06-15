@@ -1,9 +1,10 @@
 package de.tum.in.tumcampusapp.component.other.generic.activity;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import androidx.annotation.Nullable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import de.tum.in.tumcampusapp.R;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -13,6 +14,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Generic class which handles can handle a long running background task
  */
+@Deprecated
 public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActivity<T> {
 
     private Disposable loadingDisposable;

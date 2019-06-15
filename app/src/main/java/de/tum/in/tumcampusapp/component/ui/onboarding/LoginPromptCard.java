@@ -3,12 +3,14 @@ package de.tum.in.tumcampusapp.component.ui.onboarding;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.component.ui.overview.CardInteractionListener;
 import de.tum.in.tumcampusapp.component.ui.overview.CardManager;
 import de.tum.in.tumcampusapp.component.ui.overview.card.Card;
 import de.tum.in.tumcampusapp.component.ui.overview.card.CardViewHolder;
@@ -25,7 +27,8 @@ public class LoginPromptCard extends Card {
         super(CardManager.CARD_LOGIN, context, "card_login");
     }
 
-    public static CardViewHolder inflateViewHolder(ViewGroup parent) {
+    public static CardViewHolder inflateViewHolder(ViewGroup parent,
+                                                   CardInteractionListener interactionListener) {
         final View view = LayoutInflater.from(parent.getContext())
                                         .inflate(R.layout.card_login_prompt, parent, false);
 
@@ -35,7 +38,7 @@ public class LoginPromptCard extends Card {
                 view.getContext().startActivity(loginIntent);
             });
 
-        return new CardViewHolder(view);
+        return new CardViewHolder(view, interactionListener);
     }
 
     @Override

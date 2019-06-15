@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
@@ -35,14 +36,20 @@ class UpdateNoteCard(context: Context) : Card(CardManager.CARD_UPDATE_NOTE, cont
 
     companion object {
         @JvmStatic
-        fun inflateViewHolder(parent: ViewGroup): CardViewHolder {
+        fun inflateViewHolder(
+                parent: ViewGroup,
+                interactionListener: CardInteractionListener
+        ): CardViewHolder {
             val card = LayoutInflater.from(parent.context)
                     .inflate(R.layout.card_update_note, parent, false)
-            return UpdateNoteViewHolder(card)
+            return UpdateNoteViewHolder(card, interactionListener)
         }
     }
 
-    class UpdateNoteViewHolder(view: View) : CardViewHolder(view) {
+    class UpdateNoteViewHolder(
+            view: View,
+            interactionListener: CardInteractionListener
+    ) : CardViewHolder(view, interactionListener) {
         internal var subtitleView: TextView = view.findViewById(R.id.update_note_subtitle)
         internal var messageView: TextView = view.findViewById(R.id.update_note_message)
 

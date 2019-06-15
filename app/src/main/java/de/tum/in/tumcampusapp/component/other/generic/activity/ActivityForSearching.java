@@ -19,6 +19,7 @@ import de.tum.in.tumcampusapp.utils.Utils;
  * Generic class for searching. Provides basic functions for a {@link SearchView}
  * and typical processes related to search.
  */
+@Deprecated
 public abstract class ActivityForSearching<T> extends ProgressActivity<T> {
     /**
      * Search authority and minimum query length
@@ -110,7 +111,6 @@ public abstract class ActivityForSearching<T> extends ProgressActivity<T> {
         searchView.setOnCloseListener(() -> {
             searchItem.collapseActionView();
             query = null;
-            enableDrawer(true);
             onStartSearch();
             return false;
         });
@@ -118,7 +118,6 @@ public abstract class ActivityForSearching<T> extends ProgressActivity<T> {
         searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                enableDrawer(false);
                 return true;
             }
 
@@ -126,7 +125,6 @@ public abstract class ActivityForSearching<T> extends ProgressActivity<T> {
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 query = null;
                 onStartSearch();
-                enableDrawer(true);
                 return true;
             }
         });

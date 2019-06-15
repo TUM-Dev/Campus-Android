@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar" />
+
+    <include
+        layout="@layout/layout_all_errors"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/StandardCard"
+                android:layout_margin="@dimen/material_default_padding">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:transitionName="@string/transition_card">
+
+                    <TextView
+                        android:id="@+id/semesterTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/material_default_padding"
+                        android:layout_marginTop="@dimen/material_default_padding"
+                        android:layout_marginEnd="@dimen/material_default_padding"
+                        android:fontFamily="sans-serif-medium"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/color_primary"
+                        tools:text="Wintersemester 2018/19" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/material_default_padding"
+                        android:layout_marginTop="@dimen/material_default_padding"
+                        android:layout_marginEnd="@dimen/material_default_padding"
+                        android:text="@string/outstanding_balance"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+
+                    <TextView
+                        android:id="@+id/amountTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/material_default_padding"
+                        android:layout_marginEnd="@dimen/material_default_padding"
+                        android:layout_marginBottom="@dimen/material_default_padding"
+                        android:fontFamily="sans-serif-medium"
+                        android:textColor="@color/sections_green"
+                        android:textSize="50sp"
+                        tools:text="0.00 €" />
+
+                    <TextView
+                        android:id="@+id/deadlineTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/material_default_padding"
+                        android:layout_marginEnd="@dimen/material_default_padding"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="16sp"
+                        tools:text="Due on Aug 15, 2018" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/financialAidButton"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/material_default_padding"
+                        android:layout_marginTop="@dimen/material_default_padding"
+                        android:layout_marginBottom="@dimen/material_default_padding"
+                        android:text="@string/student_financial_aid"
+                        android:textAllCaps="false"
+                        android:textColor="@color/color_primary"
+                        app:cornerRadius="@dimen/material_corner_radius" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </FrameLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</LinearLayout>

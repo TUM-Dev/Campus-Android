@@ -32,6 +32,7 @@ import java.net.UnknownHostException
  *
  * @param T The type of object that is to be retrieved via the [apiCall]
  */
+@Deprecated("Use BaseActivity and a suitable BaseFragment class")
 abstract class ProgressActivity<T>(
         layoutId: Int
 ) : BaseActivity(layoutId), SwipeRefreshLayout.OnRefreshListener {
@@ -44,7 +45,7 @@ abstract class ProgressActivity<T>(
     }
 
     protected val swipeRefreshLayout: SwipeRefreshLayout? by lazy {
-        findViewById<SwipeRefreshLayout>(R.id.ptr_layout)
+        findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
     }
 
     private val errorLayoutsContainer: FrameLayout by lazy {

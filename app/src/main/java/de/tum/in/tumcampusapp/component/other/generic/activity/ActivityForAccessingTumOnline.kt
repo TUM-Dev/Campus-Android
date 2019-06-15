@@ -9,6 +9,7 @@ import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
  *
  * @param T The type of object that is loaded from the TUMonline API
  */
+@Deprecated("Use BaseActivity and a suitable BaseFragment class")
 abstract class ActivityForAccessingTumOnline<T>(layoutId: Int) : ProgressActivity<T>(layoutId) {
 
     protected val apiClient: TUMOnlineClient by lazy {

@@ -1,12 +1,16 @@
 package de.tum.`in`.tumcampusapp.component.ui.transportation
 
 import android.view.View
+import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.Departure
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
 import kotlinx.android.synthetic.main.card_mvv.view.*
 
-class MVVCardViewHolder(itemView: View) : CardViewHolder(itemView) {
+class MVVCardViewHolder(
+        itemView: View,
+        interactionListener: CardInteractionListener
+) : CardViewHolder(itemView, interactionListener) {
 
     fun bind(station: StationResult, departures: List<Departure>) {
         with(itemView) {

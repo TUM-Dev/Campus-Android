@@ -2,13 +2,14 @@ package de.tum.in.tumcampusapp.component.ui.overview;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.joda.time.DateTime;
 import org.joda.time.ReadableInstant;
@@ -28,10 +29,11 @@ public class NoInternetCard extends StickyCard {
         super(CardManager.CARD_NO_INTERNET, context);
     }
 
-    public static CardViewHolder inflateViewHolder(ViewGroup parent) {
+    public static CardViewHolder inflateViewHolder(ViewGroup parent,
+                                                   CardInteractionListener interactionListener) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_no_internet, parent, false);
-        return new CardViewHolder(view);
+        return new CardViewHolder(view, interactionListener);
     }
 
     @Override

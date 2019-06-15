@@ -1,88 +1,13 @@
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/contentFrame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <include layout="@layout/toolbar" />
-
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/ptr_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <include layout="@layout/layout_all_errors" />
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <com.alamkanak.weekview.WeekView
-                        android:id="@+id/weekView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:columnGap="1dp"
-                        app:dayBackgroundColor="@android:color/white"
-                        app:eventCornerRadius="4dp"
-                        app:eventMarginVertical="2dp"
-                        app:eventPadding="4dp"
-                        app:eventTextColor="@android:color/white"
-                        app:eventTextSize="12dp"
-                        app:headerRowBackgroundColor="@android:color/white"
-                        app:headerRowBottomLineColor="@color/navigation_bar_divider"
-                        app:headerRowBottomLineWidth="1dp"
-                        app:headerRowPadding="12dp"
-                        app:headerRowTextColor="@color/text_dark_secondary"
-                        app:headerRowTextSize="12dp"
-                        app:hourHeight="60dp"
-                        app:nowLineColor="@color/tum_blue"
-                        app:nowLineStrokeWidth="1dp"
-                        app:overlappingEventGap="1dp"
-                        app:showHeaderRowBottomLine="true"
-                        app:showNowLine="true"
-                        app:showTimeColumnSeparator="true"
-                        app:singleDayHorizontalMargin="2dp"
-                        app:timeColumnPadding="8dp"
-                        app:timeColumnSeparatorColor="@color/navigation_bar_divider"
-                        app:timeColumnSeparatorStrokeWidth="1dp"
-                        app:timeColumnTextColor="@color/text_dark_secondary"
-                        app:timeColumnTextSize="12dp"
-                        app:todayBackgroundColor="#1848adff"
-                        app:todayHeaderTextColor="@color/color_primary"
-                        app:xScrollingSpeed="1" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/todayButton"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end|bottom"
-                        android:layout_margin="@dimen/material_default_padding"
-                        android:text="@string/today"
-                        android:visibility="gone"
-                        app:backgroundTint="@android:color/white"
-                        app:cornerRadius="@dimen/material_corner_radius"
-                        tools:visibility="visible" />
-
-                </FrameLayout>
-
-            </LinearLayout>
-
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    </LinearLayout>
+        android:layout_height="match_parent" />
 
     <include layout="@layout/navigation_drawer" />
 

@@ -14,8 +14,8 @@ import de.tum.in.tumcampusapp.utils.Const;
 /**
  * Provides the preferences, encapsulated into an own activity.
  */
-public class UserPreferencesActivity extends BaseActivity implements
-                                                          PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
+public class UserPreferencesActivity extends BaseActivity
+        implements PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
 
     public UserPreferencesActivity() {
         super(R.layout.activity_user_preferences);

@@ -34,7 +34,12 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <include
+        <FrameLayout
+            android:id="@+id/contentFrame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!--<include
             layout="@layout/layout_all_errors"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" />
@@ -65,7 +70,7 @@
             </FrameLayout>
 
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                android:id="@+id/ptr_layout"
+                android:id="@+id/swipeRefreshLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone">
@@ -129,7 +134,7 @@
                 app:backgroundTint="@color/color_primary"
                 app:cornerRadius="@dimen/material_corner_radius" />
 
-        </LinearLayout>
+        </LinearLayout>-->
 
     </LinearLayout>
 

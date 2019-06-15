@@ -6,12 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.crashlytics.android.Crashlytics;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.inject.Inject;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,11 +14,19 @@ import androidx.core.content.ContextCompat;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.lifecycle.LiveDataReactiveStreams;
 import androidx.lifecycle.Observer;
+
+import com.crashlytics.android.Crashlytics;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.inject.Inject;
+
 import de.tum.in.tumcampusapp.App;
 import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
+import de.tum.in.tumcampusapp.component.other.generic.activity.BaseNavigationActivity;
 import de.tum.in.tumcampusapp.component.ui.overview.MainActivity;
 import de.tum.in.tumcampusapp.service.DownloadWorker;
 import de.tum.in.tumcampusapp.service.StartSyncReceiver;
@@ -219,7 +221,7 @@ public class StartupActivity extends AppCompatActivity {
      * Afterwards {@link MainActivity} gets started
      */
     private void openMainActivity() {
-        Intent intent = new Intent(StartupActivity.this, MainActivity.class);
+        Intent intent = new Intent(this, BaseNavigationActivity.class);
         startActivity(intent);
         finish();
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);

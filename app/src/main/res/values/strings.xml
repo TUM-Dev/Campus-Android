@@ -148,7 +148,7 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="my_tum">My TUM</string>
-    <string name="schedule">Calendar</string>
+    <string name="calendar">Calendar</string>
     <string name="my_lectures">My Lectures</string>
     <string name="my_grades">My Grades</string>
     <string name="chat_rooms">Chat rooms</string>

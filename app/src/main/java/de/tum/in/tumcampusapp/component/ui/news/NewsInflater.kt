@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import de.tum.`in`.tumcampusapp.component.ui.news.model.News
+import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.database.TcaDb
 
 class NewsInflater(context: Context) {
@@ -15,10 +16,15 @@ class NewsInflater(context: Context) {
         TcaDb.getInstance(context).newsDao()
     }
 
-    fun onCreateNewsView(parent: ViewGroup,
-                         layoutId: Int, showOptionsButton: Boolean = true): NewsViewHolder {
+    @JvmOverloads
+    fun onCreateNewsView(
+            parent: ViewGroup,
+            layoutId: Int,
+            showOptionsButton: Boolean = true,
+            interactionListener: CardInteractionListener? = null
+    ): NewsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
-        return NewsViewHolder(view, showOptionsButton)
+        return NewsViewHolder(view, interactionListener, showOptionsButton)
     }
 
     fun onBindNewsView(viewHolder: NewsViewHolder, newsItem: News) {
