@@ -15,7 +15,6 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.fragment.EventsListFragment
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.EventType
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.service.DownloadWorker
-import de.tum.`in`.tumcampusapp.service.di.DownloadModule
 import kotlinx.android.synthetic.main.fragment_events.viewPager
 import java.util.Arrays
 import javax.inject.Inject
@@ -33,11 +32,7 @@ class EventsFragment : FragmentForDownloadingExternal(
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        injector
-            .downloadComponent()
-            .downloadModule(DownloadModule())
-            .build()
-            .inject(this)
+        injector.downloadComponent().inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -1,5 +1,7 @@
 package de.tum.`in`.tumcampusapp.di
 
+import android.content.Context
+import dagger.BindsInstance
 import dagger.Component
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.di.FeedbackComponent
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.di.CafeteriaComponent
@@ -16,15 +18,25 @@ import javax.inject.Singleton
 @Component(modules = [AppModule::class])
 interface AppComponent {
 
-    fun cafeteriaComponent(): CafeteriaComponent.Builder
-    fun downloadComponent(): DownloadComponent.Builder
+    fun cafeteriaComponent(): CafeteriaComponent
+    fun downloadComponent(): DownloadComponent
     fun eventsComponent(): EventsComponent.Builder
     fun feedbackComponent(): FeedbackComponent.Builder
-    fun kinoComponent(): KinoComponent.Builder
-    fun newsComponent(): NewsComponent.Builder
+    fun kinoComponent(): KinoComponent
+    fun newsComponent(): NewsComponent
     fun ticketsComponent(): TicketsComponent.Builder
 
     fun inject(mainActivity: MainActivity)
     fun inject(mainFragment: MainFragment)
+
+    @Component.Builder
+    interface Builder {
+
+        @BindsInstance
+        fun context(context: Context): Builder
+
+        fun build(): AppComponent
+
+    }
 
 }

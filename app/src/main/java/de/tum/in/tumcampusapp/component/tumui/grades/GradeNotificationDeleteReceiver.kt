@@ -4,8 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import de.tum.`in`.tumcampusapp.di.app
-import de.tum.`in`.tumcampusapp.service.di.DownloadModule
-import java.util.*
+import java.util.ArrayList
 import javax.inject.Inject
 
 /**
@@ -18,10 +17,7 @@ class GradeNotificationDeleteReceiver : BroadcastReceiver() {
     lateinit var gradesStore: GradesStore
 
     override fun onReceive(context: Context, intent: Intent) {
-        context.app.appComponent.downloadComponent()
-                .downloadModule(DownloadModule())
-                .build()
-                .inject(this)
+        context.app.appComponent.downloadComponent().inject(this)
 
         val newGrades = intent.getStringArrayListExtra(KEY_NEW_GRADES)
         val existingGrades = gradesStore.gradedCourses

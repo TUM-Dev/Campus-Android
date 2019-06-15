@@ -70,11 +70,7 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        injector
-            .cafeteriaComponent()
-            .cafeteriaModule(CafeteriaModule())
-            .build()
-            .inject(this)
+        injector.cafeteriaComponent().inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

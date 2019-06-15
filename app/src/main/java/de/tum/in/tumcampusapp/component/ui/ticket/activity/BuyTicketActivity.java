@@ -79,7 +79,6 @@ public class BuyTicketActivity extends BaseActivity implements TicketAmountViewH
         loadingLayout = findViewById(R.id.loading_layout);
 
         getInjector().ticketsComponent()
-                .ticketsModule(new TicketsModule())
                 .eventId(eventId)
                 .build()
                 .inject(this);

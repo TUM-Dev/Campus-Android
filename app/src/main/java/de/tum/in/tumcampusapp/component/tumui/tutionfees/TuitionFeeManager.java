@@ -45,9 +45,7 @@ public class TuitionFeeManager implements ProvidesCard, ProvidesNotifications {
         }
 
 
-        TuitionFeesCard card = new TuitionFeesCard(mContext);
-        card.setTuition(tuition);
-
+        TuitionFeesCard card = new TuitionFeesCard(mContext, tuition);
         results.add(card.getIfShowOnStart());
         return results;
     }

@@ -50,8 +50,6 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         super.onAttach(context);
         ((BaseActivity) requireActivity()).getInjector()
                 .cafeteriaComponent()
-                .cafeteriaModule(new CafeteriaModule())
-                .build()
                 .inject(this);
 
         ViewModelFactory<CafeteriaViewModel> factory = new ViewModelFactory<>(viewModelProvider);
