@@ -6,8 +6,9 @@ import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.sync.model.Sync
 import io.reactivex.Flowable
 import org.joda.time.DateTime
+import javax.inject.Inject
 
-class KinoLocalRepository(
+class KinoLocalRepository @Inject constructor(
         private val database: TcaDb
 ) {
 

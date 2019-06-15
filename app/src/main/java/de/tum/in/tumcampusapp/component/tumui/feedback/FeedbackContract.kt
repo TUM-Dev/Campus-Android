@@ -32,7 +32,7 @@ interface FeedbackContract {
     }
 
     interface Presenter {
-        fun attachView(view: FeedbackContract.View)
+        fun attachView(view: View)
         fun onRestoreInstanceState(savedInstanceState: Bundle)
         fun initEmail()
         fun getFeedback(): Feedback

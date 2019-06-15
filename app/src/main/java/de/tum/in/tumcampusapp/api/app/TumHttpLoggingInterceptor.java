@@ -155,7 +155,7 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
                         }
                     }
 
-                    Buffer buffer = source.buffer();
+                    Buffer buffer = source.getBuffer();
                     if (!isPlaintext(buffer)) {
                         logger.log("");
                         logger.log("<-- END HTTP (binary " + buffer.size() + "-byte body omitted)");
