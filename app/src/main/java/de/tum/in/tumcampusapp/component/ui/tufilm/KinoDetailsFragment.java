@@ -152,7 +152,7 @@ public class KinoDetailsFragment extends Fragment {
             } else if(status.ticketsStillAvailable()) {
                 ticketButton.setVisibility(View.VISIBLE);
                 remainingTicketsHeaderView.setVisibility(View.VISIBLE);
-                remainingTicketsTextView.setText(String.format(Locale.getDefault(), "%d", status));
+                remainingTicketsTextView.setText(String.format(Locale.getDefault(), "%d", status.getRemainingTicketCount()));
                 remainingTicketsTextView.setVisibility(View.VISIBLE);
             } else {
                 ticketButton.setVisibility(isEventBooked ? View.VISIBLE : View.GONE);

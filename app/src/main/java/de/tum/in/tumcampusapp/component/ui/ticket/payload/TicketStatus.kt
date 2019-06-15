@@ -10,4 +10,5 @@ data class TicketStatus(@SerializedName("ticket_type")
     // is only correct if ticket status represents all TicketTypes
     fun isEventWithoutTickets() = contingent <= 0
     fun ticketsStillAvailable() = (contingent - sold) > 0
+    fun getRemainingTicketCount() = contingent - sold
 }
