@@ -34,7 +34,7 @@ import javax.inject.Inject
 
 class FeedbackPresenter @Inject constructor(
     private val context: Context,
-    @LrzId private val lrzId: String,
+    @LrzId override val lrzId: String,
     private val tumCabeClient: TUMCabeClient
 ): FeedbackContract.Presenter {
 
@@ -47,16 +47,12 @@ class FeedbackPresenter @Inject constructor(
     private var imagesSent: Int = 0
 
     private var view: FeedbackContract.View? = null
-    private var _feedback = Feedback()
-
-    override fun getFeedback(): Feedback = _feedback
-
-    override fun getLrzId(): String = lrzId
+    override var feedback = Feedback()
 
     override fun attachView(view: FeedbackContract.View) {
         this.view = view
 
-        compositeDisposable += view.getMessage().subscribe { _feedback.message = it }
+        compositeDisposable += view.getMessage().subscribe { feedback.message = it }
         compositeDisposable += view.getTopicInput().subscribe { updateFeedbackTopic(it) }
 
         compositeDisposable += view.getIncludeEmail().subscribe { onIncludeEmailChanged(it) }
@@ -68,34 +64,34 @@ class FeedbackPresenter @Inject constructor(
     }
 
     override fun listenForLocation() {
-        compositeDisposable += checkNotNull(view).getLocation().subscribe { _feedback.location = it }
+        compositeDisposable += checkNotNull(view).getLocation().subscribe { feedback.location = it }
     }
 
     private fun updateFeedbackTopic(topicButton: Int) {
         if (topicButton == R.id.tumInGeneralRadioButton) {
-            _feedback.topic = Const.FEEDBACK_TOPIC_GENERAL
+            feedback.topic = Const.FEEDBACK_TOPIC_GENERAL
         } else {
-            _feedback.topic = Const.FEEDBACK_TOPIC_APP
+            feedback.topic = Const.FEEDBACK_TOPIC_APP
         }
     }
 
     private fun onIncludeLocationChanged(includeLocation: Boolean) {
-        _feedback.includeLocation = includeLocation
+        feedback.includeLocation = includeLocation
         if (includeLocation && (SDK_INT < M || checkPermission(ACCESS_FINE_LOCATION))) {
             listenForLocation()
         }
     }
 
     private fun onIncludeEmailChanged(includeEmail: Boolean) {
-        _feedback.includeEmail = includeEmail
+        feedback.includeEmail = includeEmail
         view?.showEmailInput(includeEmail && lrzId.isEmpty())
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         if (savedInstanceState.containsKey(Const.FEEDBACK)) {
-            _feedback = savedInstanceState.getParcelable<Feedback>(Const.FEEDBACK)
+            feedback = savedInstanceState.getParcelable<Feedback>(Const.FEEDBACK)
 
-            _feedback.message?.let {
+            feedback.message?.let {
                 view?.setFeedback(it)
             }
         }
@@ -103,10 +99,10 @@ class FeedbackPresenter @Inject constructor(
 
     override fun initEmail() {
         val hasLrzId = lrzId.isNotEmpty()
-        _feedback.includeEmail = hasLrzId
+        feedback.includeEmail = hasLrzId
 
         if (hasLrzId) {
-            _feedback.email = "$lrzId@mytum.de"
+            feedback.email = "$lrzId@mytum.de"
         }
     }
 
@@ -150,7 +146,7 @@ class FeedbackPresenter @Inject constructor(
     }
 
     override fun onSendFeedback() {
-        if (_feedback.message?.isEmpty() == true) {
+        if (feedback.message?.isEmpty() == true) {
             view?.showEmptyMessageError()
         } else {
             view?.showSendConfirmationDialog()
@@ -158,32 +154,32 @@ class FeedbackPresenter @Inject constructor(
     }
 
     override fun onConfirmSend() {
-        if (!_feedback.includeEmail) {
-            _feedback.email = null
+        if (!feedback.includeEmail) {
+            feedback.email = null
         }
 
-        if (!_feedback.includeLocation) {
-            _feedback.latitude = null
-            _feedback.longitude = null
+        if (!feedback.includeLocation) {
+            feedback.latitude = null
+            feedback.longitude = null
         } else {
-            if (_feedback.location == null) {
+            if (feedback.location == null) {
                 showNoLocationAccessDialog()
                 return
             }
         }
 
-        val images = _feedback.picturePaths.size
-        _feedback.imageCount = images
+        val images = feedback.picturePaths.size
+        feedback.imageCount = images
 
         imagesSent = 0
 
-        if (_feedback.includeEmail && !isEmailValid(_feedback.email)) {
+        if (feedback.includeEmail && !isEmailValid(feedback.email)) {
             view?.showWarning(context.getString(R.string.invalid_email))
             return
         }
 
         view?.showProgressDialog()
-        sendFeedbackCall = tumCabeClient.sendFeedback(_feedback)
+        sendFeedbackCall = tumCabeClient.sendFeedback(feedback)
         sendFeedbackCall?.enqueue(object : Callback<FeedbackResult> {
             override fun onResponse(call: Call<FeedbackResult>,
                                     response: Response<FeedbackResult>) {
@@ -192,7 +188,7 @@ class FeedbackPresenter @Inject constructor(
                     view?.showSendErrorDialog()
                 }
 
-                if (_feedback.imageCount == 0) {
+                if (feedback.imageCount == 0) {
                     view?.onFeedbackSent()
                 } else {
                     sendImages()
@@ -214,15 +210,15 @@ class FeedbackPresenter @Inject constructor(
     }
 
     override fun removeImage(path: String) {
-        val index = _feedback.picturePaths.indexOf(path)
-        _feedback.picturePaths.remove(path)
+        val index = feedback.picturePaths.indexOf(path)
+        feedback.picturePaths.remove(path)
         File(path).delete()
         view?.onImageRemoved(index)
     }
 
     private fun sendImages() {
-        val imagePaths = _feedback.picturePaths.toTypedArray()
-        sendImagesCalls = tumCabeClient.sendFeedbackImages(_feedback, imagePaths)
+        val imagePaths = feedback.picturePaths.toTypedArray()
+        sendImagesCalls = tumCabeClient.sendFeedbackImages(feedback, imagePaths)
 
         for (call in sendImagesCalls) {
             call.enqueue(object : Callback<FeedbackResult> {
@@ -236,11 +232,11 @@ class FeedbackPresenter @Inject constructor(
 
                     imagesSent++
 
-                    if (imagesSent == _feedback.imageCount) {
+                    if (imagesSent == feedback.imageCount) {
                         view?.onFeedbackSent()
                     }
 
-                    Utils.log("Sent " + imagesSent + " of " + _feedback.imageCount + " images")
+                    Utils.log("Sent " + imagesSent + " of " + feedback.imageCount + " images")
                 }
 
                 override fun onFailure(call: Call<FeedbackResult>, t: Throwable) {
@@ -287,23 +283,20 @@ class FeedbackPresenter @Inject constructor(
     override fun onNewImageTaken() {
         ImageUtils.rescaleBitmap(context, currentPhotoPath)
         currentPhotoPath?.let {
-            _feedback.picturePaths.add(it)
+            feedback.picturePaths.add(it)
             view?.onImageAdded(it)
         }
     }
 
     override fun onNewImageSelected(uri: Uri?) {
         val filePath = ImageUtils.rescaleBitmap(context, uri) ?: return
-        _feedback.picturePaths.add(filePath)
+        feedback.picturePaths.add(filePath)
         view?.onImageAdded(filePath)
     }
 
     override fun detachView() {
         clearPictures()
-
-        if (sendFeedbackCall != null) {
-            sendFeedbackCall?.cancel()
-        }
+        sendFeedbackCall?.cancel()
 
         for (call in sendImagesCalls) {
             call.cancel()
@@ -314,13 +307,13 @@ class FeedbackPresenter @Inject constructor(
     }
 
     private fun clearPictures() {
-        for (path in _feedback.picturePaths) {
+        for (path in feedback.picturePaths) {
             File(path).delete()
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(Const.FEEDBACK, _feedback)
+        outState.putParcelable(Const.FEEDBACK, feedback)
     }
 
     companion object {
