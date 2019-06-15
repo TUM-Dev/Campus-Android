@@ -10,10 +10,8 @@ import de.tum.`in`.tumcampusapp.service.DownloadWorker
 
 @Subcomponent(modules = [CafeteriaModule::class])
 interface CafeteriaComponent {
-
     fun inject(cafeteriaFragment: CafeteriaFragment)
     fun inject(cafeteriaDetailsSectionFragment: CafeteriaDetailsSectionFragment)
-
 }
 
 @Module
