@@ -130,10 +130,10 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             ticketButton.visibility = if(!viewModel.isEventBooked(event)) View.GONE else View.VISIBLE
             remainingTicketsContainer.visibility = View.GONE
         } else {
-            if (status == null || status.contingent < 0) {
+            if (status == null || status.isEventWithoutTickets()) {
                 if(!viewModel.isEventBooked(event)) ticketButton.visibility = View.GONE
                 remainingTicketsContainer.visibility = View.GONE
-            } else if(status.contingent - status.sold > 0) {
+            } else if(status.ticketsStillAvailable()) {
                 ticketButton.visibility = View.VISIBLE
                 remainingTicketsContainer.visibility = View.VISIBLE
                 remainingTicketsTextView.text = status.toString()

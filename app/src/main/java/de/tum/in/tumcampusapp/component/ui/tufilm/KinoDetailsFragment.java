@@ -144,11 +144,11 @@ public class KinoDetailsFragment extends Fragment {
             remainingTicketsHeaderView.setVisibility(View.GONE);
             remainingTicketsTextView.setVisibility(View.GONE);
         } else {
-            if (status == null || status.getContingent() < 0) {
+            if (status == null || status.isEventWithoutTickets()) {
                 ticketButton.setVisibility((ticketBoughtCount <= 0) ? View.GONE : View.VISIBLE);
                 remainingTicketsHeaderView.setVisibility(View.GONE);
                 remainingTicketsTextView.setVisibility(View.GONE);
-            } else if(status.getContingent() - status.getSold() > 0) {
+            } else if(status.ticketsStillAvailable()) {
                 ticketButton.setVisibility(View.VISIBLE);
                 remainingTicketsHeaderView.setVisibility(View.VISIBLE);
                 remainingTicketsTextView.setText(String.format(Locale.getDefault(), "%d", status));
