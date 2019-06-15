@@ -42,32 +42,32 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
     public CardViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         switch (viewType) {
             case CardManager.CARD_CAFETERIA:
-                return CafeteriaMenuCard.inflateViewHolder(viewGroup, interactionListener);
+                return CafeteriaMenuCard.Companion.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_TUITION_FEE:
-                return TuitionFeesCard.inflateViewHolder(viewGroup, interactionListener);
+                return TuitionFeesCard.Companion.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_NEXT_LECTURE:
-                return NextLectureCard.inflateViewHolder(viewGroup, interactionListener);
+                return NextLectureCard.Companion.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_RESTORE:
                 return RestoreCard.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_NO_INTERNET:
                 return NoInternetCard.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_MVV:
-                return MVVCard.inflateViewHolder(viewGroup, interactionListener);
+                return MVVCard.Companion.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_NEWS: //Fallthrough
             case CardManager.CARD_NEWS_FILM:
-                return NewsCard.inflateViewHolder(viewGroup, viewType, interactionListener);
+                return NewsCard.Companion.inflateViewHolder(viewGroup, viewType, interactionListener);
             case CardManager.CARD_EDUROAM:
-                return EduroamCard.inflateViewHolder(viewGroup, interactionListener);
+                return EduroamCard.Companion.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_EDUROAM_FIX:
-                return EduroamFixCard.inflateViewHolder(viewGroup, interactionListener);
+                return EduroamFixCard.Companion.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_CHAT:
                 return ChatMessagesCard.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_SUPPORT:
-                return SupportCard.inflateViewHolder(viewGroup, interactionListener);
+                return SupportCard.Companion.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_LOGIN:
-                return LoginPromptCard.inflateViewHolder(viewGroup, interactionListener);
+                return LoginPromptCard.Companion.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_TOP_NEWS:
-                return TopNewsCard.inflateViewHolder(viewGroup, interactionListener);
+                return TopNewsCard.Companion.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_EVENT:
                 return EventCard.inflateViewHolder(viewGroup, interactionListener);
             case CardManager.CARD_UPDATE_NOTE:

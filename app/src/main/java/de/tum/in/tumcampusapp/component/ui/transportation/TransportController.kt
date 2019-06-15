@@ -121,11 +121,7 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
             return emptyList()
         }
 
-        val card = MVVCard(context).apply {
-            setStation(station)
-            setDepartures(departures)
-        }
-
+        val card = MVVCard(context, station, departures)
         card.getIfShowOnStart()?.let {
             results.add(it)
         }
