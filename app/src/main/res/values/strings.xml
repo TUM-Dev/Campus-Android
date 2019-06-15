@@ -713,7 +713,7 @@ Signature: %5$s</string>
     <string name="home">Home</string>
     <string name="about">About</string>
     <string name="due_on_format_string">Due on %s</string>
-    <string name="student_financial_aid">Student Financial Aid</string>
+    <string name="student_financial_aid">Fees + Financial Aid</string>
     <string name="released">Released</string>
 
     <string name="including_format_string">including %s</string>

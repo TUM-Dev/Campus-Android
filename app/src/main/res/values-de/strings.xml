@@ -657,7 +657,7 @@ Signatur: %5$s</string>
     <string name="about">Über</string>
     <string name="due_on_format_string">Fällig am %s</string>
     <string name="home">Übersicht</string>
-    <string name="student_financial_aid">Studienfinanzierung</string>
+    <string name="student_financial_aid">Studienfinanzierung und Beiträge</string>
     <string name="released">Veröffentlicht</string>
 
     <string name="new_items_format_string">%d neue Meldungen</string>
