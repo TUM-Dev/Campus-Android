@@ -30,7 +30,6 @@ import de.tum.in.tumcampusapp.component.other.generic.activity.BaseNavigationAct
 import de.tum.in.tumcampusapp.component.ui.overview.MainActivity;
 import de.tum.in.tumcampusapp.service.DownloadWorker;
 import de.tum.in.tumcampusapp.service.StartSyncReceiver;
-import de.tum.in.tumcampusapp.service.di.DownloadModule;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.fabric.sdk.android.Fabric;
@@ -67,8 +66,6 @@ public class StartupActivity extends AppCompatActivity {
 
         ((App) getApplicationContext()).getAppComponent()
                 .downloadComponent()
-                .downloadModule(new DownloadModule())
-                .build()
                 .inject(this);
 
         // Only use Crashlytics if we are not compiling debug

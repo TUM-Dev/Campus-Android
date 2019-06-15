@@ -24,10 +24,8 @@ interface TicketsComponent {
     @Subcomponent.Builder
     interface Builder {
 
-        fun ticketsModule(ticketsModule: TicketsModule): TicketsComponent.Builder
-
         @BindsInstance
-        fun eventId(@EventId eventId: Int): TicketsComponent.Builder
+        fun eventId(@EventId eventId: Int): Builder
 
         fun build(): TicketsComponent
 

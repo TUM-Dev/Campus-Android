@@ -8,13 +8,4 @@ interface NewsComponent {
 
     fun inject(newsFragment: NewsFragment)
 
-    @Subcomponent.Builder
-    interface Builder {
-
-        fun newsModule(newsModule: NewsModule): NewsComponent.Builder
-
-        fun build(): NewsComponent
-
-    }
-
 }

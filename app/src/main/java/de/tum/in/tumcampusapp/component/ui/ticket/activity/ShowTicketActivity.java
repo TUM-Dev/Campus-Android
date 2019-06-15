@@ -32,7 +32,6 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
 import de.tum.in.tumcampusapp.component.ui.ticket.adapter.BoughtTicketAdapter;
-import de.tum.in.tumcampusapp.component.ui.ticket.di.TicketsModule;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketInfo;
@@ -80,7 +79,6 @@ public class ShowTicketActivity extends BaseActivity {
 
         int eventId = getIntent().getIntExtra(Const.KEY_EVENT_ID, 0);
         getInjector().ticketsComponent()
-                .ticketsModule(new TicketsModule())
                 .eventId(eventId)
                 .build()
                 .inject(this);

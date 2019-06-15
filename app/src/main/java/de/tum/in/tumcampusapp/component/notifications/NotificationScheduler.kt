@@ -17,7 +17,7 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import org.jetbrains.anko.alarmManager
 import org.jetbrains.anko.notificationManager
 import org.joda.time.DateTime
-import kotlin.math.max
+import javax.inject.Inject
 
 /**
  * This class is responsible for scheduling notifications. This can either be a concrete notification
@@ -26,7 +26,7 @@ import kotlin.math.max
  *
  * @param context The used [Context]
  */
-class NotificationScheduler(private val context: Context) {
+class NotificationScheduler @Inject constructor(private val context: Context) {
 
     private val notificationManager = context.notificationManager
 

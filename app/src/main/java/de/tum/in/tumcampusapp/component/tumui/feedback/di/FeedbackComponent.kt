@@ -12,10 +12,8 @@ interface FeedbackComponent {
     @Subcomponent.Builder
     interface Builder {
 
-        fun feedbackModule(feedbackModule: FeedbackModule): FeedbackComponent.Builder
-
         @BindsInstance
-        fun lrzId(@LrzId lrzId: String): FeedbackComponent.Builder
+        fun lrzId(@LrzId lrzId: String): Builder
 
         fun build(): FeedbackComponent
 
