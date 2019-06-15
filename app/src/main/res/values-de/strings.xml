@@ -109,6 +109,7 @@
     <string name="actors">Schauspieler</string>
     <string name="description">Beschreibung</string>
     <string name="no_movies">Keine Filme in nächster Zeit</string>
+    <string name="no_tickets_remaining_tufilm_message">Derzeit stehen leider keine weiteren Online Tickets für diesen Film zur Verfügung.\nWeitere Tickets können an der Abendkasse sowie den Vorverkaufsstellen erworben werden.</string>
 
     <!-- Navigation drawer -->
     <string name="drawer_open">Öffnen</string>
@@ -507,7 +508,7 @@ Signatur: %5$s</string>
     <string name="partially_redeemed">%d von %d eingelöst (%s)</string>
     <string name="redeemed_at">Eingelöst um %s</string>
     <string name="no_tickets_remaining">Keine Tickets mehr vorhanden</string>
-    <string name="no_tickets_remaining_message">Du warst leider zu spät dran und die Tickets sind hier bereits ausverkauft. Bei vielen Events kannst du aber noch Tickets an der Abendkasse erwerben.</string>
+    <string name="no_tickets_remaining_message">Leider stehen für diese Veranstaltung keine weiteren Online Tickets zur Verfügung.\nBei vielen Veranstaltungen kannst du aber vor Ort noch Tickets erwerben.</string>
     <string name="error_message_select_at_least_one_ticket">Bitte wähle mindestens ein Ticket aus einer der Kategorien aus.</string>
     <string name="error_no_ticket_selected">Keine Tickets ausgewählt</string>
     <string name="ticket_amount_information">Es können maximal %d Tickets pro Person vom Typ \“%s\” gekauft werden.</string>

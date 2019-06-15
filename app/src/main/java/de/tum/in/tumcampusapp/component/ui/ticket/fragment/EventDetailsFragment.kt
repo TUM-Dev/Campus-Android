@@ -19,6 +19,7 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.EventHelper
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.di.TicketsModule
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
+import de.tum.`in`.tumcampusapp.component.ui.ticket.payload.TicketStatus
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -76,18 +77,11 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         showEventDetails(event)
-        viewModel.ticketCount.observe(viewLifecycleOwner, this::showTicketCount)
+        viewModel.aggregatedTicketStatus.observe(viewLifecycleOwner, this::showTicketCount)
     }
 
     override fun onRefresh() {
         viewModel.fetchTicketCount()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (!viewModel.isEventBooked(event) && EventHelper.isEventImminent(event)) {
-            ticketButton.visibility = View.GONE
-        }
     }
 
     private fun showEventDetails(event: Event) {
@@ -105,6 +99,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         if (viewModel.isEventBooked(event)) {
             ticketButton.text = getString(R.string.show_ticket)
+            ticketButton.text = resources.getQuantityText(R.plurals.show_tickets, viewModel.getBookedTicketCount(event))
             ticketButton.setOnClickListener { showTicket(event) }
         } else {
             ticketButton.text = getString(R.string.buy_ticket)
@@ -130,9 +125,25 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         startActivity(intent)
     }
 
-    private fun showTicketCount(count: Int?) {
-        val text = count?.toString() ?: getString(R.string.unknown)
-        remainingTicketsTextView.text = text
+    private fun showTicketCount(status: TicketStatus?) {
+        // Same logic as in showTicketCount function in KinoDetailsFragment.kt --> keep it the same
+        if(EventHelper.isEventImminent(event)) {
+            ticketButton.visibility = if(!viewModel.isEventBooked(event)) View.GONE else View.VISIBLE
+            remainingTicketsContainer.visibility = View.GONE
+        } else {
+            if (status == null || status.isEventWithoutTickets()) {
+                if(!viewModel.isEventBooked(event)) ticketButton.visibility = View.GONE
+                remainingTicketsContainer.visibility = View.GONE
+            } else if(status.ticketsStillAvailable()) {
+                ticketButton.visibility = View.VISIBLE
+                remainingTicketsContainer.visibility = View.VISIBLE
+                remainingTicketsTextView.text = status.toString()
+            } else {
+                ticketButton.visibility = if(!viewModel.isEventBooked(event)) View.GONE else View.VISIBLE
+                remainingTicketsContainer.visibility = View.VISIBLE
+                remainingTicketsTextView.text = getString(R.string.no_tickets_remaining_message)
+            }
+        }
         swipeRefreshLayout.isRefreshing = false
     }
 
