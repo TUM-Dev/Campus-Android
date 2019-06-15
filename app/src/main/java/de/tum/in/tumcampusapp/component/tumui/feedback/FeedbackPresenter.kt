@@ -39,15 +39,15 @@ class FeedbackPresenter @Inject constructor(
 ): FeedbackContract.Presenter {
 
     private val compositeDisposable = CompositeDisposable()
+    override var feedback = Feedback()
 
-    private var sendFeedbackCall: Call<FeedbackResult>? = null
+    private var sendFeedbackCall = tumCabeClient.sendFeedback(feedback)
     private var sendImagesCalls = mutableListOf<Call<FeedbackResult>>()
 
     private var currentPhotoPath: String? = null
     private var imagesSent: Int = 0
 
     private var view: FeedbackContract.View? = null
-    override var feedback = Feedback()
 
     override fun attachView(view: FeedbackContract.View) {
         this.view = view
@@ -179,8 +179,7 @@ class FeedbackPresenter @Inject constructor(
         }
 
         view?.showProgressDialog()
-        sendFeedbackCall = tumCabeClient.sendFeedback(feedback)
-        sendFeedbackCall?.enqueue(object : Callback<FeedbackResult> {
+        sendFeedbackCall.enqueue(object : Callback<FeedbackResult> {
             override fun onResponse(call: Call<FeedbackResult>,
                                     response: Response<FeedbackResult>) {
                 val result = response.body()
@@ -222,8 +221,10 @@ class FeedbackPresenter @Inject constructor(
 
         for (call in sendImagesCalls) {
             call.enqueue(object : Callback<FeedbackResult> {
-                override fun onResponse(call: Call<FeedbackResult>,
-                                        response: Response<FeedbackResult>) {
+                override fun onResponse(
+                    call: Call<FeedbackResult>,
+                    response: Response<FeedbackResult>
+                ) {
                     val result = response.body()
                     if (result == null || !result.isSuccess) {
                         view?.showSendErrorDialog()
@@ -296,7 +297,7 @@ class FeedbackPresenter @Inject constructor(
 
     override fun detachView() {
         clearPictures()
-        sendFeedbackCall?.cancel()
+        sendFeedbackCall.cancel()
 
         for (call in sendImagesCalls) {
             call.cancel()
