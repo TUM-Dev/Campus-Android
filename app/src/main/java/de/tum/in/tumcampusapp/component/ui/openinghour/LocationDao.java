@@ -14,6 +14,9 @@ public interface LocationDao {
     @Query("SELECT hours FROM location WHERE reference  = :id")
     String getHoursByReferenceId(int id);
 
+    @Query("SELECT * FROM location WHERE reference = :id")
+    Location getLocationByReferenceId(int id);
+
     @Query("SELECT * FROM location WHERE category = :category ORDER BY name")
     List<Location> getAllOfCategory(String category);
 

@@ -82,7 +82,7 @@ public class OpeningHoursDetailFragment extends Fragment {
     /**
      * change presentation of locations in the list
      */
-    public void setViewValue(View view, Location location) {
+    public static void bindLocationToView(View view, Location location) {
         TextView locationTextView = view.findViewById(R.id.headerTextView);
         locationTextView.setText(location.getName());
 
@@ -145,7 +145,7 @@ public class OpeningHoursDetailFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            OpeningHoursDetailFragment.this.setViewValue(holder.itemView, locations.get(position));
+            OpeningHoursDetailFragment.bindLocationToView(holder.itemView, locations.get(position));
         }
 
         @Override
