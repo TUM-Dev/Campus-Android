@@ -10,7 +10,6 @@ import com.squareup.picasso.Picasso;
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import de.tum.in.tumcampusapp.di.AppComponent;
-import de.tum.in.tumcampusapp.di.AppModule;
 import de.tum.in.tumcampusapp.di.DaggerAppComponent;
 import io.reactivex.plugins.RxJavaPlugins;
 
@@ -35,7 +34,7 @@ public class App extends Application {
         // We use Dagger 2 for dependency injection. The main AppModule and AppComponent can be
         // found in the package "di".
         appComponent = DaggerAppComponent.builder()
-                .appModule(new AppModule(this))
+                .context(this)
                 .build();
     }
 

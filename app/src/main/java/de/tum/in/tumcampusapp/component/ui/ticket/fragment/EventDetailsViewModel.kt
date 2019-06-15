@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.tum.`in`.tumcampusapp.component.ui.ticket.di.EventId
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
+import de.tum.`in`.tumcampusapp.component.ui.ticket.payload.TicketStatus
 import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -21,8 +22,8 @@ class EventDetailsViewModel @Inject constructor(
 
     private val compositeDisposable = CompositeDisposable()
 
-    private val _ticketCount = MutableLiveData<Int?>()
-    val ticketCount: LiveData<Int?> = _ticketCount
+    private val _aggregatedTicketStatus = MutableLiveData<TicketStatus?>()
+    val aggregatedTicketStatus: LiveData<TicketStatus?> = _aggregatedTicketStatus
 
     init {
         fetchTicketCount()
@@ -32,12 +33,14 @@ class EventDetailsViewModel @Inject constructor(
         compositeDisposable += eventsRemoteRepository.fetchTicketStats(eventId)
                 .subscribeOn(Schedulers.io())
                 .doOnError(Utils::log)
-                .subscribe(_ticketCount::postValue) {
-                    _ticketCount.postValue(null)
+                .subscribe(_aggregatedTicketStatus::postValue) {
+                    _aggregatedTicketStatus.postValue(null)
                 }
     }
 
-    fun isEventBooked(event: Event): Boolean = ticketsLocalRepository.getTicketCount(event) != 0
+    fun isEventBooked(event: Event): Boolean = ticketsLocalRepository.getTicketCount(event) > 0
+
+    fun getBookedTicketCount(event: Event): Int = ticketsLocalRepository.getTicketCount(event)
 
     override fun onCleared() {
         super.onCleared()

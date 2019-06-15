@@ -2,16 +2,16 @@ package de.tum.in.tumcampusapp.component.ui.tufilm;
 
 import android.os.Bundle;
 
+import androidx.lifecycle.ViewModelProviders;
+import androidx.viewpager.widget.ViewPager;
+
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import androidx.lifecycle.ViewModelProviders;
-import androidx.viewpager.widget.ViewPager;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ProgressActivity;
-import de.tum.in.tumcampusapp.component.ui.tufilm.di.KinoModule;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.di.ViewModelFactory;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -34,10 +34,7 @@ public class KinoActivity extends ProgressActivity<Void> {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getInjector().kinoComponent()
-                .kinoModule(new KinoModule())
-                .build()
-                .inject(this);
+        getInjector().kinoComponent().inject(this);
 
         getWindow().setBackgroundDrawableResource(R.color.secondary_window_background);
 

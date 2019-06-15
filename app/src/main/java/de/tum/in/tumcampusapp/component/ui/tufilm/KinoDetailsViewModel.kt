@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
+import de.tum.`in`.tumcampusapp.component.ui.ticket.payload.TicketStatus
 import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.model.Kino
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoLocalRepository
@@ -26,15 +27,15 @@ class KinoDetailsViewModel @Inject constructor(
     private val _event= MutableLiveData<Event>()
     val event: LiveData<Event> = _event
 
-    private val _ticketCount = MutableLiveData<Int?>()
-    val ticketCount: LiveData<Int?> = _ticketCount
+    private val _aggregatedTicketStatus = MutableLiveData<TicketStatus?>()
+    val aggregatedTicketStatus: LiveData<TicketStatus?> = _aggregatedTicketStatus
 
     fun fetchTicketCount(eventId: Int) {
         compositeDisposable += eventsRemoteRepository.fetchTicketStats(eventId)
                 .subscribeOn(Schedulers.io())
                 .doOnError(Utils::log)
-                .subscribe(_ticketCount::postValue) {
-                    _ticketCount.postValue(null)
+                .subscribe(_aggregatedTicketStatus::postValue) {
+                    _aggregatedTicketStatus.postValue(null)
                 }
     }
 

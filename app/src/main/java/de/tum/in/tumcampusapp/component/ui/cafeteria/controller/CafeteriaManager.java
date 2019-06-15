@@ -3,6 +3,8 @@ package de.tum.in.tumcampusapp.component.ui.cafeteria.controller;
 import android.content.Context;
 import android.preference.PreferenceManager;
 
+import androidx.annotation.NonNull;
+
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 
@@ -12,7 +14,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-import androidx.annotation.NonNull;
+import javax.inject.Inject;
+
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.notifications.ProvidesNotifications;
 import de.tum.in.tumcampusapp.component.other.locations.LocationManager;
@@ -34,6 +37,7 @@ public class CafeteriaManager implements ProvidesCard, ProvidesNotifications {
     private Context mContext;
     private final CafeteriaLocalRepository localRepository;
 
+    @Inject
     public CafeteriaManager(Context context) {
         mContext = context;
         TcaDb db = TcaDb.getInstance(context);

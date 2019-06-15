@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.component.tumui.feedback;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,6 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
@@ -65,6 +66,7 @@ public class FeedbackPresenter implements FeedbackContract.Presenter {
 
     private Feedback feedback = new Feedback();
 
+    @Inject
     public FeedbackPresenter(Context context, String lrzId, TUMCabeClient tumCabeClient) {
         this.context = context;
         this.lrzId = lrzId;

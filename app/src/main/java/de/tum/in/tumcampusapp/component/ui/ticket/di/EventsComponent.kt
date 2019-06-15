@@ -5,7 +5,7 @@ import dagger.Subcomponent
 import de.tum.`in`.tumcampusapp.component.ui.ticket.fragment.EventsListFragment
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.EventType
 
-@Subcomponent(modules = [EventsModule::class])
+@Subcomponent
 interface EventsComponent {
 
     fun inject(eventsListFragment: EventsListFragment)
@@ -13,10 +13,8 @@ interface EventsComponent {
     @Subcomponent.Builder
     interface Builder {
 
-        fun eventsModule(eventsModule: EventsModule): EventsComponent.Builder
-
         @BindsInstance
-        fun eventType(eventType: EventType): EventsComponent.Builder
+        fun eventType(eventType: EventType): Builder
 
         fun build(): EventsComponent
 

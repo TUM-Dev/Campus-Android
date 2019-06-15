@@ -24,12 +24,13 @@ import org.jetbrains.anko.doAsync
 import java.io.IOException
 import java.lang.Double.parseDouble
 import java.util.*
+import javax.inject.Inject
 
 /**
  * Location manager, manages intelligent location services, provides methods to easily access
  * the users current location, campus, next public transfer station and best cafeteria
  */
-class LocationManager(c: Context) {
+class LocationManager @Inject constructor(c: Context) {
     private val mContext: Context = c.applicationContext
     private val buildingToGpsDao: BuildingToGpsDao
     private var manager: android.location.LocationManager? = null

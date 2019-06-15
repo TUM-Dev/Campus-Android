@@ -13,7 +13,6 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl.USE_CACHE
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.FragmentForDownloadingExternal
-import de.tum.`in`.tumcampusapp.component.ui.news.di.NewsModule
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.service.DownloadWorker
 import de.tum.`in`.tumcampusapp.utils.NetUtils
@@ -40,11 +39,7 @@ class NewsFragment : FragmentForDownloadingExternal(
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        injector
-            .newsComponent()
-            .newsModule(NewsModule())
-            .build()
-            .inject(this)
+        injector.newsComponent().inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
