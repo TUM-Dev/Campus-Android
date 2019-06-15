@@ -6,8 +6,7 @@ import android.os.Parcelable
 import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.utils.Const
 import kotlinx.android.parcel.Parcelize
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.UUID
 
 /**
  * @param id to associate the pictures with the message
@@ -33,7 +32,7 @@ data class Feedback(
         val appVersion: String = BuildConfig.VERSION_NAME,
         var imageCount: Int = 0,
         @Transient // don't send this
-        var picturePaths: List<String> = ArrayList()
+        var picturePaths: MutableList<String> = mutableListOf()
 ) : Parcelable {
 
     var location: Location?

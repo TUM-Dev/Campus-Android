@@ -32,11 +32,11 @@ interface FeedbackContract {
     }
 
     interface Presenter {
+        val feedback: Feedback
+        val lrzId: String
         fun attachView(view: View)
         fun onRestoreInstanceState(savedInstanceState: Bundle)
         fun initEmail()
-        fun getFeedback(): Feedback
-        fun getLrzId(): String
         fun removeImage(path: String)
         fun onSendFeedback()
         fun onConfirmSend()
