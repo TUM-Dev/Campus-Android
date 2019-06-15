@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseNavigationActivity
 import de.tum.`in`.tumcampusapp.component.other.generic.drawer.NavItem
@@ -49,18 +50,22 @@ object NavigationManager {
     }
 
     private fun openFragment(activity: BaseNavigationActivity, fragment: Fragment) {
-        val backstackCount = activity.supportFragmentManager.backStackEntryCount
         activity
             .supportFragmentManager
             .beginTransaction()
             .setCustomAnimations(R.anim.fadein, R.anim.fadeout)
             .replace(R.id.contentFrame, fragment)
-            .apply {
-                if (backstackCount == 0) {
-                    addToBackStack(null)
-                }
-            }
+            .ensureBackToHome(activity)
             .commit()
+    }
+
+    private fun FragmentTransaction.ensureBackToHome(
+        activity: BaseNavigationActivity
+    ): FragmentTransaction {
+        if (activity.supportFragmentManager.backStackEntryCount == 0) {
+            addToBackStack(null)
+        }
+        return this
     }
 
 }

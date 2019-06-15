@@ -111,7 +111,6 @@ public abstract class ActivityForSearching<T> extends ProgressActivity<T> {
         searchView.setOnCloseListener(() -> {
             searchItem.collapseActionView();
             query = null;
-            // enableDrawer(true);
             onStartSearch();
             return false;
         });
@@ -119,7 +118,6 @@ public abstract class ActivityForSearching<T> extends ProgressActivity<T> {
         searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                // enableDrawer(false);
                 return true;
             }
 
@@ -127,7 +125,6 @@ public abstract class ActivityForSearching<T> extends ProgressActivity<T> {
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 query = null;
                 onStartSearch();
-                // enableDrawer(true);
                 return true;
             }
         });
