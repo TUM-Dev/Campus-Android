@@ -126,6 +126,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun showTicketCount(status: TicketStatus?) {
+        // Same logic as showTicketCount function in EventDetailsFragment.kt --> keep it the same
         if(EventHelper.isEventImminent(event)) {
             ticketButton.visibility = if(!viewModel.isEventBooked(event)) View.GONE else View.VISIBLE
             remainingTicketsContainer.visibility = View.GONE

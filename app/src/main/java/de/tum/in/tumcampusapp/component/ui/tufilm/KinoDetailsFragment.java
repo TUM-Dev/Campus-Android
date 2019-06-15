@@ -137,15 +137,16 @@ public class KinoDetailsFragment extends Fragment {
         TextView remainingTicketsTextView = rootView.findViewById(R.id.remainingTicketsTextView);
         TextView remainingTicketsHeaderView = rootView.findViewById(R.id.remainingTicketsHeaderTextView);
         MaterialButton ticketButton = rootView.findViewById(R.id.buyTicketButton);
-        int ticketBoughtCount = ticketsLocalRepo.getTicketCount(event);
+        boolean isEventBooked = ticketsLocalRepo.getTicketCount(event) > 0;
 
+        // Same logic as showTicketCount function in EventDetailsFragment.kt --> keep it the same
         if(EventHelper.Companion.isEventImminent(event)) {
-            ticketButton.setVisibility((ticketBoughtCount <= 0) ? View.GONE : View.VISIBLE);
+            ticketButton.setVisibility(isEventBooked ? View.VISIBLE : View.GONE);
             remainingTicketsHeaderView.setVisibility(View.GONE);
             remainingTicketsTextView.setVisibility(View.GONE);
         } else {
             if (status == null || status.isEventWithoutTickets()) {
-                ticketButton.setVisibility((ticketBoughtCount <= 0) ? View.GONE : View.VISIBLE);
+                ticketButton.setVisibility(isEventBooked ? View.VISIBLE : View.GONE);
                 remainingTicketsHeaderView.setVisibility(View.GONE);
                 remainingTicketsTextView.setVisibility(View.GONE);
             } else if(status.ticketsStillAvailable()) {
@@ -154,7 +155,7 @@ public class KinoDetailsFragment extends Fragment {
                 remainingTicketsTextView.setText(String.format(Locale.getDefault(), "%d", status));
                 remainingTicketsTextView.setVisibility(View.VISIBLE);
             } else {
-                ticketButton.setVisibility((ticketBoughtCount <= 0) ? View.GONE : View.VISIBLE);
+                ticketButton.setVisibility(isEventBooked ? View.VISIBLE : View.GONE);
                 remainingTicketsHeaderView.setVisibility(View.VISIBLE);
                 remainingTicketsTextView.setText(R.string.no_tickets_remaining_tufilm_message);
                 remainingTicketsTextView.setVisibility(View.VISIBLE);
