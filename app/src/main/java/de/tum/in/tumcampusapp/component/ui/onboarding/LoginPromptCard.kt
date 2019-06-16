@@ -1,12 +1,10 @@
 package de.tum.`in`.tumcampusapp.component.ui.onboarding
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
@@ -40,7 +38,7 @@ class LoginPromptCard(context: Context) : Card(CardManager.CARD_LOGIN, context, 
         fun inflateViewHolder(parent: ViewGroup, interactionListener: CardInteractionListener): CardViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.card_login_prompt, parent, false)
             view.findViewById<View>(R.id.loginButton).setOnClickListener {
-                val loginIntent = Intent(view.context, WizNavStartActivity::class.java)
+                val loginIntent = OnboardingActivity.newIntent(view.context)
                 view.context.startActivity(loginIntent)
             }
             return CardViewHolder(view, interactionListener)

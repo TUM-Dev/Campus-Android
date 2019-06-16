@@ -107,6 +107,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation 'android.arch.lifecycle:reactivestreams:1.1.1'
     implementation 'android.arch.work:work-runtime-ktx:1.0.1'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
     kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
     kapt 'androidx.room:room-compiler:2.1.0-alpha06'
 
@@ -131,6 +132,8 @@ dependencies {
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.anko:anko:0.10.8"
+    implementation 'androidx.core:core-ktx:1.0.2'
+    implementation 'androidx.fragment:fragment-ktx:1.0.0'
 
     // RxJava
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'

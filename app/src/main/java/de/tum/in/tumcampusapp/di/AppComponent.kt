@@ -6,6 +6,9 @@ import dagger.Component
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.di.FeedbackComponent
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.di.CafeteriaComponent
 import de.tum.`in`.tumcampusapp.component.ui.news.di.NewsComponent
+import de.tum.`in`.tumcampusapp.component.ui.onboarding.CheckTokenFragment
+import de.tum.`in`.tumcampusapp.component.ui.onboarding.OnboardingExtrasFragment
+import de.tum.`in`.tumcampusapp.component.ui.onboarding.OnboardingStartFragment
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainFragment
 import de.tum.`in`.tumcampusapp.component.ui.ticket.di.EventsComponent
@@ -28,6 +31,9 @@ interface AppComponent {
 
     fun inject(mainActivity: MainActivity)
     fun inject(mainFragment: MainFragment)
+    fun inject(onboardingStartFragment: OnboardingStartFragment)
+    fun inject(checkTokenFragment: CheckTokenFragment)
+    fun inject(onboardingExtrasFragment: OnboardingExtrasFragment)
 
     @Component.Builder
     interface Builder {

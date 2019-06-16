@@ -5,15 +5,16 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.button.MaterialButton;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.material.button.MaterialButton;
 
 import java.util.Locale;
 
@@ -21,7 +22,6 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
 import de.tum.in.tumcampusapp.api.app.exception.NoPublicKey;
 import de.tum.in.tumcampusapp.api.tumonline.AccessTokenManager;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.api.tumonline.exception.InactiveTokenException;
 import de.tum.in.tumcampusapp.api.tumonline.exception.InvalidTokenException;
 import de.tum.in.tumcampusapp.api.tumonline.exception.RequestLimitReachedException;
@@ -32,8 +32,6 @@ import de.tum.in.tumcampusapp.component.other.generic.activity.ProgressActivity;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Displays the first page of the startup wizard, where the user can enter his lrz-id.
@@ -136,7 +134,7 @@ public class WizNavStartActivity extends ProgressActivity<Void> implements TextW
         showLoadingStart();
         String tokenName = "TUMCampusApp-" + Build.PRODUCT;
 
-        mTokenRequestCall = TUMOnlineClient.getInstance(this).requestToken(publicKey, tokenName);
+        /*mTokenRequestCall = TUMOnlineClient.getInstance(this).requestToken(publicKey, tokenName);
         mTokenRequestCall.enqueue(new Callback<AccessToken>() {
             @Override
             public void onResponse(@NonNull Call<AccessToken> call,
@@ -162,7 +160,7 @@ public class WizNavStartActivity extends ProgressActivity<Void> implements TextW
 
                 mTokenRequestCall = null;
             }
-        });
+        });*/
     }
 
     /**

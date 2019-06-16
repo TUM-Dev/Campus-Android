@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import java.net.UnknownHostException;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+
+import java.net.UnknownHostException;
+
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.api.tumonline.exception.InactiveTokenException;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ProgressActivity;
 import de.tum.in.tumcampusapp.component.tumui.person.model.Identity;
@@ -20,8 +20,6 @@ import de.tum.in.tumcampusapp.component.tumui.person.model.ObfuscatedIds;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class WizNavCheckTokenActivity extends ProgressActivity<Void> {
 
@@ -58,7 +56,7 @@ public class WizNavCheckTokenActivity extends ProgressActivity<Void> {
         mToast = Toast.makeText(this, R.string.checking_if_token_enabled, Toast.LENGTH_LONG);
         mToast.show();
 
-        mIdentityCall = TUMOnlineClient.getInstance(this).getIdentity();
+        /*mIdentityCall = TUMOnlineClient.getInstance(this).getIdentity();
         mIdentityCall.enqueue(new Callback<IdentitySet>() {
             @Override
             public void onResponse(@NonNull Call<IdentitySet> call,
@@ -82,7 +80,7 @@ public class WizNavCheckTokenActivity extends ProgressActivity<Void> {
                 handleDownloadFailure(t);
                 mIdentityCall = null;
             }
-        });
+        });*/
     }
 
     private void handleDownloadSuccess(@NonNull IdentitySet identitySet) {
