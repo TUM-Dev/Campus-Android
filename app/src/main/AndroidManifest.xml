@@ -350,37 +350,6 @@
                 android:value=".component.other.generic.activity.BaseNavigationActivity" />
         </activity>
         <activity
-            android:name=".component.ui.onboarding.WizNavStartActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/connect_to_tum_online"
-            android:parentActivityName=".component.ui.overview.MainActivity"
-            android:theme="@style/AppTheme.NoDrawerLayout">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
-        </activity>
-        <activity
-            android:name=".component.ui.onboarding.WizNavCheckTokenActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/connect_to_tum_online"
-            android:parentActivityName=".component.ui.onboarding.WizNavStartActivity"
-            android:theme="@style/AppTheme.NoDrawerLayout">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.onboarding.WizNavStartActivity" />
-        </activity>
-        <activity
-            android:name=".component.ui.onboarding.WizNavExtrasActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/connect_to_tum_online"
-            android:parentActivityName=".component.ui.onboarding.WizNavCheckTokenActivity"
-            android:theme="@style/AppTheme.NoDrawerLayout"
-            android:windowSoftInputMode="stateHidden">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.onboarding.WizNavCheckTokenActivity" />
-        </activity>
-        <activity
             android:name=".component.tumui.calendar.CalendarActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/calendar"

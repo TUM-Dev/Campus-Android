@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.transaction
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
@@ -34,6 +35,10 @@ class CheckTokenFragment : BaseFragment<Unit>(
 ) {
 
     private val compositeDisposable = CompositeDisposable()
+
+    private val lrzId: String by lazy {
+        checkNotNull(arguments?.getString(KEY_LRZ_ID))
+    }
 
     @Inject
     lateinit var tumOnlineClient: TUMOnlineClient
@@ -89,10 +94,13 @@ class CheckTokenFragment : BaseFragment<Unit>(
             Utils.setSetting(requireContext(), Const.ROLE, "1")
         }
 
+        // By storing the LRZ ID in this step, we can prevent that a user who didn't completely
+        // finish the login flow is considered logged in
+        Utils.setSetting(requireContext(), Const.LRZ_ID, lrzId)
+
         // Note: we can't upload the obfuscated ids here since we might not have a (chat) member yet
 
         requireFragmentManager().transaction {
-            // setCustomAnimations(R.anim.fadein, R.anim.fadeout)
             replace(R.id.contentFrame, OnboardingExtrasFragment.newInstance())
             addToBackStack(null)
         }
@@ -114,7 +122,10 @@ class CheckTokenFragment : BaseFragment<Unit>(
     }
 
     companion object {
-        fun newInstance() = CheckTokenFragment()
+        private const val KEY_LRZ_ID = "KEY_LRZ_ID"
+        fun newInstance(
+            lrzId: String
+        ) = CheckTokenFragment().apply { arguments = bundleOf(KEY_LRZ_ID to lrzId) }
     }
 
 }

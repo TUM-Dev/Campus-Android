@@ -46,7 +46,7 @@ class OnboardingStartFragment : BaseFragment<Unit>(
 ), Backpressable {
 
     private val compositeDisposable = CompositeDisposable()
-    private lateinit var lrzId: String
+    private lateinit var enteredId: String
 
     @Inject
     lateinit var authManager: AuthenticationManager
@@ -90,15 +90,12 @@ class OnboardingStartFragment : BaseFragment<Unit>(
     }
 
     private fun onNextPressed() {
-        val enteredId = lrz_id.text.toString().toLowerCase(Locale.GERMANY)
+        enteredId = lrz_id.text.toString().toLowerCase(Locale.GERMANY)
 
         if (!enteredId.matches(Const.TUM_ID_PATTERN.toRegex())) {
             Utils.showToast(requireContext(), R.string.error_invalid_tum_id)
             return
         }
-
-        lrzId = enteredId
-        Utils.setSetting(requireContext(), Const.LRZ_ID, lrzId)
 
         hideKeyboard()
 
@@ -117,7 +114,7 @@ class OnboardingStartFragment : BaseFragment<Unit>(
                 }
                 .show()
         } else {
-            requestNewToken(lrzId)
+            requestNewToken(enteredId)
         }
     }
 
@@ -200,7 +197,7 @@ class OnboardingStartFragment : BaseFragment<Unit>(
     private fun generateNewToken() {
         authManager.clearKeys()
         authManager.generatePrivateKey(null)
-        requestNewToken(lrzId)
+        requestNewToken(enteredId)
     }
 
     override fun onBackPressed(): Boolean {
@@ -223,8 +220,7 @@ class OnboardingStartFragment : BaseFragment<Unit>(
 
     private fun openNextOnboardingStep() {
         requireFragmentManager().transaction {
-            // setCustomAnimations(R.anim.fadein, R.anim.fadeout)
-            replace(R.id.contentFrame, CheckTokenFragment.newInstance())
+            replace(R.id.contentFrame, CheckTokenFragment.newInstance(enteredId))
             addToBackStack(null)
         }
     }
