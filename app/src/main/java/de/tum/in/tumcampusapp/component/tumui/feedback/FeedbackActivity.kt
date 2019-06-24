@@ -117,10 +117,10 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     }
 
     override fun getMessage(): Observable<String> =
-            feedbackMessage
-                    .textChanges()
-                    .map { it.toString() }
+            feedbackMessage.textChanges().map { it.toString() }
 
+    override fun getEmail(): Observable<String> =
+            customEmailInput.textChanges().map { it.toString() }
 
     override fun getTopicInput(): Observable<Int> = radioButtonsGroup.checkedChanges()
     override fun getIncludeEmail(): Observable<Boolean> = includeEmailCheckbox.checkedChanges()
