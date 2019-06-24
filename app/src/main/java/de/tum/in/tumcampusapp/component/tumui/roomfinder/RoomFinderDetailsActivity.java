@@ -67,7 +67,7 @@ public class RoomFinderDetailsActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mImageFragment = ImageViewTouchFragment.newInstance();
+        mImageFragment = ImageViewTouchFragment.Companion.newInstance();
         getSupportFragmentManager().beginTransaction()
                                    .add(R.id.fragment_container, mImageFragment)
                                    .commit();
@@ -79,7 +79,7 @@ public class RoomFinderDetailsActivity
             return;
         }
 
-        mImageFragment = ImageViewTouchFragment.newInstance();
+        mImageFragment = ImageViewTouchFragment.Companion.newInstance();
         getSupportFragmentManager().beginTransaction()
                                    .add(R.id.fragment_container, mImageFragment)
                                    .commit();
