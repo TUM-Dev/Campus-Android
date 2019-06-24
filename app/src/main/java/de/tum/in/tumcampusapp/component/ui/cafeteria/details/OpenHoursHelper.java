@@ -13,7 +13,6 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.openinghour.LocationDao;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
-import de.tum.in.tumcampusapp.utils.Utils;
 
 public class OpenHoursHelper {
 
@@ -40,7 +39,6 @@ public class OpenHoursHelper {
         if (result == null) {
             return "";
         }
-        Utils.log("id: " + id + ", " + result);
 
         //Check which week day we have
         int dayOfWeek = date.getDayOfWeek();
@@ -68,8 +66,7 @@ public class OpenHoursHelper {
         String[] time = new String[2];
         if (m.find()) {
             //We are currently in Mo-Do/Fr, when this weekday is in that range we have our result or we check if the current range is valid for fridays also
-            Utils.log(m.group(2));
-            if (dayOfWeek + 1 <= Calendar.THURSDAY
+            if (dayOfWeek + 1 <= Calendar.THURSDAY // +1 because dayOfWeek is zero-based while Calendar.THURSDAY is not
                 || m.group(2).equalsIgnoreCase(isGerman ? "fr" : "fri")) {
                 time[0] = m.group(3);
                 time[1] = m.group(4);
