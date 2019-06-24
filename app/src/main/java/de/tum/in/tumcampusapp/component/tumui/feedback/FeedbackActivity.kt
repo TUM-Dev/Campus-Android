@@ -42,7 +42,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     private var progressDialog: AlertDialog? = null
 
     @Inject
-    internal var presenter: FeedbackContract.Presenter? = null
+    lateinit var presenter: FeedbackContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,31 +53,31 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
                 .build()
                 .inject(this)
 
-        presenter?.attachView(this)
+        presenter.attachView(this)
 
         if (savedInstanceState != null) {
-            presenter?.onRestoreInstanceState(savedInstanceState)
+            presenter.onRestoreInstanceState(savedInstanceState)
         }
 
         initIncludeLocation()
         initPictureGalley()
 
         if (savedInstanceState == null) {
-            presenter?.initEmail()
+            presenter.initEmail()
         }
         initIncludeEmail()
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        presenter?.onSaveInstanceState(outState)
+        presenter.onSaveInstanceState(outState)
     }
 
     private fun initPictureGalley() {
         val pictureList = findViewById<RecyclerView>(R.id.imageRecyclerView)
         pictureList.layoutManager = LinearLayoutManager(this, HORIZONTAL, false)
 
-        val imagePaths = presenter?.feedback?.picturePaths ?: ArrayList()
+        val imagePaths = presenter.feedback.picturePaths
         val thumbnailSize = resources.getDimension(R.dimen.thumbnail_size).toInt()
         thumbnailsAdapter = FeedbackThumbnailsAdapter(imagePaths, this, thumbnailSize)
         pictureList.adapter = thumbnailsAdapter
@@ -102,14 +102,14 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     }
 
     private fun removeThumbnail(path: String) {
-        presenter?.removeImage(path)
+        presenter.removeImage(path)
     }
 
     private fun showImageOptionsDialog() {
         val options = arrayOf(getString(R.string.feedback_take_picture), getString(R.string.gallery))
         val alertDialog = AlertDialog.Builder(this)
                 .setTitle(R.string.feedback_add_picture)
-                .setItems(options) { dialog, index -> presenter?.onImageOptionSelected(index) }
+                .setItems(options) { _, index -> presenter.onImageOptionSelected(index) }
                 .setNegativeButton(R.string.cancel, null)
                 .create()
         alertDialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
@@ -148,15 +148,15 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     }
 
     private fun initIncludeLocation() {
-        includeLocationCheckBox.isChecked = presenter?.feedback?.includeLocation ?: false
+        includeLocationCheckBox.isChecked = presenter.feedback.includeLocation
     }
 
     private fun initIncludeEmail() {
-        val feedback = presenter?.feedback
-        val email = feedback?.email
-        includeEmailCheckbox.isChecked = feedback?.includeEmail ?: false
+        val feedback = presenter.feedback
+        val email = feedback.email
+        includeEmailCheckbox.isChecked = feedback.includeEmail
 
-        if ((presenter?.lrzId ?: "").isEmpty()) {
+        if ((presenter.lrzId).isEmpty()) {
             includeEmailCheckbox.text = getString(R.string.feedback_include_email)
             customEmailInput.setText(email)
         } else {
@@ -173,7 +173,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     }
 
     fun onSendClicked(view: View) {
-        presenter?.onSendFeedback()
+        presenter.onSendFeedback()
     }
 
     override fun showEmptyMessageError() {
@@ -211,7 +211,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
         val errorDialog = AlertDialog.Builder(this)
                 .setMessage(R.string.feedback_sending_error)
                 .setIcon(R.drawable.ic_error_outline)
-                .setPositiveButton(R.string.try_again) { _, _ -> presenter?.feedback }
+                .setPositiveButton(R.string.try_again) { _, _ -> presenter.feedback }
                 .setNegativeButton(R.string.cancel, null)
                 .create()
         errorDialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
@@ -227,7 +227,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     override fun showSendConfirmationDialog() {
         val alertDialog = AlertDialog.Builder(this)
                 .setMessage(R.string.send_feedback_question)
-                .setPositiveButton(R.string.send) { _, _ -> presenter?.onConfirmSend() }
+                .setPositiveButton(R.string.send) { _, _ -> presenter.onConfirmSend() }
                 .setNegativeButton(R.string.cancel, null)
                 .create()
         alertDialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
@@ -240,10 +240,10 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
         }
 
         when (requestCode) {
-            REQUEST_TAKE_PHOTO -> presenter?.onNewImageTaken()
+            REQUEST_TAKE_PHOTO -> presenter.onNewImageTaken()
             REQUEST_GALLERY -> {
                 val filePath = data?.data
-                presenter?.onNewImageSelected(filePath)
+                presenter.onNewImageSelected(filePath)
             }
         }
     }
@@ -269,19 +269,19 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
             PERMISSION_LOCATION -> {
                 includeLocationCheckBox.isChecked = isGranted
                 if (isGranted) {
-                    presenter?.listenForLocation()
+                    presenter.listenForLocation()
                 }
                 return
             }
             PERMISSION_CAMERA -> {
                 if (isGranted) {
-                    presenter?.takePicture()
+                    presenter.takePicture()
                 }
                 return
             }
             PERMISSION_FILES -> {
                 if (isGranted) {
-                    presenter?.openGallery()
+                    presenter.openGallery()
                 }
                 return
             }
@@ -291,7 +291,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     }
 
     override fun onDestroy() {
-        presenter?.detachView()
+        presenter.detachView()
         super.onDestroy()
     }
 
