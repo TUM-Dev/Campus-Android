@@ -17,13 +17,12 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.app.model.TUMCabeVerification
 import de.tum.`in`.tumcampusapp.component.other.generic.PushNotification
+import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseNavigationActivity
 import de.tum.`in`.tumcampusapp.component.ui.chat.activity.ChatActivity
-import de.tum.`in`.tumcampusapp.component.ui.chat.activity.ChatRoomsActivity
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatRoom
 import de.tum.`in`.tumcampusapp.component.ui.chat.repository.ChatMessageLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.chat.repository.ChatMessageRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
-import de.tum.`in`.tumcampusapp.component.ui.overview.MainActivity
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.service.FcmReceiverService.Companion.CHAT_NOTIFICATION
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -103,14 +102,14 @@ class ChatPushNotification(
                 .sendBroadcast(intent)
         val messagesText = messages?.asReversed()?.map { it.text }
         val notificationText = messagesText?.joinToString("\n")
+
         // Put the data into the intent
         val notificationIntent = Intent(appContext, ChatActivity::class.java).apply {
             putExtra(Const.CURRENT_CHAT_ROOM, Gson().toJson(chatRoom))
         }
 
         val taskStackBuilder = TaskStackBuilder.create(appContext).apply {
-            addNextIntent(Intent(appContext, MainActivity::class.java))
-            addNextIntent(Intent(appContext, ChatRoomsActivity::class.java))
+            addNextIntent(BaseNavigationActivity.newChatIntent(appContext))
             addNextIntent(notificationIntent)
         }
 

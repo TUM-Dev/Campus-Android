@@ -6,9 +6,13 @@ import android.os.Bundle
 import android.view.MenuItem
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
+import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseNavigationActivity
 import de.tum.`in`.tumcampusapp.utils.Const
-import kotlinx.android.synthetic.main.activity_payment_confirmation.*
-import java.util.*
+import kotlinx.android.synthetic.main.activity_payment_confirmation.bodyTextView
+import kotlinx.android.synthetic.main.activity_payment_confirmation.doneButton
+import kotlinx.android.synthetic.main.activity_payment_confirmation.imageView
+import kotlinx.android.synthetic.main.activity_payment_confirmation.showTicketButton
+import java.util.Timer
 import kotlin.concurrent.schedule
 
 class PaymentConfirmationActivity : BaseActivity(R.layout.activity_payment_confirmation) {
@@ -33,9 +37,9 @@ class PaymentConfirmationActivity : BaseActivity(R.layout.activity_payment_confi
         }
 
         doneButton.setOnClickListener {
-            val intent = Intent(this, EventsActivity::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            }
+            val intent = BaseNavigationActivity
+                .newEventsIntent(this)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
             finish()
         }
@@ -69,8 +73,9 @@ class PaymentConfirmationActivity : BaseActivity(R.layout.activity_payment_confi
     private fun handleOnBackPressed() {
         // Go back to events and finish this activity to prevent the user from purchasing
         // another ticket.
-        val intent = Intent(this, EventsActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        val intent = BaseNavigationActivity
+            .newEventsIntent(this)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
         finish()
     }

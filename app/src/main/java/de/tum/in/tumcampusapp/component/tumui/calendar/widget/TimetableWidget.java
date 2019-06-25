@@ -8,8 +8,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import androidx.annotation.NonNull;
 import android.widget.RemoteViews;
+
+import androidx.annotation.NonNull;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -18,7 +19,7 @@ import org.joda.time.format.DateTimeFormat;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarActivity;
+import de.tum.in.tumcampusapp.component.other.generic.activity.BaseNavigationActivity;
 
 public class TimetableWidget extends AppWidgetProvider {
 
@@ -84,17 +85,14 @@ public class TimetableWidget extends AppWidgetProvider {
         rv.setOnClickPendingIntent(R.id.timetable_widget_setting, pendingConfigIntent);
 
         // Set up the calendar activity listeners
-        Intent calendarIntent = new Intent(context, CalendarActivity.class);
+        Intent calendarIntent = BaseNavigationActivity.newCalendarIntent(context);
+
         PendingIntent pendingCalendarIntent = PendingIntent.getActivity(
                 context, appWidgetId, calendarIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         rv.setOnClickPendingIntent(R.id.timetable_widget_header, pendingCalendarIntent);
 
         // Set up the calendar intent used when the user taps an event
-        Intent eventIntent = new Intent(context, CalendarActivity.class);
-        eventIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent eventPendingIntent = PendingIntent.getActivity(
-                context, appWidgetId, eventIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        rv.setPendingIntentTemplate(R.id.timetable_widget_listview, eventPendingIntent);
+        rv.setPendingIntentTemplate(R.id.timetable_widget_listview, pendingCalendarIntent);
 
         // Set up the intent that starts the TimetableWidgetService, which will
         // provide the departure times for this station

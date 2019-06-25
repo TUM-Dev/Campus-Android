@@ -9,17 +9,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter;
-import de.tum.in.tumcampusapp.component.tumui.lectures.activity.LecturesPersonalActivity;
 import de.tum.in.tumcampusapp.component.tumui.lectures.model.Lecture;
-import de.tum.in.tumcampusapp.component.ui.chat.activity.ChatRoomsActivity;
-
-/**
- * This class handles the view output of the results for finding lectures via
- * TUMOnline used in {@link LecturesPersonalActivity}
- * and {@link ChatRoomsActivity}. It
- * implements {@link se.emilsjolander.stickylistheaders.StickyListHeadersAdapter} to
- * show semester info as sticky header.
- */
 
 public class LecturesListAdapter extends SimpleStickyListHeadersAdapter<Lecture> {
 

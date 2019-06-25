@@ -1,10 +1,5 @@
 package de.tum.in.tumcampusapp.component.ui.openinghour;
 
-import android.os.Bundle;
-
-import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
-
 /**
  * An activity representing a list of Items. This activity has different
  * presentations for handset and tablet-size devices. On handsets, the activity
@@ -17,9 +12,9 @@ import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
  * {@link OpeningHoursListFragment} and the item details (if present) is a
  * {@link OpeningHoursDetailFragment}.
  */
-public class OpeningHoursListActivity extends BaseActivity {
+class OpeningHoursListActivity /*extends BaseActivity*/ {
 
-    public OpeningHoursListActivity() {
+    /*public OpeningHoursListActivity() {
         super(R.layout.activity_openinghourslist);
     }
 
@@ -33,6 +28,6 @@ public class OpeningHoursListActivity extends BaseActivity {
                     .replace(R.id.contentFrame, OpeningHoursListFragment.newInstance())
                     .commit();
         }
-    }
+    }*/
 
 }

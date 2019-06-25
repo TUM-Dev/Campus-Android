@@ -121,67 +121,34 @@
                 android:resource="@xml/shortcuts" />
         </activity>
         <activity
-            android:name=".component.ui.overview.MainActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/home"
-            android:launchMode="singleTop" />
-        <activity
             android:name=".component.other.generic.activity.BaseNavigationActivity"
             android:configChanges="orientation|screenSize"
             android:launchMode="singleTop" />
         <activity
-            android:name=".component.ui.news.NewsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/news"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
-        </activity>
-        <activity
-            android:name=".component.tumui.grades.GradesActivity"
-            android:label="@string/empty_string"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
-        </activity>
-        <activity
             android:name=".component.other.settings.UserPreferencesActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/settings"
-            android:parentActivityName=".component.ui.overview.MainActivity"
+            android:parentActivityName=".component.other.generic.activity.BaseNavigationActivity"
             android:theme="@style/AppTheme.NoDrawerLayout">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
+                android:value=".component.other.generic.activity.BaseNavigationActivity" />
         </activity>
         <activity
             android:name=".component.ui.openinghour.OpeningHoursDetailActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/opening_hours"
-            android:parentActivityName=".component.ui.openinghour.OpeningHoursListActivity">
+            android:parentActivityName=".component.other.generic.activity.BaseNavigationActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.openinghour.OpeningHoursListActivity" />
-        </activity>
-        <activity
-            android:name=".component.ui.openinghour.OpeningHoursListActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/opening_hours"
-            android:parentActivityName=".component.ui.overview.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
+                android:value=".component.other.generic.activity.BaseNavigationActivity" />
         </activity>
         <activity
             android:name=".component.ui.transportation.TransportationActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/mvv"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
+            android:parentActivityName=".component.other.generic.activity.BaseNavigationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -191,7 +158,7 @@
                 android:resource="@xml/searchable_mvv" />
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
+                android:value=".component.other.generic.activity.BaseNavigationActivity" />
         </activity>
         <activity
             android:name=".component.ui.transportation.TransportationDetailsActivity"
@@ -207,22 +174,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampusapp.component.tumui.lectures.activity.LecturesDetailsActivity" />
         </activity>
-        <activity
-            android:name=".component.tumui.lectures.activity.LecturesDetailsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/lectures_information"
-            android:parentActivityName=".component.tumui.lectures.activity.LecturesPersonalActivity"
-            android:theme="@style/AppTheme.NoDrawerLayout">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.tumui.lectures.activity.LecturesPersonalActivity" />
-        </activity>
+<!--
         <activity
             android:name=".component.tumui.lectures.activity.LecturesPersonalActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/my_lectures"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
+            android:parentActivityName=".component.other.generic.activity.BaseNavigationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -232,44 +190,36 @@
                 android:resource="@xml/searchable_lectures" />
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
+                android:value=".component.other.generic.activity.BaseNavigationActivity" />
         </activity>
-        <activity
-            android:name=".component.ui.cafeteria.activity.CafeteriaActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/empty_string"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
-        </activity>
+-->
         <activity
             android:name=".component.ui.cafeteria.activity.CafeteriaNotificationSettingsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/cafeteria_notification_settings"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.cafeteria.activity.CafeteriaActivity">
+            android:parentActivityName=".component.other.generic.activity.BaseNavigationActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity" />
+                android:value="de.tum.in.tumcampusapp.component.other.generic.activity.BaseNavigationActivity" />
         </activity>
         <activity
             android:name=".component.ui.tufilm.KinoActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/kino"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
+            android:parentActivityName=".component.other.generic.activity.BaseNavigationActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
+                android:value=".component.other.generic.activity.BaseNavigationActivity" />
         </activity>
+<!--
         <activity
             android:name=".component.tumui.person.PersonSearchActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/person_search"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
+            android:parentActivityName=".component.other.generic.activity.BaseNavigationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -279,26 +229,28 @@
                 android:resource="@xml/searchable_persons" />
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
+                android:value=".component.other.generic.activity.BaseNavigationActivity" />
         </activity>
+-->
         <activity
             android:name=".component.tumui.person.PersonDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/person_information"
-            android:parentActivityName=".component.tumui.person.PersonSearchActivity">
+            android:parentActivityName=".component.other.generic.activity.BaseNavigationActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.tumui.person.PersonSearchActivity" />
+                android:value="de.tum.in.tumcampusapp.component.other.generic.activity.BaseNavigationActivity" />
         </activity>
+<!--
         <activity
             android:name=".component.tumui.roomfinder.RoomFinderActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/roomfinder"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
+            android:parentActivityName=".component.other.generic.activity.BaseNavigationActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
+                android:value=".component.other.generic.activity.BaseNavigationActivity" />
 
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -308,34 +260,16 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable_rooms" />
         </activity>
+-->
         <activity
             android:name=".component.tumui.roomfinder.RoomFinderDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/roomfinder"
-            android:parentActivityName=".component.tumui.roomfinder.RoomFinderActivity"
+            android:parentActivityName=".component.other.generic.activity.BaseNavigationActivity"
             android:theme="@style/AppTheme.NoDrawerLayout">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity" />
-        </activity>
-        <activity
-            android:name=".component.ui.studyroom.StudyRoomsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/study_rooms"
-            android:parentActivityName=".component.ui.overview.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
-        </activity>
-        <activity
-            android:name=".component.tumui.tutionfees.TuitionFeesActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/tuition_fees"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
+                android:value="de.tum.in.tumcampusapp.component.other.generic.activity.BaseNavigationActivity" />
         </activity>
         <activity
             android:name=".component.ui.overview.InformationActivity"
@@ -353,21 +287,21 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/setup_eduroam"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity"
+            android:parentActivityName=".component.other.generic.activity.BaseNavigationActivity"
             android:theme="@style/AppTheme.NoDrawerLayout">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
+                android:value=".component.other.generic.activity.BaseNavigationActivity" />
         </activity>
         <activity
             android:name=".component.ui.onboarding.WizNavStartActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/startup_wizard"
-            android:parentActivityName=".component.ui.overview.MainActivity"
+            android:parentActivityName=".component.other.generic.activity.BaseNavigationActivity"
             android:theme="@style/AppTheme.NoDrawerLayout">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
+                android:value=".component.other.generic.activity.BaseNavigationActivity" />
         </activity>
         <activity
             android:name=".component.ui.onboarding.WizNavCheckTokenActivity"
@@ -391,81 +325,55 @@
                 android:value=".component.ui.onboarding.WizNavCheckTokenActivity" />
         </activity>
         <activity
-            android:name=".component.tumui.calendar.CalendarActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/calendar"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
-        </activity>
-        <activity
-            android:name=".component.ui.chat.activity.ChatRoomsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/my_chat_rooms"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
-        </activity>
-        <activity
             android:name=".component.ui.chat.activity.ChatActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/my_chat_rooms"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.chat.activity.ChatRoomsActivity">
+            android:parentActivityName=".component.other.generic.activity.BaseNavigationActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.ui.chat.activity.ChatRoomsActivity" />
+                android:value="de.tum.in.tumcampusapp.component.other.generic.activity.BaseNavigationActivity" />
         </activity>
         <activity
             android:name=".component.ui.chat.activity.JoinRoomScanActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.chat.activity.ChatRoomsActivity"
+            android:parentActivityName=".component.other.generic.activity.BaseNavigationActivity"
             android:theme="@style/AppThemeFullscreen">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.ui.chat.activity.ChatRoomsActivity" />
+                android:value="de.tum.in.tumcampusapp.component.other.generic.activity.BaseNavigationActivity" />
         </activity>
         <activity
             android:name=".component.ui.alarm.AlarmActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity"
+            android:parentActivityName=".component.other.generic.activity.BaseNavigationActivity"
             android:theme="@style/AppThemeFullscreen">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
+                android:value=".component.other.generic.activity.BaseNavigationActivity" />
         </activity>
-        <activity
-            android:name=".component.ui.barrierfree.BarrierFreeInfoActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/barrier_free"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity" />
         <activity
             android:name=".component.ui.barrierfree.BarrierFreeContactActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/contact_person"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.barrierfree.BarrierFreeInfoActivity" />
+            android:parentActivityName=".component.other.generic.activity.BaseNavigationActivity" />
         <activity
             android:name=".component.ui.barrierfree.BarrierFreeFacilitiesActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/facilities"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.barrierfree.BarrierFreeInfoActivity" />
+            android:parentActivityName=".component.other.generic.activity.BaseNavigationActivity" />
         <activity
             android:name=".component.ui.barrierfree.BarrierFreeMoreInfoActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/more_info"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.barrierfree.BarrierFreeInfoActivity" />
+            android:parentActivityName=".component.other.generic.activity.BaseNavigationActivity" />
         <activity
             android:name=".component.tumui.feedback.FeedbackActivity"
             android:configChanges="orientation|screenSize"
@@ -476,7 +384,7 @@
         <activity
             android:name=".component.tumui.calendar.CreateEventActivity"
             android:label="@string/activity_create_event_title"
-            android:parentActivityName=".component.tumui.calendar.CalendarActivity" />
+            android:parentActivityName=".component.other.generic.activity.BaseNavigationActivity" />
         <activity
             android:name=".component.ui.chat.AddChatMemberActivity"
             android:label="Add Participant"
@@ -626,7 +534,7 @@
             android:parentActivityName=".component.ui.tufilm.KinoActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
+                android:value=".component.other.generic.activity.BaseNavigationActivity" />
         </activity>
         <activity
             android:name=".component.ui.ticket.activity.BuyTicketActivity"
@@ -636,27 +544,17 @@
             android:parentActivityName=".component.ui.tufilm.KinoActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
-        </activity>
-        <activity
-            android:name=".component.ui.ticket.activity.EventsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/events_tickets"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
+                android:value=".component.other.generic.activity.BaseNavigationActivity" />
         </activity>
         <activity
             android:name=".component.ui.ticket.activity.EventDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/events"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.ticket.activity.EventsActivity">
+            android:parentActivityName=".component.other.generic.activity.BaseNavigationActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.ticket.activity.EventsActivity" />
+                android:value=".component.other.generic.activity.BaseNavigationActivity" />
         </activity>
         <activity
             android:name=".component.ui.ticket.activity.StripePaymentActivity"
@@ -666,7 +564,7 @@
             android:parentActivityName=".component.ui.ticket.activity.BuyTicketActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
+                android:value=".component.other.generic.activity.BaseNavigationActivity" />
         </activity>
         <activity
             android:name=".component.ui.ticket.activity.PaymentConfirmationActivity"

@@ -14,20 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.tumui.lectures.activity.LecturesPersonalActivity;
-import de.tum.in.tumcampusapp.component.ui.chat.activity.ChatRoomsActivity;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomAndLastMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
-
-/**
- * This class handles the view output of the results for finding lectures via
- * TUMOnline used in {@link LecturesPersonalActivity}
- * and {@link ChatRoomsActivity}. It
- * implements {@link StickyListHeadersAdapter} to
- * show semester info as sticky header.
- */
 
 public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 
@@ -36,7 +26,6 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
     private List<ChatRoomAndLastMessage> rooms;
     private Context mContext;
 
-    // constructor
     public ChatRoomListAdapter(Context context, List<ChatRoomAndLastMessage> results, int mode) {
         this.filters = new ArrayList<>();
         this.showDateAndNumber = mode == 1;
@@ -57,8 +46,7 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
         }
         //set header text as first char in name
         ChatRoomAndLastMessage item = getItem(pos);
-        String semester = item.getChatRoomDbRow()
-                              .getSemester();
+        String semester = item.getChatRoomDbRow().getSemester();
 
         if (semester.isEmpty()) {
             semester = mContext.getString(R.string.my_chat_rooms);

@@ -9,6 +9,7 @@ import de.tum.`in`.tumcampusapp.component.notifications.NotificationProvider
 import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
 import de.tum.`in`.tumcampusapp.component.notifications.model.InstantNotification
 import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
+import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseNavigationActivity
 import de.tum.`in`.tumcampusapp.utils.Const
 
 class GradesNotificationProvider(
@@ -31,7 +32,7 @@ class GradesNotificationProvider(
         val text = context.resources.getQuantityString(
                 R.plurals.new_grades_format_string, size, size, formattedNewGrades)
 
-        val intent = GradesActivity.newIntent(context)
+        val intent = BaseNavigationActivity.newGradesIntent(context)
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, FLAG_UPDATE_CURRENT)
 
         val deleteIntent = GradeNotificationDeleteReceiver.newIntent(context, newGrades)

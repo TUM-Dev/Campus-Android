@@ -15,6 +15,7 @@ import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import kotlinx.android.synthetic.main.fragment_roomfinder.listView
+import org.jetbrains.anko.bundleOf
 import java.io.IOException
 import java.io.Serializable
 import java.util.regex.Pattern
@@ -28,6 +29,10 @@ class RoomFinderFragment : FragmentForSearchingInBackground<List<RoomFinderRoom>
 
     private val recentsDao by lazy { TcaDb.getInstance(requireContext()).recentsDao() }
     private lateinit var adapter: RoomFinderListAdapter
+
+    private val queryArg: String? by lazy {
+        arguments?.getString(SearchManager.QUERY)
+    }
 
     private val recents: List<RoomFinderRoom>
         get() {
@@ -49,10 +54,8 @@ class RoomFinderFragment : FragmentForSearchingInBackground<List<RoomFinderRoom>
             openRoomDetails(room)
         }
 
-        val intent = requireActivity().intent
-        if (intent != null && intent.hasExtra(SearchManager.QUERY)) {
-            val query = checkNotNull(intent.getStringExtra(SearchManager.QUERY))
-            requestSearch(query)
+        queryArg?.let {
+            requestSearch(it)
             return
         }
 
@@ -134,7 +137,13 @@ class RoomFinderFragment : FragmentForSearchingInBackground<List<RoomFinderRoom>
     }
 
     companion object {
-        fun newInstance() = RoomFinderFragment()
+        fun newInstance(
+            query: String? = null
+        ) = RoomFinderFragment().apply {
+            query?.let {
+                arguments = bundleOf(SearchManager.QUERY to it)
+            }
+        }
     }
 
 }

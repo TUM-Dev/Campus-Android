@@ -25,7 +25,7 @@ import de.tum.in.tumcampusapp.component.ui.transportation.MVVCard;
 import de.tum.in.tumcampusapp.component.ui.updatenote.UpdateNoteCard;
 
 /**
- * Adapter for the cards start page used in {@link MainActivity}
+ * Adapter for the cards start page used in {@link MainFragment}
  */
 public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
 

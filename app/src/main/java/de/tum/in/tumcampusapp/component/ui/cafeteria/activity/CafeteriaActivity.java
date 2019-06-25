@@ -1,14 +1,9 @@
 package de.tum.in.tumcampusapp.component.ui.cafeteria.activity;
 
-import android.os.Bundle;
+@Deprecated
+public class CafeteriaActivity/* extends BaseActivity*/ {
 
-import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.fragment.CafeteriaFragment;
-
-public class CafeteriaActivity extends BaseActivity {
-
-    public CafeteriaActivity() {
+    /*public CafeteriaActivity() {
         super(R.layout.activity_cafeteria);
     }
 
@@ -22,6 +17,6 @@ public class CafeteriaActivity extends BaseActivity {
                     .replace(R.id.contentFrame, CafeteriaFragment.newInstance())
                     .commit();
         }
-    }
+    }*/
 
 }

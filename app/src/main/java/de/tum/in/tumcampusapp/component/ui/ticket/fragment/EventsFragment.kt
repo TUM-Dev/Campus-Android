@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.component.ui.ticket.activity
+package de.tum.`in`.tumcampusapp.component.ui.ticket.fragment
 
 import android.content.Context
 import android.os.Bundle
@@ -11,7 +11,6 @@ import com.google.android.material.tabs.TabLayout
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.FragmentForDownloadingExternal
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsDownloadAction
-import de.tum.`in`.tumcampusapp.component.ui.ticket.fragment.EventsListFragment
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.EventType
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.service.DownloadWorker

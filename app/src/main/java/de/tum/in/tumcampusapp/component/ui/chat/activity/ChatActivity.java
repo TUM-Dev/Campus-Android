@@ -19,6 +19,12 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.work.WorkManager;
+
 import com.google.gson.Gson;
 
 import org.jetbrains.annotations.Nullable;
@@ -26,15 +32,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.work.WorkManager;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.component.other.generic.activity.ActivityForDownloadingExternal;
+import de.tum.in.tumcampusapp.component.other.generic.activity.BaseNavigationActivity;
 import de.tum.in.tumcampusapp.component.ui.chat.AddChatMemberActivity;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatMessageViewModel;
 import de.tum.in.tumcampusapp.component.ui.chat.ChatRoomController;
@@ -326,7 +328,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
                         if (response.isSuccessful() && room != null) {
                             new ChatRoomController(ChatActivity.this).leave(currentChatRoom);
 
-                            Intent intent = new Intent(ChatActivity.this, ChatRoomsActivity.class);
+                            Intent intent = BaseNavigationActivity.newChatIntent(ChatActivity.this);
                             startActivity(intent);
                             finish();
                         } else {

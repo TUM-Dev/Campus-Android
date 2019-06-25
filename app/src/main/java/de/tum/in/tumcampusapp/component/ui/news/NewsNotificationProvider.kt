@@ -2,13 +2,13 @@ package de.tum.`in`.tumcampusapp.component.ui.news
 
 import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import androidx.core.app.NotificationCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.notifications.NotificationProvider
 import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
 import de.tum.`in`.tumcampusapp.component.notifications.model.InstantNotification
 import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
+import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseNavigationActivity
 import de.tum.`in`.tumcampusapp.component.ui.news.model.News
 import de.tum.`in`.tumcampusapp.utils.Const
 
@@ -32,7 +32,7 @@ class NewsNotificationProvider(
         val inboxStyle = NotificationCompat.InboxStyle()
         newsItems.forEach { inboxStyle.addLine(it.title) }
 
-        val intent = Intent(context, NewsActivity::class.java)
+        val intent = BaseNavigationActivity.newNewsIntent(context)
         val pendingIntent = PendingIntent.getActivity(
                 context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 

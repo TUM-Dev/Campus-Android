@@ -337,7 +337,7 @@ class ChatRoomsFragment : FragmentForAccessingTumOnline<LecturesResponse>(
         }
     }
 
-    private companion object {
+    companion object {
         private const val CAMERA_REQUEST_CODE = 34
         private const val JOIN_ROOM_REQUEST_CODE = 22
 

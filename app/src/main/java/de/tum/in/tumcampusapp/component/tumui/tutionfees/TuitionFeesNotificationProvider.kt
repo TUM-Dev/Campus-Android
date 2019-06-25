@@ -9,6 +9,7 @@ import de.tum.`in`.tumcampusapp.component.notifications.NotificationProvider
 import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
 import de.tum.`in`.tumcampusapp.component.notifications.model.InstantNotification
 import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
+import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseNavigationActivity
 import de.tum.`in`.tumcampusapp.utils.Const
 
 class TuitionFeesNotificationProvider(context: Context) : NotificationProvider(context) {
@@ -31,7 +32,7 @@ class TuitionFeesNotificationProvider(context: Context) : NotificationProvider(c
         val title = context.getString(R.string.tuition_fees)
         val text = context.getString(R.string.reregister_todo, tuition.deadline)
 
-        val intent = tuition.getIntent(context)
+        val intent = BaseNavigationActivity.newTuitionIntent(context)
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
 
         val notification = getNotificationBuilder()

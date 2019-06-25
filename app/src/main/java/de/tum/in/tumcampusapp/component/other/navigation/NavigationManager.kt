@@ -4,10 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseNavigationActivity
 import de.tum.`in`.tumcampusapp.component.other.generic.drawer.NavItem
+import de.tum.`in`.tumcampusapp.component.ui.overview.MainFragment
 
 object NavigationManager {
 
@@ -49,7 +51,12 @@ object NavigationManager {
         }
     }
 
-    private fun openFragment(activity: BaseNavigationActivity, fragment: Fragment) {
+    fun openFragment(activity: BaseNavigationActivity, fragment: Fragment) {
+        if (fragment is MainFragment) {
+            activity.supportFragmentManager.addToClearedBackStack(R.id.contentFrame, fragment)
+            return
+        }
+
         activity
             .supportFragmentManager
             .beginTransaction()
@@ -66,6 +73,19 @@ object NavigationManager {
             addToBackStack(null)
         }
         return this
+    }
+
+    private fun FragmentManager.addToClearedBackStack(
+        containerViewId: Int,
+        fragment: Fragment
+    ) {
+        while (backStackEntryCount > 0) {
+            popBackStackImmediate()
+        }
+
+        beginTransaction()
+            .replace(containerViewId, fragment)
+            .commit()
     }
 
 }

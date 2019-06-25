@@ -17,7 +17,6 @@ import de.tum.`in`.tumcampusapp.component.other.navigation.NavDestination
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse
-import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Const.CALENDAR_ID_PARAM
@@ -177,7 +176,8 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     private fun onLocationClicked(location: String) {
         val findStudyRoomIntent = Intent()
         findStudyRoomIntent.putExtra(SearchManager.QUERY, Utils.extractRoomNumberFromLocation(location))
-        findStudyRoomIntent.setClass(requireContext(), RoomFinderActivity::class.java)
+        // TODO
+        // findStudyRoomIntent.setClass(requireContext(), RoomFinderActivity::class.java)
         startActivity(findStudyRoomIntent)
     }
 

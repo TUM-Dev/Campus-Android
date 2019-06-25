@@ -27,7 +27,6 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.AuthenticationManager;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseNavigationActivity;
-import de.tum.in.tumcampusapp.component.ui.overview.MainActivity;
 import de.tum.in.tumcampusapp.service.DownloadWorker;
 import de.tum.in.tumcampusapp.service.StartSyncReceiver;
 import de.tum.in.tumcampusapp.utils.Const;
@@ -215,7 +214,7 @@ public class StartupActivity extends AppCompatActivity {
 
     /**
      * Animates the TUM logo into place (left upper corner) and animates background up.
-     * Afterwards {@link MainActivity} gets started
+     * Afterwards {@link BaseNavigationActivity} gets started
      */
     private void openMainActivity() {
         Intent intent = new Intent(this, BaseNavigationActivity.class);

@@ -13,7 +13,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity;
+import de.tum.in.tumcampusapp.component.other.generic.activity.BaseNavigationActivity;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository;
@@ -35,9 +35,11 @@ public class MensaWidget extends AppWidgetProvider {
         if (localRepository == null) {
             localRepository = new CafeteriaLocalRepository(TcaDb.getInstance(context));
         }
+
         if (mensaManager == null) {
             mensaManager = new CafeteriaManager(context);
         }
+
         int cafeteriaId = mensaManager.getBestMatchMensaId();
         Cafeteria cafeteria = localRepository.getCafeteria(cafeteriaId);
 
@@ -56,8 +58,11 @@ public class MensaWidget extends AppWidgetProvider {
             rv.setTextViewText(R.id.mensa_widget_subhead, date);
 
             // Set the header on click to open the mensa activity
-            Intent mensaIntent = new Intent(context, CafeteriaActivity.class);
+            final int mensaId = mensaManager.getBestMatchMensaId();
+            Intent mensaIntent = BaseNavigationActivity.newCafeteriaIntent(context, mensaId);
+            // Intent mensaIntent = new Intent(context, CafeteriaActivity.class);
             mensaIntent.putExtra(Const.CAFETERIA_ID, mensaManager.getBestMatchMensaId());
+
             PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, mensaIntent, 0);
             rv.setOnClickPendingIntent(R.id.mensa_widget_header_container, pendingIntent);
 

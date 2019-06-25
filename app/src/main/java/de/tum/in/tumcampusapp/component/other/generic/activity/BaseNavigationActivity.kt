@@ -1,5 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.other.generic.activity
 
+import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
@@ -15,6 +17,7 @@ import com.google.android.material.navigation.NavigationView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.drawer.DrawerHeaderInflater
 import de.tum.`in`.tumcampusapp.component.other.generic.drawer.DrawerMenuHelper
+import de.tum.`in`.tumcampusapp.component.other.navigation.NavAction
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainFragment
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -24,6 +27,10 @@ import org.jetbrains.anko.defaultSharedPreferences
 class BaseNavigationActivity : BaseActivity(
     R.layout.activity_main
 ), SharedPreferences.OnSharedPreferenceChangeListener {
+
+    private val navAction: NavAction? by lazy {
+        intent.getParcelableExtra<NavAction?>(KEY_NAV_ACTION)
+    }
 
     private val drawerHeaderInflater: DrawerHeaderInflater by lazy {
         DrawerHeaderInflater(this)
@@ -50,6 +57,17 @@ class BaseNavigationActivity : BaseActivity(
         }
     }
 
+    private val shortcutDestination: NavAction? by lazy {
+        val extra = intent.getStringExtra("shortcutDestination")
+        intent.removeExtra("shortcutDestination")
+        when (extra) {
+            "cafeteria" -> NavAction.Mensa
+            "study_rooms" -> NavAction.StudyRooms
+            "calendar" -> NavAction.Calendar
+            else -> null
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -62,6 +80,14 @@ class BaseNavigationActivity : BaseActivity(
                 .beginTransaction()
                 .replace(R.id.contentFrame, MainFragment.newInstance())
                 .commit()
+
+            navAction?.let {
+                NavigationManager.openFragment(this, it.createDestination())
+            }
+
+            shortcutDestination?.let {
+                NavigationManager.openFragment(this, it.createDestination())
+            }
         }
     }
 
@@ -132,6 +158,84 @@ class BaseNavigationActivity : BaseActivity(
     override fun onDestroy() {
         defaultSharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
         super.onDestroy()
+    }
+
+    companion object {
+
+        private const val KEY_NAV_ACTION = "KEY_NAV_ACTION"
+
+        private fun newNavActionIntent(
+            context: Context,
+            navAction: NavAction
+        ): Intent {
+            return newIntent(context).putExtra(KEY_NAV_ACTION, navAction)
+        }
+
+        @JvmStatic
+        fun newIntent(
+            context: Context
+        ): Intent {
+            return Intent(context, BaseNavigationActivity::class.java)
+        }
+
+        @JvmStatic
+        fun newCafeteriaIntent(
+            context: Context,
+            cafeteriaId: Int
+        ): Intent {
+            return newNavActionIntent(context, NavAction.Cafeteria(cafeteriaId))
+        }
+
+        @JvmStatic
+        fun newChatIntent(
+            context: Context
+        ): Intent {
+            return newNavActionIntent(context, NavAction.Chat)
+        }
+
+        @JvmStatic
+        fun newNewsIntent(
+            context: Context
+        ): Intent {
+            return newNavActionIntent(context, NavAction.News)
+        }
+
+        @JvmStatic
+        fun newEventsIntent(
+            context: Context
+        ): Intent {
+            return newNavActionIntent(context, NavAction.Events)
+        }
+
+        @JvmStatic
+        fun newTuitionIntent(
+            context: Context
+        ): Intent {
+            return newNavActionIntent(context, NavAction.Tuition)
+        }
+
+        @JvmStatic
+        fun newRoomFinderIntent(
+            context: Context,
+            roomNumber: String
+        ): Intent {
+            return newNavActionIntent(context, NavAction.RoomFinder(roomNumber))
+        }
+
+        @JvmStatic
+        fun newGradesIntent(
+            context: Context
+        ): Intent {
+            return newNavActionIntent(context, NavAction.Grades)
+        }
+
+        @JvmStatic
+        fun newCalendarIntent(
+            context: Context
+        ): Intent {
+            return newNavActionIntent(context, NavAction.Calendar)
+        }
+
     }
 
 }

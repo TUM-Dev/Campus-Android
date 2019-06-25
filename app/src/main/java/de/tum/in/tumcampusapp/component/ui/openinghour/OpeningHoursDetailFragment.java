@@ -7,15 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
 import java.util.regex.Pattern;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration;
 import de.tum.in.tumcampusapp.component.ui.openinghour.model.Location;
@@ -37,12 +38,17 @@ public class OpeningHoursDetailFragment extends Fragment {
     private int mItemId;
     private String mItemContent;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public OpeningHoursDetailFragment() {
-        // NOP
+    static OpeningHoursDetailFragment newInstance(int itemId,
+                                                  String itemContent,
+                                                  boolean isTwoPane) {
+        Bundle args = new Bundle();
+        args.putInt(OpeningHoursDetailFragment.ARG_ITEM_ID, itemId);
+        args.putString(OpeningHoursDetailFragment.ARG_ITEM_CONTENT, itemContent);
+        args.putBoolean(OpeningHoursDetailFragment.TWO_PANE, isTwoPane);
+
+        OpeningHoursDetailFragment fragment = new OpeningHoursDetailFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override

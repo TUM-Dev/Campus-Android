@@ -22,7 +22,6 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.activity.CafeteriaNotific
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionsPagerAdapter
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.di.CafeteriaModule
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
@@ -32,6 +31,7 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.observeNonNull
 import kotlinx.android.synthetic.main.fragment_cafeteria.pager
 import kotlinx.android.synthetic.main.fragment_cafeteria.spinnerToolbar
+import org.jetbrains.anko.bundleOf
 import org.joda.time.DateTime
 import javax.inject.Inject
 import javax.inject.Provider
@@ -233,10 +233,19 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
 
     companion object {
 
+        private const val KEY_CAFETERIA_ID = "KEY_CAFETERIA_ID"
         private const val NONE_SELECTED = -1
 
+        // TODO Test this
+
         @JvmStatic
-        fun newInstance() = CafeteriaFragment()
+        fun newInstance(
+            id: Int? = null
+        ) = CafeteriaFragment().apply {
+            id?.let {
+                arguments = bundleOf(KEY_CAFETERIA_ID to it)
+            }
+        }
 
     }
 
