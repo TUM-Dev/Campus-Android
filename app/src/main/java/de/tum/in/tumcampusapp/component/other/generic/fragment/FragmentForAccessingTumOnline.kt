@@ -6,7 +6,7 @@ import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 
 abstract class FragmentForAccessingTumOnline<T>(
     @LayoutRes layoutId: Int,
-    @StringRes titleResId: Int
+    @StringRes titleResId: Int?
 ) : BaseFragment<T>(layoutId, titleResId) {
 
     protected val apiClient: TUMOnlineClient by lazy {

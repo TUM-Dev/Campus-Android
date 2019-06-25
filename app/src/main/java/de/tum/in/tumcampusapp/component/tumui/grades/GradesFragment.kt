@@ -39,7 +39,7 @@ import java.util.Locale
 
 class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     R.layout.fragment_grades,
-    R.string.my_grades
+    null
 ) {
 
     private var spinnerPosition = 0

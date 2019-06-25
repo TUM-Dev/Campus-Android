@@ -46,7 +46,7 @@ import java.net.UnknownHostException
 
 abstract class BaseFragment<T>(
         @LayoutRes private val layoutId: Int,
-        @StringRes private val titleResId: Int
+        @StringRes private val titleResId: Int?
 ) : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private var apiCall: Call<T>? = null
@@ -126,7 +126,7 @@ abstract class BaseFragment<T>(
 
     override fun onResume() {
         super.onResume()
-        toolbar?.setTitle(titleResId)
+        toolbar?.title = titleResId?.let { getString(it) }
     }
 
     private fun setupToolbar() {
