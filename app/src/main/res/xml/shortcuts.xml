@@ -2,17 +2,23 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <shortcut
-        android:shortcutId="mensa"
         android:enabled="true"
         android:icon="@drawable/ic_cafeteria_shortcut"
+        android:shortcutId="mensa"
         android:shortcutShortLabel="@string/cafeteria"
         tools:targetApi="n_mr1">
+
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="de.tum.in.tumcampus"
-            android:targetClass="de.tum.in.tumcampusapp.component.other.generic.activity.BaseNavigationActivity">
-            <extra android:name="shortcutDestination" android:value="cafeteria" />
+            android:targetClass="de.tum.in.tumcampusapp.component.other.generic.activity.BaseNavigationActivity"
+            android:targetPackage="de.tum.in.tumcampus">
+
+            <extra
+                android:name="shortcutDestination"
+                android:value="cafeteria" />
+
         </intent>
+
     </shortcut>
 
     <shortcut
@@ -21,12 +27,18 @@
         android:shortcutId="studyrooms"
         android:shortcutShortLabel="@string/study_rooms"
         tools:targetApi="n_mr1">
+
         <intent
             android:action="android.intent.action.VIEW"
             android:targetClass="de.tum.in.tumcampusapp.component.other.generic.activity.BaseNavigationActivity"
             android:targetPackage="de.tum.in.tumcampus">
-            <extra android:name="shortcutDestination" android:value="study_rooms" />
+
+            <extra
+                android:name="shortcutDestination"
+                android:value="study_rooms" />
+
         </intent>
+
     </shortcut>
 
     <shortcut
@@ -35,12 +47,18 @@
         android:shortcutId="calendar"
         android:shortcutShortLabel="@string/calendar"
         tools:targetApi="n_mr1">
+
         <intent
             android:action="android.intent.action.VIEW"
             android:targetClass="de.tum.in.tumcampusapp.component.other.generic.activity.BaseNavigationActivity"
             android:targetPackage="de.tum.in.tumcampus">
-            <extra android:name="shortcutDestination" android:value="calendar" />
+
+            <extra
+                android:name="shortcutDestination"
+                android:value="calendar" />
+
         </intent>
+
     </shortcut>
 
 </shortcuts>

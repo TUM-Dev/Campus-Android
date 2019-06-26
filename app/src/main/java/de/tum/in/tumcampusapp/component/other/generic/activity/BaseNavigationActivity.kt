@@ -18,7 +18,7 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.drawer.DrawerHeaderInflater
 import de.tum.`in`.tumcampusapp.component.other.generic.drawer.DrawerMenuHelper
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavAction
-import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
+import de.tum.`in`.tumcampusapp.component.other.navigation.NavManager
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainFragment
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.closeDrawers
@@ -58,14 +58,11 @@ class BaseNavigationActivity : BaseActivity(
     }
 
     private val shortcutDestination: NavAction? by lazy {
-        val extra = intent.getStringExtra("shortcutDestination")
-        intent.removeExtra("shortcutDestination")
-        when (extra) {
-            "cafeteria" -> NavAction.Mensa
-            "study_rooms" -> NavAction.StudyRooms
-            "calendar" -> NavAction.Calendar
-            else -> null
-        }
+        NavAction.fromIntent(intent)
+    }
+
+    private val navManager: NavManager by lazy {
+        NavManager(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,11 +79,11 @@ class BaseNavigationActivity : BaseActivity(
                 .commit()
 
             navAction?.let {
-                NavigationManager.openFragment(this, it.createDestination())
+                navManager.openFragment(it.createDestination())
             }
 
             shortcutDestination?.let {
-                NavigationManager.openFragment(this, it.createDestination())
+                navManager.openFragment(it.createDestination())
             }
         }
     }
@@ -108,7 +105,7 @@ class BaseNavigationActivity : BaseActivity(
         navigationView.setNavigationItemSelectedListener { item ->
             drawerLayout.closeDrawers {
                 val navItem = drawerMenuHelper.findNavItem(item)
-                NavigationManager.open(this, navItem)
+                navManager.open(navItem)
             }
             true
         }

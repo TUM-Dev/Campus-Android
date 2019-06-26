@@ -14,7 +14,7 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.RequestLimitReachedException
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavDestination
-import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
+import de.tum.`in`.tumcampusapp.component.other.navigation.NavManager
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse
 import de.tum.`in`.tumcampusapp.database.TcaDb
@@ -54,6 +54,10 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     private val isShownInCalendarActivity: Boolean by lazy {
         arguments?.getBoolean(CALENDAR_SHOWN_IN_CALENDAR_ACTIVITY_PARAM)
                 ?: throw IllegalStateException("Incomplete Bundle when opening calendar details fragment")
+    }
+
+    private val navManager: NavManager by lazy {
+        NavManager(requireContext())
     }
 
     private var deleteApiCall: Call<DeleteEventResponse>? = null
@@ -127,7 +131,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     private fun openEventInCalendarActivity(calendarItem: CalendarItem) {
         val args = Bundle().apply { putLong(Const.EVENT_TIME, calendarItem.eventStart.millis) }
         val destination = NavDestination.Fragment(CalendarFragment::class.java, args)
-        NavigationManager.open(requireContext(), destination)
+        navManager.open(destination)
     }
 
     private fun displayDeleteDialog(eventId: String) {

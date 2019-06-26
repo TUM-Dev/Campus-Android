@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
+import de.tum.`in`.tumcampusapp.component.other.navigation.NavManager
 import de.tum.`in`.tumcampusapp.component.other.settings.UserPreferencesActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -23,13 +23,14 @@ open class CardViewHolder @JvmOverloads constructor(
     var currentCard: Card? = null
 
     private val context: Context by lazy { itemView.context }
+    private val navManager: NavManager by lazy { NavManager(context) }
 
     protected val activity: AppCompatActivity by lazy { context as AppCompatActivity }
 
     init {
         itemView.setOnClickListener {
             val destination = currentCard?.getNavigationDestination() ?: return@setOnClickListener
-            NavigationManager.open(activity, destination)
+            navManager.open(destination)
         }
 
         val moreIcon = itemView.findViewById<ImageView>(R.id.cardMoreIcon)

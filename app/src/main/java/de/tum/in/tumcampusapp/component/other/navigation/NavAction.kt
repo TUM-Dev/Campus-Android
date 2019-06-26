@@ -1,5 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.other.navigation
 
+import android.content.Intent
 import android.os.Parcelable
 import androidx.fragment.app.Fragment
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarFragment
@@ -65,6 +66,25 @@ sealed class NavAction : Parcelable {
     @Parcelize
     object StudyRooms : NavAction(), Parcelable {
         override fun createDestination(): Fragment = StudyRoomsFragment.newInstance()
+    }
+
+    companion object {
+
+        private const val KEY_SHORTCUT_DESTINATION = "shortcutDestination"
+
+        fun fromIntent(
+            intent: Intent
+        ): NavAction? {
+            val extra = intent.getStringExtra(KEY_SHORTCUT_DESTINATION)
+            intent.removeExtra(KEY_SHORTCUT_DESTINATION)
+            return when (extra) {
+                "cafeteria" -> Mensa
+                "study_rooms" -> StudyRooms
+                "calendar" -> Calendar
+                else -> null
+            }
+        }
+
     }
 
 }
