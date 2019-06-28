@@ -20,6 +20,15 @@
             android:layout_height="wrap_content"
             tools:text="Monday, August 20, 2018" />
 
+        <TextView
+            android:id="@+id/menuOpeningHours"
+            style="@style/CardDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/sections_green"
+            android:layout_marginBottom="@dimen/material_default_padding"
+            tools:text="open 11am-2pm"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/menusRecyclerView"
             android:layout_width="match_parent"
