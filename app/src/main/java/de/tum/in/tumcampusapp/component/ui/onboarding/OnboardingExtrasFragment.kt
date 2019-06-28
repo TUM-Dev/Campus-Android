@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.edit
+import androidx.core.os.bundleOf
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
@@ -22,11 +23,11 @@ import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
+import kotlinx.android.synthetic.main.fragment_onboarding_extras.bugReportsCheckBox
 import kotlinx.android.synthetic.main.fragment_onboarding_extras.chatTermsButton
-import kotlinx.android.synthetic.main.fragment_onboarding_extras.chk_bug_reports
-import kotlinx.android.synthetic.main.fragment_onboarding_extras.chk_group_chat
-import kotlinx.android.synthetic.main.fragment_onboarding_extras.chk_silent_mode
 import kotlinx.android.synthetic.main.fragment_onboarding_extras.finishButton
+import kotlinx.android.synthetic.main.fragment_onboarding_extras.groupChatCheckBox
+import kotlinx.android.synthetic.main.fragment_onboarding_extras.silentModeCheckBox
 import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.support.v4.browse
 import java.io.IOException
@@ -36,6 +37,10 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
     R.layout.fragment_onboarding_extras,
     R.string.connect_to_tum_online
 ) {
+
+    private val lrzId: String by lazy {
+        checkNotNull(arguments?.getString(KEY_LRZ_ID))
+    }
 
     @Inject
     lateinit var cacheManager: CacheManager
@@ -56,28 +61,28 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        chk_bug_reports.isChecked = Utils.getSettingBool(requireContext(), Const.BUG_REPORTS, true)
+        bugReportsCheckBox.isChecked = Utils.getSettingBool(requireContext(), Const.BUG_REPORTS, true)
 
         if (AccessTokenManager.hasValidAccessToken(requireContext())) {
-            chk_silent_mode.isChecked =
+            silentModeCheckBox.isChecked =
                 Utils.getSettingBool(requireContext(), Const.SILENCE_SERVICE, false)
-            chk_silent_mode.setOnCheckedChangeListener { _, isChecked ->
+            silentModeCheckBox.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked && !SilenceService.hasPermissions(requireContext())) {
                     SilenceService.requestPermissions(requireContext())
-                    chk_silent_mode.isChecked = false
+                    silentModeCheckBox.isChecked = false
                 }
             }
         } else {
-            chk_silent_mode.isChecked = false
-            chk_silent_mode.isEnabled = false
+            silentModeCheckBox.isChecked = false
+            silentModeCheckBox.isEnabled = false
         }
 
         if (AccessTokenManager.hasValidAccessToken(requireContext())) {
-            chk_group_chat.isChecked =
+            groupChatCheckBox.isChecked =
                 Utils.getSettingBool(requireContext(), Const.GROUP_CHAT_ENABLED, true)
         } else {
-            chk_group_chat.isChecked = false
-            chk_group_chat.isEnabled = false
+            groupChatCheckBox.isChecked = false
+            groupChatCheckBox.isEnabled = false
         }
 
         if (AccessTokenManager.hasValidAccessToken(requireContext())) {
@@ -159,16 +164,24 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
         requireContext()
             .defaultSharedPreferences
             .edit {
-                putBoolean(Const.SILENCE_SERVICE, chk_silent_mode.isChecked())
+                putBoolean(Const.SILENCE_SERVICE, silentModeCheckBox.isChecked)
                 putBoolean(Const.BACKGROUND_MODE, true) // Enable by default
-                putBoolean(Const.BUG_REPORTS, chk_bug_reports.isChecked())
+                putBoolean(Const.BUG_REPORTS, bugReportsCheckBox.isChecked)
 
                 if (!result.lrzId.isNullOrEmpty()) {
-                    putBoolean(Const.GROUP_CHAT_ENABLED, chk_group_chat.isChecked)
-                    putBoolean(Const.AUTO_JOIN_NEW_ROOMS, chk_group_chat.isChecked)
+                    putBoolean(Const.GROUP_CHAT_ENABLED, groupChatCheckBox.isChecked)
+                    putBoolean(Const.AUTO_JOIN_NEW_ROOMS, groupChatCheckBox.isChecked)
                     put(Const.CHAT_MEMBER, result)
                 }
             }
+
+        finishOnboarding()
+    }
+
+    private fun finishOnboarding() {
+        // By storing the LRZ ID in this step, we can prevent that a user who didn't completely
+        // finish the login flow is considered logged in
+        Utils.setSetting(requireContext(), Const.LRZ_ID, lrzId)
 
         // Start the StartupActivity in a new, empty Task. We finish the current Activity and remove
         // the current Task, which it is in.
@@ -183,7 +196,10 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
     }
 
     companion object {
-        fun newInstance() = OnboardingExtrasFragment()
+        private const val KEY_LRZ_ID = "KEY_LRZ_ID"
+        fun newInstance(
+            lrzId: String
+        ) = OnboardingExtrasFragment().apply { arguments = bundleOf(KEY_LRZ_ID to lrzId) }
     }
 
 }

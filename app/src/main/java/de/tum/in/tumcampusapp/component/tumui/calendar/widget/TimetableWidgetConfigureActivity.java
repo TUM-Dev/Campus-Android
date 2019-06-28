@@ -26,7 +26,7 @@ public class TimetableWidgetConfigureActivity extends AppCompatActivity {
         setContentView(R.layout.activity_timetable_widget_configure);
 
         // Setup toolbar and save button
-        setSupportActionBar(findViewById(R.id.main_toolbar));
+        setSupportActionBar(findViewById(R.id.toolbar));
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

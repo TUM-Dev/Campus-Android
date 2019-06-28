@@ -26,7 +26,7 @@ import javax.inject.Inject
 
 sealed class IdentityResponse {
     data class Success(val identity: IdentitySet) : IdentityResponse()
-    data class Failure(val t: Throwable) : IdentityResponse()
+    data class Failure(val throwable: Throwable) : IdentityResponse()
 }
 
 class CheckTokenFragment : BaseFragment<Unit>(
@@ -69,7 +69,7 @@ class CheckTokenFragment : BaseFragment<Unit>(
                 toast.cancel()
                 when (response) {
                     is IdentityResponse.Success -> handleDownloadSuccess(response.identity)
-                    is IdentityResponse.Failure -> handleDownloadFailure(response.t)
+                    is IdentityResponse.Failure -> handleDownloadFailure(response.throwable)
                 }
             }
     }
@@ -94,14 +94,10 @@ class CheckTokenFragment : BaseFragment<Unit>(
             Utils.setSetting(requireContext(), Const.ROLE, "1")
         }
 
-        // By storing the LRZ ID in this step, we can prevent that a user who didn't completely
-        // finish the login flow is considered logged in
-        Utils.setSetting(requireContext(), Const.LRZ_ID, lrzId)
-
         // Note: we can't upload the obfuscated ids here since we might not have a (chat) member yet
 
         requireFragmentManager().transaction {
-            replace(R.id.contentFrame, OnboardingExtrasFragment.newInstance())
+            replace(R.id.contentFrame, OnboardingExtrasFragment.newInstance(lrzId))
             addToBackStack(null)
         }
     }

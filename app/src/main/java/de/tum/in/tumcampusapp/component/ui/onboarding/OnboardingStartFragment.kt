@@ -28,9 +28,9 @@ import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_onboarding_start.lrz_id
+import kotlinx.android.synthetic.main.fragment_onboarding_start.lrzIdTextView
 import kotlinx.android.synthetic.main.fragment_onboarding_start.nextButton
-import kotlinx.android.synthetic.main.toolbar.main_toolbar
+import kotlinx.android.synthetic.main.toolbar.toolbar
 import org.jetbrains.anko.inputMethodManager
 import java.util.Locale
 import javax.inject.Inject
@@ -65,9 +65,9 @@ class OnboardingStartFragment : BaseFragment<Unit>(
         setCustomCloseIcon()
 
         val lrzId = Utils.getSetting(requireContext(), Const.LRZ_ID, "")
-        lrz_id.setText(lrzId)
+        lrzIdTextView.setText(lrzId)
 
-        compositeDisposable += lrz_id.textChanges()
+        compositeDisposable += lrzIdTextView.textChanges()
             .map { it.toString() }
             .subscribe {
                 val isEmpty = it.isBlank()
@@ -85,12 +85,12 @@ class OnboardingStartFragment : BaseFragment<Unit>(
             val color = ContextCompat.getColor(requireContext(), R.color.color_primary)
             closeIcon.setTint(color)
         }
-        main_toolbar.navigationIcon = closeIcon
-        main_toolbar.setNavigationOnClickListener { requireActivity().finish() }
+        toolbar.navigationIcon = closeIcon
+        toolbar.setNavigationOnClickListener { requireActivity().finish() }
     }
 
     private fun onNextPressed() {
-        enteredId = lrz_id.text.toString().toLowerCase(Locale.GERMANY)
+        enteredId = lrzIdTextView.text.toString().toLowerCase(Locale.GERMANY)
 
         if (!enteredId.matches(Const.TUM_ID_PATTERN.toRegex())) {
             Utils.showToast(requireContext(), R.string.error_invalid_tum_id)
@@ -215,7 +215,7 @@ class OnboardingStartFragment : BaseFragment<Unit>(
     }
 
     private fun hideKeyboard() {
-        requireContext().inputMethodManager.hideSoftInputFromWindow(lrz_id.windowToken, 0)
+        requireContext().inputMethodManager.hideSoftInputFromWindow(lrzIdTextView.windowToken, 0)
     }
 
     private fun openNextOnboardingStep() {

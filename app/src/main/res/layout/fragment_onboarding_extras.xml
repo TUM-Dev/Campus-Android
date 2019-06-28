@@ -40,7 +40,7 @@
                     android:textSize="15sp" />
 
                 <CheckBox
-                    android:id="@+id/chk_silent_mode"
+                    android:id="@+id/silentModeCheckBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -55,7 +55,7 @@
                     android:textSize="15sp" />
 
                 <CheckBox
-                    android:id="@+id/chk_group_chat"
+                    android:id="@+id/groupChatCheckBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -81,7 +81,7 @@
                     app:cornerRadius="@dimen/material_corner_radius" />
 
                 <CheckBox
-                    android:id="@+id/chk_bug_reports"
+                    android:id="@+id/bugReportsCheckBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
