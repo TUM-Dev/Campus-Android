@@ -12,7 +12,7 @@ import de.tum.`in`.tumcampusapp.R
 
 class FeedbackThumbnailsAdapter internal constructor(
         private var paths: List<String>,
-        private val listener: RemoveListener,
+        private val onRemoveImage: (path: String) -> Unit,
         private val thumbnailSize: Int) : RecyclerView.Adapter<FeedbackThumbnailsAdapter.ViewHolder>() {
 
     private val pathsToThumbnails = ArrayMap<String, Bitmap>()
@@ -32,7 +32,7 @@ class FeedbackThumbnailsAdapter internal constructor(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val path = paths[position]
         val thumbnail = pathsToThumbnails[path]
-        holder.bind(path, thumbnail, listener)
+        holder.bind(path, thumbnail, onRemoveImage)
     }
 
     fun update(paths: List<String>) {
@@ -72,19 +72,15 @@ class FeedbackThumbnailsAdapter internal constructor(
         return BitmapFactory.decodeFile(path, bmOptions)
     }
 
-    interface RemoveListener {
-        fun onThumbnailRemoved(path: String)
-    }
-
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val imageView = itemView as ImageView
 
-        fun bind(path: String, thumbnail: Bitmap?, listener: RemoveListener) {
+        fun bind(path: String, thumbnail: Bitmap?, onRemoveImage: (path: String) -> Unit) {
             imageView.apply {
                 setImageBitmap(thumbnail)
                 tag = adapterPosition
-                setOnClickListener { listener.onThumbnailRemoved(path) }
+                setOnClickListener { onRemoveImage(path) }
             }
         }
 

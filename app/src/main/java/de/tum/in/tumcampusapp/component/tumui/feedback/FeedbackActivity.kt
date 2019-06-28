@@ -15,9 +15,9 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.LocationRequest
 import com.jakewharton.rxbinding3.widget.checkedChanges
 import com.jakewharton.rxbinding3.widget.textChanges
@@ -36,9 +36,9 @@ import kotlinx.android.synthetic.main.activity_feedback.*
 import java.io.File
 import javax.inject.Inject
 
-class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContract.View, FeedbackThumbnailsAdapter.RemoveListener {
+class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContract.View {
 
-    private var thumbnailsAdapter: FeedbackThumbnailsAdapter? = null
+    private lateinit var thumbnailsAdapter: FeedbackThumbnailsAdapter
     private var progressDialog: AlertDialog? = null
 
     @Inject
@@ -60,7 +60,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
         }
 
         initIncludeLocation()
-        initPictureGalley()
+        initPictureGallery()
 
         if (savedInstanceState == null) {
             presenter.initEmail()
@@ -73,19 +73,18 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
         presenter.onSaveInstanceState(outState)
     }
 
-    private fun initPictureGalley() {
-        val pictureList = findViewById<RecyclerView>(R.id.imageRecyclerView)
-        pictureList.layoutManager = LinearLayoutManager(this, HORIZONTAL, false)
+    private fun initPictureGallery() {
+        imageRecyclerView.layoutManager = LinearLayoutManager(this, HORIZONTAL, false)
 
         val imagePaths = presenter.feedback.picturePaths
         val thumbnailSize = resources.getDimension(R.dimen.thumbnail_size).toInt()
-        thumbnailsAdapter = FeedbackThumbnailsAdapter(imagePaths, this, thumbnailSize)
-        pictureList.adapter = thumbnailsAdapter
+        thumbnailsAdapter = FeedbackThumbnailsAdapter(imagePaths, { onThumbnailRemoved(it) }, thumbnailSize)
+        imageRecyclerView.adapter = thumbnailsAdapter
 
-        findViewById<View>(R.id.addImageButton).setOnClickListener { showImageOptionsDialog() }
+        addImageButton.setOnClickListener { showImageOptionsDialog() }
     }
 
-    override fun onThumbnailRemoved(path: String) {
+    private fun onThumbnailRemoved(path: String) {
         val builder = AlertDialog.Builder(this)
         val view = View.inflate(this, R.layout.picture_dialog, null)
 
@@ -156,7 +155,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
         val email = feedback.email
         includeEmailCheckbox.isChecked = feedback.includeEmail
 
-        if ((presenter.lrzId).isEmpty()) {
+        if (presenter.lrzId.isEmpty()) {
             includeEmailCheckbox.text = getString(R.string.feedback_include_email)
             customEmailInput.setText(email)
         } else {
@@ -165,11 +164,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     }
 
     override fun showEmailInput(show: Boolean) {
-        customEmailLayout.visibility = if (show) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
+        customEmailLayout.isVisible = show
     }
 
     fun onSendClicked(view: View) {
@@ -249,11 +244,11 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     }
 
     override fun onImageAdded(path: String) {
-        thumbnailsAdapter?.addImage(path)
+        thumbnailsAdapter.addImage(path)
     }
 
     override fun onImageRemoved(position: Int) {
-        thumbnailsAdapter?.removeImage(position)
+        thumbnailsAdapter.removeImage(position)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
@@ -271,21 +266,16 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
                 if (isGranted) {
                     presenter.listenForLocation()
                 }
-                return
             }
             PERMISSION_CAMERA -> {
                 if (isGranted) {
                     presenter.takePicture()
                 }
-                return
             }
             PERMISSION_FILES -> {
                 if (isGranted) {
                     presenter.openGallery()
                 }
-                return
-            }
-            else -> {
             }
         }
     }
