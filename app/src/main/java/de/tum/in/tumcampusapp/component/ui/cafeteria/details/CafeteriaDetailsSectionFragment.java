@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.other.generic.activity.BaseActivity;
-import de.tum.in.tumcampusapp.component.ui.cafeteria.di.CafeteriaModule;
 import de.tum.in.tumcampusapp.di.ViewModelFactory;
 import de.tum.in.tumcampusapp.utils.Const;
 
@@ -66,9 +65,19 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         DateTime menuDate = (DateTime) getArguments().getSerializable(Const.DATE);
         String menuDateString = DateTimeFormat.fullDate().print(menuDate);
+        int cafeteriaId = getArguments().getInt(Const.CAFETERIA_ID);
 
         TextView dateTextView = view.findViewById(R.id.menuDateTextView);
         dateTextView.setText(menuDateString);
+
+        TextView hoursTextView = view.findViewById(R.id.menuOpeningHours);
+        String hours = new OpenHoursHelper(getContext()).getHoursByIdAsString(cafeteriaId, menuDate);
+        if (hours.isEmpty()) {
+            hoursTextView.setVisibility(View.GONE);
+        } else {
+            hoursTextView.setVisibility(View.VISIBLE);
+            hoursTextView.setText(hours);
+        }
 
         RecyclerView recyclerView = view.findViewById(R.id.menusRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -76,8 +85,6 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 
         CafeteriaMenusAdapter adapter = new CafeteriaMenusAdapter(requireContext(), true, null);
         recyclerView.setAdapter(adapter);
-
-        int cafeteriaId = getArguments().getInt(Const.CAFETERIA_ID);
 
         cafeteriaViewModel.getCafeteriaMenus().observe(getViewLifecycleOwner(), adapter::update);
         cafeteriaViewModel.fetchCafeteriaMenus(cafeteriaId, menuDate);
