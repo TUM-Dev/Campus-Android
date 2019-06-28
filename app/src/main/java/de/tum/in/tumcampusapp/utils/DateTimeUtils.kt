@@ -1,16 +1,13 @@
 package de.tum.`in`.tumcampusapp.utils
 
 import android.content.Context
-import android.text.format.DateUtils.FORMAT_ABBREV_RELATIVE
-import android.text.format.DateUtils.HOUR_IN_MILLIS
-import android.text.format.DateUtils.MINUTE_IN_MILLIS
-import android.text.format.DateUtils.getRelativeTimeSpanString
+import android.text.format.DateUtils.*
 import de.tum.`in`.tumcampusapp.R
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import java.text.ParseException
-import java.util.Locale
+import java.util.*
 
 object DateTimeUtils {
 
@@ -196,4 +193,8 @@ object DateTimeUtils {
         Utils.log(e)
         DateTime()
     }
+
+    fun getTimeString(d: DateTime): String = timeFormatter.print(d)
+
+    private val timeFormatter = DateTimeFormat.forPattern("HH:mm")
 }
