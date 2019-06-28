@@ -16,25 +16,25 @@ import java.util.*
 /**
  * Tuition manager, handles tuition card
  */
-class TuitionFeeManager(private val mContext: Context) : ProvidesCard, ProvidesNotifications {
+class TuitionFeeManager(private val context: Context) : ProvidesCard, ProvidesNotifications {
 
     override fun getCards(cacheControl: CacheControl): List<Card> {
         val results = ArrayList<Card>()
         val tuition = loadTuition(cacheControl) ?: return results
 
-        val card = TuitionFeesCard(mContext, tuition)
+        val card = TuitionFeesCard(context, tuition)
         card.getIfShowOnStart()?.let { results.add(it) }
         return results
     }
 
     override fun hasNotificationsEnabled(): Boolean {
-        return Utils.getSettingBool(mContext, "card_tuition_fee_phone", true)
+        return Utils.getSettingBool(context, "card_tuition_fee_phone", true)
     }
 
     fun loadTuition(cacheControl: CacheControl): Tuition? {
         try {
             val response = TUMOnlineClient
-                    .getInstance(mContext)
+                    .getInstance(context)
                     .getTuitionFeesStatus(cacheControl)
                     .execute()
             if (!response.isSuccessful) {
@@ -59,7 +59,7 @@ class TuitionFeeManager(private val mContext: Context) : ProvidesCard, ProvidesN
 
     private fun scheduleNotificationAlarm(tuition: Tuition) {
         val notificationTime = TuitionNotificationScheduler.getNextNotificationTime(tuition)
-        val scheduler = NotificationScheduler(mContext)
+        val scheduler = NotificationScheduler(context)
         scheduler.scheduleAlarm(NotificationType.TUITION_FEES, notificationTime)
     }
 

@@ -26,35 +26,39 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
 /**
  * Displays the map regarding the searched room.
  */
 class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R.layout.activity_roomfinderdetails), DialogInterface.OnClickListener {
 
-    lateinit var mImageFragment: ImageViewTouchFragment
+    @Inject
+    lateinit var tumCabeClient: TUMCabeClient
+
+    private lateinit var imageFragment: ImageViewTouchFragment
+    private var weekViewFragment: Fragment? = null
 
     private var mapsLoaded: Boolean = false
 
-    lateinit var room: RoomFinderRoom
     private var mapId: String = ""
     private var mapsList: List<RoomFinderMap> = ArrayList()
     private val infoLoaded: Boolean = false
 
-    private var fragment: Fragment? = null
+    private var roomFinderCoordinateCall: Call<RoomFinderCoordinate>? = null
+    private var roomFinderMapsCall: Call<List<RoomFinderMap>>? = null
 
-    private var mRoomFinderCoordinateCall: Call<RoomFinderCoordinate>? = null
-    private var mRoomFinderMapsCall: Call<List<RoomFinderMap>>? = null
+    private val room: RoomFinderRoom by lazy {
+        intent.getSerializableExtra(EXTRA_ROOM_INFO) as RoomFinderRoom
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mImageFragment = ImageViewTouchFragment.newInstance()
+        imageFragment = ImageViewTouchFragment.newInstance()
         supportFragmentManager.beginTransaction()
-                .add(R.id.fragment_container, mImageFragment)
+                .add(R.id.fragment_container, imageFragment)
                 .commit()
-
-        room = intent.getSerializableExtra(EXTRA_ROOM_INFO) as RoomFinderRoom
 
         startLoading()
     }
@@ -63,23 +67,23 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
         menuInflater.inflate(R.menu.menu_roomfinder_detail, menu)
 
         val switchMap = menu.findItem(R.id.action_switch_map)
-        switchMap.isVisible = "10" != mapId && mapsLoaded && fragment == null
+        switchMap.isVisible = "10" != mapId && mapsLoaded && weekViewFragment == null
 
         val timetable = menu.findItem(R.id.action_room_timetable)
         timetable.isVisible = infoLoaded
         timetable.setIcon(
-                if (fragment == null) R.drawable.ic_outline_event_note_24px
+                if (weekViewFragment == null) R.drawable.ic_outline_event_note_24px
                 else R.drawable.ic_outline_map_24px
         )
 
-        menu.findItem(R.id.action_directions).isVisible = infoLoaded && fragment == null
+        menu.findItem(R.id.action_directions).isVisible = infoLoaded && weekViewFragment == null
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_room_timetable -> {
-                getRoomTimetable()
+                toggleRoomTimetable()
                 invalidateOptionsMenu()
                 return true
             }
@@ -96,9 +100,9 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
     }
 
     override fun onBackPressed() {
-        // Remove fragment with room timetable if present and show map again
-        if (fragment != null) {
-            getRoomTimetable()
+        // Remove weekViewFragment with room timetable if present and show map again
+        if (weekViewFragment != null) {
+            toggleRoomTimetable()
             invalidateOptionsMenu()
             return
         }
@@ -106,33 +110,28 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
         super.onBackPressed()
     }
 
-    private fun getRoomTimetable() {
+    private fun toggleRoomTimetable() {
         val ft = supportFragmentManager.beginTransaction()
-        // Remove if fragment is already present
-        if (fragment != null) {
-            ft.replace(R.id.fragment_container, mImageFragment)
+        // Remove if weekViewFragment is already present
+        if (weekViewFragment != null) {
+            ft.replace(R.id.fragment_container, imageFragment)
             ft.commit()
-            fragment = null
+            weekViewFragment = null
             return
         }
 
         val roomApiCode = room.room_id
-        fragment = WeekViewFragment.newInstance(roomApiCode)
-        ft.replace(R.id.fragment_container, fragment!!)
+        weekViewFragment = WeekViewFragment.newInstance(roomApiCode)
+        ft.replace(R.id.fragment_container, weekViewFragment!!)
         ft.commit()
     }
 
     private fun showMapSwitch() {
-        val list = arrayOfNulls<CharSequence>(mapsList.size)
-        var curPos = 0
-        for (index in mapsList.indices) {
-            list[index] = mapsList[index]
-                    .description
-            if (mapsList[index].map_id == mapId) {
-                curPos = index
-            }
-        }
-        AlertDialog.Builder(this).setSingleChoiceItems(list, curPos, this)
+        val descriptions = mapsList.map { it.description }
+        val currentPosition = mapsList.indexOfFirst { it.map_id == mapId }
+
+        AlertDialog.Builder(this)
+                .setSingleChoiceItems(descriptions.toTypedArray(), currentPosition, this)
                 .show()
     }
 
@@ -154,11 +153,11 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
     }
 
     override fun onLoadFinished(url: String?) {
-        mImageFragment.loadImage(url!!, object : ImageViewTouchFragment.ImageLoadingListener {
-            override fun onImageLoadingError() {
-                showImageLoadingError()
-            }
-        })
+        if (url == null) {
+            showImageLoadingError()
+        } else {
+            imageFragment.loadImage(url) { showImageLoadingError() }
+        }
 
         supportActionBar?.title = room.info
         supportActionBar?.subtitle = room.formattedAddress
@@ -170,12 +169,12 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
     private fun loadMapList() {
         showLoadingStart()
 
-        mRoomFinderMapsCall = TUMCabeClient.getInstance(this).fetchAvailableMaps(room.arch_id)
-        mRoomFinderMapsCall?.enqueue(object : Callback<List<RoomFinderMap>> {
+        roomFinderMapsCall = tumCabeClient.fetchAvailableMaps(room.arch_id)
+        roomFinderMapsCall?.enqueue(object : Callback<List<RoomFinderMap>> {
             override fun onResponse(call: Call<List<RoomFinderMap>>,
                                     response: Response<List<RoomFinderMap>>) {
                 val data = response.body()
-                mRoomFinderMapsCall = null
+                roomFinderMapsCall = null
 
                 if (!response.isSuccessful || data == null) {
                     onMapListLoadFailed()
@@ -191,7 +190,7 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
                 }
 
                 onMapListLoadFailed()
-                mRoomFinderMapsCall = null
+                roomFinderMapsCall = null
             }
         })
     }
@@ -220,12 +219,12 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
 
     private fun loadGeo() {
         showLoadingStart()
-        mRoomFinderCoordinateCall = TUMCabeClient.getInstance(this).fetchRoomFinderCoordinates(room.arch_id)
-        mRoomFinderCoordinateCall?.enqueue(object : Callback<RoomFinderCoordinate> {
+        roomFinderCoordinateCall = tumCabeClient.fetchRoomFinderCoordinates(room.arch_id)
+        roomFinderCoordinateCall?.enqueue(object : Callback<RoomFinderCoordinate> {
             override fun onResponse(call: Call<RoomFinderCoordinate>,
                                     response: Response<RoomFinderCoordinate>) {
                 val data = response.body()
-                mRoomFinderCoordinateCall = null
+                roomFinderCoordinateCall = null
 
                 if (!response.isSuccessful || data == null) {
                     onLoadGeoFailed()
@@ -242,7 +241,7 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
                 }
 
                 onLoadGeoFailed()
-                mRoomFinderCoordinateCall = null
+                roomFinderCoordinateCall = null
             }
         })
     }
@@ -290,8 +289,8 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
 
     override fun onStop() {
         super.onStop()
-        mRoomFinderMapsCall?.cancel()
-        mRoomFinderCoordinateCall?.cancel()
+        roomFinderMapsCall?.cancel()
+        roomFinderCoordinateCall?.cancel()
     }
 
     companion object {

@@ -23,33 +23,33 @@ class ExamListAdapter(context: Context, results: List<Exam>) : SimpleStickyListH
         var view: View? = convertView
 
         if (view == null) {
-            view = mInflater.inflate(R.layout.activity_grades_listview, parent, false)
+            view = inflater.inflate(R.layout.activity_grades_listview, parent, false)
             holder = ViewHolder(view!!)
             view.tag = holder
         } else {
             holder = view.tag as ViewHolder
         }
 
+
         val exam = infoList[position]
-        if (exam != null) {
-            holder.nameTextView.text = exam.course
-            holder.gradeTextView.text = exam.grade
+        checkNotNull(exam)
 
-            val gradeColor = exam.getGradeColor(context)
-            holder.gradeTextView.background.setTint(gradeColor)
+        holder.nameTextView.text = exam.course
+        holder.gradeTextView.text = exam.grade
 
-            val date: String = if (exam.date == null) {
-                context.getString(R.string.not_specified)
-            } else {
-                DF.print(exam.date)
-            }
-            holder.examDateTextView.text = String.format(
-                    "%s: %s", context.getString(R.string.date), date)
+        val gradeColor = exam.getGradeColor(context)
+        holder.gradeTextView.background.setTint(gradeColor)
 
-            holder.additionalInfoTextView.text = String.format("%s: %s, %s: %s",
-                    context.getString(R.string.examiner), exam.examiner,
-                    context.getString(R.string.mode), exam.modus)
+        val date: String = if (exam.date == null) {
+            context.getString(R.string.not_specified)
+        } else {
+            DATE_FORMAT.print(exam.date)
         }
+        holder.examDateTextView.text = String.format("%s: %s", context.getString(R.string.date), date)
+
+        holder.additionalInfoTextView.text = String.format("%s: %s, %s: %s",
+                context.getString(R.string.examiner), exam.examiner,
+                context.getString(R.string.mode), exam.modus)
 
         return view
     }
@@ -76,6 +76,6 @@ class ExamListAdapter(context: Context, results: List<Exam>) : SimpleStickyListH
     }
 
     companion object {
-        private val DF = DateTimeFormat.mediumDate()
+        private val DATE_FORMAT = DateTimeFormat.mediumDate()
     }
 }

@@ -23,7 +23,7 @@ class WeekViewFragment : Fragment(), MonthChangeListener<WidgetCalendarItem> {
     private val eventsCache = HashMap<Calendar, List<WeekViewDisplayable<WidgetCalendarItem>>>()
 
     private var roomApiCode: String? = null
-    lateinit var mWeekView: WeekView<WidgetCalendarItem>
+    private lateinit var weekView: WeekView<WidgetCalendarItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,9 +35,9 @@ class WeekViewFragment : Fragment(), MonthChangeListener<WidgetCalendarItem> {
             inflater.inflate(R.layout.fragment_day_view, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        mWeekView = view.findViewById(R.id.weekView)
-        mWeekView.setMonthChangeListener(this)
-        mWeekView.goToHour(8)
+        weekView = view.findViewById(R.id.weekView)
+        weekView.setMonthChangeListener(this)
+        weekView.goToHour(8)
     }
 
     override fun onMonthChange(startDate: Calendar,
@@ -67,7 +67,7 @@ class WeekViewFragment : Fragment(), MonthChangeListener<WidgetCalendarItem> {
 
             requireActivity().runOnUiThread {
                 eventsCache[start] = events
-                mWeekView.notifyDataSetChanged()
+                weekView.notifyDataSetChanged()
             }
         }.start()
     }
