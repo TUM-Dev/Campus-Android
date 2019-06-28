@@ -33,7 +33,7 @@ public class BarrierfreeMoreInfoAdapter extends SimpleStickyListHeadersAdapter<B
         }
 
         // set title
-        final BarrierfreeMoreInfo info = getInfoList().get(position);
+        final BarrierfreeMoreInfo info = getItemList().get(position);
         if (info != null) {
             holder.title.setText(info.getTitle());
         }

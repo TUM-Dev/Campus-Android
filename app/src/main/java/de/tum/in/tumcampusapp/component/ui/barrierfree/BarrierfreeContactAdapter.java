@@ -41,7 +41,7 @@ public class BarrierfreeContactAdapter extends SimpleStickyListHeadersAdapter<Ba
         }
 
         // display information of current person
-        final BarrierfreeContact contact = getInfoList().get(position);
+        final BarrierfreeContact contact = getItemList().get(position);
 
         if (!contact.isValid()) {
             view.setVisibility(View.GONE);
@@ -80,7 +80,7 @@ public class BarrierfreeContactAdapter extends SimpleStickyListHeadersAdapter<Ba
             } else {
                 // Jump to PersonDetail Activity
                 more.setVisibility(View.VISIBLE);
-                more.setText(context.getString(R.string.more_info));
+                more.setText(getContext().getString(R.string.more_info));
                 more.setOnClickListener(v -> {
                     Person person = new Person();
                     person.setName(contact.getName());
@@ -89,9 +89,9 @@ public class BarrierfreeContactAdapter extends SimpleStickyListHeadersAdapter<Ba
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("personObject", person);
 
-                    Intent intent = new Intent(context, PersonDetailsActivity.class);
+                    Intent intent = new Intent(getContext(), PersonDetailsActivity.class);
                     intent.putExtras(bundle);
-                    context.startActivity(intent);
+                    getContext().startActivity(intent);
                 });
             }
         }

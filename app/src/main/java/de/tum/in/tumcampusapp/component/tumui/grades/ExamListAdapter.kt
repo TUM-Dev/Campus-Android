@@ -12,28 +12,26 @@ import org.joda.time.format.DateTimeFormat
 /**
  * Custom UI adapter for a list of exams.
  */
-class ExamListAdapter(context: Context, results: List<Exam>) : SimpleStickyListHeadersAdapter<Exam>(context, results) {
+class ExamListAdapter(context: Context, results: List<Exam>) : SimpleStickyListHeadersAdapter<Exam>(context, results.toMutableList()) {
 
     init {
-        infoList.sort()
+        itemList.sort()
     }
 
-    override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val holder: ViewHolder
-        var view: View? = convertView
+        val view: View
 
-        if (view == null) {
+        if (convertView == null) {
             view = inflater.inflate(R.layout.activity_grades_listview, parent, false)
-            holder = ViewHolder(view!!)
+            holder = ViewHolder(view)
             view.tag = holder
         } else {
+            view = convertView
             holder = view.tag as ViewHolder
         }
 
-
-        val exam = infoList[position]
-        checkNotNull(exam)
-
+        val exam = itemList[position]
         holder.nameTextView.text = exam.course
         holder.gradeTextView.text = exam.grade
 

@@ -30,8 +30,10 @@ public class LecturesListAdapter extends SimpleStickyListHeadersAdapter<Lecture>
     @Override
     public String generateHeaderName(Lecture item) {
         String headerText = super.generateHeaderName(item);
-        headerText = headerText.replaceAll("Sommersemester", this.context.getString(R.string.semester_summer));
-        headerText = headerText.replaceAll("Wintersemester", this.context.getString(R.string.semester_winter));
+        headerText = headerText.replaceAll("Sommersemester", this.getContext()
+                                                                 .getString(R.string.semester_summer));
+        headerText = headerText.replaceAll("Wintersemester", this.getContext()
+                                                                 .getString(R.string.semester_winter));
         return headerText;
     }
 
@@ -40,7 +42,7 @@ public class LecturesListAdapter extends SimpleStickyListHeadersAdapter<Lecture>
         ViewHolder holder;
         View convertView = view;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.activity_lectures_listview, parent, false);
+            convertView = getInflater().inflate(R.layout.activity_lectures_listview, parent, false);
             holder = new ViewHolder();
 
             // set UI elements
@@ -53,13 +55,13 @@ public class LecturesListAdapter extends SimpleStickyListHeadersAdapter<Lecture>
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Lecture lvItem = infoList.get(position);
+        Lecture lvItem = getItemList().get(position);
 
         // if we have something to display - set for each lecture element
         if (lvItem != null) {
             holder.tvLectureName.setText(lvItem.getTitle());
-            String details = context.getString(R.string.lecture_list_item_details_format_string,
-                    lvItem.getLectureType(), lvItem.getSemesterId(), lvItem.getDuration());
+            String details = getContext().getString(R.string.lecture_list_item_details_format_string,
+                                                    lvItem.getLectureType(), lvItem.getSemesterId(), lvItem.getDuration());
             holder.tvTypeSWSSemester.setText(details);
             holder.tvDozent.setText(lvItem.getLecturers());
         }
