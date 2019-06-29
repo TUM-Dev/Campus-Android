@@ -44,7 +44,7 @@
                         android:padding="@dimen/material_default_padding">
 
                         <TextView
-                            android:id="@+id/ticket_event_title"
+                            android:id="@+id/eventTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-medium"
@@ -55,53 +55,53 @@
                             tools:text="Title" />
 
                         <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/ticket_event_ticket_list"
+                            android:id="@+id/ticketList"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/ticket_event_title" />
+                            app:layout_constraintTop_toBottomOf="@id/eventTitle" />
 
                         <TextView
-                            android:id="@+id/ticket_event_date_time"
+                            android:id="@+id/eventDateTime"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/material_default_padding"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/ticket_event_ticket_list"
+                            app:layout_constraintTop_toBottomOf="@id/ticketList"
                             tools:text="20.04.2018 12:45" />
 
                         <TextView
-                            android:id="@+id/ticket_event_location"
+                            android:id="@+id/eventLocation"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/ticket_event_date_time"
+                            app:layout_constraintTop_toBottomOf="@id/eventDateTime"
                             tools:text="Location" />
 
                         <TextView
-                            android:id="@+id/ticket_event_redemption_state"
+                            android:id="@+id/redemptionStateTextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingTop="@dimen/material_small_padding"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/ticket_event_location"
+                            app:layout_constraintTop_toBottomOf="@id/eventLocation"
                             tools:text="Redeemed: No" />
 
                         <ImageView
-                            android:id="@+id/ticket_qr_code"
+                            android:id="@+id/qrCode"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             app:layout_constraintDimensionRatio="H,1:1"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/ticket_event_redemption_state"
+                            app:layout_constraintTop_toBottomOf="@id/redemptionStateTextView"
                             tools:src="@drawable/qr_code_demo" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
