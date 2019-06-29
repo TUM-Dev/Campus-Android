@@ -3,14 +3,18 @@ package de.tum.`in`.tumcampusapp.component.ui.ticket
 import android.content.Context
 import android.content.Intent
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.BuyTicketActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
+import de.tum.`in`.tumcampusapp.component.ui.ticket.payload.TicketStatus
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import org.joda.time.DateTime
+import java.util.*
 
 /**
  * Logic associated with the buy button that is needed in the EventDetailsFragment
@@ -68,6 +72,34 @@ class EventHelper {
         fun isEventImminent(event: Event): Boolean {
             val eventStart = DateTime(event.startTime)
             return DateTime.now().isAfter(eventStart.minusHours(4))
+        }
+
+        fun showRemainingTickets(
+                status: TicketStatus?,
+                isEventBooked: Boolean,
+                isEventImminent: Boolean,
+                buyTicketButton: View,
+                remainingTicketsContainer: View,
+                remainingTicketsTextView: TextView,
+                noTicketsMessage: String) {
+
+            if (isEventImminent) {
+                buyTicketButton.isVisible = isEventBooked
+                remainingTicketsContainer.isVisible = false
+            } else {
+                if (status == null || status.isEventWithoutTickets()) {
+                    buyTicketButton.isVisible = isEventBooked
+                    remainingTicketsContainer.isVisible = false
+                } else if (status.ticketsStillAvailable()) {
+                    buyTicketButton.isVisible = true
+                    remainingTicketsContainer.isVisible = true
+                    remainingTicketsTextView.text = String.format(Locale.getDefault(), "%d", status.getRemainingTicketCount())
+                } else {
+                    buyTicketButton.isVisible = isEventBooked
+                    remainingTicketsContainer.isVisible = true
+                    remainingTicketsTextView.text = noTicketsMessage
+                }
+            }
         }
     }
 }

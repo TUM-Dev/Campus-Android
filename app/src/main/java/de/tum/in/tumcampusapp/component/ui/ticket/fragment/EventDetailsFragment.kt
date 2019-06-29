@@ -17,7 +17,6 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CreateEventActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventHelper
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity
-import de.tum.`in`.tumcampusapp.component.ui.ticket.di.TicketsModule
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.payload.TicketStatus
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
@@ -26,9 +25,14 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Const.KEY_EVENT_ID
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import de.tum.`in`.tumcampusapp.utils.into
-import de.tum.`in`.tumcampusapp.utils.observe
 import kotlinx.android.synthetic.main.fragment_event_details.*
+import kotlinx.android.synthetic.main.fragment_event_details.dateTextView
+import kotlinx.android.synthetic.main.fragment_event_details.descriptionTextView
+import kotlinx.android.synthetic.main.fragment_event_details.locationTextView
+import kotlinx.android.synthetic.main.fragment_event_details.remainingTicketsContainer
+import kotlinx.android.synthetic.main.fragment_event_details.remainingTicketsTextView
 import kotlinx.android.synthetic.main.fragment_event_details.view.*
+import kotlinx.android.synthetic.main.fragment_kinodetails_section.*
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -125,24 +129,15 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun showTicketCount(status: TicketStatus?) {
-        // Same logic as in showTicketCount function in KinoDetailsFragment.kt --> keep it the same
-        if(EventHelper.isEventImminent(event)) {
-            ticketButton.visibility = if(!viewModel.isEventBooked(event)) View.GONE else View.VISIBLE
-            remainingTicketsContainer.visibility = View.GONE
-        } else {
-            if (status == null || status.isEventWithoutTickets()) {
-                if(!viewModel.isEventBooked(event)) ticketButton.visibility = View.GONE
-                remainingTicketsContainer.visibility = View.GONE
-            } else if(status.ticketsStillAvailable()) {
-                ticketButton.visibility = View.VISIBLE
-                remainingTicketsContainer.visibility = View.VISIBLE
-                remainingTicketsTextView.text = status.toString()
-            } else {
-                ticketButton.visibility = if(!viewModel.isEventBooked(event)) View.GONE else View.VISIBLE
-                remainingTicketsContainer.visibility = View.VISIBLE
-                remainingTicketsTextView.text = getString(R.string.no_tickets_remaining_message)
-            }
-        }
+        EventHelper.showRemainingTickets(
+                status,
+                viewModel.isEventBooked(event),
+                EventHelper.isEventImminent(event),
+                buyTicketButton,
+                remainingTicketsContainer,
+                remainingTicketsTextView,
+                getString(R.string.no_tickets_remaining_message))
+
         swipeRefreshLayout.isRefreshing = false
     }
 
