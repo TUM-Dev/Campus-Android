@@ -58,7 +58,7 @@ class KinoDetailsFragment : Fragment() {
 
         kinoViewModel.kino.observe(this, Observer<Kino> { showMovieDetails(it) })
         kinoViewModel.event.observe(this, Observer<Event> { showEventTicketDetails(it) })
-        kinoViewModel.aggregatedTicketStatus.observe(this, { showTicketCount(it) })
+        kinoViewModel.aggregatedTicketStatus.observe(this, Observer { showTicketCount(it) })
     }
 
     override fun onCreateView(inflater: LayoutInflater,
