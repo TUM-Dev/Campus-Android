@@ -23,7 +23,6 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_buy_ticket.*
 import kotlinx.android.synthetic.main.activity_show_ticket.*
@@ -89,7 +88,7 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnError { Utils.log(it) }
-                .subscribe(Consumer<List<TicketType>> { this.handleTicketTypesDownloadSuccess(it) }, {
+                .subscribe({ handleTicketTypesDownloadSuccess(it) }, {
                     Utils.showToast(this@BuyTicketActivity, R.string.error_something_wrong)
                     finish()
                 })

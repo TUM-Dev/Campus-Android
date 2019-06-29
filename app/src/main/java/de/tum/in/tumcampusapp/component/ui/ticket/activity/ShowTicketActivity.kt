@@ -25,7 +25,6 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsRemoteRepo
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.activity_show_ticket.*
 import kotlinx.android.synthetic.main.fragment_calendar_details.*
 import org.joda.time.DateTime
@@ -119,7 +118,7 @@ class ShowTicketActivity : BaseActivity(R.layout.activity_show_ticket) {
     private fun loadRedemptionStatus() {
         val disposable = ticketsRemoteRepo
                 .fetchTickets()
-                .subscribe(Consumer<List<Ticket>> { handleTicketRefreshSuccess(it) }, { handleTicketRefreshFailure() })
+                .subscribe( { handleTicketRefreshSuccess(it) }, { handleTicketRefreshFailure() } )
         compositeDisposable.add(disposable)
     }
 
