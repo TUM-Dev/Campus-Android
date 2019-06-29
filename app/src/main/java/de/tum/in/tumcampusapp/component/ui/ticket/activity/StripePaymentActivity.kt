@@ -226,7 +226,7 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
     }
 
     private fun initCustomerSession() {
-        CustomerSession.initCustomerSession(TicketEphemeralKeyProvider({ string ->
+        CustomerSession.initCustomerSession(TicketEphemeralKeyProvider(this) { string ->
             if (string.startsWith("Error: ")) {
                 showError(string)
                 finish()
@@ -238,7 +238,7 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
                 }
                 showLoading(false)
             }
-        }, this))
+        })
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
