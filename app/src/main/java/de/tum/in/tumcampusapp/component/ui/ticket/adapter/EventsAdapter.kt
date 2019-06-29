@@ -34,9 +34,9 @@ import java.util.regex.Pattern
 
 class EventsAdapter(private val mContext: Context) : RecyclerView.Adapter<CardViewHolder>() {
 
-    private val mTicketsLocalRepo: TicketsLocalRepository = TicketsLocalRepository(TcaDb.getInstance(mContext))
+    private val ticketsLocalRepo: TicketsLocalRepository = TicketsLocalRepository(TcaDb.getInstance(mContext))
 
-    private var mEvents: List<EventItem> = ArrayList()
+    private var events: List<EventItem> = ArrayList()
     private val betaInfo = EventBetaInfo()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
@@ -56,7 +56,7 @@ class EventsAdapter(private val mContext: Context) : RecyclerView.Adapter<CardVi
     }
 
     override fun getItemViewType(position: Int): Int {
-        val item = mEvents[position]
+        val item = events[position]
         if (item is EventBetaInfo) {
             return CARD_INFO
         }
@@ -66,7 +66,7 @@ class EventsAdapter(private val mContext: Context) : RecyclerView.Adapter<CardVi
     }
 
     override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
-        val eventItem = mEvents[position]
+        val eventItem = events[position]
         if (eventItem is EventBetaInfo) {
             return
         }
@@ -75,19 +75,19 @@ class EventsAdapter(private val mContext: Context) : RecyclerView.Adapter<CardVi
         eventCard.event = event
         holder.currentCard = eventCard
 
-        val ticketCount = mTicketsLocalRepo.getTicketCount(event)
+        val ticketCount = ticketsLocalRepo.getTicketCount(event)
         (holder as EventViewHolder).bind(event, ticketCount)
     }
 
-    override fun getItemCount() = mEvents.size
+    override fun getItemCount() = events.size
 
     fun update(newEvents: MutableList<EventItem>) {
         if (newEvents.isEmpty() || newEvents[0] !is EventBetaInfo) {
             newEvents.add(0, betaInfo)
         }
-        val callback = EventDiffUtil(mEvents, newEvents)
+        val callback = EventDiffUtil(events, newEvents)
         val diffResult = DiffUtil.calculateDiff(callback)
-        mEvents = newEvents
+        events = newEvents
         diffResult.dispatchUpdatesTo(this)
     }
 

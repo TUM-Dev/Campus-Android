@@ -15,11 +15,11 @@ class TicketAmountViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         fun ticketAmountUpdated(ticketTypeId: Int, amount: Int)
     }
 
-    private val minusButton: MaterialButton by lazy { itemView.findViewById<MaterialButton>(R.id.ticket_amount_minus) }
-    private val plusButton: MaterialButton by lazy { itemView.findViewById<MaterialButton>(R.id.ticket_amount_plus) }
-    private val currentAmount: TextView by lazy { itemView.findViewById<TextView>(R.id.current_ticket_amount) }
-    private val ticketTypeName: TextView by lazy { itemView.findViewById<TextView>(R.id.ticket_type_name) }
-    private val ticketPrice: TextView by lazy { itemView.findViewById<TextView>(R.id.price_per_ticket) }
+    private val minusButton: MaterialButton by lazy { itemView.findViewById(R.id.ticket_amount_minus) }
+    private val plusButton: MaterialButton by lazy { itemView.findViewById(R.id.ticket_amount_plus) }
+    private val currentAmount: TextView by lazy { itemView.findViewById(R.id.current_ticket_amount) }
+    private val ticketTypeName: TextView by lazy { itemView.findViewById(R.id.ticket_type_name) }
+    private val ticketPrice: TextView by lazy { itemView.findViewById(R.id.price_per_ticket) }
 
     private var ticketAmount = 1
     private var ticketType = TicketType()
@@ -47,8 +47,8 @@ class TicketAmountViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         ticketPrice.text = itemView.resources.getString(R.string.price_per_ticket, Utils.formatPrice(ticketType.price))
         currentAmount.text = ticketAmount.toString()
         // init buttons
-        plusButton.setOnClickListener { view -> updateTicketAmount(true) }
-        minusButton.setOnClickListener { view -> updateTicketAmount(false) }
+        plusButton.setOnClickListener { updateTicketAmount(true) }
+        minusButton.setOnClickListener { updateTicketAmount(false) }
 
         // handle how many tickets are left
         remainingTickets = ticketType.contingent - ticketType.sold
