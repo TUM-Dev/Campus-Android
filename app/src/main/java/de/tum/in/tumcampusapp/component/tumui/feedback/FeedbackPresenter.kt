@@ -1,8 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.tumui.feedback
 
-import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.Manifest.permission.CAMERA
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.Manifest.permission.*
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -55,6 +53,7 @@ class FeedbackPresenter @Inject constructor(
         compositeDisposable += view.getMessage().subscribe { feedback.message = it }
         compositeDisposable += view.getTopicInput().subscribe { updateFeedbackTopic(it) }
 
+        compositeDisposable += view.getEmail().subscribe { feedback.email = it }
         compositeDisposable += view.getIncludeEmail().subscribe { onIncludeEmailChanged(it) }
         compositeDisposable += view.getIncludeLocation().subscribe { onIncludeLocationChanged(it) }
 
@@ -89,7 +88,7 @@ class FeedbackPresenter @Inject constructor(
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         if (savedInstanceState.containsKey(Const.FEEDBACK)) {
-            feedback = savedInstanceState.getParcelable<Feedback>(Const.FEEDBACK)
+            feedback = savedInstanceState.getParcelable(Const.FEEDBACK)!!
 
             feedback.message?.let {
                 view?.setFeedback(it)
@@ -142,6 +141,9 @@ class FeedbackPresenter @Inject constructor(
     }
 
     private fun isEmailValid(email: String?): Boolean {
+        if (email == null) {
+            return false
+        }
         return Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
@@ -318,11 +320,11 @@ class FeedbackPresenter @Inject constructor(
     }
 
     companion object {
-        @JvmField val REQUEST_TAKE_PHOTO = 11
-        @JvmField val REQUEST_GALLERY = 12
-        @JvmField val PERMISSION_LOCATION = 13
-        @JvmField val PERMISSION_CAMERA = 14
-        @JvmField val PERMISSION_FILES = 15
+        const val REQUEST_TAKE_PHOTO = 11
+        const val REQUEST_GALLERY = 12
+        const val PERMISSION_LOCATION = 13
+        const val PERMISSION_CAMERA = 14
+        const val PERMISSION_FILES = 15
     }
 
 }

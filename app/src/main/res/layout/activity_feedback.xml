@@ -57,7 +57,7 @@
                 app:boxStrokeWidth="@dimen/input_layout_border">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/feedback_message"
+                    android:id="@+id/feedbackMessage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="top"
@@ -76,7 +76,7 @@
 
                 <androidx.appcompat.widget.AppCompatImageButton
                     style="@style/Widget.AppCompat.Button.Borderless"
-                    android:id="@+id/feedback_add_image"
+                    android:id="@+id/addImageButton"
                     android:layout_width="@dimen/add_thumbnail_button_size"
                     android:layout_height="@dimen/add_thumbnail_button_size"
                     android:layout_gravity="center_vertical"
@@ -88,7 +88,7 @@
                     app:cornerRadius="@dimen/material_corner_radius" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/feedback_image_list"
+                    android:id="@+id/imageRecyclerView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -104,7 +104,7 @@
                 android:background="@color/text_light_gray" />
 
             <CheckBox
-                android:id="@+id/feedback_include_email"
+                android:id="@+id/includeEmailCheckbox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/material_small_padding"
@@ -112,7 +112,7 @@
                 android:text="@string/feedback_include_email" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/feedback_custom_email_layout"
+                android:id="@+id/customEmailLayout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
                 tools:visibility="visible">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/feedback_custom_email"
+                    android:id="@+id/customEmailInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress"
@@ -135,7 +135,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <CheckBox
-                android:id="@+id/feedback_include_location"
+                android:id="@+id/includeLocationCheckBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/material_small_padding"

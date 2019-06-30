@@ -45,7 +45,8 @@ public class OpenHoursHelper {
 
         //Split up the data string from the database with regex which has the format: "Mo-Do 11-14, Fr 11-13.45" or "Mo-Fr 9-20"
         Matcher m;
-        if (context.getString(R.string.language).equals("de")){
+        boolean isGerman = context.getString(R.string.language).equals("de");
+        if (isGerman){
             m = Pattern.compile("([a-z]{2}?)[-]?([a-z]{2}?)? ([0-9]{1,2}(?:[\\:][0-9]{2}?)?)-([0-9]{1,2}(?:[\\:][0-9]{2}?)?)", Pattern.CASE_INSENSITIVE)
                        .matcher(result);
         } else {
@@ -65,8 +66,8 @@ public class OpenHoursHelper {
         String[] time = new String[2];
         if (m.find()) {
             //We are currently in Mo-Do/Fr, when this weekday is in that range we have our result or we check if the current range is valid for fridays also
-            if (dayOfWeek <= Calendar.THURSDAY || m.group(2)
-                    .equalsIgnoreCase("fr")) {
+            if (dayOfWeek + 1 <= Calendar.THURSDAY // +1 because dayOfWeek is zero-based while Calendar.THURSDAY is not
+                || m.group(2).equalsIgnoreCase(isGerman ? "fr" : "fri")) {
                 time[0] = m.group(3);
                 time[1] = m.group(4);
             } else {
@@ -90,27 +91,33 @@ public class OpenHoursHelper {
         DateTime opens = strToCal(date, time[0]);
         DateTime closes = strToCal(date, time[1]);
 
-        //Check the relativity
-        DateTime relativeTo;
-        int relation;
-        if (opens.isAfter(now)) {
-            relation = R.string.opens;
-            relativeTo = opens;
-        } else if (closes.isAfter(now)) {
-            relation = R.string.closes;
-            relativeTo = closes;
+
+        if (date.dayOfYear().equals(now.dayOfYear())) {
+            //Check the relativity
+            DateTime relativeTo;
+            int relation;
+            if (opens.isAfter(now)) {
+                relation = R.string.opens;
+                relativeTo = opens;
+            } else if (closes.isAfter(now)) {
+                relation = R.string.closes;
+                relativeTo = closes;
+            } else {
+                relation = R.string.closed;
+                relativeTo = closes;
+            }
+
+            //Get the relative string
+            String relativeTime = DateTimeUtils.INSTANCE.formatFutureTime(relativeTo, context);
+            //Return an assembly
+            return context.getString(relation) + " " + relativeTime.substring(0, 1)
+                                                                   .toLowerCase(Locale.getDefault()) + relativeTime.substring(1);
         } else {
-            relation = R.string.closed;
-            relativeTo = closes;
+            // future --> show non-relative opening hours
+            return context.getString(R.string.opening_hours) + ": " +
+                   DateTimeUtils.INSTANCE.getTimeString(opens) + " - " +
+                   DateTimeUtils.INSTANCE.getTimeString(closes);
         }
-
-        //Get the relative string
-        String relativeTime = DateTimeUtils.INSTANCE.formatFutureTime(relativeTo, context);
-
-        //Return an assembly
-        return context.getString(relation) + " " + relativeTime.substring(0, 1)
-                .toLowerCase(Locale.getDefault()) + relativeTime.substring(1);
-
     }
 
     private static DateTime strToCal(DateTime date, String time) {

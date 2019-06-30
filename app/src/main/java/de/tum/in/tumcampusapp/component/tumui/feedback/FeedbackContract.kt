@@ -12,6 +12,7 @@ interface FeedbackContract {
     interface View {
         fun getTopicInput(): Observable<Int>
         fun getMessage(): Observable<String>
+        fun getEmail(): Observable<String>
         fun getIncludeEmail(): Observable<Boolean>
         fun getIncludeLocation(): Observable<Boolean>
         fun getLocation(): Observable<Location>
