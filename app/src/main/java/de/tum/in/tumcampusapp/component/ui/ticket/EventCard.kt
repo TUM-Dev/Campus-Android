@@ -17,6 +17,7 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.adapter.EventsAdapter
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoActivity
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 
@@ -42,11 +43,10 @@ class EventCard(context: Context) : Card(CardManager.CARD_EVENT, context, "card_
 
     override fun getNavigationDestination(): NavDestination? {
         val event = this.event
-        /*if (event != null && event.kino != -1) {
-            val intent = Intent(context, KinoActivity::class.java)
-            intent.putExtra(Const.KINO_ID, event.kino)
-            return SystemIntent(intent)
-        }*/
+        if (event != null && event.kino != -1) {
+            val args = Bundle().apply { putInt(Const.KINO_ID, event.kino) }
+            return NavDestination.Activity(KinoActivity::class.java, args)
+        }
         val args = Bundle().apply { putParcelable(Const.KEY_EVENT, event) }
         return NavDestination.Activity(EventDetailsActivity::class.java, args)
     }
