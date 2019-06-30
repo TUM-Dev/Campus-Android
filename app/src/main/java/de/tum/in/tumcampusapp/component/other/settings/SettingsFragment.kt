@@ -95,8 +95,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
     }
 
     private fun populateNewsSources() {
-        val newsSourcesPreference =
-            findPreference("card_news_sources") as? PreferenceCategory ?: return
+        val newsSourcesPreference = findPreference("card_news_sources") as? PreferenceCategory ?: return
         val newsSources = newsController.newsSources
 
         for (newsSource in newsSources) {
@@ -110,7 +109,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
             // Load news source icon in background and set it
             val url = newsSource.icon
             if (url.isNotBlank()) {
-                loadNewsSourceIcon(preferenceScreen, url)
+                loadNewsSourceIcon(pref, url)
             }
 
             pref.title = newsSource.title
@@ -134,9 +133,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
                     bitmap: Bitmap?,
                     from: Picasso.LoadedFrom?
                 ) {
-                    if (isAdded) {
-                        preference.icon = BitmapDrawable(resources, bitmap)
-                    }
+                    preference.icon = BitmapDrawable(resources, bitmap)
                 }
 
                 override fun onBitmapFailed(
