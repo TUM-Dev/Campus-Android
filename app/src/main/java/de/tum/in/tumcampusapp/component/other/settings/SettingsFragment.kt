@@ -6,9 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager.PERMISSION_GRANTED
-import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat.checkSelfPermission
@@ -22,7 +20,6 @@ import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
@@ -36,6 +33,10 @@ import de.tum.`in`.tumcampusapp.service.SilenceService
 import de.tum.`in`.tumcampusapp.service.StartSyncReceiver
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
+import de.tum.`in`.tumcampusapp.utils.plusAssign
+import io.reactivex.Single
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.notificationManager
 import java.util.concurrent.ExecutionException
@@ -43,6 +44,8 @@ import javax.inject.Inject
 
 class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener,
     SharedPreferences.OnSharedPreferenceChangeListener {
+
+    private val compositeDisposable = CompositeDisposable()
 
     @Inject
     lateinit var cafeteriaLocalRepository: CafeteriaLocalRepository
@@ -121,26 +124,11 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         preference: Preference,
         url: String
     ) {
-        Picasso
-            .get()
-            .load(url)
-            .into(object : Target {
-                override fun onPrepareLoad(
-                    placeHolderDrawable: Drawable?
-                ) = Unit
-
-                override fun onBitmapLoaded(
-                    bitmap: Bitmap?,
-                    from: Picasso.LoadedFrom?
-                ) {
-                    preference.icon = BitmapDrawable(resources, bitmap)
-                }
-
-                override fun onBitmapFailed(
-                    e: Exception?,
-                    errorDrawable: Drawable?
-                ) = Unit
-            })
+        compositeDisposable += Single
+            .fromCallable { Picasso.get().load(url).get() }
+            .subscribeOn(Schedulers.io())
+            .map { BitmapDrawable(resources, it) }
+            .subscribe(preference::setIcon, Utils::log)
     }
 
     /**
@@ -305,6 +293,11 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         if (readCalendar == PERMISSION_GRANTED && writeCalendar == PERMISSION_GRANTED) {
             CalendarController.deleteLocalCalendar(requireContext())
         }
+    }
+
+    override fun onDestroy() {
+        compositeDisposable.dispose()
+        super.onDestroy()
     }
 
     companion object {
