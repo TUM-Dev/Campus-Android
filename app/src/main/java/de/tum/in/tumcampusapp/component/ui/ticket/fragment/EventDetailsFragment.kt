@@ -27,13 +27,7 @@ import de.tum.`in`.tumcampusapp.utils.Const.KEY_EVENT_ID
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import de.tum.`in`.tumcampusapp.utils.into
 import kotlinx.android.synthetic.main.fragment_event_details.*
-import kotlinx.android.synthetic.main.fragment_event_details.dateTextView
-import kotlinx.android.synthetic.main.fragment_event_details.descriptionTextView
-import kotlinx.android.synthetic.main.fragment_event_details.locationTextView
-import kotlinx.android.synthetic.main.fragment_event_details.remainingTicketsContainer
-import kotlinx.android.synthetic.main.fragment_event_details.remainingTicketsTextView
 import kotlinx.android.synthetic.main.fragment_event_details.view.*
-import kotlinx.android.synthetic.main.fragment_kinodetails_section.*
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -134,7 +128,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 status,
                 viewModel.isEventBooked(event),
                 EventHelper.isEventImminent(event),
-                buyTicketButton,
+                ticketButton,
                 remainingTicketsContainer,
                 remainingTicketsTextView,
                 getString(R.string.no_tickets_remaining_message))

@@ -26,7 +26,6 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_show_ticket.*
-import kotlinx.android.synthetic.main.fragment_calendar_details.*
 import org.joda.time.DateTime
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -151,7 +150,7 @@ class ShowTicketActivity : BaseActivity(R.layout.activity_show_ticket) {
 
     private fun setViewData() {
         eventTitle.text = event.title
-        dateTextView.text = event.getFormattedStartDateTime(this)
+        eventDateTime.text = event.getFormattedStartDateTime(this)
         redemptionStateTextView.text = redemptionState
         eventLocation.text = event.locality
         eventLocation.setOnClickListener { this.showMap(it) }
