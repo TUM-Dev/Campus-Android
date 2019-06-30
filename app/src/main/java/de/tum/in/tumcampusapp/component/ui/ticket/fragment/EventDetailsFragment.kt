@@ -81,7 +81,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         showEventDetails(event)
-        viewModel.aggregatedTicketStatus.observe(viewLifecycleOwner, Observer<TicketStatus?> { showTicketCount(it) })
+        viewModel.aggregatedTicketStatus.observe(viewLifecycleOwner, Observer { showTicketCount(it) })
     }
 
     override fun onRefresh() {
@@ -112,7 +112,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         context?.let {
             dateTextView.text = event.getFormattedStartDateTime(it)
-            dateContainer.setOnClickListener { _ -> displayAddToCalendarDialog() }
+            dateContainer.setOnClickListener { displayAddToCalendarDialog() }
         }
 
         locationTextView.text = event.locality

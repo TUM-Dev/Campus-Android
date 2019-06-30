@@ -162,11 +162,11 @@ class KinoDetailsFragment : Fragment() {
                         kinoCover.setImageBitmap(bitmap)
                     }
 
-                    override fun onBitmapFailed(e: Exception, errorDrawable: Drawable) {
+                    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
                         kinoCoverProgress.visibility = View.GONE
                     }
 
-                    override fun onPrepareLoad(placeHolderDrawable: Drawable) {
+                    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
                         // intentionally left blank
                     }
                 })

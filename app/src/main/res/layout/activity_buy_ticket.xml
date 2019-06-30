@@ -174,7 +174,7 @@
                         android:textColor="@color/text_dark_secondary"
                         app:layout_constraintEnd_toEndOf="@id/guideline"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/eventLocation"/>
+                        app:layout_constraintTop_toBottomOf="@id/buyEventLocation"/>
 
                     <TextView
                         android:id="@+id/eventDate"

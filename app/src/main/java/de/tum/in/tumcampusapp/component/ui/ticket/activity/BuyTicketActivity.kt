@@ -25,7 +25,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_buy_ticket.*
-import kotlinx.android.synthetic.main.activity_show_ticket.*
 import kotlinx.android.synthetic.main.loading_overlay.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -138,7 +137,7 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
     private fun initEventTextViews() {
         val event = eventsLocalRepo.getEventById(eventId)
         event?.let {
-            eventTitle.text = it.title
+            eventName.text = it.title
             buyEventLocation.text = it.locality
             eventDate.text = it.getFormattedStartDateTime(this)
         }
