@@ -346,7 +346,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         Utils.setSetting(mContext, Const.SYNC_CALENDAR, false);
         if (readCalendar == PackageManager.PERMISSION_GRANTED &&
                 writeCalendar == PackageManager.PERMISSION_GRANTED) {
-            CalendarController.deleteLocalCalendar(mContext);
+            CalendarController.Companion.deleteLocalCalendar(mContext);
         }
     }
 
