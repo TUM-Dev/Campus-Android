@@ -124,7 +124,7 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
      * @return A cursor containing a list of lectures and the is_on_blacklist flag
      */
     fun getLecturesForWidget(widgetId: Int): List<CalendarItem> {
-        val lectures = calendarDao.getLecturesInBlacklist(widgetId.toString())
+        val lectures = calendarDao.getLecturesInBlacklist(widgetId.toString()).toMutableList()
         lectures.forEach {
             it.blacklisted = true
         }
@@ -186,7 +186,7 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
         calendarDao.insert(*items.toTypedArray())
     }
 
-    fun getLocationsForEvent(eventId: String): List<String>? {
+    fun getLocationsForEvent(eventId: String): List<String> {
         return calendarDao.getNonCancelledLocationsById(eventId)
     }
 
