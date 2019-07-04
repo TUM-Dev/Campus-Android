@@ -238,6 +238,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
             description = description.substring(0, 4000)
         }
         event.description = description
+        this.event = event
 
         val apiCall = apiClient.createEvent(event, null)
         fetch(apiCall)
