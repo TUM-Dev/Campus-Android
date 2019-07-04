@@ -214,14 +214,15 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
         /**
          * Replaces the current TUM_CAMPUS_APP calendar with a new version.
          *
-         * @param c Context
+         * @param context Context
          */
         @Throws(SQLiteException::class)
-        fun syncCalendar(c: Context) {
+        fun syncCalendar(context: Context) {
             // Deleting earlier calendar created by TUM Campus App
-            deleteLocalCalendar(c)
-            val uri = CalendarHelper.addCalendar(c)
-            addEvents(c, uri)
+            deleteLocalCalendar(context)
+            CalendarHelper.addCalendar(context)?.let {
+                addEvents(context, it)
+            }
         }
 
         /**

@@ -34,7 +34,7 @@
                     android:hint="@string/event_title">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/event_title"
+                        android:id="@+id/eventTitleView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:imeOptions="actionDone"
@@ -48,7 +48,7 @@
                 <LinearLayout style="@style/CalendarDateTimeItem">
 
                     <TextView
-                        android:id="@+id/event_start_date"
+                        android:id="@+id/eventStartDateView"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -63,7 +63,7 @@
                         tools:text="Mon, Jun 11, 2018" />
 
                     <TextView
-                        android:id="@+id/event_start_time"
+                        android:id="@+id/eventStartTimeView"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:background="?android:selectableItemBackground"
@@ -81,7 +81,7 @@
                 <LinearLayout style="@style/CalendarDateTimeItem">
 
                     <TextView
-                        android:id="@+id/event_end_date"
+                        android:id="@+id/eventEndDateView"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -96,7 +96,7 @@
                         tools:text="Mon, Jun 11, 2018" />
 
                     <TextView
-                        android:id="@+id/event_end_time"
+                        android:id="@+id/eventEndTimeView"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:background="?android:selectableItemBackground"
@@ -120,7 +120,7 @@
                     android:hint="@string/comment">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/event_description"
+                        android:id="@+id/eventDescriptionView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@android:color/transparent"
@@ -132,7 +132,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/create_event_button"
+                    android:id="@+id/createEventButton"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
