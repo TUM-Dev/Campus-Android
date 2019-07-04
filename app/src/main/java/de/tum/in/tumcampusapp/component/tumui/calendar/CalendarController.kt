@@ -53,11 +53,11 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
     val nextCalendarItemGeo: Geo?
         get() = roomLocationsDao.nextLectureCoordinates?.toGeo()
 
-    internal fun getFromDbBetweenDates(begin: DateTime, end: DateTime) =
+    fun getFromDbBetweenDates(begin: DateTime, end: DateTime) =
             applyEventColors(calendarDao.getAllBetweenDates(begin, end))
 
 
-    internal fun getFromDbNotCancelledBetweenDates(begin: DateTime, end: DateTime) =
+    fun getFromDbNotCancelledBetweenDates(begin: DateTime, end: DateTime) =
             applyEventColors(calendarDao.getAllNotCancelledBetweenDates(begin, end))
 
 
@@ -136,9 +136,9 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
      * Gets the event by its id and duplicates of this event with different locations.
      * The first item is the one with the given id.
      */
-    internal fun getCalendarItemAndDuplicatesById(id: String) = calendarDao.getCalendarItemsById(id)
+    fun getCalendarItemAndDuplicatesById(id: String) = calendarDao.getCalendarItemsById(id)
 
-    internal fun scheduleNotifications(events: List<Event>) {
+    fun scheduleNotifications(events: List<Event>) {
         // Be responsible when scheduling alarms. We don't want to exceed system resources
         // By only using up half of the remaining resources, we achieve fair distribution of the
         // remaining usable notifications
@@ -217,6 +217,7 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
          * @param context Context
          */
         @Throws(SQLiteException::class)
+        @JvmStatic
         fun syncCalendar(context: Context) {
             // Deleting earlier calendar created by TUM Campus App
             deleteLocalCalendar(context)
