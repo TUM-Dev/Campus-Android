@@ -244,9 +244,10 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     }
 
     override fun onDownloadSuccessful(response: CreateEventResponse) {
-        val nr = response.eventId
-        event?.nr = nr
-        TcaDb.getInstance(this).calendarDao().insert(event)
+        event?.let {
+            it.nr = response.eventId
+            TcaDb.getInstance(this).calendarDao().insert(it)
+        }
         finish()
     }
 
