@@ -31,9 +31,9 @@ class DepartureView
  * @param big     Whether the departure should use a thin or a big line
  */
 @JvmOverloads constructor(context: Context, private val big: Boolean = false) : LinearLayout(context) {
-    private val symbolView: TextView by lazy { findViewById(R.id.line_symbol) }
-    private val lineView: TextView by lazy { findViewById(R.id.nameTextView) }
-    private val timeSwitcher: TextSwitcher by lazy { findViewById(R.id.line_switcher) }
+    private val symbolView: TextView by lazy { findViewById<TextView>(R.id.line_symbol) }
+    private val lineView: TextView by lazy { findViewById<TextView>(R.id.nameTextView) }
+    private val timeSwitcher: TextSwitcher by lazy { findViewById<TextSwitcher>(R.id.line_switcher) }
     private val mHandler: Handler
     private var valueAnimator: ValueAnimator? = null
     private var departureTime: DateTime? = null
