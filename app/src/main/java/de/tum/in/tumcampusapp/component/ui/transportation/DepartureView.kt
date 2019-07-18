@@ -24,13 +24,8 @@ import java.util.*
  * automatically down counting departure time
  */
 class DepartureView
-/**
- * Constructor for DepartureView
- *
- * @param context Context
- * @param big     Whether the departure should use a thin or a big line
- */
-@JvmOverloads constructor(context: Context, private val big: Boolean = false) : LinearLayout(context) {
+
+@JvmOverloads constructor(context: Context, private val useCompactView: Boolean = false) : LinearLayout(context) {
     private val symbolView: TextView by lazy { findViewById<TextView>(R.id.line_symbol) }
     private val lineView: TextView by lazy { findViewById<TextView>(R.id.nameTextView) }
     private val timeSwitcher: TextSwitcher by lazy { findViewById<TextSwitcher>(R.id.line_switcher) }
@@ -47,10 +42,10 @@ class DepartureView
         gravity = Gravity.CENTER_VERTICAL
 
         val inflater = LayoutInflater.from(context)
-        if (big) {
-            inflater.inflate(R.layout.departure_line_big, this, true)
-        } else {
+        if (useCompactView) {
             inflater.inflate(R.layout.departure_line_small, this, true)
+        } else {
+            inflater.inflate(R.layout.departure_line_big, this, true)
         }
 
         // Declare the in and out animations and initialize them
@@ -70,21 +65,21 @@ class DepartureView
      * @param symbol Symbol e.g. U6, S1, T14
      */
     fun setSymbol(symbol: String, highlight: Boolean) {
-        val mvvSymbol = MVVSymbol(symbol)
+        val mvvSymbol = MVVSymbol(symbol, context)
         symbolView.setTextColor(mvvSymbol.textColor)
         symbolView.text = symbol
         symbolView.backgroundTintList = ColorStateList.valueOf(mvvSymbol.backgroundColor)
 
         if (highlight) {
-            if (big) {
+            if (useCompactView) {
+                setBackgroundColor(context.resources.getColor(R.color.reduced_opacity) and mvvSymbol.backgroundColor)
+            } else {
                 setBackgroundColor(mvvSymbol.backgroundColor)
                 lineView.setTextColor(Color.WHITE)
                 for (index in 0 until timeSwitcher.childCount) {
                     val tw = timeSwitcher.getChildAt(index) as TextView
                     tw.setTextColor(Color.WHITE)
                 }
-            } else {
-                setBackgroundColor(0x20ffffff and mvvSymbol.backgroundColor)
             }
         } else {
             setBackgroundColor(mvvSymbol.textColor)

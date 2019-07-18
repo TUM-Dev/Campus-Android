@@ -113,4 +113,39 @@
     <color name="event_other">#5598D3</color>
     <color name="location_color">#00A7DE</color>
 
+    <!--- MVV colors -->
+    <color name="s_1">#41C0FF</color>
+    <color name="s_2">#71BF44</color>
+    <color name="s_3">#7B107D</color>
+    <color name="s_4">#FF2020</color>
+    <color name="s_6">#02A76D</color>
+    <color name="s_7">#963834</color>
+    <color name="s_8">@color/black</color>
+    <color name="s_20">#F3AEAC</color>
+    <color name="s_8_font">#F1CB00</color>
+
+    <color name="u_1">#3B7233</color>
+    <color name="u_2">#C4022D</color>
+    <color name="u_3">#ED6720</color>
+    <color name="u_4">#01AB85</color>
+    <color name="u_5">#BD7B02</color>
+    <color name="u_6">#0265AF</color>
+    <color name="u_7">@color/u_2</color>
+    <color name="u_7_accent">#BF3B7233</color> // U1 at 75% opacity
+    <color name="u_8">@color/u_3</color>
+    <color name="u_8_accent">@color/u_2</color>
+
+    <color name="tram">#DC261C</color>
+
+    <color name="night_line_font">#EBD22E</color>
+
+    <color name="metro_bus">#FC6604</color>
+    <color name="express_bus">#477F70</color>
+    <color name="regular_bus">#004A5D</color>
+
+    <color name="unknown_line">#757575</color>
+    <color name="reduced_opacity">#20ffffff</color>
+    <!--- End of MVV colors -->
+
+
 </resources>
