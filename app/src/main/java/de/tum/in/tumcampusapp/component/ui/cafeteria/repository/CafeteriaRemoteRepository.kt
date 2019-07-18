@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.Observable
-import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
@@ -30,7 +29,7 @@ class CafeteriaRemoteRepository @Inject constructor(
                 .doOnNext { localRepository.clear() }
                 .flatMap { tumCabeClient.cafeterias }
                 .doAfterNext { localRepository.updateLastSync() }
-                .subscribe(Consumer { localRepository.addCafeteria(it) }, Consumer { Utils.log(it) })
+                .subscribe(localRepository::addCafeterias, Utils::log)
     }
 
 }

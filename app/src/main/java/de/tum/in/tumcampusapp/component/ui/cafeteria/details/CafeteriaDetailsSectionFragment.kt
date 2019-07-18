@@ -12,9 +12,9 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
+import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import kotlinx.android.synthetic.main.fragment_cafeteriadetails_section.*
@@ -31,16 +31,14 @@ class CafeteriaDetailsSectionFragment : Fragment() {
     @Inject
     internal lateinit var viewModelProvider: Provider<CafeteriaViewModel>
 
-    private lateinit var cafeteriaViewModel: CafeteriaViewModel
+    private val cafeteriaViewModel by lazy {
+        ViewModelProviders.of(this, ViewModelFactory(viewModelProvider)).get(CafeteriaViewModel::class.java)
+    }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        (requireActivity() as BaseActivity).injector
-                .cafeteriaComponent()
+        injector.cafeteriaComponent()
                 .inject(this)
-
-        val factory = ViewModelFactory(viewModelProvider)
-        cafeteriaViewModel = ViewModelProviders.of(this, factory).get(CafeteriaViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater,

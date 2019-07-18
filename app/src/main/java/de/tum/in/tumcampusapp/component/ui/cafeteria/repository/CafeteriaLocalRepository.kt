@@ -43,7 +43,7 @@ class CafeteriaLocalRepository @Inject constructor(
 
     fun getCafeteria(id: Int): Cafeteria? = database.cafeteriaDao().getById(id)
 
-    fun addCafeteria(cafeterias: List<Cafeteria>) = executor.execute {
+    fun addCafeterias(cafeterias: List<Cafeteria>) = executor.execute {
         database.cafeteriaDao().insert(cafeterias)
     }
 

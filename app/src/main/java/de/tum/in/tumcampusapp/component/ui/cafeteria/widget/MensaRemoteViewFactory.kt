@@ -11,25 +11,25 @@ import java.util.*
 import java.util.regex.Pattern
 
 class MensaRemoteViewFactory(private val applicationContext: Context) : RemoteViewsService.RemoteViewsFactory {
-    private var mMenus: List<CafeteriaMenu> = ArrayList()
+    private var menus: List<CafeteriaMenu> = ArrayList()
 
     override fun onCreate() {
-        mMenus = CafeteriaManager(applicationContext).bestMatchCafeteriaMenus
+        menus = CafeteriaManager(applicationContext).bestMatchCafeteriaMenus
     }
 
     override fun onDataSetChanged() { /* Noop */ }
 
     override fun onDestroy() { /* Noop */ }
 
-    override fun getCount() = mMenus.size
+    override fun getCount() = menus.size
 
     override fun getViewAt(position: Int): RemoteViews {
-        if (position >= mMenus.size) {
+        if (position >= menus.size) {
             // No idea why this happens, but getViewAt is occasionally called with position == size
             return loadingView
         }
 
-        val (_, _, _, _, typeLong, _, name) = mMenus[position]
+        val (_, _, _, _, typeLong, _, name) = menus[position]
         val remoteViews = RemoteViews(applicationContext.packageName, R.layout.mensa_widget_item)
 
         val menuContent = PATTERN.matcher(name)
