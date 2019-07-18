@@ -14,7 +14,6 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocal
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.service.MensaWidgetService
 import de.tum.`in`.tumcampusapp.utils.Const
-import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
 /**
@@ -29,19 +28,16 @@ class MensaWidget : AppWidgetProvider() {
         val mensaManager = CafeteriaManager(context)
 
         val cafeteriaId = mensaManager.bestMatchMensaId
-        val cafeteria = localRepository.getCafeteria(cafeteriaId)
+        val cafeteria = localRepository.getCafeteriaWithMenus(cafeteriaId)
 
         for (appWidgetId in appWidgetIds) {
             val remoteViews = RemoteViews(context.packageName, R.layout.mensa_widget)
 
             // Set the header for the Widget layout
-            cafeteria?.let {
-                remoteViews.setTextViewText(R.id.mensa_widget_header, it.name)
-            }
+            remoteViews.setTextViewText(R.id.mensa_widget_header, cafeteria.name)
 
             // Set the properly formatted date in the subhead
-            val localDate = DateTime.now().toLocalDate()
-            val date = DateTimeFormat.shortDate().print(localDate)
+            val date = DateTimeFormat.shortDate().print(cafeteria.nextMenuDate)
             remoteViews.setTextViewText(R.id.mensa_widget_subhead, date)
 
             // Set the header on click to open the mensa activity
