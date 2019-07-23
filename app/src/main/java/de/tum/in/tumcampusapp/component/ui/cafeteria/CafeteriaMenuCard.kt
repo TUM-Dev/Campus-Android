@@ -57,7 +57,7 @@ class CafeteriaMenuCard(context: Context, private val cafeteria: CafeteriaWithMe
 
     override fun hideAlways() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        val id = Integer.toString(cafeteria.id)
+        val id = cafeteria.id.toString()
         val ids = prefs.getStringSet(Const.CAFETERIA_CARDS_SETTING, HashSet())!!
         if (ids.contains(id)) {
             ids.remove(id)
