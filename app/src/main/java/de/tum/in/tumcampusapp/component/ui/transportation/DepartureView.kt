@@ -13,7 +13,11 @@ import android.view.animation.AnimationUtils
 import android.widget.LinearLayout
 import android.widget.TextSwitcher
 import android.widget.TextView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.utils.Utils
 import org.joda.time.DateTime
 import org.joda.time.Seconds
 import java.util.*
@@ -24,7 +28,7 @@ import java.util.*
  * automatically down counting departure time
  */
 class DepartureView
-@JvmOverloads constructor(context: Context, private val useCompactView: Boolean = false) : LinearLayout(context) {
+@JvmOverloads constructor(context: Context, private val useCompactView: Boolean = false) : LinearLayout(context), LifecycleObserver {
     private val symbolView: TextView by lazy { findViewById<TextView>(R.id.line_symbol) }
     private val lineView: TextView by lazy { findViewById<TextView>(R.id.nameTextView) }
     private val timeSwitcher: TextSwitcher by lazy { findViewById<TextSwitcher>(R.id.line_switcher) }
@@ -137,10 +141,9 @@ class DepartureView
                 }
     }
 
-    /**
-     * Call this, when the DepartureView isn't needed anymore.
-     */
-    fun removeAllCallbacksAndMessages() {
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    fun stop() {
+        Utils.log("departureView: stopped")
         countdownHandler.removeCallbacksAndMessages(null)
 
         valueAnimator?.apply {
