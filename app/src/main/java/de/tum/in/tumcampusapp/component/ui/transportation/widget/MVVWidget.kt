@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.RemoteViews
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
+import org.jetbrains.anko.alarmManager
 import java.util.*
 
 /**
@@ -56,14 +57,13 @@ class MVVWidget : AppWidgetProvider() {
 
         val intent = Intent(context, MVVWidget::class.java)
         val sender = PendingIntent.getBroadcast(context, 0, intent, 0)
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager?
-        alarmManager?.let {
-            it.cancel(sender)
-            if (autoReload) {
-                intent.action = BROADCAST_RELOAD_ALL_ALARM
-                it.setRepeating(AlarmManager.RTC, 5000, UPDATE_ALARM_DELAY.toLong(), sender)
-            }
+        val alarmManager = context.alarmManager
+        alarmManager.cancel(sender)
+        if (autoReload) {
+            intent.action = BROADCAST_RELOAD_ALL_ALARM
+            alarmManager.setRepeating(AlarmManager.RTC, 5000, UPDATE_ALARM_DELAY.toLong(), sender)
         }
+
     }
 
     /**

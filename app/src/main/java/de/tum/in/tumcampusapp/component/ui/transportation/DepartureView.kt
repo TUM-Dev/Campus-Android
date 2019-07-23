@@ -24,12 +24,11 @@ import java.util.*
  * automatically down counting departure time
  */
 class DepartureView
-
 @JvmOverloads constructor(context: Context, private val useCompactView: Boolean = false) : LinearLayout(context) {
     private val symbolView: TextView by lazy { findViewById<TextView>(R.id.line_symbol) }
     private val lineView: TextView by lazy { findViewById<TextView>(R.id.nameTextView) }
     private val timeSwitcher: TextSwitcher by lazy { findViewById<TextSwitcher>(R.id.line_switcher) }
-    private val mHandler: Handler
+    private val countdownHandler: Handler
     private var valueAnimator: ValueAnimator? = null
     private var departureTime: DateTime? = null
 
@@ -37,7 +36,6 @@ class DepartureView
         get() = symbolView.text.toString()
 
     init {
-
         orientation = HORIZONTAL
         gravity = Gravity.CENTER_VERTICAL
 
@@ -48,15 +46,10 @@ class DepartureView
             inflater.inflate(R.layout.departure_line_big, this, true)
         }
 
-        // Declare the in and out animations and initialize them
-        val `in` = AnimationUtils.loadAnimation(getContext(), android.R.anim.slide_in_left)
-        val out = AnimationUtils.loadAnimation(getContext(), android.R.anim.slide_out_right)
+        timeSwitcher.inAnimation = AnimationUtils.loadAnimation(getContext(), android.R.anim.slide_in_left)
+        timeSwitcher.outAnimation = AnimationUtils.loadAnimation(getContext(), android.R.anim.slide_out_right)
 
-        // set the animation type of textSwitcher
-        timeSwitcher.inAnimation = `in`
-        timeSwitcher.outAnimation = out
-
-        mHandler = Handler()
+        countdownHandler = Handler()
     }
 
     /**
@@ -72,7 +65,7 @@ class DepartureView
 
         if (highlight) {
             if (useCompactView) {
-                setBackgroundColor(context.resources.getColor(R.color.reduced_opacity) and mvvSymbol.backgroundColor)
+                setBackgroundColor(mvvSymbol.getHighlight())
             } else {
                 setBackgroundColor(mvvSymbol.backgroundColor)
                 lineView.setTextColor(Color.WHITE)
@@ -132,7 +125,7 @@ class DepartureView
             return
         }
         // Keep countDown approximately in sync.
-        mHandler.postDelayed({ updateDepartureTime() }, 1000)
+        countdownHandler.postDelayed(this::updateDepartureTime, 1000)
     }
 
     private fun animateOut() {
@@ -148,7 +141,7 @@ class DepartureView
      * Call this, when the DepartureView isn't needed anymore.
      */
     fun removeAllCallbacksAndMessages() {
-        mHandler.removeCallbacksAndMessages(null)
+        countdownHandler.removeCallbacksAndMessages(null)
 
         valueAnimator?.apply {
             cancel()

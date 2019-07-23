@@ -9,7 +9,7 @@ import de.tum.`in`.tumcampusapp.R
  *
  * @param line Line symbol name e.g. U6, S1, T14
  */
-class MVVSymbol(line: String, context: Context) {
+class MVVSymbol(line: String, val context: Context) {
 
     val backgroundColor: Int
     val textColor: Int
@@ -56,6 +56,10 @@ class MVVSymbol(line: String, context: Context) {
 
         this.textColor = context.resources.getColor(textColor)
         this.backgroundColor = context.resources.getColor(backgroundColor)
+    }
+
+    fun getHighlight(): Int {
+        return context.resources.getColor(R.color.reduced_opacity) and backgroundColor
     }
 
     companion object {
