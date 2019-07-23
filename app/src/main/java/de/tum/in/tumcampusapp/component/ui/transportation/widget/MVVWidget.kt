@@ -67,7 +67,7 @@ class MVVWidget : AppWidgetProvider() {
     }
 
     /**
-     * Plans updates the widgets after 30s and 60s
+     * Updates the widget every 20 seconds
      */
     private fun planUpdates(context: Context) {
         for (i in 1..3) {
