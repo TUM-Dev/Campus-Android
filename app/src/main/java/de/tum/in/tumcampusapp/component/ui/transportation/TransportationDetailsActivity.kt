@@ -106,7 +106,7 @@ class TransportationDetailsActivity : ProgressActivity<Unit>(R.layout.activity_t
         }
         mViewResults.removeAllViews()
         for ((_, direction, lineSymbol, _, departureTime) in results) {
-            val view = DepartureView(this, true)
+            val view = DepartureView(this, false)
             lifecycle.addObserver(view)
 
             view.setOnClickListener { v ->

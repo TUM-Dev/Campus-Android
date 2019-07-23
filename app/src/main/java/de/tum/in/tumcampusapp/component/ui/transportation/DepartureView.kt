@@ -28,7 +28,7 @@ import java.util.*
  * automatically down counting departure time
  */
 class DepartureView
-@JvmOverloads constructor(context: Context, private val useCompactView: Boolean = false) : LinearLayout(context), LifecycleObserver {
+@JvmOverloads constructor(context: Context, private val useCompactView: Boolean = true) : LinearLayout(context), LifecycleObserver {
     private val symbolView: TextView by lazy { findViewById<TextView>(R.id.line_symbol) }
     private val lineView: TextView by lazy { findViewById<TextView>(R.id.nameTextView) }
     private val timeSwitcher: TextSwitcher by lazy { findViewById<TextSwitcher>(R.id.line_switcher) }

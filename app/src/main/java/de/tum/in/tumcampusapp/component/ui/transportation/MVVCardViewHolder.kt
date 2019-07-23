@@ -24,7 +24,7 @@ class MVVCardViewHolder(
                 departures.asSequence()
                         .take(items)
                         .map { departure ->
-                            DepartureView(context).apply {
+                            DepartureView(context, true).apply {
                                 val isFavorite = controller.isFavorite(departure.symbol)
                                 setSymbol(departure.symbol, isFavorite)
                                 setLine(departure.direction)
