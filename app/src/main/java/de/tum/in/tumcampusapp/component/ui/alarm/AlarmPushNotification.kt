@@ -103,7 +103,7 @@ class AlarmPushNotification(
         private fun isValidSignature(title: String, description: String, signature: String): Boolean {
             val key = cabePublicKey ?: return false
 
-            val sig = RSASigner.getSignatureInstance()
+            val sig = RSASigner.signatureInstance
             try {
                 sig.initVerify(key)
             } catch (e: InvalidKeyException) {
