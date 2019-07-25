@@ -11,13 +11,11 @@ The TUM Campus Apps is being developed by students and volunteers. It can be use
 The app is intended for both students and employees!
 
 Developers and other involved people:
-https://github.com/TCA-Team/TumCampusApp/blob/master/CONTRIBUTORS.md
+https://github.com/TUM-Dev/TumCampusApp/blob/master/CONTRIBUTORS.md
 
 Support: https://www.facebook.com/TUMCampus / app@tum.de
 
 Disclaimer: This is not an official app of the TU Munich and there is consequentially no official support or liability. 
-
-Chat Terms: https://app.tum.de/landing/chatterms/
 
 Permissions and what they are used for:
 - Location services: so we can show you nearest Cafeteria / MVV departures
@@ -29,4 +27,4 @@ Permissions and what they are used for:
 - Disable sleep mode: to receive messages when the display is turned off
 
 License: GNU GPL v3 - http://www.gnu.org/licenses/gpl.html
-The source code is available on GitHub: https://github.com/TCA-Team/
+The source code is available on GitHub: https://github.com/TUM-Dev/

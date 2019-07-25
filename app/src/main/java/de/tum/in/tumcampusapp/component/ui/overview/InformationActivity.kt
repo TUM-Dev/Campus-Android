@@ -8,13 +8,13 @@ import android.content.pm.PackageManager.NameNotFoundException
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
-import androidx.core.content.pm.PackageInfoCompat
 import android.text.format.DateUtils
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import androidx.core.content.pm.PackageInfoCompat
 import de.psdev.licensesdialog.LicensesDialog
 import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.R
@@ -42,9 +42,6 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
         }
         button_privacy.setOnClickListener {
             startActivity(Intent(ACTION_VIEW, Uri.parse(getString(R.string.url_privacy_policy))))
-        }
-        button_chat_terms.setOnClickListener {
-            startActivity(Intent(ACTION_VIEW, Uri.parse(getString(R.string.url_chat_terms))))
         }
         button_licenses.setOnClickListener {
             LicensesDialog.Builder(this)

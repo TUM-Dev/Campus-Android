@@ -88,7 +88,6 @@ abstract class Card(
                 return this
             }
         }
-
         return null
     }
 
