@@ -238,7 +238,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
                                            @NonNull Response<DeleteEventResponse> response) {
                         if (response.isSuccessful()) {
                             Utils.log("Event successfully deleted (now creating the edited version)");
-                            TcaDb.getInstance(CreateEventActivity.this).calendarDao().delete(eventId);
+                            TcaDb.Companion.getInstance(CreateEventActivity.this).calendarDao().delete(eventId);
                             createEvent();
                         } else {
                             Utils.showToast(CreateEventActivity.this, R.string.error_unknown);
@@ -293,7 +293,7 @@ public class CreateEventActivity extends ActivityForAccessingTumOnline<CreateEve
     public void onDownloadSuccessful(@NonNull CreateEventResponse response) {
         String nr = response.getEventId();
         event.setNr(nr);
-        TcaDb.getInstance(this).calendarDao().insert(event);
+        TcaDb.Companion.getInstance(this).calendarDao().insert(event);
         finish();
     }
 

@@ -24,17 +24,7 @@ import de.tum.`in`.tumcampusapp.utils.Const.CALENDAR_ID_PARAM
 import de.tum.`in`.tumcampusapp.utils.Const.CALENDAR_SHOWN_IN_CALENDAR_ACTIVITY_PARAM
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.ui.RoundedBottomSheetDialogFragment
-import kotlinx.android.synthetic.main.fragment_calendar_details.buttonsContainer
-import kotlinx.android.synthetic.main.fragment_calendar_details.cancelButtonsContainer
-import kotlinx.android.synthetic.main.fragment_calendar_details.dateTextView
-import kotlinx.android.synthetic.main.fragment_calendar_details.deleteButton
-import kotlinx.android.synthetic.main.fragment_calendar_details.descriptionTextView
-import kotlinx.android.synthetic.main.fragment_calendar_details.editButton
-import kotlinx.android.synthetic.main.fragment_calendar_details.locationIcon
-import kotlinx.android.synthetic.main.fragment_calendar_details.locationLinearLayout
-import kotlinx.android.synthetic.main.fragment_calendar_details.showInCalendarButton
-import kotlinx.android.synthetic.main.fragment_calendar_details.showInCalendarButtonContainer
-import kotlinx.android.synthetic.main.fragment_calendar_details.titleTextView
+import kotlinx.android.synthetic.main.fragment_calendar_details.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -43,10 +33,6 @@ import java.net.UnknownHostException
 class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
 
     private var listener: OnEventInteractionListener? = null
-
-    private val dao: CalendarDao by lazy {
-        TcaDb.getInstance(context).calendarDao()
-    }
 
     private val calendarItemId: String by lazy {
         arguments?.getString(CALENDAR_ID_PARAM) ?: throw IllegalStateException("No calendar item ID passed")
@@ -65,8 +51,11 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val calendarItem = dao.getCalendarItemsById(calendarItemId)
-        updateView(calendarItem)
+        context?.let {
+            val dao = TcaDb.getInstance(it).calendarDao()
+            val calendarItem = dao.getCalendarItemsById(calendarItemId)
+            updateView(calendarItem)
+        }
     }
 
     private fun updateView(calendarItemList: List<CalendarItem>) {
