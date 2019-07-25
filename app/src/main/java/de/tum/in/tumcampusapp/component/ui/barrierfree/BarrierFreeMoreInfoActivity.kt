@@ -33,7 +33,7 @@ class BarrierFreeMoreInfoActivity : ActivityForLoadingInBackground<Void, List<Ba
         }
 
         infoList = result
-        listView.adapter = BarrierFreeMoreInfoAdapter(this, infoList)
+        listView.adapter = BarrierFreeMoreInfoAdapter(this, result)
         listView.setOnItemClickListener(this)
     }
 
