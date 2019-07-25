@@ -38,7 +38,7 @@ class MVVWidgetService : RemoteViewsService() {
         override fun getViewAt(position: Int): RemoteViews? {
             // Get the departure for this view
             val currentItem = this.departures[position]
-            val mvvSymbol = MVVSymbol(currentItem.symbol)
+            val mvvSymbol = MVVSymbol(currentItem.symbol, applicationContext)
 
             return RemoteViews(applicationContext.packageName, R.layout.departure_line_widget).apply {
                 // Setup the line symbol
