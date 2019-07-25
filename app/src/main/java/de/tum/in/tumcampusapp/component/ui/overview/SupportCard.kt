@@ -23,13 +23,10 @@ class SupportCard(context: Context) : Card(CardManager.CARD_SUPPORT, context, ""
         Utils.setSetting(context, CardManager.SHOW_SUPPORT, false)
     }
 
-    override fun shouldShow(prefs: SharedPreferences): Boolean {
-        return Utils.getSettingBool(context, CardManager.SHOW_SUPPORT, true)
-    }
+    override fun shouldShow(prefs: SharedPreferences) =
+            Utils.getSettingBool(context, CardManager.SHOW_SUPPORT, true)
 
-    override fun getId(): Int {
-        return 0
-    }
+    override fun getId() = 0
 
     companion object {
         @JvmStatic

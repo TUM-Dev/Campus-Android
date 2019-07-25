@@ -28,7 +28,7 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.observe
-import kotlinx.android.synthetic.main.fragment_main.cardsRecyclerView
+import kotlinx.android.synthetic.main.fragment_main.*
 import org.jetbrains.anko.connectivityManager
 import org.jetbrains.anko.support.v4.runOnUiThread
 import javax.inject.Inject
@@ -105,7 +105,7 @@ class MainFragment : BaseFragment<Unit>(
         }
     }
 
-    private fun refreshCards() {
+    internal fun refreshCards() {
         swipeRefreshLayout?.isRefreshing = true
         onRefresh()
         downloadNewsAlert()
@@ -175,8 +175,10 @@ class MainFragment : BaseFragment<Unit>(
             cardsAdapter.remove(lastPos)
 
             Snackbar.make(cardsRecyclerView, R.string.card_dismissed, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.undo) { v ->
-                        cardsAdapter.insert(lastPos, card)
+                    .setAction(R.string.undo) {
+                        card?.let {
+                            cardsAdapter.insert(lastPos, it)
+                        }
 
                         val layoutManager = cardsRecyclerView.layoutManager
                         layoutManager?.smoothScrollToPosition(cardsRecyclerView, null, lastPos)
