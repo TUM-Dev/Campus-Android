@@ -1,10 +1,10 @@
 package de.tum.`in`.tumcampusapp.component.ui.transportation
 
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.LinearLayout
+import androidx.appcompat.app.AlertDialog
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
@@ -106,7 +106,8 @@ class TransportationDetailsActivity : ProgressActivity<Unit>(R.layout.activity_t
         }
         mViewResults.removeAllViews()
         for ((_, direction, lineSymbol, _, departureTime) in results) {
-            val view = DepartureView(this, true)
+            val view = DepartureView(this, false)
+            lifecycle.addObserver(view)
 
             view.setOnClickListener { v ->
                 val departureView = v as DepartureView
@@ -137,14 +138,6 @@ class TransportationDetailsActivity : ProgressActivity<Unit>(R.layout.activity_t
             view.setLine(direction)
             view.setTime(departureTime)
             mViewResults.addView(view)
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        for (i in 0 until mViewResults.childCount) {
-            val view = mViewResults.getChildAt(i) as? DepartureView ?: continue
-            view.removeAllCallbacksAndMessages()
         }
     }
 
