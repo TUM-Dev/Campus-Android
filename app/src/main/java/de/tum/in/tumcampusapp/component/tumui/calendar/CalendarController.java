@@ -53,12 +53,12 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
 
     public CalendarController(Context context) {
         mContext = context;
-        calendarDao = TcaDb.getInstance(context)
-                .calendarDao();
-        roomLocationsDao = TcaDb.getInstance(context)
-                .roomLocationsDao();
-        widgetsTimetableBlacklistDao = TcaDb.getInstance(context)
-                .widgetsTimetableBlacklistDao();
+        calendarDao = TcaDb.Companion.getInstance(context)
+                                     .calendarDao();
+        roomLocationsDao = TcaDb.Companion.getInstance(context)
+                                          .roomLocationsDao();
+        widgetsTimetableBlacklistDao = TcaDb.Companion.getInstance(context)
+                                                      .widgetsTimetableBlacklistDao();
     }
 
     /**
@@ -99,7 +99,7 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
             }
         }
 
-        CalendarDao calendarDao = TcaDb.getInstance(c).calendarDao();
+        CalendarDao calendarDao = TcaDb.Companion.getInstance(c).calendarDao();
         List<CalendarItem> calendarItems = calendarDao.getAllNotCancelled();
 
         for (CalendarItem calendarItem : calendarItems) {

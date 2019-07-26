@@ -30,7 +30,7 @@ public class NewsDaoTest {
 
     @Before
     public void setUp() {
-        dao = TcaDb.getInstance(RuntimeEnvironment.application).newsDao();
+        dao = TcaDb.Companion.getInstance(RuntimeEnvironment.application).newsDao();
         newsIdx = 0;
         JodaTimeAndroid.init(RuntimeEnvironment.application);
     }
@@ -38,7 +38,7 @@ public class NewsDaoTest {
     @After
     public void tearDown() {
         dao.flush();
-        TcaDb.getInstance(RuntimeEnvironment.application).close();
+        TcaDb.Companion.getInstance(RuntimeEnvironment.application).close();
     }
 
     private News createNewsItem(String source, DateTime date) {
