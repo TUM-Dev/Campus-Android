@@ -128,7 +128,11 @@
         <activity
             android:name=".component.other.generic.activity.BaseNavigationActivity"
             android:configChanges="orientation|screenSize"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".component.ui.news.NewsActivity"
             android:configChanges="orientation|screenSize"
