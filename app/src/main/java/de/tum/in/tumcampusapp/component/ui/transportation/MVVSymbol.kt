@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.ui.transportation
 
-import android.graphics.Color
+import android.content.Context
+import de.tum.`in`.tumcampusapp.R
 
 /**
  * Encapsulates information about the symbol shown next to departure information. Contains the
@@ -8,59 +9,78 @@ import android.graphics.Color
  *
  * @param line Line symbol name e.g. U6, S1, T14
  */
-class MVVSymbol(line: String) {
+class MVVSymbol(line: String, val context: Context) {
 
     val backgroundColor: Int
     val textColor: Int
 
     init {
-        var textColor = -0x1
-        var backgroundColor = 0
+        var textColor = R.color.white
+        val backgroundColor: Int
 
         val symbol = line.getOrNull(0) ?: 'X'
         val lineNumber = line.substring(1).toIntOrNull() ?: 0
 
         when (symbol) {
             'S' -> {
-                when (lineNumber) {
-                    in 1..8 -> backgroundColor = S_LINE_COLOR[lineNumber - 1]
-                    20 -> backgroundColor = -0x35ac96
-                    27 -> backgroundColor = -0x266f68
+                backgroundColor = when (lineNumber) {
+                    in 1..8 -> S_LINE_COLOR[lineNumber - 1]
+                    20 -> R.color.s_20
+                    else -> R.color.unknown_line
                 }
-                textColor = if (lineNumber == 8) -0xe3500 else -0x1
+                textColor = if (lineNumber == 8) R.color.s_8_font else R.color.white
             }
             'U' -> {
                 backgroundColor = if (lineNumber > 0 && lineNumber <= U_LINE_COLOR.size) {
                     U_LINE_COLOR[lineNumber - 1]
                 } else {
-                    U_LINE_DEFAULT_COLOR
+                    R.color.unknown_line
                 }
-                textColor = -0x30104
+                textColor = when (lineNumber) {
+                    7 -> R.color.u_7_accent
+                    8 -> R.color.u_8_accent
+                    else -> R.color.white
+                }
             }
             'N' -> {
-                backgroundColor = -0x1000000
-                textColor = -0x142dd2
+                backgroundColor = R.color.black
+                textColor = R.color.night_line_font
             }
-            'X' -> backgroundColor = -0xb88090
-            else -> when {
-                lineNumber < 50 -> {
-                    backgroundColor = -0x23d9e4
-                    textColor = -0x30104
-                }
-                lineNumber < 90 -> backgroundColor = -0x399fc
-                else -> backgroundColor = -0xffb5a3
+            'X' -> backgroundColor = R.color.express_bus
+            else -> backgroundColor = when {
+                lineNumber < 50 -> R.color.tram
+                lineNumber < 90 -> R.color.metro_bus
+                else -> R.color.regular_bus
             }
         }
 
-        this.textColor = textColor
-        this.backgroundColor = backgroundColor
+        this.textColor = context.resources.getColor(textColor)
+        this.backgroundColor = context.resources.getColor(backgroundColor)
+    }
+
+    fun getHighlight(): Int {
+        return context.resources.getColor(R.color.reduced_opacity) and backgroundColor
     }
 
     companion object {
-        private val S_LINE_COLOR = intArrayOf(-0x924621, -0x724ccb, -0x82e785, -0x3effc4, 0, -0xff6ea2, -0x80cdd7, -0xe0e1df)
+        private val S_LINE_COLOR = intArrayOf(
+                R.color.s_1,
+                R.color.s_2,
+                R.color.s_3,
+                R.color.s_4,
+                R.color.unknown_line,
+                R.color.s_6,
+                R.color.s_7,
+                R.color.s_8)
 
-        private val U_LINE_COLOR = intArrayOf(-0xbb8dc4, -0x33d9c4, -0x1b8de4, -0xfb5d84, -0x5b8de4, -0xfba15c, -0x3efecc, -0x1495d9)
-
-        private const val U_LINE_DEFAULT_COLOR = Color.GRAY
+        private val U_LINE_COLOR = intArrayOf(
+                R.color.u_1,
+                R.color.u_2,
+                R.color.u_3,
+                R.color.u_4,
+                R.color.u_5,
+                R.color.u_6,
+                R.color.u_7,
+                R.color.u_8)
     }
 }
