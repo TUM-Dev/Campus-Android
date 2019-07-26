@@ -6,6 +6,7 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.Departure
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
 import kotlinx.android.synthetic.main.card_mvv.view.*
+import kotlin.math.min
 
 class MVVCardViewHolder(
         itemView: View,
@@ -17,13 +18,13 @@ class MVVCardViewHolder(
             stationNameTextView.text = station.station
 
             val controller = TransportController(context)
-            val items = Math.min(departures.size, 5)
+            val items = min(departures.size, 5)
 
             if (contentContainerLayout.childCount == 0) {
                 departures.asSequence()
                         .take(items)
                         .map { departure ->
-                            DepartureView(context).apply {
+                            DepartureView(context, true).apply {
                                 val isFavorite = controller.isFavorite(departure.symbol)
                                 setSymbol(departure.symbol, isFavorite)
                                 setLine(departure.direction)
