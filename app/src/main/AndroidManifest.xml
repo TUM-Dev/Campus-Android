@@ -474,10 +474,6 @@
             android:parentActivityName=".component.tumui.feedback.FeedbackActivity"
             android:theme="@style/AppTheme.NoDrawerLayout" />
         <activity
-            android:name=".component.tumui.calendar.CreateEventActivity"
-            android:label="@string/activity_create_event_title"
-            android:parentActivityName=".component.tumui.calendar.CalendarActivity" />
-        <activity
             android:name=".component.ui.chat.AddChatMemberActivity"
             android:label="Add Participant"
             android:parentActivityName=".component.ui.chat.activity.ChatActivity"
