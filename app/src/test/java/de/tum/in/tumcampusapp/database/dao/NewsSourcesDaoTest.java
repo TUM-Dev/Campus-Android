@@ -24,13 +24,13 @@ public class NewsSourcesDaoTest {
 
     @Before
     public void setUp() {
-        dao = TcaDb.getInstance(RuntimeEnvironment.application).newsSourcesDao();
+        dao = TcaDb.Companion.getInstance(RuntimeEnvironment.application).newsSourcesDao();
     }
 
     @After
     public void tearDown() {
         dao.flush();
-        TcaDb.getInstance(RuntimeEnvironment.application).close();
+        TcaDb.Companion.getInstance(RuntimeEnvironment.application).close();
     }
 
     /**
