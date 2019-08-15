@@ -31,8 +31,8 @@ import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderSchedule;
 import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
 import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotificationLocation;
-import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeContact;
-import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeMoreInfo;
+import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierFreeContact;
+import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierFreeMoreInfo;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
@@ -250,13 +250,13 @@ public final class TUMCabeClient {
         }
     }
 
-    public List<BarrierfreeContact> getBarrierfreeContactList() throws IOException {
+    public List<BarrierFreeContact> getBarrierfreeContactList() throws IOException {
         return service.getBarrierfreeContactList()
                 .execute()
                 .body();
     }
 
-    public List<BarrierfreeMoreInfo> getMoreInfoList() throws IOException {
+    public List<BarrierFreeMoreInfo> getMoreInfoList() throws IOException {
         return service.getMoreInfoList()
                 .execute()
                 .body();
