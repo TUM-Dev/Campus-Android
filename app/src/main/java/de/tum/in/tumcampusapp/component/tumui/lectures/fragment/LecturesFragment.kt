@@ -12,7 +12,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.lectures.activity.LecturesDetail
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.adapter.LecturesListAdapter
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.Lecture
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LecturesResponse
-import kotlinx.android.synthetic.main.fragment_lectures.lecturesListView
+import kotlinx.android.synthetic.main.fragment_lectures.*
 
 class LecturesFragment : FragmentForSearchingTumOnline<LecturesResponse>(
     R.layout.fragment_lectures,
@@ -65,7 +65,7 @@ class LecturesFragment : FragmentForSearchingTumOnline<LecturesResponse>(
             lecturesListView.adapter = NoResultsAdapter(requireContext())
         } else {
             val lectures = response.lectures.sorted()
-            lecturesListView.adapter = LecturesListAdapter(requireContext(), lectures)
+            lecturesListView.adapter = LecturesListAdapter(requireContext(), lectures.toMutableList())
         }
     }
 
