@@ -5,7 +5,7 @@ import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyList
 /**
  * The model used to display contact infromation in barrier free page
  */
-data class BarrierfreeContact(var name: String = "",
+data class BarrierFreeContact(var name: String = "",
                               var telephone: String = "",
                               var email: String = "",
                               var faculty: String = "",
