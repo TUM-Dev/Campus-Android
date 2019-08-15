@@ -3,6 +3,7 @@ package de.tum.`in`.tumcampusapp.di
 import android.content.Context
 import dagger.BindsInstance
 import dagger.Component
+import de.tum.`in`.tumcampusapp.component.other.settings.SettingsFragment
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.di.FeedbackComponent
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.di.CafeteriaComponent
 import de.tum.`in`.tumcampusapp.component.ui.news.di.NewsComponent
@@ -28,6 +29,7 @@ interface AppComponent {
 
     fun inject(mainActivity: MainActivity)
     fun inject(mainFragment: MainFragment)
+    fun inject(settingsFragment: SettingsFragment)
 
     @Component.Builder
     interface Builder {

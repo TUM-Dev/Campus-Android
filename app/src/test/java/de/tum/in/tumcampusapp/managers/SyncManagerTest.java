@@ -27,16 +27,16 @@ public class SyncManagerTest {
 
     @Before
     public void setUp() {
-        dao = TcaDb.getInstance(RuntimeEnvironment.application)
-                   .syncDao();
+        dao = TcaDb.Companion.getInstance(RuntimeEnvironment.application)
+                             .syncDao();
         dao.removeCache();
         syncManager = new SyncManager(RuntimeEnvironment.application);
     }
 
     @After
     public void tearDown() {
-        TcaDb.getInstance(RuntimeEnvironment.application)
-             .close();
+        TcaDb.Companion.getInstance(RuntimeEnvironment.application)
+                       .close();
     }
 
     /**

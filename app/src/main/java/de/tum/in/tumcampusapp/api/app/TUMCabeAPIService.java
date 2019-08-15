@@ -18,8 +18,8 @@ import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderSchedule;
 import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
 import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotificationLocation;
-import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeContact;
-import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierfreeMoreInfo;
+import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierFreeContact;
+import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierFreeMoreInfo;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.component.ui.openinghour.model.Location;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
@@ -145,11 +145,11 @@ public interface TUMCabeAPIService {
 
     // Barrier free contacts
     @GET(API_BARRIER_FREE + API_BARRIER_FREE_CONTACT)
-    Call<List<BarrierfreeContact>> getBarrierfreeContactList();
+    Call<List<BarrierFreeContact>> getBarrierfreeContactList();
 
     // Barrier free More Info
     @GET(API_BARRIER_FREE + API_BARRIER_FREE_MORE_INFO)
-    Call<List<BarrierfreeMoreInfo>> getMoreInfoList();
+    Call<List<BarrierFreeMoreInfo>> getMoreInfoList();
 
     // Barrier free toilets list
     @GET(API_BARRIER_FREE + API_BARRIER_FREE_LIST_OF_TOILETS)

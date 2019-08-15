@@ -31,5 +31,4 @@ class CafeteriaRemoteRepository @Inject constructor(
                 .doAfterNext { localRepository.updateLastSync() }
                 .subscribe(localRepository::addCafeterias, Utils::log)
     }
-
 }

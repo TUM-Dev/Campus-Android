@@ -63,7 +63,7 @@ public class ChatMessageValidator {
     private static boolean verifySignature(String text, String signature,
                                            PublicKey key) {
 
-        Signature sig = RSASigner.getSignatureInstance();
+        Signature sig = RSASigner.Companion.getSignatureInstance();
 
         try {
             sig.initVerify(key);

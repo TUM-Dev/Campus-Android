@@ -26,6 +26,7 @@ object Const {
     const val SILENCE_SERVICE = "silent_mode"
     const val SILENCE_OLD_STATE = "silence_old_state"
     const val TITLE_EXTRA = "title"
+    const val LECTURE_ID_EXTRA = "stp_sp_nr"
 
     const val API_HOSTNAME = "tumcabe.in.tum.de"
     const val API_HOSTNAME_NEW = "app.tum.de"
