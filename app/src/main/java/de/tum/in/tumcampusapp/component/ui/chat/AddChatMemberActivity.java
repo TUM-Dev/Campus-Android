@@ -218,9 +218,9 @@ public class AddChatMemberActivity extends BaseActivity {
                                            @NonNull Response<ChatRoom> response) {
                         ChatRoom room = response.body();
                         if (room != null) {
-                            TcaDb.getInstance(getBaseContext())
-                                    .chatRoomDao()
-                                    .updateMemberCount(room.getMembers(), room.getId());
+                            TcaDb.Companion.getInstance(getBaseContext())
+                                           .chatRoomDao()
+                                           .updateMemberCount(room.getMembers(), room.getId());
                             Utils.showToast(getBaseContext(), R.string.chat_member_added);
                         } else {
                             Utils.showToast(getBaseContext(), R.string.error_something_wrong);

@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
-import de.tum.`in`.tumcampusapp.component.other.settings.UserPreferencesActivity
+import de.tum.`in`.tumcampusapp.component.other.settings.SettingsActivity
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarFragment
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackActivity
 import de.tum.`in`.tumcampusapp.component.tumui.grades.GradesFragment
@@ -145,7 +145,7 @@ class DrawerMenuHelper(
         private val ABOUT = arrayOf(
                 NavItem.ActivityDestination(R.string.show_feedback, R.drawable.ic_outline_feedback_24px, FeedbackActivity::class.java),
                 NavItem.ActivityDestination(R.string.about_tca, R.drawable.ic_action_info_black, InformationActivity::class.java),
-                NavItem.ActivityDestination(R.string.settings, R.drawable.ic_outline_settings_24px, UserPreferencesActivity::class.java)
+                NavItem.ActivityDestination(R.string.settings, R.drawable.ic_outline_settings_24px, SettingsActivity::class.java)
         )
 
     }

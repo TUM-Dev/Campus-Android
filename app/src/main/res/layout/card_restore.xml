@@ -2,17 +2,17 @@
     style="@style/StandardCard">
 
     <FrameLayout
+        android:id="@+id/restore_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center_horizontal"
-        android:onClick="restoreCards"
         android:orientation="vertical"
-        android:paddingStart="@dimen/material_default_padding"
-        android:paddingTop="@dimen/material_small_padding"
+        android:paddingBottom="@dimen/material_small_padding"
         android:paddingEnd="@dimen/material_default_padding"
-        android:paddingBottom="@dimen/material_small_padding">
+        android:paddingStart="@dimen/material_default_padding"
+        android:paddingTop="@dimen/material_small_padding">
 
         <TextView
             android:id="@+id/textView"
@@ -20,10 +20,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:drawableStart="@drawable/ic_action_restore"
             android:drawablePadding="@dimen/material_default_padding"
+            android:drawableStart="@drawable/ic_action_restore"
             android:text="@string/restore_all_cards"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     </FrameLayout>
 

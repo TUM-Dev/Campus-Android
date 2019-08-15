@@ -22,11 +22,7 @@ import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.utils.Const.CHAT_MEMBER
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.observeNonNull
-import kotlinx.android.synthetic.main.fragment_events_list.eventPlaceholder
-import kotlinx.android.synthetic.main.fragment_events_list.eventsRecyclerView
-import kotlinx.android.synthetic.main.fragment_events_list.eventsRefreshLayout
-import kotlinx.android.synthetic.main.fragment_events_list.placeholderImage
-import kotlinx.android.synthetic.main.fragment_events_list.placeholderTextView
+import kotlinx.android.synthetic.main.fragment_events_list.*
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -88,7 +84,7 @@ class EventsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         if (viewState.events.isNotEmpty()) {
             val adapter = eventsRecyclerView.adapter as EventsAdapter
-            adapter.update(viewState.events)
+            adapter.update(viewState.events.toMutableList())
         } else {
             placeholderTextView.setText(eventType.placeholderTextId)
             placeholderImage.setImageResource(eventType.placeholderImageId)

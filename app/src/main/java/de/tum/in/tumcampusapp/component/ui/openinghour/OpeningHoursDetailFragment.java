@@ -63,8 +63,8 @@ public class OpeningHoursDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_item_detail, container, false);
 
         // click on category in list
-        LocationDao dao = TcaDb.getInstance(getActivity())
-                               .locationDao();
+        LocationDao dao = TcaDb.Companion.getInstance(getActivity())
+                                         .locationDao();
         String[] categories = {"library", "info", "cafeteria_gar", "cafeteria_grh", "cafeteria", "cafeteria_pas", "cafeteria_wst"};
         List<Location> locations = dao.getAllOfCategory(categories[mItemId]);
 

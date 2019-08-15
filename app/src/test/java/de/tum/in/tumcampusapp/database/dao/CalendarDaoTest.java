@@ -36,12 +36,12 @@ public class CalendarDaoTest {
 
     @Before
     public void setUp() {
-        dao = TcaDb.getInstance(RuntimeEnvironment.application)
-                   .calendarDao();
-        wtbDao = TcaDb.getInstance(RuntimeEnvironment.application)
-                      .widgetsTimetableBlacklistDao();
-        rlDao = TcaDb.getInstance(RuntimeEnvironment.application)
-                     .roomLocationsDao();
+        dao = TcaDb.Companion.getInstance(RuntimeEnvironment.application)
+                             .calendarDao();
+        wtbDao = TcaDb.Companion.getInstance(RuntimeEnvironment.application)
+                                .widgetsTimetableBlacklistDao();
+        rlDao = TcaDb.Companion.getInstance(RuntimeEnvironment.application)
+                               .roomLocationsDao();
         nr = 0;
         JodaTimeAndroid.init(RuntimeEnvironment.application);
     }
@@ -51,8 +51,8 @@ public class CalendarDaoTest {
         dao.flush();
         wtbDao.flush();
         rlDao.flush();
-        TcaDb.getInstance(RuntimeEnvironment.application)
-             .close();
+        TcaDb.Companion.getInstance(RuntimeEnvironment.application)
+                       .close();
     }
 
     private CalendarItem createCalendarItem(String status, DateTime startDate) {

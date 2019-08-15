@@ -47,8 +47,8 @@ class TicketAmountViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         ticketPrice.text = itemView.resources.getString(R.string.price_per_ticket, Utils.formatPrice(ticketType.price))
         currentAmount.text = ticketAmount.toString()
         // init buttons
-        plusButton.setOnClickListener { view -> updateTicketAmount(true) }
-        minusButton.setOnClickListener { view -> updateTicketAmount(false) }
+        plusButton.setOnClickListener { updateTicketAmount(true) }
+        minusButton.setOnClickListener { updateTicketAmount(false) }
 
         // handle how many tickets are left
         remainingTickets = ticketType.contingent - ticketType.sold

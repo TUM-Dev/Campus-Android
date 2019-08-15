@@ -45,7 +45,7 @@
                     android:hint="@string/cardholder">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/cardholder_edit_text"
+                        android:id="@+id/cardholderEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPersonName|textCapWords"
@@ -62,7 +62,7 @@
                     android:background="@color/placeholder" />
 
                 <ViewSwitcher
-                    android:id="@+id/select_payment_method_switcher"
+                    android:id="@+id/selectPaymentMethodSwitcher"
                     android:layout_width="match_parent"
                     android:layout_height="?android:listPreferredItemHeight"
                     android:background="?android:selectableItemBackground">
@@ -110,7 +110,7 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:textColor="@color/text_dark_secondary"
                             app:layout_constraintBottom_toTopOf="@id/selected_payment_method_brand_text_view"
-                            app:layout_constraintEnd_toStartOf="@id/change_payment_method_button"
+                            app:layout_constraintEnd_toStartOf="@id/changePaymentMethodButton"
                             app:layout_constraintStart_toEndOf="@id/credit_card_icon"
                             app:layout_constraintTop_toTopOf="parent"
                             tools:text="**** **** **** 1234" />
@@ -124,13 +124,13 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             android:textColor="@color/text_dark_secondary"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/change_payment_method_button"
+                            app:layout_constraintEnd_toStartOf="@id/changePaymentMethodButton"
                             app:layout_constraintStart_toStartOf="@id/selected_payment_method_text_view"
                             app:layout_constraintTop_toBottomOf="@id/selected_payment_method_text_view"
                             tools:text="Visa" />
 
                         <ImageView
-                            android:id="@+id/change_payment_method_button"
+                            android:id="@+id/changePaymentMethodButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -165,14 +165,14 @@
                     android:orientation="horizontal">
 
                     <CheckBox
-                        android:id="@+id/terms_of_service_checkbox"
+                        android:id="@+id/termsOfServiceCheckBox"
                         android:layout_width="0px"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/stripe_terms_of_service_checkbox" />
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/terms_of_service_button"
+                        android:id="@+id/termsOfServiceButton"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -184,7 +184,7 @@
                 </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/complete_purchase_button"
+                    android:id="@+id/completePurchaseButton"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

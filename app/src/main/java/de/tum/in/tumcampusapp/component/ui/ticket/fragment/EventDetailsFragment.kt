@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.squareup.picasso.Picasso
@@ -17,7 +18,6 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CreateEventActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventHelper
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity
-import de.tum.`in`.tumcampusapp.component.ui.ticket.di.TicketsModule
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.payload.TicketStatus
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
@@ -26,7 +26,6 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Const.KEY_EVENT_ID
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import de.tum.`in`.tumcampusapp.utils.into
-import de.tum.`in`.tumcampusapp.utils.observe
 import kotlinx.android.synthetic.main.fragment_event_details.*
 import kotlinx.android.synthetic.main.fragment_event_details.view.*
 import javax.inject.Inject
@@ -76,7 +75,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         showEventDetails(event)
-        viewModel.aggregatedTicketStatus.observe(viewLifecycleOwner, this::showTicketCount)
+        viewModel.aggregatedTicketStatus.observe(viewLifecycleOwner, Observer { showTicketCount(it) })
     }
 
     override fun onRefresh() {
@@ -107,7 +106,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         context?.let {
             dateTextView.text = event.getFormattedStartDateTime(it)
-            dateContainer.setOnClickListener { _ -> displayAddToCalendarDialog() }
+            dateContainer.setOnClickListener { displayAddToCalendarDialog() }
         }
 
         locationTextView.text = event.locality
@@ -125,24 +124,15 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun showTicketCount(status: TicketStatus?) {
-        // Same logic as in showTicketCount function in KinoDetailsFragment.kt --> keep it the same
-        if(EventHelper.isEventImminent(event)) {
-            ticketButton.visibility = if(!viewModel.isEventBooked(event)) View.GONE else View.VISIBLE
-            remainingTicketsContainer.visibility = View.GONE
-        } else {
-            if (status == null || status.isEventWithoutTickets()) {
-                if(!viewModel.isEventBooked(event)) ticketButton.visibility = View.GONE
-                remainingTicketsContainer.visibility = View.GONE
-            } else if(status.ticketsStillAvailable()) {
-                ticketButton.visibility = View.VISIBLE
-                remainingTicketsContainer.visibility = View.VISIBLE
-                remainingTicketsTextView.text = status.toString()
-            } else {
-                ticketButton.visibility = if(!viewModel.isEventBooked(event)) View.GONE else View.VISIBLE
-                remainingTicketsContainer.visibility = View.VISIBLE
-                remainingTicketsTextView.text = getString(R.string.no_tickets_remaining_message)
-            }
-        }
+        EventHelper.showRemainingTickets(
+                status,
+                viewModel.isEventBooked(event),
+                EventHelper.isEventImminent(event),
+                ticketButton,
+                remainingTicketsContainer,
+                remainingTicketsTextView,
+                getString(R.string.no_tickets_remaining_message))
+
         swipeRefreshLayout.isRefreshing = false
     }
 
