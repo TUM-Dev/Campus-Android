@@ -19,7 +19,7 @@ interface CafeteriaDao {
     fun removeCache()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(cafeteria: List<Cafeteria>)
+    fun insert(cafeterias: List<Cafeteria>)
 
     @Query("SELECT name FROM cafeteria WHERE id = :id")
     fun getMensaNameFromId(id: Int): String

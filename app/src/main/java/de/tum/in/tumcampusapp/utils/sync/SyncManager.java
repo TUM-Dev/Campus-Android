@@ -20,8 +20,8 @@ public class SyncManager {
      * @param context Context
      */
     public SyncManager(Context context) {
-        dao = TcaDb.getInstance(context)
-                   .syncDao();
+        dao = TcaDb.Companion.getInstance(context)
+                             .syncDao();
     }
 
     /**

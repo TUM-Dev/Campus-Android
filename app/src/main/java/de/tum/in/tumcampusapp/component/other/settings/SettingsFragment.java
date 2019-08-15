@@ -111,7 +111,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
 
     private void initCafeteriaCardSelections() {
-        CafeteriaLocalRepository repository = new CafeteriaLocalRepository(TcaDb.getInstance(getContext()));
+        CafeteriaLocalRepository repository = new CafeteriaLocalRepository(TcaDb.Companion.getInstance(getContext()));
         List<Cafeteria> cafeterias = repository.getAllCafeterias().blockingFirst();
         Collections.sort(cafeterias, (c1, c2) -> c1.getName().compareTo(c2.getName()));
 
@@ -325,7 +325,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
 
     private void clearData() throws ExecutionException, InterruptedException {
-        TcaDb.resetDb(mContext);
+        TcaDb.Companion.resetDb(mContext);
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         sharedPrefs.edit().clear().apply();

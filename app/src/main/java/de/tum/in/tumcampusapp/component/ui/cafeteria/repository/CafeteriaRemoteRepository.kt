@@ -29,7 +29,6 @@ class CafeteriaRemoteRepository @Inject constructor(
                 .doOnNext { localRepository.clear() }
                 .flatMap { tumCabeClient.cafeterias }
                 .doAfterNext { localRepository.updateLastSync() }
-                .subscribe(localRepository::addCafeteria, Utils::log)
+                .subscribe(localRepository::addCafeterias, Utils::log)
     }
-
 }

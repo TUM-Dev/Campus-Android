@@ -56,7 +56,7 @@ public class EventsAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
     public EventsAdapter(Context context) {
         mContext = context;
-        mTicketsLocalRepo = new TicketsLocalRepository(TcaDb.getInstance(context));
+        mTicketsLocalRepo = new TicketsLocalRepository(TcaDb.Companion.getInstance(context));
     }
 
     @NonNull
