@@ -35,6 +35,7 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.defaultSharedPreferences
@@ -128,6 +129,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
             .fromCallable { Picasso.get().load(url).get() }
             .subscribeOn(Schedulers.io())
             .map { BitmapDrawable(resources, it) }
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(preference::setIcon, Utils::log)
     }
 
