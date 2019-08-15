@@ -82,7 +82,7 @@ class SilenceService : JobIntentService() {
         }
 
         val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        val currentLectures = calendarController.currentFromDb
+        val currentLectures = calendarController.currentLectures
         Utils.log("Current lectures: " + currentLectures.size)
 
         if (currentLectures.isEmpty() || isDoNotDisturbActive) {

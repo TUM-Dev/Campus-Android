@@ -112,6 +112,7 @@
     <color name="event_exercise">#fcad18</color>
     <color name="event_other">#5598D3</color>
     <color name="location_color">#00A7DE</color>
+    <color name="calendar_color">#0066CC</color>
 
     <!--- MVV colors -->
     <color name="s_1">#41C0FF</color>
