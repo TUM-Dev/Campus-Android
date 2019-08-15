@@ -31,10 +31,10 @@ public class RoomLocationsDaoTest {
 
     @Before
     public void setUp() {
-        dao = TcaDb.getInstance(RuntimeEnvironment.application)
-                   .roomLocationsDao();
-        calendarDao = TcaDb.getInstance(RuntimeEnvironment.application)
-                           .calendarDao();
+        dao = TcaDb.Companion.getInstance(RuntimeEnvironment.application)
+                             .roomLocationsDao();
+        calendarDao = TcaDb.Companion.getInstance(RuntimeEnvironment.application)
+                                     .calendarDao();
         nr = 0;
         JodaTimeAndroid.init(RuntimeEnvironment.application);
     }
@@ -43,8 +43,8 @@ public class RoomLocationsDaoTest {
     public void tearDown() {
         dao.flush();
         calendarDao.flush();
-        TcaDb.getInstance(RuntimeEnvironment.application)
-             .close();
+        TcaDb.Companion.getInstance(RuntimeEnvironment.application)
+                       .close();
     }
 
     private CalendarItem createCalendarItem(DateTime startDate, String location) {

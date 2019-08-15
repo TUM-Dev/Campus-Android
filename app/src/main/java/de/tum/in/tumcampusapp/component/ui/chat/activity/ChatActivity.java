@@ -123,7 +123,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
     }
 
     private void initChatMessageViewModel() {
-        TcaDb tcaDb = TcaDb.getInstance(this);
+        TcaDb tcaDb = TcaDb.Companion.getInstance(this);
 
         ChatMessageRemoteRepository remoteRepository = ChatMessageRemoteRepository.INSTANCE;
         remoteRepository.setTumCabeClient(TUMCabeClient.getInstance(this));
