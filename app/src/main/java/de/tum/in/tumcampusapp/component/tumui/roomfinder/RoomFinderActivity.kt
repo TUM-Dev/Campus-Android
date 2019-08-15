@@ -4,6 +4,7 @@ import android.os.Bundle
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 
+@Deprecated("Use SearchFragment instead")
 class RoomFinderActivity : BaseActivity(R.layout.activity_roomfinder) {
 
     public override fun onCreate(savedInstanceState: Bundle?) {

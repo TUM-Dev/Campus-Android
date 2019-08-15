@@ -12,6 +12,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom
 /**
  * Custom UI adapter for a list of employees.
  */
+@Deprecated("Use SearchFragment instead")
 class RoomFinderListAdapter(
         context: Context, items: List<RoomFinderRoom>
 ) : SimpleStickyListHeadersAdapter<RoomFinderRoom>(context, items.toMutableList()) {

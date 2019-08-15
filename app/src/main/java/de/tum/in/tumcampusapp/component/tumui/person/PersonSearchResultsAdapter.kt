@@ -8,9 +8,10 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
 import kotlinx.android.synthetic.main.person_search_result_item.view.textView
 
+@Deprecated("Use SearchFragment instead")
 class PersonSearchResultsAdapter(
-        private var items: List<Person>,
-        private val onItemClick: (Person) -> Unit
+    private var items: List<Person>,
+    private val onItemClick: (Person) -> Unit
 ) : RecyclerView.Adapter<PersonSearchResultsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,7 +37,7 @@ class PersonSearchResultsAdapter(
             person: Person,
             onItemClick: (Person) -> Unit
         ) = with(itemView) {
-            textView.text = person.getFullName()
+            textView.text = person.fullName
             setOnClickListener { onItemClick(person) }
         }
 

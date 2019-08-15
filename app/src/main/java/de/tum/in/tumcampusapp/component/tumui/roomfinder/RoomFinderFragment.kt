@@ -19,6 +19,7 @@ import java.io.IOException
 import java.io.Serializable
 import java.util.regex.Pattern
 
+@Deprecated("Use SearchFragment instead")
 class RoomFinderFragment : FragmentForSearchingInBackground<List<RoomFinderRoom>>(
     R.layout.fragment_roomfinder,
     R.string.roomfinder,

@@ -13,16 +13,19 @@ import java.io.Serializable
  * corresponding request.
  */
 @Xml(name = "row")
-data class Person(@PropertyElement(name = "geschlecht")
-                  var gender: String = "",
-                  @PropertyElement(name = "obfuscated_id")
-                  var id: String = "",
-                  @PropertyElement(name = "vorname")
-                  var name: String = "",
-                  @PropertyElement(name = "familienname")
-                  var surname: String = "") : Serializable {
+data class Person(
+    @PropertyElement(name = "geschlecht")
+    var gender: String = "",
+    @PropertyElement(name = "obfuscated_id")
+    var id: String = "",
+    @PropertyElement(name = "vorname")
+    var name: String = "",
+    @PropertyElement(name = "familienname")
+    var surname: String = ""
+) : Serializable {
 
-    fun getFullName() = "$name $surname"
+    val fullName: String
+        get() = "$name $surname"
 
     companion object {
 

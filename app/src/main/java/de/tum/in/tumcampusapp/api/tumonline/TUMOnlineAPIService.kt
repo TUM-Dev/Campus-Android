@@ -13,6 +13,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.person.model.Employee
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.IdentitySet
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.PersonList
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model.TuitionList
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -78,6 +79,11 @@ interface TUMOnlineAPIService {
     fun searchPerson(
             @Query("pSuche") query: String
     ): Call<PersonList>
+
+    @GET("wbservicesbasic.personenSuche")
+    fun searchPersonRx(
+        @Query("pSuche") query: String
+    ): Single<PersonList>
 
     @GET("wbservicesbasic.noten")
     fun getGrades(
