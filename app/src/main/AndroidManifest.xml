@@ -149,7 +149,7 @@
                 android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
-            android:name=".component.other.settings.UserPreferencesActivity"
+            android:name=".component.other.settings.SettingsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/settings"
             android:parentActivityName=".component.ui.overview.MainActivity"
@@ -342,11 +342,11 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/about_tca"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.other.settings.UserPreferencesActivity"
+            android:parentActivityName=".component.other.settings.SettingsActivity"
             android:theme="@style/AppTheme.NoDrawerLayout">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.other.settings.UserPreferencesActivity" />
+                android:value=".component.other.settings.SettingsActivity" />
         </activity>
         <activity
             android:name=".component.ui.eduroam.SetupEduroamActivity"

@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.overview.card
 
 import android.content.Context
-import android.content.Intent
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
@@ -11,9 +10,8 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
-import de.tum.`in`.tumcampusapp.component.other.settings.UserPreferencesActivity
+import de.tum.`in`.tumcampusapp.component.other.settings.SettingsActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
-import de.tum.`in`.tumcampusapp.utils.Const
 
 open class CardViewHolder @JvmOverloads constructor(
         itemView: View,
@@ -57,10 +55,7 @@ open class CardViewHolder @JvmOverloads constructor(
 
     private fun openCardSettings() {
         val key = currentCard?.settingsPrefix ?: return
-
-        val intent = Intent(context, UserPreferencesActivity::class.java).apply {
-            putExtra(Const.PREFERENCE_SCREEN, key)
-        }
+        val intent = SettingsActivity.newIntent(context, key)
         context.startActivity(intent)
     }
 
