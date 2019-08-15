@@ -31,10 +31,10 @@ import java.io.IOException
 import javax.inject.Inject
 
 class FeedbackPresenter @Inject constructor(
-    private val context: Context,
-    @LrzId override val lrzId: String,
-    private val tumCabeClient: TUMCabeClient
-): FeedbackContract.Presenter {
+        private val context: Context,
+        @LrzId override val lrzId: String,
+        private val tumCabeClient: TUMCabeClient
+) : FeedbackContract.Presenter {
 
     private val compositeDisposable = CompositeDisposable()
     override var feedback = Feedback()
@@ -224,8 +224,8 @@ class FeedbackPresenter @Inject constructor(
         for (call in sendImagesCalls) {
             call.enqueue(object : Callback<FeedbackResult> {
                 override fun onResponse(
-                    call: Call<FeedbackResult>,
-                    response: Response<FeedbackResult>
+                        call: Call<FeedbackResult>,
+                        response: Response<FeedbackResult>
                 ) {
                     val result = response.body()
                     if (result == null || !result.isSuccess) {
@@ -284,15 +284,15 @@ class FeedbackPresenter @Inject constructor(
     }
 
     override fun onNewImageTaken() {
-        ImageUtils.rescaleBitmap(context, currentPhotoPath)
         currentPhotoPath?.let {
+            ImageUtils.rescaleBitmap(context, it)
             feedback.picturePaths.add(it)
             view?.onImageAdded(it)
         }
     }
 
     override fun onNewImageSelected(uri: Uri?) {
-        val filePath = ImageUtils.rescaleBitmap(context, uri) ?: return
+        val filePath = ImageUtils.rescaleBitmap(context, uri ?: return) ?: return
         feedback.picturePaths.add(filePath)
         view?.onImageAdded(filePath)
     }

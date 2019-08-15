@@ -83,7 +83,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
     }
 
     public void onClickTerms(View view) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_chat_terms)));
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_privacy_policy)));
         startActivity(intent);
     }
 

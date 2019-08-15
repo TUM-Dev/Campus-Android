@@ -31,7 +31,7 @@ class CafeteriaLocalRepository @Inject constructor(
     // Menu methods //
 
     fun getCafeteriaMenus(id: Int, date: DateTime): List<CafeteriaMenu> {
-        return database.cafeteriaMenuDao().getTypeNameFromDbCard(id, date)
+        return database.cafeteriaMenuDao().getCafeteriaMenus(id, date)
     }
 
     fun getAllMenuDates(): List<DateTime> = database.cafeteriaMenuDao().allDates
@@ -43,8 +43,8 @@ class CafeteriaLocalRepository @Inject constructor(
 
     fun getCafeteria(id: Int): Cafeteria? = database.cafeteriaDao().getById(id)
 
-    fun addCafeteria(vararg cafeteria: Cafeteria) = executor.execute {
-        database.cafeteriaDao().insert(*cafeteria)
+    fun addCafeterias(cafeterias: List<Cafeteria>) = executor.execute {
+        database.cafeteriaDao().insert(cafeterias)
     }
 
     // Sync methods //
