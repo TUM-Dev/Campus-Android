@@ -18,7 +18,8 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter
 /**
  * An adapter used to display contact information in barrierfree page.
  */
-class BarrierFreeContactAdapter(context: Context, infos: List<BarrierFreeContact>) : SimpleStickyListHeadersAdapter<BarrierFreeContact>(context, infos), StickyListHeadersAdapter {
+class BarrierFreeContactAdapter(context: Context, infos: List<BarrierFreeContact>) :
+        SimpleStickyListHeadersAdapter<BarrierFreeContact>(context, infos.toMutableList()), StickyListHeadersAdapter {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val holder: ViewHolder
@@ -34,7 +35,7 @@ class BarrierFreeContactAdapter(context: Context, infos: List<BarrierFreeContact
         }
 
         // display information of current person
-        val contact = getInfoList()[position]
+        val contact = itemList[position]
 
         if (!contact.isValid) {
             view.visibility = View.GONE

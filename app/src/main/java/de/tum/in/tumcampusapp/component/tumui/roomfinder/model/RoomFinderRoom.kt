@@ -32,7 +32,7 @@ data class RoomFinderRoom(
 
     override fun getHeadName() = formattedName
 
-    override fun getHeaderId() = headName
+    override fun getHeaderId() = getHeadName()
 
     companion object {
         private const val serialVersionUID = 6631656320611471476L

@@ -10,7 +10,7 @@ import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyList
 import de.tum.`in`.tumcampusapp.component.ui.barrierfree.model.BarrierFreeMoreInfo
 
 class BarrierFreeMoreInfoAdapter(context: Context, infos: List<BarrierFreeMoreInfo>) :
-        SimpleStickyListHeadersAdapter<BarrierFreeMoreInfo>(context, infos) {
+        SimpleStickyListHeadersAdapter<BarrierFreeMoreInfo>(context, infos.toMutableList()) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val holder: ViewHolder
@@ -28,10 +28,8 @@ class BarrierFreeMoreInfoAdapter(context: Context, infos: List<BarrierFreeMoreIn
         }
 
         // set title
-        val info = getInfoList()[position]
-        if (info != null) {
-            holder.title?.text = info.title
-        }
+        val info = itemList[position]
+        holder.title?.text = info.title
 
         return view
     }
