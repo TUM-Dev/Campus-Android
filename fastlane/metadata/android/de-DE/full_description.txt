@@ -12,12 +12,9 @@ Support: https://www.facebook.com/TUMCampus / app@tum.de
 Wichtiger Hinweis:
 Dies ist keine offizielle App der Technischen Universität München. Es erfolgt daher auch kein offizieller Support oder eine Haftung. Die App wird von und für Studierende entwickelt.
 
-Datenschutzerklärung: https://app.tum.de/landing/privacy/
-Chatbedingungen: https://app.tum.de/landing/chatterms/
-
-Berechtigungen und die Gründe:
+Berechtigungen und deren Gründe:
 - Standort abfragen: Um immer aktuelle Informationen zum aktuellen Standort anzuzeigen, wie z.B. Mensa Menü, MVV Abfahrtszeiten, ....
-- Kontakte ändern: Damit in der Personensuche mit einem Klick die Kontaktdaten eines Komilitonen oder TU Mitarbeiters in die Kontakte eingefügt werden koennen
+- Kontakte ändern: Damit in der Personensuche mit einem Klick die Kontaktdaten eines Kommilitonen oder TU Mitarbeiters in die Kontakte eingefügt werden können
 - Kalendertermine lesen/ändern: Damit sich die Vorlesungstermine mit dem Google Kalender synchronisieren lassen 
 - SD-Karteninhalte ändern oder löschen: Damit die App Daten zwischenspeichern kann und damit das Laden beschleunigt wird.
 - Konten auf dem Gerät suchen: Wird für die Chatfunktion benötigt, da dafür ein Google Account benötigt wird.

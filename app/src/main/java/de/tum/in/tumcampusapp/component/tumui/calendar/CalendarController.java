@@ -10,15 +10,16 @@ import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.provider.CalendarContract;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
 import de.tum.in.tumcampusapp.component.notifications.NotificationScheduler;
@@ -53,12 +54,12 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
 
     public CalendarController(Context context) {
         mContext = context;
-        calendarDao = TcaDb.getInstance(context)
-                .calendarDao();
-        roomLocationsDao = TcaDb.getInstance(context)
-                .roomLocationsDao();
-        widgetsTimetableBlacklistDao = TcaDb.getInstance(context)
-                .widgetsTimetableBlacklistDao();
+        calendarDao = TcaDb.Companion.getInstance(context)
+                                     .calendarDao();
+        roomLocationsDao = TcaDb.Companion.getInstance(context)
+                                          .roomLocationsDao();
+        widgetsTimetableBlacklistDao = TcaDb.Companion.getInstance(context)
+                                                      .widgetsTimetableBlacklistDao();
     }
 
     /**
@@ -99,7 +100,7 @@ public class CalendarController implements ProvidesCard, ProvidesNotifications {
             }
         }
 
-        CalendarDao calendarDao = TcaDb.getInstance(c).calendarDao();
+        CalendarDao calendarDao = TcaDb.Companion.getInstance(c).calendarDao();
         List<CalendarItem> calendarItems = calendarDao.getAllNotCancelled();
 
         for (CalendarItem calendarItem : calendarItems) {

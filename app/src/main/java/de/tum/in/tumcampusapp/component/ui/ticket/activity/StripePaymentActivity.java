@@ -73,7 +73,7 @@ public class StripePaymentActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        localTicketRepo = new TicketsLocalRepository(TcaDb.getInstance(this));
+        localTicketRepo = new TicketsLocalRepository(TcaDb.Companion.getInstance(this));
 
         ticketPrice = getIntent().getStringExtra(Const.KEY_TICKET_PRICE);
         ticketIds = getIntent().getIntegerArrayListExtra(Const.KEY_TICKET_IDS);

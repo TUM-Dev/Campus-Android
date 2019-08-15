@@ -52,9 +52,9 @@ public final class CardManager {
                .clear()
                .apply();
 
-        TcaDb.getInstance(context)
-             .newsDao()
-             .restoreAllNews();
+        TcaDb.Companion.getInstance(context)
+                       .newsDao()
+                       .restoreAllNews();
 
         Utils.setSetting(context, SHOW_TOP_NEWS, true);
         restoreCardPositions(context);
