@@ -57,7 +57,7 @@
                         app:layout_constraintTop_toTopOf="parent"/>
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/ticket_amounts"
+                        android:id="@+id/ticketAmountsRecyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:layout_constraintStart_toStartOf="parent"
@@ -75,10 +75,10 @@
                         android:textColor="@color/text_dark_secondary"
                         app:layout_constraintEnd_toEndOf="@id/guideline"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/ticket_amounts"/>
+                        app:layout_constraintTop_toBottomOf="@id/ticketAmountsRecyclerView"/>
 
                     <TextView
-                        android:id="@+id/ticket_total_price"
+                        android:id="@+id/totalPriceTextView"
                         android:layout_width="0pt"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/material_default_padding"
@@ -121,7 +121,7 @@
                         app:layout_constraintTop_toBottomOf="@id/details_header_text_view"/>
 
                     <TextView
-                        android:id="@+id/ticket_details_event"
+                        android:id="@+id/eventName"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/material_default_padding"
@@ -146,10 +146,10 @@
                         android:textColor="@color/text_dark_secondary"
                         app:layout_constraintEnd_toEndOf="@id/guideline"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/ticket_details_event"/>
+                        app:layout_constraintTop_toBottomOf="@id/eventName"/>
 
                     <TextView
-                        android:id="@+id/ticket_details_location"
+                        android:id="@+id/buyEventLocation"
                         android:layout_width="0pt"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/material_default_padding"
@@ -174,10 +174,10 @@
                         android:textColor="@color/text_dark_secondary"
                         app:layout_constraintEnd_toEndOf="@id/guideline"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/ticket_details_location"/>
+                        app:layout_constraintTop_toBottomOf="@id/buyEventLocation"/>
 
                     <TextView
-                        android:id="@+id/ticket_details_date"
+                        android:id="@+id/eventDate"
                         android:layout_width="0pt"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/material_default_padding"
@@ -202,7 +202,7 @@
                         android:textColor="@android:color/white"
                         app:backgroundTint="@color/color_primary"
                         app:cornerRadius="@dimen/material_corner_radius"
-                        app:layout_constraintTop_toBottomOf="@id/ticket_details_date"
+                        app:layout_constraintTop_toBottomOf="@id/eventDate"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"/>
