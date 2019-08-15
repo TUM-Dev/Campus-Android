@@ -21,7 +21,11 @@ class TimetableWidgetService : RemoteViewsService() {
         return TimetableRemoteViewFactory(this.applicationContext, intent)
     }
 
-    private inner class TimetableRemoteViewFactory internal constructor(private val applicationContext: Context, intent: Intent) : RemoteViewsFactory {
+    private class TimetableRemoteViewFactory internal constructor(
+            private val applicationContext: Context,
+            intent: Intent
+    ) : RemoteViewsFactory {
+
         private val appWidgetID: Int = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
         private var calendarEvents: List<WidgetCalendarItem> = ArrayList()
 
@@ -52,7 +56,7 @@ class TimetableWidgetService : RemoteViewsService() {
 
         override fun onDestroy() {}
 
-        override fun getCount()= calendarEvents.size
+        override fun getCount() = calendarEvents.size
 
         override fun getViewAt(position: Int): RemoteViews? {
             if (position >= calendarEvents.size) {
@@ -91,7 +95,7 @@ class TimetableWidgetService : RemoteViewsService() {
             val startTimeText = formatter.print(startTime)
             val endTime = DateTime(currentItem.endTime.millis)
             val endTimeText = formatter.print(endTime)
-            val eventTime = getString(R.string.event_start_end_format_string, startTimeText, endTimeText)
+            val eventTime = applicationContext.getString(R.string.event_start_end_format_string, startTimeText, endTimeText)
             remoteViews.setTextViewText(R.id.timetable_widget_event_time, eventTime)
 
             // Setup event location

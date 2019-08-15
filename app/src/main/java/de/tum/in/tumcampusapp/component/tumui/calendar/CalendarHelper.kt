@@ -8,6 +8,7 @@ import android.net.Uri
 import android.provider.CalendarContract
 import android.provider.CalendarContract.Calendars
 import androidx.core.content.ContextCompat
+import de.tum.`in`.tumcampusapp.R
 
 /**
  * Helper class for exporting to Google Calendar.
@@ -22,7 +23,7 @@ object CalendarHelper {
      * @param context Context
      * @return Uri for insertion
      */
-    fun addCalendar(context: Context): Uri? = context.contentResolver.insert(buildCalendarUri(), buildContentValues())
+    fun addCalendar(context: Context): Uri? = context.contentResolver.insert(buildCalendarUri(), buildContentValues(context))
 
     /**
      * Deletes the calendar TUM_Campus_APP from google calendar
@@ -47,15 +48,15 @@ object CalendarHelper {
                 .build()
     }
 
-    private fun buildContentValues(): ContentValues {
-        val colorCalendar = 0x0066CC
+    private fun buildContentValues(c: Context): ContentValues {
+        val calendarColor = c.resources.getColor(R.color.calendar_color)
         val intName = ACCOUNT_NAME + CALENDAR_NAME
         return ContentValues().apply {
             put(Calendars.ACCOUNT_NAME, ACCOUNT_NAME)
             put(Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL)
             put(Calendars.NAME, intName)
             put(Calendars.CALENDAR_DISPLAY_NAME, CALENDAR_NAME)
-            put(Calendars.CALENDAR_COLOR, colorCalendar)
+            put(Calendars.CALENDAR_COLOR, calendarColor)
             put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_OWNER)
             put(Calendars.OWNER_ACCOUNT, ACCOUNT_NAME)
             put(Calendars.VISIBLE, 1)

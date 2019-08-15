@@ -22,11 +22,6 @@ class TimetableWidget : AppWidgetProvider() {
         setAlarm(context)
     }
 
-    override fun onDeleted(context: Context, appWidgetIds: IntArray) {
-        // When the user deletes the widget, delete the associated setting from the database.
-        super.onDeleted(context, appWidgetIds)
-    }
-
     override fun onEnabled(context: Context) {
         // Enter relevant functionality for when the first widget is created
         setAlarm(context)

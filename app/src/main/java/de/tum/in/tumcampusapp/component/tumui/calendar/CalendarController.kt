@@ -175,13 +175,9 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
     private fun replaceIntoDb(events: List<Event>) {
         val items = ArrayList<CalendarItem>()
         for (event in events) {
-            if (event.id == null || event.id.isEmpty()) {
-                throw IllegalArgumentException("Invalid id.")
+            if (event.id != null && event.id.isNotEmpty() && event.title.isNotEmpty()) {
+                items.add(event.toCalendarItem())
             }
-            if (event.title.isEmpty()) {
-                throw IllegalArgumentException("Invalid lecture title.")
-            }
-            items.add(event.toCalendarItem())
         }
         calendarDao.insert(*items.toTypedArray())
     }
