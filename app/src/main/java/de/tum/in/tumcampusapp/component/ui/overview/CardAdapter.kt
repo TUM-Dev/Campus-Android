@@ -101,9 +101,7 @@ class CardAdapter(private val interactionListener: CardInteractionListener) : Re
         // If there is a support card, it should always be the first one
         // except when it's been dismissed.
         // Restore card should stay at the bottom
-        if (selectedCard is RestoreCard) {
-            return fromPosition
-        } else if (selectedCard is SupportCard) {
+        if (selectedCard is RestoreCard || selectedCard is SupportCard) {
             return fromPosition
         }
 
