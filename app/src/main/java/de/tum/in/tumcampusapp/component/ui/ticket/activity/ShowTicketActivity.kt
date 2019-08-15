@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket.activity
 
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -26,7 +25,6 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_show_ticket.*
-import org.joda.time.DateTime
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -48,35 +46,27 @@ class ShowTicketActivity : BaseActivity(R.layout.activity_show_ticket) {
 
     private val redemptionState: String
         get() {
-            var nrTicketsRedeemed = 0
-            var lastRedemption: DateTime? = null
-            for (ticketInfo in ticketInfoList) {
-                if (ticketInfo.tickets?.get(0)?.redemption != null) {
-                    nrTicketsRedeemed++
-                    val redemption = (ticketInfo.tickets?.get(0) as Ticket).redemption
-                    if (redemption?.isAfter(lastRedemption) == true) {
-                        lastRedemption = redemption
-                    }
+
+            val redemptions = ticketInfoList.mapNotNull { it.tickets?.first()?.redemption }
+            val lastRedemption = redemptions.max()
+
+            val formattedDate = lastRedemption?.let {
+                Ticket.getFormattedRedemptionDate(this, it)
+            } ?: ""
+
+            return when {
+                redemptions.isEmpty() -> getString(R.string.not_redeemed_yet)
+                redemptions.size < ticketInfoList.size -> {
+                    val redeemed = redemptions.size
+                    val all = ticketInfoList.size
+                    getString(R.string.partially_redeemed, redeemed, all, formattedDate)
                 }
+                else -> getString(R.string.redeemed_at, formattedDate)
             }
-            val redemptionState: String
-            var formattedDateTime: String? = ""
-            if (lastRedemption != null) {
-                formattedDateTime = Ticket.getFormattedRedemptionDate(this, lastRedemption)
-            }
-            if (nrTicketsRedeemed == 0) {
-                redemptionState = getString(R.string.not_redeemed_yet)
-            } else if (nrTicketsRedeemed < ticketInfoList.size) {
-                redemptionState = getString(R.string.partially_redeemed, nrTicketsRedeemed, ticketInfoList.size, formattedDateTime)
-            } else {
-                redemptionState = getString(R.string.redeemed_at, formattedDateTime)
-            }
-            return redemptionState
         }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.decorView.setBackgroundColor(Color.WHITE)
 
         val eventId = intent.getIntExtra(Const.KEY_EVENT_ID, 0)
         injector.ticketsComponent()
