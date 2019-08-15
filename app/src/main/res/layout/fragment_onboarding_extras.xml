@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <include layout="@layout/toolbar" />
@@ -69,17 +68,6 @@
                     android:text="@string/set_lecture_chat"
                     android:textSize="15sp" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/chatTermsButton"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/material_small_padding"
-                    android:text="@string/open_chat_terms"
-                    android:textAllCaps="false"
-                    android:textColor="@color/color_primary"
-                    app:cornerRadius="@dimen/material_corner_radius" />
-
                 <CheckBox
                     android:id="@+id/bugReportsCheckBox"
                     android:layout_width="wrap_content"
@@ -96,6 +84,19 @@
                     android:padding="@dimen/padding_default"
                     android:text="@string/set_bug_reports"
                     android:textSize="15sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/privacyPolicyButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="@dimen/material_small_padding"
+                    android:layout_marginTop="@dimen/material_default_padding"
+                    android:text="@string/privacy_policy"
+                    android:textAllCaps="false"
+                    android:textColor="@color/color_primary"
+                    app:cornerRadius="@dimen/material_corner_radius" />
 
             </LinearLayout>
 

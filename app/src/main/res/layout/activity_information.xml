@@ -71,17 +71,6 @@
                     app:cornerRadius="@dimen/material_corner_radius" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/button_chat_terms"
-                    style="@style/Widget.MaterialComponents.Button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/material_default_padding"
-                    android:layout_marginEnd="@dimen/material_default_padding"
-                    android:text="@string/open_chat_terms"
-                    android:textAllCaps="false"
-                    app:cornerRadius="@dimen/material_corner_radius" />
-
-                <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_licenses"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"

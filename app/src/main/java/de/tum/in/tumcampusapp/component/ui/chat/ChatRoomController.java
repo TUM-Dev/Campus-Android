@@ -47,7 +47,7 @@ public class ChatRoomController implements ProvidesCard {
     @Inject
     public ChatRoomController(Context context) {
         mContext = context;
-        TcaDb db = TcaDb.getInstance(context);
+        TcaDb db = TcaDb.Companion.getInstance(context);
         chatRoomDao = db.chatRoomDao();
     }
 

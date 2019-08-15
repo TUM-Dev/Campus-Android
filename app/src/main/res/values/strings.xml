@@ -381,8 +381,7 @@
     <string name="vibration">Vibration</string>
     <string name="silent">Silent</string>
     <string name="mode_silent_mode">State during lectures</string>
-    <string name="url_privacy_policy" translatable="false">https://app.tum.de/landing/privacy/</string>
-    <string name="url_chat_terms" translatable="false">https://app.tum.de/landing/chatterms/</string>
+    <string name="url_privacy_policy" translatable="false">https://www.tum.app/privacy</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="message_details">Message info</string>
     <string name="message_detail_text">&lt;b>Sender&lt;/b>&lt;br>

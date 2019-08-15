@@ -24,9 +24,9 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import kotlinx.android.synthetic.main.fragment_onboarding_extras.bugReportsCheckBox
-import kotlinx.android.synthetic.main.fragment_onboarding_extras.chatTermsButton
 import kotlinx.android.synthetic.main.fragment_onboarding_extras.finishButton
 import kotlinx.android.synthetic.main.fragment_onboarding_extras.groupChatCheckBox
+import kotlinx.android.synthetic.main.fragment_onboarding_extras.privacyPolicyButton
 import kotlinx.android.synthetic.main.fragment_onboarding_extras.silentModeCheckBox
 import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.support.v4.browse
@@ -54,7 +54,7 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
     @Inject
     lateinit var authManager: AuthenticationManager
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         injector.inject(this)
     }
@@ -89,7 +89,7 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
             cacheManager.fillCache()
         }
 
-        chatTermsButton.setOnClickListener { browse(getString(R.string.url_chat_terms)) }
+        privacyPolicyButton.setOnClickListener { browse(getString(R.string.url_privacy_policy)) }
         finishButton.setOnClickListener { startLoading() }
     }
 
