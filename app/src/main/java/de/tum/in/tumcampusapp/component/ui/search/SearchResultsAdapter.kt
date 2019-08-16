@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.ui.search.SearchResult.Person
+import de.tum.`in`.tumcampusapp.component.ui.search.SearchResult.Room
 import kotlinx.android.synthetic.main.list_item_search_result.view.iconImageView
 import kotlinx.android.synthetic.main.list_item_search_result.view.subtitleTextView
 import kotlinx.android.synthetic.main.list_item_search_result.view.titleTextView
@@ -19,12 +21,20 @@ class SearchResultsAdapter(
         override fun areItemsTheSame(
             oldItem: SearchResult,
             newItem: SearchResult
-        ): Boolean = false // TODO
+        ): Boolean = when {
+            oldItem is Room && newItem is Room -> oldItem.room.room_id == newItem.room.room_id
+            oldItem is Person && newItem is Person -> oldItem.person.id == newItem.person.id
+            else -> false
+        }
 
         override fun areContentsTheSame(
             oldItem: SearchResult,
             newItem: SearchResult
-        ): Boolean = false // TODO
+        ): Boolean = when {
+            oldItem is Room && newItem is Room -> oldItem.room == newItem.room
+            oldItem is Person && newItem is Person -> oldItem.person == newItem.person
+            else -> false
+        }
     }
 ) {
 
@@ -45,15 +55,12 @@ class SearchResultsAdapter(
             onItemClick: (SearchResult) -> Unit
         ) = with(itemView) {
             titleTextView.text = searchResult.title
-            subtitleTextView.isVisible = searchResult is SearchResult.Room
-
-            if (searchResult is SearchResult.Room) {
-                subtitleTextView.text = searchResult.room.formattedAddress
-            }
+            subtitleTextView.isVisible = searchResult.subtitle != null
+            subtitleTextView.text = searchResult.subtitle
 
             val imageResource = when (searchResult) {
-                is SearchResult.Person -> R.drawable.ic_person
-                is SearchResult.Room -> R.drawable.ic_room
+                is Person -> R.drawable.ic_person
+                is Room -> R.drawable.ic_room
             }
             iconImageView.setImageResource(imageResource)
 

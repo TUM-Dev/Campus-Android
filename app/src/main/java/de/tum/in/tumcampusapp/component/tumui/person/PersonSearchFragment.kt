@@ -65,8 +65,10 @@ class PersonSearchFragment : FragmentForSearchingTumOnline<PersonList>(
     }
 
     private fun searchPerson(query: String) {
+        /*
         val apiCall = apiClient.searchPerson(query)
         fetch(apiCall)
+        */
     }
 
     override fun onDownloadSuccessful(response: PersonList) {

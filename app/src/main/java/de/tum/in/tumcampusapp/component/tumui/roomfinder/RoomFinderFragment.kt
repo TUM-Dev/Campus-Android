@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.NoResultsAdapter
@@ -68,9 +67,12 @@ class RoomFinderFragment : FragmentForSearchingInBackground<List<RoomFinderRoom>
 
     override fun onSearchInBackground(query: String): List<RoomFinderRoom>? {
         return try {
+            emptyList()
+            /*
             TUMCabeClient
                 .getInstance(requireContext())
                 .fetchRooms(userRoomSearchMatching(query))
+            */
         } catch (e: IOException) {
             Utils.log(e)
             null

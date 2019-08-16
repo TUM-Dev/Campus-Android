@@ -285,14 +285,8 @@ public final class TUMCabeClient {
         return service.fetchAvailableMaps(ApiHelper.encodeUrl(archId));
     }
 
-    public List<RoomFinderRoom> fetchRooms(String searchStrings) throws IOException {
-        return service.fetchRooms(ApiHelper.encodeUrl(searchStrings))
-                .execute()
-                .body();
-    }
-
-    public Single<List<RoomFinderRoom>> fetchRoomsRx(String searchStrings) {
-        return service.fetchRoomsRx(ApiHelper.encodeUrl(searchStrings));
+    public Single<List<RoomFinderRoom>> fetchRooms(String searchStrings) {
+        return service.fetchRooms(ApiHelper.encodeUrl(searchStrings));
     }
 
     public RoomFinderCoordinate fetchCoordinates(String archId) throws IOException {

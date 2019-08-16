@@ -17,19 +17,33 @@ import javax.inject.Inject
 
 typealias ApiPerson = Person
 
+data class SearchViewState(
+    val data: List<SearchResult> = emptyList(),
+    val isLoading: Boolean = false
+)
+
 sealed class SearchResult {
     abstract val title: String
+    open val subtitle: String? = null
 
     data class Person(val person: ApiPerson) : SearchResult() {
         override val title: String
             get() = person.fullName
     }
 
-
     data class Room(val room: RoomFinderRoom) : SearchResult() {
         override val title: String
             get() = room.info
+
+        override val subtitle: String?
+            get() = room.formattedAddress
     }
+}
+
+sealed class Action {
+    object Clear : Action()
+    object Search : Action()
+    data class ShowResults(val results: List<SearchResult>) : Action()
 }
 
 class SearchResultsStore {
@@ -37,14 +51,27 @@ class SearchResultsStore {
     private val _results = MutableLiveData<List<SearchResult>>()
     val results: LiveData<List<SearchResult>> = _results
 
-    fun dispatch(searchResults: List<SearchResult>) {
-        val existingSearchResults = _results.value.orEmpty()
-        _results.value = existingSearchResults + searchResults
+    private val _viewState = MutableLiveData<SearchViewState>()
+    val viewState: LiveData<SearchViewState> = _viewState
+
+    init {
+        _viewState.value = SearchViewState()
     }
 
-    fun clear() {
-        _results.value = emptyList()
+    fun dispatch(action: Action) {
+        _viewState.value = reduce(state(), action)
     }
+
+    private fun reduce(
+        state: SearchViewState,
+        action: Action
+    ) = when (action) {
+        is Action.Clear -> state.copy(data = emptyList(), isLoading = false)
+        is Action.Search -> state.copy(data = emptyList(), isLoading = true)
+        is Action.ShowResults -> state.copy(data = state.data + action.results, isLoading = false)
+    }
+
+    private fun state() = checkNotNull(_viewState.value)
 
 }
 
@@ -56,28 +83,31 @@ class SearchViewModel @Inject constructor(
     private val compositeDisposable = CompositeDisposable()
     private val store = SearchResultsStore()
 
-    val results: LiveData<List<SearchResult>> = store.results
+    val viewState: LiveData<SearchViewState> = store.viewState
 
     fun search(query: String) {
+        store.dispatch(Action.Search)
+
         val persons = tumOnlineClient
-            .searchPersonRx(query)
+            .searchPerson(query)
             .subscribeOn(Schedulers.io())
             .map { it.persons }
             .map { persons -> persons.map { SearchResult.Person(it) } }
 
         val rooms = tumCabeClient
-            .fetchRoomsRx(userRoomSearchMatching(query))
+            .fetchRooms(userRoomSearchMatching(query))
             .subscribeOn(Schedulers.io())
             .map { rooms -> rooms.map { SearchResult.Room(it) } }
 
         compositeDisposable += Single
             .merge(persons, rooms)
             .observeOn(AndroidSchedulers.mainThread())
+            .map { Action.ShowResults(it) }
             .subscribe { store.dispatch(it) }
     }
 
     fun clear() {
-        store.clear()
+        store.dispatch(Action.Clear)
     }
 
     /**

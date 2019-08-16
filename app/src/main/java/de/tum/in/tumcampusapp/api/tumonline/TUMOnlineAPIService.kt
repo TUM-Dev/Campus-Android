@@ -77,11 +77,6 @@ interface TUMOnlineAPIService {
 
     @GET("wbservicesbasic.personenSuche")
     fun searchPerson(
-            @Query("pSuche") query: String
-    ): Call<PersonList>
-
-    @GET("wbservicesbasic.personenSuche")
-    fun searchPersonRx(
         @Query("pSuche") query: String
     ): Single<PersonList>
 

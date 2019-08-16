@@ -77,11 +77,12 @@ class SearchFragment : BaseFragment<Unit>(
         }
 
         searchResultsRecyclerView.adapter = adapter
-        viewModel.results.observeNonNull(viewLifecycleOwner, this::render)
+        viewModel.viewState.observeNonNull(viewLifecycleOwner, this::render)
     }
 
-    private fun render(results: List<SearchResult>) {
-        adapter.submitList(results)
+    private fun render(viewState: SearchViewState) {
+        swipeRefreshLayout?.isRefreshing = viewState.isLoading
+        adapter.submitList(viewState.data)
     }
 
     private fun onItemClick(searchResult: SearchResult) {
