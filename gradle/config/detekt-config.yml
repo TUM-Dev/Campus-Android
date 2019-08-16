@@ -82,10 +82,10 @@ complexity:
     active: false
   LargeClass:
     active: true
-    threshold: 150
+    threshold: 250
   LongMethod:
     active: true
-    threshold: 20
+    threshold: 25
   LongParameterList:
     active: true
     threshold: 5
@@ -104,8 +104,8 @@ complexity:
     ignoreStringsRegex: '$^'
   TooManyFunctions:
     active: true
-    thresholdInFiles: 10
-    thresholdInClasses: 10
+    thresholdInFiles: 15
+    thresholdInClasses: 15
     thresholdInInterfaces: 10
     thresholdInObjects: 10
     thresholdInEnums: 10
