@@ -165,8 +165,8 @@ dependencies {
     implementation 'com.makeramen:roundedimageview:2.3.0'
 
     // Dagger
-    implementation 'com.google.dagger:dagger:2.21'
-    kapt 'com.google.dagger:dagger-compiler:2.21'
+    implementation 'com.google.dagger:dagger:2.24'
+    kapt 'com.google.dagger:dagger-compiler:2.24'
 
     // LeakCanary
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-1'

@@ -4,14 +4,13 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.core.os.bundleOf
-import androidx.fragment.app.transaction
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.InactiveTokenException
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.BaseFragment
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.IdentitySet
-import de.tum.`in`.tumcampusapp.di.injector
+import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponent
+import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponentProvider
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
@@ -36,16 +35,19 @@ class CheckTokenFragment : BaseFragment<Unit>(
 
     private val compositeDisposable = CompositeDisposable()
 
-    private val lrzId: String by lazy {
-        checkNotNull(arguments?.getString(KEY_LRZ_ID))
+    private val onboardingComponent: OnboardingComponent by lazy {
+        (requireActivity() as OnboardingComponentProvider).onboardingComponent()
     }
 
     @Inject
     lateinit var tumOnlineClient: TUMOnlineClient
 
+    @Inject
+    lateinit var navigator: OnboardingNavigator
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        injector.inject(this)
+        onboardingComponent.inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -96,10 +98,7 @@ class CheckTokenFragment : BaseFragment<Unit>(
 
         // Note: we can't upload the obfuscated ids here since we might not have a (chat) member yet
 
-        requireFragmentManager().transaction {
-            replace(R.id.contentFrame, OnboardingExtrasFragment.newInstance(lrzId))
-            addToBackStack(null)
-        }
+        navigator.openNext()
     }
 
     private fun handleDownloadFailure(t: Throwable) {
@@ -118,10 +117,7 @@ class CheckTokenFragment : BaseFragment<Unit>(
     }
 
     companion object {
-        private const val KEY_LRZ_ID = "KEY_LRZ_ID"
-        fun newInstance(
-            lrzId: String
-        ) = CheckTokenFragment().apply { arguments = bundleOf(KEY_LRZ_ID to lrzId) }
+        fun newInstance() = CheckTokenFragment()
     }
 
 }

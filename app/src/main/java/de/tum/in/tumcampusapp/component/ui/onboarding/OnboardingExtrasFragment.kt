@@ -1,12 +1,10 @@
 package de.tum.`in`.tumcampusapp.component.ui.onboarding
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.edit
-import androidx.core.os.bundleOf
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
@@ -17,7 +15,8 @@ import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.FragmentForLoadingInBackground
 import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomController
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMember
-import de.tum.`in`.tumcampusapp.di.injector
+import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponent
+import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponentProvider
 import de.tum.`in`.tumcampusapp.service.SilenceService
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -38,8 +37,8 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
     R.string.connect_to_tum_online
 ) {
 
-    private val lrzId: String by lazy {
-        checkNotNull(arguments?.getString(KEY_LRZ_ID))
+    private val onboardingComponent: OnboardingComponent by lazy {
+        (requireActivity() as OnboardingComponentProvider).onboardingComponent()
     }
 
     @Inject
@@ -54,9 +53,12 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
     @Inject
     lateinit var authManager: AuthenticationManager
 
+    @Inject
+    lateinit var navigator: OnboardingNavigator
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        injector.inject(this)
+        onboardingComponent.inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -160,7 +162,8 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
             return
         }
 
-        // Gets the editor for editing preferences and updates the preference values with the chosen state
+        // Gets the editor for editing preferences and updates the preference values with the
+        // chosen state
         requireContext()
             .defaultSharedPreferences
             .edit {
@@ -179,16 +182,7 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
     }
 
     private fun finishOnboarding() {
-        // By storing the LRZ ID in this step, we can prevent that a user who didn't completely
-        // finish the login flow is considered logged in
-        Utils.setSetting(requireContext(), Const.LRZ_ID, lrzId)
-
-        // Start the StartupActivity in a new, empty Task. We finish the current Activity and remove
-        // the current Task, which it is in.
-        val intent = Intent(requireContext(), StartupActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        startActivity(intent)
-        requireActivity().finishAndRemoveTask()
+        navigator.finish()
     }
 
     private fun SharedPreferences.Editor.put(key: String, value: Any) {
@@ -196,10 +190,7 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
     }
 
     companion object {
-        private const val KEY_LRZ_ID = "KEY_LRZ_ID"
-        fun newInstance(
-            lrzId: String
-        ) = OnboardingExtrasFragment().apply { arguments = bundleOf(KEY_LRZ_ID to lrzId) }
+        fun newInstance() = OnboardingExtrasFragment()
     }
 
 }

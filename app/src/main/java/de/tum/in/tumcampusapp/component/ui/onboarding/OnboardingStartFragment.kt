@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.transaction
 import com.jakewharton.rxbinding3.widget.textChanges
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
@@ -20,8 +19,8 @@ import de.tum.`in`.tumcampusapp.api.tumonline.exception.TokenLimitReachedExcepti
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.UnknownErrorException
 import de.tum.`in`.tumcampusapp.api.tumonline.model.AccessToken
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.BaseFragment
-import de.tum.`in`.tumcampusapp.di.injector
-import de.tum.`in`.tumcampusapp.utils.Backpressable
+import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponent
+import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponentProvider
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
@@ -43,10 +42,13 @@ sealed class TokenResponse {
 class OnboardingStartFragment : BaseFragment<Unit>(
     R.layout.fragment_onboarding_start,
     R.string.connect_to_tum_online
-), Backpressable {
+) {
 
     private val compositeDisposable = CompositeDisposable()
-    private lateinit var enteredId: String
+
+    private val onboardingComponent: OnboardingComponent by lazy {
+        (requireActivity() as OnboardingComponentProvider).onboardingComponent()
+    }
 
     @Inject
     lateinit var authManager: AuthenticationManager
@@ -54,9 +56,12 @@ class OnboardingStartFragment : BaseFragment<Unit>(
     @Inject
     lateinit var tumOnlineClient: TUMOnlineClient
 
+    @Inject
+    lateinit var navigator: OnboardingNavigator
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        injector.inject(this)
+        onboardingComponent.inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -90,20 +95,21 @@ class OnboardingStartFragment : BaseFragment<Unit>(
     }
 
     private fun onNextPressed() {
-        enteredId = lrzIdTextView.text.toString().toLowerCase(Locale.GERMANY)
+        val enteredId = lrzIdTextView.text.toString().toLowerCase(Locale.GERMANY)
 
         if (!enteredId.matches(Const.TUM_ID_PATTERN.toRegex())) {
             Utils.showToast(requireContext(), R.string.error_invalid_tum_id)
             return
         }
 
+        Utils.setSetting(requireContext(), Const.LRZ_ID, enteredId)
         hideKeyboard()
 
         if (AccessTokenManager.hasValidAccessToken(requireContext())) {
             AlertDialog.Builder(requireContext())
                 .setMessage(getString(R.string.error_access_token_already_set_generate_new))
                 .setPositiveButton(getString(R.string.generate_new_token)) { _, _ ->
-                    generateNewToken()
+                    generateNewToken(enteredId)
                 }
                 .setNegativeButton(getString(R.string.use_existing)) { _, _ ->
                     openNextOnboardingStep()
@@ -194,20 +200,10 @@ class OnboardingStartFragment : BaseFragment<Unit>(
             .show()
     }
 
-    private fun generateNewToken() {
+    private fun generateNewToken(enteredId: String) {
         authManager.clearKeys()
         authManager.generatePrivateKey(null)
         requestNewToken(enteredId)
-    }
-
-    override fun onBackPressed(): Boolean {
-        resetLrzId()
-        resetAccessToken()
-        return false
-    }
-
-    private fun resetLrzId() {
-        Utils.setSetting(requireContext(), Const.LRZ_ID, "")
     }
 
     private fun resetAccessToken() {
@@ -219,10 +215,7 @@ class OnboardingStartFragment : BaseFragment<Unit>(
     }
 
     private fun openNextOnboardingStep() {
-        requireFragmentManager().transaction {
-            replace(R.id.contentFrame, CheckTokenFragment.newInstance(enteredId))
-            addToBackStack(null)
-        }
+        navigator.openNext()
     }
 
     override fun onDestroy() {
