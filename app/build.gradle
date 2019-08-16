@@ -1,5 +1,4 @@
 plugins {
-    id 'io.gitlab.arturbosch.detekt' version "1.0.0.RC6-4"
     id 'de.aaschmid.cpd' version '1.2'
 }
 apply plugin: 'com.android.application'
@@ -11,7 +10,6 @@ apply from: '../gradle/scripts/findbugs.gradle'
 apply from: '../gradle/scripts/pmd.gradle'
 apply from: '../gradle/scripts/jacoco.gradle'
 apply from: '../gradle/scripts/checkstyle.gradle'
-apply from: '../gradle/scripts/detekt.gradle'
 apply from: '../gradle/scripts/testLogging.gradle'
 
 android {
@@ -129,7 +127,7 @@ dependencies {
     kapt "com.tickaroo.tikxml:processor:$tikXmlVersion"
 
     // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
     implementation "org.jetbrains.anko:anko:0.10.8"
     implementation 'androidx.core:core-ktx:1.0.2'
     implementation 'androidx.fragment:fragment-ktx:1.0.0'
@@ -178,7 +176,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:2.23.4'
     testImplementation 'org.assertj:assertj-core:3.11.1'
     testImplementation 'androidx.room:room-testing:2.1.0-alpha06'
-    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}"
 
     testImplementation 'com.android.support.test:rules:1.0.2'
     testImplementation 'com.android.support.test:runner:1.0.2'

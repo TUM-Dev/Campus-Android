@@ -10,31 +10,32 @@ cache:
     - $HOME/.gradle/wrapper/
     - $HOME/.android/build-cache
 env:
- global:
- - ANDROID_API=27
- - ANDROID_BUILD_TOOLS=27.0.3
+  global:
+    - ANDROID_API=27
+    - ANDROID_BUILD_TOOLS=27.0.3
 android:
   components:
-  - tools
-  - platform-tools
-  - extra-android-support
-  - extra-android-m2repository
-  - extra-google-google_play_services
-  - extra-google-m2repository
-  - android-$ANDROID_API_LEVEL
-  - build-tools-$ANDROID_BUILD_TOOLS
-  - addon-google_apis-google-$ANDROID_API_LEVEL
+    - tools
+    - platform-tools
+    - extra-android-support
+    - extra-android-m2repository
+    - extra-google-google_play_services
+    - extra-google-m2repository
+    - android-$ANDROID_API_LEVEL
+    - build-tools-$ANDROID_BUILD_TOOLS
+    - addon-google_apis-google-$ANDROID_API_LEVEL
   licenses:
-  - '.+'
+    - '.+'
 before_install:
-- yes | sdkmanager "platforms;android-27"
-- chmod +x gradlew
+  - yes | sdkmanager "platforms;android-27"
+  - chmod +x gradlew
 install:
-- "./gradlew dependencies"
+  - "./gradlew dependencies"
 script:
-- "./gradlew check"
+  - "./gradlew detekt"
+  - "./gradlew check"
 before_deploy:
-- cat "$TRAVIS_BUILD_DIR/app/build/reports/lint-results.xml"
-- cat "$TRAVIS_BUILD_DIR/app/build/reports/pmd/duplicates.xml"
-- cat "$TRAVIS_BUILD_DIR/app/build/reports/detekt/detekt-checkstyle.xml"
-- cat "$TRAVIS_BUILD_DIR/app/build/reports/findbugs/findBugsDebug.xml"
+  - cat "$TRAVIS_BUILD_DIR/app/build/reports/lint-results.xml"
+  - cat "$TRAVIS_BUILD_DIR/app/build/reports/pmd/duplicates.xml"
+  - cat "$TRAVIS_BUILD_DIR/app/build/reports/detekt/detekt-checkstyle.xml"
+  - cat "$TRAVIS_BUILD_DIR/app/build/reports/findbugs/findBugsDebug.xml"
