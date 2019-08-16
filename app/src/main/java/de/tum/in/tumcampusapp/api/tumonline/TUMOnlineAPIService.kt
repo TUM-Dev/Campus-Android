@@ -23,56 +23,61 @@ interface TUMOnlineAPIService {
 
     @GET("wbservicesbasic.kalender")
     fun getCalendar(
-            @Query("pMonateVor") start: Int,
-            @Query("pMonateNach") end: Int,
-            @Header("Cache-Control") cacheControl: String
+        @Query("pMonateVor") start: Int,
+        @Query("pMonateNach") end: Int,
+        @Header("Cache-Control") cacheControl: String
     ): Call<EventsResponse>
 
     @GET("wbservicesbasic.terminCreate")
     fun createCalendarEvent(
-            @Query("pTitel") title: String,
-            @Query("pAnmerkung") description: String,
-            @Query("pVon") start: String,
-            @Query("pBis") end: String,
-            @Query("pTerminNr") eventId: String? = null
+        @Query("pTitel") title: String,
+        @Query("pAnmerkung") description: String,
+        @Query("pVon") start: String,
+        @Query("pBis") end: String,
+        @Query("pTerminNr") eventId: String? = null
     ): Call<CreateEventResponse>
 
     @GET("wbservicesbasic.terminDelete")
     fun deleteCalendarEvent(
-            @Query("pTerminNr") eventId: String
+        @Query("pTerminNr") eventId: String
     ): Call<DeleteEventResponse>
 
     @GET("wbservicesbasic.studienbeitragsstatus")
     fun getTuitionFeesStatus(
-            @Header("Cache-Control") cacheControl: String
+        @Header("Cache-Control") cacheControl: String
     ): Call<TuitionList>
 
     @GET("wbservicesbasic.veranstaltungenEigene")
     fun getPersonalLectures(
-            @Header("Cache-Control") cacheControl: String
+        @Header("Cache-Control") cacheControl: String
     ): Call<LecturesResponse>
 
     @GET("wbservicesbasic.veranstaltungenDetails")
     fun getLectureDetails(
-            @Query("pLVNr") id: String,
-            @Header("Cache-Control") cacheControl: String
+        @Query("pLVNr") id: String,
+        @Header("Cache-Control") cacheControl: String
     ): Call<LectureDetailsResponse>
 
     @GET("wbservicesbasic.veranstaltungenTermine")
     fun getLectureAppointments(
-            @Query("pLVNr") id: String,
-            @Header("Cache-Control") cacheControl: String
+        @Query("pLVNr") id: String,
+        @Header("Cache-Control") cacheControl: String
     ): Call<LectureAppointmentsResponse>
 
     @GET("wbservicesbasic.veranstaltungenSuche")
     fun searchLectures(
-            @Query("pSuche") query: String
+        @Query("pSuche") query: String
     ): Call<LecturesResponse>
+
+    @GET("wbservicesbasic.veranstaltungenSuche")
+    fun searchLecturesRx(
+        @Query("pSuche") query: String
+    ): Single<LecturesResponse>
 
     @GET("wbservicesbasic.personenDetails")
     fun getPersonDetails(
-            @Query("pIdentNr") id: String,
-            @Header("Cache-Control") cacheControl: String
+        @Query("pIdentNr") id: String,
+        @Header("Cache-Control") cacheControl: String
     ): Call<Employee>
 
     @GET("wbservicesbasic.personenSuche")
@@ -82,13 +87,13 @@ interface TUMOnlineAPIService {
 
     @GET("wbservicesbasic.noten")
     fun getGrades(
-            @Header("Cache-Control") cacheControl: String
+        @Header("Cache-Control") cacheControl: String
     ): Call<ExamList>
 
     @GET("wbservicesbasic.requestToken")
     fun requestToken(
-            @Query("pUsername") username: String,
-            @Query("pTokenName") tokenName: String
+        @Query("pUsername") username: String,
+        @Query("pTokenName") tokenName: String
     ): Call<AccessToken>
 
     @GET("wbservicesbasic.id")
@@ -96,8 +101,8 @@ interface TUMOnlineAPIService {
 
     @GET("wbservicesbasic.secretUpload")
     fun uploadSecret(
-            @Query("pToken") token: String,
-            @Query("pSecret") secret: String
+        @Query("pToken") token: String,
+        @Query("pSecret") secret: String
     ): Call<TokenConfirmation>
 
 }

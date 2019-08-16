@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.ui.search.SearchResult.Lecture
 import de.tum.`in`.tumcampusapp.component.ui.search.SearchResult.Person
 import de.tum.`in`.tumcampusapp.component.ui.search.SearchResult.Room
 import kotlinx.android.synthetic.main.list_item_search_result.view.iconImageView
@@ -22,8 +23,9 @@ class SearchResultsAdapter(
             oldItem: SearchResult,
             newItem: SearchResult
         ): Boolean = when {
-            oldItem is Room && newItem is Room -> oldItem.room.room_id == newItem.room.room_id
+            oldItem is Lecture && newItem is Lecture -> oldItem.lecture.lectureId == newItem.lecture.lectureId
             oldItem is Person && newItem is Person -> oldItem.person.id == newItem.person.id
+            oldItem is Room && newItem is Room -> oldItem.room.room_id == newItem.room.room_id
             else -> false
         }
 
@@ -31,8 +33,9 @@ class SearchResultsAdapter(
             oldItem: SearchResult,
             newItem: SearchResult
         ): Boolean = when {
-            oldItem is Room && newItem is Room -> oldItem.room == newItem.room
+            oldItem is Lecture && newItem is Lecture -> oldItem.lecture == newItem.lecture
             oldItem is Person && newItem is Person -> oldItem.person == newItem.person
+            oldItem is Room && newItem is Room -> oldItem.room == newItem.room
             else -> false
         }
     }
@@ -55,10 +58,11 @@ class SearchResultsAdapter(
             onItemClick: (SearchResult) -> Unit
         ) = with(itemView) {
             titleTextView.text = searchResult.title
-            subtitleTextView.isVisible = searchResult.subtitle != null
+            subtitleTextView.isVisible = searchResult.subtitle.isNullOrBlank().not()
             subtitleTextView.text = searchResult.subtitle
 
             val imageResource = when (searchResult) {
+                is Lecture -> R.drawable.ic_outline_school_24px
                 is Person -> R.drawable.ic_person
                 is Room -> R.drawable.ic_room
             }

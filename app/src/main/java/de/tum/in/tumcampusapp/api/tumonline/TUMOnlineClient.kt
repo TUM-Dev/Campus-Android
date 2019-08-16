@@ -68,6 +68,10 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
         return apiService.searchLectures(query)
     }
 
+    fun searchLecturesRx(query: String): Single<LecturesResponse> {
+        return apiService.searchLecturesRx(query)
+    }
+
     fun getPersonDetails(id: String, cacheControl: CacheControl): Call<Employee> {
         return apiService.getPersonDetails(id, cacheControl.header)
     }

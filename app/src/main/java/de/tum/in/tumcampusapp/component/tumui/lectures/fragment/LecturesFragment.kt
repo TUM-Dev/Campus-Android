@@ -1,6 +1,5 @@
 package de.tum.`in`.tumcampusapp.component.tumui.lectures.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import de.tum.`in`.tumcampusapp.R
@@ -12,7 +11,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.lectures.activity.LecturesDetail
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.adapter.LecturesListAdapter
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.Lecture
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LecturesResponse
-import kotlinx.android.synthetic.main.fragment_lectures.*
+import kotlinx.android.synthetic.main.fragment_lectures.lecturesListView
 
 class LecturesFragment : FragmentForSearchingTumOnline<LecturesResponse>(
     R.layout.fragment_lectures,
@@ -26,8 +25,7 @@ class LecturesFragment : FragmentForSearchingTumOnline<LecturesResponse>(
 
         lecturesListView.setOnItemClickListener { _, _, position, _ ->
             val item = lecturesListView.getItemAtPosition(position) as Lecture
-            val intent = Intent(requireContext(), LecturesDetailsActivity::class.java)
-            intent.putExtra(Lecture.STP_SP_NR, item.stp_sp_nr)
+            val intent = LecturesDetailsActivity.newIntent(requireContext(), item)
             startActivity(intent)
         }
 

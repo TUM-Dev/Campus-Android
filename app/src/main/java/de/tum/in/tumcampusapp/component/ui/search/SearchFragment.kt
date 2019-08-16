@@ -10,8 +10,10 @@ import androidx.core.content.getSystemService
 import androidx.lifecycle.ViewModelProviders
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.BaseFragment
+import de.tum.`in`.tumcampusapp.component.tumui.lectures.activity.LecturesDetailsActivity
 import de.tum.`in`.tumcampusapp.component.tumui.person.PersonDetailsActivity
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderDetailsActivity
+import de.tum.`in`.tumcampusapp.component.ui.search.SearchResult.Lecture
 import de.tum.`in`.tumcampusapp.component.ui.search.SearchResult.Person
 import de.tum.`in`.tumcampusapp.component.ui.search.SearchResult.Room
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
@@ -57,6 +59,9 @@ class SearchFragment : BaseFragment<Unit>(
             requireActivity().onBackPressed()
         }
 
+        // Disable pull-to-refresh on SwipeRefreshLayout
+        swipeRefreshLayout?.isEnabled = false
+
         searchEditText.setOnEditorActionListener { textView, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 val input = textView.text.toString().trim()
@@ -87,6 +92,7 @@ class SearchFragment : BaseFragment<Unit>(
 
     private fun onItemClick(searchResult: SearchResult) {
         val intent = when (searchResult) {
+            is Lecture -> LecturesDetailsActivity.newIntent(requireContext(), searchResult.lecture)
             is Person -> PersonDetailsActivity.newIntent(requireContext(), searchResult.person)
             is Room -> RoomFinderDetailsActivity.newIntent(requireContext(), searchResult.room)
         }

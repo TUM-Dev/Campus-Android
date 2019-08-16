@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
+import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.Lecture
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom
 import de.tum.`in`.tumcampusapp.utils.plusAssign
@@ -16,6 +17,7 @@ import java.util.regex.Pattern
 import javax.inject.Inject
 
 typealias ApiPerson = Person
+typealias ApiLecture = Lecture
 
 data class SearchViewState(
     val data: List<SearchResult> = emptyList(),
@@ -25,6 +27,14 @@ data class SearchViewState(
 sealed class SearchResult {
     abstract val title: String
     open val subtitle: String? = null
+
+    data class Lecture(val lecture: ApiLecture) : SearchResult() {
+        override val title: String
+            get() = lecture.title
+
+        override val subtitle: String?
+            get() = lecture.lecturers
+    }
 
     data class Person(val person: ApiPerson) : SearchResult() {
         override val title: String
@@ -92,18 +102,27 @@ class SearchViewModel @Inject constructor(
             .searchPerson(query)
             .subscribeOn(Schedulers.io())
             .map { it.persons }
+            .onErrorReturn { emptyList() }
             .map { persons -> persons.map { SearchResult.Person(it) } }
 
         val rooms = tumCabeClient
             .fetchRooms(userRoomSearchMatching(query))
             .subscribeOn(Schedulers.io())
+            .onErrorReturn { emptyList() }
             .map { rooms -> rooms.map { SearchResult.Room(it) } }
 
+        val lectures = tumOnlineClient
+            .searchLecturesRx(query)
+            .subscribeOn(Schedulers.io())
+            .map { it.lectures }
+            .onErrorReturn { emptyList() }
+            .map { lectures -> lectures.map { SearchResult.Lecture(it) } }
+
         compositeDisposable += Single
-            .merge(persons, rooms)
+            .merge(persons, rooms, lectures)
             .observeOn(AndroidSchedulers.mainThread())
             .map { Action.ShowResults(it) }
-            .subscribe { store.dispatch(it) }
+            .subscribe { action -> store.dispatch(action) }
     }
 
     fun clear() {
