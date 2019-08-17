@@ -21,12 +21,23 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/ic_room" />
 
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/profilePictureImageView"
+        android:layout_width="@dimen/icon_large"
+        android:layout_height="@dimen/icon_large"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:riv_corner_radius="@dimen/icon_large" />
+
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/material_default_padding"
         android:fontFamily="sans-serif-medium"
+        android:textColor="@color/text_dark_primary"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@id/subtitleTextView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,6 +50,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/material_default_padding"
+        android:textColor="@color/text_dark_secondary"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

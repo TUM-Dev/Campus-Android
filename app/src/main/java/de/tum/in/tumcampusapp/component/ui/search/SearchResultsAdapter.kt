@@ -8,12 +8,14 @@ import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.search.SearchResult.Lecture
 import de.tum.`in`.tumcampusapp.component.ui.search.SearchResult.Person
 import de.tum.`in`.tumcampusapp.component.ui.search.SearchResult.Room
 import kotlinx.android.synthetic.main.list_item_search_more.view.showMoreTextView
 import kotlinx.android.synthetic.main.list_item_search_result.view.iconImageView
+import kotlinx.android.synthetic.main.list_item_search_result.view.profilePictureImageView
 import kotlinx.android.synthetic.main.list_item_search_result.view.subtitleTextView
 import kotlinx.android.synthetic.main.list_item_search_result.view.titleTextView
 
@@ -50,6 +52,14 @@ sealed class AdapterItem(@LayoutRes val layoutResId: Int) {
                 is Room -> R.drawable.ic_room
             }
             iconImageView.setImageResource(imageResource)
+
+            if (searchResult is Person) {
+                Picasso
+                    .get()
+                    .load(searchResult.person.fullImageUrl)
+                    .into(profilePictureImageView)
+            }
+
             setOnClickListener { onItemClick(this@Result) }
         }
 
@@ -138,26 +148,6 @@ class SearchResultsAdapter(
         submit()
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        fun bind(
-            searchResult: SearchResult,
-            onItemClick: (SearchResult) -> Unit
-        ) = with(itemView) {
-            titleTextView.text = searchResult.title
-            subtitleTextView.isVisible = searchResult.subtitle.isNullOrBlank().not()
-            subtitleTextView.text = searchResult.subtitle
-
-            val imageResource = when (searchResult) {
-                is Lecture -> R.drawable.ic_outline_school_24px
-                is Person -> R.drawable.ic_person
-                is Room -> R.drawable.ic_room
-            }
-            iconImageView.setImageResource(imageResource)
-
-            setOnClickListener { onItemClick(searchResult) }
-        }
-
-    }
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
 }

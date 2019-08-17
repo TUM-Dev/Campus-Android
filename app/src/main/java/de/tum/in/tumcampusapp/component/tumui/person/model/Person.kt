@@ -21,11 +21,16 @@ data class Person(
     @PropertyElement(name = "vorname")
     var name: String = "",
     @PropertyElement(name = "familienname")
-    var surname: String = ""
+    var surname: String = "",
+    @PropertyElement(name = "bild_url")
+    var imageUrl: String = ""
 ) : Serializable {
 
     val fullName: String
         get() = "$name $surname"
+
+    val fullImageUrl: String
+        get() = "https://campus.tum.de/tumonline/$imageUrl".replace("&amp;", "&")
 
     companion object {
 
