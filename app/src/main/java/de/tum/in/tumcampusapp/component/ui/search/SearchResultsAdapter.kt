@@ -58,6 +58,10 @@ sealed class AdapterItem(@LayoutRes val layoutResId: Int) {
                     .get()
                     .load(searchResult.person.fullImageUrl)
                     .into(profilePictureImageView)
+            } else {
+                // Reset image resource, because otherwise profile pictures might be displayed
+                // in the wrong list cells
+                profilePictureImageView.setImageDrawable(null)
             }
 
             setOnClickListener { onItemClick(this@Result) }
