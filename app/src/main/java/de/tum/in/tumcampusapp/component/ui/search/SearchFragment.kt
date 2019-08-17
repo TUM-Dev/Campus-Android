@@ -92,7 +92,7 @@ class SearchFragment : BaseFragment<Unit>(
         }
 
         searchResultsRecyclerView.isVisible = viewState.isLoading.not()
-        adapter.submitList(viewState.data)
+        adapter.submit(viewState.data)
     }
 
     private fun onItemClick(searchResult: SearchResult) {
