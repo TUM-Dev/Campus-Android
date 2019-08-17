@@ -5,19 +5,16 @@ import android.view.View
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.NoResultsAdapter
-import de.tum.`in`.tumcampusapp.component.other.generic.fragment.FragmentForSearchingTumOnline
-import de.tum.`in`.tumcampusapp.component.tumui.lectures.LectureSearchSuggestionProvider
+import de.tum.`in`.tumcampusapp.component.other.generic.fragment.FragmentForAccessingTumOnline
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.activity.LecturesDetailsActivity
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.adapter.LecturesListAdapter
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.Lecture
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LecturesResponse
 import kotlinx.android.synthetic.main.fragment_lectures.lecturesListView
 
-class LecturesFragment : FragmentForSearchingTumOnline<LecturesResponse>(
+class LecturesFragment : FragmentForAccessingTumOnline<LecturesResponse>(
     R.layout.fragment_lectures,
-    R.string.my_lectures,
-    authority = LectureSearchSuggestionProvider.AUTHORITY,
-    minLength = 4
+    R.string.my_lectures
 ) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -29,32 +26,15 @@ class LecturesFragment : FragmentForSearchingTumOnline<LecturesResponse>(
             startActivity(intent)
         }
 
-        onStartSearch()
+        loadPersonalLectures()
     }
 
     override fun onRefresh() {
         loadPersonalLectures(CacheControl.BYPASS_CACHE)
     }
 
-    override fun onStartSearch() {
-        enableRefresh()
-        loadPersonalLectures(CacheControl.USE_CACHE)
-    }
-
-    override fun onStartSearch(query: String?) {
-        query?.let {
-            disableRefresh()
-            searchLectures(query)
-        }
-    }
-
-    private fun loadPersonalLectures(cacheControl: CacheControl) {
+    private fun loadPersonalLectures(cacheControl: CacheControl = CacheControl.USE_CACHE) {
         val apiCall = apiClient.getPersonalLectures(cacheControl)
-        fetch(apiCall)
-    }
-
-    private fun searchLectures(query: String) {
-        val apiCall = apiClient.searchLectures(query)
         fetch(apiCall)
     }
 

@@ -7,6 +7,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProviders
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.BaseFragment
@@ -19,6 +20,7 @@ import de.tum.`in`.tumcampusapp.component.ui.search.SearchResult.Room
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.utils.observeNonNull
+import kotlinx.android.synthetic.main.fragment_search.progressIndicator
 import kotlinx.android.synthetic.main.fragment_search.searchResultsRecyclerView
 import kotlinx.android.synthetic.main.toolbar_search.clearButton
 import kotlinx.android.synthetic.main.toolbar_search.searchEditText
@@ -59,9 +61,6 @@ class SearchFragment : BaseFragment<Unit>(
             requireActivity().onBackPressed()
         }
 
-        // Disable pull-to-refresh on SwipeRefreshLayout
-        swipeRefreshLayout?.isEnabled = false
-
         searchEditText.setOnEditorActionListener { textView, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 val input = textView.text.toString().trim()
@@ -86,7 +85,13 @@ class SearchFragment : BaseFragment<Unit>(
     }
 
     private fun render(viewState: SearchViewState) {
-        swipeRefreshLayout?.isRefreshing = viewState.isLoading
+        if (viewState.isLoading) {
+            progressIndicator.show()
+        } else {
+            progressIndicator.hide()
+        }
+
+        searchResultsRecyclerView.isVisible = viewState.isLoading.not()
         adapter.submitList(viewState.data)
     }
 
