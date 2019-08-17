@@ -18,20 +18,14 @@ android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
     buildTypes {
-        all {
-            proguardFiles(file('../proguard').listFiles())
-            proguardFile getDefaultProguardFile('proguard-android.txt')
-            minifyEnabled true
-            useProguard true
-        }
         release {
             debuggable false
+            minifyEnabled true
+            useProguard true
             shrinkResources true
-        }
-        debug {
-            debuggable true
-            shrinkResources false
-            testCoverageEnabled true
+
+            proguardFiles(file('../proguard').listFiles())
+            proguardFile getDefaultProguardFile('proguard-android.txt')
         }
     }
     defaultConfig {
