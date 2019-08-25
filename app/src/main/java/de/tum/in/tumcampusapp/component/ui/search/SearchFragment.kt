@@ -7,6 +7,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProviders
 import de.tum.`in`.tumcampusapp.R
@@ -41,6 +42,10 @@ class SearchFragment : BaseFragment<Unit>(
     private val viewModel: SearchViewModel by lazy {
         val factory = ViewModelFactory(viewModelProvider)
         ViewModelProviders.of(this, factory).get(SearchViewModel::class.java)
+    }
+
+    private val query: String? by lazy {
+        arguments?.getString(KEY_QUERY)
     }
 
     override fun onAttach(context: Context?) {
@@ -82,6 +87,10 @@ class SearchFragment : BaseFragment<Unit>(
 
         searchResultsRecyclerView.adapter = adapter
         viewModel.viewState.observeNonNull(viewLifecycleOwner, this::render)
+
+        query?.let {
+            viewModel.search(it)
+        }
     }
 
     private fun render(viewState: SearchViewState) {
@@ -114,6 +123,18 @@ class SearchFragment : BaseFragment<Unit>(
             searchEditText.clearFocus()
             inputMethodManager?.hideSoftInputFromWindow(searchEditText.windowToken, 0)
         }
+    }
+
+    companion object {
+
+        private const val KEY_QUERY = "KEY_QUERY"
+
+        fun newInstance(
+            query: String
+        ) = SearchFragment().apply {
+            arguments = bundleOf(KEY_QUERY to query)
+        }
+
     }
 
 }

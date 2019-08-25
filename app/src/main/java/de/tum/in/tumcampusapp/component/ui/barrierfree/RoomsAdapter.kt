@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.component.tumui.roomfinder
+package de.tum.`in`.tumcampusapp.component.ui.barrierfree
 
 import android.content.Context
 import android.view.View
@@ -9,12 +9,9 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom
 
-/**
- * Custom UI adapter for a list of employees.
- */
-@Deprecated("Use SearchFragment instead")
-class RoomFinderListAdapter(
-        context: Context, items: List<RoomFinderRoom>
+class RoomsAdapter(
+    context: Context,
+    items: List<RoomFinderRoom>
 ) : SimpleStickyListHeadersAdapter<RoomFinderRoom>(context, items.toMutableList()) {
 
     internal class ViewHolder {
