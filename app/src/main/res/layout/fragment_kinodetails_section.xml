@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/default_window_background">
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/default_window_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,39 +24,39 @@
                 android:layout_height="match_parent">
 
                 <ImageView
-                    android:id="@+id/kino_cover"
+                    android:id="@+id/kinoCover"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/spinner_background"
                     android:contentDescription="@string/kino_cover_description"
                     android:scaleType="centerCrop"
-                    android:visibility="visible" />
+                    android:visibility="visible"/>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/kino_cover_placeholder"
+                    android:id="@+id/kinoCoverPlaceholder"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/kino_movie_title"
+                        android:id="@+id/kinoMovieTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/material_tiny_padding"
                         android:layout_marginStart="@dimen/material_tiny_padding"
                         android:layout_marginTop="@dimen/material_default_padding"
-                        android:layout_marginEnd="@dimen/material_tiny_padding"
                         android:gravity="center_horizontal"
-                        android:text="Avengers: Endgame"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Avengers: Endgame"/>
 
                     <ProgressBar
-                        android:id="@+id/kino_cover_progress"
+                        android:id="@+id/kinoCoverProgress"
                         android:layout_width="wrap_content"
                         android:layout_height="0px"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/kino_movie_title" />
+                        app:layout_constraintTop_toBottomOf="@id/kinoMovieTitle"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </FrameLayout>
@@ -79,7 +79,7 @@
                 android:text="@string/watch_trailer"
                 android:textAllCaps="false"
                 android:textColor="@color/color_primary"
-                app:cornerRadius="@dimen/material_corner_radius" />
+                app:cornerRadius="@dimen/material_corner_radius"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buyTicketButton"
@@ -92,51 +92,51 @@
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:visibility="gone"
-                app:cornerRadius="@dimen/material_corner_radius" />
+                app:cornerRadius="@dimen/material_corner_radius"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingStart="@dimen/material_default_padding"
-            android:paddingEnd="@dimen/material_default_padding">
+            android:paddingEnd="@dimen/material_default_padding"
+            android:paddingStart="@dimen/material_default_padding">
 
             <TextView
                 android:id="@+id/dateTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:drawableTop="@drawable/ic_outline_event_24px"
                 android:drawablePadding="@dimen/material_tiny_padding"
+                android:drawableTop="@drawable/ic_outline_event_24px"
                 android:gravity="center_horizontal"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textColor="@color/text_dark_primary"
-                tools:text="10/11" />
+                tools:text="10/11"/>
 
             <TextView
                 android:id="@+id/runtimeTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:drawableTop="@drawable/ic_outline_access_time_24px"
                 android:drawablePadding="@dimen/material_tiny_padding"
+                android:drawableTop="@drawable/ic_outline_access_time_24px"
                 android:gravity="center_horizontal"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textColor="@color/text_dark_primary"
-                tools:text="135 min" />
+                tools:text="135 min"/>
 
             <TextView
                 android:id="@+id/ratingTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:drawableTop="@drawable/ic_star_black_24dp"
                 android:drawablePadding="@dimen/material_tiny_padding"
+                android:drawableTop="@drawable/ic_star_black_24dp"
                 android:gravity="center_horizontal"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textColor="@color/text_dark_primary"
-                tools:text="7 / 10" />
+                tools:text="7 / 10"/>
 
         </LinearLayout>
 
@@ -151,163 +151,170 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="@dimen/material_default_padding"
-                android:background="@color/list_divider" />
+                android:background="@color/list_divider"/>
 
-            <TextView
-                android:id="@+id/remainingTicketsHeaderTextView"
+            <LinearLayout
+                android:id="@+id/remainingTicketsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/material_default_padding"
-                android:layout_marginTop="@dimen/material_default_padding"
-                android:layout_marginEnd="@dimen/material_default_padding"
-                android:fontFamily="sans-serif-medium"
-                android:text="@string/remaining_tickets"
-                android:textColor="@color/color_primary" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/remainingTicketsTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/material_default_padding"
-                android:layout_marginEnd="@dimen/material_default_padding"
-                android:lineSpacingMultiplier="1.1"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                android:textColor="@color/text_dark_primary"
-                tools:text="Actors" />
+                <TextView
+                    android:id="@+id/remainingTicketsHeaderTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/material_default_padding"
+                    android:layout_marginStart="@dimen/material_default_padding"
+                    android:layout_marginTop="@dimen/material_default_padding"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/remaining_tickets"
+                    android:textColor="@color/color_primary"/>
+
+                <TextView
+                    android:id="@+id/remainingTicketsTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/material_default_padding"
+                    android:layout_marginStart="@dimen/material_default_padding"
+                    android:lineSpacingMultiplier="1.1"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/text_dark_primary"
+                    tools:text="Actors"/>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/locationHeaderTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/material_default_padding"
                 android:layout_marginStart="@dimen/material_default_padding"
                 android:layout_marginTop="@dimen/material_default_padding"
-                android:layout_marginEnd="@dimen/material_default_padding"
                 android:fontFamily="sans-serif-medium"
                 android:text="@string/location"
-                android:textColor="@color/color_primary" />
+                android:textColor="@color/color_primary"/>
 
             <TextView
                 android:id="@+id/locationTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/material_default_padding"
                 android:layout_marginEnd="@dimen/material_default_padding"
+                android:layout_marginStart="@dimen/material_default_padding"
                 android:lineSpacingMultiplier="1.1"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textColor="@color/text_dark_primary"
-                tools:text="Actors" />
+                tools:text="Actors"/>
 
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="@dimen/material_default_padding"
             android:layout_marginBottom="@dimen/material_default_padding"
-            android:background="@color/list_divider" />
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:background="@color/list_divider"/>
 
         <TextView
             android:id="@+id/descriptionTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/material_default_padding"
             android:layout_marginEnd="@dimen/material_default_padding"
+            android:layout_marginStart="@dimen/material_default_padding"
             android:lineSpacingMultiplier="1.1"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:textColor="@color/text_dark_primary"
-            tools:text="Lorem ipsum dolor sit amet" />
+            tools:text="Lorem ipsum dolor sit amet"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="@dimen/material_default_padding"
-            android:background="@color/list_divider" />
+            android:background="@color/list_divider"/>
 
         <TextView
             android:id="@+id/genresHeaderTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/material_default_padding"
             android:layout_marginStart="@dimen/material_default_padding"
             android:layout_marginTop="@dimen/material_default_padding"
-            android:layout_marginEnd="@dimen/material_default_padding"
             android:fontFamily="sans-serif-medium"
             android:text="@string/genres"
-            android:textColor="@color/color_primary" />
+            android:textColor="@color/color_primary"/>
 
         <TextView
             android:id="@+id/genresTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/material_default_padding"
             android:layout_marginEnd="@dimen/material_default_padding"
+            android:layout_marginStart="@dimen/material_default_padding"
             android:lineSpacingMultiplier="1.1"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:textColor="@color/text_dark_primary"
-            tools:text="Genres" />
+            tools:text="Genres"/>
 
         <TextView
             android:id="@+id/releaseYearHeaderTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/material_default_padding"
             android:layout_marginStart="@dimen/material_default_padding"
             android:layout_marginTop="@dimen/material_default_padding"
-            android:layout_marginEnd="@dimen/material_default_padding"
             android:fontFamily="sans-serif-medium"
             android:text="@string/released"
-            android:textColor="@color/color_primary" />
+            android:textColor="@color/color_primary"/>
 
         <TextView
             android:id="@+id/releaseYearTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/material_default_padding"
             android:layout_marginEnd="@dimen/material_default_padding"
+            android:layout_marginStart="@dimen/material_default_padding"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:textColor="@color/text_dark_primary"
-            tools:text="2018" />
+            tools:text="2018"/>
 
         <TextView
             android:id="@+id/actorsHeaderTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/material_default_padding"
             android:layout_marginStart="@dimen/material_default_padding"
             android:layout_marginTop="@dimen/material_default_padding"
-            android:layout_marginEnd="@dimen/material_default_padding"
             android:fontFamily="sans-serif-medium"
             android:text="@string/actors"
-            android:textColor="@color/color_primary" />
+            android:textColor="@color/color_primary"/>
 
         <TextView
             android:id="@+id/actorsTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/material_default_padding"
             android:layout_marginEnd="@dimen/material_default_padding"
+            android:layout_marginStart="@dimen/material_default_padding"
             android:lineSpacingMultiplier="1.1"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:textColor="@color/text_dark_primary"
-            tools:text="Actors" />
+            tools:text="Actors"/>
 
         <TextView
             android:id="@+id/directorHeaderTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/material_default_padding"
             android:layout_marginStart="@dimen/material_default_padding"
             android:layout_marginTop="@dimen/material_default_padding"
-            android:layout_marginEnd="@dimen/material_default_padding"
             android:fontFamily="sans-serif-medium"
             android:text="@string/director"
-            android:textColor="@color/color_primary" />
+            android:textColor="@color/color_primary"/>
 
         <TextView
             android:id="@+id/directorTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/material_default_padding"
             android:layout_marginEnd="@dimen/material_default_padding"
+            android:layout_marginStart="@dimen/material_default_padding"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:textColor="@color/text_dark_primary"
-            tools:text="Director" />
+            tools:text="Director"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/moreInfoButton"
@@ -315,12 +322,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/material_default_padding"
             android:layout_marginBottom="@dimen/material_default_padding"
+            android:layout_marginTop="@dimen/material_default_padding"
             android:text="@string/more_info"
             android:textAllCaps="false"
             android:textColor="@color/color_primary"
-            app:cornerRadius="@dimen/material_corner_radius" />
+            app:cornerRadius="@dimen/material_corner_radius"/>
 
     </LinearLayout>
 

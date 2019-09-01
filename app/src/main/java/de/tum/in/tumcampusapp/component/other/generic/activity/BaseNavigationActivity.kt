@@ -16,6 +16,7 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.drawer.DrawerHeaderInflater
 import de.tum.`in`.tumcampusapp.component.other.generic.drawer.DrawerMenuHelper
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
+import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainFragment
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.closeDrawers
@@ -90,7 +91,7 @@ class BaseNavigationActivity : BaseActivity(
 
     private fun initDrawerToggle() {
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
-        val toolbar = findViewById<Toolbar>(R.id.main_toolbar)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
 
         drawerToggle = object : ActionBarDrawerToggle(this, drawerLayout,
             toolbar, R.string.drawer_open, R.string.drawer_close) {}
@@ -132,6 +133,11 @@ class BaseNavigationActivity : BaseActivity(
     override fun onDestroy() {
         defaultSharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
         super.onDestroy()
+    }
+
+    fun restoreCards() {
+        CardManager.restoreCards(this)
+        (supportFragmentManager.findFragmentById(R.id.contentFrame) as? MainFragment)?.refreshCards()
     }
 
 }

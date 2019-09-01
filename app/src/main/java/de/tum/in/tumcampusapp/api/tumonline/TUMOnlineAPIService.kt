@@ -13,6 +13,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.person.model.Employee
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.IdentitySet
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.PersonList
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model.TuitionList
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -88,10 +89,10 @@ interface TUMOnlineAPIService {
     fun requestToken(
             @Query("pUsername") username: String,
             @Query("pTokenName") tokenName: String
-    ): Call<AccessToken>
+    ): Single<AccessToken>
 
     @GET("wbservicesbasic.id")
-    fun getIdentity(): Call<IdentitySet>
+    fun getIdentity(): Single<IdentitySet>
 
     @GET("wbservicesbasic.secretUpload")
     fun uploadSecret(

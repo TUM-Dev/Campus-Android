@@ -5,6 +5,7 @@ import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
 import de.tum.`in`.tumcampusapp.component.tumui.grades.model.ExamList
+import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,7 +20,9 @@ class GradesBackgroundUpdater @Inject constructor(
 ) : Callback<ExamList> {
 
     fun fetchGradesAndNotifyIfNecessary() {
-        tumOnlineClient.getGrades(CacheControl.BYPASS_CACHE).enqueue(this)
+        if (Utils.getSetting(context, Const.LRZ_ID, "").isNotEmpty()) {
+            tumOnlineClient.getGrades(CacheControl.BYPASS_CACHE).enqueue(this)
+        }
     }
 
     override fun onResponse(call: Call<ExamList>, response: Response<ExamList>) {

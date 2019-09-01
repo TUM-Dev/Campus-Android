@@ -107,6 +107,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation 'android.arch.lifecycle:reactivestreams:1.1.1'
     implementation 'android.arch.work:work-runtime-ktx:1.0.1'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
     kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
     kapt 'androidx.room:room-compiler:2.1.0-alpha06'
 
@@ -164,8 +165,8 @@ dependencies {
     implementation 'com.makeramen:roundedimageview:2.3.0'
 
     // Dagger
-    implementation 'com.google.dagger:dagger:2.21'
-    kapt 'com.google.dagger:dagger-compiler:2.21'
+    implementation 'com.google.dagger:dagger:2.24'
+    kapt 'com.google.dagger:dagger-compiler:2.24'
 
     // LeakCanary
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-1'

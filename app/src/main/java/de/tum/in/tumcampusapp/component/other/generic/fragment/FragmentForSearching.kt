@@ -112,6 +112,18 @@ abstract class FragmentForSearching<T>(
             }
         })
 
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(newText: String?): Boolean {
+                onStartSearch()
+                return false
+            }
+
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                requestSearch(query.orEmpty())
+                return false
+            }
+        })
+
         super.onCreateOptionsMenu(menu, inflater)
     }
 
