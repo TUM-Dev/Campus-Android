@@ -92,8 +92,11 @@ class TimetableWidget : AppWidgetProvider() {
          *
          * @param appWidgetId the id of the widget to update
          */
-        private fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager,
-                                     appWidgetId: Int) {
+        private fun updateAppWidget(
+            context: Context,
+            appWidgetManager: AppWidgetManager,
+            appWidgetId: Int
+        ) {
             // Instantiate the RemoteViews object for the app widget layout.
             val remoteViews = RemoteViews(context.packageName, R.layout.timetable_widget)
 
@@ -143,5 +146,4 @@ class TimetableWidget : AppWidgetProvider() {
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.timetable_widget_listview)
         }
     }
-
 }

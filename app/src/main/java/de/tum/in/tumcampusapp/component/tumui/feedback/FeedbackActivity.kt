@@ -125,7 +125,6 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     override fun getIncludeEmail(): Observable<Boolean> = includeEmailCheckbox.checkedChanges()
     override fun getIncludeLocation(): Observable<Boolean> = includeLocationCheckBox.checkedChanges()
 
-
     @SuppressLint("MissingPermission")
     override fun getLocation(): Observable<Location> = RxLocation(this).location().updates(LocationRequest.create())
 
@@ -251,9 +250,11 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
         thumbnailsAdapter.removeImage(position)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>,
-                                            grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         if (grantResults.isEmpty()) {
             return
         }
@@ -284,5 +285,4 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
         presenter.detachView()
         super.onDestroy()
     }
-
 }

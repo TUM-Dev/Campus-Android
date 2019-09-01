@@ -72,5 +72,4 @@ class LecturesFragment : FragmentForSearchingTumOnline<LecturesResponse>(
     companion object {
         @JvmStatic fun newInstance() = LecturesFragment()
     }
-
 }

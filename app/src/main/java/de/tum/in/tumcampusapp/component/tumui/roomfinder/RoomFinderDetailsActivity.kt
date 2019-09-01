@@ -171,8 +171,10 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
 
         roomFinderMapsCall = tumCabeClient.fetchAvailableMaps(room.arch_id)
         roomFinderMapsCall?.enqueue(object : Callback<List<RoomFinderMap>> {
-            override fun onResponse(call: Call<List<RoomFinderMap>>,
-                                    response: Response<List<RoomFinderMap>>) {
+            override fun onResponse(
+                call: Call<List<RoomFinderMap>>,
+                response: Response<List<RoomFinderMap>>
+            ) {
                 val data = response.body()
                 roomFinderMapsCall = null
 
@@ -183,8 +185,10 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
                 onMapListLoadFinished(data)
             }
 
-            override fun onFailure(call: Call<List<RoomFinderMap>>,
-                                   throwable: Throwable) {
+            override fun onFailure(
+                call: Call<List<RoomFinderMap>>,
+                throwable: Throwable
+            ) {
                 if (call.isCanceled) {
                     return
                 }
@@ -221,8 +225,10 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
         showLoadingStart()
         roomFinderCoordinateCall = tumCabeClient.fetchRoomFinderCoordinates(room.arch_id)
         roomFinderCoordinateCall?.enqueue(object : Callback<RoomFinderCoordinate> {
-            override fun onResponse(call: Call<RoomFinderCoordinate>,
-                                    response: Response<RoomFinderCoordinate>) {
+            override fun onResponse(
+                call: Call<RoomFinderCoordinate>,
+                response: Response<RoomFinderCoordinate>
+            ) {
                 val data = response.body()
                 roomFinderCoordinateCall = null
 
@@ -234,8 +240,10 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
                 onGeoLoadFinished(LocationManager.convertRoomFinderCoordinateToGeo(data))
             }
 
-            override fun onFailure(call: Call<RoomFinderCoordinate>,
-                                   throwable: Throwable) {
+            override fun onFailure(
+                call: Call<RoomFinderCoordinate>,
+                throwable: Throwable
+            ) {
                 if (call.isCanceled) {
                     return
                 }
@@ -276,7 +284,6 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
             Utils.log(e)
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.apps.maps")))
         }
-
     }
 
     private fun showImageLoadingError() {

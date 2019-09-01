@@ -91,9 +91,11 @@ class EventsAdapter(private val mContext: Context) : RecyclerView.Adapter<CardVi
         diffResult.dispatchUpdatesTo(this)
     }
 
-    class EventViewHolder(view: View,
-                          interactionListener: CardInteractionListener?,
-                          private val showOptionsButton: Boolean) : CardViewHolder(view, interactionListener) {
+    class EventViewHolder(
+        view: View,
+        interactionListener: CardInteractionListener?,
+        private val showOptionsButton: Boolean
+    ) : CardViewHolder(view, interactionListener) {
 
         private var optionsButtonGroup: Group = view.findViewById(R.id.cardMoreIconGroup)
         private var progressBar: ProgressBar = view.findViewById(R.id.poster_progress_bar)
@@ -151,5 +153,4 @@ class EventsAdapter(private val mContext: Context) : RecyclerView.Adapter<CardVi
         private const val CARD_HORIZONTAL = 1
         private const val CARD_VERTICAL = 2
     }
-
 }

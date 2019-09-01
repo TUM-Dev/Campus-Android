@@ -19,8 +19,8 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter
  * @param <T> the data model
 </T> */
 abstract class SimpleStickyListHeadersAdapter<T : SimpleStickyListHeadersAdapter.SimpleStickyListItem>(
-        var context: Context,
-        var itemList: MutableList<T>
+    var context: Context,
+    var itemList: MutableList<T>
 ) : BaseAdapter(), StickyListHeadersAdapter {
 
     private val filters: MutableList<String>

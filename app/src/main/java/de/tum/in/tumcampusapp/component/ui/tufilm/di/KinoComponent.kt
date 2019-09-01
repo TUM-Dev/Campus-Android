@@ -10,5 +10,4 @@ interface KinoComponent {
     fun inject(kinoActivity: KinoActivity)
 
     fun inject(kinoDetailsFragment: KinoDetailsFragment)
-
 }

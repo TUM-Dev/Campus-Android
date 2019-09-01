@@ -49,5 +49,4 @@ class DateTimeConverter : TypeConverter<DateTime?> {
 
         throw JsonParseException("Invalid date format: $dateTime")
     }
-
 }

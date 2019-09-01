@@ -11,9 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
 
 class FeedbackThumbnailsAdapter internal constructor(
-        private var paths: List<String>,
-        private val onRemoveImage: (path: String) -> Unit,
-        private val thumbnailSize: Int) : RecyclerView.Adapter<FeedbackThumbnailsAdapter.ViewHolder>() {
+    private var paths: List<String>,
+    private val onRemoveImage: (path: String) -> Unit,
+    private val thumbnailSize: Int
+) : RecyclerView.Adapter<FeedbackThumbnailsAdapter.ViewHolder>() {
 
     private val pathsToThumbnails = ArrayMap<String, Bitmap>()
 
@@ -83,7 +84,5 @@ class FeedbackThumbnailsAdapter internal constructor(
                 setOnClickListener { onRemoveImage(path) }
             }
         }
-
     }
-
 }

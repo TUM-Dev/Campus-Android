@@ -35,5 +35,4 @@ abstract class NotificationProvider(protected val context: Context) {
      * @return An [AppNotification] or null
      */
     abstract fun buildNotification(): AppNotification?
-
 }

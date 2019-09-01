@@ -5,11 +5,11 @@ import org.joda.time.DateTime
 import org.joda.time.Minutes
 
 data class Departure(
-        val servingLine: String = "",
-        val direction: String = "",
-        val symbol: String = "",
-        val countDown: Int = -1,
-        val departureTime: DateTime = DateTime()
+    val servingLine: String = "",
+    val direction: String = "",
+    val symbol: String = "",
+    val countDown: Int = -1,
+    val departureTime: DateTime = DateTime()
 ) {
 
     /**
@@ -36,7 +36,5 @@ data class Departure(
                     mvvDeparture.dateTime
             )
         }
-
     }
-
 }

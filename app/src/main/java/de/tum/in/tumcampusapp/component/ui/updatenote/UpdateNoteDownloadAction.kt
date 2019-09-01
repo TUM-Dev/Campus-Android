@@ -11,8 +11,8 @@ import java.io.IOException
 import javax.inject.Inject
 
 class UpdateNoteDownloadAction @Inject constructor(
-        val mContext: Context
-): DownloadWorker.Action {
+    val mContext: Context
+) : DownloadWorker.Action {
     override fun execute(cacheBehaviour: CacheControl) {
         val savedNote = Utils.getSetting(mContext, Const.UPDATE_MESSAGE, "")
         if (savedNote.isNotEmpty()) {

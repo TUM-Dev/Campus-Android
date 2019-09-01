@@ -21,5 +21,4 @@ class StudyRoomsActivity : BaseActivity(
                 .commit()
         }
     }
-
 }

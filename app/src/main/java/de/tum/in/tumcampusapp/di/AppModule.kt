@@ -62,7 +62,5 @@ abstract class AppModule {
         fun provideLocalBroadcastManager(
             context: Context
         ): LocalBroadcastManager = LocalBroadcastManager.getInstance(context)
-
     }
-
 }

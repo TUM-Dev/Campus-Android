@@ -19,17 +19,17 @@ class OpenHoursHelper(private val context: Context) {
      * HINT: Currently only works for cafeterias, and institutions
      * that have Mo-Do xx-yy.yy, Fr aa-bb and Mo-Fr xx-yy format
      *
-     * @param id      Location ID, e.g. 100
-     * @param date    Relative date
+     * @param id Location ID, e.g. 100
+     * @param date Relative date
      * @return Readable opening string
      */
     fun getHoursByIdAsString(id: Int, date: DateTime): String {
         val result = dao.getHoursByReferenceId(id) ?: return ""
 
-        //Check which week day we have
+        // Check which week day we have
         val dayOfWeek = date.dayOfWeek
 
-        //Split up the data string from the database with regex which has the format: "Mo-Do 11-14, Fr 11-13.45" or "Mo-Fr 9-20"
+        // Split up the data string from the database with regex which has the format: "Mo-Do 11-14, Fr 11-13.45" or "Mo-Fr 9-20"
 
         val isGerman = context.getString(R.string.language) == "de"
         val m: Matcher = if (isGerman) {
@@ -41,44 +41,44 @@ class OpenHoursHelper(private val context: Context) {
                     .matcher(result)
         }
 
-        //Capture groups for: Mo-Do 9-21.30
-        //#0	Mo-Do 9-21.30
-        //#1	Mo
-        //#2	Do
-        //#3	9
-        //#4	21.30
+        // Capture groups for: Mo-Do 9-21.30
+        // #0	Mo-Do 9-21.30
+        // #1	Mo
+        // #2	Do
+        // #3	9
+        // #4	21.30
 
-        //Find the first part
+        // Find the first part
         val time = arrayOfNulls<String>(2)
         if (m.find()) {
-            //We are currently in Mo-Do/Fr, when this weekday is in that range we have our result or we check if the current range is valid for fridays also
-            if (dayOfWeek + 1 <= Calendar.THURSDAY // +1 because dayOfWeek is zero-based while Calendar.THURSDAY is not
-                    || m.group(2).equals(if (isGerman) "fr" else "fri", ignoreCase = true)) {
+            // We are currently in Mo-Do/Fr, when this weekday is in that range we have our result or we check if the current range is valid for fridays also
+            if (dayOfWeek + 1 <= Calendar.THURSDAY || // +1 because dayOfWeek is zero-based while Calendar.THURSDAY is not
+                    m.group(2).equals(if (isGerman) "fr" else "fri", ignoreCase = true)) {
                 time[0] = m.group(3)
                 time[1] = m.group(4)
             } else {
-                //Otherwise we need to move to the next match
+                // Otherwise we need to move to the next match
                 if (m.find()) {
-                    //Got a match, data should be in capture groups 3/4
+                    // Got a match, data should be in capture groups 3/4
                     time[0] = m.group(3)
                     time[1] = m.group(4)
                 } else {
-                    //No match found, return
+                    // No match found, return
                     return ""
                 }
             }
         } else {
-            //No match found, return
+            // No match found, return
             return ""
         }
 
-        //Convert time to workable calender objects
+        // Convert time to workable calender objects
         val now = DateTime.now()
         val opens = stringToDateTime(date, time[0] ?: "")
         val closes = stringToDateTime(date, time[1] ?: "")
 
         if (date.dayOfYear() == now.dayOfYear()) {
-            //Check the relativity
+            // Check the relativity
             val relativeTo: DateTime
             val relation: Int
             if (opens.isAfter(now)) {
@@ -92,9 +92,9 @@ class OpenHoursHelper(private val context: Context) {
                 relativeTo = closes
             }
 
-            //Get the relative string
+            // Get the relative string
             val relativeTime = DateTimeUtils.formatFutureTime(relativeTo, context)
-            //Return an assembly
+            // Return an assembly
             return context.getString(relation) + " " + relativeTime.substring(0, 1)
                     .toLowerCase(Locale.getDefault()) + relativeTime.substring(1)
         } else {

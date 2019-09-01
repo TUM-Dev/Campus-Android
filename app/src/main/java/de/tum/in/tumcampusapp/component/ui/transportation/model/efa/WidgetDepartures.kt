@@ -8,16 +8,18 @@ import java.util.*
 /**
  * Create new WidgetDepartures. It contains the widget settingsPrefix and can load the according departure list
  *
- * @param station     The station name
- * @param stationId   The station name
+ * @param station The station name
+ * @param stationId The station name
  * @param useLocation Whether this widgets station is determined by the current location
- * @param autoReload  If widget should update automatically, otherwise a button-press is required
+ * @param autoReload If widget should update automatically, otherwise a button-press is required
  */
-class WidgetDepartures(station: String = "",
-                       stationId: String = "",
-                       var useLocation: Boolean = false,
-                       var autoReload: Boolean = false,
-                       var departures: MutableList<Departure> = ArrayList()) {
+class WidgetDepartures(
+    station: String = "",
+    stationId: String = "",
+    var useLocation: Boolean = false,
+    var autoReload: Boolean = false,
+    var departures: MutableList<Departure> = ArrayList()
+) {
 
     private var lastLoad: Long = 0
     /**

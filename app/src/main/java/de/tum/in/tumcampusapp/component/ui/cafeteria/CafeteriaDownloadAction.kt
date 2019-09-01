@@ -7,13 +7,12 @@ import de.tum.`in`.tumcampusapp.service.DownloadWorker
 import javax.inject.Inject
 
 class CafeteriaDownloadAction @Inject constructor(
-        private val cafeteriaMenuManager: CafeteriaMenuManager,
-        private val cafeteriaRemoteRepository: CafeteriaRemoteRepository
+    private val cafeteriaMenuManager: CafeteriaMenuManager,
+    private val cafeteriaRemoteRepository: CafeteriaRemoteRepository
 ) : DownloadWorker.Action {
 
     override fun execute(cacheBehaviour: CacheControl) {
         cafeteriaMenuManager.downloadMenus(cacheBehaviour)
         cafeteriaRemoteRepository.fetchCafeterias(cacheBehaviour == CacheControl.BYPASS_CACHE)
     }
-
 }

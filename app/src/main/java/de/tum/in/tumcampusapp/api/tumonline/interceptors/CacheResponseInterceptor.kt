@@ -20,5 +20,4 @@ class CacheResponseInterceptor : Interceptor {
             response
         }
     }
-
 }

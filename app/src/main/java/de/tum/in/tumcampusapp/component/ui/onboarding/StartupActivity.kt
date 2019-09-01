@@ -192,5 +192,4 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
         private const val REQUEST_LOCATION = 0
         private val PERMISSIONS_LOCATION = arrayOf(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION)
     }
-
 }

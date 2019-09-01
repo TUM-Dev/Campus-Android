@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import org.joda.time.DateTime
 
-
 class ChatRoomAndLastMessage {
 
     @Embedded
@@ -17,5 +16,4 @@ class ChatRoomAndLastMessage {
     var nrUnread: Int = 0
 
     fun hasUnread() = nrUnread > 0
-
 }

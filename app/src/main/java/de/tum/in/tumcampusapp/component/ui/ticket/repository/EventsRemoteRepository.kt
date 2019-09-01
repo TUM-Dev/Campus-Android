@@ -16,11 +16,11 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class EventsRemoteRepository @Inject constructor(
-        private val context: Context,
-        private val tumCabeClient: TUMCabeClient,
-        private val eventsLocalRepository: EventsLocalRepository,
-        private val ticketsLocalRepository: TicketsLocalRepository,
-        private val ticketsRemoteRepository: TicketsRemoteRepository
+    private val context: Context,
+    private val tumCabeClient: TUMCabeClient,
+    private val eventsLocalRepository: EventsLocalRepository,
+    private val ticketsLocalRepository: TicketsLocalRepository,
+    private val ticketsRemoteRepository: TicketsRemoteRepository
 ) {
 
     fun fetchEventsAndTickets() {
@@ -65,7 +65,6 @@ class EventsRemoteRepository @Inject constructor(
 
     fun fetchTicketStats(eventId: Int): Single<TicketStatus> {
         return tumCabeClient.fetchTicketStats(eventId)
-                .map { it.reduceRight {s, a -> TicketStatus(-1, a.contingent + s.contingent, a.sold + s.sold) } }
+                .map { it.reduceRight { s, a -> TicketStatus(-1, a.contingent + s.contingent, a.sold + s.sold) } }
     }
-
 }

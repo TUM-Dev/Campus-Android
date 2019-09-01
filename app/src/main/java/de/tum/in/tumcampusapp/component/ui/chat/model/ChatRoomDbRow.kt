@@ -7,19 +7,20 @@ import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.Lecture
 
 @Entity(tableName = "chat_room", primaryKeys = ["name", "_id"])
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
-data class ChatRoomDbRow(var room: Int = 0,
-                         var name: String = "",
-                         var semester: String = "",
-                         @ColumnInfo(name = "semester_id")
-                         var semesterId: String = "",
-                         var joined: Int = 0,
-                         @ColumnInfo(name = "_id")
-                         var lvId: Int = 0,
-                         var contributor: String = "",
-                         var members: Int = -1,
-                         @ColumnInfo(name = "last_read")
-                         var lastRead: Int = -1) {
-
+data class ChatRoomDbRow(
+    var room: Int = 0,
+    var name: String = "",
+    var semester: String = "",
+    @ColumnInfo(name = "semester_id")
+    var semesterId: String = "",
+    var joined: Int = 0,
+    @ColumnInfo(name = "_id")
+    var lvId: Int = 0,
+    var contributor: String = "",
+    var members: Int = -1,
+    @ColumnInfo(name = "last_read")
+    var lastRead: Int = -1
+) {
 
     companion object {
         fun fromLecture(lecture: Lecture): ChatRoomDbRow {

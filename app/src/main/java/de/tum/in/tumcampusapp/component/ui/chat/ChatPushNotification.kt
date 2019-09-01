@@ -35,9 +35,9 @@ import org.jetbrains.anko.notificationManager
  * Creates/modifies the notificationId when there is a new chat message.
  */
 class ChatPushNotification(
-        private val fcmChatPayload: FcmChat,
-        appContext: Context,
-        notification: Int
+    private val fcmChatPayload: FcmChat,
+    appContext: Context,
+    notification: Int
 ) : PushNotification(appContext, CHAT_NOTIFICATION, notification, true) {
 
     private val passedChatRoom by lazy {
@@ -122,8 +122,8 @@ class ChatPushNotification(
      */
     private fun showNotification(chatRoom: ChatRoom, taskStackBuilder: TaskStackBuilder, text: String?) {
         // Check if chat is currently open then don't show a notificationId if it is
-        if (ChatActivity.mCurrentOpenChatRoom != null
-                && fcmChatPayload.room == ChatActivity.mCurrentOpenChatRoom.id) {
+        if (ChatActivity.mCurrentOpenChatRoom != null &&
+                fcmChatPayload.room == ChatActivity.mCurrentOpenChatRoom.id) {
             return
         }
 
@@ -183,7 +183,6 @@ class ChatPushNotification(
                         this.message = message
                     })
         }
-
 
         /**
          * Create a chat notification from a json payload

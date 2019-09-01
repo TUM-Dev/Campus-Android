@@ -118,7 +118,5 @@ class CafeteriaMenuFormatter(private val context: Context) {
         'Sw':'Schwefeloxid und Sulfite',
         'Wt':'Weichtiere'
         */
-
     }
-
 }

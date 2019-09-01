@@ -71,5 +71,4 @@ abstract class FragmentForDownloadingExternal(
                 )
                 .observe(this, completionHandler)
     }
-
 }

@@ -25,8 +25,8 @@ import org.jetbrains.anko.doAsync
 import javax.inject.Inject
 
 class CardsRepository @Inject constructor(
-        private val context: Context,
-        private val eventCardsProvider: EventCardsProvider
+    private val context: Context,
+    private val eventCardsProvider: EventCardsProvider
 ) {
 
     private var cards = MutableLiveData<List<Card>>()
@@ -96,5 +96,4 @@ class CardsRepository @Inject constructor(
 
         return results.filterNotNull()
     }
-
 }

@@ -70,5 +70,4 @@ class EduroamCard(context: Context) : Card(CardManager.CARD_EDUROAM, context, "c
             return CardViewHolder(view, interactionListener)
         }
     }
-
 }

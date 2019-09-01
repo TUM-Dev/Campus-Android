@@ -38,5 +38,4 @@ class BarrierFreeMoreInfoAdapter(context: Context, infos: List<BarrierFreeMoreIn
     internal class ViewHolder {
         var title: TextView? = null
     }
-
 }

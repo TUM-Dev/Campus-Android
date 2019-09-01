@@ -42,11 +42,10 @@ interface TopNewsStore {
      * @param newsAlert The [NewsAlert] to be stored
      */
     fun store(newsAlert: NewsAlert)
-
 }
 
 class RealTopNewsStore @Inject constructor(
-        private val sharedPrefs: SharedPreferences
+    private val sharedPrefs: SharedPreferences
 ) : TopNewsStore {
 
     override fun isEnabled(): Boolean {
@@ -96,5 +95,4 @@ class RealTopNewsStore @Inject constructor(
 
         sharedPrefs.edit().putString(Const.NEWS_ALERT_SHOW_UNTIL, newsAlert.displayUntil).apply()
     }
-
 }

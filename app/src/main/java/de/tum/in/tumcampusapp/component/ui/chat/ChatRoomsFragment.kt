@@ -51,7 +51,7 @@ class ChatRoomsFragment : FragmentForAccessingTumOnline<LecturesResponse>(
 ) {
 
     private var currentMode = ChatRoom.MODE_JOINED
-    private val manager: ChatRoomController by  lazy {
+    private val manager: ChatRoomController by lazy {
         ChatRoomController(requireContext())
     }
 
@@ -141,7 +141,6 @@ class ChatRoomsFragment : FragmentForAccessingTumOnline<LecturesResponse>(
                     showErrorSnackbar(R.string.error_something_wrong)
                 }
             }
-
         }
 
         val chatRoomAndLastMessages = manager.getAllByStatus(currentMode)
@@ -219,7 +218,7 @@ class ChatRoomsFragment : FragmentForAccessingTumOnline<LecturesResponse>(
                 // When we show joined chat rooms open chat room directly
                 if (currentMode == ChatRoom.MODE_JOINED) {
                     moveToChatActivity()
-                } else { //Otherwise show a nice information, that we added the room
+                } else { // Otherwise show a nice information, that we added the room
                     val rooms = manager.getAllByStatus(currentMode)
 
                     runOnUiThread {
@@ -344,5 +343,4 @@ class ChatRoomsFragment : FragmentForAccessingTumOnline<LecturesResponse>(
         @JvmStatic
         fun newInstance() = ChatRoomsFragment()
     }
-
 }

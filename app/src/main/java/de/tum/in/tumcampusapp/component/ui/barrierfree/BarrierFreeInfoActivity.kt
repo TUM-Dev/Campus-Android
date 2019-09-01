@@ -17,5 +17,4 @@ class BarrierFreeInfoActivity : BaseActivity(R.layout.activity_barrier_free_info
                     .commit()
         }
     }
-
 }

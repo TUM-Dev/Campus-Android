@@ -29,5 +29,4 @@ class BarrierFreeInfoFragment : BaseFragment<Unit>(
         @JvmStatic
         fun newInstance() = BarrierFreeInfoFragment()
     }
-
 }

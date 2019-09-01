@@ -139,5 +139,4 @@ class BaseNavigationActivity : BaseActivity(
         CardManager.restoreCards(this)
         (supportFragmentManager.findFragmentById(R.id.contentFrame) as? MainFragment)?.refreshCards()
     }
-
 }

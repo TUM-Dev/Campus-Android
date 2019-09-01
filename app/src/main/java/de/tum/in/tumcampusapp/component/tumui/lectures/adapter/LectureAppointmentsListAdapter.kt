@@ -16,8 +16,10 @@ import org.joda.time.format.DateTimeFormat
 /**
  * Generates the output of the ListView on the [LecturesAppointmentsActivity] activity.
  */
-class LectureAppointmentsListAdapter(context: Context, // list of Appointments to one lecture
-                                     private val appointmentList: List<LectureAppointment>) : BaseAdapter() {
+class LectureAppointmentsListAdapter(
+    context: Context, // list of Appointments to one lecture
+    private val appointmentList: List<LectureAppointment>
+) : BaseAdapter() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 

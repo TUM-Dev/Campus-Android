@@ -7,7 +7,7 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import javax.inject.Inject
 
 class MainActivityViewModel @Inject constructor(
-        private val cardsRepo: CardsRepository
+    private val cardsRepo: CardsRepository
 ) : ViewModel() {
 
     val cards: LiveData<List<Card>>
@@ -16,5 +16,4 @@ class MainActivityViewModel @Inject constructor(
     fun refreshCards() {
         cardsRepo.refreshCards(CacheControl.BYPASS_CACHE)
     }
-
 }

@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import javax.inject.Inject
 
 class GradesStore @Inject constructor(
-        private val sharedPrefs: SharedPreferences
+    private val sharedPrefs: SharedPreferences
 ) {
 
     val gradedCourses: List<String>
@@ -17,5 +17,4 @@ class GradesStore @Inject constructor(
     companion object {
         private const val KEY_GRADED_COURSES = "KEY_GRADED_COURSES"
     }
-
 }

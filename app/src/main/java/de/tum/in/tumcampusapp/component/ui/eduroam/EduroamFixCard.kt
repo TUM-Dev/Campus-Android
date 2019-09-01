@@ -25,7 +25,7 @@ import java.util.*
 import java.util.regex.Pattern
 
 class EduroamFixCard(
-        context: Context
+    context: Context
 ) : Card(CardManager.CARD_EDUROAM_FIX, context, "card_eduroam_fix_start") {
 
     private val errors: MutableList<String> = ArrayList()
@@ -73,7 +73,6 @@ class EduroamFixCard(
         return if (!context.wifiManager.isWifiEnabled) {
             false
         } else !isConfigValid()
-
     }
 
     override fun discard(editor: SharedPreferences.Editor) {
@@ -86,10 +85,10 @@ class EduroamFixCard(
 
     private fun checkAnonymousIdentity() {
         val anonymousIdentity = eduroam.enterpriseConfig.anonymousIdentity
-        if (anonymousIdentity != null
-                && anonymousIdentity != "anonymous@mwn.de"
-                && anonymousIdentity != "anonymous@eduroam.mwn.de"
-                && anonymousIdentity != "anonymous@mytum.de") {
+        if (anonymousIdentity != null &&
+                anonymousIdentity != "anonymous@mwn.de" &&
+                anonymousIdentity != "anonymous@eduroam.mwn.de" &&
+                anonymousIdentity != "anonymous@mytum.de") {
             errors.add(context.getString(R.string.wifi_anonymous_identity_not_set))
         }
     }
@@ -97,20 +96,20 @@ class EduroamFixCard(
     private fun checkDNSName() {
         if (SDK_INT < M && !isValidSubjectMatchAPI18(eduroam)) {
             errors.add(context.getString(R.string.wifi_dns_name_not_set))
-        } else if (SDK_INT >= M
-                && (eduroam.enterpriseConfig.altSubjectMatch != "DNS:$RADIUS_DNS" || eduroam.enterpriseConfig.domainSuffixMatch != RADIUS_DNS)
-                && !isValidSubjectMatchAPI18(eduroam)) {
+        } else if (SDK_INT >= M &&
+                (eduroam.enterpriseConfig.altSubjectMatch != "DNS:$RADIUS_DNS" || eduroam.enterpriseConfig.domainSuffixMatch != RADIUS_DNS) &&
+                !isValidSubjectMatchAPI18(eduroam)) {
             errors.add(context.getString(R.string.wifi_dns_name_not_set))
         }
     }
 
     private fun isTumEduroam(identity: String): Boolean {
         val pattern = Pattern.compile(Const.TUM_ID_PATTERN)
-        return (identity.endsWith("@mwn.de")
-                || identity.endsWith("@mytum.de")
-                || identity.endsWith("@tum.de")
-                || (identity.endsWith(".mwn.de") || identity.endsWith(".tum.de")) && identity.contains(AT_SIGN)
-                || pattern.matcher(identity).matches())
+        return (identity.endsWith("@mwn.de") ||
+                identity.endsWith("@mytum.de") ||
+                identity.endsWith("@tum.de") ||
+                (identity.endsWith(".mwn.de") || identity.endsWith(".tum.de")) && identity.contains(AT_SIGN) ||
+                pattern.matcher(identity).matches())
     }
 
     private fun isValidSubjectMatchAPI18(eduroam: WifiConfiguration): Boolean {

@@ -18,5 +18,4 @@ sealed class NavDestination {
     data class Link(
         val url: String
     ) : NavDestination()
-
 }

@@ -41,5 +41,4 @@ abstract class BaseActivity(
 
         return super.onOptionsItemSelected(item)
     }
-
 }

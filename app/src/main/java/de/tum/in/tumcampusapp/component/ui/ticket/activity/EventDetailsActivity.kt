@@ -8,7 +8,6 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.fragment.EventDetailsFragmen
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.utils.Const
 
-
 /**
  * This Activity displays more information about the event
  * Especially the full description, link and the full dates
@@ -24,5 +23,4 @@ class EventDetailsActivity : BaseActivity(R.layout.activity_event_details) {
                 .replace(R.id.fragment_container, EventDetailsFragment.newInstance(event))
                 .commit()
     }
-
 }

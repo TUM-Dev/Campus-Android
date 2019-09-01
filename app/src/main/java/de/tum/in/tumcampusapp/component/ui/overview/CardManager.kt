@@ -65,5 +65,4 @@ object CardManager {
         }
         editor.apply()
     }
-
 }

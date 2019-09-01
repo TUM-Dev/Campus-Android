@@ -10,20 +10,19 @@ import com.google.gson.annotations.SerializedName
  */
 @Entity(tableName = "study_room_groups")
 data class StudyRoomGroup(
-        @PrimaryKey
-        @SerializedName("id")
-        var id: Int = -1,
-        @SerializedName("name")
-        var name: String = "",
-        @SerializedName("details")
-        var details: String = "",
-        @Ignore
-        @SerializedName("rooms")
-        var rooms: List<StudyRoom> = emptyList()
+    @PrimaryKey
+    @SerializedName("id")
+    var id: Int = -1,
+    @SerializedName("name")
+    var name: String = "",
+    @SerializedName("details")
+    var details: String = "",
+    @Ignore
+    @SerializedName("rooms")
+    var rooms: List<StudyRoom> = emptyList()
 ) : Comparable<StudyRoomGroup> {
 
     override fun toString() = name
 
     override fun compareTo(other: StudyRoomGroup) = name.compareTo(other.name)
-
 }

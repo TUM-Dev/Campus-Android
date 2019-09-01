@@ -26,7 +26,6 @@ interface OnboardingComponent {
             @BindsInstance activity: OnboardingActivity
         ): OnboardingComponent
     }
-
 }
 
 interface OnboardingComponentProvider {

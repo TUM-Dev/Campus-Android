@@ -15,7 +15,7 @@ class SyncManager(context: Context) {
     /**
      * Checks if a new sync is needed or if data is up-to-date
      *
-     * @param obj     Gives class name as sync ID
+     * @param obj Gives class name as sync ID
      * @param seconds Sync period, e.g. 86400 for 1 day
      * @return true if sync is needed, else false
      */
@@ -26,7 +26,7 @@ class SyncManager(context: Context) {
     /**
      * Checks if a new sync is needed or if data is up-to-date
      *
-     * @param id      Sync-ID (derived by originator class name)
+     * @param id Sync-ID (derived by originator class name)
      * @param seconds Sync period, e.g. 86400 for 1 day
      * @return true if sync is needed, else false
      */

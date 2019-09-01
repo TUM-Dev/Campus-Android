@@ -75,13 +75,14 @@ class EventHelper {
         }
 
         fun showRemainingTickets(
-                status: TicketStatus?,
-                isEventBooked: Boolean,
-                isEventImminent: Boolean,
-                buyTicketButton: View,
-                remainingTicketsContainer: View,
-                remainingTicketsTextView: TextView,
-                noTicketsMessage: String) {
+            status: TicketStatus?,
+            isEventBooked: Boolean,
+            isEventImminent: Boolean,
+            buyTicketButton: View,
+            remainingTicketsContainer: View,
+            remainingTicketsTextView: TextView,
+            noTicketsMessage: String
+        ) {
 
             if (isEventImminent) {
                 buyTicketButton.isVisible = isEventBooked

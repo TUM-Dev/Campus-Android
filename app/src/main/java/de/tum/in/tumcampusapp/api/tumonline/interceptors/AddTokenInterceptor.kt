@@ -21,9 +21,9 @@ class AddTokenInterceptor(private val context: Context) : Interceptor {
         val request = chain.request()
         var url = request.url()
 
-        //Do not add any token for requesting a new token. This would result in a 404
-        if(url.encodedPath().contains("requestToken")) {
-            return chain.proceed(request);
+        // Do not add any token for requesting a new token. This would result in a 404
+        if (url.encodedPath().contains("requestToken")) {
+            return chain.proceed(request)
         }
 
         accessToken?.let {
@@ -36,5 +36,4 @@ class AddTokenInterceptor(private val context: Context) : Interceptor {
         val modifiedRequest = request.newBuilder().url(url).build()
         return chain.proceed(modifiedRequest)
     }
-
 }

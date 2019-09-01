@@ -22,5 +22,4 @@ object NotificationPresenter {
                 .from(context)
                 .notify(id, notification.notification)
     }
-
 }

@@ -54,5 +54,4 @@ interface EventDao {
             "WHERE kino.link =:eventLink " +
             "LIMIT 1")
     fun getKinoCountForEvent(eventLink: String): Int
-
 }

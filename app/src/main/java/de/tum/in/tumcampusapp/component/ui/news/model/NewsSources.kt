@@ -5,7 +5,6 @@ import androidx.room.PrimaryKey
 import androidx.room.RoomWarnings
 import com.google.gson.annotations.SerializedName
 
-
 /**
  * This class contains information about the source of a [News] item.
  *
@@ -17,13 +16,14 @@ import com.google.gson.annotations.SerializedName
  */
 @Entity(tableName = "news_sources")
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
-data class NewsSources(@PrimaryKey
-                       @SerializedName("source")
-                       var id: Int = -1,
-                       var title: String = "",
-                       var icon: String = "") {
+data class NewsSources(
+    @PrimaryKey
+    @SerializedName("source")
+    var id: Int = -1,
+    var title: String = "",
+    var icon: String = ""
+) {
 
     val isNewspread: Boolean
         get() = setOf(7, 8, 9, 13).contains(id)
-
 }

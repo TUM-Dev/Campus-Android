@@ -17,5 +17,4 @@ abstract class FragmentForSearchingTumOnline<T>(
     protected val apiClient: TUMOnlineClient by lazy {
         TUMOnlineClient.getInstance(requireContext())
     }
-
 }

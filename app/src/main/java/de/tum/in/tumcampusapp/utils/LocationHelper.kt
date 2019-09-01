@@ -11,5 +11,4 @@ object LocationHelper {
                 location.latitude, location.longitude, results)
         return results[0]
     }
-
 }

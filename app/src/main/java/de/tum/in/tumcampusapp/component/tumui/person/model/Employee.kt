@@ -17,32 +17,34 @@ import de.tum.`in`.tumcampusapp.R
  * corresponding request.
  */
 @Xml(name = "person")
-data class Employee(@PropertyElement(name = "geschlecht")
-                    val gender: String? = null,
-                    @PropertyElement(name = "obfuscated_id")
-                    val id: String = "",
-                    @PropertyElement(name = "vorname")
-                    val name: String = "",
-                    @PropertyElement(name = "familienname")
-                    val surname: String = "",
-                    @Element(name = "dienstlich")
-                    val businessContact: Contact? = null,
-                    @PropertyElement(name = "sprechstunde")
-                    val consultationHours: String = "",
-                    @PropertyElement
-                    val email: String = "",
-                    @Element(name = "gruppen")
-                    val groupList: GroupList? = null,
-                    @PropertyElement(name = "image_data")
-                    val imageData: String = "",
-                    @Element(name = "privat")
-                    val privateContact: Contact? = null,
-                    @Element(name = "raeume")
-                    val roomList: RoomList? = null,
-                    @Element(name = "telefon_nebenstellen")
-                    val telSubstationList: TelSubstationList? = null,
-                    @PropertyElement(name = "titel")
-                    val title: String = "") {
+data class Employee(
+    @PropertyElement(name = "geschlecht")
+    val gender: String? = null,
+    @PropertyElement(name = "obfuscated_id")
+    val id: String = "",
+    @PropertyElement(name = "vorname")
+    val name: String = "",
+    @PropertyElement(name = "familienname")
+    val surname: String = "",
+    @Element(name = "dienstlich")
+    val businessContact: Contact? = null,
+    @PropertyElement(name = "sprechstunde")
+    val consultationHours: String = "",
+    @PropertyElement
+    val email: String = "",
+    @Element(name = "gruppen")
+    val groupList: GroupList? = null,
+    @PropertyElement(name = "image_data")
+    val imageData: String = "",
+    @Element(name = "privat")
+    val privateContact: Contact? = null,
+    @Element(name = "raeume")
+    val roomList: RoomList? = null,
+    @Element(name = "telefon_nebenstellen")
+    val telSubstationList: TelSubstationList? = null,
+    @PropertyElement(name = "titel")
+    val title: String = ""
+) {
 
     val groups: List<Group>?
         get() = groupList?.groups
@@ -70,5 +72,4 @@ data class Employee(@PropertyElement(name = "geschlecht")
             return "$salutationWithName, $title"
         }
     }
-
 }

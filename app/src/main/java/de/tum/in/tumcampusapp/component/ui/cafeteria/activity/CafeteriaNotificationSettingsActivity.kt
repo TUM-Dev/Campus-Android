@@ -41,7 +41,8 @@ class CafeteriaNotificationSettingsActivity : BaseActivity(R.layout.activity_caf
      * Reloads the settings into the dailySchedule list.
      */
     private fun buildDailySchedule(
-            settings: CafeteriaNotificationSettings): List<CafeteriaNotificationTime> {
+        settings: CafeteriaNotificationSettings
+    ): List<CafeteriaNotificationTime> {
         return (DateTimeConstants.MONDAY until DateTimeConstants.SATURDAY)
                 .map {
                     val day = DateTime.now().withDayOfWeek(it)
@@ -50,5 +51,4 @@ class CafeteriaNotificationSettingsActivity : BaseActivity(R.layout.activity_caf
                 }
                 .toList()
     }
-
 }

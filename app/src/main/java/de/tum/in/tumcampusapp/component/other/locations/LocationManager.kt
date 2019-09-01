@@ -111,7 +111,7 @@ class LocationManager @Inject constructor(c: Context) {
      * @return The last location
      */
     fun getLastLocation(): Location? {
-        //Check Location permission for Android 6.0
+        // Check Location permission for Android 6.0
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return null
         }
@@ -151,7 +151,7 @@ class LocationManager @Inject constructor(c: Context) {
     fun getStation(): StationResult? {
         val campus = getCurrentCampus() ?: return null
 
-        //Try to find favorite station for current campus
+        // Try to find favorite station for current campus
         val station = Utils.getSetting(mContext, "card_stations_default_" + campus.short, "")
         if ("".equals(station)) {
             Stations.values().associateBy(Stations::station).values.find {
@@ -159,7 +159,7 @@ class LocationManager @Inject constructor(c: Context) {
             }?.let { return it.station }
         }
 
-        //Otherwise fallback to the default
+        // Otherwise fallback to the default
         return campus.defaultStation.station
     }
 
@@ -248,7 +248,7 @@ class LocationManager @Inject constructor(c: Context) {
      * @return false if permission check fails
      */
     fun getLocationUpdates(locationListener: LocationListener): Boolean {
-        //Check Location permission for Android 6.0
+        // Check Location permission for Android 6.0
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return false
         }
@@ -317,7 +317,6 @@ class LocationManager @Inject constructor(c: Context) {
                 val room = rooms[0].arch_id
                 return fetchRoomGeo(room)
             }
-
         } catch (e: Exception) {
             Utils.log(e)
         }
@@ -390,7 +389,6 @@ class LocationManager @Inject constructor(c: Context) {
             Martinsried(StationResult("LMU Martinsried", "1002557", Integer.MAX_VALUE)),
             GarchingTUM(StationResult("Garching-Technische Universität", "1002070", Integer.MAX_VALUE))
         }
-
 
         /**
          * Returns the "id" of the campus near the given location

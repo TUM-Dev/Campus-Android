@@ -12,5 +12,4 @@ class EmailContactItem(emailAddress: String) : AbstractContactItem(R.string.e_ma
         data = Uri.parse("mailto:")
         putExtra(Intent.EXTRA_EMAIL, arrayOf(value))
     }
-
 }

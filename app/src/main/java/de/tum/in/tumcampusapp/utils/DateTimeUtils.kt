@@ -13,7 +13,7 @@ object DateTimeUtils {
 
     @JvmStatic
     fun dateWithStartOfDay(): DateTime {
-        return DateTime.now().withTimeAtStartOfDay();
+        return DateTime.now().withTimeAtStartOfDay()
     }
 
     @JvmStatic
@@ -39,7 +39,7 @@ object DateTimeUtils {
         val timeInMillis = time.millis
         val now = DateTime.now().millis
 
-        //Catch future dates: current clock might be running behind
+        // Catch future dates: current clock might be running behind
         if (timeInMillis < now || timeInMillis <= 0) {
             return DateTimeUtils.formatTimeOrDay(time, context)
         }
@@ -146,7 +146,6 @@ object DateTimeUtils {
      */
     fun isSameDay(first: DateTime, second: DateTime) =
             first.year() == second.year() && first.dayOfYear() == second.dayOfYear()
-
 
     private val dateFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
 

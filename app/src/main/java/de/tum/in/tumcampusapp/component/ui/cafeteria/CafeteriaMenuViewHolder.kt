@@ -12,8 +12,8 @@ import kotlinx.android.synthetic.main.card_cafeteria_menu.view.*
 import org.joda.time.format.DateTimeFormat
 
 class CafeteriaMenuViewHolder(
-        itemView: View,
-        interactionListener: CardInteractionListener
+    itemView: View,
+    interactionListener: CardInteractionListener
 ) : CardViewHolder(itemView, interactionListener) {
 
     private lateinit var adapter: CafeteriaMenusAdapter
@@ -41,5 +41,4 @@ class CafeteriaMenuViewHolder(
 
         adapter.update(cafeteria.menus)
     }
-
 }

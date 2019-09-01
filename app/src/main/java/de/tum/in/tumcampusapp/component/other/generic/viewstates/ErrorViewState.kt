@@ -12,10 +12,10 @@ import de.tum.`in`.tumcampusapp.R
  * @param buttonTextResId The resource ID of the text that should be displayed on the button, defaults to "Retry"
  */
 sealed class ErrorViewState(
-        val iconResId: Int? = null,
-        val headerResId: Int? = null,
-        val messageResId: Int,
-        val buttonTextResId: Int = R.string.retry
+    val iconResId: Int? = null,
+    val headerResId: Int? = null,
+    val messageResId: Int,
+    val buttonTextResId: Int = R.string.retry
 )
 
 class EmptyViewState(iconResId: Int? = null, messageResId: Int) : ErrorViewState(

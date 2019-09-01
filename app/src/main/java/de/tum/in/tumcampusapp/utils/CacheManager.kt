@@ -56,8 +56,10 @@ class CacheManager @Inject constructor(private val context: Context) {
                 .getInstance(context)
                 .getPersonalLectures(CacheControl.USE_CACHE)
                 .enqueue(object : Callback<LecturesResponse> {
-                    override fun onResponse(call: Call<LecturesResponse>,
-                                            response: Response<LecturesResponse>) {
+                    override fun onResponse(
+                        call: Call<LecturesResponse>,
+                        response: Response<LecturesResponse>
+                    ) {
                         Utils.log("Successfully updated personal lectures in background")
                         val lectures = response.body()?.lectures ?: return
                         val chatRoomController = ChatRoomController(context)
@@ -74,5 +76,4 @@ class CacheManager @Inject constructor(private val context: Context) {
     fun clearCache() {
         cache.delete()
     }
-
 }

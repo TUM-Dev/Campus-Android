@@ -33,5 +33,4 @@ class NewsAdapter(
     }
 
     override fun getItemCount() = news.size
-
 }

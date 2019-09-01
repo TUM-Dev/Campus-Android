@@ -18,7 +18,6 @@ class ImageViewTouchFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_image_view_touch, container, false)
 
-
     fun loadImage(url: String, onImageLoadingError: () -> Unit) {
         Utils.log("room finder url: $url")
 
@@ -45,5 +44,4 @@ class ImageViewTouchFragment : Fragment() {
             return ImageViewTouchFragment()
         }
     }
-
 }

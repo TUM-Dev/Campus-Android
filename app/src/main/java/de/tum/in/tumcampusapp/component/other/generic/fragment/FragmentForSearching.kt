@@ -112,7 +112,7 @@ abstract class FragmentForSearching<T>(
             }
         })
 
-        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(newText: String?): Boolean {
                 onStartSearch()
                 return false
@@ -160,5 +160,4 @@ abstract class FragmentForSearching<T>(
     override fun onRefresh() {
         requestSearch(query.orEmpty())
     }
-
 }

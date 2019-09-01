@@ -63,7 +63,6 @@ class MVVWidget : AppWidgetProvider() {
             intent.action = BROADCAST_RELOAD_ALL_ALARM
             alarmManager.setRepeating(AlarmManager.RTC, 5000, UPDATE_ALARM_DELAY.toLong(), sender)
         }
-
     }
 
     /**
@@ -97,8 +96,12 @@ class MVVWidget : AppWidgetProvider() {
      *
      * @param appWidgetId the id of the widget to update
      */
-    private fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager,
-                                appWidgetId: Int, forceLoadData: Boolean) {
+    private fun updateAppWidget(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetId: Int,
+        forceLoadData: Boolean
+    ) {
         // Get the settings for this widget from the database
         val widgetDepartures = TransportController(context).getWidget(appWidgetId)
 
@@ -180,5 +183,4 @@ class MVVWidget : AppWidgetProvider() {
             return appWidgetManager.getAppWidgetIds(thisWidget)
         }
     }
-
 }

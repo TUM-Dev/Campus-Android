@@ -27,13 +27,11 @@ class GradeNotificationDeleteReceiver : BroadcastReceiver() {
 
     companion object {
 
-        private const val KEY_NEW_GRADES = "KEY_NEW_GRADES";
+        private const val KEY_NEW_GRADES = "KEY_NEW_GRADES"
 
         fun newIntent(context: Context, newGrades: List<String>): Intent {
             return Intent(context, GradeNotificationDeleteReceiver::class.java)
                     .putStringArrayListExtra(KEY_NEW_GRADES, newGrades as ArrayList<String>)
         }
-
     }
-
 }

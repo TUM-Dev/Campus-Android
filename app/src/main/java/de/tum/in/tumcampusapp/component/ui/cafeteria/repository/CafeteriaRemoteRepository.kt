@@ -8,8 +8,8 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class CafeteriaRemoteRepository @Inject constructor(
-        private val tumCabeClient: TUMCabeClient,
-        private val localRepository: CafeteriaLocalRepository
+    private val tumCabeClient: TUMCabeClient,
+    private val localRepository: CafeteriaLocalRepository
 ) {
 
     /**

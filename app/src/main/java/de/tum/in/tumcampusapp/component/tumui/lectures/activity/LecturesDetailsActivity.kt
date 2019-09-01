@@ -108,5 +108,4 @@ class LecturesDetailsActivity : ActivityForAccessingTumOnline<LectureDetailsResp
 
         appointmentsButton.isEnabled = true
     }
-
 }

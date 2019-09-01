@@ -28,5 +28,4 @@ sealed class NavItem(
         needsChatAccess: Boolean = false,
         hideForEmployees: Boolean = false
     ) : NavItem(titleRes, iconRes, needsTUMOAccess, needsChatAccess, hideForEmployees)
-
 }

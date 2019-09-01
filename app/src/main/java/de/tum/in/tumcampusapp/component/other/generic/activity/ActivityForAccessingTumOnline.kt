@@ -15,5 +15,4 @@ abstract class ActivityForAccessingTumOnline<T>(layoutId: Int) : ProgressActivit
     protected val apiClient: TUMOnlineClient by lazy {
         TUMOnlineClient.getInstance(this)
     }
-
 }

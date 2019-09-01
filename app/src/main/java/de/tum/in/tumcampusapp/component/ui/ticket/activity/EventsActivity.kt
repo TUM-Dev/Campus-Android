@@ -17,7 +17,4 @@ class EventsActivity : BaseActivity(R.layout.activity_events) {
                     .commit()
         }
     }
-
 }
-
-

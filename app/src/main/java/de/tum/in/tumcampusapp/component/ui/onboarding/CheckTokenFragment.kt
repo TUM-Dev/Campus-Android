@@ -119,5 +119,4 @@ class CheckTokenFragment : BaseFragment<Unit>(
     companion object {
         fun newInstance() = CheckTokenFragment()
     }
-
 }

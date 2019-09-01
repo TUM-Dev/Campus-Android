@@ -10,9 +10,10 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import kotlinx.android.synthetic.main.layout_card_lecture.view.*
 
-
 class NextLectureView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
     private val view = LayoutInflater.from(context).inflate(R.layout.layout_card_lecture, this, true)
@@ -39,5 +40,4 @@ class NextLectureView @JvmOverloads constructor(
         val activity = context as AppCompatActivity
         detailsFragment.show(activity.supportFragmentManager, null)
     }
-
 }

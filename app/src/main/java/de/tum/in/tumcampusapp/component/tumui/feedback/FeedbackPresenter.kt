@@ -31,9 +31,9 @@ import java.io.IOException
 import javax.inject.Inject
 
 class FeedbackPresenter @Inject constructor(
-        private val context: Context,
-        @LrzId override val lrzId: String,
-        private val tumCabeClient: TUMCabeClient
+    private val context: Context,
+    @LrzId override val lrzId: String,
+    private val tumCabeClient: TUMCabeClient
 ) : FeedbackContract.Presenter {
 
     private val compositeDisposable = CompositeDisposable()
@@ -182,8 +182,10 @@ class FeedbackPresenter @Inject constructor(
 
         view?.showProgressDialog()
         sendFeedbackCall.enqueue(object : Callback<FeedbackResult> {
-            override fun onResponse(call: Call<FeedbackResult>,
-                                    response: Response<FeedbackResult>) {
+            override fun onResponse(
+                call: Call<FeedbackResult>,
+                response: Response<FeedbackResult>
+            ) {
                 val result = response.body()
                 if (result == null || result.isSuccess) {
                     view?.showSendErrorDialog()
@@ -224,8 +226,8 @@ class FeedbackPresenter @Inject constructor(
         for (call in sendImagesCalls) {
             call.enqueue(object : Callback<FeedbackResult> {
                 override fun onResponse(
-                        call: Call<FeedbackResult>,
-                        response: Response<FeedbackResult>
+                    call: Call<FeedbackResult>,
+                    response: Response<FeedbackResult>
                 ) {
                     val result = response.body()
                     if (result == null || !result.isSuccess) {
@@ -326,5 +328,4 @@ class FeedbackPresenter @Inject constructor(
         const val PERMISSION_CAMERA = 14
         const val PERMISSION_FILES = 15
     }
-
 }

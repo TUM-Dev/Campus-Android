@@ -8,10 +8,11 @@ import java.security.*
  * Takes care of handling all unicode juggling and crypto algorithm selection.
  */
 class RSASigner(
-        /**
-         * A [PrivateKey] instance which will be used to generate the signature.
-         */
-        private val privateKey: PrivateKey) {
+    /**
+     * A [PrivateKey] instance which will be used to generate the signature.
+     */
+    private val privateKey: PrivateKey
+) {
 
     /**
      * Sign the message given as the parameter and return it as a base64 encoded
@@ -58,7 +59,6 @@ class RSASigner(
                 } catch (e: NoSuchAlgorithmException) {
                     throw AssertionError(e)
                 }
-
             }
     }
 }

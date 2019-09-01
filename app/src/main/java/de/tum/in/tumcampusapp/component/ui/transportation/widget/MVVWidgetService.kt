@@ -60,7 +60,5 @@ class MVVWidgetService : RemoteViewsService() {
         override fun getItemId(position: Int) = position.toLong()
 
         override fun hasStableIds() = true
-
     }
-
 }

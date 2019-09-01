@@ -5,11 +5,13 @@ import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyList
 /**
  * The model used to display contact infromation in barrier free page
  */
-data class BarrierFreeContact(var name: String = "",
-                              var telephone: String = "",
-                              var email: String = "",
-                              var faculty: String = "",
-                              var tumID: String = "") :
+data class BarrierFreeContact(
+    var name: String = "",
+    var telephone: String = "",
+    var email: String = "",
+    var faculty: String = "",
+    var tumID: String = ""
+) :
         SimpleStickyListHeadersAdapter.SimpleStickyListItem {
 
     val isValid: Boolean
@@ -17,7 +19,6 @@ data class BarrierFreeContact(var name: String = "",
 
     val hasTumID: Boolean
         get() = !(tumID == "null" || tumID == "")
-
 
     override fun getHeadName() = faculty
 

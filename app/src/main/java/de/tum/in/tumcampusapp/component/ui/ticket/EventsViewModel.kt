@@ -32,11 +32,11 @@ sealed class Result {
 }
 
 class EventsViewModel @Inject constructor(
-        private val eventsLocalRepository: EventsLocalRepository,
-        private val eventsRemoteRepository: EventsRemoteRepository,
-        private val ticketsLocalRepository: TicketsLocalRepository,
-        private val ticketsRemoteRepository: TicketsRemoteRepository,
-        eventType: EventType
+    private val eventsLocalRepository: EventsLocalRepository,
+    private val eventsRemoteRepository: EventsRemoteRepository,
+    private val ticketsLocalRepository: TicketsLocalRepository,
+    private val ticketsRemoteRepository: TicketsRemoteRepository,
+    eventType: EventType
 ) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
@@ -141,5 +141,4 @@ class EventsViewModel @Inject constructor(
     companion object {
         private const val ERROR_DURATION: Long = 4
     }
-
 }

@@ -47,5 +47,4 @@ class TransportNotificationProvider(context: Context) : NotificationProvider(con
 
         return InstantNotification(NotificationType.TRANSPORT, 0, notification)
     }
-
 }

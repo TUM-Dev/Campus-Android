@@ -45,8 +45,8 @@ import retrofit2.Response
 import java.net.UnknownHostException
 
 abstract class BaseFragment<T>(
-        @LayoutRes private val layoutId: Int,
-        @StringRes private val titleResId: Int
+    @LayoutRes private val layoutId: Int,
+    @StringRes private val titleResId: Int
 ) : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private var apiCall: Call<T>? = null
@@ -105,9 +105,9 @@ abstract class BaseFragment<T>(
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? = inflater.inflate(layoutId, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -407,5 +407,4 @@ abstract class BaseFragment<T>(
         }
         super.onDestroy()
     }
-
 }

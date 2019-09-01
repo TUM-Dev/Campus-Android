@@ -45,7 +45,6 @@ data class CafeteriaWithMenus(val id: Int) {
     // Cafeteria is typically opened from 11 to 14 ~= 3 hours
     val notificationDuration: Long
         get() = Period.hours(3).millis.toLong()
-
 }
 
 fun DateTime.isToday() = LocalDate.now() == LocalDate(this)

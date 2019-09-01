@@ -2,8 +2,6 @@ package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
 import android.os.Bundle
 
-import androidx.fragment.app.Fragment
-
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventsResponse
@@ -28,5 +26,4 @@ class CalendarActivity : ActivityForAccessingTumOnline<EventsResponse>(R.layout.
                     .commit()
         }
     }
-
 }

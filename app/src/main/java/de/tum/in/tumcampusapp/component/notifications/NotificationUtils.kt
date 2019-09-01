@@ -86,12 +86,15 @@ object NotificationUtils {
     }
 
     @TargetApi(Build.VERSION_CODES.O)
-    private fun createChannel(context: Context, id: String, nameResId: Int,
-                              descriptionResId: Int, importance: Int): NotificationChannel {
+    private fun createChannel(
+        context: Context,
+        id: String,
+        nameResId: Int,
+        descriptionResId: Int,
+        importance: Int
+    ): NotificationChannel {
         return NotificationChannel(id, context.getString(nameResId), importance).apply {
             description = context.getString(descriptionResId)
         }
     }
-
 }
-

@@ -74,7 +74,7 @@ class CafeteriaNotificationSettings(context: Context) {
                 .any { it }
 
         return if (didChangeTime) {
-            cafeteriaMenuManager.scheduleNotificationAlarms();
+            cafeteriaMenuManager.scheduleNotificationAlarms()
             true
         } else {
             false
@@ -107,7 +107,6 @@ class CafeteriaNotificationSettings(context: Context) {
 
             return INSTANCE!!
         }
-
     }
 
     /**
@@ -152,7 +151,5 @@ class CafeteriaNotificationSettings(context: Context) {
                     .withSecondOfMinute(0)
                     .withMillisOfSecond(0)
         }
-
     }
-
 }

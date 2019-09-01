@@ -310,7 +310,5 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         fun newInstance(
             key: String?
         ) = SettingsFragment().apply { arguments = bundleOf(ARG_PREFERENCE_ROOT to key) }
-
     }
-
 }

@@ -66,5 +66,4 @@ abstract class FragmentForLoadingInBackground<T>(
         loadingDisposable.dispose()
         super.onDestroy()
     }
-
 }

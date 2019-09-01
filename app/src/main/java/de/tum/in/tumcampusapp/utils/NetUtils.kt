@@ -16,9 +16,11 @@ object NetUtils {
         return hasCapability(internetCapability)
     }
 
-    private inline fun anyConnectedNetwork(context: Context,
-                                           condition: (NetworkCapabilities) -> Boolean = { true })
-            : Boolean {
+    private inline fun anyConnectedNetwork(
+        context: Context,
+        condition: (NetworkCapabilities) -> Boolean = { true }
+    ):
+            Boolean {
         val connectivityMgr = context.connectivityManager
 
         return connectivityMgr.allNetworks.asSequence().filter {

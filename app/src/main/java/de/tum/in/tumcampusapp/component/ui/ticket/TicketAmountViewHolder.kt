@@ -23,7 +23,7 @@ class TicketAmountViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     private var ticketAmount = 1
     private var ticketType = TicketType()
-    private var ticketTypePos = 0;
+    private var ticketTypePos = 0
     private var remainingTickets = 0
     private var minAmount = 1
     private var maxAmount = 1

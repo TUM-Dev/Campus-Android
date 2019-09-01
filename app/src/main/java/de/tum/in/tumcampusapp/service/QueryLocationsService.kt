@@ -42,8 +42,8 @@ class QueryLocationsService : JobIntentService() {
                 .also { roomLocationsDao.insert(*it.toTypedArray()) }
 
         // Do sync of google calendar if necessary
-        val shouldSyncCalendar = Utils.getSettingBool(this, Const.SYNC_CALENDAR, false)
-                && ContextCompat.checkSelfPermission(this, WRITE_CALENDAR) == PERMISSION_GRANTED
+        val shouldSyncCalendar = Utils.getSettingBool(this, Const.SYNC_CALENDAR, false) &&
+                ContextCompat.checkSelfPermission(this, WRITE_CALENDAR) == PERMISSION_GRANTED
         val syncManager = SyncManager(this)
         val needsSync = syncManager.needSync(Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)
 
@@ -75,7 +75,5 @@ class QueryLocationsService : JobIntentService() {
             JobIntentService.enqueueWork(context, QueryLocationsService::class.java,
                     Const.QUERY_LOCATIONS_SERVICE_JOB_ID, Intent())
         }
-
     }
-
 }

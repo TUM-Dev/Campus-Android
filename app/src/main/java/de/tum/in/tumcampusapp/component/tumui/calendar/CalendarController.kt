@@ -56,10 +56,8 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
     fun getFromDbBetweenDates(begin: DateTime, end: DateTime) =
             applyEventColors(calendarDao.getAllBetweenDates(begin, end))
 
-
     fun getFromDbNotCancelledBetweenDates(begin: DateTime, end: DateTime) =
             applyEventColors(calendarDao.getAllNotCancelledBetweenDates(begin, end))
-
 
     private fun applyEventColors(calendarItems: List<CalendarItem>): List<CalendarItem> {
         val provider = EventColorProvider(context)
@@ -101,7 +99,7 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
      * Add a lecture to the blacklist of a widget
      *
      * @param widgetId the Id of the widget
-     * @param lecture  the title of the lecture
+     * @param lecture the title of the lecture
      */
     fun addLectureToBlacklist(widgetId: Int, lecture: String) {
         widgetsTimetableBlacklistDao.insert(WidgetsTimetableBlacklist(widgetId, lecture))
@@ -111,7 +109,7 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
      * Remove a lecture from the blacklist of a widget
      *
      * @param widgetId the Id of the widget
-     * @param lecture  the title of the lecture
+     * @param lecture the title of the lecture
      */
     fun deleteLectureFromBlacklist(widgetId: Int, lecture: String) {
         widgetsTimetableBlacklistDao.delete(WidgetsTimetableBlacklist(widgetId, lecture))
@@ -259,5 +257,4 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
             }
         }
     }
-
 }

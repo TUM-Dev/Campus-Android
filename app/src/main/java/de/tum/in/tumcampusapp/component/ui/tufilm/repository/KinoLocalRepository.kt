@@ -9,7 +9,7 @@ import org.joda.time.DateTime
 import javax.inject.Inject
 
 class KinoLocalRepository @Inject constructor(
-        private val database: TcaDb
+    private val database: TcaDb
 ) {
 
     fun getLastSync() = database.syncDao().getSyncSince(Kino::class.java.name, TIME_TO_SYNC)
@@ -33,5 +33,4 @@ class KinoLocalRepository @Inject constructor(
     companion object {
         private const val TIME_TO_SYNC = 1800
     }
-
 }

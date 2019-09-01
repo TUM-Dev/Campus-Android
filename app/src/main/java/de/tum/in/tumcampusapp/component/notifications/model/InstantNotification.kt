@@ -10,7 +10,7 @@ import de.tum.`in`.tumcampusapp.component.notifications.persistence.Notification
  * @param notification The [Notification] that will be displayed to the user
  */
 class InstantNotification(
-        type: NotificationType,
-        id: Int,
-        notification: Notification
+    type: NotificationType,
+    id: Int,
+    notification: Notification
 ) : AppNotification(type, id, notification)

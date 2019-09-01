@@ -5,11 +5,10 @@ import de.tum.`in`.tumcampusapp.service.DownloadWorker
 import javax.inject.Inject
 
 class GradesDownloadAction @Inject constructor(
-        private val updater: GradesBackgroundUpdater
+    private val updater: GradesBackgroundUpdater
 ) : DownloadWorker.Action {
 
     override fun execute(cacheBehaviour: CacheControl) {
         updater.fetchGradesAndNotifyIfNecessary()
     }
-
 }

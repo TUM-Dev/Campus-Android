@@ -16,5 +16,4 @@ class NewsActivity : BaseActivity(R.layout.activity_news) {
                 .commit()
         }
     }
-
 }

@@ -30,10 +30,10 @@ class StudyRoomGroupManager(context: Context) {
             groups.forEach { group ->
                 group.rooms.forEach { room ->
                     // only insert rooms that have data
-                    if (room.code != ""
-                            && room.name != ""
-                            && room.buildingName != ""
-                            && room.id != -1) {
+                    if (room.code != "" &&
+                            room.name != "" &&
+                            room.buildingName != "" &&
+                            room.id != -1) {
                         roomsDao.insert(room)
                     }
                 }
@@ -46,5 +46,4 @@ class StudyRoomGroupManager(context: Context) {
     fun getAllStudyRoomsForGroup(groupId: Int): List<StudyRoom> {
         return roomsDao.getAll(groupId).sorted()
     }
-
 }

@@ -10,15 +10,17 @@ import java.io.IOException
 
 /**
  * A generic push notification received via our backend server
- * @param appContext    application context
- * @param type          the concrete type ID of the notification
- * @param confirmation  if the notification needs to be confirmed to the backend
+ * @param appContext application context
+ * @param type the concrete type ID of the notification
+ * @param confirmation if the notification needs to be confirmed to the backend
  */
-abstract class PushNotification(protected val appContext: Context,
-                                @PushNotificationType
-                                protected val type: Int,
-                                protected val notificationId: Int,
-                                private val confirmation: Boolean) {
+abstract class PushNotification(
+    protected val appContext: Context,
+    @PushNotificationType
+    protected val type: Int,
+    protected val notificationId: Int,
+    private val confirmation: Boolean
+) {
     protected val defaultIcon = R.drawable.ic_notification
 
     /**

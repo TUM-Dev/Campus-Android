@@ -17,5 +17,4 @@ interface NewsModule {
 
     @Binds
     fun bindNewsDownloadAction(impl: NewsDownloadAction): DownloadWorker.Action
-
 }

@@ -9,7 +9,6 @@ interface CafeteriaAPIService {
 
     @GET("exportDB.php?mensa_id=all")
     fun getMenus(
-            @Header("Cache-Control") cacheControl: String
+        @Header("Cache-Control") cacheControl: String
     ): Call<CafeteriaResponse>
-
 }

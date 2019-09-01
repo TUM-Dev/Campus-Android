@@ -1,6 +1,5 @@
 package de.tum.`in`.tumcampusapp.component.ui.chat
 
-
 import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.ViewModel
@@ -18,8 +17,8 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 class ChatMessageViewModel(
-        private val localRepository: ChatMessageLocalRepository,
-        private val remoteRepository: ChatMessageRemoteRepository
+    private val localRepository: ChatMessageLocalRepository,
+    private val remoteRepository: ChatMessageRemoteRepository
 ) : ViewModel() {
 
     fun markAsRead(room: Int) = localRepository.markAsRead(room)
@@ -32,12 +31,15 @@ class ChatMessageViewModel(
 
     fun getUnsent(): List<ChatMessage> = localRepository.getUnsent()
 
-    fun getUnsentInChatRoom(room: ChatRoom): List<ChatMessage>{
+    fun getUnsentInChatRoom(room: ChatRoom): List<ChatMessage> {
         return localRepository.getUnsentInChatRoom(room.id)
     }
 
-    fun getOlderMessages(room: ChatRoom, messageId: Long,
-                         verification: TUMCabeVerification): Observable<List<ChatMessage>> {
+    fun getOlderMessages(
+        room: ChatRoom,
+        messageId: Long,
+        verification: TUMCabeVerification
+    ): Observable<List<ChatMessage>> {
         return remoteRepository
                 .getMessages(room.id, messageId, verification)
                 .subscribeOn(Schedulers.io())
@@ -45,8 +47,10 @@ class ChatMessageViewModel(
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
-    fun getNewMessages(room: ChatRoom,
-                       verification: TUMCabeVerification): Observable<List<ChatMessage>> {
+    fun getNewMessages(
+        room: ChatRoom,
+        verification: TUMCabeVerification
+    ): Observable<List<ChatMessage>> {
         return remoteRepository
                 .getNewMessages(room.id, verification)
                 .subscribeOn(Schedulers.io())

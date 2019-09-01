@@ -16,5 +16,4 @@ class RoomFinderActivity : BaseActivity(R.layout.activity_roomfinder) {
                 .commit()
         }
     }
-
 }

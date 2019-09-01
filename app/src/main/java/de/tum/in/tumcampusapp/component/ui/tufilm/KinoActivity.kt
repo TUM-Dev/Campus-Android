@@ -56,6 +56,4 @@ class KinoActivity : ProgressActivity<Void>(R.layout.activity_kino) {
         kinoViewPager.adapter = KinoAdapter(supportFragmentManager, kinos)
         kinoViewPager.currentItem = startPosition
     }
-
 }
-

@@ -38,8 +38,10 @@ class NoInternetCard(context: Context) : StickyCard(CardManager.CARD_NO_INTERNET
 
     companion object {
 
-        fun inflateViewHolder(parent: ViewGroup,
-                              interactionListener: CardInteractionListener): CardViewHolder {
+        fun inflateViewHolder(
+            parent: ViewGroup,
+            interactionListener: CardInteractionListener
+        ): CardViewHolder {
             val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.card_no_internet, parent, false)
             return CardViewHolder(view, interactionListener)

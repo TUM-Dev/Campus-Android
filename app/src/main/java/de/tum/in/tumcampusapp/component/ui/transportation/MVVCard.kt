@@ -57,5 +57,4 @@ class MVVCard(context: Context, val station: StationResult, val departures: List
             return MVVCardViewHolder(view, interactionListener)
         }
     }
-
 }

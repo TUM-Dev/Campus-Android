@@ -28,6 +28,4 @@ constructor(private val context: Context, private val localRepository: EventsLoc
 
         return results
     }
-
 }
-

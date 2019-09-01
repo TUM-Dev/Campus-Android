@@ -20,6 +20,5 @@ interface ProvidesNotifications {
      *
      * @return The list of [AppNotification]s
      */
-    //fun getNotifications(): List<AppNotification>
-
+    // fun getNotifications(): List<AppNotification>
 }

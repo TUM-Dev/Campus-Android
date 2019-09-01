@@ -2,8 +2,10 @@ package de.tum.`in`.tumcampusapp.component.ui.chat.model
 
 import de.tum.`in`.tumcampusapp.R.string.name
 
-data class ChatRoom(var title: String = "",
-                    var semester: String = "ZZZ") {
+data class ChatRoom(
+    var title: String = "",
+    var semester: String = "ZZZ"
+) {
     var id: Int = 0
     var members = -1
 
@@ -26,5 +28,4 @@ data class ChatRoom(var title: String = "",
         @JvmField
         val MODE_UNJOINED = 0
     }
-
 }

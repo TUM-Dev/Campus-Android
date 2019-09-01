@@ -12,5 +12,4 @@ interface ProvidesCard {
      * Returns the list of [Card]s that should be displayed in the overview screen.
      */
     fun getCards(@NonNull cacheControl: CacheControl): List<Card>
-
 }

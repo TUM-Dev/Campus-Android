@@ -12,8 +12,8 @@ import de.tum.`in`.tumcampusapp.component.notifications.persistence.Notification
 import de.tum.`in`.tumcampusapp.utils.Const
 
 class GradesNotificationProvider(
-        context: Context,
-        private val newGrades: List<String>
+    context: Context,
+    private val newGrades: List<String>
 ) : NotificationProvider(context) {
 
     override fun getNotificationBuilder(): NotificationCompat.Builder {
@@ -54,5 +54,4 @@ class GradesNotificationProvider(
         private const val GROUP_KEY_GRADES = "de.tum.in.tumcampus.GRADES"
         private const val DELETE_REQUEST_CODE = 0
     }
-
 }

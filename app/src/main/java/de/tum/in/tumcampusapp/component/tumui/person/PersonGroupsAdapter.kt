@@ -29,7 +29,5 @@ class PersonGroupsAdapter(private val items: List<Group>) : RecyclerView.Adapter
             functionTextView.text = group.title
             orgTextView.text = group.org
         }
-
     }
-
 }
