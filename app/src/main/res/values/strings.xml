@@ -128,7 +128,7 @@
 
     <!-- Startup Wizard -->
     <string name="not_connected_to_tumonline">Not connected</string>
-    <string name="startup_wizard">Connect to TUMonline</string>
+    <string name="connect_to_tum_online">Connect to TUMonline</string>
     <string name="welcome_msg">To setup TUMonline access, you need to provide your <b>TUM ID</b>.\n\nThe ID has the format <i>ga12abc</i>.</string>
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
@@ -725,7 +725,7 @@ Signature: %5$s</string>
     <string name="next_lecture_hide">Hide</string>
     <string name="next_lecture_show_more">Show %d more …</string>
     <string name="show_in_calendar">Show in Calendar</string>
-  
+
     <string name="stripe_terms_of_service_checkbox">I agree to the terms of service.</string>
     <string name="stripe_terms_of_service_button">Terms of Service</string>
     <string name="tickets_available_here">Tickets available here!</string>
@@ -755,4 +755,5 @@ Signature: %5$s</string>
 
     // for opening hours
     <string name="language">en</string>
+    <string name="use_existing">Use existing</string>
 </resources>

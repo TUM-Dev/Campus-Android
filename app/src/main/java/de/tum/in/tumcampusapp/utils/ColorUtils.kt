@@ -14,5 +14,4 @@ object ColorUtils {
         hsv[2] *= INTENSITY_ADJUST
         return Color.HSVToColor(hsv)
     }
-
 }

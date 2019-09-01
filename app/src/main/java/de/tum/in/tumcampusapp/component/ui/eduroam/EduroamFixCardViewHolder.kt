@@ -12,8 +12,8 @@ import kotlinx.android.synthetic.main.card_eduroam_fix.view.*
 import org.jetbrains.anko.wifiManager
 
 class EduroamFixCardViewHolder(
-        itemView: View,
-        interactionListener: CardInteractionListener
+    itemView: View,
+    interactionListener: CardInteractionListener
 ) : CardViewHolder(itemView, interactionListener) {
 
     fun bind(eduroam: WifiConfiguration?, errors: List<String>) = with(itemView) {
@@ -41,5 +41,4 @@ class EduroamFixCardViewHolder(
         intent.putExtra(Const.EXTRA_FOREIGN_CONFIGURATION_EXISTS, true)
         context.startActivity(intent)
     }
-
 }

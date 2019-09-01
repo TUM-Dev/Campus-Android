@@ -48,8 +48,11 @@ class EventsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 .inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_events_list, container, false)
     }
 
@@ -114,5 +117,4 @@ class EventsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             }
         }
     }
-
 }

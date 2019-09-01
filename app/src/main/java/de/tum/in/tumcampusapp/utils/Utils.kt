@@ -64,8 +64,8 @@ object Utils {
     /**
      * Get a value from the default shared preferences
      *
-     * @param c          Context
-     * @param key        setting name
+     * @param c Context
+     * @param key setting name
      * @param defaultVal default value
      * @return setting value, defaultVal if undefined
      */
@@ -78,8 +78,8 @@ object Utils {
     /**
      * Get a value from the default shared preferences.
      *
-     * @param c          Context
-     * @param key        setting name
+     * @param c Context
+     * @param key setting name
      * @param defaultVal default value
      * @return setting value, defaultVal if undefined
      */
@@ -96,8 +96,8 @@ object Utils {
     /**
      * Get a value from the default shared preferences.
      *
-     * @param c          Context
-     * @param key        setting name
+     * @param c Context
+     * @param key setting name
      * @param defaultVal default value
      * @return setting value, defaultVal if undefined
      */
@@ -114,8 +114,8 @@ object Utils {
     /**
      * Get a value from the default shared preferences.
      *
-     * @param c          Context
-     * @param key        setting name
+     * @param c Context
+     * @param key setting name
      * @param defaultVal default value
      * @return setting value, defaultVal if undefined
      */
@@ -132,8 +132,8 @@ object Utils {
     /**
      * Get a value from the default shared preferences.
      *
-     * @param c         Context
-     * @param key       setting name
+     * @param c Context
+     * @param key setting name
      * @param classInst e.g. ChatMember.class
      * @return setting value
      */
@@ -147,8 +147,8 @@ object Utils {
     /**
      * Return the boolean value of a setting.
      *
-     * @param c          Context
-     * @param name       setting name
+     * @param c Context
+     * @param name setting name
      * @param defaultVal default value
      * @return true if setting was checked, else value
      */
@@ -187,7 +187,7 @@ object Utils {
      * If you can't give an exact error description simply use
      * [.log] instead.
      *
-     * @param e       Exception (source for message and stack trace)
+     * @param e Exception (source for message and stack trace)
      * @param message Additional information for exception message
      */
     @JvmStatic
@@ -203,7 +203,6 @@ object Utils {
         } catch (e1: IOException) {
             // there is a time to stop logging errors
         }
-
     }
 
     /**
@@ -276,7 +275,7 @@ object Utils {
     /**
      * Sets the value of a setting
      *
-     * @param c   Context
+     * @param c Context
      * @param key setting key
      */
     @JvmStatic
@@ -290,8 +289,8 @@ object Utils {
     /**
      * Sets the value of a setting
      *
-     * @param c     Context
-     * @param key   setting key
+     * @param c Context
+     * @param key setting key
      * @param value String value
      */
     @JvmStatic
@@ -305,7 +304,7 @@ object Utils {
     /**
      * Sets the value of a setting
      *
-     * @param c   Context
+     * @param c Context
      * @param key setting key
      */
     @JvmStatic
@@ -320,7 +319,7 @@ object Utils {
      * Shows a long [Toast] message.
      *
      * @param context The activity where the toast is shown
-     * @param msg     The toast message id
+     * @param msg The toast message id
      */
     @JvmStatic
     fun showToast(context: Context, msg: Int) {
@@ -331,7 +330,7 @@ object Utils {
      * Shows a long [Toast] message.
      *
      * @param context The activity where the toast is shown
-     * @param msg     The toast message
+     * @param msg The toast message
      */
     @JvmStatic
     fun showToast(context: Context, msg: CharSequence) {
@@ -424,8 +423,8 @@ object Utils {
 
     @JvmStatic
     fun isBackgroundServicePermitted(context: Context): Boolean {
-        return isBackgroundServiceEnabled(context)
-                && (isBackgroundServiceAlwaysEnabled(context) || NetUtils.isConnectedWifi(context))
+        return isBackgroundServiceEnabled(context) &&
+                (isBackgroundServiceAlwaysEnabled(context) || NetUtils.isConnectedWifi(context))
     }
 
     private fun isBackgroundServiceEnabled(context: Context): Boolean {
@@ -471,7 +470,7 @@ object Utils {
     /**
      * Creates a bitmap for a vector image (.xml) to be able to use it for notifications.
      *
-     * @param c   the current context
+     * @param c the current context
      * @param res the resource id of the drawable we want
      * @return bitmap of the xml vector graphic
      */

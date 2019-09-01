@@ -11,14 +11,16 @@ import java.io.Serializable
  */
 
 @Xml(name = "gruppe")
-data class Group(@PropertyElement(name = "beschreibung")
-                 var description: String = "",
-                 @PropertyElement(name = "kennung")
-                 var id: String = "",
-                 @PropertyElement(name = "org")
-                 var org: String = "",
-                 @PropertyElement(name = "titel")
-                 var title: String = "") :
+data class Group(
+    @PropertyElement(name = "beschreibung")
+    var description: String = "",
+    @PropertyElement(name = "kennung")
+    var id: String = "",
+    @PropertyElement(name = "org")
+    var org: String = "",
+    @PropertyElement(name = "titel")
+    var title: String = ""
+) :
         Serializable {
     companion object {
         private const val serialVersionUID = -3430225489964912473L

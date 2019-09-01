@@ -2,6 +2,8 @@ package de.tum.in.tumcampusapp.component.ui.chat;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -11,7 +13,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-import androidx.annotation.NonNull;
+import javax.inject.Inject;
+
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.api.tumonline.CacheControl;
@@ -41,6 +44,7 @@ public class ChatRoomController implements ProvidesCard {
      *
      * @param context Context
      */
+    @Inject
     public ChatRoomController(Context context) {
         mContext = context;
         TcaDb db = TcaDb.Companion.getInstance(context);

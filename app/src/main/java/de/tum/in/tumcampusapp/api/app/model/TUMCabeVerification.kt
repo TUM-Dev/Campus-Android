@@ -9,11 +9,12 @@ import java.security.SecureRandom
 import java.util.*
 
 data class TUMCabeVerification(
-        val signature: String,
-        val date: String,
-        val rand: String,
-        val device: String,
-        var data: Any? = null) {
+    val signature: String,
+    val date: String,
+    val rand: String,
+    val device: String,
+    var data: Any? = null
+) {
 
     companion object {
 
@@ -32,7 +33,5 @@ data class TUMCabeVerification(
 
             return TUMCabeVerification(signature, date, rand, deviceID, data)
         }
-
     }
-
 }

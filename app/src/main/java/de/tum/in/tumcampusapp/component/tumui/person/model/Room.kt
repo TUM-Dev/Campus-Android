@@ -11,15 +11,16 @@ import java.io.Serializable
  * corresponding request.
  */
 @Xml(name = "raum")
-data class Room(@PropertyElement(name = "ortsbeschreibung")
-                var location: String = "",
-                @PropertyElement(name = "kurz")
-                var number: String = "") : Serializable {
+data class Room(
+    @PropertyElement(name = "ortsbeschreibung")
+    var location: String = "",
+    @PropertyElement(name = "kurz")
+    var number: String = ""
+) : Serializable {
 
     fun getFullLocation() = "$location ($number)"
 
     companion object {
         private const val serialVersionUID = -5328581629897735774L
     }
-
 }

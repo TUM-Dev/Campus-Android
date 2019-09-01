@@ -6,7 +6,7 @@ import io.reactivex.Observable
 import javax.inject.Inject
 
 class EventsLocalRepository @Inject constructor(
-        private val database: TcaDb
+    private val database: TcaDb
 ) {
 
     fun storeEvents(events: List<Event>) {
@@ -28,5 +28,4 @@ class EventsLocalRepository @Inject constructor(
     fun removePastEventsWithoutTicket() {
         database.eventDao().removePastEventsWithoutTicket()
     }
-
 }

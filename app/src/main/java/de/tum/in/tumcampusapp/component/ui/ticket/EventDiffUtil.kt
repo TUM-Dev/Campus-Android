@@ -4,8 +4,8 @@ import androidx.recyclerview.widget.DiffUtil
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.EventItem
 
 class EventDiffUtil(
-        private val oldItems: List<EventItem>,
-        private val newItems: List<EventItem>
+    private val oldItems: List<EventItem>,
+    private val newItems: List<EventItem>
 ) : DiffUtil.Callback() {
 
     override fun getOldListSize() = oldItems.size

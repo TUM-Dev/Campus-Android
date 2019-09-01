@@ -13,5 +13,4 @@ interface DownloadComponent {
     fun inject(eventsFragment: EventsFragment)
     fun inject(startupActivity: StartupActivity)
     fun inject(gradeNotificationDeleteReceiver: GradeNotificationDeleteReceiver)
-
 }

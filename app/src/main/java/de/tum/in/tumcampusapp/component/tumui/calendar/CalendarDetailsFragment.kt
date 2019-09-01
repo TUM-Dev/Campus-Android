@@ -45,8 +45,11 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
 
     private var deleteApiCall: Call<DeleteEventResponse>? = null
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_calendar_details, container, false)
     }
 
@@ -136,8 +139,10 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
         val c = requireContext()
         deleteApiCall = TUMOnlineClient.getInstance(c).deleteEvent(eventId)
         deleteApiCall?.enqueue(object : Callback<DeleteEventResponse> {
-            override fun onResponse(call: Call<DeleteEventResponse>,
-                                    response: Response<DeleteEventResponse>) {
+            override fun onResponse(
+                call: Call<DeleteEventResponse>,
+                response: Response<DeleteEventResponse>
+            ) {
                 dismiss()
                 listener?.onEventDeleted(eventId)
                 deleteApiCall = null
@@ -173,9 +178,11 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     companion object {
 
         @JvmStatic
-        fun newInstance(calendarItemId: String,
-                        isShownInCalendarActivity: Boolean = true,
-                        listener: OnEventInteractionListener? = null): CalendarDetailsFragment {
+        fun newInstance(
+            calendarItemId: String,
+            isShownInCalendarActivity: Boolean = true,
+            listener: OnEventInteractionListener? = null
+        ): CalendarDetailsFragment {
             return CalendarDetailsFragment().apply {
                 this.arguments = Bundle().apply {
                     putString(CALENDAR_ID_PARAM, calendarItemId)
@@ -184,7 +191,6 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
                 this.listener = listener
             }
         }
-
     }
 
     override fun onDetach() {
@@ -196,5 +202,4 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
         fun onEventDeleted(eventId: String)
         fun onEditEvent(calendarItem: CalendarItem)
     }
-
 }

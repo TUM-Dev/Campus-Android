@@ -41,9 +41,12 @@ class CafeteriaDetailsSectionFragment : Fragment() {
                 .inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?, savedInstanceState: Bundle?): View?
-        = inflater.inflate(R.layout.fragment_cafeteriadetails_section, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? =
+        inflater.inflate(R.layout.fragment_cafeteriadetails_section, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val menuDate = arguments?.getSerializable(Const.DATE) as DateTime
@@ -81,5 +84,4 @@ class CafeteriaDetailsSectionFragment : Fragment() {
             return fragment
         }
     }
-
 }

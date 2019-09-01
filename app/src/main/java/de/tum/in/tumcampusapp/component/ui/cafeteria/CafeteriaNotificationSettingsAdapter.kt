@@ -14,8 +14,8 @@ import org.joda.time.format.DateTimeFormat
 import java.util.*
 
 class CafeteriaNotificationSettingsAdapter(
-        private val context: Context,
-        private val dailySchedule: List<CafeteriaNotificationTime>
+    private val context: Context,
+    private val dailySchedule: List<CafeteriaNotificationTime>
 ) : RecyclerView.Adapter<CafeteriaNotificationSettingsAdapter.ViewHolder>(), OnNotificationTimeChangedListener {
 
     private val settings = CafeteriaNotificationSettings.getInstance(context)
@@ -69,9 +69,11 @@ class CafeteriaNotificationSettingsAdapter(
         private val dayFormatter = DateTimeFormat.forPattern("EEEE").withLocale(Locale.getDefault())
         private val timeFormatter = DateTimeFormat.shortTime().withLocale(Locale.getDefault())
 
-        fun bind(time: CafeteriaNotificationTime,
-                 settings: CafeteriaNotificationSettings,
-                 listener: OnNotificationTimeChangedListener) = with(itemView) {
+        fun bind(
+            time: CafeteriaNotificationTime,
+            settings: CafeteriaNotificationSettings,
+            listener: OnNotificationTimeChangedListener
+        ) = with(itemView) {
             val dayOfWeekString = dayFormatter.print(time.weekday)
             weekdayTextView.text = dayOfWeekString
 
@@ -96,12 +98,10 @@ class CafeteriaNotificationSettingsAdapter(
                 listener.onCheckChanged(adapterPosition, isChecked)
             }
         }
-
     }
 
     companion object {
         private const val MIN_HOUR = 6
         private const val MAX_HOUR = 14
     }
-
 }

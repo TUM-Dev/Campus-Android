@@ -32,6 +32,7 @@ before_install:
 install:
 - "./gradlew dependencies"
 script:
+- "./gradlew ktlintCheck"
 - "./gradlew check"
 before_deploy:
 - cat "$TRAVIS_BUILD_DIR/app/build/reports/lint-results.xml"

@@ -76,5 +76,4 @@ class CafeteriaNotificationProvider(context: Context) : NotificationProvider(con
     companion object {
         private const val GROUP_KEY_CAFETERIA = "de.tum.in.tumcampus.CAFETERIA"
     }
-
 }

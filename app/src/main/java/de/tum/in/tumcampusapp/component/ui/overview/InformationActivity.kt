@@ -69,7 +69,7 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
     }
 
     private fun displayDebugInfo() {
-        //Setup showing of debug information
+        // Setup showing of debug information
         val sp = PreferenceManager.getDefaultSharedPreferences(this)
 
         try {

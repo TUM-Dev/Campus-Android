@@ -18,7 +18,6 @@ import de.tum.`in`.tumcampusapp.utils.Const.ADD_GEOFENCE_EXTRA
 import de.tum.`in`.tumcampusapp.utils.Const.GEOFENCING_SERVICE_JOB_ID
 import de.tum.`in`.tumcampusapp.utils.Utils
 
-
 /**
  * Service that receives Geofencing requests and registers them.
  */
@@ -80,7 +79,5 @@ class GeofencingRegistrationService : JobIntentService() {
                     .build()
             return intent.putExtra(ADD_GEOFENCE_EXTRA, geofencingRequest)
         }
-
     }
-
 }

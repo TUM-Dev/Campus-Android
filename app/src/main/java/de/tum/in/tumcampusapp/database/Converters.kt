@@ -20,7 +20,7 @@ class Converters {
     }
 
     @TypeConverter
-    fun toJson(location: FcmNotificationLocation): String = Gson().toJson(location);
+    fun toJson(location: FcmNotificationLocation): String = Gson().toJson(location)
 
     @TypeConverter
     fun toLocation(json: String): FcmNotificationLocation = Gson().fromJson(json, FcmNotificationLocation::class.java)

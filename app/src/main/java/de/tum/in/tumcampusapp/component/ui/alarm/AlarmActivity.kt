@@ -35,7 +35,7 @@ class AlarmActivity : BaseActivity(R.layout.activity_alarmdetails) {
 
     private fun processIntent(intent: Intent) {
         val notification = intent.getSerializableExtra("info") as FcmNotification
-        //FcmAlert alert = (FcmAlert) intent.getSerializableExtra("alert"); //Currently only has the silent flag, don't need it atm
+        // FcmAlert alert = (FcmAlert) intent.getSerializableExtra("alert"); //Currently only has the silent flag, don't need it atm
 
         Utils.log(notification.toString())
 

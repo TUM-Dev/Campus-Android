@@ -107,7 +107,7 @@ class ShowTicketActivity : BaseActivity(R.layout.activity_show_ticket) {
     private fun loadRedemptionStatus() {
         val disposable = ticketsRemoteRepo
                 .fetchTickets()
-                .subscribe( { handleTicketRefreshSuccess(it) }, { handleTicketRefreshFailure() } )
+                .subscribe({ handleTicketRefreshSuccess(it) }, { handleTicketRefreshFailure() })
         compositeDisposable.add(disposable)
     }
 
@@ -176,5 +176,3 @@ class ShowTicketActivity : BaseActivity(R.layout.activity_show_ticket) {
         super.onDestroy()
     }
 }
-
-

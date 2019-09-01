@@ -87,7 +87,7 @@ class CardAdapter(private val interactionListener: CardInteractionListener) : Re
         val card = mItems.removeAt(fromPosition)
         mItems.add(toValidatedPosition, card)
 
-        //Update card positions so they stay the same even when the app is closed
+        // Update card positions so they stay the same even when the app is closed
         for (index in mItems.indices) {
             mItems[index].position = index
         }
@@ -111,5 +111,4 @@ class CardAdapter(private val interactionListener: CardInteractionListener) : Re
             else -> toPosition
         }
     }
-
 }

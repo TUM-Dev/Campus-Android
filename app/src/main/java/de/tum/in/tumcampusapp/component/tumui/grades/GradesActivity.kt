@@ -23,7 +23,5 @@ class GradesActivity : BaseActivity(R.layout.activity_grades) {
 
         // TODO Eventually use Intent to BaseActivity with Intent extra
         fun newIntent(context: Context) = Intent(context, GradesActivity::class.java)
-
     }
-
 }

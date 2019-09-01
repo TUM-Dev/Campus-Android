@@ -34,7 +34,7 @@ import java.net.UnknownHostException
  */
 @Deprecated("Use BaseActivity and a suitable BaseFragment class")
 abstract class ProgressActivity<T>(
-        layoutId: Int
+    layoutId: Int
 ) : BaseActivity(layoutId), SwipeRefreshLayout.OnRefreshListener {
 
     private var apiCall: Call<T>? = null
@@ -340,5 +340,4 @@ abstract class ProgressActivity<T>(
             registered = false
         }
     }
-
 }

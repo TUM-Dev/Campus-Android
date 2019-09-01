@@ -58,5 +58,4 @@ class MensaRemoteViewFactory(private val applicationContext: Context) : RemoteVi
 
         private val PATTERN = Pattern.compile("\\([^\\)]+\\)")
     }
-
 }

@@ -62,5 +62,4 @@ class TuitionFeeManager(private val context: Context) : ProvidesCard, ProvidesNo
         val scheduler = NotificationScheduler(context)
         scheduler.scheduleAlarm(NotificationType.TUITION_FEES, notificationTime)
     }
-
 }

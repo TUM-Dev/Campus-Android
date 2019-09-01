@@ -57,5 +57,4 @@ class LecturesAppointmentsActivity : ActivityForAccessingTumOnline<LectureAppoin
 
         lvTerminList.adapter = LectureAppointmentsListAdapter(this, appointments)
     }
-
 }

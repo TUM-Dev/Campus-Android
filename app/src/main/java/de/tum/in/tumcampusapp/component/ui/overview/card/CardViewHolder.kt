@@ -14,8 +14,8 @@ import de.tum.`in`.tumcampusapp.component.other.settings.SettingsActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 
 open class CardViewHolder @JvmOverloads constructor(
-        itemView: View,
-        private val listener: CardInteractionListener? = null
+    itemView: View,
+    private val listener: CardInteractionListener? = null
 ) : RecyclerView.ViewHolder(itemView) {
 
     var currentCard: Card? = null
@@ -67,5 +67,4 @@ open class CardViewHolder @JvmOverloads constructor(
         currentCard?.hideAlways()
         currentCard?.discard()
     }
-
 }

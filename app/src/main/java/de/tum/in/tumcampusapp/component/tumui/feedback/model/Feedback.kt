@@ -20,19 +20,19 @@ import java.util.UUID
  */
 @Parcelize
 data class Feedback(
-        val id: String = UUID.randomUUID().toString(),
-        var topic: String = Const.FEEDBACK_TOPIC_GENERAL,
-        var message: String? = null,
-        var email: String? = null,
-        var includeEmail: Boolean = false,
-        var includeLocation: Boolean = false,
-        var latitude: Double? = null,
-        var longitude: Double? = null,
-        val osVersion: String = Build.VERSION.RELEASE,
-        val appVersion: String = BuildConfig.VERSION_NAME,
-        var imageCount: Int = 0,
-        @Transient // don't send this
-        var picturePaths: MutableList<String> = mutableListOf()
+    val id: String = UUID.randomUUID().toString(),
+    var topic: String = Const.FEEDBACK_TOPIC_GENERAL,
+    var message: String? = null,
+    var email: String? = null,
+    var includeEmail: Boolean = false,
+    var includeLocation: Boolean = false,
+    var latitude: Double? = null,
+    var longitude: Double? = null,
+    val osVersion: String = Build.VERSION.RELEASE,
+    val appVersion: String = BuildConfig.VERSION_NAME,
+    var imageCount: Int = 0,
+    @Transient // don't send this
+    var picturePaths: MutableList<String> = mutableListOf()
 ) : Parcelable {
 
     var location: Location?
@@ -48,5 +48,4 @@ data class Feedback(
             latitude = value?.latitude
             longitude = value?.longitude
         }
-
 }

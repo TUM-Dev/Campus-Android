@@ -24,5 +24,4 @@ class LecturesPersonalActivity : BaseActivity(R.layout.activity_lectures) {
                     .commit()
         }
     }
-
 }

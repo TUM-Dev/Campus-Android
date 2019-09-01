@@ -35,80 +35,80 @@ object DownloadModule {
     @JvmStatic
     @Provides
     fun provideAssetManager(
-            context: Context
+        context: Context
     ): AssetManager = context.assets
 
     @JvmStatic
     @Provides
     fun provideCafeteriaDownloadAction(
-            menuManager: CafeteriaMenuManager,
-            remoteRepository: CafeteriaRemoteRepository
+        menuManager: CafeteriaMenuManager,
+        remoteRepository: CafeteriaRemoteRepository
     ): CafeteriaDownloadAction = CafeteriaDownloadAction(menuManager, remoteRepository)
 
     @JvmStatic
     @Provides
     fun provideLocationImportAction(
-            context: Context,
-            database: TcaDb,
-            tumCabeClient: TUMCabeClient
+        context: Context,
+        database: TcaDb,
+        tumCabeClient: TUMCabeClient
     ): LocationImportAction = LocationImportAction(context, database, tumCabeClient)
 
     @JvmStatic
     @Provides
     fun provideEventsDownloadAction(
-            remoteRepository: EventsRemoteRepository
+        remoteRepository: EventsRemoteRepository
     ): EventsDownloadAction = EventsDownloadAction(remoteRepository)
 
     @JvmStatic
     @Provides
     fun provideFilmDownloadAction(
-            remoteRepository: KinoRemoteRepository
+        remoteRepository: KinoRemoteRepository
     ): FilmDownloadAction = FilmDownloadAction(remoteRepository)
 
     @JvmStatic
     @Provides
     fun provideIdUploadAction(
-            context: Context,
-            authManager: AuthenticationManager,
-            tumCabeClient: TUMCabeClient
+        context: Context,
+        authManager: AuthenticationManager,
+        tumCabeClient: TUMCabeClient
     ): IdUploadAction = IdUploadAction(context, authManager, tumCabeClient)
 
     @JvmStatic
     @Provides
     fun provideNewsDownloadAction(
-            newsController: NewsController
+        newsController: NewsController
     ): NewsDownloadAction = NewsDownloadAction(newsController)
 
     @JvmStatic
     @Provides
     fun provideTopNewsDownloadAction(
-            remoteRepository: TopNewsRemoteRepository
+        remoteRepository: TopNewsRemoteRepository
     ): TopNewsDownloadAction = TopNewsDownloadAction(remoteRepository)
 
     @JvmStatic
     @Provides
     fun provideUpdateNoteDownloadAction(
-            context: Context
+        context: Context
     ): UpdateNoteDownloadAction = UpdateNoteDownloadAction(context)
 
     @JvmStatic
     @Provides
     fun provideGradesDownloadAction(
-            updater: GradesBackgroundUpdater
+        updater: GradesBackgroundUpdater
     ): GradesDownloadAction = GradesDownloadAction(updater)
 
     @JvmStatic
     @Provides
     fun provideWorkerActions(
-            cafeteriaDownloadAction: CafeteriaDownloadAction,
-            locationImportAction: LocationImportAction,
-            eventsDownloadAction: EventsDownloadAction,
-            filmDownloadAction: FilmDownloadAction,
-            gradesDownloadAction: GradesDownloadAction,
-            idUploadAction: IdUploadAction,
-            newsDownloadAction: NewsDownloadAction,
-            topNewsDownloadAction: TopNewsDownloadAction,
-            updateNoteDownloadAction: UpdateNoteDownloadAction
+        cafeteriaDownloadAction: CafeteriaDownloadAction,
+        locationImportAction: LocationImportAction,
+        eventsDownloadAction: EventsDownloadAction,
+        filmDownloadAction: FilmDownloadAction,
+        gradesDownloadAction: GradesDownloadAction,
+        idUploadAction: IdUploadAction,
+        newsDownloadAction: NewsDownloadAction,
+        topNewsDownloadAction: TopNewsDownloadAction,
+        updateNoteDownloadAction: UpdateNoteDownloadAction
     ): DownloadWorker.WorkerActions = DownloadWorker.WorkerActions(
             cafeteriaDownloadAction,
             locationImportAction,
@@ -120,5 +120,4 @@ object DownloadModule {
             topNewsDownloadAction,
             updateNoteDownloadAction
     )
-
 }

@@ -22,9 +22,9 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.tryOrNull
 
 class UpdatePushNotification(
-        payload: String,
-        appContext: Context,
-        notification: Int
+    payload: String,
+    appContext: Context,
+    notification: Int
 ) : PushNotification(appContext, UPDATE, notification, true) {
 
     private val data: FcmUpdate? = Gson().fromJson(payload, FcmUpdate::class.java)
@@ -35,9 +35,9 @@ class UpdatePushNotification(
         }
 
     init {
-        //if (BuildConfig.VERSION_CODE < data.packageVersion) {
-        //TODO(kordianbruck): self deactivate, if we actually send this packageVersion fom the server
-        //}
+        // if (BuildConfig.VERSION_CODE < data.packageVersion) {
+        // TODO(kordianbruck): self deactivate, if we actually send this packageVersion fom the server
+        // }
     }
 
     /**

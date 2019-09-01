@@ -10,8 +10,8 @@ import de.tum.`in`.tumcampusapp.utils.addCompoundDrawablesWithIntrinsicBounds
 import kotlinx.android.synthetic.main.card_next_lecture_item.view.*
 
 class NextLectureCardViewHolder(
-        itemView: View,
-        interactionListener: CardInteractionListener
+    itemView: View,
+    interactionListener: CardInteractionListener
 ) : CardViewHolder(itemView, interactionListener) {
 
     private var isExpanded = false
@@ -60,5 +60,4 @@ class NextLectureCardViewHolder(
     private fun showLecture(lecture: NextLectureCard.CardCalendarItem) = with(itemView) {
         lectureContainer1.setLecture(lecture)
     }
-
 }

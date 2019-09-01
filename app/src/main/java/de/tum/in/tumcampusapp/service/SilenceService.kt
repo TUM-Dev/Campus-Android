@@ -55,7 +55,7 @@ class SilenceService : JobIntentService() {
     }
 
     override fun onHandleWork(intent: Intent) {
-        //Abort, if the settingsPrefix changed
+        // Abort, if the settingsPrefix changed
         if (!Utils.getSettingBool(this, Const.SILENCE_SERVICE, false)) {
             // Don't schedule a new run, since the service is disabled
             return
@@ -170,7 +170,5 @@ class SilenceService : JobIntentService() {
             val intent = Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
             context.startActivity(intent)
         }
-
     }
-
 }

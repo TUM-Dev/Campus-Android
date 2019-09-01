@@ -27,5 +27,4 @@ class CheckTokenInterceptor(private val context: Context) : Interceptor {
 
         return chain.proceed(request)
     }
-
 }

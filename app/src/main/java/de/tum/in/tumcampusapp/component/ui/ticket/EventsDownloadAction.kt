@@ -6,11 +6,10 @@ import de.tum.`in`.tumcampusapp.service.DownloadWorker
 import javax.inject.Inject
 
 class EventsDownloadAction @Inject constructor(
-        private val eventsRemoteRepository: EventsRemoteRepository
+    private val eventsRemoteRepository: EventsRemoteRepository
 ) : DownloadWorker.Action {
 
     override fun execute(cacheBehaviour: CacheControl) {
         eventsRemoteRepository.fetchEventsAndTickets()
     }
-
 }

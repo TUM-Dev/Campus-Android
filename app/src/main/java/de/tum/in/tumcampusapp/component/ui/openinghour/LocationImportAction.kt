@@ -13,10 +13,10 @@ import javax.inject.Inject
  * Import default location and opening hours
  */
 class LocationImportAction @Inject constructor(
-        private val context: Context,
-        private val database: TcaDb,
-        private val tumCabeClient: TUMCabeClient
-): DownloadWorker.Action {
+    private val context: Context,
+    private val database: TcaDb,
+    private val tumCabeClient: TUMCabeClient
+) : DownloadWorker.Action {
 
     @Throws(IOException::class)
     override fun execute(cacheBehaviour: CacheControl) {
@@ -24,5 +24,4 @@ class LocationImportAction @Inject constructor(
         database.locationDao().removeCache()
         database.locationDao().replaceInto(openingHours)
     }
-
 }

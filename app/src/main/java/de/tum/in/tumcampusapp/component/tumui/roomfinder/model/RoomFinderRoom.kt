@@ -9,12 +9,12 @@ import java.io.Serializable
  * @param name This is the campus name
  */
 data class RoomFinderRoom(
-        var campus: String = "",
-        var address: String = "",
-        var info: String = "",
-        var arch_id: String = "",
-        var room_id: String = "",
-        private val name: String = ""
+    var campus: String = "",
+    var address: String = "",
+    var info: String = "",
+    var arch_id: String = "",
+    var room_id: String = "",
+    private val name: String = ""
 ) : SimpleStickyListHeadersAdapter.SimpleStickyListItem, Serializable {
 
     private val formattedName: String

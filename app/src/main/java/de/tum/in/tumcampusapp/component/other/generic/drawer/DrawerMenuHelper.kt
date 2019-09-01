@@ -147,7 +147,5 @@ class DrawerMenuHelper(
                 NavItem.ActivityDestination(R.string.about_tca, R.drawable.ic_action_info_black, InformationActivity::class.java),
                 NavItem.ActivityDestination(R.string.settings, R.drawable.ic_outline_settings_24px, SettingsActivity::class.java)
         )
-
     }
-
 }

@@ -4,34 +4,19 @@
     package="de.tum.in.tumcampusapp"
     android:installLocation="auto"
     tools:ignore="UnusedAttribute">
-
     <!-- Standard access rights -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <!-- For google calendar synchronisation -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- For google calendar synchronisation -->
     <uses-permission android:name="android.permission.READ_CALENDAR" />
-    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
-
-    <!-- To add searched person to contact list -->
-    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
-
-    <!-- For location services -->
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" /> <!-- To add searched person to contact list -->
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" /> <!-- For location services -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
-    <!-- For automatically setting up eduroam -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- For automatically setting up eduroam -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-
-    <!-- FCM requires a Google account. -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-
-    <!-- Allow vibration for chat messages -->
-    <uses-permission android:name="android.permission.VIBRATE" />
-
-    <!-- As AndroidLint suggests: We do not necessarily need camera access -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- FCM requires a Google account. -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" /> <!-- Allow vibration for chat messages -->
+    <uses-permission android:name="android.permission.VIBRATE" /> <!-- As AndroidLint suggests: We do not necessarily need camera access -->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -43,19 +28,13 @@
         android:required="false" />
     <uses-feature
         android:name="android.hardware.location.gps"
-        android:required="false" />
-
-    <!-- For QR code scanner -->
-    <uses-permission android:name="android.permission.CAMERA" />
-
-    <!-- To start the Silence and Background service on Boot -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
-    <!-- To potentially change the Do Not Disturb mode -->
-    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
-
-    <!-- Do not collect crashes by default -->
-    <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" />
+        android:required="false" /> <!-- For QR code scanner -->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- To start the Silence and Background service on Boot -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- To potentially change the Do Not Disturb mode -->
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" /> <!-- Do not collect crashes by default -->
+    <meta-data
+        android:name="firebase_crashlytics_collection_enabled"
+        android:value="false" />
 
     <application
         android:name=".App"
@@ -67,6 +46,7 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="false"
         android:theme="@style/AppTheme">
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -364,35 +344,14 @@
                 android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
-            android:name=".component.ui.onboarding.WizNavStartActivity"
+            android:name=".component.ui.onboarding.OnboardingActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/startup_wizard"
-            android:parentActivityName=".component.ui.overview.MainActivity"
+            android:label="@string/connect_to_tum_online"
+            android:parentActivityName=".component.other.generic.activity.BaseNavigationActivity"
             android:theme="@style/AppTheme.NoDrawerLayout">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
-        </activity>
-        <activity
-            android:name=".component.ui.onboarding.WizNavCheckTokenActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/startup_wizard"
-            android:parentActivityName=".component.ui.onboarding.WizNavStartActivity"
-            android:theme="@style/AppTheme.NoDrawerLayout">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.onboarding.WizNavStartActivity" />
-        </activity>
-        <activity
-            android:name=".component.ui.onboarding.WizNavExtrasActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/startup_wizard"
-            android:parentActivityName=".component.ui.onboarding.WizNavCheckTokenActivity"
-            android:theme="@style/AppTheme.NoDrawerLayout"
-            android:windowSoftInputMode="stateHidden">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.onboarding.WizNavCheckTokenActivity" />
+                android:value=".component.other.generic.activity.BaseNavigationActivity" />
         </activity>
         <activity
             android:name=".component.tumui.calendar.CalendarActivity"
@@ -485,9 +444,7 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.chat.activity.ChatActivity" />
-        </activity>
-
-        <!-- receiver for the mensaWidget -->
+        </activity> <!-- receiver for the mensaWidget -->
         <receiver
             android:name=".component.ui.cafeteria.widget.MensaWidget"
             android:label="@string/mensa_widget">
@@ -502,10 +459,7 @@
 
         <service
             android:name=".service.MensaWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS" />
-
-        <!-- receiver for the MVVWidget -->
-
+            android:permission="android.permission.BIND_REMOTEVIEWS" /> <!-- receiver for the MVVWidget -->
         <receiver
             android:name=".component.ui.transportation.widget.MVVWidget"
             android:label="@string/mvv_widget">
@@ -542,10 +496,7 @@
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
-        </activity>
-
-        <!-- receiver for the TimetableWidget -->
-
+        </activity> <!-- receiver for the TimetableWidget -->
         <receiver
             android:name=".component.tumui.calendar.widget.TimetableWidget"
             android:label="@string/timetable_widget">
@@ -573,9 +524,7 @@
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
-        </activity>
-
-        <!-- Used to restart alarm when device has been restarted -->
+        </activity> <!-- Used to restart alarm when device has been restarted -->
         <receiver android:name=".service.StartSyncReceiver">
             <intent-filter>
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
@@ -597,9 +546,9 @@
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".service.FcmReceiverService"
-            android:stopWithTask="false"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            android:stopWithTask="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -680,12 +629,9 @@
                 android:value=".component.ui.ticket.activity.StripePaymentActivity" />
         </activity>
 
-        <receiver android:name="de.tum.in.tumcampusapp.component.notifications.receivers.NotificationReceiver" />
-
-        <receiver android:name="de.tum.in.tumcampusapp.component.notifications.receivers.NotificationAlarmReceiver" />
-
+        <receiver android:name=".component.notifications.receivers.NotificationReceiver" />
+        <receiver android:name=".component.notifications.receivers.NotificationAlarmReceiver" />
         <receiver android:name=".component.tumui.grades.GradeNotificationDeleteReceiver" />
-
     </application>
 
 </manifest>

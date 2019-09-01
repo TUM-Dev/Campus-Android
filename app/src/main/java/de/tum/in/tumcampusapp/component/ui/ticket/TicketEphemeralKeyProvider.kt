@@ -12,17 +12,22 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-class TicketEphemeralKeyProvider(private val context: Context,
-                                 private val onStringResponse: (String) -> Unit
+class TicketEphemeralKeyProvider(
+    private val context: Context,
+    private val onStringResponse: (String) -> Unit
 ) : EphemeralKeyProvider {
 
-    override fun createEphemeralKey(@Size(min = 4) apiVersion: String,
-                                    keyUpdateListener: EphemeralKeyUpdateListener) {
+    override fun createEphemeralKey(
+        @Size(min = 4) apiVersion: String,
+        keyUpdateListener: EphemeralKeyUpdateListener
+    ) {
         try {
             TUMCabeClient.getInstance(context).retrieveEphemeralKey(context, apiVersion,
                     object : Callback<HashMap<String, Any>> {
-                        override fun onResponse(call: Call<HashMap<String, Any>>,
-                                                response: Response<HashMap<String, Any>>) {
+                        override fun onResponse(
+                            call: Call<HashMap<String, Any>>,
+                            response: Response<HashMap<String, Any>>
+                        ) {
                             val responseBody = response.body()
                             if (responseBody != null) {
                                 val id = responseBody.toString()
@@ -38,7 +43,5 @@ class TicketEphemeralKeyProvider(private val context: Context,
         } catch (e: NoPrivateKey) {
             Utils.log(e)
         }
-
     }
-
 }

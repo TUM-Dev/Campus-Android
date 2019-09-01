@@ -11,5 +11,4 @@ class MobilePhoneContactItem(text: String) : AbstractContactItem(R.string.mobile
         val uri = Uri.parse("tel:$value")
         return Intent(Intent.ACTION_DIAL, uri)
     }
-
 }

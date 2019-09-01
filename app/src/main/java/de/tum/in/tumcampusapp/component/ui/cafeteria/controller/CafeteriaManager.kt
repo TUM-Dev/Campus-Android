@@ -89,5 +89,4 @@ class CafeteriaManager @Inject constructor(private val context: Context) : Provi
         cafeteria.menuDates = localRepository.getAllMenuDates()
         return localRepository.getCafeteriaMenus(cafeteriaId, cafeteria.nextMenuDate)
     }
-
 }

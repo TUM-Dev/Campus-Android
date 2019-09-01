@@ -12,8 +12,8 @@ import org.joda.time.DateTime
  * @param time The timestamp at which the [Notification] should be displayed
  */
 class FutureNotification(
-        type: NotificationType,
-        id: Int,
-        notification: Notification,
-        val time: DateTime
+    type: NotificationType,
+    id: Int,
+    notification: Notification,
+    val time: DateTime
 ) : AppNotification(type, id, notification)

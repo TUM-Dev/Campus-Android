@@ -12,9 +12,9 @@ import javax.inject.Inject
  * Asks to verify private key, uploads fcm token and obfuscated ids (if missing)
  */
 class IdUploadAction @Inject constructor(
-        private val context: Context,
-        private val authManager: AuthenticationManager,
-        private val tumCabeClient: TUMCabeClient
+    private val context: Context,
+    private val authManager: AuthenticationManager,
+    private val tumCabeClient: TUMCabeClient
 ) : DownloadWorker.Action {
 
     override fun execute(cacheBehaviour: CacheControl) {
@@ -45,5 +45,4 @@ class IdUploadAction @Inject constructor(
         // upload obfuscated ids
         authManager.uploadObfuscatedIds(uploadStatus)
     }
-
 }

@@ -20,12 +20,14 @@ import java.util.*
  * corresponding request.
  */
 @Xml(name = "row")
-data class Tuition(@PropertyElement(name = "frist", converter = DateTimeConverter::class)
-                   val deadline: DateTime,
-                   @PropertyElement(name = "semester_bezeichnung")
-                   val semester: String,
-                   @PropertyElement(name = "soll", converter = FloatConverter::class)
-                   val amount: Float) {
+data class Tuition(
+    @PropertyElement(name = "frist", converter = DateTimeConverter::class)
+    val deadline: DateTime,
+    @PropertyElement(name = "semester_bezeichnung")
+    val semester: String,
+    @PropertyElement(name = "soll", converter = FloatConverter::class)
+    val amount: Float
+) {
 
     fun getIntent(context: Context): Intent = Intent(context, TuitionFeesActivity::class.java)
 
@@ -40,5 +42,4 @@ data class Tuition(@PropertyElement(name = "frist", converter = DateTimeConverte
             context.getString(R.string.not_available)
         }
     }
-
 }

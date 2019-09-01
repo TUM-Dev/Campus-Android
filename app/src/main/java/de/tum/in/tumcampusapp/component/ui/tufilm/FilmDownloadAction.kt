@@ -6,11 +6,10 @@ import de.tum.`in`.tumcampusapp.service.DownloadWorker
 import javax.inject.Inject
 
 class FilmDownloadAction @Inject constructor(
-        private val kinoRemoteRepository: KinoRemoteRepository
+    private val kinoRemoteRepository: KinoRemoteRepository
 ) : DownloadWorker.Action {
 
     override fun execute(cacheBehaviour: CacheControl) {
         kinoRemoteRepository.fetchKinos(cacheBehaviour == CacheControl.BYPASS_CACHE)
     }
-
 }

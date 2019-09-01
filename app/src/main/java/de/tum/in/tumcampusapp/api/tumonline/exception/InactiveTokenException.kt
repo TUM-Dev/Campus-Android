@@ -6,5 +6,4 @@ class InactiveTokenException : InterruptedIOException() {
 
     override val message: String?
         get() = "The user’s access token is inactive"
-
 }

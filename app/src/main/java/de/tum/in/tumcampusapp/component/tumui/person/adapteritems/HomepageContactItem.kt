@@ -10,5 +10,4 @@ class HomepageContactItem(url: String) : AbstractContactItem(R.string.homepage, 
     override fun getIntent(context: Context) = Intent(Intent.ACTION_VIEW).apply {
         data = Uri.parse(value)
     }
-
 }

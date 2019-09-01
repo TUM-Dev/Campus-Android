@@ -14,7 +14,7 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import kotlinx.android.synthetic.main.person_contact_item.view.*
 
 class PersonContactItemsAdapter(
-        private val items: List<AbstractContactItem>
+    private val items: List<AbstractContactItem>
 ) : RecyclerView.Adapter<PersonContactItemsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -64,7 +64,5 @@ class PersonContactItemsAdapter(
                 Utils.showToast(context, R.string.action_cant_be_performed)
             }
         }
-
     }
-
 }

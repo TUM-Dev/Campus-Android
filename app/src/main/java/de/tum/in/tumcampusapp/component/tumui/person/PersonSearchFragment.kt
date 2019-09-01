@@ -89,5 +89,4 @@ class PersonSearchFragment : FragmentForSearchingTumOnline<PersonList>(
     companion object {
         fun newInstance() = PersonSearchFragment()
     }
-
 }

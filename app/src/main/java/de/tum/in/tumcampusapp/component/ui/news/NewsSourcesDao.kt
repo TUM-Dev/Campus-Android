@@ -1,6 +1,5 @@
 package de.tum.`in`.tumcampusapp.component.ui.news
 
-
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -25,5 +24,4 @@ interface NewsSourcesDao {
 
     @Query("DELETE FROM news_sources")
     fun flush()
-
 }

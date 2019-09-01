@@ -8,7 +8,7 @@ import de.tum.`in`.tumcampusapp.database.TcaDb
 import javax.inject.Inject
 
 class TicketsLocalRepository @Inject constructor(
-        private val database: TcaDb
+    private val database: TcaDb
 ) {
     fun storeTickets(tickets: List<Ticket>) {
         insert(*tickets.toTypedArray())
@@ -29,5 +29,4 @@ class TicketsLocalRepository @Inject constructor(
     fun getTicketCount(event: Event): Int {
         return database.ticketDao().getTicketCountForEvent(event.id)
     }
-
 }

@@ -13,5 +13,4 @@ enum class NotificationType(val id: Int) {
         private val map = NotificationType.values().associateBy(NotificationType::id)
         fun fromId(id: Long) = map[id.toInt()]
     }
-
 }

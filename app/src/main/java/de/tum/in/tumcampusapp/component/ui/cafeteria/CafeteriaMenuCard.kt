@@ -76,5 +76,4 @@ class CafeteriaMenuCard(context: Context, private val cafeteria: CafeteriaWithMe
             return CafeteriaMenuViewHolder(view, interactionListener)
         }
     }
-
 }

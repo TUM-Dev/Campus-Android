@@ -6,5 +6,4 @@ class UnknownErrorException : InterruptedIOException() {
 
     override val message: String?
         get() = "Unknown Exception..."
-
 }

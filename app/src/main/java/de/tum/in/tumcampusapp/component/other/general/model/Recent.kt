@@ -6,6 +6,8 @@ import androidx.room.RoomWarnings
 
 @Entity
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
-data class Recent(@PrimaryKey
-                  var name: String = "",
-                  var type: Int = -1)
+data class Recent(
+    @PrimaryKey
+    var name: String = "",
+    var type: Int = -1
+)

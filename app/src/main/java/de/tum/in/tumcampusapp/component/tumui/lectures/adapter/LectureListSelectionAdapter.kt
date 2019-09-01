@@ -15,9 +15,9 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import java.lang.Long.parseLong
 
 class LectureListSelectionAdapter(
-        context: Context,
-        private val calendarItems: List<CalendarItem>,
-        private val appWidgetId: Int
+    context: Context,
+    private val calendarItems: List<CalendarItem>,
+    private val appWidgetId: Int
 ) : BaseAdapter(), CompoundButton.OnCheckedChangeListener {
 
     private val calendarController: CalendarController = CalendarController(context)

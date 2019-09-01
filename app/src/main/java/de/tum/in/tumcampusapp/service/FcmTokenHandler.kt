@@ -119,5 +119,4 @@ object FcmTokenHandler {
             sendTokenToBackend(context, regId)
         }
     }
-
 }

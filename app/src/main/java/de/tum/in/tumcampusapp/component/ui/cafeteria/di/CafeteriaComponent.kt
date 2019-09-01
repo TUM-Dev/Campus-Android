@@ -19,5 +19,4 @@ interface CafeteriaModule {
 
     @Binds
     fun bindCafeteriaDownloadAction(impl: CafeteriaDownloadAction): DownloadWorker.Action
-
 }

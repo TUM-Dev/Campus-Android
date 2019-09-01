@@ -131,5 +131,4 @@ class NewsFragment : FragmentForDownloadingExternal(
     companion object {
         fun newInstance() = NewsFragment()
     }
-
 }

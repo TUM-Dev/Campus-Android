@@ -45,15 +45,15 @@ import retrofit2.Response
 import java.net.UnknownHostException
 
 abstract class BaseFragment<T>(
-        @LayoutRes private val layoutId: Int,
-        @StringRes private val titleResId: Int
+    @LayoutRes private val layoutId: Int,
+    @StringRes private val titleResId: Int
 ) : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private var apiCall: Call<T>? = null
     private var hadSuccessfulRequest = false
 
     private val toolbar: Toolbar?
-        get() = requireActivity().findViewById<Toolbar?>(R.id.main_toolbar)
+        get() = requireActivity().findViewById<Toolbar?>(R.id.toolbar)
 
     private val contentView: ViewGroup by lazy {
         requireActivity().findViewById<ViewGroup>(android.R.id.content).getChildAt(0) as ViewGroup
@@ -105,9 +105,9 @@ abstract class BaseFragment<T>(
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? = inflater.inflate(layoutId, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -407,5 +407,4 @@ abstract class BaseFragment<T>(
         }
         super.onDestroy()
     }
-
 }

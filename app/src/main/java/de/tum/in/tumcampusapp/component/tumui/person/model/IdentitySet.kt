@@ -10,5 +10,4 @@ data class IdentitySet(@Element val ids: List<Identity>) {
             if (ids.isEmpty())
                 "null"
             else ids[0].toString()
-
 }

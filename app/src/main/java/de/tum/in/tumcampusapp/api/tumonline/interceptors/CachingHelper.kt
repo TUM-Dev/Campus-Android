@@ -42,7 +42,5 @@ class CachingHelper {
                 Pair("noten", Duration.standardDays(1)),
                 Pair("mensaapp", Duration.standardDays(1))
         )
-
     }
-
 }

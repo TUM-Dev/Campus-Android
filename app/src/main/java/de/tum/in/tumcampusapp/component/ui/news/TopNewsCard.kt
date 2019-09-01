@@ -61,7 +61,6 @@ class TopNewsCard(context: Context) : Card(CardManager.CARD_TOP_NEWS, context, "
         return if (newsAlert == null || newsAlert.link.isEmpty()) {
             null
         } else NavDestination.Link(newsAlert.link)
-
     }
 
     override fun updateViewHolder(viewHolder: RecyclerView.ViewHolder) {
@@ -75,7 +74,6 @@ class TopNewsCard(context: Context) : Card(CardManager.CARD_TOP_NEWS, context, "
         return if (newsAlert == null) {
             false
         } else topNewsStore.isEnabled() && newsAlert.shouldDisplay
-
     }
 
     public override fun discard(editor: SharedPreferences.Editor) {
@@ -89,5 +87,4 @@ class TopNewsCard(context: Context) : Card(CardManager.CARD_TOP_NEWS, context, "
             return CardViewHolder(view, interactionListener)
         }
     }
-
 }

@@ -13,10 +13,10 @@ interface TicketDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(vararg ticket: Ticket)
 
-    @Query("SELECT count(*) as count, t.*, tt.* FROM tickets t, ticket_types tt "
-            + "WHERE t.event_id = :eventId "
-            + "AND t.ticket_type_id = tt.id "
-            + "GROUP BY t.ticket_type_id")
+    @Query("SELECT count(*) as count, t.*, tt.* FROM tickets t, ticket_types tt " +
+            "WHERE t.event_id = :eventId " +
+            "AND t.ticket_type_id = tt.id " +
+            "GROUP BY t.ticket_type_id")
     fun getByEventId(eventId: Int): List<TicketInfo>
 
     @Query("SELECT count(*) FROM tickets WHERE event_id =:eventId")

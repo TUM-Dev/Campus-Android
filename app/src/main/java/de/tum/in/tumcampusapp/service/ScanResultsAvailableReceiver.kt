@@ -52,8 +52,8 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
         }
 
         // Test if user has eduroam configured already
-        val isEduroamConfigured = EduroamController.getEduroamConfig(context) != null
-                || NetUtils.isConnected(context)
+        val isEduroamConfigured = EduroamController.getEduroamConfig(context) != null ||
+                NetUtils.isConnected(context)
 
         context.wifiManager.scanResults.forEach { network ->
             if (network.SSID != Const.EDUROAM_SSID && network.SSID != Const.LRZ) {
@@ -124,7 +124,5 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
 
             Utils.setSetting(context, SHOULD_SHOW, false)
         }
-
     }
-
 }

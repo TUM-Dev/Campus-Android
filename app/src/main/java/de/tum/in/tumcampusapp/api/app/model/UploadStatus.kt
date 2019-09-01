@@ -10,16 +10,15 @@ import com.google.gson.annotations.SerializedName
  * @param externalId true if uploaded
  */
 data class UploadStatus(
-        @SerializedName("fcm_token") var fcmToken: String = "",
-        @SerializedName("public_key") var publicKey: String = "",
-        @SerializedName("student_id") var studentId: Boolean = false,
-        @SerializedName("employee_id") var employeeId: Boolean = false,
-        @SerializedName("external_id") var externalId: Boolean = false
+    @SerializedName("fcm_token") var fcmToken: String = "",
+    @SerializedName("public_key") var publicKey: String = "",
+    @SerializedName("student_id") var studentId: Boolean = false,
+    @SerializedName("employee_id") var employeeId: Boolean = false,
+    @SerializedName("external_id") var externalId: Boolean = false
 ) {
 
     companion object {
         const val UPLOADED = "uploaded"
         const val VERIFIED = "verified"
     }
-
 }

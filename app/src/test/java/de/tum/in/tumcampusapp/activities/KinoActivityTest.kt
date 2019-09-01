@@ -36,13 +36,13 @@ class KinoActivityTest {
 
     @Before
     fun setUp() {
-        val db =  TcaDb.getInstance(RuntimeEnvironment.application)
+        val db = TcaDb.getInstance(RuntimeEnvironment.application)
         val localRepository = KinoLocalRepository(db)
         viewModel = KinoViewModel(localRepository)
         RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
-        RxJavaPlugins.setComputationSchedulerHandler { Schedulers.trampoline()  }
-        RxJavaPlugins.setNewThreadSchedulerHandler { Schedulers.trampoline()  }
-        RxJavaPlugins.setSingleSchedulerHandler { Schedulers.trampoline()  }
+        RxJavaPlugins.setComputationSchedulerHandler { Schedulers.trampoline() }
+        RxJavaPlugins.setNewThreadSchedulerHandler { Schedulers.trampoline() }
+        RxJavaPlugins.setSingleSchedulerHandler { Schedulers.trampoline() }
         RxAndroidPlugins.setMainThreadSchedulerHandler { Schedulers.trampoline() }
         dao = db.kinoDao()
         dao.flush()
@@ -75,7 +75,7 @@ class KinoActivityTest {
     fun mainComponentNoMoviesDisplayedTest() {
         kinoActivity = Robolectric.buildActivity(KinoActivity::class.java).create().start().get()
         waitForUI()
-        //For some reason the ui needs a while until it's been updated.
+        // For some reason the ui needs a while until it's been updated.
         Thread.sleep(100)
         assertThat(kinoActivity!!.findViewById<View>(R.id.error_layout).visibility).isEqualTo(View.VISIBLE)
     }
@@ -119,5 +119,4 @@ class KinoActivityTest {
                 ""
         )
     }
-
 }

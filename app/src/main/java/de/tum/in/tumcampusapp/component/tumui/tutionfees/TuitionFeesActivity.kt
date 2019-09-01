@@ -19,5 +19,4 @@ class TuitionFeesActivity : BaseActivity(R.layout.activity_tuitionfees) {
                     .commit()
         }
     }
-
 }

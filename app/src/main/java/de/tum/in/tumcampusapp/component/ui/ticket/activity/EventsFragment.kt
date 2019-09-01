@@ -84,12 +84,10 @@ class EventsFragment : FragmentForDownloadingExternal(
         override fun getPageTitle(position: Int): CharSequence? {
             return titles[position]
         }
-
     }
 
     companion object {
         @JvmStatic
         fun newInstance() = EventsFragment()
     }
-
 }

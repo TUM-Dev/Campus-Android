@@ -57,5 +57,4 @@ class MensaWidget : AppWidgetProvider() {
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
         }
     }
-
 }

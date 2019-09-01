@@ -7,10 +7,12 @@ import androidx.room.RoomWarnings
 
 @Entity(tableName = "widgets_transport")
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
-data class WidgetsTransport(@PrimaryKey
-                            var id: Int = 0,
-                            var station: String = "",
-                            @ColumnInfo(name = "station_id")
-                            var stationId: String = "",
-                            var location: Boolean = false,
-                            var reload: Boolean = false)
+data class WidgetsTransport(
+    @PrimaryKey
+    var id: Int = 0,
+    var station: String = "",
+    @ColumnInfo(name = "station_id")
+    var stationId: String = "",
+    var location: Boolean = false,
+    var reload: Boolean = false
+)

@@ -9,8 +9,8 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class TopNewsRemoteRepository @Inject constructor(
-        private val topNewsStore: TopNewsStore,
-        private val tumCabeClient: TUMCabeClient
+    private val topNewsStore: TopNewsStore,
+    private val tumCabeClient: TUMCabeClient
 ) {
 
     /**
@@ -26,5 +26,4 @@ class TopNewsRemoteRepository @Inject constructor(
     private fun onTopNewsDownloaded(newsAlert: NewsAlert) {
         topNewsStore.store(newsAlert)
     }
-
 }

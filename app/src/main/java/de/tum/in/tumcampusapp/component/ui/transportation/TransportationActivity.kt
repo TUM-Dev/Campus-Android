@@ -53,7 +53,6 @@ class TransportationActivity : ActivityForSearching<Unit>(
         }
 
         listViewResults.adapter = adapterStations
-
     }
 
     /**

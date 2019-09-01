@@ -13,8 +13,8 @@ import de.tum.`in`.tumcampusapp.component.ui.news.model.News
 import de.tum.`in`.tumcampusapp.utils.Const
 
 class NewsNotificationProvider(
-        context: Context,
-        private val newsItems: List<News>
+    context: Context,
+    private val newsItems: List<News>
 ) : NotificationProvider(context) {
 
     override fun getNotificationBuilder(): NotificationCompat.Builder {
@@ -51,5 +51,4 @@ class NewsNotificationProvider(
     companion object {
         private const val GROUP_KEY_NEWS = "de.tum.in.tumcampus.NEWS"
     }
-
 }

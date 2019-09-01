@@ -47,8 +47,10 @@ constructor(private val context: Context) {
                 .getInstance(context)
                 .getMenus(cacheControl)
                 .enqueue(object : Callback<CafeteriaResponse> {
-                    override fun onResponse(call: Call<CafeteriaResponse>,
-                                            response: Response<CafeteriaResponse>) {
+                    override fun onResponse(
+                        call: Call<CafeteriaResponse>,
+                        response: Response<CafeteriaResponse>
+                    ) {
                         val cafeteriaResponse = response.body()
                         if (cafeteriaResponse != null) {
                             onDownloadSuccess(cafeteriaResponse)
@@ -98,5 +100,4 @@ constructor(private val context: Context) {
             it.cafeteriaId == queriedMensaId
         }
     }
-
 }

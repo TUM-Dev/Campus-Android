@@ -30,9 +30,9 @@ import java.security.spec.X509EncodedKeySpec
  * TUM alerting system
  */
 class AlarmPushNotification(
-        payload: String,
-        appContext: Context,
-        notification: Int
+    payload: String,
+    appContext: Context,
+    notification: Int
 ) : PushNotification(appContext, ALERT, notification, true) {
 
     private val alert: FcmAlert = Gson().fromJson(payload, FcmAlert::class.java)
@@ -95,9 +95,9 @@ class AlarmPushNotification(
         /**
          * Validates the signature sent to us
          *
-         * @param title       the message title
+         * @param title the message title
          * @param description the message description
-         * @param signature   the message signature
+         * @param signature the message signature
          * @return if the signature is valid
          */
         private fun isValidSignature(title: String, description: String, signature: String): Boolean {

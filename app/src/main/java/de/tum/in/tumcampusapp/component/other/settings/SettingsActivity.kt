@@ -45,7 +45,5 @@ class SettingsActivity : BaseActivity(R.layout.activity_user_preferences),
         ) = Intent(context, SettingsActivity::class.java).apply {
             putExtra(Const.PREFERENCE_SCREEN, rootKey)
         }
-
     }
-
 }

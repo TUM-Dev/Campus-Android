@@ -11,11 +11,11 @@ import org.joda.time.DateTime
  * A class to represent events for the integrated WeekView calendar
  */
 data class WidgetCalendarItem(
-        val id: String,
-        val title: String,
-        val startTime: DateTime,
-        val endTime: DateTime,
-        val location: String
+    val id: String,
+    val title: String,
+    val startTime: DateTime,
+    val endTime: DateTime,
+    val location: String
 ) : WeekViewDisplayable<WidgetCalendarItem> {
 
     var color: Int = 0
@@ -59,7 +59,5 @@ data class WidgetCalendarItem(
             val end = DateTimeUtils.getDateTime(schedule.end)
             return WidgetCalendarItem(id, schedule.title, start, end, "")
         }
-
     }
-
 }

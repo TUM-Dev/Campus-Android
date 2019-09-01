@@ -9,6 +9,4 @@ class MensaWidgetService : RemoteViewsService() {
     override fun onGetViewFactory(intent: Intent): RemoteViewsFactory {
         return MensaRemoteViewFactory(this.applicationContext)
     }
-
 }
-

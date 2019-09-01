@@ -43,5 +43,4 @@ class GeofencingUpdateReceiver : BroadcastReceiver() {
     companion object {
         const val TAG = "GeofencingUpdateReceiver"
     }
-
 }

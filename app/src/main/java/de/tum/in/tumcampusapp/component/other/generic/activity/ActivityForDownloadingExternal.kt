@@ -68,5 +68,4 @@ abstract class ActivityForDownloadingExternal(layoutId: Int) : ProgressActivity<
                 )
                 .observe(this, completionHandler)
     }
-
 }

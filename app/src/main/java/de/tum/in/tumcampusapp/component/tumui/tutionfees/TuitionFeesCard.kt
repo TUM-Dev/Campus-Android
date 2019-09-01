@@ -22,8 +22,8 @@ import org.joda.time.format.DateTimeFormat
  * Card that shows information about your fees that have to be paid or have been paid
  */
 class TuitionFeesCard(
-        context: Context,
-        private val tuition: Tuition
+    context: Context,
+    private val tuition: Tuition
 ) : Card(CardManager.CARD_TUITION_FEE, context, "card_tuition_fee") {
 
     override val optionsMenuResId: Int
@@ -92,5 +92,4 @@ class TuitionFeesCard(
             return CardViewHolder(view, interactionListener)
         }
     }
-
 }

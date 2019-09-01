@@ -15,9 +15,9 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class EventDetailsViewModel @Inject constructor(
-        @EventId val eventId: Int,
-        private val eventsRemoteRepository: EventsRemoteRepository,
-        private val ticketsLocalRepository: TicketsLocalRepository
+    @EventId val eventId: Int,
+    private val eventsRemoteRepository: EventsRemoteRepository,
+    private val ticketsLocalRepository: TicketsLocalRepository
 ) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
@@ -46,5 +46,4 @@ class EventDetailsViewModel @Inject constructor(
         super.onCleared()
         compositeDisposable.dispose()
     }
-
 }

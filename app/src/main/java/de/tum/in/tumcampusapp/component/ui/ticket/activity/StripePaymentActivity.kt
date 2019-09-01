@@ -57,11 +57,11 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
         val termsOfServiceLink = intent.getStringExtra(Const.KEY_TERMS_LINK)
         val stripePublishableKey = intent.getStringExtra(Const.KEY_STRIPE_API_PUBLISHABLE_KEY)
 
-        if (ticketIds == null
-                || ticketIds.isEmpty()
-                || ticketPrice == null
-                || termsOfServiceLink.isEmpty()
-                || stripePublishableKey == null) {
+        if (ticketIds == null ||
+                ticketIds.isEmpty() ||
+                ticketPrice == null ||
+                termsOfServiceLink.isEmpty() ||
+                stripePublishableKey == null) {
             Utils.showToast(this, R.string.error_something_wrong)
             finish()
             return
@@ -114,9 +114,9 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
 
     private fun updateBuyButton() {
         val hasCardholder = cardholderEditText.text.toString().isNotEmpty()
-        val enabled = (hasCardholder
-                && didSelectPaymentMethod
-                && termsOfServiceCheckBox.isChecked)
+        val enabled = (hasCardholder &&
+                didSelectPaymentMethod &&
+                termsOfServiceCheckBox.isChecked)
         val alpha = if (enabled) 1.0f else 0.5f
 
         completePurchaseButton.isEnabled = enabled
@@ -138,8 +138,10 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
                     .getInstance(this)
                     .purchaseTicketStripe(this, ticketIds,
                             methodId, cardholder, object : Callback<List<Ticket>> {
-                        override fun onResponse(call: Call<List<Ticket>>,
-                                                response: Response<List<Ticket>>) {
+                        override fun onResponse(
+                            call: Call<List<Ticket>>,
+                            response: Response<List<Ticket>>
+                        ) {
                             val tickets = response.body()
                             if (tickets != null && tickets.isNotEmpty()) {
                                 handleTicketPurchaseSuccess(tickets)
@@ -157,7 +159,6 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
             Utils.log(e)
             handleTicketPurchaseFailure()
         }
-
     }
 
     private fun handleTicketPurchaseSuccess(tickets: List<Ticket>) {
@@ -276,15 +277,13 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
                 updateBuyButton()
                 selectPaymentMethodSwitcher.isEnabled = true
             }
-
         }, config)
     }
 
-    private fun buildCardString(data: SourceCardData) =  getString(R.string.credit_card_format_string, data.last4)
+    private fun buildCardString(data: SourceCardData) = getString(R.string.credit_card_format_string, data.last4)
 
     override fun onDestroy() {
         super.onDestroy()
         paymentSession?.onDestroy()
     }
-
 }

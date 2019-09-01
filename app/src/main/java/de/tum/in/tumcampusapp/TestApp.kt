@@ -6,7 +6,6 @@ import android.annotation.SuppressLint
 class TestApp : App() {
 
     override fun setupPicasso() {
-        //nothing to do
+        // nothing to do
     }
-
 }
