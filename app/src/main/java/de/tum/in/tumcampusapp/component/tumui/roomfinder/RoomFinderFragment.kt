@@ -136,5 +136,4 @@ class RoomFinderFragment : FragmentForSearchingInBackground<List<RoomFinderRoom>
     companion object {
         fun newInstance() = RoomFinderFragment()
     }
-
 }

@@ -4,9 +4,9 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 
 data class EventsViewState(
-        val events: List<Event> = emptyList(),
-        val errorResId: Int? = null,
-        val isLoading: Boolean = false
+    val events: List<Event> = emptyList(),
+    val errorResId: Int? = null,
+    val isLoading: Boolean = false
 ) {
 
     fun toLoading(): EventsViewState {
@@ -28,5 +28,4 @@ data class EventsViewState(
     companion object {
         fun initial() = EventsViewState(isLoading = true)
     }
-
 }

@@ -13,7 +13,7 @@ import java.util.concurrent.Executors
 import javax.inject.Inject
 
 class CafeteriaLocalRepository @Inject constructor(
-        private val database: TcaDb
+    private val database: TcaDb
 ) {
 
     private val executor: Executor = Executors.newSingleThreadExecutor()
@@ -36,7 +36,6 @@ class CafeteriaLocalRepository @Inject constructor(
 
     fun getAllMenuDates(): List<DateTime> = database.cafeteriaMenuDao().allDates
 
-
     // Canteen methods //
 
     fun getAllCafeterias(): Flowable<List<Cafeteria>> = database.cafeteriaDao().all
@@ -58,5 +57,4 @@ class CafeteriaLocalRepository @Inject constructor(
     companion object {
         private const val TIME_TO_SYNC = 604800 // 1 week
     }
-
 }

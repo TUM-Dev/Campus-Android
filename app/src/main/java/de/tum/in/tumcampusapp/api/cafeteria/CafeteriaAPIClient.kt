@@ -59,7 +59,5 @@ class CafeteriaAPIClient(private val apiService: CafeteriaAPIService) {
 
             return CafeteriaAPIClient(apiService)
         }
-
     }
-
 }

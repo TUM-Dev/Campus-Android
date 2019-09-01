@@ -6,5 +6,4 @@ class InvalidTokenException : InterruptedIOException() {
 
     override val message: String?
         get() = "The user’s token is not confirmed or invalid"
-
 }

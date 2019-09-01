@@ -20,5 +20,4 @@ class BoughtTicketAdapter(private val ticketInfos: List<TicketInfo>) : RecyclerV
     }
 
     override fun getItemCount() = ticketInfos.size
-
 }

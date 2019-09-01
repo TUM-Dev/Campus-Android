@@ -73,5 +73,4 @@ class TuitionFeesFragment : FragmentForAccessingTumOnline<TuitionList>(
     companion object {
         @JvmStatic fun newInstance() = TuitionFeesFragment()
     }
-
 }

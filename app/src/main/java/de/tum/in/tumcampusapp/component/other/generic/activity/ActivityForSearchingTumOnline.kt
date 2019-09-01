@@ -13,13 +13,12 @@ import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
  */
 @Deprecated("Use BaseActivity and a suitable BaseFragment class")
 abstract class ActivityForSearchingTumOnline<T>(
-        layoutId: Int,
-        auth: String,
-        minLen: Int
+    layoutId: Int,
+    auth: String,
+    minLen: Int
 ) : ActivityForSearching<T>(layoutId, auth, minLen) {
 
     protected val apiClient: TUMOnlineClient by lazy {
         TUMOnlineClient.getInstance(this)
     }
-
 }

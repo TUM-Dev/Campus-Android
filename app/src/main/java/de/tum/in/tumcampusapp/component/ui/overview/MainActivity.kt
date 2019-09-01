@@ -21,5 +21,4 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                     .commit()
         }
     }
-
 }

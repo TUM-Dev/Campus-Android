@@ -15,9 +15,9 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.splitOnChanged
 
 class CafeteriaMenusAdapter(
-        private val context: Context,
-        private val isBigLayout: Boolean,
-        private val onClickListener: (() -> Unit)? = null
+    private val context: Context,
+    private val isBigLayout: Boolean,
+    private val onClickListener: (() -> Unit)? = null
 ) : RecyclerView.Adapter<CafeteriaMenusAdapter.ViewHolder>() {
 
     private val dao: FavoriteDishDao by lazy {
@@ -52,9 +52,9 @@ class CafeteriaMenusAdapter(
                 .splitOnChanged { it.typeLong }
                 .map(this::createAdapterItemsForSection)
                 .flatten()
-        
+
         val diffResult = DiffUtil.calculateDiff(DiffUtilCallback(adapterItems, newItems))
-        
+
         adapterItems.clear()
         adapterItems += newItems
 
@@ -71,7 +71,7 @@ class CafeteriaMenusAdapter(
     }
 
     private fun createAdapterItemsForSection(
-            menus: List<CafeteriaMenu>
+        menus: List<CafeteriaMenu>
     ): List<CafeteriaMenuAdapterItem> {
         val header = CafeteriaMenuAdapterItem.Header(menus.first())
         val items = menus.map {
@@ -93,8 +93,8 @@ class CafeteriaMenusAdapter(
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     private class DiffUtilCallback(
-            private val oldItems: List<CafeteriaMenuAdapterItem>,
-            private val newItems: List<CafeteriaMenuAdapterItem>
+        private val oldItems: List<CafeteriaMenuAdapterItem>,
+        private val newItems: List<CafeteriaMenuAdapterItem>
     ) : DiffUtil.Callback() {
 
         override fun getOldListSize() = oldItems.size
@@ -108,8 +108,5 @@ class CafeteriaMenusAdapter(
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             return oldItems[oldItemPosition] == newItems[newItemPosition]
         }
-
     }
-
-
 }

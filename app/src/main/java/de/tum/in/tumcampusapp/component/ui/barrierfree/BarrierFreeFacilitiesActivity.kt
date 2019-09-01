@@ -70,5 +70,4 @@ class BarrierFreeFacilitiesActivity : ActivityForAccessingTumCabe<List<RoomFinde
     override fun onNothingSelected(parent: AdapterView<*>) {
         // Nothing selected
     }
-
 }

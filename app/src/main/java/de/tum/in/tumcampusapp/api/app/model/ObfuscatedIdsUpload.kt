@@ -10,7 +10,8 @@ import com.google.gson.annotations.SerializedName
  * @param externalId true if uploaded
  */
 data class ObfuscatedIdsUpload(
-        @SerializedName("student_id") var studentId: String = "",
-        @SerializedName("employee_id") var employeeId: String = "",
-        @SerializedName("external_id") var externalId: String = "",
-        var verification: TUMCabeVerification)
+    @SerializedName("student_id") var studentId: String = "",
+    @SerializedName("employee_id") var employeeId: String = "",
+    @SerializedName("external_id") var externalId: String = "",
+    var verification: TUMCabeVerification
+)

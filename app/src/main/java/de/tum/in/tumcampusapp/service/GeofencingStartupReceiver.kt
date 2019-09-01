@@ -7,7 +7,6 @@ import de.tum.`in`.tumcampusapp.utils.Const.DISTANCE_IN_METER
 import de.tum.`in`.tumcampusapp.utils.Const.MUNICH_GEOFENCE
 import de.tum.`in`.tumcampusapp.utils.Utils
 
-
 class GeofencingStartupReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -29,5 +28,4 @@ class GeofencingStartupReceiver : BroadcastReceiver() {
                 intent.action == "android.intent.action.QUICKBOOT_POWERON" ||
                 intent.action == "android.location.PROVIDERS_CHANGED")
     }
-
 }

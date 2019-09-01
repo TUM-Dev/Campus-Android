@@ -22,17 +22,17 @@ enum class CalendarItemType {
  */
 @Entity(tableName = "calendar")
 data class CalendarItem(
-        @PrimaryKey
-        var nr: String = "",
-        var status: String = "",
-        var url: String = "",
-        var title: String = "",
-        var description: String = "",
-        var dtstart: DateTime = DateTime(),
-        var dtend: DateTime = DateTime(),
-        var location: String = "",
-        @Ignore
-        var blacklisted: Boolean = false
+    @PrimaryKey
+    var nr: String = "",
+    var status: String = "",
+    var url: String = "",
+    var title: String = "",
+    var description: String = "",
+    var dtstart: DateTime = DateTime(),
+    var dtend: DateTime = DateTime(),
+    var location: String = "",
+    @Ignore
+    var blacklisted: Boolean = false
 ) : WeekViewDisplayable<CalendarItem> {
 
     @Ignore
@@ -110,9 +110,9 @@ data class CalendarItem(
     }
 
     fun isSameEventButForLocation(other: CalendarItem): Boolean {
-        return title == other.title
-                && dtstart == other.dtstart
-                && dtend == other.dtend
+        return title == other.title &&
+                dtstart == other.dtstart &&
+                dtend == other.dtend
     }
 
     override fun toWeekViewEvent(): WeekViewEvent<CalendarItem> {

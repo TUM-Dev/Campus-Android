@@ -29,7 +29,5 @@ class NotificationStore(context: Context) {
 
             return INSTANCE!!
         }
-
     }
-
 }

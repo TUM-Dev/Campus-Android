@@ -8,14 +8,16 @@ import java.io.Serializable
 
 @Entity(tableName = "notification")
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
-data class FcmNotification(@PrimaryKey
-                           var notification: Int = 0,
-                           var type: Int = 0,
-                           var location: FcmNotificationLocation = FcmNotificationLocation(),
-                           var title: String = "",
-                           var description: String = "",
-                           var signature: String = "",
-                           var created: DateTime = DateTime()) : Serializable {
+data class FcmNotification(
+    @PrimaryKey
+    var notification: Int = 0,
+    var type: Int = 0,
+    var location: FcmNotificationLocation = FcmNotificationLocation(),
+    var title: String = "",
+    var description: String = "",
+    var signature: String = "",
+    var created: DateTime = DateTime()
+) : Serializable {
     companion object {
         private const val serialVersionUID = 8643117662605459731L
     }

@@ -22,8 +22,8 @@ class TimetableWidgetService : RemoteViewsService() {
     }
 
     private class TimetableRemoteViewFactory internal constructor(
-            private val applicationContext: Context,
-            intent: Intent
+        private val applicationContext: Context,
+        intent: Intent
     ) : RemoteViewsFactory {
 
         private val appWidgetID: Int = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
@@ -117,6 +117,5 @@ class TimetableWidgetService : RemoteViewsService() {
         override fun getItemId(position: Int) = position.toLong()
 
         override fun hasStableIds() = true
-
     }
 }

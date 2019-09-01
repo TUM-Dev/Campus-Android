@@ -150,16 +150,20 @@ class MainFragment : BaseFragment<Unit>(
 
     private inner class ItemTouchHelperCallback : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
-        override fun getSwipeDirs(recyclerView: RecyclerView,
-                                  viewHolder: RecyclerView.ViewHolder): Int {
+        override fun getSwipeDirs(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder
+        ): Int {
             val cardViewHolder = viewHolder as CardViewHolder
             val card = cardViewHolder.currentCard
             return if (card == null || !card.isDismissible) 0 else super.getSwipeDirs(recyclerView, viewHolder)
         }
 
-        override fun onMove(recyclerView: RecyclerView,
-                            viewHolder: RecyclerView.ViewHolder,
-                            target: RecyclerView.ViewHolder): Boolean {
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
             cardsAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
             return true
         }
@@ -197,5 +201,4 @@ class MainFragment : BaseFragment<Unit>(
                     .show()
         }
     }
-
 }

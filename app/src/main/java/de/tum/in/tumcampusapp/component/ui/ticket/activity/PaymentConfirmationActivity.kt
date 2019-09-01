@@ -17,7 +17,7 @@ class PaymentConfirmationActivity : BaseActivity(R.layout.activity_payment_confi
         super.onCreate(savedInstanceState)
 
         val eventId = intent.getIntExtra(Const.KEY_EVENT_ID, -1)
-        val ticketAmount = intent.getIntExtra(Const.KEY_TICKET_AMOUNT, 1);
+        val ticketAmount = intent.getIntExtra(Const.KEY_TICKET_AMOUNT, 1)
         if (eventId == -1) {
             finish()
             return
@@ -29,7 +29,7 @@ class PaymentConfirmationActivity : BaseActivity(R.layout.activity_payment_confi
         showTicketButton.setOnClickListener {
             val intent = Intent(this, ShowTicketActivity::class.java)
             intent.putExtra(Const.KEY_EVENT_ID, eventId)
-            startActivity(intent);
+            startActivity(intent)
         }
 
         doneButton.setOnClickListener {
@@ -74,5 +74,4 @@ class PaymentConfirmationActivity : BaseActivity(R.layout.activity_payment_confi
         startActivity(intent)
         finish()
     }
-
 }

@@ -9,8 +9,8 @@ import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
 import kotlinx.android.synthetic.main.person_search_result_item.view.textView
 
 class PersonSearchResultsAdapter(
-        private var items: List<Person>,
-        private val onItemClick: (Person) -> Unit
+    private var items: List<Person>,
+    private val onItemClick: (Person) -> Unit
 ) : RecyclerView.Adapter<PersonSearchResultsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -39,7 +39,5 @@ class PersonSearchResultsAdapter(
             textView.text = person.getFullName()
             setOnClickListener { onItemClick(person) }
         }
-
     }
-
 }

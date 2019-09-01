@@ -11,5 +11,5 @@ import com.tickaroo.tikxml.annotation.Xml
  */
 @Xml(name = "rowset")
 data class LectureAppointmentsResponse(
-        @Element val lectureAppointments: List<LectureAppointment>? = null
+    @Element val lectureAppointments: List<LectureAppointment>? = null
 )

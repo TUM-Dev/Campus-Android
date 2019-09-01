@@ -51,5 +51,4 @@ class OnboardingActivity : BaseActivity(R.layout.activity_onboarding), Onboardin
     companion object {
         fun newIntent(context: Context) = Intent(context, OnboardingActivity::class.java)
     }
-
 }

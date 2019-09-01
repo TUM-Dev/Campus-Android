@@ -13,7 +13,8 @@ import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom
  * Custom UI adapter for a list of employees.
  */
 class RoomFinderListAdapter(
-        context: Context, items: List<RoomFinderRoom>
+    context: Context,
+    items: List<RoomFinderRoom>
 ) : SimpleStickyListHeadersAdapter<RoomFinderRoom>(context, items.toMutableList()) {
 
     internal class ViewHolder {

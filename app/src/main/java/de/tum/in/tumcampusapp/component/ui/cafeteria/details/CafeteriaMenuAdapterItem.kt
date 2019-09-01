@@ -17,8 +17,8 @@ sealed class CafeteriaMenuAdapterItem {
     abstract val id: String
 
     abstract fun bind(
-            holder: CafeteriaMenusAdapter.ViewHolder,
-            listener: (() -> Unit)?
+        holder: CafeteriaMenusAdapter.ViewHolder,
+        listener: (() -> Unit)?
     )
 
     data class Header(val menu: CafeteriaMenu) : CafeteriaMenuAdapterItem() {
@@ -27,29 +27,28 @@ sealed class CafeteriaMenuAdapterItem {
             get() = "header_${menu.id}"
 
         override fun bind(
-                holder: CafeteriaMenusAdapter.ViewHolder,
-                listener: (() -> Unit)?
-        ) = with(holder.itemView)  {
+            holder: CafeteriaMenusAdapter.ViewHolder,
+            listener: (() -> Unit)?
+        ) = with(holder.itemView) {
             headerTextView.text = menu.typeLong.replace("[0-9]", "").trim()
             setOnClickListener { listener?.invoke() }
         }
-
     }
 
     data class Item(
-            val menu: CafeteriaMenu,
-            val isFavorite: Boolean = false,
-            val rolePrice: String? = null,
-            val isBigLayout: Boolean,
-            val favoriteDishDao: FavoriteDishDao
+        val menu: CafeteriaMenu,
+        val isFavorite: Boolean = false,
+        val rolePrice: String? = null,
+        val isBigLayout: Boolean,
+        val favoriteDishDao: FavoriteDishDao
     ) : CafeteriaMenuAdapterItem() {
 
         override val id: String
             get() = "item_${menu.id}"
 
         override fun bind(
-                holder: CafeteriaMenusAdapter.ViewHolder,
-                listener: (() -> Unit)?
+            holder: CafeteriaMenusAdapter.ViewHolder,
+            listener: (() -> Unit)?
         ) = with(holder.itemView) {
             val formatter = CafeteriaMenuFormatter(context)
             val menuSpan = formatter.format(menu.name, isBigLayout)
@@ -62,8 +61,8 @@ sealed class CafeteriaMenuAdapterItem {
         }
 
         private fun showPrice(
-                itemView: View,
-                price: String
+            itemView: View,
+            price: String
         ) = with(itemView) {
             priceTextView.text = kotlin.String.format("%s €", price)
 
@@ -85,7 +84,5 @@ sealed class CafeteriaMenuAdapterItem {
             priceTextView.visibility = View.GONE
             favoriteDish.visibility = View.GONE
         }
-
     }
-
 }

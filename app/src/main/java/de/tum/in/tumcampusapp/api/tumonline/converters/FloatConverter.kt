@@ -18,5 +18,4 @@ class FloatConverter : TypeConverter<Float> {
     }
 
     override fun write(value: Float?) = value?.toString() ?: ""
-
 }

@@ -13,25 +13,25 @@ import org.joda.time.DateTime
 @Entity(tableName = "study_rooms")
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
 data class StudyRoom(
-        @PrimaryKey
-        @SerializedName("room_id")
-        var id: Int = -1,
-        @SerializedName("room_code")
-        var code: String = "",
-        @SerializedName("room_name")
-        var name: String = "",
-        @ColumnInfo(name = "building_name")
-        @SerializedName("building_name")
-        var buildingName: String = "",
-        @ColumnInfo(name = "group_id")
-        @SerializedName("group_id")
-        var studyRoomGroup: Int = -1,
-        @ColumnInfo(name = "occupied_until")
-        @SerializedName("occupied_until")
-        var occupiedUntil: DateTime? = null,
-        @ColumnInfo(name = "free_until")
-        @SerializedName("free_until")
-        var freeUntil: DateTime? = null
+    @PrimaryKey
+    @SerializedName("room_id")
+    var id: Int = -1,
+    @SerializedName("room_code")
+    var code: String = "",
+    @SerializedName("room_name")
+    var name: String = "",
+    @ColumnInfo(name = "building_name")
+    @SerializedName("building_name")
+    var buildingName: String = "",
+    @ColumnInfo(name = "group_id")
+    @SerializedName("group_id")
+    var studyRoomGroup: Int = -1,
+    @ColumnInfo(name = "occupied_until")
+    @SerializedName("occupied_until")
+    var occupiedUntil: DateTime? = null,
+    @ColumnInfo(name = "free_until")
+    @SerializedName("free_until")
+    var freeUntil: DateTime? = null
 ) : Comparable<StudyRoom> {
 
     override fun compareTo(other: StudyRoom): Int {
@@ -49,5 +49,4 @@ data class StudyRoom(
     }
 
     override fun toString() = code
-
 }

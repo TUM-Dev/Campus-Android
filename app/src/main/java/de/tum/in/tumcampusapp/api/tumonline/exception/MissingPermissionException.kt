@@ -6,5 +6,4 @@ class MissingPermissionException : InterruptedIOException() {
 
     override val message: String?
         get() = "Token is active but specific permission not given"
-
 }

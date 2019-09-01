@@ -17,7 +17,7 @@ import javax.inject.Inject
  * ViewModel for kinos.
  */
 class KinoViewModel @Inject constructor(
-        private val localRepository: KinoLocalRepository
+    private val localRepository: KinoLocalRepository
 ) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
@@ -58,5 +58,4 @@ class KinoViewModel @Inject constructor(
         super.onCleared()
         compositeDisposable.dispose()
     }
-
 }

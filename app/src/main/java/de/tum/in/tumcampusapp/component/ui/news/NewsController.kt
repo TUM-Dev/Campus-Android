@@ -158,5 +158,4 @@ class NewsController @Inject constructor(
     override fun hasNotificationsEnabled(): Boolean {
         return Utils.getSettingBool(context, "card_news_phone", false)
     }
-
 }

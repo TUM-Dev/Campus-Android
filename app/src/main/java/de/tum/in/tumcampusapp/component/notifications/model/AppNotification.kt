@@ -13,13 +13,12 @@ import de.tum.`in`.tumcampusapp.component.notifications.persistence.ScheduledNot
  * @param notification The [Notification] that will be displayed to the user
  */
 abstract class AppNotification(
-        val type: NotificationType,
-        val id: Int,
-        val notification: Notification
+    val type: NotificationType,
+    val id: Int,
+    val notification: Notification
 ) {
 
     fun toScheduledNotification(): ScheduledNotification {
         return ScheduledNotification(type.id.toLong(), id)
     }
-
 }

@@ -6,7 +6,7 @@ import androidx.room.Relation
 class TicketInfo {
     @Embedded
     var ticketType: TicketType? = null
-    @Relation(entityColumn =  "ticket_type_id", parentColumn = "id")
+    @Relation(entityColumn = "ticket_type_id", parentColumn = "id")
     var tickets: List<Ticket>? = null
     var count: Int = 0
 }

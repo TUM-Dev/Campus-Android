@@ -12,5 +12,4 @@ abstract class FragmentForAccessingTumCabe<T>(
     protected val apiClient: TUMCabeClient by lazy {
         TUMCabeClient.getInstance(requireContext())
     }
-
 }

@@ -7,12 +7,12 @@ import androidx.room.RoomWarnings
 @Entity
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
 data class FavoriteDish(
-        @PrimaryKey(autoGenerate = true)
-        var id: Int = 0,
-        var cafeteriaId: Int = -1,
-        var dishName: String = "",
-        var date: String = "",
-        var tag: String = ""
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0,
+    var cafeteriaId: Int = -1,
+    var dishName: String = "",
+    var date: String = "",
+    var tag: String = ""
 ) {
 
     companion object {
@@ -25,6 +25,5 @@ data class FavoriteDish(
                     date = date,
                     tag = menu.tag)
         }
-
     }
 }

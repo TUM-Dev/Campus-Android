@@ -11,7 +11,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter
 /**
  * This adapter class produces just one single item saying now search results
  */
-class NoResultsAdapter(context: Context):
+class NoResultsAdapter(context: Context) :
         ArrayAdapter<String>(context, R.layout.listview_simple_item_center, arrayOf(context.getString(R.string.no_search_result))), StickyListHeadersAdapter {
 
     // Generate header view

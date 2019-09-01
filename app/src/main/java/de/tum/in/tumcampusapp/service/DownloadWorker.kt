@@ -21,8 +21,8 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import javax.inject.Inject
 
 class DownloadWorker(
-        context: Context,
-        workerParams: WorkerParameters
+    context: Context,
+    workerParams: WorkerParameters
 ) : Worker(context, workerParams) {
 
     @Inject
@@ -71,8 +71,8 @@ class DownloadWorker(
         @JvmOverloads
         @JvmStatic
         fun getWorkRequest(
-                behaviour: CacheControl = USE_CACHE,
-                fillCache: Boolean = false
+            behaviour: CacheControl = USE_CACHE,
+            fillCache: Boolean = false
         ): OneTimeWorkRequest {
             val constraints = Constraints.Builder()
                     .setRequiredNetworkType(CONNECTED)
@@ -120,7 +120,5 @@ class DownloadWorker(
                 cacheManager.fillCache()
             }
         }
-
     }
-
 }

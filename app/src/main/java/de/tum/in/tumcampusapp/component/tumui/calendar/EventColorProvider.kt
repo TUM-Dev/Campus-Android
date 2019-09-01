@@ -18,5 +18,4 @@ class EventColorProvider(private val context: Context) {
         }
         return getDisplayColorFromColor(ContextCompat.getColor(context, colorResId))
     }
-
 }

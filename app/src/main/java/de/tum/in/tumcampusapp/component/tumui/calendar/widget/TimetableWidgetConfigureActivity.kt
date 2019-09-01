@@ -76,5 +76,4 @@ class TimetableWidgetConfigureActivity : AppCompatActivity() {
         setResult(Activity.RESULT_OK, resultValue)
         finish()
     }
-
 }

@@ -26,8 +26,8 @@ class UpdateNoteCard(context: Context) : Card(CardManager.CARD_UPDATE_NOTE, cont
     }
 
     override fun shouldShow(prefs: SharedPreferences): Boolean {
-        return Utils.getSettingBool(context, Const.SHOW_UPDATE_NOTE, false)
-        && Utils.getSetting(context, Const.UPDATE_MESSAGE, "").isNotEmpty()
+        return Utils.getSettingBool(context, Const.SHOW_UPDATE_NOTE, false) &&
+        Utils.getSetting(context, Const.UPDATE_MESSAGE, "").isNotEmpty()
     }
 
     override fun discard(editor: SharedPreferences.Editor) {
@@ -37,8 +37,8 @@ class UpdateNoteCard(context: Context) : Card(CardManager.CARD_UPDATE_NOTE, cont
     companion object {
         @JvmStatic
         fun inflateViewHolder(
-                parent: ViewGroup,
-                interactionListener: CardInteractionListener
+            parent: ViewGroup,
+            interactionListener: CardInteractionListener
         ): CardViewHolder {
             val card = LayoutInflater.from(parent.context)
                     .inflate(R.layout.card_update_note, parent, false)
@@ -47,8 +47,8 @@ class UpdateNoteCard(context: Context) : Card(CardManager.CARD_UPDATE_NOTE, cont
     }
 
     class UpdateNoteViewHolder(
-            view: View,
-            interactionListener: CardInteractionListener
+        view: View,
+        interactionListener: CardInteractionListener
     ) : CardViewHolder(view, interactionListener) {
         internal var subtitleView: TextView = view.findViewById(R.id.update_note_subtitle)
         internal var messageView: TextView = view.findViewById(R.id.update_note_message)

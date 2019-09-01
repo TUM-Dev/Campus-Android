@@ -16,15 +16,16 @@ import org.joda.time.DateTime
 
 @Xml(name = "event")
 data class Event(
-        @PropertyElement(name = "description") val description: String? = null,
-        @PropertyElement(name = "dtstart", converter = DateTimeConverter::class) val startTime: DateTime? = null,
-        @PropertyElement(name = "dtend", converter = DateTimeConverter::class) val endTime: DateTime? = null,
-        @PropertyElement(name = "geo") val geo: Geo? = null,
-        @PropertyElement(name = "location") val location: String? = null,
-        @PropertyElement(name = "nr") val id: String? = null,
-        @PropertyElement(name = "status") val status: String? = null,
-        @PropertyElement(name = "title") val title: String,
-        @PropertyElement(name = "url") val url: String? = null) {
+    @PropertyElement(name = "description") val description: String? = null,
+    @PropertyElement(name = "dtstart", converter = DateTimeConverter::class) val startTime: DateTime? = null,
+    @PropertyElement(name = "dtend", converter = DateTimeConverter::class) val endTime: DateTime? = null,
+    @PropertyElement(name = "geo") val geo: Geo? = null,
+    @PropertyElement(name = "location") val location: String? = null,
+    @PropertyElement(name = "nr") val id: String? = null,
+    @PropertyElement(name = "status") val status: String? = null,
+    @PropertyElement(name = "title") val title: String,
+    @PropertyElement(name = "url") val url: String? = null
+) {
 
     val isFutureEvent: Boolean
         get() = startTime?.isAfterNow ?: false
@@ -61,5 +62,4 @@ data class Event(
         val notificationTime = startTime.minusMinutes(15)
         return FutureNotification(NotificationType.CALENDAR, id.toInt(), notification, notificationTime)
     }
-
 }

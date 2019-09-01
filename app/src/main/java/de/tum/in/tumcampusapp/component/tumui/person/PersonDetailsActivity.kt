@@ -221,5 +221,4 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
     companion object {
         private val PERMISSIONS_CONTACTS = arrayOf(Manifest.permission.WRITE_CONTACTS)
     }
-
 }

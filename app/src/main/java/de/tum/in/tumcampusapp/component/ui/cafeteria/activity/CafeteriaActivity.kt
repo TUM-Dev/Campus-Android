@@ -18,5 +18,4 @@ class CafeteriaActivity : BaseActivity(R.layout.activity_cafeteria) {
                     .commit()
         }
     }
-
 }

@@ -421,5 +421,4 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             R.color.grade_5_0, R.color.grade_default
         )
     }
-
 }

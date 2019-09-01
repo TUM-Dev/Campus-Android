@@ -13,26 +13,26 @@ import org.joda.time.format.DateTimeFormat
 /**
  * Ticket
  *
- * @param id  ID of ticket_history in DB
- * @param event   Event ID
- * @param code   Ticket Code
- * @param ticketTypeId  ID of TicketType
+ * @param id ID of ticket_history in DB
+ * @param event Event ID
+ * @param code Ticket Code
+ * @param ticketTypeId ID of TicketType
  * @param redeemed
  */
 @Entity(tableName = "tickets")
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
 data class Ticket(
-        @PrimaryKey
-        @SerializedName("ticket_history")
-        var id: Int = 0,
-        @ColumnInfo(name = "event_id")
-        @SerializedName("event")
-        var eventId: Int = 0,
-        var code: String = "",
-        @ColumnInfo(name = "ticket_type_id")
-        @SerializedName("ticket_type")
-        var ticketTypeId: Int = 0,
-        var redemption: DateTime? = null
+    @PrimaryKey
+    @SerializedName("ticket_history")
+    var id: Int = 0,
+    @ColumnInfo(name = "event_id")
+    @SerializedName("event")
+    var eventId: Int = 0,
+    var code: String = "",
+    @ColumnInfo(name = "ticket_type_id")
+    @SerializedName("ticket_type")
+    var ticketTypeId: Int = 0,
+    var redemption: DateTime? = null
 ) {
 
     companion object {
@@ -43,6 +43,4 @@ data class Ticket(
             return "$date, $time"
         }
     }
-
-
 }

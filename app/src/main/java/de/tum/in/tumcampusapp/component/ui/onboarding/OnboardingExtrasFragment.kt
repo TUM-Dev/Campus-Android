@@ -192,5 +192,4 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
     companion object {
         fun newInstance() = OnboardingExtrasFragment()
     }
-
 }

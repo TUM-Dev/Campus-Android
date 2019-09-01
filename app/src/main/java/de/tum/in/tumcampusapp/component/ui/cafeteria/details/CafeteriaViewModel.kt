@@ -17,7 +17,7 @@ import org.joda.time.DateTime
 import javax.inject.Inject
 
 class CafeteriaViewModel @Inject constructor(
-        private val localRepository: CafeteriaLocalRepository
+    private val localRepository: CafeteriaLocalRepository
 ) : ViewModel() {
 
     private val _cafeterias = MutableLiveData<List<Cafeteria>>()
@@ -83,8 +83,8 @@ class CafeteriaViewModel @Inject constructor(
      * Adds the distance between user and cafeteria to model.
      */
     private fun transformCafeteria(
-            cafeterias: List<Cafeteria>,
-            location: Location
+        cafeterias: List<Cafeteria>,
+        location: Location
     ): List<Cafeteria> {
         return cafeterias.map {
             it.distance = calculateDistanceToCafeteria(it, location)
@@ -96,5 +96,4 @@ class CafeteriaViewModel @Inject constructor(
         super.onCleared()
         compositeDisposable.dispose()
     }
-
 }

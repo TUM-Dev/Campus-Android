@@ -8,5 +8,7 @@ import androidx.room.RoomWarnings
  */
 @Entity(tableName = "widgets_timetable_blacklist", primaryKeys = ["widget_id", "lecture_title"])
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
-data class WidgetsTimetableBlacklist(var widget_id: Int = -1,
-                                     var lecture_title: String = "")
+data class WidgetsTimetableBlacklist(
+    var widget_id: Int = -1,
+    var lecture_title: String = ""
+)

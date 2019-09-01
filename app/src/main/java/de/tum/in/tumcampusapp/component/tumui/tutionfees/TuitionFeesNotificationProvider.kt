@@ -44,5 +44,4 @@ class TuitionFeesNotificationProvider(context: Context) : NotificationProvider(c
         // will be active
         return InstantNotification(NotificationType.TUITION_FEES, 0, notification)
     }
-
 }

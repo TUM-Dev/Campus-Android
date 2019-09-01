@@ -24,7 +24,5 @@ data class Error(@PropertyElement var message: String = "") {
                 Pair("Request-Rate überschritten", RequestLimitReachedException()),
                 Pair("Token-Limit", TokenLimitReachedException())
         )
-
     }
-
 }

@@ -114,7 +114,7 @@ class ContactsHelper {
 
             // Add image
             val bitmap = employee.image
-            if (bitmap != null) {    // If an image is selected successfully
+            if (bitmap != null) { // If an image is selected successfully
                 val stream = ByteArrayOutputStream()
                 bitmap.compress(Bitmap.CompressFormat.PNG, 75, stream)
 
@@ -182,7 +182,5 @@ class ContactsHelper {
                         .build())
             }
         }
-
     }
-
 }

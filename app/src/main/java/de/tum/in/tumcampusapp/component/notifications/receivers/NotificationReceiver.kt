@@ -24,5 +24,4 @@ class NotificationReceiver : BroadcastReceiver() {
                 .from(context)
                 .notify(notificationId, notification)
     }
-
 }

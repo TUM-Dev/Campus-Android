@@ -58,8 +58,11 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 .inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = LayoutInflater.from(container?.context)
                 .inflate(R.layout.fragment_event_details, container, false)
 
@@ -206,7 +209,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun handleCalendarExportSelection(which: Int) {
-        when(which) {
+        when (which) {
             0 -> addToExternalCalendar()
             else -> addToTUMCalendar()
         }
@@ -222,7 +225,5 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 }
             }
         }
-
     }
-
 }

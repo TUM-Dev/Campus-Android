@@ -20,9 +20,7 @@ interface FeedbackComponent {
         fun lrzId(@LrzId lrzId: String): Builder
 
         fun build(): FeedbackComponent
-
     }
-
 }
 
 @Module
@@ -30,5 +28,4 @@ interface FeedbackModule {
 
     @Binds
     fun bindsFeedbackPresenter(impl: FeedbackPresenter): FeedbackContract.Presenter
-
 }

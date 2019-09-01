@@ -24,11 +24,13 @@ import java.util.ArrayList
 /**
  * Card that shows the cafeteria menu
  */
-class ChatMessagesCard(context: Context,
-                       room: ChatRoomDbRow) : Card(CARD_CHAT, context, "card_chat") {
+class ChatMessagesCard(
+    context: Context,
+    room: ChatRoomDbRow
+) : Card(CARD_CHAT, context, "card_chat") {
 
     private var mUnread: List<ChatMessage> = ArrayList()
-    private var nrUnread = 0;
+    private var nrUnread = 0
     private var mRoomName = ""
     private var mRoomId = 0
     private var mRoomIdString = ""
@@ -54,7 +56,7 @@ class ChatMessagesCard(context: Context,
      * Sets the information needed to build the card
      *
      * @param roomName Name of the chat room
-     * @param roomId   Id of the chat room
+     * @param roomId Id of the chat room
      */
     private fun setChatRoom(roomName: String, roomId: Int, roomIdString: String) {
         mRoomName = listOf("[A-Z, 0-9(LV\\.Nr)=]+$", "\\([A-Z]+[0-9]+\\)", "\\[[A-Z]+[0-9]+\\]")
@@ -85,14 +87,12 @@ class ChatMessagesCard(context: Context,
 
         @JvmStatic
         fun inflateViewHolder(
-                parent: ViewGroup,
-                interactionListener: CardInteractionListener
+            parent: ViewGroup,
+            interactionListener: CardInteractionListener
         ): CardViewHolder {
             val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.card_chat_messages, parent, false)
             return ChatMessagesCardViewHolder(view, interactionListener)
         }
-
     }
-
 }

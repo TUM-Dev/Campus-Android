@@ -29,7 +29,7 @@ object ImageUtils {
         return File.createTempFile(
                 imageFileName, /* prefix */
                 ".jpg", /* suffix */
-                storageDir      /* directory */
+                storageDir /* directory */
         )
     }
 
@@ -47,7 +47,6 @@ object ImageUtils {
             Utils.log(e)
             null
         }
-
     }
 
     /**
@@ -76,7 +75,6 @@ object ImageUtils {
         } catch (e: IOException) {
             Utils.log(e)
         }
-
     }
 
     /**
@@ -101,5 +99,4 @@ object ImageUtils {
         }
         return Bitmap.createScaledBitmap(image, width, height, true)
     }
-
 }

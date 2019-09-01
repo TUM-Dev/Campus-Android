@@ -18,9 +18,9 @@ import de.tum.`in`.tumcampusapp.utils.Utils
  * @param settingsPrefix Preference key prefix used for all preferences belonging to that card
  */
 abstract class Card(
-        val cardType: Int,
-        protected var context: Context,
-        val settingsPrefix: String = ""
+    val cardType: Int,
+    protected var context: Context,
+    val settingsPrefix: String = ""
 ) : Comparable<Card> {
 
     // Settings for showing this card on start page or as notification
@@ -44,7 +44,7 @@ abstract class Card(
         get() = R.menu.card_popup_menu_no_settings
 
     open var position: Int
-        get()  =
+        get() =
             Utils.getSettingInt(context, "${this.javaClass.simpleName}$CARD_POSITION_PREFERENCE_SUFFIX", -1)
         set(position) =
             Utils.setSetting(context, "${this.javaClass.simpleName}$CARD_POSITION_PREFERENCE_SUFFIX", position)
@@ -124,8 +124,10 @@ abstract class Card(
      */
     protected abstract fun discard(editor: Editor)
 
-    class DiffCallback(private val oldList: List<Card>,
-                       private val newList: List<Card>) : DiffUtil.Callback() {
+    class DiffCallback(
+        private val oldList: List<Card>,
+        private val newList: List<Card>
+    ) : DiffUtil.Callback() {
 
         override fun getOldListSize() = oldList.size
 
@@ -136,7 +138,5 @@ abstract class Card(
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
                 oldList[oldItemPosition] == newList[newItemPosition]
-
     }
-
 }

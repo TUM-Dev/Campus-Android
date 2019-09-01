@@ -51,5 +51,4 @@ object TuitionNotificationScheduler {
                 .withMinuteOfHour(0)
                 .withSecondOfMinute(0)
     }
-
 }

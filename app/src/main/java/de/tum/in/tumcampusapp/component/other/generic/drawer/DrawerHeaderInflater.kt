@@ -89,5 +89,4 @@ class DrawerHeaderInflater(
             .placeholder(R.drawable.photo_not_available)
             .into(imageView)
     }
-
 }

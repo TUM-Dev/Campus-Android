@@ -17,7 +17,5 @@ interface EventsComponent {
         fun eventType(eventType: EventType): Builder
 
         fun build(): EventsComponent
-
     }
-
 }

@@ -27,8 +27,10 @@ class RestoreCard(context: Context) : StickyCard(CardManager.CARD_RESTORE, conte
 
     companion object {
 
-        fun inflateViewHolder(parent: ViewGroup,
-                              interactionListener: CardInteractionListener): CardViewHolder {
+        fun inflateViewHolder(
+            parent: ViewGroup,
+            interactionListener: CardInteractionListener
+        ): CardViewHolder {
             val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.card_restore, parent, false)
             view.findViewById<View>(R.id.restore_card).setOnClickListener {

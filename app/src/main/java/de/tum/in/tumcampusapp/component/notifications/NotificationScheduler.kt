@@ -147,8 +147,10 @@ class NotificationScheduler @Inject constructor(private val context: Context) {
      * @param globalNotificationId The notification's global ID in [NotificationStore] used for scheduling
      * @return The [PendingIntent] used for scheduling the notification
      */
-    private fun getAlarmIntent(futureNotification: FutureNotification,
-                               globalNotificationId: Long): PendingIntent {
+    private fun getAlarmIntent(
+        futureNotification: FutureNotification,
+        globalNotificationId: Long
+    ): PendingIntent {
         val intent = Intent(context, NotificationReceiver::class.java).apply {
             putExtra(Const.KEY_NOTIFICATION_ID, globalNotificationId.toInt())
             putExtra(Const.KEY_NOTIFICATION, futureNotification.notification)

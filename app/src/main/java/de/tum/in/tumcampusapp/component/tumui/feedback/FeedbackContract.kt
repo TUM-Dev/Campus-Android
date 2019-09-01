@@ -50,5 +50,4 @@ interface FeedbackContract {
         fun onSaveInstanceState(outState: Bundle)
         fun detachView()
     }
-
 }

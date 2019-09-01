@@ -32,9 +32,7 @@ interface TicketsComponent {
         fun eventId(@EventId eventId: Int): Builder
 
         fun build(): TicketsComponent
-
     }
-
 }
 
 @Module
@@ -42,5 +40,4 @@ interface TicketsModule {
 
     @Binds
     fun bindEventsDownloadAction(impl: EventsDownloadAction): DownloadWorker.Action
-
 }

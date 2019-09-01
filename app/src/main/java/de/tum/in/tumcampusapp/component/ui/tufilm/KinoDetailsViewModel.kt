@@ -15,8 +15,8 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class KinoDetailsViewModel @Inject constructor(
-        private val localRepository: KinoLocalRepository,
-        private val eventsRemoteRepository: EventsRemoteRepository
+    private val localRepository: KinoLocalRepository,
+    private val eventsRemoteRepository: EventsRemoteRepository
 ) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
@@ -24,7 +24,7 @@ class KinoDetailsViewModel @Inject constructor(
     private val _kino = MutableLiveData<Kino>()
     val kino: LiveData<Kino> = _kino
 
-    private val _event= MutableLiveData<Event>()
+    private val _event = MutableLiveData<Event>()
     val event: LiveData<Event> = _event
 
     private val _aggregatedTicketStatus = MutableLiveData<TicketStatus?>()
@@ -55,5 +55,4 @@ class KinoDetailsViewModel @Inject constructor(
         super.onCleared()
         compositeDisposable.dispose()
     }
-
 }

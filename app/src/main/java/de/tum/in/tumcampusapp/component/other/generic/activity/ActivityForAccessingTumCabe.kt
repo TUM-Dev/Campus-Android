@@ -16,5 +16,4 @@ abstract class ActivityForAccessingTumCabe<T>(layoutId: Int) : ProgressActivity<
     protected val apiClient: TUMCabeClient by lazy {
         TUMCabeClient.getInstance(this)
     }
-
 }

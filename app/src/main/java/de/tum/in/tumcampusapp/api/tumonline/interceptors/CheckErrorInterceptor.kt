@@ -43,5 +43,4 @@ class CheckErrorInterceptor(private val context: Context) : Interceptor {
 
         return response
     }
-
 }

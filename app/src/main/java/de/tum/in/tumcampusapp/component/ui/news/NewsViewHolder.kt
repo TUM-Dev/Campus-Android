@@ -24,9 +24,9 @@ import org.joda.time.format.DateTimeFormat
 import java.util.regex.Pattern
 
 class NewsViewHolder(
-        itemView: View,
-        interactionListener: CardInteractionListener?,
-        private val showOptionsButton: Boolean = true
+    itemView: View,
+    interactionListener: CardInteractionListener?,
+    private val showOptionsButton: Boolean = true
 ) : CardViewHolder(itemView, interactionListener) {
 
     private val optionsButtonGroup: Group by lazy { itemView.findViewById<Group>(R.id.cardMoreIconGroup) }
@@ -35,7 +35,7 @@ class NewsViewHolder(
     private val dateTextView: TextView by lazy { itemView.findViewById<TextView>(R.id.news_src_date) }
     private val sourceTextView: TextView by lazy { itemView.findViewById<TextView>(R.id.news_src_title) }
     private val ticketsIcon: ImageView? by lazy { itemView.findViewById<ImageView>(R.id.tickets_icon) }
-    private val ticketsTextView: TextView? by lazy { itemView.findViewById<TextView>(R.id.tickets_available)}
+    private val ticketsTextView: TextView? by lazy { itemView.findViewById<TextView>(R.id.tickets_available) }
 
     fun bind(newsItem: News, newsSource: NewsSources, hasEvent: Boolean) = with(itemView) {
         val card = if (newsItem.isFilm) FilmCard(context, newsItem) else NewsCard(context = context, news = newsItem)
@@ -121,5 +121,4 @@ class NewsViewHolder(
     companion object {
         private val COMPILE = Pattern.compile("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*")
     }
-
 }

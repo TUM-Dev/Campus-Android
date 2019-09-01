@@ -57,11 +57,11 @@ class NextLectureCard(context: Context) : Card(CardManager.CARD_NEXT_LECTURE, co
     }
 
     data class CardCalendarItem(
-            val id: String,
-            val title: String,
-            val start: DateTime,
-            val end: DateTime,
-            val locations: List<String>?
+        val id: String,
+        val title: String,
+        val start: DateTime,
+        val end: DateTime,
+        val locations: List<String>?
     ) {
         val locationString: String
             get() {
@@ -84,5 +84,4 @@ class NextLectureCard(context: Context) : Card(CardManager.CARD_NEXT_LECTURE, co
             return NextLectureCardViewHolder(view, interactionListener)
         }
     }
-
 }

@@ -30,8 +30,11 @@ class WeekViewFragment : Fragment(), MonthChangeListener<WidgetCalendarItem> {
         roomApiCode = arguments?.getString(Const.ROOM_ID)
     }
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?, savedInstanceState: Bundle?): View? =
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? =
             inflater.inflate(R.layout.fragment_day_view, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,8 +43,10 @@ class WeekViewFragment : Fragment(), MonthChangeListener<WidgetCalendarItem> {
         weekView.goToHour(8)
     }
 
-    override fun onMonthChange(startDate: Calendar,
-                               endDate: Calendar): List<WeekViewDisplayable<WidgetCalendarItem>> {
+    override fun onMonthChange(
+        startDate: Calendar,
+        endDate: Calendar
+    ): List<WeekViewDisplayable<WidgetCalendarItem>> {
         if (!isLoaded(startDate)) {
             loadEventsInBackground(startDate, endDate)
             return emptyList()
@@ -102,5 +107,4 @@ class WeekViewFragment : Fragment(), MonthChangeListener<WidgetCalendarItem> {
             return fragment
         }
     }
-
 }

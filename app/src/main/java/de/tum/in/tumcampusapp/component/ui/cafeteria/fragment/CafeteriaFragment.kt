@@ -22,7 +22,6 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.activity.CafeteriaNotific
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionsPagerAdapter
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.di.CafeteriaModule
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
@@ -237,7 +236,5 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
 
         @JvmStatic
         fun newInstance() = CafeteriaFragment()
-
     }
-
 }

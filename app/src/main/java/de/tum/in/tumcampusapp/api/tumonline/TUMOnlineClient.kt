@@ -134,7 +134,5 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
                 .create(TUMOnlineAPIService::class.java)
             return TUMOnlineClient(apiService)
         }
-
     }
-
 }

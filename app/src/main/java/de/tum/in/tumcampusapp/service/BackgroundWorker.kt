@@ -9,8 +9,8 @@ import java.util.concurrent.TimeUnit
  * Worker to sync data periodically in background
  */
 class BackgroundWorker(
-        context: Context,
-        workerParams: WorkerParameters
+    context: Context,
+    workerParams: WorkerParameters
 ) : Worker(context, workerParams) {
 
     override fun doWork(): ListenableWorker.Result {
@@ -34,7 +34,5 @@ class BackgroundWorker(
                     .setConstraints(constraints)
                     .build()
         }
-
     }
-
 }

@@ -138,7 +138,6 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
                 }
                 updateDateViews()
             }, start.year, start.monthOfYear - 1, start.dayOfMonth).show()
-
         }
         eventEndDateView.setOnClickListener {
             hideKeyboard()
@@ -194,8 +193,10 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         apiClient
                 .deleteEvent(eventId)
                 .enqueue(object : Callback<DeleteEventResponse> {
-                    override fun onResponse(call: Call<DeleteEventResponse>,
-                                            response: Response<DeleteEventResponse>) {
+                    override fun onResponse(
+                        call: Call<DeleteEventResponse>,
+                        response: Response<DeleteEventResponse>
+                    ) {
                         if (response.isSuccessful) {
                             Utils.log("Event successfully deleted (now creating the edited version)")
                             TcaDb.getInstance(this@CreateEventActivity).calendarDao().delete(eventId)
@@ -205,8 +206,10 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
                         }
                     }
 
-                    override fun onFailure(call: Call<DeleteEventResponse>,
-                                           t: Throwable) {
+                    override fun onFailure(
+                        call: Call<DeleteEventResponse>,
+                        t: Throwable
+                    ) {
                         Utils.log(t)
                         displayErrorMessage(t)
                     }
@@ -309,5 +312,4 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
         dialog.show()
     }
-
 }

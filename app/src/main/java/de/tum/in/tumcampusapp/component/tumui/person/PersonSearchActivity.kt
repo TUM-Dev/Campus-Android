@@ -16,5 +16,4 @@ class PersonSearchActivity : BaseActivity(R.layout.activity_person_search) {
                 .commit()
         }
     }
-
 }

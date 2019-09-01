@@ -23,8 +23,11 @@ class DateSerializer : JsonDeserializer<DateTime>, JsonSerializer<DateTime> {
         DateTimeFormat.forPattern(it).withLocale(Locale.GERMAN)
     }
 
-    override fun deserialize(json: JsonElement?,
-                             typeOfT: Type?, context: JsonDeserializationContext?): DateTime {
+    override fun deserialize(
+        json: JsonElement?,
+        typeOfT: Type?,
+        context: JsonDeserializationContext?
+    ): DateTime {
         dateFormats.forEach {
             try {
                 return it.parseDateTime(json?.asString)

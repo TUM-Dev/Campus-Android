@@ -26,5 +26,4 @@ class ChaosMonkeyInterceptor : Interceptor {
         }
         return chain.proceed(chain.request())
     }
-
 }

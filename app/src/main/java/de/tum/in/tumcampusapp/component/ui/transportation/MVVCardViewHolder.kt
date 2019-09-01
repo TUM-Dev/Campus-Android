@@ -9,8 +9,8 @@ import kotlinx.android.synthetic.main.card_mvv.view.*
 import kotlin.math.min
 
 class MVVCardViewHolder(
-        itemView: View,
-        interactionListener: CardInteractionListener
+    itemView: View,
+    interactionListener: CardInteractionListener
 ) : CardViewHolder(itemView, interactionListener) {
 
     fun bind(station: StationResult, departures: List<Departure>) {
@@ -38,5 +38,4 @@ class MVVCardViewHolder(
             }
         }
     }
-
 }

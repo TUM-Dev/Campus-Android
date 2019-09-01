@@ -8,8 +8,8 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class KinoRemoteRepository @Inject constructor(
-        private val tumCabeClient: TUMCabeClient,
-        private val localRepository: KinoLocalRepository
+    private val tumCabeClient: TUMCabeClient,
+    private val localRepository: KinoLocalRepository
 ) {
 
     /**
@@ -32,5 +32,4 @@ class KinoRemoteRepository @Inject constructor(
                 .map { it.toTypedArray() }
                 .subscribe(localRepository::addKino, Utils::log)
     }
-
 }

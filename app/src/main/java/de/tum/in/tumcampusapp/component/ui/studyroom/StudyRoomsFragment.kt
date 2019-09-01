@@ -126,5 +126,4 @@ class StudyRoomsFragment : FragmentForAccessingTumCabe<List<StudyRoomGroup>>(
     companion object {
         fun newInstance() = StudyRoomsFragment()
     }
-
 }

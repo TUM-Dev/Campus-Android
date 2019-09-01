@@ -48,5 +48,4 @@ class OnboardingNavigator @Inject constructor(
             Utils.setSetting(activity, Const.ACCESS_TOKEN, "")
         }
     }
-
 }

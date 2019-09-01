@@ -15,5 +15,4 @@ class EqualSpacingItemDecoration(private val spacing: Int) : RecyclerView.ItemDe
         outRect.top = spacing
         outRect.bottom = if (position == itemCount - 1) spacing else 0
     }
-
 }

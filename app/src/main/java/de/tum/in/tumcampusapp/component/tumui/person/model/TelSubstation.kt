@@ -9,8 +9,10 @@ import java.io.Serializable
  * TUMOnline web service response format for a corresponding request.
  */
 @Xml(name = "nebenstelle")
-data class TelSubstation(@PropertyElement(name = "telefonnummer")
-                         var number: String = "") : Serializable {
+data class TelSubstation(
+    @PropertyElement(name = "telefonnummer")
+    var number: String = ""
+) : Serializable {
     companion object {
         private const val serialVersionUID = -3289209179488515142L
     }

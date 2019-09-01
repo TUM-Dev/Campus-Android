@@ -13,10 +13,10 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class GradesBackgroundUpdater @Inject constructor(
-        private val context: Context,
-        private val tumOnlineClient: TUMOnlineClient,
-        private val notificationScheduler: NotificationScheduler,
-        private val gradesStore: GradesStore
+    private val context: Context,
+    private val tumOnlineClient: TUMOnlineClient,
+    private val notificationScheduler: NotificationScheduler,
+    private val gradesStore: GradesStore
 ) : Callback<ExamList> {
 
     fun fetchGradesAndNotifyIfNecessary() {
@@ -55,5 +55,4 @@ class GradesBackgroundUpdater @Inject constructor(
     companion object {
         private const val NOTIFICATION_THRESHOLD = 2
     }
-
 }

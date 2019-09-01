@@ -13,9 +13,9 @@ import retrofit2.Call
 import javax.inject.Inject
 
 class TicketsRemoteRepository @Inject constructor(
-        private val context: Context,
-        private val tumCabeClient: TUMCabeClient,
-        private val ticketsLocalRepository: TicketsLocalRepository
+    private val context: Context,
+    private val tumCabeClient: TUMCabeClient,
+    private val ticketsLocalRepository: TicketsLocalRepository
 ) {
 
     fun fetchTickets(): Observable<List<Ticket>> {
@@ -41,5 +41,4 @@ class TicketsRemoteRepository @Inject constructor(
         return tumCabeClient.fetchTicketTypes(eventId)
                 .doOnNext(ticketsLocalRepository::addTicketTypes)
     }
-
 }

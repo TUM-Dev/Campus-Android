@@ -13,5 +13,4 @@ class EventBetaInfo() : EventItem {
     override fun getIdForComparison(): Int {
         return -1
     }
-
 }

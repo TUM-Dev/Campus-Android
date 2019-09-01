@@ -8,12 +8,14 @@ import java.math.BigInteger
 import java.security.SecureRandom
 import java.util.*
 
-data class DeviceRegister(var signature: String = "",
-                          var date: String = "",
-                          var rand: String = "",
-                          var device: String = "",
-                          var publicKey: String = "",
-                          var member: ChatMember? = null) {
+data class DeviceRegister(
+    var signature: String = "",
+    var date: String = "",
+    var rand: String = "",
+    var device: String = "",
+    var publicKey: String = "",
+    var member: ChatMember? = null
+) {
     companion object {
         @Throws(NoPrivateKey::class)
         fun getDeviceRegister(c: Context, publickey: String, member: ChatMember?): DeviceRegister {

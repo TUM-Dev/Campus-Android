@@ -226,5 +226,4 @@ class OnboardingStartFragment : BaseFragment<Unit>(
     companion object {
         fun newInstance() = OnboardingStartFragment()
     }
-
 }

@@ -163,14 +163,16 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
         TUMCabeClient
                 .getInstance(this)
                 .reserveTicket(verification, object : Callback<TicketReservationResponse> {
-                    override fun onResponse(call: Call<TicketReservationResponse>,
-                                            response: Response<TicketReservationResponse>) {
+                    override fun onResponse(
+                        call: Call<TicketReservationResponse>,
+                        response: Response<TicketReservationResponse>
+                    ) {
                         // ResponseBody can be null if the user has already bought a ticket
                         // but has not fetched it from the server yet
                         val reservationResponse = response.body()
-                        if (response.isSuccessful
-                                && reservationResponse != null
-                                && reservationResponse.error == null) {
+                        if (response.isSuccessful &&
+                                reservationResponse != null &&
+                                reservationResponse.error == null) {
                             handleTicketReservationSuccess(reservationResponse)
                         } else {
                             if (reservationResponse == null || !response.isSuccessful) {
@@ -228,4 +230,3 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
         super.onDestroy()
     }
 }
-

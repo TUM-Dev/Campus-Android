@@ -10,5 +10,4 @@ object FontUtils {
     fun getFontSizeInPx(context: Context, fontSize: Float): Int {
         return applyDimension(COMPLEX_UNIT_SP, fontSize, context.resources.displayMetrics).toInt()
     }
-
 }

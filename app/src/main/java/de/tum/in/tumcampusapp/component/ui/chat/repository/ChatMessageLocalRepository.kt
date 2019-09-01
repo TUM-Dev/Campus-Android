@@ -1,6 +1,5 @@
 package de.tum.`in`.tumcampusapp.component.ui.chat.repository
 
-
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMessage
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import java.util.concurrent.Executor
@@ -8,7 +7,7 @@ import java.util.concurrent.Executors
 
 object ChatMessageLocalRepository {
 
-    private val executor: Executor = Executors.newSingleThreadExecutor();
+    private val executor: Executor = Executors.newSingleThreadExecutor()
 
     lateinit var db: TcaDb
 
@@ -37,5 +36,4 @@ object ChatMessageLocalRepository {
     fun removeUnsent(chatMessage: ChatMessage) {
         executor.execute { db.chatMessageDao().removeUnsent(chatMessage.text) }
     }
-
 }

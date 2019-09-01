@@ -5,9 +5,11 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.RoomWarnings
 
-@Entity(tableName = "transport_favorites" ,
+@Entity(tableName = "transport_favorites",
         indices = [Index(value = ["symbol"], unique = true)])
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
-data class TransportFavorites(@PrimaryKey(autoGenerate = true)
-                              var id: Int = 0,
-                              var symbol: String = "")
+data class TransportFavorites(
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0,
+    var symbol: String = ""
+)

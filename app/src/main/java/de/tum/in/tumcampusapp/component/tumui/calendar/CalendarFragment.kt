@@ -106,8 +106,8 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
 
         weekView.scrollListener = object : ScrollListener {
             override fun onFirstVisibleDayChanged(
-                    newFirstVisibleDay: Calendar,
-                    oldFirstVisibleDay: Calendar?
+                newFirstVisibleDay: Calendar,
+                oldFirstVisibleDay: Calendar?
             ) {
                 val visibleDay = LocalDate(newFirstVisibleDay)
                 val today = LocalDate.now()
@@ -255,9 +255,9 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
     }
 
     override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<out String>,
-            grantResults: IntArray
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
     ) {
         val hasPermissions = grantResults.all { it == PackageManager.PERMISSION_GRANTED }
         if (!hasPermissions) {
@@ -295,12 +295,12 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
     }
 
     private fun isPermissionGranted(id: Int): Boolean {
-        if (checkSelfPermission(requireContext(), Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
-                && checkSelfPermission(requireContext(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+        if (checkSelfPermission(requireContext(), Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED &&
+                checkSelfPermission(requireContext(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
             return true
         } else {
-            if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CALENDAR)
-                    || shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CALENDAR)) {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CALENDAR) ||
+                    shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CALENDAR)) {
                 AlertDialog.Builder(requireContext())
                         .setMessage(getString(R.string.permission_calendar_explanation))
                         .setPositiveButton(R.string.ok) { _, _ ->
@@ -333,8 +333,8 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
     }
 
     private fun prepareCalendarItems(
-            begin: DateTime,
-            end: DateTime
+        begin: DateTime,
+        end: DateTime
     ): List<WeekViewDisplayable<CalendarItem>> {
         val showCancelledEvents =
                 Utils.getSettingBool(requireContext(), Const.CALENDAR_FILTER_CANCELED, true)
@@ -498,12 +498,9 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
 
         @JvmStatic
         fun newInstance(
-                date: Long? = null,
-                eventId: String? = null
+            date: Long? = null,
+            eventId: String? = null
         ) = CalendarFragment().apply {
-
         }
-
     }
-
 }

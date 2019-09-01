@@ -18,10 +18,10 @@ class NewsInflater(context: Context) {
 
     @JvmOverloads
     fun onCreateNewsView(
-            parent: ViewGroup,
-            layoutId: Int,
-            showOptionsButton: Boolean = true,
-            interactionListener: CardInteractionListener? = null
+        parent: ViewGroup,
+        layoutId: Int,
+        showOptionsButton: Boolean = true,
+        interactionListener: CardInteractionListener? = null
     ): NewsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
         return NewsViewHolder(view, interactionListener, showOptionsButton)
@@ -33,5 +33,4 @@ class NewsInflater(context: Context) {
         val hasEvents = nrOfEvents != 0
         viewHolder.bind(newsItem, newsSource, hasEvents)
     }
-
 }

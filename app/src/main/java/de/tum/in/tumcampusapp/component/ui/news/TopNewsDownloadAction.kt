@@ -6,11 +6,10 @@ import de.tum.`in`.tumcampusapp.service.DownloadWorker
 import javax.inject.Inject
 
 class TopNewsDownloadAction @Inject constructor(
-        private val remoteRepository: TopNewsRemoteRepository
+    private val remoteRepository: TopNewsRemoteRepository
 ) : DownloadWorker.Action {
 
     override fun execute(cacheBehaviour: CacheControl) {
         remoteRepository.fetchNewsAlert()
     }
-
 }

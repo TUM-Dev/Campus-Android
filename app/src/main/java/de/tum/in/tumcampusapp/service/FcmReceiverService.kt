@@ -54,9 +54,9 @@ class FcmReceiverService : FirebaseMessagingService() {
      * See: https://github.com/TCA-Team/TumCampusApp/wiki/GCM-Message-format
      */
     private fun createPushNotificationOfType(
-            type: Int,
-            notificationId: Int,
-            payload: String
+        type: Int,
+        notificationId: Int,
+        payload: String
     ): PushNotification? {
         // Apparently, using the service context can cause issues here:
         // https://stackoverflow.com/questions/48770750/strange-crash-when-starting-notification
