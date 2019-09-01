@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import de.tum.`in`.tumcampusapp.di.AppComponent
 import de.tum.`in`.tumcampusapp.di.app
-import kotlinx.android.synthetic.main.toolbar.main_toolbar
+import kotlinx.android.synthetic.main.toolbar.toolbar
 
 abstract class BaseActivity(
     @LayoutRes private val layoutId: Int
@@ -21,7 +21,7 @@ abstract class BaseActivity(
 
         // TODO Refactor
         if (this !is BaseNavigationActivity) {
-            setSupportActionBar(main_toolbar)
+            setSupportActionBar(toolbar)
 
             supportActionBar?.let {
                 val parent = NavUtils.getParentActivityName(this)

@@ -91,7 +91,7 @@ class BaseNavigationActivity : BaseActivity(
 
     private fun initDrawerToggle() {
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
-        val toolbar = findViewById<Toolbar>(R.id.main_toolbar)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
 
         drawerToggle = object : ActionBarDrawerToggle(this, drawerLayout,
             toolbar, R.string.drawer_open, R.string.drawer_close) {}

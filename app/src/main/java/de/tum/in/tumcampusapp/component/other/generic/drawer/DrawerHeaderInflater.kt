@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.other.generic.drawer
 
 import android.content.Context
-import android.content.Intent
 import android.view.View
 import android.widget.TextView
 import com.google.android.material.button.MaterialButton
@@ -10,7 +9,7 @@ import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
-import de.tum.`in`.tumcampusapp.component.ui.onboarding.WizNavStartActivity
+import de.tum.`in`.tumcampusapp.component.ui.onboarding.OnboardingActivity
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import java.util.Locale
@@ -52,7 +51,7 @@ class DrawerHeaderInflater(
 
             loginButton.visibility = View.VISIBLE
             loginButton.setOnClickListener {
-                val intent = Intent(context, WizNavStartActivity::class.java)
+                val intent = OnboardingActivity.newIntent(context)
                 context.startActivity(intent)
             }
         }

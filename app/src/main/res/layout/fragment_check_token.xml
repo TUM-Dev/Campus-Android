@@ -1,10 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- The toolbar aka SupportActionBar -->
     <include layout="@layout/toolbar" />
 
     <include
@@ -91,28 +91,26 @@
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/open_tum_online_button"
+                android:id="@+id/openTumOnlineButton"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/material_small_padding"
                 android:layout_marginEnd="@dimen/material_small_padding"
                 android:layout_marginBottom="@dimen/material_small_padding"
-                android:onClick="onClickTUMOnline"
                 android:text="@string/open_tum_online"
                 android:textAllCaps="false"
                 android:textColor="@color/color_primary"
                 app:cornerRadius="@dimen/material_corner_radius" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/next_button"
+                android:id="@+id/nextButton"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/material_small_padding"
                 android:layout_marginEnd="@dimen/material_default_padding"
                 android:layout_marginBottom="@dimen/material_small_padding"
-                android:onClick="onClickNext"
                 android:text="@string/button_next"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"

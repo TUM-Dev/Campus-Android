@@ -25,8 +25,10 @@ import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model.TuitionList
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 
 class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
 
@@ -78,11 +80,11 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
         return apiService.getGrades(cacheControl.header)
     }
 
-    fun requestToken(username: String, tokenName: String): Call<AccessToken> {
+    fun requestToken(username: String, tokenName: String): Single<AccessToken> {
         return apiService.requestToken(username, tokenName)
     }
 
-    fun getIdentity(): Call<IdentitySet> = apiService.getIdentity()
+    fun getIdentity(): Single<IdentitySet> = apiService.getIdentity()
 
     fun uploadSecret(token: String, secret: String): Call<TokenConfirmation> {
         return apiService.uploadSecret(token, secret)
@@ -124,11 +126,12 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
             val xmlConverterFactory = TikXmlConverterFactory.create(tikXml)
 
             val apiService = Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .client(client)
-                    .addConverterFactory(xmlConverterFactory)
-                    .build()
-                    .create(TUMOnlineAPIService::class.java)
+                .baseUrl(BASE_URL)
+                .client(client)
+                .addConverterFactory(xmlConverterFactory)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build()
+                .create(TUMOnlineAPIService::class.java)
             return TUMOnlineClient(apiService)
         }
 

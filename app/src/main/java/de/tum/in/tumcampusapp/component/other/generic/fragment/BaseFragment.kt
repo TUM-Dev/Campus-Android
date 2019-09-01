@@ -53,7 +53,7 @@ abstract class BaseFragment<T>(
     private var hadSuccessfulRequest = false
 
     private val toolbar: Toolbar?
-        get() = requireActivity().findViewById<Toolbar?>(R.id.main_toolbar)
+        get() = requireActivity().findViewById<Toolbar?>(R.id.toolbar)
 
     private val contentView: ViewGroup by lazy {
         requireActivity().findViewById<ViewGroup>(android.R.id.content).getChildAt(0) as ViewGroup

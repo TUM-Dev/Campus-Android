@@ -13,8 +13,9 @@ import org.jetbrains.anko.doAsync
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class CacheManager(private val context: Context) {
+class CacheManager @Inject constructor(private val context: Context) {
 
     val cache: Cache
         get() = Cache(context.cacheDir, 10 * 1024 * 1024) // 10 MB
