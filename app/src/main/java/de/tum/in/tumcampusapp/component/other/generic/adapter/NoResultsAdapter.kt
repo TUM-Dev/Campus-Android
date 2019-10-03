@@ -15,7 +15,7 @@ class NoResultsAdapter(context: Context) :
         ArrayAdapter<String>(context, R.layout.listview_simple_item_center, arrayOf(context.getString(R.string.no_search_result))), StickyListHeadersAdapter {
 
     // Generate header view
-    override fun getHeaderView(pos: Int, convertView: View, parent: ViewGroup) = View(context)
+    override fun getHeaderView(pos: Int, convertView: View?, parent: ViewGroup) = View(context)
 
     override fun getHeaderId(i: Int): Long = 0
 
