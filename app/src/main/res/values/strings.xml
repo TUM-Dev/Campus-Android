@@ -126,6 +126,8 @@
     <string name="licences">Open-source licences</string>
     <string name="licences_summary">Legal notes to licences</string>
 
+    <string name="language_preference">Language</string>
+
     <!-- Startup Wizard -->
     <string name="not_connected_to_tumonline">Not connected</string>
     <string name="connect_to_tum_online">Connect to TUMonline</string>

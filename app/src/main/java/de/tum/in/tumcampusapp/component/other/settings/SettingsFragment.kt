@@ -192,6 +192,11 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
                 StartSyncReceiver.cancelBackground()
             }
         }
+
+        // restart app after language change
+        if (key == "language_preference") {
+            if (activity != null) (activity as SettingsActivity).restartApp()
+        }
     }
 
     private fun initCafeteriaCardSelections() {

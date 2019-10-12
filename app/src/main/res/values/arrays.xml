@@ -11,6 +11,16 @@
         <item>2</item>
     </string-array>
 
+    <!-- Language selection -->
+    <string-array name="language_entries">
+        <item>Deutsch</item>
+        <item>English</item>
+    </string-array>
+    <string-array name="language_values">
+        <item>de</item>
+        <item>en</item>
+    </string-array>
+
     <!-- Default cafeteria and mvv selection -->
     <!-- Campus Garching -->
     <string-array name="cafeterias_G" translatable="false">

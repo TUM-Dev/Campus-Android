@@ -81,6 +81,7 @@
     <string name="github_contribute">Mitmachen auf GitHub</string>
     <string name="licences">Open-Source-Lizenzen</string>
     <string name="licences_summary">Rechtliche Hinweise zu Lizenzen</string>
+    <string name="language_preference">Sprache</string>
 
     <!-- Startup Wizard -->
     <string name="not_connected_to_tumonline">Nicht verbunden</string>
