@@ -11,6 +11,7 @@ import de.tum.`in`.tumcampusapp.di.AppComponent
 import de.tum.`in`.tumcampusapp.di.app
 import kotlinx.android.synthetic.main.toolbar.toolbar
 import java.util.Locale
+import android.content.pm.PackageManager
 
 abstract class BaseActivity(
     @LayoutRes private val layoutId: Int
@@ -50,12 +51,23 @@ abstract class BaseActivity(
     // load language from user's preferences
     private fun initLanguage(context: Context) {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val lang = sharedPreferences.getString("language_preference", Locale.getDefault().language)
+        var lang = sharedPreferences.getString("language_preference", null)
+        if (lang == null) {
+            lang = Locale.getDefault().language
+            val editor = sharedPreferences.edit()
+            editor.putString("language_preference", lang)
+            editor.apply()
+        }
         val locale = Locale(lang)
 
         Locale.setDefault(locale)
         val config = baseContext.resources.configuration
         config.setLocale(locale)
         baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
+
+        val activityInfo = packageManager.getActivityInfo(this.componentName, PackageManager.GET_META_DATA)
+        if (activityInfo.labelRes != 0 && supportActionBar != null) {
+            supportActionBar!!.setTitle(activityInfo.labelRes)
+        }
     }
 }

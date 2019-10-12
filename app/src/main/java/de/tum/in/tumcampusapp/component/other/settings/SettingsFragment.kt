@@ -78,6 +78,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
             // Click listener for preference list entries. Used to simulate a button
             // (since it is not possible to add a button to the preferences screen)
             findPreference(BUTTON_LOGOUT).onPreferenceClickListener = this
+            setSummary("language_preference")
             setSummary("card_default_campus")
             setSummary("silent_mode_set_to")
             setSummary("background_mode_set_to")
