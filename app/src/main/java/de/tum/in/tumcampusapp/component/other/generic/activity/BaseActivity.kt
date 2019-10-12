@@ -12,6 +12,7 @@ import de.tum.`in`.tumcampusapp.di.app
 import kotlinx.android.synthetic.main.toolbar.toolbar
 import java.util.Locale
 import android.content.pm.PackageManager
+import de.tum.`in`.tumcampusapp.R
 
 abstract class BaseActivity(
     @LayoutRes private val layoutId: Int
@@ -54,6 +55,9 @@ abstract class BaseActivity(
         var lang = sharedPreferences.getString("language_preference", null)
         if (lang == null) {
             lang = Locale.getDefault().language
+            val availableLangs = resources.getStringArray(R.array.language_values)
+            if (!availableLangs.contains(lang)) lang = "en"
+
             val editor = sharedPreferences.edit()
             editor.putString("language_preference", lang)
             editor.apply()
