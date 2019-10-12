@@ -5,7 +5,7 @@
     <androidx.preference.PreferenceCategory android:title="@string/language_preference">
 
         <androidx.preference.ListPreference
-            android:defaultValue="de"
+            android:defaultValue="en"
             android:entries="@array/language_entries"
             android:entryValues="@array/language_values"
             android:icon="@drawable/ic_outline_language_24px"
