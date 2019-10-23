@@ -195,8 +195,8 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         }
 
         // restart app after language change
-        if (key == "language_preference" && activity != null) {
-            (activity as SettingsActivity).restartApp()
+        if (key == "language_preference") {
+            if (activity != null) (activity as SettingsActivity).restartApp()
         }
     }
 
