@@ -54,7 +54,8 @@ class NextLectureCardViewHolder(
         val icon = if (isExpanded) R.drawable.ic_arrow_up_blue else R.drawable.ic_arrow_down_blue
         moreTextView.addCompoundDrawablesWithIntrinsicBounds(start = icon)
 
-        TransitionManager.beginDelayedTransition(this as ViewGroup)
+        // If possible, run the transition on the parent RecyclerView to incorporate sibling views
+        TransitionManager.beginDelayedTransition((this.parent ?: this) as ViewGroup)
     }
 
     private fun showLecture(lecture: NextLectureCard.CardCalendarItem) = with(itemView) {
