@@ -180,6 +180,11 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
 
     private fun openMainActivity() {
         val intent = Intent(this, BaseNavigationActivity::class.java)
+        // If the app has been restarted after a language change,
+        // the intent includes an extra which is passed on to BaseNavigationActivity to open up the settings again.
+        if (getIntent().getBooleanExtra(Const.SETTINGS_RESTART, false)) {
+            intent.putExtra(Const.SETTINGS_RESTART, true)
+        }
         startActivity(intent)
         finish()
         overridePendingTransition(R.anim.fadein, R.anim.fadeout)

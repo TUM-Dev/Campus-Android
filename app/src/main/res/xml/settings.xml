@@ -2,6 +2,18 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="cards_pref_container">
 
+    <androidx.preference.PreferenceCategory android:title="@string/language_preference">
+
+        <androidx.preference.ListPreference
+            android:defaultValue="en"
+            android:entries="@array/language_entries"
+            android:entryValues="@array/language_values"
+            android:icon="@drawable/ic_outline_language_24px"
+            android:key="language_preference"
+            android:title="@string/language_preference" />
+
+    </androidx.preference.PreferenceCategory>
+
     <androidx.preference.PreferenceCategory android:title="@string/campus">
 
         <androidx.preference.ListPreference

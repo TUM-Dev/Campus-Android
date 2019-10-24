@@ -169,4 +169,6 @@ object Const {
 
     const val CAFETERIA_CARDS_SETTING = "cafeteria_cards_selection"
     const val NO_CAFETERIA_FOUND = -1
+
+    const val SETTINGS_RESTART = "settingsRestart"
 }

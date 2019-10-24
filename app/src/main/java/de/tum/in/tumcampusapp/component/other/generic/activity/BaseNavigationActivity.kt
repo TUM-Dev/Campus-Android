@@ -1,5 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.other.generic.activity
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
@@ -16,6 +17,7 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.drawer.DrawerHeaderInflater
 import de.tum.`in`.tumcampusapp.component.other.generic.drawer.DrawerMenuHelper
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
+import de.tum.`in`.tumcampusapp.component.other.settings.SettingsActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainFragment
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -63,6 +65,12 @@ class BaseNavigationActivity : BaseActivity(
                 .beginTransaction()
                 .replace(R.id.contentFrame, MainFragment.newInstance())
                 .commit()
+        }
+
+        // open settings if app has been restarted after language change
+        if (intent.getBooleanExtra(Const.SETTINGS_RESTART, false)) {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
         }
     }
 

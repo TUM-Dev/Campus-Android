@@ -37,6 +37,16 @@ class SettingsActivity : BaseActivity(R.layout.activity_user_preferences),
         return true
     }
 
+    // restart app after language change
+    fun restartApp() {
+        val i = baseContext.packageManager.getLaunchIntentForPackage(baseContext.packageName)
+        i!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        i.putExtra(Const.SETTINGS_RESTART, true)
+        startActivity(i)
+        finishAffinity()
+    }
+
     companion object {
 
         fun newIntent(
