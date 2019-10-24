@@ -68,7 +68,7 @@ class BaseNavigationActivity : BaseActivity(
         }
 
         // open settings if app has been restarted after language change
-        if (intent.getBooleanExtra("SETTINGS", false)) {
+        if (intent.getBooleanExtra(Const.SETTINGS_RESTART, false)) {
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
         }
