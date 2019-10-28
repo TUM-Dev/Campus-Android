@@ -12,6 +12,7 @@ import de.tum.`in`.tumcampusapp.component.notifications.persistence.Notification
 import de.tum.`in`.tumcampusapp.component.other.locations.model.Geo
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
+import de.tum.`in`.tumcampusapp.utils.Utils
 import org.joda.time.DateTime
 
 @Xml(name = "event")
@@ -37,7 +38,7 @@ data class Event(
         return CalendarItem(
                 id ?: "", status ?: "", url ?: "", title,
                 description ?: "", startTime ?: DateTime(),
-                endTime ?: DateTime(), location ?: "", false
+                endTime ?: DateTime(), Utils.stripHtml(location ?: ""), false
         )
     }
 
