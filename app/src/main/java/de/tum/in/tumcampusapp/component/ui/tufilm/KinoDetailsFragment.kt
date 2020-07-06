@@ -47,7 +47,7 @@ class KinoDetailsFragment : Fragment() {
 
     private lateinit var kinoViewModel: KinoDetailsViewModel
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity() as BaseActivity).injector
                 .kinoComponent()

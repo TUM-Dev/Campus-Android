@@ -45,7 +45,7 @@ class CheckTokenFragment : BaseFragment<Unit>(
     @Inject
     lateinit var navigator: OnboardingNavigator
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         onboardingComponent.inject(this)
     }

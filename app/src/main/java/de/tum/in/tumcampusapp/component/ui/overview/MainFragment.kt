@@ -61,7 +61,7 @@ class MainFragment : BaseFragment<Unit>(
         ViewModelProviders.of(this, factory).get(MainActivityViewModel::class.java)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         injector.inject(this)
     }

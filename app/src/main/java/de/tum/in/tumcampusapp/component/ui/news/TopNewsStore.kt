@@ -61,14 +61,14 @@ class RealTopNewsStore @Inject constructor(
             return null
         }
 
-        val displayUntil = sharedPrefs.getString(Const.NEWS_ALERT_SHOW_UNTIL, "")
-        val until: DateTime? = DateTimeUtils.parseIsoDateWithMillis(displayUntil)
+        val displayUntil = sharedPrefs.getString(Const.NEWS_ALERT_SHOW_UNTIL, "")!!
+        val until: DateTime = DateTimeUtils.parseIsoDateWithMillis(displayUntil)!!
         if (until == null || until.isBeforeNow) {
             return null
         }
 
-        val link = sharedPrefs.getString(Const.NEWS_ALERT_LINK, "")
-        val imageUrl = sharedPrefs.getString(Const.NEWS_ALERT_IMAGE, "")
+        val link = sharedPrefs.getString(Const.NEWS_ALERT_LINK, "")!!
+        val imageUrl = sharedPrefs.getString(Const.NEWS_ALERT_IMAGE, "")!!
         return NewsAlert(imageUrl, link, displayUntil)
     }
 

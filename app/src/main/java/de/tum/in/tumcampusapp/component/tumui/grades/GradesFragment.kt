@@ -339,7 +339,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater?.inflate(R.menu.menu_activity_grades, menu)
         barMenuItem = menu?.findItem(R.id.bar_chart_menu)
         pieMenuItem = menu?.findItem(R.id.pie_chart_menu)

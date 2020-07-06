@@ -97,7 +97,7 @@ abstract class BaseFragment<T>(
     private var registered: Boolean = false
 
     private val networkCallback: ConnectivityManager.NetworkCallback = object : ConnectivityManager.NetworkCallback() {
-        override fun onAvailable(network: Network?) {
+        override fun onAvailable(network: Network) {
             runOnUiThread {
                 this@BaseFragment.onRefresh()
             }

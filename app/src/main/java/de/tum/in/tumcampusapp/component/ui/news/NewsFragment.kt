@@ -37,7 +37,7 @@ class NewsFragment : FragmentForDownloadingExternal(
 
     private var firstVisibleItemPosition: Int? = null
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         injector.newsComponent().inject(this)
     }
@@ -82,12 +82,12 @@ class NewsFragment : FragmentForDownloadingExternal(
         showLoadingEnded()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater?.inflate(R.menu.menu_activity_news, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item?.itemId) {
             R.id.action_disable_sources -> {
                 showNewsSourcesDialog()

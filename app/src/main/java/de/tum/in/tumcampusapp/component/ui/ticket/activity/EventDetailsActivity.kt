@@ -20,7 +20,7 @@ class EventDetailsActivity : BaseActivity(R.layout.activity_event_details) {
         val event = intent.getParcelableExtra<Event>(Const.KEY_EVENT)
         supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.fragment_container, EventDetailsFragment.newInstance(event))
+                .replace(R.id.fragment_container, EventDetailsFragment.newInstance(event!!))
                 .commit()
     }
 }

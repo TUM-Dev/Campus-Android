@@ -35,7 +35,7 @@ class CafeteriaDetailsSectionFragment : Fragment() {
         ViewModelProviders.of(this, ViewModelFactory(viewModelProvider)).get(CafeteriaViewModel::class.java)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         injector.cafeteriaComponent()
                 .inject(this)

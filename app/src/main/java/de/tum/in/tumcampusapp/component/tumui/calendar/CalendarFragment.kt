@@ -171,7 +171,7 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
         }
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?) {
+    override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         val menuItemExportGoogle = menu?.findItem(R.id.action_export_calendar)
         val menuItemDeleteCalendar = menu?.findItem(R.id.action_delete_calendar)
@@ -184,7 +184,7 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
         menuItemDeleteCalendar?.isVisible = autoSyncCalendar
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater?.inflate(R.menu.menu_sync_calendar, menu)
 
         menuItemSwitchView = menu?.findItem(R.id.action_switch_view_mode)

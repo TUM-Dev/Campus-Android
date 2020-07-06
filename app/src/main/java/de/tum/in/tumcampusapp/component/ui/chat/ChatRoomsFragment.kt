@@ -249,7 +249,7 @@ class ChatRoomsFragment : FragmentForAccessingTumOnline<LecturesResponse>(
         startActivity(intent)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater?.inflate(R.menu.menu_activity_chat_rooms, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }

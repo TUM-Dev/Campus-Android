@@ -67,7 +67,7 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
     override val method: DownloadWorker.Action?
         get() = cafeteriaDownloadAction
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         injector.cafeteriaComponent().inject(this)
     }
@@ -190,7 +190,7 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
 
     override fun onNothingSelected(adapterView: AdapterView<*>?) = Unit
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater?.inflate(R.menu.menu_section_fragment_cafeteria_details, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }

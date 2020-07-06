@@ -21,7 +21,7 @@ class GradeNotificationDeleteReceiver : BroadcastReceiver() {
 
         val newGrades = intent.getStringArrayListExtra(KEY_NEW_GRADES)
         val existingGrades = gradesStore.gradedCourses
-        val updatedGrades = existingGrades + newGrades
+        val updatedGrades = existingGrades + newGrades!!
         gradesStore.store(updatedGrades)
     }
 

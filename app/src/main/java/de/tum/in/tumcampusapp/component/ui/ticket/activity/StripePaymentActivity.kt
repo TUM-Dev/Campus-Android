@@ -57,7 +57,7 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
         val termsOfServiceLink = intent.getStringExtra(Const.KEY_TERMS_LINK)
         val stripePublishableKey = intent.getStringExtra(Const.KEY_STRIPE_API_PUBLISHABLE_KEY)
 
-        if (ticketIds == null ||
+        if (ticketIds == null || termsOfServiceLink == null ||
                 ticketIds.isEmpty() ||
                 ticketPrice == null ||
                 termsOfServiceLink.isEmpty() ||

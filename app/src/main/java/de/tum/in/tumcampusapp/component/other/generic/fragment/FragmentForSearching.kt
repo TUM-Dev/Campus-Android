@@ -47,7 +47,7 @@ abstract class FragmentForSearching<T>(
 
     protected abstract fun onStartSearch(query: String?)
 
-    override fun onPrepareOptionsMenu(menu: Menu?) {
+    override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         if (openSearch) {
             searchItem.setShowAsAction(SHOW_AS_ACTION_IF_ROOM or SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW)
@@ -55,7 +55,7 @@ abstract class FragmentForSearching<T>(
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater?.inflate(R.menu.menu_search, menu)
 
         searchItem = checkNotNull(menu?.findItem(R.id.action_search))

@@ -46,7 +46,7 @@ class LecturesDetailsActivity : ActivityForAccessingTumOnline<LectureDetailsResp
             startActivity(intent)
         }
 
-        mLectureId = intent.getStringExtra("stp_sp_nr")
+        mLectureId = intent.getStringExtra("stp_sp_nr")!!
         loadLectureDetails(mLectureId, CacheControl.USE_CACHE)
     }
 

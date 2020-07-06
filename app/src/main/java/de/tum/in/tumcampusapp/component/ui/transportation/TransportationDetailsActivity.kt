@@ -47,9 +47,9 @@ class TransportationDetailsActivity : ProgressActivity<Unit>(R.layout.activity_t
             finish()
             return
         }
-        val location = intent.getStringExtra(EXTRA_STATION)
+        val location = intent.getStringExtra(EXTRA_STATION)!!
         title = location
-        val locationID = intent.getStringExtra(EXTRA_STATION_ID)
+        val locationID = intent.getStringExtra(EXTRA_STATION_ID)!!
 
         showLoadingStart()
         loadDetails(location, locationID)

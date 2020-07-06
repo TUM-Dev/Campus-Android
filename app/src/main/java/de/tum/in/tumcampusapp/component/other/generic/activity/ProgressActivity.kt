@@ -79,7 +79,7 @@ abstract class ProgressActivity<T>(
     private var registered: Boolean = false
 
     private val networkCallback: NetworkCallback = object : NetworkCallback() {
-        override fun onAvailable(network: Network?) {
+        override fun onAvailable(network: Network) {
             runOnUiThread(this@ProgressActivity::onRefresh)
         }
     }

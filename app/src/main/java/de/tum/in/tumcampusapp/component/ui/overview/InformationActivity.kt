@@ -123,7 +123,7 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
             setOnLongClickListener {
                 val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                 val clip = ClipData.newPlainText(label, value)
-                clipboard.primaryClip = clip
+                clipboard.setPrimaryClip(clip)
                 true
             }
         }

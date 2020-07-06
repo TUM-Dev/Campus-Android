@@ -30,7 +30,7 @@ class EventsFragment : FragmentForDownloadingExternal(
     override val method: DownloadWorker.Action?
         get() = eventsDownloadAction
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         injector.downloadComponent().inject(this)
     }

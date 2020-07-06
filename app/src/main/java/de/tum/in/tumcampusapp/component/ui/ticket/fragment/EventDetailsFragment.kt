@@ -50,7 +50,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     @Inject
     lateinit var viewModelProviders: Provider<EventDetailsViewModel>
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         injector.ticketsComponent()
                 .eventId(event.id)

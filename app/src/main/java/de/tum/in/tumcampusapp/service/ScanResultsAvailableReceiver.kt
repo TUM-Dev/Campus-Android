@@ -72,7 +72,7 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
     }
 
     class NeverShowAgainService : IntentService(NEVER_SHOW) {
-        override fun onHandleIntent(intent: Intent) {
+        override fun onHandleIntent(intent: Intent?) {
             Utils.setSetting(this, "card_eduroam_phone", false)
         }
 

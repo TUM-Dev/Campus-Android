@@ -8,44 +8,24 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:944892355389:android:3fec122c5eb51ef4",
+        "mobilesdk_app_id": "1:944892355389:android:48ced28754063978",
         "android_client_info": {
-          "package_name": "de.tum.in.tumcampus"
+          "package_name": "de.tum.in.tca.ticketcheck"
         }
       },
       "oauth_client": [
         {
-          "client_id": "944892355389-t2igukqg4jjlhac5ejhbno14tig805f8.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "de.tum.in.tumcampus",
-            "certificate_hash": "52d9be542408f7bc4473aae24107f0cdd4dd6905"
-          }
-        },
-        {
-          "client_id": "944892355389-hqu03lgnd7oig4tc66007rrooklaq467.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
           "client_id": "944892355389-5ql9uckm68cmeejqqvqujj6e9atd6b80.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "944892355389-o1so4eun2gaitb9s7dj0hqjr45b6at7k.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB1tF7vRPJsKmBJ7VUgsFsPBiFxd1YqLxk"
+          "current_key": "AIzaSyD917lW3Y2-x8UiWfUdzKDnI1iO7Qt7Z5s"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "944892355389-hqu03lgnd7oig4tc66007rrooklaq467.apps.googleusercontent.com",
@@ -55,13 +35,64 @@
               "client_id": "944892355389-l9qq6ekquoal46shionj0utr7sjbg4lp.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "de.tum.campusapp"
+                "bundle_id": "de.tum.campusapp",
+                "app_store_id": "1217412716"
               }
             }
           ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:944892355389:android:3fec122c5eb51ef4",
+        "android_client_info": {
+          "package_name": "de.tum.in.tumcampus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "944892355389-jat7kf35dqlvc2uvlsh3vbuq8ge6s6s5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "de.tum.in.tumcampus",
+            "certificate_hash": "fa8436ae46f44a276d59db577810070203a0a663"
+          }
         },
-        "ads_service": {
-          "status": 2
+        {
+          "client_id": "944892355389-t2igukqg4jjlhac5ejhbno14tig805f8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "de.tum.in.tumcampus",
+            "certificate_hash": "52d9be542408f7bc4473aae24107f0cdd4dd6905"
+          }
+        },
+        {
+          "client_id": "944892355389-5ql9uckm68cmeejqqvqujj6e9atd6b80.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD917lW3Y2-x8UiWfUdzKDnI1iO7Qt7Z5s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "944892355389-hqu03lgnd7oig4tc66007rrooklaq467.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "944892355389-l9qq6ekquoal46shionj0utr7sjbg4lp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "de.tum.campusapp",
+                "app_store_id": "1217412716"
+              }
+            }
+          ]
         }
       }
     }

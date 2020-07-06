@@ -8,7 +8,7 @@ class GradesStore @Inject constructor(
 ) {
 
     val gradedCourses: List<String>
-        get() = sharedPrefs.getStringSet(KEY_GRADED_COURSES, emptySet()).toList().sorted()
+        get() = sharedPrefs.getStringSet(KEY_GRADED_COURSES, emptySet())!!.toList().sorted()
 
     fun store(courses: List<String>) {
         sharedPrefs.edit().putStringSet(KEY_GRADED_COURSES, courses.toSet()).apply()
