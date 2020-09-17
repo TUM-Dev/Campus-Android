@@ -191,7 +191,7 @@ public class ChatMessage implements Parcelable {
         parcel.writeInt(id);
         parcel.writeInt(previous);
         parcel.writeString(text);
-        parcel.writeString(DateTimeUtils.INSTANCE.getDateTimeString(timestamp));
+        parcel.writeString(DateTimeUtils.getDateTimeString(timestamp));
         parcel.writeString(signature);
         parcel.writeParcelable(member, flags);
         parcel.writeInt(sendingStatus);
