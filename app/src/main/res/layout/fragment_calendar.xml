@@ -32,7 +32,6 @@
                     app:dayBackgroundColor="@android:color/white"
                     app:eventCornerRadius="4dp"
                     app:eventMarginVertical="2dp"
-                    app:eventPadding="4dp"
                     app:eventTextColor="@android:color/white"
                     app:eventTextSize="12dp"
                     app:headerRowBackgroundColor="@android:color/white"

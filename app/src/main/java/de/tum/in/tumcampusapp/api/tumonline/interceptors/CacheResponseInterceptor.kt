@@ -11,7 +11,7 @@ class CacheResponseInterceptor : Interceptor {
         val request = chain.request()
         val response = chain.proceed(request)
 
-        val url = response.request().url().toString()
+        val url = response.request.url.toString()
         val isCacheable = cachingHelper.isCacheable(url)
 
         return if (response.isSuccessful && isCacheable) {

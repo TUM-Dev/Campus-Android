@@ -161,7 +161,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
             xAxis.apply {
                 granularity = 1f
-                setValueFormatter { value, _ -> grades[value.toInt()] }
+                //setValueFormatter { value, _ -> grades[value.toInt()] }
             }
 
             description = null

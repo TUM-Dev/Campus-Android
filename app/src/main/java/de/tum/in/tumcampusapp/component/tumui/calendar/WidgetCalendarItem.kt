@@ -27,7 +27,7 @@ data class WidgetCalendarItem(
                 .setBackgroundColor(color)
                 .build()
 
-        return WeekViewEvent.Builder<WidgetCalendarItem>()
+        return WeekViewEvent.Builder<WidgetCalendarItem>(this)
                 .setId(id.toLong())
                 .setTitle(title)
                 .setStartTime(startTime.toGregorianCalendar())
@@ -35,7 +35,6 @@ data class WidgetCalendarItem(
                 .setLocation(location)
                 .setAllDay(false)
                 .setStyle(style)
-                .setData(this)
                 .build()
     }
 

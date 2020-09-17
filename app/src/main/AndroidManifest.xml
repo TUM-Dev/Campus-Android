@@ -628,6 +628,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.ticket.activity.StripePaymentActivity" />
         </activity>
+        <activity android:name=".component.tumui.calendar.CreateEventActivity" />
 
         <receiver android:name=".component.notifications.receivers.NotificationReceiver" />
         <receiver android:name=".component.notifications.receivers.NotificationAlarmReceiver" />

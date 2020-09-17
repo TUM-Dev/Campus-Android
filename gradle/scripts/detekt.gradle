@@ -1,12 +1,4 @@
 detekt {
-    profile = 'main'
-
-    profile('main') {
-        input = "$projectDir/src/main/java"
-        config = "$rootDir/gradle/config/detekt-config.yml"
-        filters = '.*test.*,.*/resources/.*,.*/tmp/.*'
-        output = "$projectDir/build/reports/detekt"
-    }
+    input = files("$projectDir/src/main/java")
+    config = files("$rootDir/gradle/config/detekt-config.yml")
 }
-// Currently seems to fail, so deactivate for now
-// check.dependsOn('detektCheck')
