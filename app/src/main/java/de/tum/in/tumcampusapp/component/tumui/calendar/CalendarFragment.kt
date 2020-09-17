@@ -63,7 +63,8 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
     }
 
     private val eventId: String by lazy {
-        checkNotNull(arguments?.getString(Const.KEY_EVENT_ID))
+        val value = arguments?.getString(Const.KEY_EVENT_ID)
+        value ?: ""
     }
 
     private var isWeekMode = false
