@@ -8,7 +8,6 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 apply plugin: "com.github.ben-manes.versions"
-apply from: '../gradle/scripts/findbugs.gradle'
 apply from: '../gradle/scripts/pmd.gradle'
 apply from: '../gradle/scripts/jacoco.gradle'
 apply from: '../gradle/scripts/checkstyle.gradle'
@@ -17,7 +16,7 @@ apply from: '../gradle/scripts/testLogging.gradle'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion '28.0.3'
+    buildToolsVersion '29.0.2'
     buildTypes {
         all {
             proguardFiles(file('../proguard').listFiles())
@@ -36,7 +35,7 @@ android {
     }
     defaultConfig {
         applicationId "de.tum.in.tumcampus"
-        minSdkVersion 24
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 572
         versionName "3.6-dev"
@@ -160,7 +159,7 @@ dependencies {
     implementation 'se.emilsjolander:stickylistheaders:2.7.0'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'me.dm7.barcodescanner:zxing:1.9.13'
-    implementation 'com.journeyapps:zxing-android-embedded:4.1.0'
+    implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     implementation 'de.psdev.licensesdialog:licensesdialog:2.1.0'
     implementation 'com.github.thellmund.Android-Week-View:core:4.1.6'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
