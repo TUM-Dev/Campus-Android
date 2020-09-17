@@ -21,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 
 import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.utils.Utils;
-import kotlin.text.Charsets;
 import okhttp3.CertificatePinner;
 import okhttp3.CookieJar;
 import okhttp3.Interceptor;
@@ -71,6 +70,9 @@ public final class ApiHelper {
                 .cookieJar(cookieJar)
                 .certificatePinner(certificatePinner);
 
+        // Disable gzip for requests as TUMonline
+        builder.addInterceptor(ApiHelper.disableGzip());
+
         //Add the device identifying header
         builder.addInterceptor(ApiHelper.getDeviceInterceptor(c));
 
@@ -86,6 +88,15 @@ public final class ApiHelper {
         //Save it to the static handle and return
         client = builder.build();
         return client;
+    }
+
+    private static Interceptor disableGzip() {
+        return chain -> {
+            Request.Builder newRequest = chain.request()
+                                              .newBuilder()
+                                              .addHeader("Accept-Encoding", "identity");
+            return chain.proceed(newRequest.build());
+        };
     }
 
     private static Interceptor getDeviceInterceptor(final Context c) {
