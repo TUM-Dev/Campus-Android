@@ -13,15 +13,12 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageView
-import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.github.mikephil.charting.utils.ColorTemplate
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.FragmentForAccessingTumOnline
@@ -139,7 +136,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             description = null
             // the legend should not contain all possible grades but rather the most common ones
             legend.setEntries(legend.entries.filter {
-                it.label != null && !it.label.contains(Regex("[1-5],[1245689]"))
+                it.label != null && !it.label.contains(uncommonGradeRe)
             })
             legend.setCustom(legend.entries)
             setTouchEnabled(false)
@@ -183,30 +180,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             description = null
             setTouchEnabled(false)
 
-            // set up elements for bar-charts legend. Libraries default legend would contain too many grades, we only want common ones
-            // this might be refined
-            val newLegend = ArrayList<LegendEntry>()
-            for (i: Int in 0..4) {
-                for (j: Int in listOf(0, 3, 7)) {
-                    newLegend.add(
-                            LegendEntry(
-                                    null, Legend.LegendForm.DEFAULT, 10f, 10f, null,
-                                    ColorTemplate.rgb(resources.getString(GRADE_COLORS[10 * i + j]))
-                            )
-                    )
-                    if (i == 4) {
-                        break
-                    }
-                }
-            }
-            newLegend.add(
-                    LegendEntry(
-                            resources.getString(R.string.grades_without_weight),
-                            Legend.LegendForm.DEFAULT, 10f, 10f, null,
-                            ColorTemplate.rgb(resources.getString(GRADE_COLORS[GRADE_COLORS.size - 1]))
-                    )
-            )
-            legend.setCustom(newLegend)
+            legend.isEnabled = false
             invalidate()
         }
     }
@@ -238,7 +212,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         exams.forEach { exam ->
             // The grade distribution now takes grades with more than one decimal place into account as well
             var cleanGrade = exam.grade!!
-            if (cleanGrade.contains(Regex("[1-4],[0-9][0-9]+"))) {
+            if (cleanGrade.contains(longGradeRe)) {
                 cleanGrade = cleanGrade.subSequence(0, 3) as String
             }
             val count = gradeDistribution[cleanGrade] ?: 0
@@ -458,6 +432,9 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         private const val KEY_SPINNER_POSITION = "spinnerPosition"
 
         fun newInstance() = GradesFragment()
+
+        private val uncommonGradeRe = Regex("[1-5],[1245689][0-9]*")
+        private val longGradeRe = Regex("[1-4],[0-9][0-9]+")
 
         private val GRADE_COLORS = intArrayOf(
                 R.color.grade_1_0, R.color.grade_1_1, R.color.grade_1_2, R.color.grade_1_3,
