@@ -88,7 +88,7 @@
     <color name="error">#FFFF0000</color>
     <color name="valid">#7cbc49</color>
 
-    <color name="grade_1.0">#318f11</color>
+    <color name="grade_1.0">#318F11</color>
     <color name="grade_1.1">#3F9711</color>
     <color name="grade_1.2">#4EA012</color>
     <color name="grade_1.3">#5DA913</color>
@@ -99,7 +99,7 @@
     <color name="grade_1.8">#A8D416</color>
     <color name="grade_1.9">#B7DD17</color>
 
-    <color name="grade_2.0">#c6e618</color>
+    <color name="grade_2.0">#C6E618</color>
     <color name="grade_2.1">#CBE218</color>
     <color name="grade_2.2">#D1DE18</color>
     <color name="grade_2.3">#D6DA18</color>
@@ -121,16 +121,16 @@
     <color name="grade_3.8">#DD2605</color>
     <color name="grade_3.9">#D91302</color>
 
-    <color name="grade_4.0">#d50000</color>
-    <color name="grade_4.1">#D10303</color>
-    <color name="grade_4.2">#CD0707</color>
-    <color name="grade_4.3">#C90A0A</color>
-    <color name="grade_4.4">#C60E0E</color>
-    <color name="grade_4.5">#C21111</color>
-    <color name="grade_4.6">#BE1515</color>
-    <color name="grade_4.7">#BA1818</color>
-    <color name="grade_4.8">#B71C1C</color>
-    <color name="grade_4.9">#B71C1C</color>
+    <color name="grade_4.0">#D50000</color>
+    <color name="grade_4.1">#BF0000</color>
+    <color name="grade_4.2">#AA0000</color>
+    <color name="grade_4.3">#950000</color>
+    <color name="grade_4.4">#7F0000</color>
+    <color name="grade_4.5">#6A0000</color>
+    <color name="grade_4.6">#550000</color>
+    <color name="grade_4.7">#3F0000</color>
+    <color name="grade_4.8">#2A0000</color>
+    <color name="grade_4.9">#150000</color>
 
     <color name="grade_5.0">#000000</color>
     <color name="grade_default">@color/sections_gray</color>
