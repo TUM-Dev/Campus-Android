@@ -363,6 +363,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.overview.MainActivity" />
         </activity>
+
+        <activity
+            android:name=".component.tumui.calendar.CreateEventActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/calendar"
+            android:launchMode="singleTop"
+            android:parentActivityName=".component.tumui.calendar.CalendarActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".component.tumui.calendar.CalendarActivity" />
+        </activity>
+
         <activity
             android:name=".component.ui.chat.activity.ChatRoomsActivity"
             android:configChanges="orientation|screenSize"
