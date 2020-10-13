@@ -30,7 +30,7 @@ public class EduroamController {
      *
      * @return true if eduroam is already setup, false otherwise
      */
-    static public WifiConfiguration getEduroamConfig(Context c) {
+    public static WifiConfiguration getEduroamConfig(Context c) {
         WifiManager wifiManager = (WifiManager) c.getApplicationContext()
                                                  .getSystemService(Context.WIFI_SERVICE);
         List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();

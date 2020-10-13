@@ -35,13 +35,6 @@ page at http://checkstyle.sourceforge.net/config.html -->
 
   <!-- All Java AST specific tests live under TreeWalker module. -->
   <module name="TreeWalker">
-
-    <!--
-
-    IMPORT CHECKS
-
-    -->
-
     <module name="RedundantImport">
       <!-- Checks for redundant import statements. -->
       <property name="severity" value="warning"/>
@@ -141,21 +134,7 @@ page at http://checkstyle.sourceforge.net/config.html -->
 
     -->
 
-    <module name="LineLength">
-      <!-- Checks if a line is too long. -->
-      <property name="max" value="${com.puppycrawl.tools.checkstyle.checks.sizes.LineLength.max}" default="160"/>
-      <property name="severity" value="warning"/>
 
-      <!--
-        The default ignore pattern exempts the following elements:
-          - import statements
-          - long URLs inside comments
-      -->
-
-      <property name="ignorePattern"
-          value="${com.puppycrawl.tools.checkstyle.checks.sizes.LineLength.ignorePattern}"
-          default="^(package .*;\s*)|(import .*;\s*)|( *(\*|//).*https?://.*)$"/>
-    </module>
 
     <module name="LeftCurly">
       <!-- Checks for placement of the left curly brace ('{'). -->
@@ -275,6 +254,21 @@ page at http://checkstyle.sourceforge.net/config.html -->
       <property name="severity" value="warning"/>
     </module>
 
+  </module>
+  <module name="LineLength">
+    <!-- Checks if a line is too long. -->
+    <property name="max" value="${com.puppycrawl.tools.checkstyle.checks.sizes.LineLength.max}" default="160"/>
+    <property name="severity" value="warning"/>
+
+    <!--
+      The default ignore pattern exempts the following elements:
+        - import statements
+        - long URLs inside comments
+    -->
+
+    <property name="ignorePattern"
+        value="${com.puppycrawl.tools.checkstyle.checks.sizes.LineLength.ignorePattern}"
+        default="^(package .*;\s*)|(import .*;\s*)|( *(\*|//).*https?://.*)$"/>
   </module>
 </module>
 

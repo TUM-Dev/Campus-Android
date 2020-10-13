@@ -152,7 +152,7 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
             String lastMessageText = "";
 
             if (timestamp != null) {
-                // TODO: Switch to DateTime in ChatRoomAndLastMessage
+                // TODO(pfent): Switch to DateTime in ChatRoomAndLastMessage
                 lastMessageText = DateTimeUtils.INSTANCE.formatTimeOrDay(timestamp, mContext);
             }
 

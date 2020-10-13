@@ -93,7 +93,8 @@ public class OpeningHoursDetailFragment extends Fragment {
         String room = location.getRoom();
 
         MaterialButton openLinkButton = view.findViewById(R.id.openLinkButton);
-        if (location.getUrl().isEmpty()) {
+        if (location.getUrl()
+                    .isEmpty()) {
             openLinkButton.setVisibility(View.GONE);
         } else {
             openLinkButton.setVisibility(View.VISIBLE);
@@ -124,7 +125,7 @@ public class OpeningHoursDetailFragment extends Fragment {
         infoView.setText(infoText);
 
         // link email addresses and phone numbers (e.g. 089-123456)
-        Linkify.addLinks(infoView, Linkify.EMAIL_ADDRESSES|Linkify.WEB_URLS);
+        Linkify.addLinks(infoView, Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS);
         Linkify.addLinks(infoView, Pattern.compile("[0-9-]{6,}"), "tel:");
     }
 
@@ -138,7 +139,7 @@ public class OpeningHoursDetailFragment extends Fragment {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.card_opening_hour_details, parent, false);
+                                   .inflate(R.layout.card_opening_hour_details, parent, false);
             return new RecyclerView.ViewHolder(v) {
             };
         }

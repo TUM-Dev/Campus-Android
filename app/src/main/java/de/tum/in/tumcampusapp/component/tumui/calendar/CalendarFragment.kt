@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.CalendarContract
 import android.text.format.DateUtils
-import android.transition.TransitionManager
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -15,7 +14,6 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat.checkSelfPermission
 import com.alamkanak.weekview.DateTimeInterpreter
-import com.alamkanak.weekview.ScrollListener
 import com.alamkanak.weekview.WeekView
 import com.alamkanak.weekview.WeekViewDisplayable
 import de.tum.`in`.tumcampusapp.R
@@ -29,7 +27,6 @@ import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.service.QueryLocationsService
 import de.tum.`in`.tumcampusapp.utils.Const
-import de.tum.`in`.tumcampusapp.utils.FontUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.Completable
@@ -45,8 +42,8 @@ import java.util.Calendar
 import java.util.Locale
 
 class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
-    R.layout.fragment_calendar,
-    R.string.calendar
+        R.layout.fragment_calendar,
+        R.string.calendar
 ), CalendarDetailsFragment.OnEventInteractionListener {
 
     private val calendarController: CalendarController by lazy {
