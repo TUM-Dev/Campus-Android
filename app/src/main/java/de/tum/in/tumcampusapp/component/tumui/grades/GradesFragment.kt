@@ -13,6 +13,9 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.ValueFormatter
 import de.tum.`in`.tumcampusapp.R
@@ -155,7 +158,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             data.setValueFormatter(object: ValueFormatter() {
                 override fun getFormattedValue(value: Float): String? {
                     if (value > 0.0)
-                        return grades[value.toInt()]
+                        return value.toString()
                     return ""
                 }
             })
@@ -163,7 +166,24 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             description = null
             setTouchEnabled(false)
 
-            legend.isEnabled = false
+            axisLeft.granularity = 1f
+            axisRight.granularity = 1f
+
+            description = null
+            setTouchEnabled(false)
+            legend.setCustom(
+                    arrayOf(
+                            LegendEntry(
+                                    getString(R.string.grades_without_weight),
+                                    Legend.LegendForm.SQUARE,
+                                    10f,
+                                    0f,
+                                    null,
+                                    ContextCompat.getColor(context, R.color.grade_default)
+                            )
+                    )
+            )
+
             invalidate()
         }
     }
