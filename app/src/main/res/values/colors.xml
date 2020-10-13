@@ -51,7 +51,7 @@
     <color name="startup_progress_bar">#a5a5a5</color>
 
     <color name="card_more_icon">#A5A5A5</color>
-    
+
     <!-- Default colors -->
     <color name="text_dark_primary">#DE000000</color> <!--DE for 87% opacity-->
     <color name="text_dark_secondary">#8A000000</color> <!--8A for 54% opacity-->
@@ -87,23 +87,51 @@
 
     <color name="error">#FFFF0000</color>
     <color name="valid">#7cbc49</color>
-  
-    <color name="grade_1.0">#318f11</color>
-    <color name="grade_1.3">#5dab12</color>
-    <color name="grade_1.4">#5dab12</color>
-    <color name="grade_1.7">#86c415</color>
-    <color name="grade_2.0">#c6e618</color>
-    <color name="grade_2.3">#fdf01a</color>
-    <color name="grade_2.4">#fdf01a</color>
-    <color name="grade_2.7">#fddf18</color>
-    <color name="grade_3.0">#fdbf19</color>
-    <color name="grade_3.3">#fcad18</color>
-    <color name="grade_3.4">#fcad18</color>
-    <color name="grade_3.7">#fb6515</color>
-    <color name="grade_4.0">#d50000</color>
-    <color name="grade_4.3">#c62828</color>
-    <color name="grade_4.4">#c62828</color>
-    <color name="grade_4.7">#b71c1c</color>
+
+    <color name="grade_1.0">#318F11</color>
+    <color name="grade_1.1">#3F9711</color>
+    <color name="grade_1.2">#4EA012</color>
+    <color name="grade_1.3">#5DA913</color>
+    <color name="grade_1.4">#6CB113</color>
+    <color name="grade_1.5">#7BBA14</color>
+    <color name="grade_1.6">#8AC315</color>
+    <color name="grade_1.7">#99CB15</color>
+    <color name="grade_1.8">#A8D416</color>
+    <color name="grade_1.9">#B7DD17</color>
+
+    <color name="grade_2.0">#C6E618</color>
+    <color name="grade_2.1">#CBE218</color>
+    <color name="grade_2.2">#D1DE18</color>
+    <color name="grade_2.3">#D6DA18</color>
+    <color name="grade_2.4">#DCD618</color>
+    <color name="grade_2.5">#E1D218</color>
+    <color name="grade_2.6">#E7CE18</color>
+    <color name="grade_2.7">#ECCA18</color>
+    <color name="grade_2.8">#F2C618</color>
+    <color name="grade_2.9">#F7C218</color>
+
+    <color name="grade_3.0">#FDBF19</color>
+    <color name="grade_3.1">#F9AB16</color>
+    <color name="grade_3.2">#F59814</color>
+    <color name="grade_3.3">#F18511</color>
+    <color name="grade_3.4">#ED720F</color>
+    <color name="grade_3.5">#E95F0C</color>
+    <color name="grade_3.6">#E54C0A</color>
+    <color name="grade_3.7">#E13907</color>
+    <color name="grade_3.8">#DD2605</color>
+    <color name="grade_3.9">#D91302</color>
+
+    <color name="grade_4.0">#D50000</color>
+    <color name="grade_4.1">#BF0000</color>
+    <color name="grade_4.2">#AA0000</color>
+    <color name="grade_4.3">#950000</color>
+    <color name="grade_4.4">#7F0000</color>
+    <color name="grade_4.5">#6A0000</color>
+    <color name="grade_4.6">#550000</color>
+    <color name="grade_4.7">#3F0000</color>
+    <color name="grade_4.8">#2A0000</color>
+    <color name="grade_4.9">#150000</color>
+
     <color name="grade_5.0">#000000</color>
     <color name="grade_default">@color/sections_gray</color>
 

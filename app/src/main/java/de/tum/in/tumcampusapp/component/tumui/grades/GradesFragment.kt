@@ -134,7 +134,11 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             setDrawEntryLabels(false)
             legend.isWordWrapEnabled = true
             description = null
-
+            // the legend should not contain all possible grades but rather the most common ones
+            legend.setEntries(legend.entries.filter {
+                it.label != null && !it.label.contains(uncommonGradeRe)
+            })
+            legend.setCustom(legend.entries)
             setTouchEnabled(false)
             invalidate()
         }
@@ -159,6 +163,15 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             data = BarData(set)
             setFitBars(true)
 
+            // only label grades that are associated with at least one grade
+            data.setValueFormatter { value, _, _, _ ->
+                if (value > 0) {
+                    "${value.toInt()}"
+                } else {
+                    ""
+                }
+            }
+
             xAxis.apply {
                 granularity = 1f
                 // setValueFormatter { value, _ -> grades[value.toInt()] }
@@ -166,6 +179,8 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
             description = null
             setTouchEnabled(false)
+
+            legend.isEnabled = false
             invalidate()
         }
     }
@@ -195,8 +210,13 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     private fun calculateGradeDistribution(exams: List<Exam>): ArrayMap<String, Int> {
         val gradeDistribution = ArrayMap<String, Int>()
         exams.forEach { exam ->
-            val count = gradeDistribution[exam.grade] ?: 0
-            gradeDistribution[exam.grade] = count + 1
+            // The grade distribution now takes grades with more than one decimal place into account as well
+            var cleanGrade = exam.grade!!
+            if (cleanGrade.contains(longGradeRe)) {
+                cleanGrade = cleanGrade.subSequence(0, 3) as String
+            }
+            val count = gradeDistribution[cleanGrade] ?: 0
+            gradeDistribution[cleanGrade] = count + 1
         }
         return gradeDistribution
     }
@@ -413,12 +433,23 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
         fun newInstance() = GradesFragment()
 
+        private val uncommonGradeRe = Regex("[1-5],[1245689][0-9]*")
+        private val longGradeRe = Regex("[1-4],[0-9][0-9]+")
+
         private val GRADE_COLORS = intArrayOf(
-            R.color.grade_1_0, R.color.grade_1_3, R.color.grade_1_4, R.color.grade_1_7,
-            R.color.grade_2_0, R.color.grade_2_3, R.color.grade_2_4, R.color.grade_2_7,
-            R.color.grade_3_0, R.color.grade_3_3, R.color.grade_3_4, R.color.grade_3_7,
-            R.color.grade_4_0, R.color.grade_4_3, R.color.grade_4_4, R.color.grade_4_7,
-            R.color.grade_5_0, R.color.grade_default
+                R.color.grade_1_0, R.color.grade_1_1, R.color.grade_1_2, R.color.grade_1_3,
+                R.color.grade_1_4, R.color.grade_1_5, R.color.grade_1_6, R.color.grade_1_7,
+                R.color.grade_1_8, R.color.grade_1_9,
+                R.color.grade_2_0, R.color.grade_2_1, R.color.grade_2_2, R.color.grade_2_3,
+                R.color.grade_2_4, R.color.grade_2_5, R.color.grade_2_6, R.color.grade_2_7,
+                R.color.grade_2_8, R.color.grade_2_9,
+                R.color.grade_3_0, R.color.grade_3_1, R.color.grade_3_2, R.color.grade_3_3,
+                R.color.grade_3_4, R.color.grade_3_5, R.color.grade_3_6, R.color.grade_3_7,
+                R.color.grade_3_8, R.color.grade_3_9,
+                R.color.grade_4_0, R.color.grade_4_1, R.color.grade_4_2, R.color.grade_4_3,
+                R.color.grade_4_4, R.color.grade_4_5, R.color.grade_4_6, R.color.grade_4_7,
+                R.color.grade_4_8, R.color.grade_4_9,
+                R.color.grade_5_0, R.color.grade_default
         )
     }
 }
