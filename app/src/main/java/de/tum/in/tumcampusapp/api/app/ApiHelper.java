@@ -140,13 +140,14 @@ public final class ApiHelper {
 
     /**
      * Creates an offline QR-Code
+     *
      * @param message to be encoded
      * @return QR-Code or null if there was an error
      */
-    public static Bitmap createQRCode(String message){
+    public static Bitmap createQRCode(String message) {
         Writer multiFormatWriter = new MultiFormatWriter();
         try {
-            BitMatrix bitMatrix = multiFormatWriter.encode(message, BarcodeFormat.QR_CODE, 400,400);
+            BitMatrix bitMatrix = multiFormatWriter.encode(message, BarcodeFormat.QR_CODE, 400, 400);
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
             return barcodeEncoder.createBitmap(bitMatrix);
         } catch (WriterException e) {

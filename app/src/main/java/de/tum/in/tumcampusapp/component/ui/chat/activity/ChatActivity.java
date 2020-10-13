@@ -91,7 +91,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
 
     public ChatActivity() {
         super(R.layout.activity_chat);
-        // TODO: Const.CURRENT_CHAT_ROOM was previously non-existent
+        // TODO(pfent): Const.CURRENT_CHAT_ROOM was previously non-existent
     }
 
     @Nullable
@@ -147,7 +147,8 @@ public class ChatActivity extends ActivityForDownloadingExternal
         }
 
         IntentFilter filter = new IntentFilter(Const.CHAT_BROADCAST_NAME);
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
+        LocalBroadcastManager.getInstance(this)
+                             .registerReceiver(receiver, filter);
     }
 
     private void handleBroadcastReceive(Intent intent) {
@@ -204,7 +205,8 @@ public class ChatActivity extends ActivityForDownloadingExternal
         super.onPause();
         chatMessageViewModel.markAsRead(currentChatRoom.getId());
         mCurrentOpenChatRoom = null;
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        LocalBroadcastManager.getInstance(this)
+                             .unregisterReceiver(receiver);
     }
 
     /*
@@ -250,7 +252,8 @@ public class ChatActivity extends ActivityForDownloadingExternal
         // Try to get the room from the extras
         ChatRoom room = null;
         if (intent.getExtras() != null) {
-            String value = intent.getExtras().getString(Const.CURRENT_CHAT_ROOM);
+            String value = intent.getExtras()
+                                 .getString(Const.CURRENT_CHAT_ROOM);
             room = new Gson().fromJson(value, ChatRoom.class);
         }
 
@@ -305,7 +308,8 @@ public class ChatActivity extends ActivityForDownloadingExternal
                 .create();
 
         if (dialog.getWindow() != null) {
-            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
+            dialog.getWindow()
+                  .setBackgroundDrawableResource(R.drawable.rounded_corners_background);
         }
 
         dialog.show();
@@ -318,28 +322,28 @@ public class ChatActivity extends ActivityForDownloadingExternal
         }
 
         TUMCabeClient.getInstance(this)
-                .leaveChatRoom(currentChatRoom, verification, new Callback<ChatRoom>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ChatRoom> call,
-                                           @NonNull Response<ChatRoom> response) {
-                        ChatRoom room = response.body();
-                        if (response.isSuccessful() && room != null) {
-                            new ChatRoomController(ChatActivity.this).leave(currentChatRoom);
+                     .leaveChatRoom(currentChatRoom, verification, new Callback<ChatRoom>() {
+                         @Override
+                         public void onResponse(@NonNull Call<ChatRoom> call,
+                                                @NonNull Response<ChatRoom> response) {
+                             ChatRoom room = response.body();
+                             if (response.isSuccessful() && room != null) {
+                                 new ChatRoomController(ChatActivity.this).leave(currentChatRoom);
 
-                            Intent intent = new Intent(ChatActivity.this, ChatRoomsActivity.class);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            Utils.showToast(ChatActivity.this, R.string.error_something_wrong);
-                        }
-                    }
+                                 Intent intent = new Intent(ChatActivity.this, ChatRoomsActivity.class);
+                                 startActivity(intent);
+                                 finish();
+                             } else {
+                                 Utils.showToast(ChatActivity.this, R.string.error_something_wrong);
+                             }
+                         }
 
-                    @Override
-                    public void onFailure(@NonNull Call<ChatRoom> call, @NonNull Throwable t) {
-                        Utils.log(t, "Failure leaving chat room");
-                        Utils.showToast(ChatActivity.this, R.string.error_something_wrong);
-                    }
-                });
+                         @Override
+                         public void onFailure(@NonNull Call<ChatRoom> call, @NonNull Throwable t) {
+                             Utils.log(t, "Failure leaving chat room");
+                             Utils.showToast(ChatActivity.this, R.string.error_something_wrong);
+                         }
+                     });
     }
 
     private void sendMessage(String text) {
@@ -355,7 +359,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
         chatMessageViewModel.addToUnsent(message);
 
         WorkManager.getInstance()
-                .enqueue(SendMessageWorker.getWorkRequest());
+                   .enqueue(SendMessageWorker.getWorkRequest());
     }
 
     @Override
@@ -387,12 +391,16 @@ public class ChatActivity extends ActivityForDownloadingExternal
 
         ImageButton sendButton = findViewById(R.id.btnSend);
         sendButton.setOnClickListener(view -> {
-            if (messageEditText.getText().toString().isEmpty()) {
+            if (messageEditText.getText()
+                               .toString()
+                               .isEmpty()) {
                 return;
             }
 
-            sendMessage(messageEditText.getText().toString());
-            messageEditText.getText().clear();
+            sendMessage(messageEditText.getText()
+                                       .toString());
+            messageEditText.getText()
+                           .clear();
         });
     }
 
@@ -451,7 +459,8 @@ public class ChatActivity extends ActivityForDownloadingExternal
         List<ChatMessage> unsent = chatMessageViewModel.getUnsentInChatRoom(currentChatRoom);
         messages.addAll(unsent);
 
-        Collections.sort(messages, (lhs, rhs) -> lhs.getTimestamp().compareTo(rhs.getTimestamp()));
+        Collections.sort(messages, (lhs, rhs) -> lhs.getTimestamp()
+                                                    .compareTo(rhs.getTimestamp()));
         chatHistoryAdapter.updateHistory(messages);
 
         if (messages.isEmpty()) {

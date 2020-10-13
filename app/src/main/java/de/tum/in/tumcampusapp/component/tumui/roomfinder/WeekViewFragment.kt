@@ -39,7 +39,6 @@ class WeekViewFragment : Fragment() {
         weekView.goToHour(8)
     }
 
-
     private fun loadEventsInBackground(start: Calendar, end: Calendar) {
         // Populate the week view with the events of the month to display
         Thread {

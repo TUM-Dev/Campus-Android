@@ -14,7 +14,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 
-public class MemberSuggestionsListAdapter extends BaseAdapter implements Filterable{
+public class MemberSuggestionsListAdapter extends BaseAdapter implements Filterable {
 
     private List<ChatMember> originalData;
     private List<ChatMember> members;
@@ -30,11 +30,14 @@ public class MemberSuggestionsListAdapter extends BaseAdapter implements Filtera
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
-        if(view == null){
-            view = LayoutInflater.from(mContext).inflate(android.R.layout.simple_list_item_2, parent, false);
+        if (view == null) {
+            view = LayoutInflater.from(mContext)
+                                 .inflate(android.R.layout.simple_list_item_2, parent, false);
         }
-        ((TextView) view.findViewById(android.R.id.text1)).setText(members.get(position).getDisplayName());
-        ((TextView) view.findViewById(android.R.id.text2)).setText(members.get(position).getLrzId());
+        ((TextView) view.findViewById(android.R.id.text1)).setText(members.get(position)
+                                                                          .getDisplayName());
+        ((TextView) view.findViewById(android.R.id.text2)).setText(members.get(position)
+                                                                          .getLrzId());
         return view;
     }
 
@@ -49,15 +52,16 @@ public class MemberSuggestionsListAdapter extends BaseAdapter implements Filtera
 
     @Override
     public long getItemId(int i) {
-        if(members == null || members.size() < i){
+        if (members == null || members.size() < i) {
             return -1;
         }
-        return members.get(i).getId();
+        return members.get(i)
+                      .getId();
     }
 
     @Override
     public int getCount() {
-        if(members == null){
+        if (members == null) {
             return 0;
         }
         return members.size();
@@ -76,9 +80,10 @@ public class MemberSuggestionsListAdapter extends BaseAdapter implements Filtera
             protected FilterResults performFiltering(CharSequence charSequence) {
                 FilterResults results = new FilterResults();
                 ArrayList<ChatMember> after = new ArrayList<>();
-                if(charSequence != null) {
+                if (charSequence != null) {
                     for (ChatMember member : originalData) {
-                        if (member.getDisplayName() != null && member.getDisplayName().contains(charSequence)) {
+                        if (member.getDisplayName() != null && member.getDisplayName()
+                                                                     .contains(charSequence)) {
                             after.add(member);
                         }
                     }
@@ -91,7 +96,7 @@ public class MemberSuggestionsListAdapter extends BaseAdapter implements Filtera
             @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                members = (List<ChatMember>)filterResults.values;
+                members = (List<ChatMember>) filterResults.values;
                 notifyDataSetChanged();
             }
         };
