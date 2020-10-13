@@ -13,33 +13,21 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageView
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.formatter.ValueFormatter
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.FragmentForAccessingTumOnline
 import de.tum.`in`.tumcampusapp.component.tumui.grades.model.Exam
 import de.tum.`in`.tumcampusapp.component.tumui.grades.model.ExamList
-import kotlinx.android.synthetic.main.fragment_grades.averageGradeTextView
-import kotlinx.android.synthetic.main.fragment_grades.barChartView
-import kotlinx.android.synthetic.main.fragment_grades.chartsContainer
-import kotlinx.android.synthetic.main.fragment_grades.filterSpinner
-import kotlinx.android.synthetic.main.fragment_grades.gradesLayout
-import kotlinx.android.synthetic.main.fragment_grades.gradesListView
-import kotlinx.android.synthetic.main.fragment_grades.pieChartView
-import kotlinx.android.synthetic.main.fragment_grades.showChartButton
-import kotlinx.android.synthetic.main.fragment_grades.showListButton
+import kotlinx.android.synthetic.main.fragment_grades.*
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
 import java.text.NumberFormat
-import java.util.Locale
+import java.util.*
 
 class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
-    R.layout.fragment_grades,
-    R.string.my_grades
+        R.layout.fragment_grades,
+        R.string.my_grades
 ) {
 
     private var spinnerPosition = 0
@@ -164,18 +152,13 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             setFitBars(true)
 
             // only label grades that are associated with at least one grade
-            data.setValueFormatter { value, _, _, _ ->
-                if (value > 0) {
-                    "${value.toInt()}"
-                } else {
-                    ""
+            data.setValueFormatter(object: ValueFormatter() {
+                override fun getFormattedValue(value: Float): String? {
+                    if (value > 0.0)
+                        return grades[value.toInt()]
+                    return ""
                 }
-            }
-
-            xAxis.apply {
-                granularity = 1f
-                // setValueFormatter { value, _ -> grades[value.toInt()] }
-            }
+            })
 
             description = null
             setTouchEnabled(false)
@@ -194,8 +177,8 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     private fun calculateAverageGrade(exams: List<Exam>): Double {
         val numberFormat = NumberFormat.getInstance(Locale.GERMAN)
         val grades = exams
-            .filter { it.isPassed }
-            .map { numberFormat.parse(it.grade).toDouble() }
+                .filter { it.isPassed }
+                .map { numberFormat.parse(it.grade).toDouble() }
 
         val gradeSum = grades.sum()
         return gradeSum / grades.size.toDouble()
@@ -229,15 +212,15 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      */
     private fun initSpinner(exams: List<Exam>) {
         val programIds = exams
-            .map { it.programID }
-            .distinct()
-            .map { getString(R.string.study_program_format_string, it) }
+                .map { it.programID }
+                .distinct()
+                .map { getString(R.string.study_program_format_string, it) }
 
         val filters = mutableListOf(getString(R.string.all_programs))
         filters.addAll(programIds)
 
         val spinnerArrayAdapter = ArrayAdapter(
-            requireContext(), R.layout.simple_spinner_item_actionbar, filters)
+                requireContext(), R.layout.simple_spinner_item_actionbar, filters)
 
         filterSpinner?.apply {
             adapter = spinnerArrayAdapter
@@ -410,21 +393,21 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         // Animate the content view to 100% opacity, and clear any animation
         // listener set on the view.
         fadeIn.animate()
-            .alpha(1f)
-            .setDuration(animationDuration)
-            .setListener(null)
+                .alpha(1f)
+                .setDuration(animationDuration)
+                .setListener(null)
 
         // Animate the loading view to 0% opacity. After the animation ends,
         // set its visibility to GONE as an optimization step (it won't
         // participate in layout passes, etc.)
         fadeOut.animate()
-            .alpha(0f)
-            .setDuration(animationDuration)
-            .setListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    fadeOut.visibility = View.GONE
-                }
-            })
+                .alpha(0f)
+                .setDuration(animationDuration)
+                .setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        fadeOut.visibility = View.GONE
+                    }
+                })
     }
 
     companion object {
