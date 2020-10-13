@@ -32,7 +32,6 @@
                     app:dayBackgroundColor="@android:color/white"
                     app:eventCornerRadius="4dp"
                     app:eventMarginVertical="2dp"
-                    app:eventPadding="4dp"
                     app:eventTextColor="@android:color/white"
                     app:eventTextSize="12dp"
                     app:headerRowBackgroundColor="@android:color/white"
@@ -66,8 +65,9 @@
                     android:layout_gravity="end|bottom"
                     android:layout_margin="@dimen/material_default_padding"
                     android:text="@string/today"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:backgroundTint="@android:color/white"
+                    android:textColor="@color/black"
                     app:cornerRadius="@dimen/material_corner_radius"
                     tools:visibility="visible" />
 

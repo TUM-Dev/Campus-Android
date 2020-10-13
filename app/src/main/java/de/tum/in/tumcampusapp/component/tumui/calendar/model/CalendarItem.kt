@@ -130,7 +130,7 @@ data class CalendarItem(
                 .setBorderColor(color)
                 .build()
 
-        return WeekViewEvent.Builder<CalendarItem>()
+        return WeekViewEvent.Builder<CalendarItem>(this)
                 .setId(nr.toLong())
                 .setTitle(title)
                 .setStartTime(eventStart.toGregorianCalendar())
@@ -138,7 +138,6 @@ data class CalendarItem(
                 .setLocation(location)
                 .setStyle(style)
                 .setAllDay(false)
-                .setData(this)
                 .build()
     }
 }

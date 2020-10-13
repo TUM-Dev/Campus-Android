@@ -10,11 +10,13 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.4'
+        classpath 'com.android.tools.build:gradle:4.0.1'
         classpath 'com.google.gms:google-services:4.3.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'io.fabric.tools:gradle:1.28.0'
         classpath 'org.jlleitschuh.gradle:ktlint-gradle:8.2.0'
+        classpath "com.github.ben-manes:gradle-versions-plugin:0.33.0"
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.11.2"
     }
 }
 

@@ -14,7 +14,7 @@ class CheckTokenInterceptor(private val context: Context) : Interceptor {
         val request = chain.request()
 
         // Check for special requests
-        val path = request.url().encodedPath()
+        val path = request.url.encodedPath
         val isTokenRequest = path.contains("requestToken")
         val isTokenConfirmationCheck = path.contains("isTokenConfirmed")
 

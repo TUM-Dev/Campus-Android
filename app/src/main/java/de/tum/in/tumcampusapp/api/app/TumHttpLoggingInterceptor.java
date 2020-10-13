@@ -36,7 +36,7 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
          * A {@link Logger} defaults output appropriate for the current platform.
          */
         Logger DEFAULT = message -> Platform.get()
-                                            .log(INFO, message, null);
+                                            .log(message, INFO, null);
     }
 
     public TumHttpLoggingInterceptor(Logger logger) {

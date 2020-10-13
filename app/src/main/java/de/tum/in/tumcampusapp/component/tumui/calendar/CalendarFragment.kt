@@ -18,8 +18,6 @@ import com.alamkanak.weekview.DateTimeInterpreter
 import com.alamkanak.weekview.ScrollListener
 import com.alamkanak.weekview.WeekView
 import com.alamkanak.weekview.WeekViewDisplayable
-import com.alamkanak.weekview.setMonthChangeListener
-import com.alamkanak.weekview.setOnEventClickListener
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
@@ -65,7 +63,8 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
     }
 
     private val eventId: String by lazy {
-        checkNotNull(arguments?.getString(Const.KEY_EVENT_ID))
+        val value = arguments?.getString(Const.KEY_EVENT_ID)
+        value ?: ""
     }
 
     private var isWeekMode = false
@@ -94,7 +93,7 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
             it.setProgressViewOffset(false, startOffset, endOffset)
         }
 
-        weekView.setMonthChangeListener { startDate, endDate ->
+        weekView.setOnMonthChangeListener { startDate, endDate ->
             val begin = DateTime(startDate)
             val end = DateTime(endDate)
             prepareCalendarItems(begin, end)
@@ -102,20 +101,6 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
 
         weekView.setOnEventClickListener { data, _ ->
             openEvent(data)
-        }
-
-        weekView.scrollListener = object : ScrollListener {
-            override fun onFirstVisibleDayChanged(
-                newFirstVisibleDay: Calendar,
-                oldFirstVisibleDay: Calendar?
-            ) {
-                val visibleDay = LocalDate(newFirstVisibleDay)
-                val today = LocalDate.now()
-                val isToday = visibleDay.isEqual(today)
-
-                todayButton.visibility = if (isToday) View.GONE else View.VISIBLE
-                TransitionManager.beginDelayedTransition(swipeRefreshLayout)
-            }
         }
 
         todayButton.setOnClickListener { weekView.goToToday() }
@@ -217,7 +202,7 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
                 return true
             }
             R.id.action_create_event -> {
-                val currentDate = LocalDate(weekView.firstVisibleDay)
+                val currentDate = LocalDate(weekView.firstVisibleDate)
                 val intent = Intent(requireContext(), CreateEventActivity::class.java)
                 intent.putExtra(Const.DATE, currentDate)
                 startActivity(intent)
@@ -423,11 +408,9 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
         if (isWeekMode) {
             icon = R.drawable.ic_outline_calendar_view_day_24px
             weekView.numberOfVisibleDays = 5
-            weekView.setEventTextSize(FontUtils.getFontSizeInPx(requireContext(), 12f))
         } else {
             icon = R.drawable.ic_outline_view_column_24px
             weekView.numberOfVisibleDays = 1
-            weekView.setEventTextSize(FontUtils.getFontSizeInPx(requireContext(), 14f))
         }
 
         // Go to current date or the one given in the intent

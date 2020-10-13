@@ -1,13 +1,13 @@
 plugins {
-    id 'io.gitlab.arturbosch.detekt' version "1.0.0.RC6-4"
-    id 'de.aaschmid.cpd' version '1.2'
+    id 'de.aaschmid.cpd' version '3.1'
 }
+apply plugin: "io.gitlab.arturbosch.detekt"
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
-apply from: '../gradle/scripts/findbugs.gradle'
+apply plugin: "com.github.ben-manes.versions"
 apply from: '../gradle/scripts/pmd.gradle'
 apply from: '../gradle/scripts/jacoco.gradle'
 apply from: '../gradle/scripts/checkstyle.gradle'
@@ -15,8 +15,8 @@ apply from: '../gradle/scripts/detekt.gradle'
 apply from: '../gradle/scripts/testLogging.gradle'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 30
+    buildToolsVersion '29.0.2'
     buildTypes {
         all {
             proguardFiles(file('../proguard').listFiles())
@@ -36,7 +36,7 @@ android {
     defaultConfig {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 572
         versionName "3.6-dev"
 
@@ -85,7 +85,7 @@ android {
     }
 }
 
-def retrofitVersion = '2.5.0'
+def retrofitVersion = '2.9.0'
 def tikXmlVersion = '0.8.13'
 
 configurations.all {
@@ -123,8 +123,8 @@ dependencies {
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 
     // Helpers
-    implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'net.danlew:android.joda:2.10.1.1'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'net.danlew:android.joda:2.10.6.1'
 
     // XML Parsing
     implementation "com.tickaroo.tikxml:annotation:$tikXmlVersion"
@@ -139,54 +139,54 @@ dependencies {
 
     // RxJava
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-    implementation 'com.trello.rxlifecycle3:rxlifecycle-android-lifecycle:3.0.0'
-    implementation 'com.trello.rxlifecycle3:rxlifecycle:3.0.0'
-    implementation 'com.jakewharton.rxrelay2:rxrelay:2.1.0'
-    implementation 'com.jakewharton.rxbinding3:rxbinding-material:3.0.0-alpha2'
+    implementation 'com.trello.rxlifecycle3:rxlifecycle-android-lifecycle:3.1.0'
+    implementation 'com.trello.rxlifecycle3:rxlifecycle:3.1.0'
+    implementation 'com.jakewharton.rxrelay2:rxrelay:2.1.1'
+    implementation 'com.jakewharton.rxbinding3:rxbinding-material:3.1.0'
     implementation 'com.patloew.rxlocation:rxlocation:1.0.5'
 
     // Transport
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.13.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
-    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.squareup.picasso:picasso:2.8'
     implementation "com.tickaroo.tikxml:retrofit-converter:$tikXmlVersion"
-    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
-    implementation 'com.squareup.okio:okio:2.2.2'
+    implementation 'com.github.franmontiel:PersistentCookieJar:1.0.1'
+    implementation 'com.squareup.okio:okio:2.8.0'
 
     // UI
     implementation 'se.emilsjolander:stickylistheaders:2.7.0'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'me.dm7.barcodescanner:zxing:1.9.13'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
-    implementation 'de.psdev.licensesdialog:licensesdialog:2.0.0'
-    implementation 'com.github.thellmund:Android-Week-View:3.4'
-    implementation 'de.hdodenhof:circleimageview:3.0.0'
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    implementation 'de.psdev.licensesdialog:licensesdialog:2.1.0'
+    implementation 'com.github.thellmund.Android-Week-View:core:4.1.6'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'com.github.PhilJay:MPAndroidChart:3.1.0'
     implementation 'com.makeramen:roundedimageview:2.3.0'
 
     // Dagger
-    implementation 'com.google.dagger:dagger:2.24'
-    kapt 'com.google.dagger:dagger-compiler:2.24'
+    implementation 'com.google.dagger:dagger:2.28.3'
+    kapt 'com.google.dagger:dagger-compiler:2.28.3'
 
     // LeakCanary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-1'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 
     // DebugDatabase
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 
     // Testing
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:2.23.4'
-    testImplementation 'org.assertj:assertj-core:3.11.1'
+    testImplementation 'junit:junit:4.13'
+    testImplementation 'org.mockito:mockito-core:3.5.11'
+    testImplementation 'org.assertj:assertj-core:3.17.1'
     testImplementation 'androidx.room:room-testing:2.3.0-alpha02'
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 
     testImplementation 'com.android.support.test:rules:1.0.2'
     testImplementation 'com.android.support.test:runner:1.0.2'
     testImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    testImplementation "org.robolectric:robolectric:4.0.1"
+    testImplementation "org.robolectric:robolectric:4.4"
 
     // TicketSale
     implementation 'com.stripe:stripe-android:6.1.2'

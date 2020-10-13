@@ -103,7 +103,10 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
 
         if (!isShownInCalendarActivity) {
             showInCalendarButtonContainer.visibility = View.VISIBLE
-            showInCalendarButton.setOnClickListener { openEventInCalendarActivity(calendarItem) }
+            showInCalendarButton.setOnClickListener {
+                openEventInCalendarActivity(calendarItem)
+                dismiss()
+            }
         }
 
         if (calendarItem.isEditable && isShownInCalendarActivity) {
@@ -118,7 +121,9 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     }
 
     private fun openEventInCalendarActivity(calendarItem: CalendarItem) {
-        val args = Bundle().apply { putLong(Const.EVENT_TIME, calendarItem.eventStart.millis) }
+        val args = Bundle().apply {
+            putLong(Const.EVENT_TIME, calendarItem.eventStart.millis)
+        }
         val destination = NavDestination.Fragment(CalendarFragment::class.java, args)
         NavigationManager.open(requireContext(), destination)
     }

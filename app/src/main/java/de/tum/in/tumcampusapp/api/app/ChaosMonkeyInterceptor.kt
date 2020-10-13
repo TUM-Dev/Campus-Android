@@ -21,7 +21,7 @@ class ChaosMonkeyInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         if (ThreadLocalRandom.current().nextDouble() < failProbability) {
             Utils.log("Chaos Monkey is resilience testing your network code")
-            val url = chain.call().request().url().toString()
+            val url = chain.call().request().url.toString()
             throw ChaosMonkeyException(url)
         }
         return chain.proceed(chain.request())

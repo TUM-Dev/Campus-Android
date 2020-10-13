@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.alamkanak.weekview.MonthChangeListener
 import com.alamkanak.weekview.WeekView
 import com.alamkanak.weekview.WeekViewDisplayable
 import de.tum.`in`.tumcampusapp.R
@@ -18,9 +17,7 @@ import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import java.util.*
 
-class WeekViewFragment : Fragment(), MonthChangeListener<WidgetCalendarItem> {
-
-    private val eventsCache = HashMap<Calendar, List<WeekViewDisplayable<WidgetCalendarItem>>>()
+class WeekViewFragment : Fragment() {
 
     private var roomApiCode: String? = null
     private lateinit var weekView: WeekView<WidgetCalendarItem>
@@ -39,25 +36,9 @@ class WeekViewFragment : Fragment(), MonthChangeListener<WidgetCalendarItem> {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         weekView = view.findViewById(R.id.weekView)
-        weekView.setMonthChangeListener(this)
         weekView.goToHour(8)
     }
 
-    override fun onMonthChange(
-        startDate: Calendar,
-        endDate: Calendar
-    ): List<WeekViewDisplayable<WidgetCalendarItem>> {
-        if (!isLoaded(startDate)) {
-            loadEventsInBackground(startDate, endDate)
-            return emptyList()
-        }
-
-        return eventsCache[startDate] ?: throw IllegalStateException()
-    }
-
-    private fun isLoaded(start: Calendar): Boolean {
-        return eventsCache[start] != null
-    }
 
     private fun loadEventsInBackground(start: Calendar, end: Calendar) {
         // Populate the week view with the events of the month to display
@@ -71,7 +52,7 @@ class WeekViewFragment : Fragment(), MonthChangeListener<WidgetCalendarItem> {
             val events = fetchEventList(roomApiCode, formattedStartTime, formattedEndTime)
 
             requireActivity().runOnUiThread {
-                eventsCache[start] = events
+                weekView.submit(events)
                 weekView.notifyDataSetChanged()
             }
         }.start()
