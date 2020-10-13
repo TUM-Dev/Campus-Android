@@ -103,20 +103,6 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
             openEvent(data)
         }
 
-        /*weekView.scrollListener = object : ScrollListener {
-            override fun onFirstVisibleDayChanged(
-                newFirstVisibleDay: Calendar,
-                oldFirstVisibleDay: Calendar?
-            ) {
-                val visibleDay = LocalDate(newFirstVisibleDay)
-                val today = LocalDate.now()
-                val isToday = visibleDay.isEqual(today)
-
-                todayButton.visibility = if (isToday) View.GONE else View.VISIBLE
-                TransitionManager.beginDelayedTransition(swipeRefreshLayout)
-            }
-        }*/
-
         todayButton.setOnClickListener { weekView.goToToday() }
         showDate?.let { openEvent(eventId) }
 
