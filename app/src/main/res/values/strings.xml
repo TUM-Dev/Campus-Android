@@ -538,7 +538,6 @@ Signature: %5$s</string>
     <string name="card_front_text">Front text</string>
     <string name="card_back_text">Back text</string>
     <string name="title_activity_cards_detail">Add Card</string>
-    <string name="title_activity_cards_quiz">Quiz Cards</string>
     <string name="card_question">Question</string>
     <string name="card_answer">Answer</string>
     <string name="filter_lecture_ALL_LECTURES">All Lectures</string>
