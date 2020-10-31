@@ -11,7 +11,7 @@ import androidx.core.app.ActivityCompat.checkSelfPermission
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.lifecycle.LiveDataReactiveStreams
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import de.tum.`in`.tumcampusapp.BuildConfig.DEBUG
 import de.tum.`in`.tumcampusapp.BuildConfig.VERSION_CODE
 import de.tum.`in`.tumcampusapp.R
@@ -24,7 +24,6 @@ import de.tum.`in`.tumcampusapp.service.StartSyncReceiver
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.observe
-import io.fabric.sdk.android.Fabric
 import io.reactivex.Flowable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_startup.container
@@ -52,9 +51,8 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
         // Only use Crashlytics if we are not compiling debug
         val isDebuggable = applicationInfo.isDebuggable
         if (!DEBUG && !isDebuggable) {
-            Fabric.with(this, Crashlytics())
-            Crashlytics.setString("TUMID", Utils.getSetting(this, Const.LRZ_ID, ""))
-            Crashlytics.setString("DeviceID", AuthenticationManager.getDeviceID(this))
+            FirebaseCrashlytics.getInstance().setCustomKey("TUMID", Utils.getSetting(this, Const.LRZ_ID, ""))
+            FirebaseCrashlytics.getInstance().setCustomKey("DeviceID", AuthenticationManager.getDeviceID(this))
         }
 
         val savedAppVersion = Utils.getSettingInt(this, Const.SAVED_APP_VERSION, VERSION_CODE)
@@ -108,14 +106,14 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
 
         // Start download workers and listen for finalization
         val downloadActions = Flowable
-            .fromCallable(this::performAllWorkerActions)
-            .onErrorReturnItem(Unit)
-            .subscribeOn(Schedulers.io())
+                .fromCallable(this::performAllWorkerActions)
+                .onErrorReturnItem(Unit)
+                .subscribeOn(Schedulers.io())
 
         runOnUiThread {
             LiveDataReactiveStreams
-                .fromPublisher(downloadActions)
-                .observe(this) { openMainActivityIfInitializationFinished() }
+                    .fromPublisher(downloadActions)
+                    .observe(this) { openMainActivityIfInitializationFinished() }
         }
 
         // Start background service and ensure cards are set
@@ -150,21 +148,21 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
      */
     private fun showLocationPermissionRationaleDialog() {
         AlertDialog.Builder(this, R.style.Theme_MaterialComponents_Light_Dialog)
-            .setMessage(R.string.permission_location_explanation)
-            .setPositiveButton(R.string.ok) { _, _ ->
-                requestPermissions(this, PERMISSIONS_LOCATION, REQUEST_LOCATION)
-            }
-            .create()
-            .apply {
-                window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-            }
-            .show()
+                .setMessage(R.string.permission_location_explanation)
+                .setPositiveButton(R.string.ok) { _, _ ->
+                    requestPermissions(this, PERMISSIONS_LOCATION, REQUEST_LOCATION)
+                }
+                .create()
+                .apply {
+                    window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
+                }
+                .show()
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
+            requestCode: Int,
+            permissions: Array<String>,
+            grantResults: IntArray
     ) {
         openMainActivityIfInitializationFinished()
     }

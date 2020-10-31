@@ -2,7 +2,7 @@ package de.tum.`in`.tumcampusapp
 
 import android.app.Application
 import android.os.StrictMode
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
 import de.tum.`in`.tumcampusapp.component.notifications.NotificationUtils.setupNotificationChannels
@@ -66,6 +66,6 @@ open class App : Application() {
     }
 
     private fun initRxJavaErrorHandler() {
-        RxJavaPlugins.setErrorHandler(Crashlytics::logException)
+        RxJavaPlugins.setErrorHandler(FirebaseCrashlytics.getInstance()::recordException)
     }
 }
