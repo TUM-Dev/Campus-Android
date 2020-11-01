@@ -121,7 +121,7 @@ class BaseNavigationActivity : BaseActivity(
 
     override fun onSharedPreferenceChanged(
         sharedPreferences: SharedPreferences,
-        key: String
+        key: String?
     ) {
         if (key == Const.EMPLOYEE_MODE) {
             drawerMenuHelper.populateMenu()

@@ -2,6 +2,7 @@ package de.tum.`in`.tumcampusapp.component.other.settings
 
 import android.Manifest.permission.READ_CALENDAR
 import android.Manifest.permission.WRITE_CALENDAR
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -147,8 +148,11 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 
     override fun onSharedPreferenceChanged(
         sharedPrefs: SharedPreferences,
-        key: String
+        key: String?
     ) {
+        if(key == null) {
+            return
+        }
         setSummary(key)
 
         // When newspread selection changes
@@ -284,11 +288,11 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         requireActivity().finish()
     }
 
+    @SuppressLint("ApplySharedPref")
     @Throws(ExecutionException::class, InterruptedException::class)
     private fun clearData() {
         TcaDb.resetDb(requireContext())
-
-        requireContext().defaultSharedPreferences.edit().clear().apply()
+        requireContext().defaultSharedPreferences.edit().clear().commit()
 
         // Remove all notifications that are currently shown
         requireContext().notificationManager.cancelAll()
