@@ -45,7 +45,7 @@ import java.util.concurrent.ExecutionException
 import javax.inject.Inject
 
 class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener,
-    SharedPreferences.OnSharedPreferenceChangeListener {
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -61,17 +61,21 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
     }
 
     override fun onCreatePreferences(
-        savedInstanceState: Bundle?,
-        rootKey: String?
+            savedInstanceState: Bundle?,
+            rootKey: String?
     ) {
         setPreferencesFromResource(R.xml.settings, rootKey)
         populateNewsSources()
         setUpEmployeeSettings()
 
-        // Disables silence service if the app is used without TUMOnline access
+        // Disables silence service and logout if the app is used without TUMOnline access
         val silentSwitch = findPreference(Const.SILENCE_SERVICE) as? SwitchPreferenceCompat
-        if (silentSwitch != null && !AccessTokenManager.hasValidAccessToken(context)) {
-            silentSwitch.isEnabled = false
+        val logoutButton = findPreference(BUTTON_LOGOUT)
+        if (!AccessTokenManager.hasValidAccessToken(context)) {
+            if (silentSwitch != null) {
+                silentSwitch.isEnabled = false
+            }
+            logoutButton.isVisible = false
         }
 
         // Only do these things if we are in the root of the preferences
@@ -124,15 +128,15 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
     }
 
     private fun loadNewsSourceIcon(
-        preference: Preference,
-        url: String
+            preference: Preference,
+            url: String
     ) {
         compositeDisposable += Single
-            .fromCallable { Picasso.get().load(url).get() }
-            .subscribeOn(Schedulers.io())
-            .map { BitmapDrawable(resources, it) }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(preference::setIcon, Utils::log)
+                .fromCallable { Picasso.get().load(url).get() }
+                .subscribeOn(Schedulers.io())
+                .map { BitmapDrawable(resources, it) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(preference::setIcon, Utils::log)
     }
 
     /**
@@ -147,10 +151,10 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
     }
 
     override fun onSharedPreferenceChanged(
-        sharedPrefs: SharedPreferences,
-        key: String?
+            sharedPrefs: SharedPreferences,
+            key: String?
     ) {
-        if(key == null) {
+        if (key == null) {
             return
         }
         setSummary(key)
@@ -206,9 +210,9 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 
     private fun initCafeteriaCardSelections() {
         val cafeterias = cafeteriaLocalRepository
-            .getAllCafeterias()
-            .blockingFirst()
-            .sortedBy { it.name }
+                .getAllCafeterias()
+                .blockingFirst()
+                .sortedBy { it.name }
 
         val cafeteriaByLocationName = getString(R.string.settings_cafeteria_depending_on_location)
         val cafeteriaNames = listOf(cafeteriaByLocationName) + cafeterias.map { it.name }
@@ -243,16 +247,16 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
             preference.setSummary(R.string.settings_no_location_selected)
         } else {
             preference.summary = values
-                .map { preference.findIndexOfValue(it) }
-                .map { preference.entries[it] }
-                .map { it.toString() }
-                .sorted()
-                .joinToString(", ")
+                    .map { preference.findIndexOfValue(it) }
+                    .map { preference.entries[it] }
+                    .map { it.toString() }
+                    .sorted()
+                    .joinToString(", ")
         }
     }
 
     override fun onPreferenceClick(
-        preference: Preference?
+            preference: Preference?
     ): Boolean {
         when (preference?.key) {
             SETUP_EDUROAM -> startActivity(Intent(context, SetupEduroamActivity::class.java))
@@ -264,15 +268,15 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 
     private fun showLogoutDialog(title: Int, message: Int) {
         AlertDialog.Builder(requireContext())
-            .setTitle(title)
-            .setMessage(message)
-            .setPositiveButton(R.string.logout) { _, _ -> logout() }
-            .setNegativeButton(R.string.cancel, null)
-            .create()
-            .apply {
-                window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-            }
-            .show()
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(R.string.logout) { _, _ -> logout() }
+                .setNegativeButton(R.string.cancel, null)
+                .create()
+                .apply {
+                    window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
+                }
+                .show()
     }
 
     private fun logout() {
@@ -318,7 +322,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         private const val SETUP_EDUROAM = "card_eduroam_setup"
 
         fun newInstance(
-            key: String?
+                key: String?
         ) = SettingsFragment().apply { arguments = bundleOf(ARG_PREFERENCE_ROOT to key) }
     }
 }
