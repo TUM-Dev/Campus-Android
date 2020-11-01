@@ -43,14 +43,13 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/loginButton"
-            style="@style/Widget.MaterialComponents.Button"
+            style="@style/BlueButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/material_default_padding"
             android:layout_marginBottom="@dimen/material_small_padding"
             android:text="@string/tumonline_login"
             android:textAllCaps="false"
-            android:textColor="@android:color/white"
             app:cornerRadius="@dimen/material_corner_radius"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

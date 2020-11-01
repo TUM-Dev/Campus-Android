@@ -36,8 +36,6 @@
             android:layout_margin="@dimen/material_default_padding"
             android:text="@string/save"
             android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            app:backgroundTint="@color/color_primary"
             app:cornerRadius="@dimen/material_corner_radius" />
 
     </LinearLayout>
