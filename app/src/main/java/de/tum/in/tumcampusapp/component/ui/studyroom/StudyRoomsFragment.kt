@@ -107,22 +107,6 @@ class StudyRoomsFragment : FragmentForAccessingTumCabe<List<StudyRoomGroup>>(
         }
     }
 
-    /**
-     * StudyRoomGroupDetailsFragment sets the buttons tag to the StudyRoom.code
-     * This code can be used to find the room via the RoomFinder
-     */
-    // TODO
-    /*fun openLink(view: View) {
-        val link = view.tag as String
-        val roomCode = link.substringAfter(' ') // ???
-
-        with(Intent()) {
-            putExtra(SearchManager.QUERY, roomCode)
-            setClass(requireContext(), RoomFinderActivity::class.java)
-            startActivity(this)
-        }
-    }*/
-
     companion object {
         fun newInstance() = StudyRoomsFragment()
     }
