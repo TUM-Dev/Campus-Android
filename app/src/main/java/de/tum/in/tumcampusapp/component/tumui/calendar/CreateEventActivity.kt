@@ -5,13 +5,10 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
-import android.text.Layout
 import android.text.TextWatcher
 import android.view.MenuItem
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -47,6 +44,8 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
 
     private var isEditing: Boolean = false
     private var event: CalendarItem? = null
+    private var events: List<CalendarItem>? = null
+    private var apiCallsFetched = 0;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,7 +98,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
             }
             if (repeats) {
                 // Don't allow too many requests
-                if ((endOnRadioBtn.isChecked && start.plusMonths(1).isBefore(last))
+                if ((endOnRadioBtn.isChecked && start.plusMonths(6).isBefore(last))
                         || (endAfterRadioBtn.isChecked && eventRepeatsTimes.text.toString().toInt() > 25)) {
                     showErrorDialog(getString(R.string.create_event_too_many_error))
                     return@setOnClickListener
@@ -284,8 +283,9 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         }
         event.description = description
         this.event = event
-        val events: List<CalendarItem> = generateEvents()
-        for (curEvent in events) {
+        events = generateEvents()
+
+        for (curEvent in events!!) {
             val apiCall = apiClient.createEvent(curEvent, null)
             fetch(apiCall)
         }
@@ -332,11 +332,14 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     }
 
     override fun onDownloadSuccessful(response: CreateEventResponse) {
-        event?.let {
+        events?.get(apiCallsFetched++)?.let {
             it.nr = response.eventId
             TcaDb.getInstance(this).calendarDao().insert(it)
         }
-        finish()
+        //finish when all events have been created
+        if (apiCallsFetched==events?.size) {
+            finish()
+        }
     }
 
     override fun onBackPressed() {
