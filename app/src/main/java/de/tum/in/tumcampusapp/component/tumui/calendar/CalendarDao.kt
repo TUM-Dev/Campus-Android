@@ -105,4 +105,7 @@ interface CalendarDao {
             "LEFT JOIN eventSeriesMappings ON eventSeriesMappings.eventId=calendar.nr " +
             "WHERE eventSeriesMappings.seriesId=:seriesId")
     fun getCalendarItemsInSeries(seriesId: String): List<CalendarItem>
+
+    @Query("SELECT eventSeriesMappings.seriesId FROM eventSeriesMappings WHERE eventSeriesMappings.eventId=:eventId LIMIT 1")
+    fun getSeriesIdForEvent(eventId: String): String?
 }

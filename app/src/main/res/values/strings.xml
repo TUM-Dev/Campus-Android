@@ -21,6 +21,7 @@
     <string name="ends_on">Ends on</string>
     <string name="repeats">Repeats Weekly</string>
     <string name="create_event_too_many_error">You can only create up to 25 events at the same time.</string>
+    <string name="delete_series">delete series</string>
     <string name="dialog_show_calendar">Export successful.\nShow local calendar <i>TUM_CAMPUS_APP</i> on <i>Google Calendar App</i>?</string>
     <string name="export_to_google">Export to Google</string>
     <string name="export_to_google_error">An error occurred while exporting your calendar to Google Calendar.</string>

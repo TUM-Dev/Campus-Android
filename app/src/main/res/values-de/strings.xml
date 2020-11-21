@@ -19,6 +19,7 @@
     <string name="ends_on">Ende am</string>
     <string name="repeats">Wöchentlicher Termin</string>
     <string name="create_event_too_many_error">Es können höchstens 25 Termine gleichzeitig erstellt werden.</string>
+    <string name="delete_series">Serie löschen</string>
     <string name="dialog_show_calendar">Exportieren erfolgreich.\nLokalen Kalender <i>TUM_CAMPUS_APP</i> in der <i>Google Calendar App</i> anzeigen?</string>
     <string name="export_to_google">Exportiere nach Google</string>
     <string name="delete_from_google">Löschen aus Google</string>
