@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="list_divider">@color/tum_400</color>
+    <color name="placeholder">@color/tum_light_gray</color>
+
+    <!-- Default colors -->
+
+    <color name="text_primary">#DEFFFFFF</color>
+    <color name="text_secondary">#8AFFFFFF</color>
+
+    <color name="default_window_background">@android:color/black</color>
+    <color name="secondary_window_background">@android:color/black</color>
+
+    <!-- Navigation drawer -->
+
+    <color name="navigation_drawer_header_background">@color/black</color>
+
+    <color name="navigation_drawer_item_background_selected">#780065BD</color>
+    <color name="navigation_drawer_item_text_selected">@color/tum_100</color>
+
+</resources>

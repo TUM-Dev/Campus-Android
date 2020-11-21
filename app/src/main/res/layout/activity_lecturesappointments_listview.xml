@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-medium"
-        android:textColor="@color/text_dark_primary"
+        android:textColor="@color/text_primary"
         android:textSize="18sp"
         tools:text="Date" />
 
@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/material_tiny_padding"
-        android:textColor="@color/text_dark_secondary"
+        android:textColor="@color/text_secondary"
         android:textSize="16sp"
         tools:text="Details" />
 
@@ -28,7 +28,7 @@
         android:id="@+id/tvTerminBetreff"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/text_dark_secondary"
+        android:textColor="@color/text_secondary"
         android:textSize="16sp"
         tools:text="More details" />
 

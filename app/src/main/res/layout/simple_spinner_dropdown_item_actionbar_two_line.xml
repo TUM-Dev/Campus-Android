@@ -23,7 +23,7 @@
             android:layout_weight="1"
             android:ellipsize="marquee"
             android:singleLine="true"
-            android:textColor="@color/text_dark_secondary"
+            android:textColor="@color/text_secondary"
             android:textSize="16sp"
             tools:text="Text 1" />
 
@@ -35,7 +35,7 @@
             android:ellipsize="marquee"
             android:gravity="end"
             android:singleLine="true"
-            android:textColor="@color/text_dark_secondary"
+            android:textColor="@color/text_secondary"
             android:textSize="14sp"
             tools:text="Distance" />
 
@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:ellipsize="marquee"
         android:singleLine="true"
-        android:textColor="@color/text_dark_secondary"
+        android:textColor="@color/text_secondary"
         android:textSize="12sp"
         tools:text="Text 2" />
 

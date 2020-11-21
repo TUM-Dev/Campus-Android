@@ -5,6 +5,8 @@
         <item name="colorPrimaryDark">@color/tum_light_gray</item>
         <item name="colorAccent">@color/tum_blue</item>
         <item name="android:windowBackground">@color/default_window_background</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
         <item name="android:textCursorDrawable">@drawable/cursor_text_field_colorful</item>
 
@@ -17,5 +19,7 @@
         <item name="android:windowLightNavigationBar">true</item>
         <item name="android:navigationBarColor">@android:color/primary_text_dark</item>
         <item name="android:navigationBarDividerColor">@color/navigation_bar_divider</item>
+
+        <item name="android:listDivider">@color/list_divider</item>
     </style>
 </resources>

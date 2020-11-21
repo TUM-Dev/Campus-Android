@@ -173,7 +173,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
             statusImageView.setVisibility(inProgress ? View.GONE : View.VISIBLE);
             sendingProgressBar.setVisibility(inProgress ? View.VISIBLE : View.GONE);
 
-            int darkTextColor = ContextCompat.getColor(context, R.color.text_dark_secondary);
+            int darkTextColor = ContextCompat.getColor(context, R.color.text_secondary);
 
             if (inProgress) {
                 timestampTextView.setTextColor(darkTextColor);
@@ -198,7 +198,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
                 timestampTextView.setText(R.string.chat_message_send_error);
                 timestampTextView.setTextColor(iconTint);
             } else {
-                int textColor = ContextCompat.getColor(context, R.color.text_dark_secondary);
+                int textColor = ContextCompat.getColor(context, R.color.text_secondary);
                 timestampTextView.setTextColor(textColor);
                 timestampTextView.setText(message.getFormattedTimestamp(context));
             }

@@ -146,24 +146,24 @@
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
         <item name="android:layout_marginBottom">@dimen/material_small_padding</item>
-        <item name="android:textColor">@color/text_dark_primary</item>
+        <item name="android:textColor">@color/text_primary</item>
         <item name="android:textSize">16sp</item>
     </style>
 
     <style name="CardBody">
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
-        <item name="android:textColor">@color/text_dark_secondary</item>
+        <item name="android:textColor">@color/text_secondary</item>
         <item name="android:textSize">16sp</item>
     </style>
 
     <style name="CardDetails">
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
-        <item name="android:textColor">@color/text_dark_secondary</item>
+        <item name="android:textColor">@color/text_secondary</item>
         <item name="android:textSize">15sp</item>
     </style>
 
     <style name="CardSource">
-        <item name="android:textColor">@color/text_dark_secondary</item>
+        <item name="android:textColor">@color/text_secondary</item>
         <item name="android:textSize">14sp</item>
     </style>
 

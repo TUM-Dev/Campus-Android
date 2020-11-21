@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
+    <color name="white">@android:color/white</color>
+    <color name="black">@android:color/black</color>
 
     <color name="pop_up_background">#FAFAFA</color>
 
@@ -24,23 +24,40 @@
     <color name="tum_dark_gray">#E6E6E6</color>
     <color name="tum_blue">@color/tum_500</color>
 
-    <color name="tum_500_alpha_15">#260065BD</color>
-
     <color name="facebook">#3B5998</color>
     <color name="github">#24292E</color>
     <color name="email">#757575</color>
 
-    <color name="placeholder">#E2E2E2</color>
-    <color name="list_divider">#EEEEEE</color>
+    <color name="placeholder">@color/tum_dark_gray</color>
+    <color name="list_divider">@color/tum_200</color>
 
     <color name="spinner_background">#FFFFFF</color>
     <color name="spinner_border">#E0E0E0</color>
 
     <color name="input_layout_border">@color/color_primary</color>
 
+
+    <!-- Default colors -->
+    <color name="text_primary">#DE000000</color> <!--DE for 87% opacity-->
+    <color name="text_secondary">#8A000000</color> <!--8A for 54% opacity-->
+
+    <color name="default_window_background">@color/white</color>
+    <color name="secondary_window_background">#F2F2F2</color>
+    <color name="semitransparent_dark_background">#4D000000</color>
+
+
+    <!-- Navigation drawer -->
+
+    <color name="navigation_drawer_header_background">@color/tum_light_gray</color>
+    <color name="navigation_drawer_header_name">@color/text_primary</color>
+
+    <color name="navigation_drawer_background">@color/default_window_background</color>
     <color name="navigation_drawer_item_background">#EDEDED</color>
+    <color name="navigation_drawer_item_background_selected">#260065BD</color>
     <color name="navigation_drawer_icon_tint">#757575</color>
-    <color name="navigation_drawer_item_text">#222222</color>
+    <color name="navigation_drawer_item_text">@color/text_primary</color>
+    <color name="navigation_drawer_item_text_selected">@color/tum_blue</color>
+
 
     <color name="study_room_free">#C8E6C9</color>
     <color name="study_room_occupied">#FFCDD2</color>
@@ -52,13 +69,6 @@
 
     <color name="card_more_icon">#A5A5A5</color>
 
-    <!-- Default colors -->
-    <color name="text_dark_primary">#DE000000</color> <!--DE for 87% opacity-->
-    <color name="text_dark_secondary">#8A000000</color> <!--8A for 54% opacity-->
-
-    <color name="default_window_background">@android:color/white</color>
-    <color name="secondary_window_background">#F2F2F2</color>
-    <color name="semitransparent_dark_background">#4D000000</color>
 
     <!-- official TUM accent colors (style guide) -->
     <color name="tum_orange">#E37222</color>

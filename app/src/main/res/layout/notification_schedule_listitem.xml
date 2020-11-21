@@ -14,7 +14,7 @@
         android:layout_weight="1"
         android:gravity="center_vertical"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/text_dark_primary"
+        android:textColor="@color/text_primary"
         tools:text="Monday" />
 
     <TextView
@@ -26,7 +26,7 @@
         android:paddingStart="@dimen/material_default_padding"
         android:paddingEnd="@dimen/material_default_padding"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/text_dark_primary"
+        android:textColor="@color/text_primary"
         tools:text="9:30" />
 
     <CheckBox
