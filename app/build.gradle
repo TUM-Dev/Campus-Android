@@ -31,7 +31,7 @@ android {
         debug {
             debuggable true
             shrinkResources false
-            testCoverageEnabled false
+            testCoverageEnabled true
         }
     }
     defaultConfig {
