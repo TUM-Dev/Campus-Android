@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="github">@color/text_secondary</color>
+
     <color name="list_divider">@color/tum_400</color>
     <color name="placeholder">@color/tum_light_gray</color>
 
+    <color name="spinner_border">#8AFFFFFF</color>
+
     <!-- Default colors -->
 
-    <color name="text_primary">#DEFFFFFF</color>
-    <color name="text_secondary">#8AFFFFFF</color>
+    <color name="text_primary">@color/text_primary_dark</color>
+    <color name="text_secondary">@color/text_secondary_dark</color>
 
     <color name="default_window_background">@android:color/black</color>
     <color name="secondary_window_background">@android:color/black</color>

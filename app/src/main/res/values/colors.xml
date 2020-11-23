@@ -26,13 +26,13 @@
 
     <color name="facebook">#3B5998</color>
     <color name="github">#24292E</color>
-    <color name="email">#757575</color>
+    <color name="email">@color/text_secondary</color>
 
     <color name="placeholder">@color/tum_dark_gray</color>
     <color name="list_divider">@color/tum_200</color>
 
     <color name="spinner_background">#FFFFFF</color>
-    <color name="spinner_border">#E0E0E0</color>
+    <color name="spinner_border">@color/tum_dark_gray</color>
 
     <color name="input_layout_border">@color/color_primary</color>
 
@@ -40,6 +40,8 @@
     <!-- Default colors -->
     <color name="text_primary">#DE000000</color> <!--DE for 87% opacity-->
     <color name="text_secondary">#8A000000</color> <!--8A for 54% opacity-->
+    <color name="text_primary_dark">#DEFFFFFF</color>
+    <color name="text_secondary_dark">#8AFFFFFF</color>
 
     <color name="default_window_background">@color/white</color>
     <color name="secondary_window_background">#F2F2F2</color>
