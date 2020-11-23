@@ -100,9 +100,14 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
                 return@setOnClickListener
             }
             if (repeats) {
+                if (endAfterRadioBtn.isChecked && (eventRepeatsTimes.text.toString() == "" ||
+                        eventRepeatsTimes.text.toString().toInt() < 2)) {
+                    showErrorDialog(getString(R.string.create_event_too_little_error))
+                    return@setOnClickListener
+                }
                 // Don't allow too many requests
-                if ((endOnRadioBtn.isChecked && start.plusMonths(6).isBefore(last))
-                        || (endAfterRadioBtn.isChecked && eventRepeatsTimes.text.toString().toInt() > 25)) {
+                if ((endOnRadioBtn.isChecked && start.plusMonths(6).isBefore(last)) ||
+                        (endAfterRadioBtn.isChecked && eventRepeatsTimes.text.toString().toInt() > 25)) {
                     showErrorDialog(getString(R.string.create_event_too_many_error))
                     return@setOnClickListener
                 }
