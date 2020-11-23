@@ -124,8 +124,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:orientation="horizontal"
-                    android:layout_margin="@dimen/material_default_padding"
-                    android:layout_marginTop="0dp"
+                    android:layout_marginLeft="@dimen/material_default_padding"
+                    android:layout_marginRight="@dimen/material_default_padding"
                     android:paddingTop="0dp">
 
                     <RadioGroup
@@ -139,7 +139,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:hint="@string/ends_after"
-                            android:textColorHint="@color/black"
+                            android:textColorHint="@color/text_dark_primary"
                             android:checked="true"/>
 
                         <RadioButton
@@ -147,8 +147,8 @@
                             android:id="@+id/endOnRadioBtn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColorHint="@color/black"
-                            android:hint="@string/ends_on"/>
+                            android:hint="@string/ends_on"
+                            android:textColorHint="@color/text_dark_primary"/>
 
                     </RadioGroup>
 
@@ -163,13 +163,13 @@
                             android:orientation="horizontal">
                             <EditText
                                 android:id="@+id/eventRepeatsTimes"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                                android:textColor="@color/black"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical"
-                                android:text="14"
-                                android:inputType="number"/>
+                                android:hint="14"
+                                android:inputType="number"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                                android:textColor="@color/text_dark_primary"/>
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
@@ -177,8 +177,8 @@
                                 android:clickable="true"
                                 android:focusable="true"
                                 android:gravity="center_vertical"
-                                android:textColor="@color/black"
-                                android:text="@string/events"/>
+                                android:text="@string/events"
+                                android:textColor="@color/text_dark_primary"/>
                         </LinearLayout>
                         <TextView
                             android:id="@+id/eventLastDateView"
@@ -189,8 +189,8 @@
                             android:focusable="true"
                             android:gravity="center_vertical"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:text="Mon, Jun 11, 2018"
-                            android:textColor="@color/black"/>
+                            android:textColor="@color/text_dark_primary"
+                            android:text="Mon, Jun 11, 2018"/>
 
                     </LinearLayout>
 
