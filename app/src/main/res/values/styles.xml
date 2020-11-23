@@ -192,8 +192,8 @@
         <item name="android:background">@drawable/bottom_sheet_background</item>
     </style>
 
-    <style name="BaseBottomSheetDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
-        <item name="android:windowIsFloating">false</item>
+    <style name="BaseBottomSheetDialog" parent="@style/Theme.MaterialComponents.DayNight.BottomSheetDialog">
+        <item name="android:windowIsFloating">true</item>
         <item name="bottomSheetStyle">@style/BottomDialog</item>
     </style>
 
@@ -209,7 +209,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:drawableStart">@drawable/ic_action_info_black</item>
+        <item name="android:drawableStart">@drawable/ic_action_info</item>
         <item name="android:drawablePadding">@dimen/material_default_padding</item>
         <item name="android:drawableTint">@android:color/white</item>
         <item name="android:background">@drawable/info_box_background</item>

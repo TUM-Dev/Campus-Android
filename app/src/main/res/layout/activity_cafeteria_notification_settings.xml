@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/material_default_padding"
-            android:drawableStart="@drawable/ic_action_info_black"
+            android:drawableStart="@drawable/ic_action_info"
             android:drawablePadding="@dimen/material_default_padding"
             android:text="@string/favorite_dish_info"
             android:textColor="#000000" />

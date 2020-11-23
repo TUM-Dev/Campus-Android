@@ -82,7 +82,7 @@
             android:paddingTop="@dimen/material_small_padding"
             android:textAppearance="?android:attr/textAppearanceSmall"
             tools:text="Additional Information\nand more"
-            android:drawableStart="@drawable/ic_action_info_black"
+            android:drawableStart="@drawable/ic_action_info"
             android:drawablePadding="@dimen/material_small_padding"
             android:drawableTint="@color/text_dark_gray"
             android:layout_gravity="top"
