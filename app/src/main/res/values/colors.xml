@@ -47,6 +47,9 @@
     <color name="secondary_window_background">#F2F2F2</color>
     <color name="semitransparent_dark_background">#4D000000</color>
 
+    <color name="default_button_text">@color/color_primary</color>
+    <color name="default_button_background">@color/tum_light_gray</color>
+
 
     <!-- Navigation drawer -->
 

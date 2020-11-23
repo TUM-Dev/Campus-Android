@@ -16,6 +16,9 @@
     <color name="default_window_background">@android:color/black</color>
     <color name="secondary_window_background">@android:color/black</color>
 
+    <color name="default_button_text">@color/text_primary</color>
+    <color name="default_button_background">@color/tum_blue</color>
+
     <!-- Navigation drawer -->
 
     <color name="navigation_drawer_header_background">@color/black</color>

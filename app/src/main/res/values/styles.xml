@@ -219,6 +219,8 @@
 
     <!-- Customized Material Themes -->
     <style name="BlueButton" parent="Widget.MaterialComponents.Button">
-        <item name="android:textColor">@color/color_primary</item>
+        <item name="android:textColor">@color/default_button_text</item>
+        <item name="android:backgroundTint">@color/default_button_background</item>
+        <item name="iconTint">@color/text_primary</item>
     </style>
 </resources>
