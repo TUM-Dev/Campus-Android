@@ -1,6 +1,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/tum_light_gray</item>
         <item name="colorPrimaryDark">@color/tum_light_gray</item>
         <item name="colorAccent">@color/tum_blue</item>
@@ -16,26 +16,26 @@
         <item name="materialButtonStyle">@style/BlueButton</item>
     </style>
     <style name="AppTheme.NoDrawerLayout" parent="AppTheme">
-        <item name="android:statusBarColor">@color/tum_light_gray</item>
+        <item name="android:statusBarColor">@color/default_window_background</item>
 
         <item name="materialButtonStyle">@style/BlueButton</item>
     </style>
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.DayNight.ActionBar">
     </style>
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.DayNight">
     </style>
 
-    <style name="TumToolbar" parent="ThemeOverlay.AppCompat.Dark">
+    <style name="TumToolbar" parent="ThemeOverlay.AppCompat.DayNight">
         <item name="android:textColorPrimary">@color/color_primary</item>
         <item name="android:textColorSecondary">@color/color_primary</item>
         <item name="android:textCursorDrawable">@drawable/cursor_text_field_colorful</item>
     </style>
 
-    <style name="TumToolbarPopUp" parent="ThemeOverlay.AppCompat.Light">
+    <style name="TumToolbarPopUp" parent="ThemeOverlay.AppCompat.DayNight">
         <item name="actionMenuTextColor">@android:color/primary_text_light</item>
     </style>
 
-    <style name="AppThemeFullscreen" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="AppThemeFullscreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary</item>
         <item name="colorAccent">@color/color_primary</item>
@@ -46,7 +46,7 @@
     </style>
 
     <!-- Style for Stripe's payment method activity -->
-    <style name="StripeDefaultTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="StripeDefaultTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/tum_light_gray</item>
         <item name="colorPrimaryDark">@color/tum_dark_gray</item>
         <item name="colorAccent">@color/tum_blue</item>

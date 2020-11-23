@@ -19,4 +19,7 @@
     <color name="navigation_drawer_item_background_selected">#780065BD</color>
     <color name="navigation_drawer_item_text_selected">@color/tum_100</color>
 
+    <!-- official TUM accent colors (style guide) -->
+    <color name="color_primary">@color/tum_400</color>
+    <color name="color_primary_dark">@color/tum_300</color>
 </resources>
