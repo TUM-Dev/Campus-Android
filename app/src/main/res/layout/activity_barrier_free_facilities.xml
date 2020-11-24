@@ -21,7 +21,6 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@android:color/white"
                 android:elevation="12dp"
                 android:theme="@style/TumToolbar">
 
@@ -35,7 +34,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:entries="@array/barrier_free_facility_spinner_list"
-                        android:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                        android:popupTheme="@style/TumToolbarPopUp" />
 
                 </FrameLayout>
 

@@ -29,6 +29,7 @@
         <item name="android:textColorPrimary">@color/color_primary</item>
         <item name="android:textColorSecondary">@color/color_primary</item>
         <item name="android:textCursorDrawable">@drawable/cursor_text_field_colorful</item>
+        <item name="android:background">@color/default_window_background</item>
     </style>
 
     <style name="TumToolbarPopUp" parent="ThemeOverlay.AppCompat.DayNight">
