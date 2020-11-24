@@ -31,7 +31,7 @@
     <color name="placeholder">@color/tum_dark_gray</color>
     <color name="list_divider">@color/tum_200</color>
 
-    <color name="spinner_background">#FFFFFF</color>
+    <color name="spinner_background">@color/default_window_background</color>
     <color name="spinner_border">@color/tum_dark_gray</color>
 
     <color name="input_layout_border">@color/color_primary</color>
