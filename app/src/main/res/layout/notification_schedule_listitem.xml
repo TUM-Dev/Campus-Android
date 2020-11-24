@@ -26,7 +26,7 @@
         android:paddingStart="@dimen/material_default_padding"
         android:paddingEnd="@dimen/material_default_padding"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/text_primary"
+        android:textColor="@color/text_secondary"
         tools:text="9:30" />
 
     <CheckBox

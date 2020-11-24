@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="pop_up_background">#1F1F1F</color>
+
     <color name="github">@color/text_secondary</color>
 
     <color name="list_divider">@color/tum_400</color>

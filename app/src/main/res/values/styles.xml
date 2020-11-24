@@ -22,7 +22,7 @@
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.DayNight.ActionBar">
     </style>
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.DayNight">
+    <style name="AppTheme.PopupOverlay" parent="AppTheme">
     </style>
 
     <style name="TumToolbar" parent="ThemeOverlay.AppCompat.DayNight">

@@ -4,7 +4,7 @@
     style="?android:attr/spinnerDropDownItemStyle"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
-    android:background="@android:color/background_light"
+    android:background="@color/default_window_background"
     android:foreground="?android:selectableItemBackground"
     android:gravity="center_vertical"
     android:orientation="vertical"
@@ -23,7 +23,7 @@
             android:layout_weight="1"
             android:ellipsize="marquee"
             android:singleLine="true"
-            android:textColor="@color/text_secondary"
+            android:textColor="@color/text_primary"
             android:textSize="16sp"
             tools:text="Text 1" />
 
