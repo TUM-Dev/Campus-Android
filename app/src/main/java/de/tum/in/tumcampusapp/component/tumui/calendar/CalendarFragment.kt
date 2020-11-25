@@ -202,7 +202,7 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
                 val currentDate = LocalDate(weekView.firstVisibleDate)
                 val intent = Intent(requireContext(), CreateEventActivity::class.java)
                 intent.putExtra(Const.DATE, currentDate)
-                startActivity(intent)
+                startActivityForResult(intent, REQUEST_CREATE)
                 return true
             }
             R.id.action_calendar_filter_canceled -> {
@@ -383,8 +383,23 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
 
         val intent = Intent(requireContext(), CreateEventActivity::class.java)
         intent.putExtras(bundle)
-        startActivity(intent)
+        startActivityForResult(intent, REQUEST_CREATE)
         detailsFragment?.dismiss()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // Not all events were created successfully
+        if (requestCode == REQUEST_CREATE && resultCode == RESULT_ERROR) {
+            val failed = data?.getStringExtra("failed")
+            val sum = data?.getStringExtra("sum")
+            AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.error_something_wrong)
+                    .setMessage(getString(R.string.create_event_some_failed, failed, sum))
+                    .setPositiveButton(R.string.ok, null)
+                    .show()
+        }
     }
 
     override fun onEventDeleted(eventId: String) {
@@ -470,6 +485,8 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
 
         private const val REQUEST_SYNC = 0
         private const val REQUEST_DELETE = 1
+        private const val REQUEST_CREATE = 2
+        const val RESULT_ERROR = 4
 
         private val PERMISSIONS_CALENDAR = arrayOf(
                 Manifest.permission.READ_CALENDAR,

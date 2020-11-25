@@ -1,13 +1,15 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -48,6 +50,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     private var event: CalendarItem? = null
     private var events: List<CalendarItem>? = null
     private var apiCallsFetched = 0
+    private var apiCallsFailed = 0
     private lateinit var seriesId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -121,7 +124,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
 
         // edited events cannot repeat
         if (isEditing) {
-            repeatingSwitch.layoutParams = LinearLayout.LayoutParams(0, 0)
+            repeatingSwitch.visibility = View.GONE
         } else {
             repeatingSwitch.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
@@ -308,7 +311,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
             return listOf(this.event!!)
         }
         val items = ArrayList<CalendarItem>()
-        seriesId = generateSeriesId()
+        seriesId = UUID.randomUUID().toString()
 
         // event ends after n times
         if (endAfterRadioBtn.isChecked) {
@@ -340,6 +343,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         return items
     }
 
+    @Synchronized
     override fun onDownloadSuccessful(response: CreateEventResponse) {
         events?.get(apiCallsFetched++)?.let {
             it.nr = response.eventId
@@ -350,8 +354,30 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         }
         //finish when all events have been created
         if (apiCallsFetched == events?.size) {
+            setResult(Activity.RESULT_OK)
             finish()
         }
+        if (apiCallsFetched + apiCallsFailed == events?.size) {
+            finishWithError()
+        }
+    }
+
+    @Synchronized
+    override fun onDownloadFailure(throwable: Throwable) {
+        Utils.log(throwable)
+
+        apiCallsFailed++
+        if (apiCallsFetched + apiCallsFailed == events?.size) {
+            finishWithError()
+        }
+    }
+
+    private fun finishWithError() {
+        val i = Intent()
+        i.putExtra("failed", apiCallsFailed.toString())
+        i.putExtra("sum", (apiCallsFetched + apiCallsFailed).toString())
+        setResult(CalendarFragment.RESULT_ERROR, i)
+        finish()
     }
 
     override fun onBackPressed() {
@@ -412,17 +438,4 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         dialog.show()
     }
 
-    companion object {
-        private val CHARPOOL = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()
-
-        /**
-         * generates a random id that is assigned to every CalendarItem in a series
-         */
-        private fun generateSeriesId(): String {
-            return (1..10)
-                    .map { kotlin.random.Random.nextInt(0, CHARPOOL.size) }
-                    .map(CHARPOOL::get)
-                    .joinToString("")
-        }
-    }
 }
