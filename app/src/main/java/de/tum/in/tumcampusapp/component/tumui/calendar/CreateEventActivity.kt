@@ -151,7 +151,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
             afterTextChanged {
                 if (it.toString() != "") {
                     repeatHelper.times = it.toString().toInt()
-                }else{
+                } else {
                     repeatHelper.times = 0
                 }
             }
@@ -266,8 +266,8 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
                 .deleteEvent(eventId)
                 .enqueue(object : Callback<DeleteEventResponse> {
                     override fun onResponse(
-                            call: Call<DeleteEventResponse>,
-                            response: Response<DeleteEventResponse>
+                        call: Call<DeleteEventResponse>,
+                        response: Response<DeleteEventResponse>
                     ) {
                         if (response.isSuccessful) {
                             Utils.log("Event successfully deleted (now creating the edited version)")
@@ -279,8 +279,8 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
                     }
 
                     override fun onFailure(
-                            call: Call<DeleteEventResponse>,
-                            t: Throwable
+                        call: Call<DeleteEventResponse>,
+                        t: Throwable
                     ) {
                         Utils.log(t)
                         displayErrorMessage(t)
@@ -361,7 +361,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
                 }
             }
         }
-        //finish when all events have been created
+        // finish when all events have been created
         if (apiCallsFetched == events.size) {
             setResult(Activity.RESULT_OK)
             finish()
@@ -446,5 +446,4 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
         dialog.show()
     }
-
 }
