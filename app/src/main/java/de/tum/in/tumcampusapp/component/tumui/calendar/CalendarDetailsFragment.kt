@@ -146,6 +146,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
         calendarItems.forEach {
             deleteEvent(it.nr)
         }
+        TcaDb.getInstance(requireContext()).calendarDao().removeSeriesIdMappings(seriesId)
     }
 
     private fun deleteEvent(eventId: String) {
