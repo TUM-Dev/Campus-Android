@@ -10,7 +10,8 @@ data class RepeatHelper(
     var repetitionType: RepetitionType = RepetitionType.NotRepeating,
     var end: DateTime? = null,
     var times: Int = 0,
-    var seriesId: String? = UUID.randomUUID().toString()) {
+    var seriesId: String? = UUID.randomUUID().toString()
+) {
 
     fun isTooLong(start: DateTime? = null): Boolean {
         if (repetitionType == RepetitionType.NotRepeating) {

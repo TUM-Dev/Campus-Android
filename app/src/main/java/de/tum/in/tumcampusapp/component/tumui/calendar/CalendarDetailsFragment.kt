@@ -136,7 +136,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
                 .setPositiveButton(R.string.delete) { _, _ -> deleteEvent(eventId) }
                 .setNeutralButton(R.string.cancel, null)
         if (s != null) { // a event series
-            alertDialog.setNegativeButton(R.string.delete_series) {_, _ -> deleteEventSeries(s) }
+            alertDialog.setNegativeButton(R.string.delete_series) { _, _ -> deleteEventSeries(s) }
         }
         alertDialog.show()
     }
