@@ -108,4 +108,7 @@ interface CalendarDao {
 
     @Query("SELECT eventSeriesMappings.seriesId FROM eventSeriesMappings WHERE eventSeriesMappings.eventId=:eventId LIMIT 1")
     fun getSeriesIdForEvent(eventId: String): String?
+
+    @Query("DELETE FROM eventSeriesMappings WHERE eventSeriesMappings.seriesId=:seriesId")
+    fun removeSeriesIdMappings(seriesId: String)
 }

@@ -4,7 +4,6 @@ import android.app.SearchManager
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -136,17 +135,18 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
                 .setMessage(R.string.delete_event_info)
                 .setPositiveButton(R.string.delete) { _, _ -> deleteEvent(eventId) }
                 .setNeutralButton(R.string.cancel, null)
-        if (s!=null) {// a event series
-            alertDialog.setNegativeButton(R.string.delete_series) {_, _ ->deleteEventSeries(s)}
+        if (s != null) { // a event series
+            alertDialog.setNegativeButton(R.string.delete_series) { _, _ -> deleteEventSeries(s) }
         }
         alertDialog.show()
     }
 
-    private fun deleteEventSeries(seriesId: String){
+    private fun deleteEventSeries(seriesId: String) {
         val calendarItems = TcaDb.getInstance(requireContext()).calendarDao().getCalendarItemsInSeries(seriesId)
-        calendarItems.forEach{
+        calendarItems.forEach {
             deleteEvent(it.nr)
         }
+        TcaDb.getInstance(requireContext()).calendarDao().removeSeriesIdMappings(seriesId)
     }
 
     private fun deleteEvent(eventId: String) {
