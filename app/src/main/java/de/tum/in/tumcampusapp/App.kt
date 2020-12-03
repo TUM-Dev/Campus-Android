@@ -1,11 +1,14 @@
 package de.tum.`in`.tumcampusapp
 
 import android.app.Application
+import android.content.res.Resources
 import android.os.StrictMode
+import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
 import de.tum.`in`.tumcampusapp.component.notifications.NotificationUtils.setupNotificationChannels
+import de.tum.`in`.tumcampusapp.component.other.settings.ThemeProvider
 import de.tum.`in`.tumcampusapp.di.AppComponent
 import de.tum.`in`.tumcampusapp.di.DaggerAppComponent
 import io.reactivex.plugins.RxJavaPlugins
@@ -24,6 +27,7 @@ open class App : Application() {
         JodaTimeAndroid.init(this)
         initRxJavaErrorHandler()
         setupStrictMode()
+        loadTheme()
     }
 
     private fun buildAppComponent() {
@@ -67,5 +71,10 @@ open class App : Application() {
 
     private fun initRxJavaErrorHandler() {
         RxJavaPlugins.setErrorHandler(FirebaseCrashlytics.getInstance()::recordException)
+    }
+
+    private fun loadTheme() {
+        val theme = ThemeProvider(this).getThemeFromPreferences()
+        AppCompatDelegate.setDefaultNightMode(theme)
     }
 }
