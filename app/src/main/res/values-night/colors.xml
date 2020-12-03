@@ -35,4 +35,15 @@
     <!-- official TUM accent colors (style guide) -->
     <color name="color_primary">@color/tum_400</color>
     <color name="color_primary_dark">@color/tum_300</color>
+
+    <color name="grade_4.1">#BF1010</color>
+    <color name="grade_4.2">#AA2020</color>
+    <color name="grade_4.3">#953030</color>
+    <color name="grade_4.4">#7F4040</color>
+    <color name="grade_4.5">#6A5050</color>
+    <color name="grade_4.6">#6A5A5A</color>
+    <color name="grade_4.7">#6A6464</color>
+    <color name="grade_4.8">#555353</color>
+    <color name="grade_4.9">#434141</color>
+    <color name="grade_5.0">#2F2F2F</color>
 </resources>

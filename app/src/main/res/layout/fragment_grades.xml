@@ -15,7 +15,6 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@android:color/white"
             android:elevation="12dp"
             android:theme="@style/TumToolbar"
             app:popupTheme="@style/TumToolbarPopUp">
@@ -45,6 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:padding="@dimen/material_default_padding"
+            android:background="@color/default_window_background"
             android:visibility="invisible">
 
             <com.github.mikephil.charting.charts.PieChart
@@ -82,16 +82,15 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/spinner_background"
+        android:background="@color/pop_up_background"
         android:padding="@dimen/material_default_padding">
 
         <TextView
             android:id="@+id/averageGradeTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="#757575"
+            android:textStyle="bold"
+            android:textColor="@color/text_light_blue"
             android:textSize="@dimen/semilarge_text_size"
             android:visibility="visible"
             tools:text="Average grade: 1.0" />

@@ -3,6 +3,8 @@
     <color name="white">@android:color/white</color>
     <color name="black">@android:color/black</color>
 
+    <color name="transparent">@android:color/transparent</color>
+
     <color name="pop_up_background">#FAFAFA</color>
 
     <color name="tum_50">#E6F0F8</color>
@@ -38,9 +40,9 @@
 
 
     <!-- Default colors -->
-    <color name="text_primary">#DE000000</color> <!--DE for 87% opacity-->
+    <color name="text_primary">#F2000000</color> <!--F2 for 95% opacity-->
     <color name="text_secondary">#8A000000</color> <!--8A for 54% opacity-->
-    <color name="text_primary_dark">#DEFFFFFF</color>
+    <color name="text_primary_dark">#F2FFFFFF</color>
     <color name="text_secondary_dark">#8AFFFFFF</color>
 
     <color name="default_window_background">@color/white</color>
