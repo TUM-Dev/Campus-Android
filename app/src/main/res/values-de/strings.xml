@@ -585,7 +585,7 @@ Signatur: %5$s</string>
     <string name="pdf_viewer_title">PDF Viewer</string>
 
     <string name="app_info_text">
-        Die TUM Campus App wird von Freiwilligen Helfenden, Studierenden des Android Praktikums und Lehrstuhlmitarbeiter*innen des Informatik Fachgebiet 13 unter
+        Die TUM Campus App wird von Freiwilligen, Studierenden des Android Praktikums und Lehrstuhlmitarbeiter*innen des Informatik Fachgebiet 13 unter
         Professor Dr. Baumgarten entwickelt. Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets und wird für Android und iOS bereitgestellt.\n\nFür besondere Anliegen erreichen Sie uns auch via E-Mail unter: app@tum.de
     </string>
     <string name="dialog_add_to_contacts">Zu Kontakten hinzufügen?</string>
