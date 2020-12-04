@@ -191,6 +191,10 @@
                 android:value="de.tum.in.tumcampusapp.component.tumui.lectures.activity.LecturesDetailsActivity" />
         </activity>
         <activity
+            android:name=".component.tumui.bibreservation.BibReservationActivity"
+            android:label="@string/title_activity_bib_reservation" >
+        </activity>
+        <activity
             android:name=".component.tumui.lectures.activity.LecturesDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/lectures_information"
