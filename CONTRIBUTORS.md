@@ -18,26 +18,26 @@ Hier sind alle jene aufgeführt, welche in Ihrer Freizeit sich dem Projekt widme
 + Paul Nieleck als Administrator von 2015 bis 2016
 + Ralf Baun
 
-## Studenten aus dem Android Praktikum
-Jedes Semester tragen Studenten im Rahmen des Android Praktikums einiges dazu bei, dass die App neue Features bekommt. Diese Studenten haben über die Dauer eines Semester ein Projekt im Rahmen der TCA ausgeführt.
-#### Entwickler Sommersemester 2016
+## Studierende aus dem Android Praktikum
+Jedes Semester tragen Student*innen im Rahmen des Android Praktikums einiges dazu bei, dass die App neue Features bekommt. Diese haben über die Dauer eines Semester ein Projekt im Rahmen der TCA ausgeführt.
+#### Sommersemester 2016
 + Aser Abdelrahman
 + Mohamad Ayad
 
-#### Entwickler Sommersemester 2015
+#### Sommersemester 2015
 + Enrico Gigantiello
 + Carlo Di Domenico
 + Arash Khatayee
 + Michael Hesse
 + Thomas Mauerer
 
-#### Entwickler Sommersemester 2014
+#### Sommersemester 2014
 + Florian Dreier
 + [Kordian Bruck](https://github.com/kordianbruck)
 + Jana Pejic
 + Marko Lalic
 
-#### Weitere Entwickler:
+#### Weitere Entwickler*innen:
 + Sascha Moecker 
 + Haris Iltifat 
 + Anas Chakfeh
