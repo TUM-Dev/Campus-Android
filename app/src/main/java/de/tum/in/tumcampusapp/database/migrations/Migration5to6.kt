@@ -8,7 +8,7 @@ class Migration5to6 : Migration(5, 6) {
         database.execSQL("CREATE TABLE IF NOT EXISTS `eventSeriesMappings` " +
                 "(`id` INTEGER NOT NULL, " +
                 "`seriesId` Text NOT NULL, " +
-                "`eventId` INTEGER NOT NULL, " +
+                "`eventId` Text NOT NULL, " +
                 "PRIMARY KEY(`id`))")
     }
 }
