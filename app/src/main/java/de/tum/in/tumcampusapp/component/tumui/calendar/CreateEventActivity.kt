@@ -1,26 +1,30 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MenuItem
+import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.RequestLimitReachedException
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CreateEventResponse
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.*
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import kotlinx.android.synthetic.main.activity_create_event.*
+import kotlinx.android.synthetic.main.activity_create_event.view.*
+import org.jetbrains.anko.sdk27.coroutines.textChangedListener
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
@@ -29,6 +33,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.net.UnknownHostException
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Allows the user to create (and edit) a private event in TUMonline.
@@ -39,7 +44,11 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     private lateinit var end: DateTime
 
     private var isEditing: Boolean = false
-    private var event: CalendarItem? = null
+    private var events: ArrayList<CalendarItem> = ArrayList()
+    private var apiCallsFetched = 0
+    private var apiCallsFailed = 0
+
+    private val repeatHelper = RepeatHelper()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,10 +93,19 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         }
         initStartEndDates(extras)
         setDateAndTimeListeners()
+        initRepeatingSettingsListeners()
 
         createEventButton.setOnClickListener {
             if (end.isBefore(start)) {
                 showErrorDialog(getString(R.string.create_event_time_error))
+                return@setOnClickListener
+            }
+            if (repeatHelper.isTooShort(start)) {
+                showErrorDialog(getString(R.string.create_event_too_little_error))
+                return@setOnClickListener
+            }
+            if (repeatHelper.isTooLong(start)) {
+                showErrorDialog(getString(R.string.create_event_too_many_error))
                 return@setOnClickListener
             }
             if (isEditing) {
@@ -95,6 +113,56 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
             } else {
                 createEvent()
             }
+        }
+
+        // edited events cannot repeat
+        if (isEditing) {
+            repeatingSwitch.visibility = View.GONE
+        }
+    }
+
+    private fun initRepeatingSettingsListeners() {
+        repeatingSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                repeatHelper.setRepeatingNTimes()
+                endAfterRadioBtn.isChecked = true
+                repeatingSettings.layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
+                repeatingSettings.requestLayout()
+            } else {
+                repeatHelper.setNotRepeating()
+                repeatingSettings.layoutParams.height = 0
+                repeatingSettings.requestLayout()
+            }
+        }
+
+        endOnRadioBtn.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                repeatHelper.setRepeatingUntil()
+            }
+        }
+
+        endAfterRadioBtn.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                repeatHelper.setRepeatingNTimes()
+            }
+        }
+
+        eventRepeatsTimes.textChangedListener {
+            afterTextChanged {
+                if (it.toString() != "") {
+                    repeatHelper.times = it.toString().toInt()
+                } else {
+                    repeatHelper.times = 0
+                }
+            }
+        }
+
+        eventLastDateView.setOnClickListener {
+            hideKeyboard()
+            DatePickerDialog(this, { _, year, month, dayOfMonth ->
+                repeatHelper.end = repeatHelper.end?.withDate(year, month + 1, dayOfMonth)
+                updateDateViews()
+            }, repeatHelper.end?.year!!, repeatHelper.end?.monthOfYear!! - 1, repeatHelper.end?.dayOfMonth!!).show()
         }
     }
 
@@ -115,9 +183,11 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
                     .withSecondOfMinute(0)
                     .withMillisOfSecond(0)
             end = start.plusHours(1)
+            repeatHelper.end = end.plusWeeks(1)
         } else {
             start = startTime
             end = endTime
+            repeatHelper.end = end.plusWeeks(1)
         }
 
         updateDateViews()
@@ -181,11 +251,13 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
                 .withLocale(Locale.getDefault())
         eventStartDateView.text = format.print(start)
         eventEndDateView.text = format.print(end)
+        eventLastDateView.text = format.print(repeatHelper.end)
     }
 
     private fun editEvent() {
         val eventId = intent.getStringExtra(Const.EVENT_NR) ?: return
-
+        val seriesId = TcaDb.getInstance(this).calendarDao().getSeriesIdForEvent(eventId)
+        repeatHelper.seriesId = seriesId
         // Because we don't show a loading screen for the delete request (only for the create
         // request), we use a short Toast to let the user know that something is happening.
         Toast.makeText(this, R.string.updating_event, Toast.LENGTH_SHORT).show()
@@ -241,17 +313,79 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
             description = description.substring(0, 4000)
         }
         event.description = description
-        this.event = event
+        this.events.add(event)
+        generateAdditionalEvents()
 
-        val apiCall = apiClient.createEvent(event, null)
-        fetch(apiCall)
+        for (curEvent in events) {
+            val apiCall = apiClient.createEvent(curEvent, null)
+            fetch(apiCall)
+        }
     }
 
+    /**
+     * adds events to the events list if more than one needs to be created
+     * depending on the repeat-setting
+     */
+    private fun generateAdditionalEvents() {
+        if (repeatHelper.isNotRepeating()) {
+            return
+        }
+        val baseEvent = events[0]
+
+        // event ends after n times
+        if (repeatHelper.isRepeatingNTimes()) {
+            for (i in 1 until repeatHelper.times) {
+                events.add(CalendarItem("", "", "", baseEvent.title, baseEvent.description, baseEvent.dtstart.plusWeeks(i), baseEvent.dtend.plusWeeks(i), "", false))
+            }
+            // event ends after "last" date
+        } else {
+            var curDateStart = baseEvent.dtstart
+            var curDateEnd = baseEvent.dtend
+            repeatHelper.end!!.plusDays(1)
+            while (curDateStart.isBefore(repeatHelper.end!!)) {
+                curDateStart = curDateStart.plusWeeks(1)
+                curDateEnd = curDateEnd.plusWeeks(1)
+                events.add(CalendarItem("", "", "", baseEvent.title, baseEvent.description, curDateStart, curDateEnd, "", false))
+            }
+        }
+    }
+
+    @Synchronized
     override fun onDownloadSuccessful(response: CreateEventResponse) {
-        event?.let {
+        events[apiCallsFetched++].let {
             it.nr = response.eventId
             TcaDb.getInstance(this).calendarDao().insert(it)
+            if (!repeatHelper.isNotRepeating() || isEditing) {
+                if (repeatHelper.seriesId != null) {
+                    TcaDb.getInstance(this).calendarDao().insert(EventSeriesMapping(repeatHelper.seriesId!!, response.eventId))
+                }
+            }
         }
+        // finish when all events have been created
+        if (apiCallsFetched == events.size) {
+            setResult(Activity.RESULT_OK)
+            finish()
+        }
+        if (apiCallsFetched + apiCallsFailed == events.size) {
+            finishWithError()
+        }
+    }
+
+    @Synchronized
+    override fun onDownloadFailure(throwable: Throwable) {
+        Utils.log(throwable)
+
+        apiCallsFailed++
+        if (apiCallsFetched + apiCallsFailed == events.size) {
+            finishWithError()
+        }
+    }
+
+    private fun finishWithError() {
+        val i = Intent()
+        i.putExtra("failed", apiCallsFailed.toString())
+        i.putExtra("sum", (apiCallsFetched + apiCallsFailed).toString())
+        setResult(CalendarFragment.RESULT_ERROR, i)
         finish()
     }
 

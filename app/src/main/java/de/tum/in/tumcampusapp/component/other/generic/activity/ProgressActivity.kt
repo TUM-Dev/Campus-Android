@@ -165,7 +165,7 @@ abstract class ProgressActivity<T>(
      * Called when an Exception is raised during an API call. Displays an error layout.
      * @param throwable The error that has occurred
      */
-    protected fun onDownloadFailure(throwable: Throwable) {
+    open fun onDownloadFailure(throwable: Throwable) {
         Utils.log(throwable)
 
         if (hadSuccessfulRequest) {

@@ -17,6 +17,13 @@
     <string name="app_short_description" translatable="false">TUM information platform - from students for students</string>
 
     <!-- Calendar -->
+    <string name="ends_after">Ends after</string>
+    <string name="ends_on">Ends on</string>
+    <string name="repeats">Repeats Weekly</string>
+    <string name="create_event_too_many_error">Event series can not be longer than 6 months.</string>
+    <string name="create_event_too_little_error">Event series needs to have at least two events.</string>
+    <string name="create_event_some_failed">%1$s out of %2$s events could not be created.</string>
+    <string name="delete_series">delete series</string>
     <string name="dialog_show_calendar">Export successful.\nShow local calendar <i>TUM_CAMPUS_APP</i> on <i>Google Calendar App</i>?</string>
     <string name="export_to_google">Export to Google</string>
     <string name="export_to_google_error">An error occurred while exporting your calendar to Google Calendar.</string>

@@ -80,7 +80,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
             if (silentSwitch != null) {
                 silentSwitch.isEnabled = false
             }
-            logoutButton.isVisible = false
+            logoutButton?.isVisible = false
         }
 
         // Only do these things if we are in the root of the preferences

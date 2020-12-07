@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventSeriesMapping
 import org.joda.time.DateTime
 
 @Dao
@@ -96,4 +97,18 @@ interface CalendarDao {
 
     @Query("SELECT * FROM calendar WHERE nr=:id")
     fun getCalendarItemById(id: String): CalendarItem
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(vararg cal: EventSeriesMapping)
+
+    @Query("SELECT calendar.* FROM calendar " +
+            "LEFT JOIN eventSeriesMappings ON eventSeriesMappings.eventId=calendar.nr " +
+            "WHERE eventSeriesMappings.seriesId=:seriesId")
+    fun getCalendarItemsInSeries(seriesId: String): List<CalendarItem>
+
+    @Query("SELECT eventSeriesMappings.seriesId FROM eventSeriesMappings WHERE eventSeriesMappings.eventId=:eventId LIMIT 1")
+    fun getSeriesIdForEvent(eventId: String): String?
+
+    @Query("DELETE FROM eventSeriesMappings WHERE eventSeriesMappings.seriesId=:seriesId")
+    fun removeSeriesIdMappings(seriesId: String)
 }

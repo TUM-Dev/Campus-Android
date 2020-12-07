@@ -129,15 +129,24 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     }
 
     private fun displayDeleteDialog(eventId: String) {
+        val s = TcaDb.getInstance(requireContext()).calendarDao().getSeriesIdForEvent(eventId)
         val alertDialog = AlertDialog.Builder(requireContext())
                 .setTitle(R.string.event_delete_title)
                 .setMessage(R.string.delete_event_info)
                 .setPositiveButton(R.string.delete) { _, _ -> deleteEvent(eventId) }
-                .setNegativeButton(R.string.cancel, null)
-                .create()
-
-        alertDialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
+                .setNeutralButton(R.string.cancel, null)
+        if (s != null) { // a event series
+            alertDialog.setNegativeButton(R.string.delete_series) { _, _ -> deleteEventSeries(s) }
+        }
         alertDialog.show()
+    }
+
+    private fun deleteEventSeries(seriesId: String) {
+        val calendarItems = TcaDb.getInstance(requireContext()).calendarDao().getCalendarItemsInSeries(seriesId)
+        calendarItems.forEach {
+            deleteEvent(it.nr)
+        }
+        TcaDb.getInstance(requireContext()).calendarDao().removeSeriesIdMappings(seriesId)
     }
 
     private fun deleteEvent(eventId: String) {

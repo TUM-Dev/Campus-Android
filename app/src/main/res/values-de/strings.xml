@@ -15,6 +15,13 @@
     <string name="no_internet_connection">Keine Internetverbindung</string>
 
     <!-- Calendar -->
+    <string name="ends_after">Ende nach</string>
+    <string name="ends_on">Ende am</string>
+    <string name="repeats">Wöchentlicher Termin</string>
+    <string name="create_event_too_many_error">Serientermine können höchstens 6 Monate andauern.</string>
+    <string name="create_event_too_little_error">Serientermine müssen mindestens 2 Elemente enthalten.</string>
+    <string name="create_event_some_failed">%1$s von %2$s Terminen konnten nicht erstellt werden.</string>
+    <string name="delete_series">Serie löschen</string>
     <string name="dialog_show_calendar">Exportieren erfolgreich.\nLokalen Kalender <i>TUM_CAMPUS_APP</i> in der <i>Google Calendar App</i> anzeigen?</string>
     <string name="export_to_google">Exportiere nach Google</string>
     <string name="delete_from_google">Löschen aus Google</string>
@@ -52,9 +59,9 @@
     <!-- Preferences -->
     <string name="lrz_id">TUM Kennung</string>
     <string name="role">Rolle</string>
-    <string name="role_summary">Deine Rolle an der TUM. Entweder Student, Mitarbeiter oder Gast.</string>
-    <string name="student">Student</string>
-    <string name="employee">Mitarbeiter</string>
+    <string name="role_summary">Deine Rolle an der TUM. Entweder Student*in, Mitarbeiter*in oder Gast.</string>
+    <string name="student">Student*in</string>
+    <string name="employee">Mitarbeiter*in</string>
     <string name="guest">Gast</string>
     <string name="cards_settings">Karten</string>
     <string name="startpage">Startseite</string>
@@ -329,7 +336,7 @@
     <string name="silent">Leise</string>
     <string name="mode_silent_mode">Modus während Vorlesung</string>
     <string name="message_details">Nachricht-Info</string>
-    <string name="message_detail_text">&lt;b>Sender&lt;/b>&lt;br>
+    <string name="message_detail_text">&lt;b>Gesendet von&lt;/b>&lt;br>
 Name: %1$s&lt;br>
 E-Mail: %2$s@mytum.de&lt;br>&lt;br>
 &lt;b>Nachricht&lt;/b>&lt;br>
@@ -583,21 +590,21 @@ Signatur: %5$s</string>
     <string name="pdf_viewer_title">PDF Viewer</string>
 
     <string name="app_info_text">
-        Die TUM Campus App wird von Freiwilligen Helfern, Studierenden des Android Praktikums und Lehrstuhlmitarbeitern des Informatik Fachgebiet 13 unter
+        Die TUM Campus App wird von Freiwilligen, Studierenden des Android Praktikums und Lehrstuhlmitarbeiter*innen des Informatik Fachgebiet 13 unter
         Professor Dr. Baumgarten entwickelt. Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets und wird für Android und iOS bereitgestellt.\n\nFür besondere Anliegen erreichen Sie uns auch via E-Mail unter: app@tum.de
     </string>
     <string name="dialog_add_to_contacts">Zu Kontakten hinzufügen?</string>
     <string name="add">Hinzufügen</string>
     <string name="recents">Zuletzt</string>
     <string name="e_mail">E-Mail</string>
-    <string name="additional_info">Zusaätzliche Infos</string>
+    <string name="additional_info">Zusätzliche Infos</string>
 
     <!-- Add user to chat via search -->
     <string name="user_search_hint">Suche Name oder TUM Kennung</string>
     <string name="error_invalid_tum_id_format">Inkorrekte TUM Kennung</string>
-    <string name="error_user_not_found">Kein Nutzer gefunden</string>
+    <string name="error_user_not_found">Niemand gefunden</string>
     <string name="add_user_to_chat_message"><b>%s</b> zum Chatroom <b>%s</b> hinzufügen?</string>
-    <string name="chat_member_added">Nutzer hinzugefügt</string>
+    <string name="chat_member_added">Nutzer*in hinzugefügt</string>
 
     <string name="or">oder</string>
     <string name="join_chat_via_qr_code">via QR-code beitreten</string>
@@ -680,7 +687,7 @@ Signatur: %5$s</string>
     <string name="ticket_sale_beta">Der Ticketverkauf befindet sich momentan im Testbetrieb und es können Fehler auftreten. Solltet ihr Probleme haben, könnt ihr uns unter app@tum.de erreichen. Es gibt weiterhin Karten an der Abendkasse, selbst wenn digital das Kontigent erschöpft ist.</string>
     <string name="next_lecture_show_more">Zeige %d weitere …</string>
     <string name="next_lecture_hide">Verbergen</string>
-    <string name="employee_mode">Mitarbeitermodus</string>
+    <string name="employee_mode">Personalmodus</string>
     <string name="employee_mode_info">Menüpunkte wie die Notenansicht oder Studienbeitrag werden in dieser Ansicht nicht angezeigt.</string>
     <string name="event_imminent_error">Tickets können nur bis zu vier Stunden vor Beginn über die App erworben werden.</string>
     <string name="show_in_calendar">Im Kalender öffnen</string>
