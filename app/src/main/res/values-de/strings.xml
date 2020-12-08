@@ -713,7 +713,7 @@ Signatur: %5$s</string>
     <string name="use_existing">Bestehendes verwenden</string>
 
     // for library reservations
-    <string name="bib_reservation">Library Reservation</string>
+    <string name="bib_reservation">Arbeitsplatz Reservieren</string>
     <string name="library_name_sg">Stammgelände</string>
     <string name="library_name_mi">Mathematik &amp; Informatik</string>
     <string name="library_name_chem">Chemie</string>
