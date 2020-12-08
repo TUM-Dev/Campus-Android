@@ -16,7 +16,6 @@ import retrofit2.Response
 class BibReservationFragment : FragmentForAccessingTumCabe<List<BibAppointment>>(R.layout.fragment_bib_reservation, R.string.bib_reservation),
     Callback<List<BibAppointment>>, AdapterView.OnItemSelectedListener {
 
-
     private var allAppointments: ArrayList<BibAppointment> = ArrayList()
     private val appointments: ArrayList<BibAppointment> = ArrayList()
     private lateinit var reservationAdapter: BibReservationAdapter
@@ -35,7 +34,7 @@ class BibReservationFragment : FragmentForAccessingTumCabe<List<BibAppointment>>
         apiClient.getReservableBibAppointments(this)
     }
 
-    private fun updateList(){
+    private fun updateList() {
         appointments.clear()
         appointments.addAll(allAppointments.filter { it.bib == selectedBib.toString() } as Collection<BibAppointment>)
         reservationAdapter.notifyDataSetChanged()
@@ -63,5 +62,4 @@ class BibReservationFragment : FragmentForAccessingTumCabe<List<BibAppointment>>
     override fun onNothingSelected(parent: AdapterView<*>?) {
         selectedBib = Bib.Unknown
     }
-
 }

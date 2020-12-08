@@ -41,7 +41,7 @@ class BibReservationAdapter(private val appointments: ArrayList<BibAppointment>,
 
         if (position == 0 || curElem.date != appointments[position - 1].date) {
             holder.dateWrapper.visibility = View.VISIBLE
-        }else {
+        } else {
             holder.dateWrapper.visibility = View.GONE
         }
     }
@@ -49,5 +49,4 @@ class BibReservationAdapter(private val appointments: ArrayList<BibAppointment>,
     override fun getItemCount(): Int {
         return appointments.size
     }
-
 }
