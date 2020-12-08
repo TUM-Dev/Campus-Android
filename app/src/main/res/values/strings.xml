@@ -767,7 +767,6 @@ Signature: %5$s</string>
 
 
     // Bib reservations
-    <string name="title_activity_bib_reservation" translatable="false">BibReservationActivity</string>
     <string name="bib_reservation">Library Reservation</string>
     <string name="library_name_sg">Main Campus</string>
     <string name="library_name_mi">Mathematics &amp; Informatics</string>
