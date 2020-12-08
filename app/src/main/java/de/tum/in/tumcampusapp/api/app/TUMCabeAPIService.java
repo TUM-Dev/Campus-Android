@@ -10,7 +10,7 @@ import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
-import de.tum.in.tumcampusapp.component.tumui.bibreservation.model.BibAppointment;
+import de.tum.in.tumcampusapp.component.ui.bibreservation.model.BibAppointment;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.FeedbackResult;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordinate;
@@ -37,7 +37,6 @@ import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationRespo
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.component.ui.updatenote.model.UpdateNote;
-import de.tum.in.tumcampusapp.service.DownloadWorker;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -58,6 +57,7 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE_LIST
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE_LIST_OF_TOILETS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE_MORE_INFO;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE_NERBY_FACILITIES;
+import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BIB_RESERVATIONS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CAFETERIAS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CHAT_MEMBERS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CHAT_ROOMS;
@@ -250,7 +250,6 @@ public interface TUMCabeAPIService {
     @GET(API_OPENING_HOURS + "{language}")
     Call<List<Location>> getOpeningHours(@Path("language") String language);
 
-    // TODO adjust to cabe url when implemented
-    @GET("/all")
+    @GET(API_BIB_RESERVATIONS)
     Call<List<BibAppointment>> getReservableBibAppointments();
 }

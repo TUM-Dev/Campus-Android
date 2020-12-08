@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.component.tumui.bibreservation
+package de.tum.`in`.tumcampusapp.component.ui.bibreservation
 
 import android.os.Bundle
 import android.view.View
@@ -6,8 +6,8 @@ import android.widget.AdapterView
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.FragmentForAccessingTumCabe
-import de.tum.`in`.tumcampusapp.component.tumui.bibreservation.model.Bib
-import de.tum.`in`.tumcampusapp.component.tumui.bibreservation.model.BibAppointment
+import de.tum.`in`.tumcampusapp.component.ui.bibreservation.model.Bib
+import de.tum.`in`.tumcampusapp.component.ui.bibreservation.model.BibAppointment
 import kotlinx.android.synthetic.main.fragment_bib_reservation.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -37,7 +37,7 @@ class BibReservationFragment : FragmentForAccessingTumCabe<List<BibAppointment>>
 
     private fun updateList(){
         appointments.clear()
-        appointments.addAll(allAppointments.filter { it.bib == selectedBib.toString() && it.reservationId != "-1" } as Collection<BibAppointment>)
+        appointments.addAll(allAppointments.filter { it.bib == selectedBib.toString() } as Collection<BibAppointment>)
         reservationAdapter.notifyDataSetChanged()
     }
 

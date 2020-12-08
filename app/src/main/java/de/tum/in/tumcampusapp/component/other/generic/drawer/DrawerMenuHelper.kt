@@ -8,7 +8,7 @@ import com.google.android.material.navigation.NavigationView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.component.other.settings.SettingsActivity
-import de.tum.`in`.tumcampusapp.component.tumui.bibreservation.BibReservationFragment
+import de.tum.`in`.tumcampusapp.component.ui.bibreservation.BibReservationFragment
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarFragment
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackActivity
 import de.tum.`in`.tumcampusapp.component.tumui.grades.GradesFragment

@@ -26,7 +26,8 @@
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -36,11 +37,11 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/material_large_padding"
         android:alpha=".6"
-        android:tint="@color/text_dark_secondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateWrapper"
-        app:srcCompat="@drawable/ic_outline_access_time_24px" />
+        app:srcCompat="@drawable/ic_outline_access_time_24px"
+        app:tint="@color/text_dark_secondary" />
 
     <TextView
         android:id="@+id/fromTime"
@@ -51,7 +52,8 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:layout_constraintTop_toBottomOf="@+id/dateWrapper" />
+        app:layout_constraintTop_toBottomOf="@+id/dateWrapper"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/textView4"
@@ -61,7 +63,8 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/fromTime"
-        app:layout_constraintTop_toBottomOf="@+id/dateWrapper" />
+        app:layout_constraintTop_toBottomOf="@+id/dateWrapper"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/tilTime"
@@ -71,7 +74,8 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/dateWrapper" />
+        app:layout_constraintTop_toBottomOf="@+id/dateWrapper"
+        tools:ignore="HardcodedText" />
 
     <Button
         android:id="@+id/reserveBtn"
@@ -79,7 +83,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/material_default_padding"
         android:backgroundTint="@color/color_primary"
-        android:text="Reserve"
+        android:text="@string/book"
         app:layout_constraintBottom_toBottomOf="@+id/tilTime"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tilTime" />

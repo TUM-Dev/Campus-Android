@@ -768,7 +768,6 @@ Signature: %5$s</string>
 
     // Bib reservations
     <string name="title_activity_bib_reservation" translatable="false">BibReservationActivity</string>
-    <!-- Strings used for fragments for navigation -->
     <string name="bib_reservation">Library Reservation</string>
     <string name="library_name_sg">Main Campus</string>
     <string name="library_name_mi">Mathematics &amp; Informatics</string>
@@ -779,4 +778,5 @@ Signature: %5$s</string>
     <string name="library_name_spo">Sport &amp; Health Sciences</string>
     <string name="library_name_str">Straubing</string>
     <string name="library_name_whs">Weihenstephan</string>
+    <string name="book">Book</string>
 </resources>

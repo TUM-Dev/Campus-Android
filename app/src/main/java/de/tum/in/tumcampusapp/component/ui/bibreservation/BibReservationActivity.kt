@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.component.tumui.bibreservation
+package de.tum.`in`.tumcampusapp.component.ui.bibreservation
 
 import android.os.Bundle
 import com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -191,7 +191,7 @@
                 android:value="de.tum.in.tumcampusapp.component.tumui.lectures.activity.LecturesDetailsActivity" />
         </activity>
         <activity
-            android:name=".component.tumui.bibreservation.BibReservationActivity"
+            android:name="de.tum.in.tumcampusapp.component.ui.bibreservation.BibReservationActivity"
             android:label="@string/title_activity_bib_reservation" >
         </activity>
         <activity

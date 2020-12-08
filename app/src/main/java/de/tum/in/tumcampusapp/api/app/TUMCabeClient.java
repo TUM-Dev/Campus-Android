@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +23,7 @@ import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
-import de.tum.in.tumcampusapp.component.tumui.bibreservation.model.BibAppointment;
+import de.tum.in.tumcampusapp.component.ui.bibreservation.model.BibAppointment;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.FeedbackResult;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordinate;
@@ -104,10 +103,10 @@ public final class TUMCabeClient {
     static final String API_CHAT_ROOMS = API_CHAT + "rooms/";
     static final String API_CHAT_MEMBERS = API_CHAT + "members/";
     static final String API_OPENING_HOURS = "openingtimes/";
+    static final String API_BIB_RESERVATIONS = "bibreservation/";
 
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;
-    private final TUMCabeAPIService mockservice;
 
     private TUMCabeClient(final Context c) {
         Gson gson = new GsonBuilder()
@@ -122,14 +121,6 @@ public final class TUMCabeClient {
                 .build()
                 .create(TUMCabeAPIService.class);
 
-        // TODO remove when implemented into cabe api
-        mockservice = new Retrofit.Builder()
-                .baseUrl("https://tumbibapi.joschas.page")
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(ApiHelper.getOkHttpClient(c))
-                .build()
-                .create(TUMCabeAPIService.class);
     }
 
     public static synchronized TUMCabeClient getInstance(Context c) {
@@ -435,7 +426,7 @@ public final class TUMCabeClient {
     }
 
     public void getReservableBibAppointments(Callback<List<BibAppointment>> callback) {
-        mockservice.getReservableBibAppointments().enqueue(callback);
+        service.getReservableBibAppointments().enqueue(callback);
     }
 
 }

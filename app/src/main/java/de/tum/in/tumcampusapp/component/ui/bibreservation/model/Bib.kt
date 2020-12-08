@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.component.tumui.bibreservation.model
+package de.tum.`in`.tumcampusapp.component.ui.bibreservation.model
 
 import com.google.gson.annotations.SerializedName
 
