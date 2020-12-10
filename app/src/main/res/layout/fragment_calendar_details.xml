@@ -121,7 +121,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/delete_event_button"
                 android:textAllCaps="false"
-                android:textColor="@color/color_primary"
                 app:cornerRadius="@dimen/material_corner_radius" />
 
             <com.google.android.material.button.MaterialButton
@@ -132,7 +131,6 @@
                 android:layout_marginStart="@dimen/material_small_padding"
                 android:text="@string/edit_event_button"
                 android:textAllCaps="false"
-                android:textColor="@color/color_primary"
                 app:cornerRadius="@dimen/material_corner_radius" />
 
         </LinearLayout>
