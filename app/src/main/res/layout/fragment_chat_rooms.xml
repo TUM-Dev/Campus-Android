@@ -14,7 +14,6 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@android:color/white"
             android:theme="@style/TumToolbar"
             app:popupTheme="@style/TumToolbarPopUp" />
 
@@ -22,7 +21,7 @@
             android:id="@+id/chatRoomTabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
+            android:background="@color/default_window_background"
             android:theme="@style/ThemeOverlay.AppCompat.Dark"
             app:tabIndicatorColor="@color/color_primary"
             app:tabIndicatorHeight="2dp"
