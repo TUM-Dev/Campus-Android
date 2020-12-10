@@ -94,7 +94,7 @@
                             android:layout_marginEnd="@dimen/material_default_padding"
                             android:layout_marginBottom="@dimen/material_default_padding"
                             android:alpha="0.54"
-                            android:src="@drawable/ic_credit_card_black_24dp"
+                            android:src="@drawable/ic_credit_card_24dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@id/selected_payment_method_text_view"
                             app:layout_constraintStart_toStartOf="parent"

@@ -10,7 +10,7 @@
                 android:viewportHeight="24.0">
             <path
                 android:name="arrowPath"
-                android:fillColor="#FFFFFF"
+                android:fillColor="@color/text_primary"
                 android:pathData="@string/arrow_up_path"/>
         </vector>
     </aapt:attr>
