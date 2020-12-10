@@ -65,7 +65,7 @@ class TuitionFeesFragment : FragmentForAccessingTumOnline<TuitionList>(
             if (nextWeek.isAfter(deadline)) {
                 amountTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.error))
             } else {
-                amountTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                amountTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary))
             }
         }
     }
