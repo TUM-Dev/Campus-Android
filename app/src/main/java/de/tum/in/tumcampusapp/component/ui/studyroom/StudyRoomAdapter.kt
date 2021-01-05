@@ -19,7 +19,7 @@ class StudyRoomAdapter(private val fragment: Fragment, private val studyRooms: L
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StudyRoomViewHolder {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.card_header_details_button, parent, false)
+                .inflate(R.layout.card_studyroom_detail, parent, false)
         return StudyRoomViewHolder(view)
     }
 

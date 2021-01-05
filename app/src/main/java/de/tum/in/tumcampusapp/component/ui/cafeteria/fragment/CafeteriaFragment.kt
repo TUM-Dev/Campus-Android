@@ -31,6 +31,7 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.observeNonNull
 import kotlinx.android.synthetic.main.fragment_cafeteria.pager
 import kotlinx.android.synthetic.main.fragment_cafeteria.spinnerToolbar
+import kotlinx.android.synthetic.main.layout_error.*
 import org.joda.time.DateTime
 import javax.inject.Inject
 import javax.inject.Provider

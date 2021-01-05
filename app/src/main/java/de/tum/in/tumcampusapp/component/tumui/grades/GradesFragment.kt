@@ -3,6 +3,7 @@ package de.tum.`in`.tumcampusapp.component.tumui.grades
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.LayoutTransition
+import android.graphics.Color
 import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.util.ArrayMap
@@ -14,6 +15,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import com.github.mikephil.charting.charts.Chart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.data.*
@@ -131,6 +133,10 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             })
             legend.setCustom(legend.entries)
             setTouchEnabled(false)
+
+            setHoleColor(Color.TRANSPARENT)
+            legend.textColor = resources.getColor(R.color.text_primary) // TODO exchange deprecated function
+
             invalidate()
         }
     }
@@ -148,6 +154,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
         val set = BarDataSet(entries, getString(R.string.grades_without_weight)).apply {
             setColors(GRADE_COLORS, requireContext())
+            valueTextColor = resources.getColor(R.color.text_primary)
         }
 
         barChartView.apply {
@@ -183,6 +190,12 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                             )
                     )
             )
+
+            // TODO exchange deprecated function
+            legend.textColor = resources.getColor(R.color.text_primary)
+            xAxis.textColor = resources.getColor(R.color.text_primary)
+            axisLeft.textColor = resources.getColor(R.color.text_primary)
+            axisRight.textColor = resources.getColor(R.color.text_primary)
 
             invalidate()
         }

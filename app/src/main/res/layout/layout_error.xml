@@ -38,13 +38,12 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        style="@style/BlueButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/material_default_padding"
         android:text="@string/retry"
         android:textAllCaps="false"
-        android:textColor="@color/color_primary"
         app:cornerRadius="@dimen/material_corner_radius" />
 
 </LinearLayout>

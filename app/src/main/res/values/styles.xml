@@ -1,6 +1,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/tum_light_gray</item>
         <item name="colorPrimaryDark">@color/tum_light_gray</item>
         <item name="colorAccent">@color/tum_blue</item>
@@ -16,26 +16,28 @@
         <item name="materialButtonStyle">@style/BlueButton</item>
     </style>
     <style name="AppTheme.NoDrawerLayout" parent="AppTheme">
-        <item name="android:statusBarColor">@color/tum_light_gray</item>
+        <item name="android:statusBarColor">@color/default_window_background</item>
 
         <item name="materialButtonStyle">@style/BlueButton</item>
     </style>
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.DayNight.ActionBar">
     </style>
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+    <style name="AppTheme.PopupOverlay" parent="AppTheme">
     </style>
 
-    <style name="TumToolbar" parent="ThemeOverlay.AppCompat.Dark">
+    <style name="TumToolbar" parent="ThemeOverlay.AppCompat.DayNight">
         <item name="android:textColorPrimary">@color/color_primary</item>
         <item name="android:textColorSecondary">@color/color_primary</item>
         <item name="android:textCursorDrawable">@drawable/cursor_text_field_colorful</item>
+        <item name="android:background">@color/default_window_background</item>
     </style>
 
-    <style name="TumToolbarPopUp" parent="ThemeOverlay.AppCompat.Light">
+    <style name="TumToolbarPopUp" parent="ThemeOverlay.AppCompat.DayNight">
         <item name="actionMenuTextColor">@android:color/primary_text_light</item>
+        <item name="android:background">@color/transparent</item>
     </style>
 
-    <style name="AppThemeFullscreen" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="AppThemeFullscreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary</item>
         <item name="colorAccent">@color/color_primary</item>
@@ -46,7 +48,7 @@
     </style>
 
     <!-- Style for Stripe's payment method activity -->
-    <style name="StripeDefaultTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="StripeDefaultTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/tum_light_gray</item>
         <item name="colorPrimaryDark">@color/tum_dark_gray</item>
         <item name="colorAccent">@color/tum_blue</item>
@@ -134,7 +136,7 @@
         <item name="android:gravity">center</item>
         <item name="android:transitionName">@string/transition_card</item>
         <item name="android:clipToPadding">true</item>
-        <item name="cardBackgroundColor">#FFFFFF</item>
+        <item name="cardBackgroundColor">@color/default_window_background</item>
         <item name="cardElevation">0dp</item>
         <item name="strokeWidth">1dp</item>
         <item name="strokeColor">@color/spinner_border</item>
@@ -146,24 +148,24 @@
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
         <item name="android:layout_marginBottom">@dimen/material_small_padding</item>
-        <item name="android:textColor">@color/text_dark_primary</item>
+        <item name="android:textColor">@color/text_primary</item>
         <item name="android:textSize">16sp</item>
     </style>
 
     <style name="CardBody">
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
-        <item name="android:textColor">@color/text_dark_secondary</item>
+        <item name="android:textColor">@color/text_secondary</item>
         <item name="android:textSize">16sp</item>
     </style>
 
     <style name="CardDetails">
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
-        <item name="android:textColor">@color/text_dark_secondary</item>
+        <item name="android:textColor">@color/text_secondary</item>
         <item name="android:textSize">15sp</item>
     </style>
 
     <style name="CardSource">
-        <item name="android:textColor">@color/text_dark_secondary</item>
+        <item name="android:textColor">@color/text_secondary</item>
         <item name="android:textSize">14sp</item>
     </style>
 
@@ -192,8 +194,8 @@
         <item name="android:background">@drawable/bottom_sheet_background</item>
     </style>
 
-    <style name="BaseBottomSheetDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
-        <item name="android:windowIsFloating">false</item>
+    <style name="BaseBottomSheetDialog" parent="@style/Theme.MaterialComponents.DayNight.BottomSheetDialog">
+        <item name="android:windowIsFloating">true</item>
         <item name="bottomSheetStyle">@style/BottomDialog</item>
     </style>
 
@@ -209,7 +211,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:drawableStart">@drawable/ic_action_info_black</item>
+        <item name="android:drawableStart">@drawable/ic_action_info</item>
         <item name="android:drawablePadding">@dimen/material_default_padding</item>
         <item name="android:drawableTint">@android:color/white</item>
         <item name="android:background">@drawable/info_box_background</item>
@@ -219,6 +221,8 @@
 
     <!-- Customized Material Themes -->
     <style name="BlueButton" parent="Widget.MaterialComponents.Button">
-        <item name="android:textColor">@color/color_primary</item>
+        <item name="android:textColor">@color/default_button_text</item>
+        <item name="android:backgroundTint">@color/default_button_background</item>
+        <item name="iconTint">@color/text_primary</item>
     </style>
 </resources>

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/tum_light_gray"
+    android:background="@color/navigation_drawer_header_background"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat">
@@ -18,6 +18,7 @@
         android:layout_margin="@dimen/material_default_padding"
         android:text="@string/tumonline_login"
         android:textAllCaps="false"
+        android:textColor="@color/text_primary"
         android:visibility="gone"
         app:cornerRadius="@dimen/material_corner_radius"
         app:layout_constraintStart_toStartOf="parent"

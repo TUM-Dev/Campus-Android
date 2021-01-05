@@ -1,4 +1,5 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/StandardCard">
 
     <FrameLayout
@@ -21,9 +22,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:drawablePadding="@dimen/material_default_padding"
-            android:drawableStart="@drawable/ic_action_restore"
             android:text="@string/restore_all_cards"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            app:drawableStartCompat="@drawable/ic_action_restore" />
 
     </FrameLayout>
 

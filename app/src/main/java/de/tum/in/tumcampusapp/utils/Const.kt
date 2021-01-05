@@ -171,4 +171,6 @@ object Const {
     const val NO_CAFETERIA_FOUND = -1
 
     const val SETTINGS_RESTART = "settingsRestart"
+
+    const val DESIGN_THEME = "design_theme_preference"
 }

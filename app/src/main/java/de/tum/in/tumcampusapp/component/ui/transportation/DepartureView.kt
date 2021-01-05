@@ -13,6 +13,7 @@ import android.view.animation.AnimationUtils
 import android.widget.LinearLayout
 import android.widget.TextSwitcher
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
@@ -72,19 +73,19 @@ class DepartureView
                 setBackgroundColor(mvvSymbol.getHighlight())
             } else {
                 setBackgroundColor(mvvSymbol.backgroundColor)
-                lineView.setTextColor(Color.WHITE)
+                lineView.setTextColor(ResourcesCompat.getColor(resources, R.color.text_primary_dark, null))
                 for (index in 0 until timeSwitcher.childCount) {
                     val tw = timeSwitcher.getChildAt(index) as TextView
-                    tw.setTextColor(Color.WHITE)
+                    tw.setTextColor(ResourcesCompat.getColor(resources, R.color.text_secondary_dark, null))
                 }
             }
         } else {
-            setBackgroundColor(mvvSymbol.textColor)
-            lineView.setTextColor(Color.BLACK)
+            setBackgroundColor(ResourcesCompat.getColor(resources, R.color.default_window_background, null))
+            lineView.setTextColor(ResourcesCompat.getColor(resources, R.color.text_primary, null))
 
             for (index in 0 until timeSwitcher.childCount) {
                 val tw = timeSwitcher.getChildAt(index) as TextView
-                tw.setTextColor(Color.GRAY)
+                tw.setTextColor(ResourcesCompat.getColor(resources, R.color.text_secondary, null))
             }
         }
     }

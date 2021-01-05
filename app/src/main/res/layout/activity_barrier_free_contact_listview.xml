@@ -14,7 +14,7 @@
         android:id="@+id/barrierfreeContactNameTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
+        android:textColor="@color/text_primary"
         android:textSize="@dimen/large_text_size"
         android:textStyle="bold"
         tools:text="Person Name"/>

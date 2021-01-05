@@ -17,7 +17,7 @@
         android:id="@+id/spinnerContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/secondary_window_background"
+        android:background="@color/default_window_background"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
