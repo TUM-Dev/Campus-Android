@@ -33,7 +33,7 @@
                     android:layout_marginEnd="@dimen/material_default_padding"
                     android:text="@string/enter_card_info_description"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/text_dark_secondary" />
+                    android:textColor="@color/text_secondary" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
@@ -94,7 +94,7 @@
                             android:layout_marginEnd="@dimen/material_default_padding"
                             android:layout_marginBottom="@dimen/material_default_padding"
                             android:alpha="0.54"
-                            android:src="@drawable/ic_credit_card_black_24dp"
+                            android:src="@drawable/ic_credit_card_24dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@id/selected_payment_method_text_view"
                             app:layout_constraintStart_toStartOf="parent"
@@ -108,7 +108,7 @@
                             android:layout_marginEnd="@dimen/material_default_padding"
                             android:fontFamily="sans-serif-medium"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:textColor="@color/text_dark_secondary"
+                            android:textColor="@color/text_secondary"
                             app:layout_constraintBottom_toTopOf="@id/selected_payment_method_brand_text_view"
                             app:layout_constraintEnd_toStartOf="@id/changePaymentMethodButton"
                             app:layout_constraintStart_toEndOf="@id/credit_card_icon"
@@ -122,7 +122,7 @@
                             android:layout_marginEnd="@dimen/material_default_padding"
                             android:layout_marginBottom="@dimen/material_default_padding"
                             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                            android:textColor="@color/text_dark_secondary"
+                            android:textColor="@color/text_secondary"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@id/changePaymentMethodButton"
                             app:layout_constraintStart_toStartOf="@id/selected_payment_method_text_view"

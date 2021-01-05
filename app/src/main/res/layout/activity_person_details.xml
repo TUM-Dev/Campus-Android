@@ -59,6 +59,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-medium"
                             android:gravity="center_horizontal"
+                            android:textColor="@color/text_primary"
                             android:padding="@dimen/padding_default"
                             android:textSize="@dimen/large_text_size"
                             tools:text="Mr. Prof. Dr. Bernd Brügge" />
@@ -69,7 +70,7 @@
                             android:layout_height="1dp"
                             android:layout_marginTop="8dp"
                             android:layout_marginBottom="8dp"
-                            android:background="?android:attr/listDivider" />
+                            android:background="@color/list_divider" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/groupsRecyclerView"
@@ -84,7 +85,7 @@
                             android:layout_height="1dp"
                             android:layout_marginTop="8dp"
                             android:layout_marginBottom="8dp"
-                            android:background="?android:attr/listDivider" />
+                            android:background="@color/list_divider" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/contactItemsRecyclerView"

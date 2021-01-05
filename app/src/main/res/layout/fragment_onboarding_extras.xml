@@ -87,7 +87,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/privacyPolicyButton"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    style="@style/BlueButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -95,7 +95,6 @@
                     android:layout_marginTop="@dimen/material_default_padding"
                     android:text="@string/privacy_policy"
                     android:textAllCaps="false"
-                    android:textColor="@color/color_primary"
                     app:cornerRadius="@dimen/material_corner_radius" />
 
             </LinearLayout>
@@ -121,7 +120,7 @@
         android:layout_marginBottom="@dimen/material_small_padding"
         android:text="@string/goto_tumcampus"
         android:textAllCaps="false"
-        android:textColor="@android:color/white"
+        android:textColor="@color/white"
         app:backgroundTint="@color/color_primary"
         app:cornerRadius="@dimen/material_corner_radius" />
 

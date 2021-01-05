@@ -37,7 +37,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_facebook"
-                    style="@style/Widget.MaterialComponents.Button.Icon"
+                    style="@style/BlueButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/material_default_padding"
@@ -45,11 +45,11 @@
                     android:text="@string/facebook"
                     android:textAllCaps="false"
                     app:cornerRadius="@dimen/material_corner_radius"
-                    app:icon="@drawable/ic_facebook_white" />
+                    app:icon="@drawable/ic_facebook" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_github"
-                    style="@style/Widget.MaterialComponents.Button.Icon"
+                    style="@style/BlueButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/material_default_padding"
@@ -57,11 +57,11 @@
                     android:text="@string/github_contribute"
                     android:textAllCaps="false"
                     app:cornerRadius="@dimen/material_corner_radius"
-                    app:icon="@drawable/ic_github_white" />
+                    app:icon="@drawable/ic_github" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_privacy"
-                    style="@style/Widget.MaterialComponents.Button"
+                    style="@style/BlueButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/material_default_padding"
@@ -72,7 +72,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_licenses"
-                    style="@style/Widget.MaterialComponents.Button"
+                    style="@style/BlueButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/material_default_padding"

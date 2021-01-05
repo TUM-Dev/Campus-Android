@@ -2,7 +2,7 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="cards_pref_container">
 
-    <androidx.preference.PreferenceCategory android:title="@string/language_preference">
+    <androidx.preference.PreferenceCategory android:title="@string/appearance">
 
         <androidx.preference.ListPreference
             android:defaultValue="en"
@@ -11,6 +11,14 @@
             android:icon="@drawable/ic_outline_language_24px"
             android:key="language_preference"
             android:title="@string/language_preference" />
+
+        <androidx.preference.ListPreference
+            android:defaultValue="system"
+            android:entries="@array/color_mode_entries"
+            android:entryValues="@array/color_mode_values"
+            android:icon="@drawable/ic_color_lens"
+            android:key="design_theme_preference"
+            android:title="@string/design_theme_preference" />
 
     </androidx.preference.PreferenceCategory>
 

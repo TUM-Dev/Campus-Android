@@ -58,7 +58,7 @@
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/material_default_padding"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="@color/text_dark_primary"
+                        android:textColor="@color/text_primary"
                         tools:ignore="RtlSymmetry"
                         tools:text="Mon, Jun 11, 2018" />
 
@@ -73,7 +73,7 @@
                         android:paddingStart="@dimen/material_default_padding"
                         android:paddingEnd="@dimen/material_default_padding"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="@color/text_dark_primary"
+                        android:textColor="@color/text_primary"
                         tools:text="11:30" />
 
                 </LinearLayout>
@@ -91,7 +91,7 @@
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/material_default_padding"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="@color/text_dark_primary"
+                        android:textColor="@color/text_primary"
                         tools:ignore="RtlSymmetry"
                         tools:text="Mon, Jun 11, 2018" />
 
@@ -106,7 +106,7 @@
                         android:paddingStart="@dimen/material_default_padding"
                         android:paddingEnd="@dimen/material_default_padding"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="@color/text_dark_primary"
+                        android:textColor="@color/text_primary"
                         tools:text="12:30" />
 
                 </LinearLayout>
@@ -139,7 +139,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:hint="@string/ends_after"
-                            android:textColorHint="@color/text_dark_primary"
+                            android:textColorHint="@color/text_primary"
                             android:checked="true"/>
 
                         <RadioButton
@@ -148,7 +148,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:hint="@string/ends_on"
-                            android:textColorHint="@color/text_dark_primary"/>
+                            android:textColorHint="@color/text_primary"/>
 
                     </RadioGroup>
 
@@ -169,7 +169,7 @@
                                 android:hint="14"
                                 android:inputType="number"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                                android:textColor="@color/text_dark_primary"/>
+                                android:textColor="@color/text_primary"/>
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
@@ -178,7 +178,7 @@
                                 android:focusable="true"
                                 android:gravity="center_vertical"
                                 android:text="@string/events"
-                                android:textColor="@color/text_dark_primary"/>
+                                android:textColor="@color/text_primary"/>
                         </LinearLayout>
                         <TextView
                             android:id="@+id/eventLastDateView"
@@ -189,7 +189,7 @@
                             android:focusable="true"
                             android:gravity="center_vertical"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:textColor="@color/text_dark_primary"
+                            android:textColor="@color/text_primary"
                             android:text="Mon, Jun 11, 2018"/>
 
                     </LinearLayout>

@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/text_dark_primary"
+            android:textColor="@color/text_primary"
             tools:text="Location Name" />
 
         <TextView
@@ -82,7 +82,7 @@
             android:paddingTop="@dimen/material_small_padding"
             android:textAppearance="?android:attr/textAppearanceSmall"
             tools:text="Additional Information\nand more"
-            android:drawableStart="@drawable/ic_action_info_black"
+            android:drawableStart="@drawable/ic_action_info"
             android:drawablePadding="@dimen/material_small_padding"
             android:drawableTint="@color/text_dark_gray"
             android:layout_gravity="top"
@@ -90,13 +90,12 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/openLinkButton"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            style="@style/BlueButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/material_tiny_padding"
             android:onClick="openLink"
             android:textAllCaps="false"
-            android:textColor="#006c90"
             android:layout_gravity="right"
             app:cornerRadius="@dimen/material_corner_radius"
             tools:text="@string/website" />

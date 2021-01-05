@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="pop_up_background">#1F1F1F</color>
+
+    <color name="github">@color/text_secondary</color>
+
+    <color name="list_divider">@color/tum_400</color>
+    <color name="placeholder">@color/tum_light_gray</color>
+
+    <color name="spinner_border">#8AFFFFFF</color>
+
+    <!-- Default colors -->
+
+    <color name="text_primary">@color/text_primary_dark</color>
+    <color name="text_secondary">@color/text_secondary_dark</color>
+
+    <color name="default_window_background">@android:color/black</color>
+    <color name="secondary_window_background">@android:color/black</color>
+
+    <color name="default_button_text">@color/text_primary</color>
+    <color name="default_button_background">@color/tum_blue</color>
+
+    <!-- Navigation drawer -->
+
+    <color name="navigation_drawer_header_background">@color/black</color>
+
+    <color name="navigation_drawer_item_background_selected">#780065BD</color>
+    <color name="navigation_drawer_item_text_selected">@color/tum_100</color>
+
+
+    <color name="study_room_free">#213D21</color>
+    <color name="study_room_occupied">#551E25</color>
+
+    <!-- official TUM accent colors (style guide) -->
+    <color name="color_primary">@color/tum_400</color>
+    <color name="color_primary_dark">@color/tum_300</color>
+
+    <color name="grade_4.1">#BF1010</color>
+    <color name="grade_4.2">#AA2020</color>
+    <color name="grade_4.3">#953030</color>
+    <color name="grade_4.4">#7F4040</color>
+    <color name="grade_4.5">#6A5050</color>
+    <color name="grade_4.6">#6A5A5A</color>
+    <color name="grade_4.7">#6A6464</color>
+    <color name="grade_4.8">#555353</color>
+    <color name="grade_4.9">#434141</color>
+    <color name="grade_5.0">#2F2F2F</color>
+</resources>

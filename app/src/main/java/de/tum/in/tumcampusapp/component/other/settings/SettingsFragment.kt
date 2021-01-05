@@ -10,6 +10,7 @@ import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.content.edit
 import androidx.core.os.bundleOf
@@ -40,6 +41,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_setup_eduroam.*
+import org.jetbrains.anko.appcompat.v7.Appcompat
 import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.notificationManager
 import java.util.concurrent.ExecutionException
@@ -47,6 +49,8 @@ import javax.inject.Inject
 
 class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener,
         SharedPreferences.OnSharedPreferenceChangeListener {
+
+    private val themeProvider by lazy { ThemeProvider(requireContext()) }
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -85,6 +89,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
             // (since it is not possible to add a button to the preferences screen)
             findPreference(BUTTON_LOGOUT).onPreferenceClickListener = this
             setSummary("language_preference")
+            setSummary(Const.DESIGN_THEME)
             setSummary("card_default_campus")
             setSummary("silent_mode_set_to")
             setSummary("background_mode_set_to")
@@ -191,6 +196,12 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
             } else {
                 requireContext().stopService(service)
             }
+        }
+
+        // Change design theme
+        if (key == Const.DESIGN_THEME) {
+            val theme = themeProvider.getTheme(sharedPrefs.getString(key, "system")!!)
+            AppCompatDelegate.setDefaultNightMode(theme)
         }
 
         // If the background mode was activated, start the service. This will invoke

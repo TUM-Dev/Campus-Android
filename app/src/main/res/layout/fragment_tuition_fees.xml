@@ -77,7 +77,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/financialAidButton"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        style="@style/BlueButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/material_default_padding"
@@ -85,7 +85,6 @@
                         android:layout_marginBottom="@dimen/material_default_padding"
                         android:text="@string/student_financial_aid"
                         android:textAllCaps="false"
-                        android:textColor="@color/color_primary"
                         app:cornerRadius="@dimen/material_corner_radius" />
 
                 </LinearLayout>
