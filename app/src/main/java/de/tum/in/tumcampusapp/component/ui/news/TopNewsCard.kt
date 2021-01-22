@@ -71,9 +71,7 @@ class TopNewsCard(context: Context) : Card(CardManager.CARD_TOP_NEWS, context, "
     }
 
     override fun shouldShow(prefs: SharedPreferences): Boolean {
-        return if (newsAlert == null) {
-            false
-        } else topNewsStore.isEnabled() && newsAlert.shouldDisplay
+        return newsAlert != null && topNewsStore.isEnabled() && newsAlert.shouldDisplay
     }
 
     public override fun discard(editor: SharedPreferences.Editor) {

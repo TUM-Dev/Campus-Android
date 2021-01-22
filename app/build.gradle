@@ -104,25 +104,25 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 
     // Android arch components
-    implementation 'androidx.room:room-rxjava2:2.3.0-alpha03'
-    implementation 'androidx.room:room-runtime:2.3.0-alpha03'
+    implementation 'androidx.room:room-rxjava2:2.3.0-alpha04'
+    implementation 'androidx.room:room-runtime:2.3.0-alpha04'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'android.arch.lifecycle:reactivestreams:1.1.1'
     implementation 'android.arch.work:work-runtime-ktx:1.0.1'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     kapt 'androidx.lifecycle:lifecycle-compiler:2.2.0'
-    kapt 'androidx.room:room-compiler:2.3.0-alpha03'
+    kapt 'androidx.room:room-compiler:2.3.0-alpha04'
 
     // Play services
     implementation 'com.google.android.gms:play-services-base:17.5.0'
     implementation 'com.google.android.gms:play-services-location:17.1.0'
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:18.0.0'
-    implementation 'com.google.firebase:firebase-messaging:21.0.0'
-    implementation 'com.google.firebase:firebase-crashlytics-ktx:17.2.2'
-    implementation 'com.google.firebase:firebase-analytics-ktx:18.0.0'
+    implementation 'com.google.firebase:firebase-core:18.0.1'
+    implementation 'com.google.firebase:firebase-messaging:21.0.1'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx:17.3.0'
+    implementation 'com.google.firebase:firebase-analytics-ktx:18.0.1'
 
     // Helpers
     implementation 'com.google.code.gson:gson:2.8.6'
@@ -182,7 +182,7 @@ dependencies {
     testImplementation 'junit:junit:4.13'
     testImplementation 'org.mockito:mockito-core:3.5.11'
     testImplementation 'org.assertj:assertj-core:3.17.1'
-    testImplementation 'androidx.room:room-testing:2.3.0-alpha03'
+    testImplementation 'androidx.room:room-testing:2.3.0-alpha04'
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 
     testImplementation 'com.android.support.test:rules:1.0.2'
