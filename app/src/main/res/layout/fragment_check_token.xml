@@ -51,22 +51,25 @@
                         android:textSize="15sp" />
 
                     <ImageView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
                         android:layout_gravity="center"
                         android:layout_marginTop="@dimen/material_default_padding"
-                        android:src="@drawable/tokenmanagement" />
+                        android:src="@drawable/wizz_token_management" />
 
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
                         android:layout_gravity="center"
                         android:layout_marginTop="@dimen/material_small_padding"
                         android:src="@drawable/wizz_activate_token" />
 
                     <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="150dp"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
                         android:layout_gravity="center"
                         android:layout_marginTop="@dimen/material_small_padding"
                         android:src="@drawable/wizz_activate_rights" />
