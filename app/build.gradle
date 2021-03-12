@@ -12,7 +12,7 @@ apply plugin: 'com.google.firebase.crashlytics'
 apply from: '../gradle/scripts/pmd.gradle'
 apply from: '../gradle/scripts/jacoco.gradle'
 apply from: '../gradle/scripts/checkstyle.gradle'
-apply from: '../gradle/scripts/detekt.gradle'
+// apply from: '../gradle/scripts/detekt.gradle'
 apply from: '../gradle/scripts/testLogging.gradle'
 
 android {
