@@ -9,7 +9,6 @@
 !.idea/inspectionProfiles/
 !.idea/vcs.xml
 *.apk
-gradlew
 /app/release/
 fastlane/report.xml
 

@@ -188,7 +188,7 @@ dependencies {
     testImplementation 'com.android.support.test:rules:1.0.2'
     testImplementation 'com.android.support.test:runner:1.0.2'
     testImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    testImplementation "org.robolectric:robolectric:4.4"
+    testImplementation "org.robolectric:robolectric:4.5.1"
 
     // TicketSale
     implementation 'com.stripe:stripe-android:6.1.2'
