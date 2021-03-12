@@ -3,7 +3,7 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ master ]
+    branches: [ master, actions ]
   pull_request:
     branches: [ master ]
 
@@ -21,11 +21,11 @@ jobs:
       - name: Check dependencies
         run: ./gradlew dependencies
 
-      - name: Lint Check
-        run: ./gradlew klintCheck
-
       - name: Build
         run: ./gradlew build
 
       - name: Test
         run: ./gradlew test
+
+      - name: Lint Check
+        run: ./gradlew ktlintCheck
