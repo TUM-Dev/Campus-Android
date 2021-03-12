@@ -6,7 +6,6 @@ jobs:
   test-build:
     runs-on: ubuntu-latest
       steps:
-        - name: Checkout the code
           uses: actions/checkout@v2
         - name: Check Dependencies
           run: ./gradlew dependencies
