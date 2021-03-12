@@ -18,14 +18,5 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Check dependencies
-        run: ./gradlew dependencies
-
       - name: Build
         run: ./gradlew build
-
-      - name: Test
-        run: ./gradlew test
-
-      - name: Lint Check
-        run: ./gradlew ktlintCheck
