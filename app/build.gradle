@@ -1,7 +1,7 @@
 plugins {
     id 'de.aaschmid.cpd' version '3.1'
 }
-apply plugin: "io.gitlab.arturbosch.detekt"
+// apply plugin: "io.gitlab.arturbosch.detekt"
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
