@@ -85,15 +85,29 @@
         android:background="@color/pop_up_background"
         android:padding="@dimen/material_default_padding">
 
-        <TextView
-            android:id="@+id/averageGradeTextView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textColor="@color/text_light_blue"
-            android:textSize="@dimen/semilarge_text_size"
-            android:visibility="visible"
-            tools:text="Average grade: 1.0" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/averageGradeTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_light_blue"
+                android:textSize="@dimen/semilarge_text_size"
+                android:textStyle="bold"
+                android:visibility="visible"
+                tools:text="Average grade: 1.0" />
+
+            <TextView
+                android:id="@+id/averageGradeHintTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_light_blue"
+                android:visibility="visible"
+                android:text="@string/average_grade_hint"/>
+        </LinearLayout>
 
     </FrameLayout>
 
