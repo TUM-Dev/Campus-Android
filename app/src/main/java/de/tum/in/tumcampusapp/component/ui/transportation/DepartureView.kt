@@ -3,7 +3,6 @@ package de.tum.`in`.tumcampusapp.component.ui.transportation
 import android.animation.ValueAnimator
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Handler
 import android.view.Gravity
 import android.view.LayoutInflater

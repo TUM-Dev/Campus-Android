@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp
 
 import android.app.Application
-import android.content.res.Resources
 import android.os.StrictMode
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.crashlytics.FirebaseCrashlytics

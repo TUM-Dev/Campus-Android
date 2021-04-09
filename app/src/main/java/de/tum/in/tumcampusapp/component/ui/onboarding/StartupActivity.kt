@@ -160,9 +160,9 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
     }
 
     override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<String>,
-            grantResults: IntArray
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
     ) {
         openMainActivityIfInitializationFinished()
     }

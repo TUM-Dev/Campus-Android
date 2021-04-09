@@ -1,7 +1,7 @@
 plugins {
     id 'de.aaschmid.cpd' version '3.1'
 }
-apply plugin: "io.gitlab.arturbosch.detekt"
+// apply plugin: "io.gitlab.arturbosch.detekt"
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
@@ -12,7 +12,7 @@ apply plugin: 'com.google.firebase.crashlytics'
 apply from: '../gradle/scripts/pmd.gradle'
 apply from: '../gradle/scripts/jacoco.gradle'
 apply from: '../gradle/scripts/checkstyle.gradle'
-apply from: '../gradle/scripts/detekt.gradle'
+// apply from: '../gradle/scripts/detekt.gradle'
 apply from: '../gradle/scripts/testLogging.gradle'
 
 android {
@@ -188,7 +188,7 @@ dependencies {
     testImplementation 'com.android.support.test:rules:1.0.2'
     testImplementation 'com.android.support.test:runner:1.0.2'
     testImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    testImplementation "org.robolectric:robolectric:4.4"
+    testImplementation "org.robolectric:robolectric:4.5.1"
 
     // TicketSale
     implementation 'com.stripe:stripe-android:6.1.2'

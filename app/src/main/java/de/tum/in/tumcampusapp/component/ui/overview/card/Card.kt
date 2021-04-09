@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.preference.PreferenceManager
-import android.util.Log
 import androidx.recyclerview.widget.DiffUtil
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavDestination
@@ -19,9 +18,9 @@ import de.tum.`in`.tumcampusapp.utils.Utils
  * @param settingsPrefix Preference key prefix used for all preferences belonging to that card
  */
 abstract class Card(
-        val cardType: Int,
-        protected var context: Context,
-        val settingsPrefix: String = ""
+    val cardType: Int,
+    protected var context: Context,
+    val settingsPrefix: String = ""
 ) : Comparable<Card> {
 
     // Settings for showing this card on start page or as notification
@@ -127,8 +126,8 @@ abstract class Card(
     protected abstract fun discard(editor: Editor)
 
     class DiffCallback(
-            private val oldList: List<Card>,
-            private val newList: List<Card>
+        private val oldList: List<Card>,
+        private val newList: List<Card>
     ) : DiffUtil.Callback() {
 
         override fun getOldListSize() = oldList.size

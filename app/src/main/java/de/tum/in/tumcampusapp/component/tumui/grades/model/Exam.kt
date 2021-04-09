@@ -112,7 +112,7 @@ data class Exam(
                 "4,7" to R.color.grade_4_7,
                 "4,8" to R.color.grade_4_8,
                 "4,9" to R.color.grade_4_9,
-                "5,0" to R.color.grade_5_0,
+                "5,0" to R.color.grade_5_0
         )
     }
 }
