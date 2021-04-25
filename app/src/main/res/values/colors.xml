@@ -50,7 +50,7 @@
     <color name="semitransparent_dark_background">#4D000000</color>
 
     <color name="default_button_text">@color/color_primary</color>
-    <color name="default_button_background">@color/tum_light_gray</color>
+    <color name="default_button_background">@color/color_primary</color>
 
 
     <!-- Navigation drawer -->
