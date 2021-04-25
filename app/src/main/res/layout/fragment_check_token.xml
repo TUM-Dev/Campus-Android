@@ -95,7 +95,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/openTumOnlineButton"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+                style="@style/BlueButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/material_small_padding"
@@ -103,7 +103,6 @@
                 android:layout_marginBottom="@dimen/material_small_padding"
                 android:text="@string/open_tum_online"
                 android:textAllCaps="false"
-                android:textColor="@color/color_primary"
                 app:cornerRadius="@dimen/material_corner_radius" />
 
             <com.google.android.material.button.MaterialButton
