@@ -18,6 +18,9 @@
     <color name="default_window_background">@android:color/black</color>
     <color name="secondary_window_background">@android:color/black</color>
 
+    <color name="chat_incoming">#151515</color>
+    <color name="chat_outgoing">@color/tum_900</color>
+
     <!-- Navigation drawer -->
 
     <color name="navigation_drawer_header_background">@color/black</color>
