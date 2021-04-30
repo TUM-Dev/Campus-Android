@@ -42,6 +42,7 @@
                 android:includeFontPadding="false"
                 android:paddingEnd="@dimen/material_tiny_padding"
                 android:textSize="12sp"
+                android:textColor="@color/text_secondary"
                 tools:ignore="RtlSymmetry"
                 tools:text="Time" />
 
