@@ -1,42 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/chatMessageLayout"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/material_small_padding"
-    android:layout_marginEnd="@dimen/material_small_padding"
-    android:background="@drawable/bg_message_incoming"
-    android:orientation="vertical"
-    android:padding="@dimen/material_small_padding"
-    tools:backgroundTint="@color/tum_50">
+    android:paddingEnd="@dimen/padding_chat_big"
+    android:paddingStart="@dimen/padding_chat_small">
 
-    <!-- TODO: Set max width to 70 percent -->
-
-    <TextView
-        android:id="@+id/userTextView"
+    <LinearLayout
+        android:id="@+id/chatMessageLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-medium"
-        android:textColor="@color/tum_blue"
-        android:textSize="12sp"
-        tools:text="User" />
+        android:background="@drawable/bg_message_incoming"
+        android:orientation="vertical"
+        android:padding="@dimen/material_small_padding"
+        tools:backgroundTint="@color/tum_50"
+        tools:ignore="UselessParent">
 
-    <TextView
-        android:id="@+id/messageTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/text_primary"
-        android:textSize="16sp"
-        android:autoLink="all"
-        tools:text="Message" />
+        <TextView
+            android:id="@+id/userTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/tum_blue"
+            android:textSize="12sp"
+            tools:text="User" />
 
-    <TextView
-        android:id="@+id/timeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textColor="@color/text_secondary"
-        tools:text="Time" />
+        <TextView
+            android:id="@+id/messageTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            tools:text="Message" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/timeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            tools:text="Time" />
+
+    </LinearLayout>
+
+</FrameLayout>
