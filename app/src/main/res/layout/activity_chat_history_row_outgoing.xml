@@ -2,17 +2,15 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <!-- TODO: Set max width to 70 percent -->
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/padding_chat_big"
+    android:paddingEnd="@dimen/padding_chat_small">
 
     <LinearLayout
         android:id="@+id/chatMessageLayout"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        android:layout_marginStart="@dimen/material_small_padding"
-        android:layout_marginEnd="@dimen/material_small_padding"
         android:background="@drawable/bg_message_outgoing"
         android:gravity="end"
         android:orientation="vertical"

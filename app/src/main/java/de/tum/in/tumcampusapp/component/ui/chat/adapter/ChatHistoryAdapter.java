@@ -136,6 +136,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
                 updateSendingStatus(context, message);
             } else {
                 userTextView.setText(message.getMember().getDisplayName());
+                timestampTextView.setText(message.getFormattedTimestamp(context));
             }
 
             String lrzId = message.getMember().getLrzId();
