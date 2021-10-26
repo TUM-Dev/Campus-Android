@@ -103,10 +103,6 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
         todayButton.setOnClickListener { weekView.goToToday() }
         showDate?.let { openEvent(eventId) }
 
-        // These are arguments passed into the calendarFragment on instantiation, figure out where this call comes from
-        // isWeekMode = arguments?.getBoolean(Const.CALENDAR_WEEK_MODE) ?: false
-        //TODO: Testing
-        //TODO: Fix deprecated code attached to this issue
         isWeekMode = Utils.getSettingBool(requireContext(), Const.CALENDAR_WEEK_MODE, false)
 
         disableRefresh()
