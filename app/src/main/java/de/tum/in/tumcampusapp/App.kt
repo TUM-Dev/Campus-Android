@@ -20,10 +20,6 @@ open class App : Application() {
     lateinit var appComponent: AppComponent
         private set
 
-    // Used to trigger/handle the google play in-app review flow
-    lateinit var reviewManager: ReviewManager
-        private set
-
     override fun onCreate() {
         super.onCreate()
         buildAppComponent()
@@ -33,7 +29,6 @@ open class App : Application() {
         initRxJavaErrorHandler()
         setupStrictMode()
         loadTheme()
-        setupReviewManager()
     }
 
     private fun buildAppComponent() {
@@ -82,9 +77,5 @@ open class App : Application() {
     private fun loadTheme() {
         val theme = ThemeProvider(this).getThemeFromPreferences()
         AppCompatDelegate.setDefaultNightMode(theme)
-    }
-
-    private fun setupReviewManager() {
-        reviewManager = ReviewManagerFactory.create(this)
     }
 }
