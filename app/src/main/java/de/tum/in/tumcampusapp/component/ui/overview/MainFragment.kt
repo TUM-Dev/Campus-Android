@@ -102,13 +102,12 @@ class MainFragment : BaseFragment<Unit>(
         }
 
         // Triggers a Google Play store review if the user has experienced some key features of the app
-        // The earliest possible retrigger of a review prompt occurs after half a year
+        // The earliest possible re-trigger of a review prompt occurs after half a year
         val dateFormatter = SimpleDateFormat("MM-yyyy", Locale.GERMANY)
-        // Will be null if this is the first launch of the app and the preference LAST_REVIEW_PROMPT has not been set yet
-        val lastReviewDate = dateFormatter.parse(Utils.getSetting(requireContext(), Const.LAST_REVIEW_PROMPT, ""))
-        val halfYearInSeconds = 183*24*60*60
+        val lastReviewDate = dateFormatter.parse(Utils.getSetting(requireContext(), Const.LAST_REVIEW_PROMPT, "01-01-1970"))
+        val halfYearInSeconds = 6*30*24*60*60
 
-        if (lastReviewDate == null || Date().time > lastReviewDate.time + halfYearInSeconds &&
+        if (Date().time > lastReviewDate!!.time + halfYearInSeconds &&
                 Utils.getSetting(requireContext(), Const.LRZ_ID, "").isNotEmpty() &&
                 Utils.getSettingBool(requireContext(), Const.HAS_VISITED_GRADES, false) &&
                 Utils.getSettingBool(requireContext(), Const.HAS_VISITED_CALENDAR, false)) {
