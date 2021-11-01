@@ -173,4 +173,9 @@ object Const {
     const val SETTINGS_RESTART = "settingsRestart"
 
     const val DESIGN_THEME = "design_theme_preference"
+
+    // Used in determining when to prompt for google playstore review
+    const val HAS_VISITED_CALENDAR = "has_visited_calendar"
+    const val HAS_VISITED_GRADES = "has_visited_grades"
+    const val LAST_REVIEW_PROMPT = "last_review_prompt"
 }
