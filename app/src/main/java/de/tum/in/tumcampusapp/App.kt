@@ -3,6 +3,8 @@ package de.tum.`in`.tumcampusapp
 import android.app.Application
 import android.os.StrictMode
 import androidx.appcompat.app.AppCompatDelegate
+import com.google.android.play.core.review.ReviewManager
+import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
@@ -18,6 +20,10 @@ open class App : Application() {
     lateinit var appComponent: AppComponent
         private set
 
+    // Used to trigger/handle the google play in-app review flow
+    lateinit var reviewManager: ReviewManager
+        private set
+
     override fun onCreate() {
         super.onCreate()
         buildAppComponent()
@@ -27,6 +33,7 @@ open class App : Application() {
         initRxJavaErrorHandler()
         setupStrictMode()
         loadTheme()
+        setupReviewManager()
     }
 
     private fun buildAppComponent() {
@@ -75,5 +82,9 @@ open class App : Application() {
     private fun loadTheme() {
         val theme = ThemeProvider(this).getThemeFromPreferences()
         AppCompatDelegate.setDefaultNightMode(theme)
+    }
+
+    private fun setupReviewManager() {
+        reviewManager = ReviewManagerFactory.create(this)
     }
 }
