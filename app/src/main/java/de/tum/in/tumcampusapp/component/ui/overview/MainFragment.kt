@@ -102,8 +102,14 @@ class MainFragment : BaseFragment<Unit>(
         }
 
         // Triggers a Google Play store review if the user has experienced some key features of the app
-        // Retriggers a review prompt after 60 uses of the app
-        if (Utils.getSetting(requireContext(), Const.LRZ_ID, "").isNotEmpty() &&
+        // The earliest possible retrigger of a review prompt occurs after half a year
+        val dateFormatter = SimpleDateFormat("MM-yyyy", Locale.GERMANY)
+        // Will be null if this is the first launch of the app and the preference LAST_REVIEW_PROMPT has not been set yet
+        val lastReviewDate = dateFormatter.parse(Utils.getSetting(requireContext(), Const.LAST_REVIEW_PROMPT, ""))
+        val halfYearInSeconds = 183*24*60*60
+
+        if (lastReviewDate == null || Date().time > lastReviewDate.time + halfYearInSeconds &&
+                Utils.getSetting(requireContext(), Const.LRZ_ID, "").isNotEmpty() &&
                 Utils.getSettingBool(requireContext(), Const.HAS_VISITED_GRADES, false) &&
                 Utils.getSettingBool(requireContext(), Const.HAS_VISITED_CALENDAR, false)) {
             triggerReviewPrompt()
@@ -157,6 +163,13 @@ class MainFragment : BaseFragment<Unit>(
         super.onDestroy()
     }
 
+    /**
+     * Handles the setup for the in-app Google Play store review flow. The review prompt is only actually opened based on certain quotas
+     * that specified by Google Play.
+     * The logic implemented should ensure that the review prompt actually always appears, as once every half year currently seems
+     * to be well within the bounds of the vague description of the quota, that Google gives (approx. once a month)
+     * @see https://developer.android.com/guide/playcore/in-app-review#quotas
+     */
     private fun triggerReviewPrompt() {
         val reviewManager = ReviewManagerFactory.create(requireContext())
 
@@ -168,7 +181,7 @@ class MainFragment : BaseFragment<Unit>(
 
                 val flow = reviewManager.launchReviewFlow(requireActivity(), reviewInfo)
                 flow.addOnCompleteListener { _ ->
-                    val df = SimpleDateFormat("MM")
+                    val df = SimpleDateFormat("MM-yyyy",  Locale.GERMANY)
                     val month = df.format(Date())
                     Utils.setSetting(requireContext(), Const.LAST_REVIEW_PROMPT, month)
                 }
