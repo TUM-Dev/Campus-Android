@@ -7,7 +7,6 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkRequest
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -19,7 +18,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.review.ReviewException
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.android.play.core.review.model.ReviewErrorCode
-import com.google.android.play.core.tasks.RuntimeExecutionException
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.BaseFragment
@@ -36,6 +34,8 @@ import de.tum.`in`.tumcampusapp.utils.observe
 import kotlinx.android.synthetic.main.fragment_main.*
 import org.jetbrains.anko.connectivityManager
 import org.jetbrains.anko.support.v4.runOnUiThread
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -101,29 +101,12 @@ class MainFragment : BaseFragment<Unit>(
             it?.let { onNewCardsAvailable(it) }
         }
 
-        // TODO: Implement smart in-app review prompts
-        // Boilerplate code from documentation
-        val reviewManager = ReviewManagerFactory.create(requireContext())
-        Log.d("MainFragment","Review flow init")
-        val request = reviewManager.requestReviewFlow()
-        request.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                // We got the ReviewInfo object
-                val reviewInfo = task.result
-
-                val flow = reviewManager.launchReviewFlow(requireActivity(), reviewInfo)
-                flow.addOnCompleteListener { _ ->
-                    // The flow has finished. The API does not indicate whether the user
-                    // reviewed or not, or even whether the review dialog was shown. Thus, no
-                    // matter the result, we continue our app flow.
-                    Utils.log("Review flow completed successfully")
-                    Log.d("MainFragment","Review flow completed successfully")
-                }
-            } else {
-                // There was some problem, log or handle the error code.
-                Log.d("MainFragment","Review flow failed")
-                @ReviewErrorCode val reviewErrorCode = (task.exception as ReviewException).errorCode
-            }
+        // Triggers a Google Play store review if the user has experienced some key features of the app
+        // Retriggers a review prompt after 60 uses of the app
+        if (Utils.getSetting(requireContext(), Const.LRZ_ID, "").isNotEmpty() &&
+                Utils.getSettingBool(requireContext(), Const.HAS_VISITED_GRADES, false) &&
+                Utils.getSettingBool(requireContext(), Const.HAS_VISITED_CALENDAR, false)) {
+            triggerReviewPrompt()
         }
     }
 
@@ -172,6 +155,28 @@ class MainFragment : BaseFragment<Unit>(
             isConnectivityChangeReceiverRegistered = false
         }
         super.onDestroy()
+    }
+
+    private fun triggerReviewPrompt() {
+        val reviewManager = ReviewManagerFactory.create(requireContext())
+
+        val request = reviewManager.requestReviewFlow()
+        request.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // We got the ReviewInfo object
+                val reviewInfo = task.result
+
+                val flow = reviewManager.launchReviewFlow(requireActivity(), reviewInfo)
+                flow.addOnCompleteListener { _ ->
+                    val df = SimpleDateFormat("MM")
+                    val month = df.format(Date())
+                    Utils.setSetting(requireContext(), Const.LAST_REVIEW_PROMPT, month)
+                }
+            } else {
+                // There was some problem, log or handle the error code.
+                @ReviewErrorCode val reviewErrorCode = (task.exception as ReviewException).errorCode
+            }
+        }
     }
 
     companion object {
