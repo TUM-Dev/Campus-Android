@@ -114,6 +114,10 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
     override fun onStart() {
         super.onStart()
         refreshWeekView()
+
+        // In case the timezone changes when reopening the calendar, while the app is still open, this ensures
+        // that the lectures are still adjusted to the new timezone
+        loadEvents(CacheControl.USE_CACHE)
     }
 
     override fun onRefresh() {
