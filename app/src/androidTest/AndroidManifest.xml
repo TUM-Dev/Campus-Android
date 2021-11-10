@@ -3,9 +3,5 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.tum.in.tumcampusapp">
 
-    <instrumentation
-        android:name="androidx.test.runner.AndroidJUnitRunner"
-        android:targetPackage="de.in.tumcampusapp" />
-
     <uses-sdk tools:overrideLibrary="android.support.test.uiautomator.v18"/>
 </manifest>
