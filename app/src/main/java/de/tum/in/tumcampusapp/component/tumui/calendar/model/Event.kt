@@ -14,6 +14,8 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
+import org.joda.time.LocalDateTime
 
 @Xml(name = "event")
 data class Event(
@@ -35,10 +37,16 @@ data class Event(
      * Retrieve related values for calendar item as CalendarItem object
      */
     fun toCalendarItem(): CalendarItem {
+        // If the device is in a different timezone, map the event start and endTimes to the correct timezone
+        // This is done anytime the event is fetched in order for it to be displayed in the calendar
+        val tzGer = DateTimeZone.forID("Europe/Berlin")
+        val startInDeviceLocation = LocalDateTime(startTime, tzGer).toDateTime(DateTimeZone.getDefault())
+        val endInDeviceLocation = LocalDateTime(endTime, tzGer).toDateTime(DateTimeZone.getDefault())
+
         return CalendarItem(
                 id ?: "", status ?: "", url ?: "", title,
-                description ?: "", startTime ?: DateTime(),
-                endTime ?: DateTime(), Utils.stripHtml(location ?: ""), false
+                description ?: "", startInDeviceLocation ?: DateTime(),
+                endInDeviceLocation ?: DateTime(), Utils.stripHtml(location ?: ""), false
         )
     }
 

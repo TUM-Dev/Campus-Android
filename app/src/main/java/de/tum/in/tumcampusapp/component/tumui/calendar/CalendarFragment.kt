@@ -135,38 +135,6 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
         var events = response.events ?: return
         scheduleNotifications(events)
 
-        // If the device is in a different timezone, get the daylight savings corrected device offset that is
-        // then used to adjust the event startTime and endTime
-        val deviceTimeZone = TimeZone.getDefault()
-        val germanTimeZone = TimeZone.getTimeZone("Europe/Berlin")
-
-        if(!deviceTimeZone.equals(germanTimeZone)) {
-            // 1000 * 60 * 60, converts from milliseconds to hours, since 10^(-3) seconds * 10^(3) = 1 second
-            //      and there are 60 seconds in a minute and 60 minutes in an hour
-            val millisecondsToHoursFactor = 1000 * 60 * 60
-            val offset = (deviceTimeZone.getOffset(Date().time) - germanTimeZone.getOffset(Date().time)) / millisecondsToHoursFactor
-
-            // A new variable is needed to be able to update event.startTime and event.endTime, since these are
-            // values and changing them to variables will break code in Event.kt
-            var timeZoneCorrectedEvents = emptyList<Event>()
-            for(event in events){
-                timeZoneCorrectedEvents = timeZoneCorrectedEvents.plusElement(Event(
-                        event.description,
-                        // If a null value is present in the database simply propagate it forward
-                        if (event.startTime != null) event.startTime.plusHours(offset) else null,
-                        if (event.endTime != null) event.endTime.plusHours(offset) else null,
-                        event.geo,
-                        event.location,
-                        event.id,
-                        event.status,
-                        event.title,
-                        event.url
-                ))
-            }
-
-            events = timeZoneCorrectedEvents
-        }
-
         compositeDisposable += Completable
                 .fromAction { calendarController.importCalendar(events) }
                 .subscribeOn(Schedulers.io())
