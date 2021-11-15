@@ -34,7 +34,7 @@ import de.tum.`in`.tumcampusapp.utils.observe
 import kotlinx.android.synthetic.main.fragment_main.*
 import org.jetbrains.anko.connectivityManager
 import org.jetbrains.anko.support.v4.runOnUiThread
-import java.text.SimpleDateFormat
+import org.joda.time.DateTime
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Provider
@@ -103,11 +103,9 @@ class MainFragment : BaseFragment<Unit>(
 
         // Triggers a Google Play store review if the user has experienced some key features of the app
         // The earliest possible re-trigger of a review prompt occurs after half a year
-        val dateFormatter = SimpleDateFormat("MM-yyyy", Locale.GERMANY)
-        val lastReviewDate = dateFormatter.parse(Utils.getSetting(requireContext(), Const.LAST_REVIEW_PROMPT, "01-01-1970"))
-        val halfYearInSeconds = 6*30*24*60*60
+        val lastReviewDate = Utils.getSetting(requireContext(), Const.LAST_REVIEW_PROMPT, "0").toLong()
 
-        if (Date().time > lastReviewDate!!.time + halfYearInSeconds &&
+        if (DateTime.now().minusMonths(6).isAfter(lastReviewDate) &&
                 Utils.getSetting(requireContext(), Const.LRZ_ID, "").isNotEmpty() &&
                 Utils.getSettingBool(requireContext(), Const.HAS_VISITED_GRADES, false) &&
                 Utils.getSettingBool(requireContext(), Const.HAS_VISITED_CALENDAR, false)) {
@@ -180,9 +178,7 @@ class MainFragment : BaseFragment<Unit>(
 
                 val flow = reviewManager.launchReviewFlow(requireActivity(), reviewInfo)
                 flow.addOnCompleteListener { _ ->
-                    val df = SimpleDateFormat("MM-yyyy",  Locale.GERMANY)
-                    val month = df.format(Date())
-                    Utils.setSetting(requireContext(), Const.LAST_REVIEW_PROMPT, month)
+                    Utils.setSetting(requireContext(), Const.LAST_REVIEW_PROMPT, Date().time.toString())
                 }
             } else {
                 // There was some problem, log or handle the error code.
