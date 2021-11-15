@@ -69,8 +69,7 @@ open class App : Application() {
     }
 
     private fun initRxJavaErrorHandler() {
-        // TODO:  This line causes tests to crash since FirebaseApp is not initialized
-        // RxJavaPlugins.setErrorHandler(FirebaseCrashlytics.getInstance()::recordException)
+        RxJavaPlugins.setErrorHandler(FirebaseCrashlytics.getInstance()::recordException)
     }
 
     private fun loadTheme() {
