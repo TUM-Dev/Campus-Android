@@ -107,6 +107,10 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
 
         disableRefresh()
         loadEvents(CacheControl.USE_CACHE)
+
+        // Tracks whether the user has used the calendar module before. This is used in determining when to prompt for a
+        // Google Play store review
+        Utils.setSetting(requireContext(), Const.HAS_VISITED_CALENDAR, true)
     }
 
     override fun onStart() {
