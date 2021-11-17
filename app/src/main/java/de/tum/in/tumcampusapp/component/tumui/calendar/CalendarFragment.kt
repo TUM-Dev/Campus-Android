@@ -103,10 +103,14 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
         todayButton.setOnClickListener { weekView.goToToday() }
         showDate?.let { openEvent(eventId) }
 
-        isWeekMode = arguments?.getBoolean(Const.CALENDAR_WEEK_MODE) ?: false
+        isWeekMode = Utils.getSettingBool(requireContext(), Const.CALENDAR_WEEK_MODE, false)
 
         disableRefresh()
         loadEvents(CacheControl.USE_CACHE)
+
+        // Tracks whether the user has used the calendar module before. This is used in determining when to prompt for a
+        // Google Play store review
+        Utils.setSetting(requireContext(), Const.HAS_VISITED_CALENDAR, true)
     }
 
     override fun onStart() {

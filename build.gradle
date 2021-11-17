@@ -37,3 +37,8 @@ allprojects {
         maven { url 'https://maven.google.com/' }
     }
 }
+
+ext {
+    play_core_services = '1.10.2'
+    play_core_services_kotlin_extension = '1.8.1'
+}

@@ -3,9 +3,7 @@ package de.tum.`in`.tumcampusapp
 import android.app.Application
 import android.os.StrictMode
 import androidx.appcompat.app.AppCompatDelegate
-import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.google.firebase.provider.FirebaseInitProvider
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
 import de.tum.`in`.tumcampusapp.component.notifications.NotificationUtils.setupNotificationChannels

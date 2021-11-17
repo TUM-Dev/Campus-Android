@@ -118,6 +118,10 @@ dependencies {
     implementation 'com.google.android.gms:play-services-base:17.5.0'
     implementation 'com.google.android.gms:play-services-location:17.1.0'
 
+    // Used for in-app reviews
+    implementation "com.google.android.play:core:$play_core_services"
+    implementation "com.google.android.play:core-ktx:$play_core_services_kotlin_extension"
+
     // Firebase
     implementation 'com.google.firebase:firebase-core:18.0.1'
     implementation 'com.google.firebase:firebase-messaging:21.0.1'
