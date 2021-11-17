@@ -103,7 +103,7 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
         todayButton.setOnClickListener { weekView.goToToday() }
         showDate?.let { openEvent(eventId) }
 
-        isWeekMode = arguments?.getBoolean(Const.CALENDAR_WEEK_MODE) ?: false
+        isWeekMode = Utils.getSettingBool(requireContext(), Const.CALENDAR_WEEK_MODE, false)
 
         disableRefresh()
         loadEvents(CacheControl.USE_CACHE)
