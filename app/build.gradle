@@ -17,7 +17,6 @@ apply from: '../gradle/scripts/testLogging.gradle'
 
 android {
     compileSdkVersion 31
-    buildToolsVersion '29.0.2'
     buildTypes {
         all {
             proguardFiles(file('../proguard').listFiles())

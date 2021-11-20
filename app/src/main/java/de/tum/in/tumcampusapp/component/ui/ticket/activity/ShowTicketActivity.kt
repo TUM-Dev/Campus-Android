@@ -48,7 +48,7 @@ class ShowTicketActivity : BaseActivity(R.layout.activity_show_ticket) {
         get() {
 
             val redemptions = ticketInfoList.mapNotNull { it.tickets?.first()?.redemption }
-            val lastRedemption = redemptions.max()
+            val lastRedemption = redemptions.maxOrNull ()
 
             val formattedDate = lastRedemption?.let {
                 Ticket.getFormattedRedemptionDate(this, it)
