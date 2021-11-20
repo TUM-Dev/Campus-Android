@@ -2,7 +2,7 @@ package de.tum.`in`.tumcampusapp.service
 
 import android.os.Bundle
 import androidx.annotation.IntDef
-import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
@@ -54,9 +54,9 @@ class FcmReceiverService : FirebaseMessagingService() {
      * See: https://github.com/TCA-Team/TumCampusApp/wiki/GCM-Message-format
      */
     private fun createPushNotificationOfType(
-        type: Int,
-        notificationId: Int,
-        payload: String
+            type: Int,
+            notificationId: Int,
+            payload: String
     ): PushNotification? {
         // Apparently, using the service context can cause issues here:
         // https://stackoverflow.com/questions/48770750/strange-crash-when-starting-notification
@@ -100,7 +100,7 @@ class FcmReceiverService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         Utils.log("new FCM token received")
-        Utils.setSetting(this, Const.FCM_INSTANCE_ID, FirebaseInstanceId.getInstance().id)
+        Utils.setSetting(this, Const.FCM_INSTANCE_ID, FirebaseInstallations.getInstance().id)
         Utils.setSetting(this, Const.FCM_TOKEN_ID, token ?: "")
     }
 
