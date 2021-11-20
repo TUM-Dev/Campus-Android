@@ -15,6 +15,9 @@ import net.danlew.android.joda.JodaTimeAndroid
 
 open class App : Application() {
 
+    // If we run Robolectric unit tests, this variable will be true
+    open val testing = false
+
     lateinit var appComponent: AppComponent
         private set
 
@@ -24,7 +27,9 @@ open class App : Application() {
         setupPicasso()
         setupNotificationChannels(this)
         JodaTimeAndroid.init(this)
-        initRxJavaErrorHandler()
+        if (!testing) {
+            initRxJavaErrorHandler()
+        }
         setupStrictMode()
         loadTheme()
     }

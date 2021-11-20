@@ -115,16 +115,4 @@ public class RSASignerTestCase {
 
         assertThat(signer.sign(message.getText())).isEqualTo(message.getSignature());
     }
-
-    /**
-     * Tests that when the private key associated with
-     * the signer is null, the signer returns null.
-     */
-    @Test
-    public void testPrivateKeyNull() {
-        signer = new RSASigner(null);
-        ChatMessage message = messageFixtures.get(0);
-
-        assertThat(signer.sign(message.getText())).isNull();
-    }
 }
