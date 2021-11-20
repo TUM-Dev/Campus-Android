@@ -5,6 +5,7 @@ import dagger.BindsInstance
 import dagger.Component
 import de.tum.`in`.tumcampusapp.component.other.settings.SettingsFragment
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.di.FeedbackComponent
+import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.di.RoomFinderComponent
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.di.CafeteriaComponent
 import de.tum.`in`.tumcampusapp.component.ui.news.di.NewsComponent
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponent
@@ -28,6 +29,7 @@ interface AppComponent {
     fun newsComponent(): NewsComponent
     fun onboardingComponent(): OnboardingComponent.Factory
     fun ticketsComponent(): TicketsComponent.Builder
+    fun roomFinderComponent(): RoomFinderComponent
 
     fun inject(mainActivity: MainActivity)
     fun inject(mainFragment: MainFragment)

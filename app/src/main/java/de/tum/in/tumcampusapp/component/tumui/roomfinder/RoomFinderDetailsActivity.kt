@@ -55,6 +55,8 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        injector.roomFinderComponent().inject(this)
+
         imageFragment = ImageViewTouchFragment.newInstance()
         supportFragmentManager.beginTransaction()
                 .add(R.id.fragment_container, imageFragment)
