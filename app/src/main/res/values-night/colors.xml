@@ -18,8 +18,8 @@
     <color name="default_window_background">@android:color/black</color>
     <color name="secondary_window_background">@android:color/black</color>
 
-    <color name="default_button_text">@color/text_primary</color>
-    <color name="default_button_background">@color/tum_blue</color>
+    <color name="chat_incoming">#151515</color>
+    <color name="chat_outgoing">@color/tum_900</color>
 
     <!-- Navigation drawer -->
 

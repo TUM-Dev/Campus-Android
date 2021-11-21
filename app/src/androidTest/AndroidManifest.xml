@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:tools="http://schemas.android.com/tools"
-          package="de.tum.in.tumcampusapp">
+    package="de.tum.in.tumcampusapp">
 
     <uses-sdk tools:overrideLibrary="android.support.test.uiautomator.v18"/>
 </manifest>

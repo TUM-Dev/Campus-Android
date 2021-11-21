@@ -46,6 +46,7 @@
 
     <!-- Exam/Grades -->
     <string name="average_grade">Durchschnittsnote</string>
+    <string name="average_grade_hint">Deinen offiziellen Schnitt findest Du in TUMOnline.</string>
     <string name="show_column_chart">Zeige als Balkendiagramm</string>
     <string name="show_pie_chart">Zeige als Tortendiagramm</string>
     <string name="result_extra">Ergebnis:&#160;</string>

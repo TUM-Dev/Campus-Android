@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.work.WorkManager
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.play.core.review.ReviewException
+import com.google.android.play.core.review.ReviewManagerFactory
+import com.google.android.play.core.review.model.ReviewErrorCode
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.BaseFragment
@@ -31,6 +34,8 @@ import de.tum.`in`.tumcampusapp.utils.observe
 import kotlinx.android.synthetic.main.fragment_main.*
 import org.jetbrains.anko.connectivityManager
 import org.jetbrains.anko.support.v4.runOnUiThread
+import org.joda.time.DateTime
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -95,6 +100,17 @@ class MainFragment : BaseFragment<Unit>(
         viewModel.cards.observe(viewLifecycleOwner) {
             it?.let { onNewCardsAvailable(it) }
         }
+
+        // Triggers a Google Play store review if the user has experienced some key features of the app
+        // The earliest possible re-trigger of a review prompt occurs after half a year
+        val lastReviewDate = Utils.getSetting(requireContext(), Const.LAST_REVIEW_PROMPT, "0").toLong()
+
+        if (DateTime.now().minusMonths(6).isAfter(lastReviewDate) &&
+                Utils.getSetting(requireContext(), Const.LRZ_ID, "").isNotEmpty() &&
+                Utils.getSettingBool(requireContext(), Const.HAS_VISITED_GRADES, false) &&
+                Utils.getSettingBool(requireContext(), Const.HAS_VISITED_CALENDAR, false)) {
+            triggerReviewPrompt()
+        }
     }
 
     override fun onResume() {
@@ -142,6 +158,33 @@ class MainFragment : BaseFragment<Unit>(
             isConnectivityChangeReceiverRegistered = false
         }
         super.onDestroy()
+    }
+
+    /**
+     * Handles the setup for the in-app Google Play store review flow. The review prompt is only actually opened based on certain quotas
+     * that specified by Google Play.
+     * The logic implemented should ensure that the review prompt actually always appears, as once every half year currently seems
+     * to be well within the bounds of the vague description of the quota, that Google gives (approx. once a month)
+     * @see https://developer.android.com/guide/playcore/in-app-review#quotas
+     */
+    private fun triggerReviewPrompt() {
+        val reviewManager = ReviewManagerFactory.create(requireContext())
+
+        val request = reviewManager.requestReviewFlow()
+        request.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // We got the ReviewInfo object
+                val reviewInfo = task.result
+
+                val flow = reviewManager.launchReviewFlow(requireActivity(), reviewInfo)
+                flow.addOnCompleteListener { _ ->
+                    Utils.setSetting(requireContext(), Const.LAST_REVIEW_PROMPT, Date().time.toString())
+                }
+            } else {
+                // There was some problem, log or handle the error code.
+                @ReviewErrorCode val reviewErrorCode = (task.exception as ReviewException).errorCode
+            }
+        }
     }
 
     companion object {

@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.webkit.WebView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.component.ui.alarm.model.FcmNotification
@@ -40,8 +41,27 @@ class AlarmActivity : BaseActivity(R.layout.activity_alarmdetails) {
         Utils.log(notification.toString())
 
         this.mTitle.text = notification.title
-        this.mDescription.loadDataWithBaseURL(null, notification.description, "text/html", "utf-8", null)
+        this.mDescription.loadDataWithBaseURL(null, formatDescription(notification.description), "text/html", "utf-8", null)
         this.mDescription.setBackgroundColor(Color.TRANSPARENT)
         this.mDate.text = DateTimeUtils.getDateString(notification.created)
+    }
+
+    private fun formatDescription(description: String): String {
+        val color = ContextCompat.getColor(this, R.color.text_primary)
+        val hexColor = "#" + String.format("%06X", color and 0x00ffffff)
+
+        val preHTML = "<!DOCTYPE HTML>\n" +
+                "<html>\n" +
+                "<head>\n" +
+                "<style type=\"text/css\">\n" +
+                "body{color: " + hexColor + ";}\n" +
+                "</style>\n" +
+                "</head>\n" +
+                "<body>\n"
+
+        val postHTML = "\n</body>\n" +
+                "</html>"
+
+        return preHTML + description + postHTML
     }
 }

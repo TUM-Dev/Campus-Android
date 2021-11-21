@@ -49,4 +49,7 @@
     <dimen name="add_thumbnail_button_size">60dp</dimen>
     <dimen name="thumbnail_size">75dp</dimen>
     <dimen name="feedback_img_big">300dp</dimen>
+
+    <dimen name="padding_chat_small">8sp</dimen>
+    <dimen name="padding_chat_big">50sp</dimen>
 </resources>

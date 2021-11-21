@@ -41,7 +41,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_setup_eduroam.*
-import org.jetbrains.anko.appcompat.v7.Appcompat
 import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.notificationManager
 import java.util.concurrent.ExecutionException
@@ -66,8 +65,8 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
     }
 
     override fun onCreatePreferences(
-            savedInstanceState: Bundle?,
-            rootKey: String?
+        savedInstanceState: Bundle?,
+        rootKey: String?
     ) {
         setPreferencesFromResource(R.xml.settings, rootKey)
         populateNewsSources()
@@ -134,8 +133,8 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
     }
 
     private fun loadNewsSourceIcon(
-            preference: Preference,
-            url: String
+        preference: Preference,
+        url: String
     ) {
         compositeDisposable += Single
                 .fromCallable { Picasso.get().load(url).get() }
@@ -157,8 +156,8 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
     }
 
     override fun onSharedPreferenceChanged(
-            sharedPrefs: SharedPreferences,
-            key: String?
+        sharedPrefs: SharedPreferences,
+        key: String?
     ) {
         if (key == null) {
             return
@@ -268,7 +267,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
     }
 
     override fun onPreferenceClick(
-            preference: Preference?
+        preference: Preference?
     ): Boolean {
         when (preference?.key) {
             SETUP_EDUROAM -> startActivity(Intent(context, SetupEduroamActivity::class.java))
@@ -334,7 +333,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         private const val SETUP_EDUROAM = "card_eduroam_setup"
 
         fun newInstance(
-                key: String?
+            key: String?
         ) = SettingsFragment().apply { arguments = bundleOf(ARG_PREFERENCE_ROOT to key) }
     }
 }

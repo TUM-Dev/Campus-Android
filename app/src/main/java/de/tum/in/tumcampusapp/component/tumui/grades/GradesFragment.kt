@@ -15,7 +15,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
-import com.github.mikephil.charting.charts.Chart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.data.*
@@ -25,6 +24,8 @@ import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.FragmentForAccessingTumOnline
 import de.tum.`in`.tumcampusapp.component.tumui.grades.model.Exam
 import de.tum.`in`.tumcampusapp.component.tumui.grades.model.ExamList
+import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.Utils
 import kotlinx.android.synthetic.main.fragment_grades.*
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
 import java.text.NumberFormat
@@ -76,6 +77,10 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         showChartButton?.setOnClickListener { toggleInLandscape() }
 
         loadGrades(CacheControl.USE_CACHE)
+
+        // Tracks whether the user has used the calendar module before. This is used in determining when to prompt for a
+        // Google Play store review
+        Utils.setSetting(requireContext(), Const.HAS_VISITED_GRADES, true)
     }
 
     override fun onRefresh() {
@@ -162,7 +167,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             setFitBars(true)
 
             // only label grades that are associated with at least one grade
-            data.setValueFormatter(object: ValueFormatter() {
+            data.setValueFormatter(object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String? {
                     if (value > 0.0)
                         return value.toString()

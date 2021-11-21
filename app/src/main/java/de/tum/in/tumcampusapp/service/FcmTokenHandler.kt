@@ -1,8 +1,8 @@
 package de.tum.`in`.tumcampusapp.service
 
 import android.content.Context
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.installations.FirebaseInstallations
+import com.google.firebase.messaging.FirebaseMessaging
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.app.model.DeviceUploadFcmToken
 import de.tum.`in`.tumcampusapp.api.app.model.TUMCabeStatus
@@ -48,21 +48,20 @@ object FcmTokenHandler {
      */
     private fun registerInBackground(context: Context) {
         val executor = Executors.newSingleThreadExecutor()
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(executor,
-                OnSuccessListener { instanceIdResult ->
-                    val token = instanceIdResult.token
-                    Utils.setSetting(context, FCM_INSTANCE_ID, instanceIdResult.id)
-                    Utils.setSetting(context, FCM_TOKEN_ID, token)
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            val token = task.result
+            Utils.setSetting(context, FCM_INSTANCE_ID, FirebaseInstallations.getInstance().id)
+            Utils.setSetting(context, FCM_TOKEN_ID, token)
 
-                    // Reset the lock in case we are updating and maybe failed
-                    Utils.setSetting(context, FCM_REG_ID_SENT_TO_SERVER, false)
-                    Utils.setSetting(context, FCM_REG_ID_LAST_TRANSMISSION, Date().time)
+            // Reset the lock in case we are updating and maybe failed
+            Utils.setSetting(context, FCM_REG_ID_SENT_TO_SERVER, false)
+            Utils.setSetting(context, FCM_REG_ID_LAST_TRANSMISSION, Date().time)
 
-                    // Let the server know of our new registration ID
-                    sendTokenToBackend(context, token)
+            // Let the server know of our new registration ID
+            sendTokenToBackend(context, token)
 
-                    Utils.log("FCM registration successful")
-                })
+            Utils.log("FCM registration successful")
+        }
     }
 
     /**
