@@ -94,11 +94,7 @@ configurations.all {
         force 'com.google.code.findbugs:jsr305:3.0.2'
     }
 }
-// Note: Firebase is untouced (new), so are google play services gms
-// Gradle and kotlin are reverted and the remainder of commit 10a625b185ae04063d3b319f6f75d5e51216ee69
-// Compile using sdk xy is also reverted
-// compileSdkVersion is also still updated
-// Probably something with material or room I guess or a interlocking of lifecycle and fragment
+
 dependencies {
 
     // Support Libraries
