@@ -41,8 +41,8 @@ data class Event(
     fun toCalendarItem(): CalendarItem {
         return CalendarItem(
                 id ?: "", status ?: "", url ?: "", title,
-                description ?: "", getStartTimeInDeviceTimezone(),
-                getEndTimeInDeviceTimezone(), Utils.stripHtml(location ?: ""), false
+                description ?: "", getStartTimeInDeviceTimezone() ?: DateTime(),
+                getEndTimeInDeviceTimezone() ?: DateTime(), Utils.stripHtml(location ?: ""), false
         )
     }
 
@@ -74,8 +74,8 @@ data class Event(
      *
      * @return The event's startTime in the user's current timezone
      */
-    fun getStartTimeInDeviceTimezone(): DateTime {
-        return LocalDateTime(startTime, tzGer).toDateTime(DateTimeZone.getDefault())
+    fun getStartTimeInDeviceTimezone(): DateTime? {
+        return startTime?.withZoneRetainFields(tzGer)?.withZone(DateTimeZone.getDefault())
     }
 
     /**
@@ -84,7 +84,7 @@ data class Event(
      *
      * @return The event's endTime in the user's current timezone
      */
-    fun getEndTimeInDeviceTimezone(): DateTime {
-        return LocalDateTime(endTime, tzGer).toDateTime(DateTimeZone.getDefault())
+    fun getEndTimeInDeviceTimezone(): DateTime? {
+        return endTime?.withZoneRetainFields(tzGer)?.withZone(DateTimeZone.getDefault())
     }
 }
