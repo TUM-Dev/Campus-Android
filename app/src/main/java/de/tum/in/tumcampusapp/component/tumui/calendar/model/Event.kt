@@ -33,20 +33,16 @@ data class Event(
     val isFutureEvent: Boolean
         get() = startTime?.isAfterNow ?: false
 
+    private val tzGer = DateTimeZone.forID("Europe/Berlin")
+
     /**
      * Retrieve related values for calendar item as CalendarItem object
      */
     fun toCalendarItem(): CalendarItem {
-        // If the device is in a different timezone, map the event start and endTimes to the correct timezone
-        // This is done anytime the event is fetched in order for it to be displayed in the calendar
-        val tzGer = DateTimeZone.forID("Europe/Berlin")
-        val startInDeviceLocation = LocalDateTime(startTime, tzGer).toDateTime(DateTimeZone.getDefault())
-        val endInDeviceLocation = LocalDateTime(endTime, tzGer).toDateTime(DateTimeZone.getDefault())
-
         return CalendarItem(
                 id ?: "", status ?: "", url ?: "", title,
-                description ?: "", startInDeviceLocation ?: DateTime(),
-                endInDeviceLocation ?: DateTime(), Utils.stripHtml(location ?: ""), false
+                description ?: "", getStartTimeInDeviceTimezone(),
+                getEndTimeInDeviceTimezone(), Utils.stripHtml(location ?: ""), false
         )
     }
 
@@ -70,5 +66,25 @@ data class Event(
 
         val notificationTime = startTime.minusMinutes(15)
         return FutureNotification(NotificationType.CALENDAR, id.toInt(), notification, notificationTime)
+    }
+
+    /**
+     * If the device is in a different timezone than the german one, this method can be used to
+     * map the event startTime to the user's timezone
+     *
+     * @return The event's startTime in the user's current timezone
+     */
+    fun getStartTimeInDeviceTimezone(): DateTime {
+        return LocalDateTime(startTime, tzGer).toDateTime(DateTimeZone.getDefault())
+    }
+
+    /**
+     * If the device is in a different timezone than the german one, this method can be used to
+     * map the event endTime to the user's timezone
+     *
+     * @return The event's endTime in the user's current timezone
+     */
+    fun getEndTimeInDeviceTimezone(): DateTime {
+        return LocalDateTime(endTime, tzGer).toDateTime(DateTimeZone.getDefault())
     }
 }
