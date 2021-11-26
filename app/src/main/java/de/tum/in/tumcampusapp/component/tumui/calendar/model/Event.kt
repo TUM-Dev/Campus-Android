@@ -47,12 +47,15 @@ data class Event(
     }
 
     fun toNotification(context: Context): FutureNotification? {
-        if (id == null || startTime == null || endTime == null) {
+        val startTimeInDeviceTimeZone = getStartTimeInDeviceTimezone()
+        val endTimeInDeviceTimeZone = getStartTimeInDeviceTimezone()
+
+        if (id == null || startTimeInDeviceTimeZone == null || endTimeInDeviceTimeZone == null) {
             return null
         }
 
-        val timestamp = DateTimeUtils.formatFutureTime(startTime, context)
-        val duration = endTime.millis - startTime.millis
+        val timestamp = DateTimeUtils.formatFutureTime(startTimeInDeviceTimeZone, context)
+        val duration = endTimeInDeviceTimeZone.millis - startTimeInDeviceTimeZone.millis
 
         val notification = NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
                 .setContentTitle(title)
@@ -64,7 +67,7 @@ data class Event(
                 .setTimeoutAfter(duration)
                 .build()
 
-        val notificationTime = startTime.minusMinutes(15)
+        val notificationTime = startTimeInDeviceTimeZone.minusMinutes(15)
         return FutureNotification(NotificationType.CALENDAR, id.toInt(), notification, notificationTime)
     }
 
@@ -74,7 +77,7 @@ data class Event(
      *
      * @return The event's startTime in the user's current timezone
      */
-    fun getStartTimeInDeviceTimezone(): DateTime? {
+    private fun getStartTimeInDeviceTimezone(): DateTime? {
         return startTime?.withZoneRetainFields(tzGer)?.withZone(DateTimeZone.getDefault())
     }
 
@@ -84,7 +87,7 @@ data class Event(
      *
      * @return The event's endTime in the user's current timezone
      */
-    fun getEndTimeInDeviceTimezone(): DateTime? {
+    private fun getEndTimeInDeviceTimezone(): DateTime? {
         return endTime?.withZoneRetainFields(tzGer)?.withZone(DateTimeZone.getDefault())
     }
 }
