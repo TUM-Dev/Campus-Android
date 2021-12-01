@@ -4,7 +4,7 @@ plugins {
 // apply plugin: "io.gitlab.arturbosch.detekt"
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.protobuf'
+//apply plugin: 'com.google.protobuf'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
@@ -104,15 +104,17 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
 
     // Android arch components
-    implementation 'androidx.room:room-rxjava2:2.4.0-beta02'
-    implementation 'androidx.room:room-runtime:2.4.0-beta02'
+    implementation "androidx.room:room-rxjava2:$room_version"
+    implementation "androidx.room:room-runtime:$room_version"
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'android.arch.lifecycle:reactivestreams:1.1.1'
     implementation 'android.arch.work:work-runtime-ktx:1.0.1'
-    implementation 'androidx.appcompat:appcompat:1.4.0'
+    // Note: Appcompat 1.4 breaks sandwich menu injected into toolbar by DrawerLayout
+    // upgrading this and or androidx.fragment:fragment-ktx will break the toolbar
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     kapt 'androidx.lifecycle:lifecycle-compiler:2.4.0'
-    kapt 'androidx.room:room-compiler:2.4.0-beta02'
+    kapt "androidx.room:room-compiler:$room_version"
 
     // Play services
     implementation 'com.google.android.gms:play-services-base:17.6.0'
@@ -141,7 +143,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.anko:anko:0.10.8"
     implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.fragment:fragment-ktx:1.4.0'
+    // Note: upgrading this and or androidx.appcompat:appcompat will break the toolbar
+    implementation 'androidx.fragment:fragment-ktx:1.2.5'
 
     // RxJava
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
@@ -186,7 +189,7 @@ dependencies {
     testImplementation 'junit:junit:4.13'
     testImplementation 'org.mockito:mockito-core:3.5.11'
     testImplementation 'org.assertj:assertj-core:3.17.1'
-    testImplementation 'androidx.room:room-testing:2.4.0-beta02'
+    testImplementation "androidx.room:room-testing:$room_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 
     testImplementation 'com.android.support.test:rules:1.0.2'
@@ -203,10 +206,10 @@ dependencies {
     implementation 'io.grpc:grpc-protobuf-lite:1.25.0' // CURRENT_GRPC_VERSION
     implementation 'io.grpc:grpc-stub:1.25.0' // CURRENT_GRPC_VERSION
     implementation 'javax.annotation:javax.annotation-api:1.3.2'
-    protobuf 'com.google.protobuf:protobuf-java:3.10.0'
+    //protobuf 'com.google.protobuf:protobuf-java:3.10.0'
 }
 
-protobuf {
+/*protobuf {
     protoc { artifact = 'com.google.protobuf:protoc:3.10.0' }
     plugins {
         javalite { artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0" }
@@ -223,6 +226,6 @@ protobuf {
             }
         }
     }
-}
+}*/
 
 apply plugin: 'com.google.gms.google-services'
