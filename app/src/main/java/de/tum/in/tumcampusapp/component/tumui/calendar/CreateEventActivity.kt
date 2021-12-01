@@ -365,9 +365,11 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         if (apiCallsFetched == events.size) {
             setResult(Activity.RESULT_OK)
             finish()
+            return
         }
         if (apiCallsFetched + apiCallsFailed == events.size) {
             finishWithError()
+            return
         }
     }
 
