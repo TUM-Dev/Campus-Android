@@ -1,9 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Ticket
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.TicketInfo
 
@@ -13,6 +10,9 @@ interface TicketDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(vararg ticket: Ticket)
 
+    // TODO Room behaviour changed, complaining about this query
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Transaction
     @Query("SELECT count(*) as count, t.*, tt.* FROM tickets t, ticket_types tt " +
             "WHERE t.event_id = :eventId " +
             "AND t.ticket_type_id = tt.id " +
