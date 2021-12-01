@@ -10,6 +10,7 @@ interface TicketDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(vararg ticket: Ticket)
 
+    // TODO Room behaviour changed, complaining about this query
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Transaction
     @Query("SELECT count(*) as count, t.*, tt.* FROM tickets t, ticket_types tt " +
