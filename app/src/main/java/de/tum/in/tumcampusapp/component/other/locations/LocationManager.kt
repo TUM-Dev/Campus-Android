@@ -153,12 +153,11 @@ class LocationManager @Inject constructor(c: Context) {
 
         // Try to find favorite station for current campus
         val station = Utils.getSetting(mContext, "card_stations_default_" + campus.short, "")
-        if ("".equals(station)) {
+        if (station.isNotEmpty()) {
             Stations.values().associateBy(Stations::station).values.find {
                 it.station.station == station
             }?.let { return it.station }
         }
-
         // Otherwise fallback to the default
         return campus.defaultStation.station
     }
