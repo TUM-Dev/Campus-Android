@@ -15,11 +15,13 @@ class MVVCardViewHolder(
 
     fun bind(station: StationResult, departures: List<Departure>) {
         with(itemView) {
-            stationNameTextView.text = station.station
-
             val controller = TransportController(context)
             val items = min(departures.size, 5)
 
+            if(stationNameTextView.text != station.station){
+                stationNameTextView.text = station.station
+                contentContainerLayout.removeAllViews()
+            }
             if (contentContainerLayout.childCount == 0) {
                 departures.asSequence()
                         .take(items)
