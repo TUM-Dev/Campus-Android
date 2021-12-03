@@ -131,7 +131,7 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
     override fun onDownloadSuccessful(response: EventsResponse) {
         isFetched = true
 
-        var events = response.events ?: return
+        val events = response.events ?: return
         scheduleNotifications(events)
 
         compositeDisposable += Completable
