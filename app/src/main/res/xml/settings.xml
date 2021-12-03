@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:key="cards_pref_container">
 
     <androidx.preference.PreferenceCategory android:title="@string/appearance">
@@ -145,42 +144,42 @@
 
         <!-- MVV card-->
         <androidx.preference.PreferenceScreen
-            app:icon="@drawable/ic_outline_train_24px"
-            app:key="card_mvv"
-            app:summary="@string/card_mvv_summary"
-            app:title="@string/mvv">
+            android:icon="@drawable/ic_outline_train_24px"
+            android:key="card_mvv"
+            android:summary="@string/card_mvv_summary"
+            android:title="@string/mvv">
 
-            <androidx.preference.PreferenceCategory app:title="@string/display">
+            <androidx.preference.PreferenceCategory android:title="@string/display">
 
                 <androidx.preference.CheckBoxPreference
-                    app:defaultValue="true"
-                    app:key="card_mvv_start"
-                    app:title="@string/startpage" />
+                    android:defaultValue="true"
+                    android:key="card_mvv_start"
+                    android:title="@string/startpage" />
 
             </androidx.preference.PreferenceCategory>
 
-            <androidx.preference.PreferenceCategory app:title="@string/default_station">
+            <androidx.preference.PreferenceCategory android:title="@string/default_station">
 
                 <androidx.preference.ListPreference
-                    app:defaultValue="Garching-Forschungszentrum"
-                    app:entries="@array/stations_G"
-                    app:entryValues="@array/stations_G"
-                    app:key="card_stations_default_G"
-                    app:title="@string/campus_garching" />
+                    android:defaultValue="Garching-Forschungszentrum"
+                    android:entries="@array/stations_G"
+                    android:entryValues="@array/stations_G"
+                    android:key="card_stations_default_G"
+                    android:title="@string/campus_garching" />
 
                 <androidx.preference.ListPreference
-                    app:defaultValue="Theresienstraße"
-                    app:entries="@array/stations_C"
-                    app:entryValues="@array/stations_C"
-                    app:key="card_stations_default_C"
-                    app:title="@string/campus_main" />
+                    android:defaultValue="Theresienstraße"
+                    android:entries="@array/stations_C"
+                    android:entryValues="@array/stations_C"
+                    android:key="card_stations_default_C"
+                    android:title="@string/campus_main" />
 
                 <androidx.preference.ListPreference
-                    app:defaultValue="Klinikum Großhadern"
-                    app:entries="@array/stations_K"
-                    app:entryValues="@array/stations_K"
-                    app:key="card_stations_default_K"
-                    app:title="@string/campus_klinikum_großhadern" />
+                    android:defaultValue="Klinikum Großhadern"
+                    android:entries="@array/stations_K"
+                    android:entryValues="@array/stations_K"
+                    android:key="card_stations_default_K"
+                    android:title="@string/campus_klinikum_großhadern" />
 
             </androidx.preference.PreferenceCategory>
 
@@ -381,7 +380,7 @@
             android:key="employee_mode"
             android:summary="@string/employee_mode_info"
             android:title="@string/employee_mode" />
-        <androidx.preference.Preference
+        <androidx.preference.Preferenced
             android:icon="@drawable/ic_outline_exit_to_app_24px"
             android:key="button_logout"
             android:title="@string/logout" />
