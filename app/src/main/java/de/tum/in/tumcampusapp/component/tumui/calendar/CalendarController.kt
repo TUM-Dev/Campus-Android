@@ -199,7 +199,7 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
         return results
     }
 
-    override fun hasNotificationsEnabled() = Utils.getSettingBool(context, "card_next_phone", false)
+    override fun hasNotificationsEnabled() = Utils.getSettingBool(context, "card_next_lecture_phone", false)
 
     companion object {
 

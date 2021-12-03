@@ -37,9 +37,7 @@ import kotlinx.android.synthetic.main.fragment_calendar.todayButton
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
-import java.util.ArrayList
-import java.util.Calendar
-import java.util.Locale
+import java.util.*
 
 class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
         R.layout.fragment_calendar,
@@ -106,7 +104,6 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
         isWeekMode = Utils.getSettingBool(requireContext(), Const.CALENDAR_WEEK_MODE, false)
 
         disableRefresh()
-        loadEvents(CacheControl.USE_CACHE)
 
         // Tracks whether the user has used the calendar module before. This is used in determining when to prompt for a
         // Google Play store review
@@ -116,6 +113,10 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
     override fun onStart() {
         super.onStart()
         refreshWeekView()
+
+        // In case the timezone changes when reopening the calendar, while the app is still open, this ensures
+        // that the lectures are still adjusted to the new timezone
+        loadEvents(CacheControl.BYPASS_CACHE)
     }
 
     override fun onRefresh() {

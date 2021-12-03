@@ -14,6 +14,8 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
+import org.joda.time.LocalDateTime
 
 @Xml(name = "event")
 data class Event(
@@ -31,24 +33,29 @@ data class Event(
     val isFutureEvent: Boolean
         get() = startTime?.isAfterNow ?: false
 
+    private val tzGer = DateTimeZone.forID("Europe/Berlin")
+
     /**
      * Retrieve related values for calendar item as CalendarItem object
      */
     fun toCalendarItem(): CalendarItem {
         return CalendarItem(
                 id ?: "", status ?: "", url ?: "", title,
-                description ?: "", startTime ?: DateTime(),
-                endTime ?: DateTime(), Utils.stripHtml(location ?: ""), false
+                description ?: "", getStartTimeInDeviceTimezone() ?: DateTime(),
+                getEndTimeInDeviceTimezone() ?: DateTime(), Utils.stripHtml(location ?: ""), false
         )
     }
 
     fun toNotification(context: Context): FutureNotification? {
-        if (id == null || startTime == null || endTime == null) {
+        val startTimeInDeviceTimeZone = getStartTimeInDeviceTimezone()
+        val endTimeInDeviceTimeZone = getStartTimeInDeviceTimezone()
+
+        if (id == null || startTimeInDeviceTimeZone == null || endTimeInDeviceTimeZone == null) {
             return null
         }
 
-        val timestamp = DateTimeUtils.formatFutureTime(startTime, context)
-        val duration = endTime.millis - startTime.millis
+        val timestamp = DateTimeUtils.formatFutureTime(startTimeInDeviceTimeZone, context)
+        val duration = endTimeInDeviceTimeZone.millis - startTimeInDeviceTimeZone.millis
 
         val notification = NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
                 .setContentTitle(title)
@@ -60,7 +67,27 @@ data class Event(
                 .setTimeoutAfter(duration)
                 .build()
 
-        val notificationTime = startTime.minusMinutes(15)
+        val notificationTime = startTimeInDeviceTimeZone.minusMinutes(15)
         return FutureNotification(NotificationType.CALENDAR, id.toInt(), notification, notificationTime)
+    }
+
+    /**
+     * If the device is in a different timezone than the german one, this method can be used to
+     * map the event startTime to the user's timezone
+     *
+     * @return The event's startTime in the user's current timezone
+     */
+    private fun getStartTimeInDeviceTimezone(): DateTime? {
+        return startTime?.withZoneRetainFields(tzGer)?.withZone(DateTimeZone.getDefault())
+    }
+
+    /**
+     * If the device is in a different timezone than the german one, this method can be used to
+     * map the event endTime to the user's timezone
+     *
+     * @return The event's endTime in the user's current timezone
+     */
+    private fun getEndTimeInDeviceTimezone(): DateTime? {
+        return endTime?.withZoneRetainFields(tzGer)?.withZone(DateTimeZone.getDefault())
     }
 }
