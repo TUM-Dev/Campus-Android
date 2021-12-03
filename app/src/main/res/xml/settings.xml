@@ -380,7 +380,7 @@
             android:key="employee_mode"
             android:summary="@string/employee_mode_info"
             android:title="@string/employee_mode" />
-        <androidx.preference.Preferenced
+        <androidx.preference.Preference
             android:icon="@drawable/ic_outline_exit_to_app_24px"
             android:key="button_logout"
             android:title="@string/logout" />
