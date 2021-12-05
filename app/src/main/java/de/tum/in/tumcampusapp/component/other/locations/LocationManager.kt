@@ -288,6 +288,10 @@ class LocationManager @Inject constructor(c: Context) {
     private fun fetchRoomGeo(archId: String): Geo? {
         return try {
             val coordinate = TUMCabeClient.getInstance(mContext).fetchCoordinates(archId)
+            if (coordinate.error.isNotEmpty()) {
+                Utils.log("Coordinate api error: " + coordinate.error)
+                return null
+            }
             coordinate?.let { convertRoomFinderCoordinateToGeo(it) }
         } catch (e: IOException) {
             Utils.log(e)

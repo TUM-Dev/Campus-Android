@@ -295,7 +295,7 @@ public final class TUMCabeClient {
     }
 
     public Call<RoomFinderCoordinate> fetchRoomFinderCoordinates(String archId) {
-        return service.fetchCoordinates(ApiHelper.encodeUrl(archId));
+        return service.fetchCoordinates(archId);
     }
 
     @Nullable
