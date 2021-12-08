@@ -4,12 +4,12 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
+import android.location.LocationListener
 import android.preference.PreferenceManager
 import androidx.core.content.ContextCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
-import de.tum.`in`.tumcampusapp.api.navigatum.NavigaTumAPIClient
 import de.tum.`in`.tumcampusapp.component.other.locations.model.BuildingToGps
 import de.tum.`in`.tumcampusapp.component.other.locations.model.Geo
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
@@ -21,14 +21,10 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.tryOrNull
 import org.jetbrains.anko.doAsync
+import java.io.IOException
 import java.lang.Double.parseDouble
 import java.util.*
 import javax.inject.Inject
-import kotlin.math.sqrt
-import kotlin.math.tan
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.pow
 
 /**
  * Location manager, manages intelligent location services, provides methods to easily access
@@ -37,6 +33,8 @@ import kotlin.math.pow
 class LocationManager @Inject constructor(c: Context) {
     private val mContext: Context = c.applicationContext
     private val buildingToGpsDao: BuildingToGpsDao
+    private var manager: android.location.LocationManager? = null
+    private val db = TcaDb.getInstance(c)
 
     init {
         val db = TcaDb.getInstance(c)
@@ -113,7 +111,7 @@ class LocationManager @Inject constructor(c: Context) {
      *
      * @return The last location
      */
-    private fun getLastLocation(): Location? {
+    fun getLastLocation(): Location? {
         // Check Location permission for Android 6.0
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return null
@@ -245,14 +243,61 @@ class LocationManager @Inject constructor(c: Context) {
     }
 
     /**
+     * This might be battery draining
+     *
+     * @return false if permission check fails
+     */
+    fun getLocationUpdates(locationListener: LocationListener): Boolean {
+        // Check Location permission for Android 6.0
+        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return false
+        }
+
+        // Acquire a reference to the system Location Manager
+        if (manager == null) {
+            manager = mContext.getSystemService(Context.LOCATION_SERVICE) as android.location.LocationManager
+        }
+        // Register the listener with the Location Manager to receive location updates
+        manager!!.requestLocationUpdates(android.location.LocationManager.GPS_PROVIDER, 1000, 1f, locationListener)
+        manager!!.requestLocationUpdates(android.location.LocationManager.NETWORK_PROVIDER, 1000, 1f, locationListener)
+        return true
+    }
+
+    fun stopReceivingUpdates(locationListener: LocationListener) {
+        if (manager != null) {
+            manager!!.removeUpdates(locationListener)
+        }
+    }
+
+    /**
      * Checks that Google Play services are available
      */
     private fun servicesConnected(): Boolean {
         val resultCode = GoogleApiAvailability.getInstance()
-            .isGooglePlayServicesAvailable(mContext) == ConnectionResult.SUCCESS
+                .isGooglePlayServicesAvailable(mContext) == ConnectionResult.SUCCESS
 
         Utils.log("Google Play services is $resultCode")
         return resultCode
+    }
+
+    /**
+     * Get the geo information for a room
+     *
+     * @param archId arch_id of the room
+     * @return Location or null on failure
+     */
+    private fun fetchRoomGeo(archId: String): Geo? {
+        return try {
+            val coordinate = TUMCabeClient.getInstance(mContext).fetchCoordinates(archId)
+            if (coordinate.error.isNotEmpty()) {
+                Utils.log("Coordinate api error: " + coordinate.error)
+                return null
+            }
+            coordinate?.let { convertRoomFinderCoordinateToGeo(it) }
+        } catch (e: IOException) {
+            Utils.log(e)
+            null
+        }
     }
 
     /**
@@ -266,21 +311,16 @@ class LocationManager @Inject constructor(c: Context) {
         var loc = roomTitle
         if (loc.contains("(")) {
             loc = loc.substring(0, loc.indexOf('('))
-                .trim { it <= ' ' }
+                    .trim { it <= ' ' }
         }
 
         try {
-            val searchResult = NavigaTumAPIClient.getInstance(mContext).search(loc)
-            var geo: Geo? = null
-            if (searchResult != null && searchResult.sections.isNotEmpty() && searchResult.sections[0].entries.isNotEmpty()) {
-                val location = searchResult.sections[0].entries[0].id
-                // The language does not matter, as we only use the geo information from this request
-                val locationDetails = NavigaTumAPIClient.getInstance(mContext).getNavigationDetails(location, "de")
-                locationDetails?.let {
-                    geo = locationDetails.geo
-                }
+            val rooms = TUMCabeClient.getInstance(mContext).fetchRooms(loc)
+
+            if (rooms != null && !rooms.isEmpty()) {
+                val room = rooms[0].arch_id
+                return fetchRoomGeo(room)
             }
-            return geo
         } catch (e: Exception) {
             Utils.log(e)
         }
@@ -390,21 +430,21 @@ class LocationManager @Inject constructor(c: Context) {
             val d = 0.99960000000000004
             val d1 = 6378137
             val d2 = 0.0066943799999999998
-            val d4 = (1 - sqrt(1 - d2)) / (1 + sqrt(1 - d2))
+            val d4 = (1 - Math.sqrt(1 - d2)) / (1 + Math.sqrt(1 - d2))
             val d15 = east - 500000
             val d11 = (zone - 1) * 6 - 180 + 3
             val d3 = d2 / (1 - d2)
             val d10 = north / d
-            val d12 = d10 / (d1 * (1 - d2 / 4 - (3 * d2 * d2) / 64 - (5 * d2.pow(3.0)) / 256))
-            val d14 = d12 + ((3 * d4) / 2 - (27 * d4.pow(3.0)) / 32) * sin(2 * d12) + ((21 * d4 * d4) / 16 - (55 * d4.pow(4.0)) / 32) * sin(4 * d12) + ((151 * d4.pow(3.0)) / 96) * sin(6 * d12)
-            val d5 = d1 / sqrt(1 - d2 * sin(d14) * sin(d14))
-            val d6 = tan(d14) * tan(d14)
-            val d7 = d3 * cos(d14) * cos(d14)
-            val d8 = (d1 * (1 - d2)) / (1 - d2 * sin(d14) * sin(d14)).pow(1.5)
+            val d12 = d10 / (d1 * (1 - d2 / 4 - (3 * d2 * d2) / 64 - (5 * Math.pow(d2, 3.0)) / 256))
+            val d14 = d12 + ((3 * d4) / 2 - (27 * Math.pow(d4, 3.0)) / 32) * Math.sin(2 * d12) + ((21 * d4 * d4) / 16 - (55 * Math.pow(d4, 4.0)) / 32) * Math.sin(4 * d12) + ((151 * Math.pow(d4, 3.0)) / 96) * Math.sin(6 * d12)
+            val d5 = d1 / Math.sqrt(1 - d2 * Math.sin(d14) * Math.sin(d14))
+            val d6 = Math.tan(d14) * Math.tan(d14)
+            val d7 = d3 * Math.cos(d14) * Math.cos(d14)
+            val d8 = (d1 * (1 - d2)) / Math.pow(1 - d2 * Math.sin(d14) * Math.sin(d14), 1.5)
             val d9 = d15 / (d5 * d)
-            var d17 = d14 - ((d5 * tan(d14)) / d8) * ((d9 * d9) / 2 - ((5 + 3 * d6 + 10 * d7 - 4 * d7 * d7 - 9 * d3) * d9.pow(4.0)) / 24 + ((61 + 90 * d6 + 298 * d7 + 45 * d6 * d6 - 252 * d3 - 3 * d7 * d7) * d9.pow(6.0)) / 720)
+            var d17 = d14 - ((d5 * Math.tan(d14)) / d8) * ((d9 * d9) / 2 - ((5 + 3 * d6 + 10 * d7 - 4 * d7 * d7 - 9 * d3) * Math.pow(d9, 4.0)) / 24 + ((61 + 90 * d6 + 298 * d7 + 45 * d6 * d6 - 252 * d3 - 3 * d7 * d7) * Math.pow(d9, 6.0)) / 720)
             d17 *= 180 / Math.PI
-            var d18 = (d9 - ((1 + 2 * d6 + d7) * d9.pow(3.0)) / 6 + ((5 - 2 * d7 + 28 * d6 - 3 * d7 * d7 + 8 * d3 + 24 * d6 * d6) * d9.pow(5.0)) / 120) / cos(d14)
+            var d18 = (d9 - ((1 + 2 * d6 + d7) * Math.pow(d9, 3.0)) / 6 + ((5 - 2 * d7 + 28 * d6 - 3 * d7 * d7 + 8 * d3 + 24 * d6 * d6) * Math.pow(d9, 5.0)) / 120) / Math.cos(d14)
             d18 = d11 + d18 * 180 / Math.PI
             return Geo(d17, d18)
         }

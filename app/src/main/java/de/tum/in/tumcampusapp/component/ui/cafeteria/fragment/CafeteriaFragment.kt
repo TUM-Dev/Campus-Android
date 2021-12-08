@@ -115,6 +115,11 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
 
     private fun onNewCafeteriaSelected(cafeteria: Cafeteria) {
         sectionsPagerAdapter.setCafeteriaId(cafeteria.id)
+
+        if(cafeteriaViewModel.menuDates.value == null || cafeteriaViewModel.menuDates.value!!.isEmpty()) {
+            cafeteriaViewModel.initializeMenuDatesWithCurrentDate()
+        }
+
         cafeteriaViewModel.fetchMenuDates()
     }
 
@@ -129,7 +134,7 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
             cafeteriaId = intent.getIntExtra(Const.CAFETERIA_ID, 0)
         } else {
             // If we're not provided with a cafeteria ID, we choose the best matching cafeteria.
-            cafeteriaId = cafeteriaManager.bestMatchMensaId
+            cafeteriaId = cafeteriaManager.bestMatchCafeteriaId
         }
 
         updateCafeteriaSpinner(cafeteriaId)
@@ -144,6 +149,7 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
                 selectedIndex = index
                 break
             }
+            selectedIndex = index
         }
 
         if (selectedIndex != NONE_SELECTED) {

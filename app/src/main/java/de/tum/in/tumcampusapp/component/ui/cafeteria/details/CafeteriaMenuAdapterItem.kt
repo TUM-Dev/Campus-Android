@@ -23,7 +23,7 @@ sealed class CafeteriaMenuAdapterItem {
     data class Header(val menu: CafeteriaMenu) : CafeteriaMenuAdapterItem() {
 
         override val id: String
-            get() = "header_${menu.id}"
+            get() = "header_${menu.menuId}"
 
         override fun bind(
             holder: CafeteriaMenusAdapter.ViewHolder,
@@ -31,21 +31,21 @@ sealed class CafeteriaMenuAdapterItem {
         ) = with(holder.itemView) {
             val headerTextView = findViewById<TextView>(R.id.headerTextView)
 
-            headerTextView.text = menu.typeLong.replace("[0-9]", "").trim()
+            headerTextView.text = menu.dishType.replace("[0-9]", "").trim()
             setOnClickListener { listener?.invoke() }
         }
     }
 
     data class Item(
-        val menu: CafeteriaMenu,
-        val isFavorite: Boolean = false,
-        val rolePrice: String? = null,
-        val isBigLayout: Boolean,
-        val favoriteDishDao: FavoriteDishDao
+            val menu: CafeteriaMenu,
+            val isFavorite: Boolean = false,
+            val rolePrice: String? = null,
+            val isBigLayout: Boolean,
+            val favoriteDishDao: FavoriteDishDao
     ) : CafeteriaMenuAdapterItem() {
 
         override val id: String
-            get() = "item_${menu.id}"
+            get() = "item_${menu.menuId}"
 
         override fun bind(
             holder: CafeteriaMenusAdapter.ViewHolder,
@@ -78,7 +78,7 @@ sealed class CafeteriaMenuAdapterItem {
                     favoriteDishDao.insertFavouriteDish(FavoriteDish.create(menu, date))
                     view.isSelected = true
                 } else {
-                    favoriteDishDao.deleteFavoriteDish(menu.cafeteriaId, menu.name)
+                    //favoriteDishDao.deleteFavoriteDish(menu.cafeteriaId, menu.name)
                     view.isSelected = false
                 }
             }

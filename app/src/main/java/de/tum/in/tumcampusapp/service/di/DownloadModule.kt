@@ -41,9 +41,8 @@ object DownloadModule {
     @JvmStatic
     @Provides
     fun provideCafeteriaDownloadAction(
-        menuManager: CafeteriaMenuManager,
         remoteRepository: CafeteriaRemoteRepository
-    ): CafeteriaDownloadAction = CafeteriaDownloadAction(menuManager, remoteRepository)
+    ): CafeteriaDownloadAction = CafeteriaDownloadAction(remoteRepository)
 
     @JvmStatic
     @Provides

@@ -3,6 +3,7 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria.details
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.PagerAdapter
+import de.tum.`in`.tumcampusapp.utils.Const
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
@@ -15,7 +16,7 @@ import kotlin.collections.ArrayList
  */
 class CafeteriaDetailsSectionsPagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager) {
 
-    private var cafeteriaId: Int = 0
+    private var cafeteriaId: Int = Const.NO_CAFETERIA_FOUND
     private var dates: List<DateTime> = ArrayList()
     private val formatter: DateTimeFormatter = DateTimeFormat.fullDate()
 
@@ -34,7 +35,7 @@ class CafeteriaDetailsSectionsPagerAdapter(fragmentManager: FragmentManager) : F
         CafeteriaDetailsSectionFragment.newInstance(cafeteriaId, dates[position])
 
     override fun getPageTitle(position: Int) =
-            formatter.print(dates[position]).uppercase(Locale.getDefault())
+        formatter.print(dates[position]).uppercase(Locale.getDefault())
 
     override fun getItemPosition(`object`: Any): Int = PagerAdapter.POSITION_NONE
 }

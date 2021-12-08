@@ -12,8 +12,11 @@ interface CafeteriaDao {
     @get:Query("SELECT * FROM cafeteria")
     val all: Flowable<List<Cafeteria>>
 
-    @Query("SELECT * FROM cafeteria WHERE id = :id")
-    fun getById(id: Int): Cafeteria?
+    /**
+     * @param cafeteriaId A valid cafeteriaId, generated via the CafeteriaLocation enum.
+     */
+    @Query("SELECT * FROM cafeteria WHERE id = :cafeteriaId")
+    fun getById(cafeteriaId: Int): Cafeteria?
 
     @Query("DELETE FROM cafeteria")
     fun removeCache()
@@ -21,6 +24,23 @@ interface CafeteriaDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(cafeterias: List<Cafeteria>)
 
-    @Query("SELECT name FROM cafeteria WHERE id = :id")
-    fun getMensaNameFromId(id: Int): String
+    /**
+     * @param cafeteriaId A valid cafeteriaId, generated via the CafeteriaLocation enum.
+     */
+    @Query("SELECT name FROM cafeteria WHERE id = :cafeteriaId")
+    fun getMensaNameFromId(cafeteriaId: Int): String
+
+    /***
+     * @param cafeteriaSlug the cafeteria for which the id is needed
+     * @return the 'id' corresponding to the provided cafeteriaSlug
+     */
+    @Query("SELECT id FROM cafeteria WHERE slug = :cafeteriaSlug")
+    fun getIdFrom(cafeteriaSlug: String): Int
+
+    /**
+     * @param cafeteriaId the cafeteria for which the slug is needed
+     * @return the 'slug' (e.g: 'mensa-garching') corresponding to the provided cafeteriaId
+     */
+    @Query("SELECT slug FROM cafeteria WHERE id = :cafeteriaId")
+    fun getSlugFrom(cafeteriaId: Int): String
 }

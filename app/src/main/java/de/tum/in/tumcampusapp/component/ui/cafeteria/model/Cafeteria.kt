@@ -3,11 +3,13 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.RoomWarnings
+import com.google.gson.annotations.SerializedName
 
 /**
  * new Cafeteria
  *
- * @param id Cafeteria ID, e.g. 412
+ * @param id Cafeteria ID, e.g. mensa-garching
+ * @param slug cafeteria string identification slug e.g.: "mensa-garching"
  * @param name Name, e.g. MensaX
  * @param address Address, e.g. Boltzmannstr. 3
  * @param latitude Coordinates of the cafeteria
@@ -16,12 +18,13 @@ import androidx.room.RoomWarnings
 @Entity
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
 data class Cafeteria(
-    @field:PrimaryKey
-    var id: Int = -1,
-    var name: String = "",
-    var address: String = "",
-    var latitude: Double = -1.0,
-    var longitude: Double = -1.0
+        @PrimaryKey
+        var id: Int = 0,
+        var slug: String = "",
+        var name: String = "",
+        var address: String = "",
+        var latitude: Double = -1.0,
+        var longitude: Double = -1.0
 ) : Comparable<Cafeteria> {
 
     // Used for ordering cafeterias

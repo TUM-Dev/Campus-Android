@@ -49,7 +49,7 @@ class CafeteriaMenusAdapter(
     fun update(menus: List<CafeteriaMenu>) {
         val newItems = menus
                 .filter(this::shouldShowMenu)
-                .splitOnChanged { it.typeLong }
+                .splitOnChanged { it.dishType }
                 .map(this::createAdapterItemsForSection)
                 .flatten()
 
@@ -64,23 +64,25 @@ class CafeteriaMenusAdapter(
     private fun shouldShowMenu(menu: CafeteriaMenu): Boolean {
         val shouldShowMenuType = Utils.getSettingBool(
                 context,
-                "card_cafeteria_${menu.typeShort}",
-                "tg" == menu.typeShort || "ae" == menu.typeShort
+                "card_cafeteria_${menu.dishType}",
+                true//"tg" == menu.typeShort || "ae" == menu.typeShort
+        // TODO look into fxing this properly
         )
         return shouldShowMenuType || isBigLayout
     }
 
     private fun createAdapterItemsForSection(
-        menus: List<CafeteriaMenu>
+            menus: List<CafeteriaMenu>
     ): List<CafeteriaMenuAdapterItem> {
         val header = CafeteriaMenuAdapterItem.Header(menus.first())
         val items = menus.map {
-            val rolePrice = rolePrices[it.typeLong]
+            // TODO pricing
+            val rolePrice = rolePrices[it.dishType]
             val isFavorite = dao.checkIfFavoriteDish(it.tag).isNotEmpty()
             CafeteriaMenuAdapterItem.Item(it, isFavorite, rolePrice, isBigLayout, dao)
         }
 
-        return if (header.menu.typeLong.isNotBlank()) listOf(header) + items else items
+        return if (header.menu.dishType.isNotBlank()) listOf(header) + items else items
     }
 
     override fun getItemViewType(position: Int): Int {

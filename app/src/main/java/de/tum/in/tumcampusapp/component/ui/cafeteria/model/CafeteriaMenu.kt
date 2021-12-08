@@ -11,45 +11,44 @@ import java.util.regex.Pattern
 /**
  * CafeteriaMenu
  *
- * @param id CafeteriaMenu Id (empty for addendum)
- * @param cafeteriaId Cafeteria ID
- * @param date Menu date
- * @param typeShort Short type, e.g. tg
- * @param typeLong Long type, e.g. Tagesgericht 1
- * @param typeNr Type ID
- * @param name Menu name
+ * @param menuId CafeteriaMenu Id (empty for addendum)
+ * @param cafeteriaId primary key of the associated cafeteria
+ * @param slug cafeteria string identification slug e.g.: "mensa-garching"
+ * @param date date on which the dish is served
+ * @param dishType
+ * @param name
+ * @param labels Labels describing the dish. Typically these are allergens.
+ * @param calendarWeek calendar week for the current year in which the dish is served
  */
 @Entity
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
 data class CafeteriaMenu(
     @PrimaryKey(autoGenerate = true)
-    @SerializedName("id")
-    var id: Int = 0,
-    @SerializedName("mensa_id")
-    var cafeteriaId: Int = -1,
+    @SerializedName("menuId")
+    var menuId: Int = 0,
+    @SerializedName("cafeteriaId")
+    var cafeteriaId: Int = 0,
+    @SerializedName("cafeteriaSlug")
+    var slug: String = "",
     @SerializedName("date")
     var date: DateTime? = null,
-    @SerializedName("type_short")
-    var typeShort: String = "",
-    @SerializedName("type_long")
-    var typeLong: String = "",
-        // If a menu does not have a type number, it is a
-        // side dish and is assigned type number 10
-    @SerializedName("type_nr")
-    var typeNr: Int = 10,
+    @SerializedName("dishType")
+    var dishType: String = "",
     @SerializedName("name")
-    var name: String = ""
+    var name: String = "",
+    @SerializedName("labels")
+    var labels: String = "",
+    @SerializedName("calendarWeek")
+    var calendarWeek: Int = -1
 ) {
-
-    private val formattedName: String
-        get() = REMOVE_PARENTHESES_PATTERN.matcher(name).replaceAll("").trim()
 
     val tag: String
         get() = "${name}__$cafeteriaId"
 
+    // TODO pricing, dishType enum, label enum?, mensa enum?
     val menuType: MenuType
         get() {
-            return when (typeShort) {
+            return when (dishType) {
                 "tg" -> MenuType.DAILY_SPECIAL
                 "ae" -> MenuType.DISCOUNTED_COURSE
                 "akt" -> MenuType.SPECIALS
@@ -61,42 +60,39 @@ data class CafeteriaMenu(
     val notificationTitle: String
         get() {
             return REMOVE_DISH_ENUMERATION_PATTERN
-                    .matcher(typeLong)
+                    .matcher(dishType)
                     .replaceAll("")
                     .trim()
         }
 
     fun getNotificationText(context: Context): String {
         val lines = getNotificationLines(context)
-        return if (menuType == MenuType.SPECIALS) {
+        return if (dishType == MenuType.SPECIALS.toString()) {
             lines.joinToString(", ")
         } else {
             lines.first()
         }
     }
 
-    fun getNotificationLines(context: Context): List<String> {
-        return if (menuType == MenuType.SPECIALS) {
+    private fun getNotificationLines(context: Context): List<String> {
+        return if (dishType == MenuType.SPECIALS.toString()) {
             // Returns a list of all specials
-            formattedName
+            name
                     .split("\n")
                     .map { it.trim() }
         } else {
             // Returns a list containing the dish name and the price
             val priceText = getPriceText(context)
-            listOfNotNull(formattedName, priceText)
+            listOfNotNull(name, priceText)
         }
     }
 
     private fun getPriceText(context: Context): String? {
         val rolePrices = CafeteriaPrices.getRolePrices(context)
-        val price = rolePrices[typeLong]
+        val price = rolePrices[dishType]
         return price?.run { "$this €" }
     }
-
     companion object {
-
-        private val REMOVE_PARENTHESES_PATTERN: Pattern = Pattern.compile("\\([^\\)]+\\)")
         private val REMOVE_DISH_ENUMERATION_PATTERN: Pattern = Pattern.compile("[0-9]")
     }
 }

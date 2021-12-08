@@ -21,12 +21,25 @@ interface CafeteriaMenuDao {
     fun insert(cafeteriaMenus: List<CafeteriaMenu>)
 
     @Query("SELECT strftime('%d-%m-%Y', date) FROM cafeteriaMenu " +
-            "WHERE date > date('now','localtime') AND cafeteriaId=:cafeteriaId AND name=:dishName " +
+            "WHERE date > date('now','localtime') AND cafeteriaId = :cafeteriaId AND name = :dishName " +
             "ORDER BY date ASC")
     fun getNextDatesForDish(cafeteriaId: Int, dishName: String): Flowable<List<String>>
 
-    @Query("SELECT id, cafeteriaId, date, typeShort, typeLong, 0 AS typeNr, group_concat(name, '\n') AS name FROM cafeteriaMenu " +
-            "WHERE cafeteriaId = :cafeteriaId AND date = :date " +
-            "GROUP BY typeLong ORDER BY typeShort=\"tg\" DESC, typeShort ASC, typeNr")
+    /**
+     * @param cafeteriaId the cafeteria for which dishes should be fetched (auto generated integer primary key)
+     * @param date the date for which dishes should be fetched.
+     * @return Any CafeteriaMenu items matching the criterion specified by the parameters
+     */
+    @Query("SELECT menuId, cafeteriaId, slug, date, dishType, name, labels, calendarWeek FROM cafeteriaMenu " +
+            "WHERE cafeteriaId = :cafeteriaId AND strftime('%d-%m-%Y', date) = strftime('%d-%m-%Y', :date)")
     fun getCafeteriaMenus(cafeteriaId: Int, date: DateTime): List<CafeteriaMenu>
+
+    /**
+     * @param cafeteriaId the cafeteria for which dishes should be fetched (auto generated integer primary key)
+     * @param date the date for which dishes should be fetched.
+     * @return The number of menus available in the local database for the provided params
+     */
+    @Query("SELECT COUNT(*) AS menus FROM CafeteriaMenu " +
+    "WHERE cafeteriaId = :cafeteriaId AND strftime('%d-%m-%Y', date) = strftime('%d-%m-%Y', :date)")
+    fun hasMenusFor(cafeteriaId: Int, date: DateTime): Int
 }

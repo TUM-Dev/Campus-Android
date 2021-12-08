@@ -1,19 +1,22 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller
 
 import android.content.Context
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.notifications.ProvidesNotifications
 import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaMenuCard
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaLocation
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.ProvidesCard
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
+import org.joda.time.DateTime
 import java.util.*
 import javax.inject.Inject
 
@@ -22,10 +25,12 @@ import javax.inject.Inject
  */
 class CafeteriaManager @Inject constructor(private val context: Context) : ProvidesCard, ProvidesNotifications {
     val localRepository: CafeteriaLocalRepository
+    val remoteRepository: CafeteriaRemoteRepository
 
     init {
         val db = TcaDb.getInstance(context)
         localRepository = CafeteriaLocalRepository(db)
+        remoteRepository = CafeteriaRemoteRepository(null, localRepository, db)
     }
 
     /**
@@ -34,14 +39,12 @@ class CafeteriaManager @Inject constructor(private val context: Context) : Provi
      */
     val bestMatchCafeteriaMenus: List<CafeteriaMenu>
         get() {
-            val cafeteriaId = bestMatchMensaId
-            return if (cafeteriaId == Const.NO_CAFETERIA_FOUND) {
-                emptyList()
-            } else getCafeteriaMenusByCafeteriaId(cafeteriaId)
+            val cafeteriaId = bestMatchCafeteriaId
+            return if (cafeteriaId == Const.NO_CAFETERIA_FOUND) emptyList() else getCafeteriaMenusByCafeteriaId(cafeteriaId)
         }
 
     // Choose which mensa should be shown
-    val bestMatchMensaId: Int
+    val bestMatchCafeteriaId: Int
         get() {
             val cafeteriaId = LocationManager(context).getCafeteria()
             if (cafeteriaId == Const.NO_CAFETERIA_FOUND) {
@@ -70,6 +73,14 @@ class CafeteriaManager @Inject constructor(private val context: Context) : Provi
                 // no cafeteria based on the location could be found
                 continue
             }
+
+            // TODO IF the CafeteriaFragment was not yet opened with
+            //  the cafeteria the card is attempting to display,
+            //  no menus will be available
+            //      => Somehow force DL here
+            if(localRepository.hasNoMenusFor(cafeteria, DateTime.now()))
+                remoteRepository.downloadRemoteMenus(cafeteria, DateTime.now(), context)
+
             val card = CafeteriaMenuCard(context, localRepository.getCafeteriaWithMenus(cafeteria))
             card.getIfShowOnStart()?.let {
                 results.add(it)

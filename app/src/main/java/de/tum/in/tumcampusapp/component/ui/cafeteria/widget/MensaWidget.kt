@@ -28,7 +28,7 @@ class MensaWidget : AppWidgetProvider() {
         val localRepository = CafeteriaLocalRepository(TcaDb.getInstance(context))
         val mensaManager = CafeteriaManager(context)
 
-        val cafeteriaId = mensaManager.bestMatchMensaId
+        val cafeteriaId = mensaManager.bestMatchCafeteriaId
         val cafeteria = localRepository.getCafeteriaWithMenus(cafeteriaId)
 
         for (appWidgetId in appWidgetIds) {
@@ -43,7 +43,7 @@ class MensaWidget : AppWidgetProvider() {
 
             // Set the header on click to open the mensa activity
             val mensaIntent = Intent(context, CafeteriaActivity::class.java).apply {
-                putExtra(Const.CAFETERIA_ID, mensaManager.bestMatchMensaId)
+                putExtra(Const.CAFETERIA_ID, mensaManager.bestMatchCafeteriaId)
             }
             val pendingIntent = PendingIntent.getActivity(context, appWidgetId, mensaIntent, FLAG_IMMUTABLE)
             remoteViews.setOnClickPendingIntent(R.id.mensa_widget_header_container, pendingIntent)

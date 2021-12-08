@@ -5,11 +5,10 @@ import de.tum.`in`.tumcampusapp.api.cafeteria.CafeteriaAPIClient
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
 import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaMenuDao
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaNotificationSettings
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.FavoriteDishDao
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.*
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaLocation
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaResponse
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization.CafeteriaResponse
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -33,42 +32,6 @@ constructor(private val context: Context) {
         val db = TcaDb.getInstance(context)
         menuDao = db.cafeteriaMenuDao()
         favoriteDishDao = db.favoriteDishDao()
-    }
-
-    /**
-     * Download cafeteria menus from external interface (JSON)
-     *
-     * @param cacheControl BYPASS_CACHE to force download over normal sync period, else false
-     */
-    fun downloadMenus(cacheControl: CacheControl) {
-        // Responses from the cafeteria API are cached for one day. If the download is forced,
-        // we add a "no-cache" header to the request.
-        CafeteriaAPIClient
-                .getInstance(context)
-                .getMenus(cacheControl)
-                .enqueue(object : Callback<CafeteriaResponse> {
-                    override fun onResponse(
-                        call: Call<CafeteriaResponse>,
-                        response: Response<CafeteriaResponse>
-                    ) {
-                        val cafeteriaResponse = response.body()
-                        if (cafeteriaResponse != null) {
-                            onDownloadSuccess(cafeteriaResponse)
-                        }
-                    }
-
-                    override fun onFailure(call: Call<CafeteriaResponse>, t: Throwable) {
-                        Utils.log(t)
-                    }
-                })
-    }
-
-    private fun onDownloadSuccess(response: CafeteriaResponse) {
-        menuDao.removeCache()
-        menuDao.insert(response.menus)
-        menuDao.insert(response.sideDishes)
-
-        scheduleNotificationAlarms()
     }
 
     fun scheduleNotificationAlarms() {
@@ -95,9 +58,10 @@ constructor(private val context: Context) {
     fun getFavoriteDishesServed(queriedMensaId: Int, date: DateTime): List<CafeteriaMenu> {
         val dateString = DateTimeUtils.getDateString(date)
 
-        val upcomingServings = favoriteDishDao.getFavouritedCafeteriaMenuOnDate(dateString)
-        return upcomingServings.filter {
-            it.cafeteriaId == queriedMensaId
+        // TODO revert/ fix Favorite dish
+        val upcomingServings = /*favoriteDishDao.getFavouritedCafeteriaMenuOnDate(dateString)*/ emptyList<CafeteriaMenu>()
+        return upcomingServings.filter { cafeteria: CafeteriaMenu ->
+            cafeteria.cafeteriaId == queriedMensaId
         }
     }
 }

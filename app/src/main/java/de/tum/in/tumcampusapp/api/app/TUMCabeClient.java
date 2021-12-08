@@ -34,6 +34,7 @@ import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotificationLocation;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierFreeContact;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierFreeMoreInfo;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.model.deserialization.CafeteriaMetadata;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
@@ -88,7 +89,7 @@ public final class TUMCabeClient {
     static final String API_ROOM_FINDER_AVAILABLE_MAPS = "availableMaps/";
     static final String API_ROOM_FINDER_SCHEDULE = "scheduleById/";
     static final String API_FEEDBACK = "feedback/";
-    static final String API_CAFETERIAS = "mensen/";
+    static final String API_CAFETERIAS = "canteens.json";
     static final String API_KINOS = "kino/";
     static final String API_NEWS = "news/";
     static final String API_UPDATE_NOTE = "updatenote/";
@@ -102,8 +103,11 @@ public final class TUMCabeClient {
     static final String API_CHAT_MEMBERS = API_CHAT + "members/";
     static final String API_OPENING_HOURS = "openingtimes/";
 
+    private static final String EAT_API_BASEURL = "https://tum-dev.github.io/eat-api/";
+
     private static TUMCabeClient instance;
     private final TUMCabeAPIService service;
+    private final TUMCabeAPIService eatAPIService;
 
     private TUMCabeClient(final Context c) {
         Gson gson = new GsonBuilder()
@@ -112,6 +116,14 @@ public final class TUMCabeClient {
 
         service = new Retrofit.Builder()
                 .baseUrl("https://" + API_HOSTNAME + API_BASEURL)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(ApiHelper.getOkHttpClient(c))
+                .build()
+                .create(TUMCabeAPIService.class);
+
+        eatAPIService = new Retrofit.Builder()
+                .baseUrl(EAT_API_BASEURL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(ApiHelper.getOkHttpClient(c))
@@ -324,8 +336,8 @@ public final class TUMCabeClient {
                 .enqueue(callback);
     }
 
-    public Observable<List<Cafeteria>> getCafeterias() {
-        return service.getCafeterias();
+    public Observable<List<CafeteriaMetadata>> getCafeterias() {
+        return eatAPIService.getCafeterias();
     }
 
     public Flowable<List<Kino>> getKinos(String lastId) {

@@ -72,21 +72,21 @@
                 android:title="@string/default_cafeteria">
 
                 <androidx.preference.ListPreference
-                    android:defaultValue="422"
+                    android:defaultValue="mensa-garching"
                     android:entries="@array/cafeterias_G"
                     android:entryValues="@array/cafeterias_G_val"
                     android:key="card_cafeteria_default_G"
                     android:title="@string/campus_garching" />
 
                 <androidx.preference.ListPreference
-                    android:defaultValue="414"
+                    android:defaultValue="stubistro-grosshadern"
                     android:entries="@array/cafeterias_K"
                     android:entryValues="@array/cafeterias_K_val"
                     android:key="card_cafeteria_default_K"
                     android:title="@string/campus_klinikum" />
 
                 <androidx.preference.ListPreference
-                    android:defaultValue="423"
+                    android:defaultValue="mensa-weihenstephan"
                     android:entries="@array/cafeterias_W"
                     android:entryValues="@array/cafeterias_W_val"
                     android:key="card_cafeteria_default_W"
