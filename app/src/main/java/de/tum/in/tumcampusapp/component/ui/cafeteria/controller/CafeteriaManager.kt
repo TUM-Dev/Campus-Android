@@ -34,14 +34,14 @@ class CafeteriaManager @Inject constructor(private val context: Context) : Provi
      */
     val bestMatchCafeteriaMenus: List<CafeteriaMenu>
         get() {
-            val cafeteriaId = bestMatchMensaId
+            val cafeteriaId = bestMatchCafeteriaId
             return if (cafeteriaId == Const.NO_CAFETERIA_FOUND) {
                 emptyList()
             } else getCafeteriaMenusByCafeteriaId(cafeteriaId)
         }
 
     // Choose which mensa should be shown
-    val bestMatchMensaId: Int
+    val bestMatchCafeteriaId: Int
         get() {
             val cafeteriaId = LocationManager(context).getCafeteria()
             if (cafeteriaId == Const.NO_CAFETERIA_FOUND) {
@@ -64,6 +64,7 @@ class CafeteriaManager @Inject constructor(private val context: Context) : Provi
             cafeteriaIds.add(LocationManager(context).getCafeteria().toString())
         }
 
+        // TODO cafeteriaIds is empty here
         for (id in cafeteriaIds) {
             val cafeteria = Integer.parseInt(id)
             if (cafeteria == Const.NO_CAFETERIA_FOUND) {

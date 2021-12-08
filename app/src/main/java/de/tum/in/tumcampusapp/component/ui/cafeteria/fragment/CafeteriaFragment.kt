@@ -129,7 +129,7 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
             cafeteriaId = intent.getIntExtra(Const.CAFETERIA_ID, 0)
         } else {
             // If we're not provided with a cafeteria ID, we choose the best matching cafeteria.
-            cafeteriaId = cafeteriaManager.bestMatchMensaId
+            cafeteriaId = cafeteriaManager.bestMatchCafeteriaId
         }
 
         updateCafeteriaSpinner(cafeteriaId)
