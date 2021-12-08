@@ -21,7 +21,7 @@ class CafeteriaAPIClient(private val apiService: CafeteriaAPIService) {
 
     companion object {
 
-        private const val BASE_URL = "https://www.devapp.it.tum.de/mensaapp/"
+        private const val BASE_URL = "https://tum-dev.github.io/eat-api/"
 
         private var apiClient: CafeteriaAPIClient? = null
 

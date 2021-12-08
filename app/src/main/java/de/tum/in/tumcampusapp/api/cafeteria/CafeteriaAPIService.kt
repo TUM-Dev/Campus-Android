@@ -7,7 +7,7 @@ import retrofit2.http.Header
 
 interface CafeteriaAPIService {
 
-    @GET("exportDB.php?mensa_id=all")
+    @GET("all.json")
     fun getMenus(
         @Header("Cache-Control") cacheControl: String
     ): Call<CafeteriaResponse>
