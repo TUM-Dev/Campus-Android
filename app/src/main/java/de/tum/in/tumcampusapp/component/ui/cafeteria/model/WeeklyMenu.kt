@@ -8,5 +8,5 @@ data class WeeklyMenu(
         @SerializedName("year")
         var year: Short = -1,
         @SerializedName("days")
-        var dishesForDays: List<DailyMenu>
+        var dishesForWeek: List<DailyMenu>
 )
