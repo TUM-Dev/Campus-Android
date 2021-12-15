@@ -335,12 +335,12 @@ object Utils {
 
     @JvmStatic
     fun showToastOnUIThread(activity: Activity, s: Int) {
-        activity.runOnUiThread { Utils.showToast(activity, s) }
+        activity.runOnUiThread { showToast(activity, s) }
     }
 
     @JvmStatic
     fun showToastOnUIThread(activity: Activity, s: CharSequence) {
-        activity.runOnUiThread { Utils.showToast(activity, s) }
+        activity.runOnUiThread { showToast(activity, s) }
     }
 
     /**
@@ -361,11 +361,11 @@ object Utils {
     }
 
     private fun isBackgroundServiceEnabled(context: Context): Boolean {
-        return Utils.getSettingBool(context, Const.BACKGROUND_MODE, false)
+        return getSettingBool(context, Const.BACKGROUND_MODE, false)
     }
 
     private fun isBackgroundServiceAlwaysEnabled(context: Context): Boolean {
-        return "0" == Utils.getSetting(context, "background_mode_set_to", "0")
+        return "0" == getSetting(context, "background_mode_set_to", "0")
     }
 
     @JvmStatic
