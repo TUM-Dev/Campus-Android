@@ -211,7 +211,7 @@ object Utils {
      * @param message Information or Debug message
      */
     @JvmStatic
-    fun logv(message: String) {
+    fun logVerbose(message: String) {
         if (!BuildConfig.DEBUG) {
             return
         }

@@ -76,7 +76,7 @@ class SilenceService : JobIntentService() {
 
         val calendarController = CalendarController(this)
         if (!calendarController.hasLectures()) {
-            Utils.logv("No lectures available")
+            Utils.logVerbose("No lectures available")
             alarmManager.set(AlarmManager.RTC, startTime + waitDuration, pendingIntent)
             return
         }

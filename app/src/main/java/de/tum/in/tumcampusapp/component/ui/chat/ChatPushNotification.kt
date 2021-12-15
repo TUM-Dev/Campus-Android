@@ -62,7 +62,7 @@ class ChatPushNotification(
     override val displayNotificationId = (fcmChatPayload.room shl 4) + NOTIFICATION_ID
 
     init {
-        Utils.logv("Received GCM notificationId: room=${fcmChatPayload.room} " +
+        Utils.logVerbose("Received GCM notificationId: room=${fcmChatPayload.room} " +
                 "member=${fcmChatPayload.member} message=${fcmChatPayload.message}")
 
         // Get the data necessary for the ChatActivity
