@@ -21,3 +21,4 @@
 
 # Also you must note that if you are using GSON for conversion from JSON to POJO representation, you must ignore those POJO classes from being obfuscated.
 # Here include the POJO's that have you have created for mapping JSON response to POJO for example.
+-keep class de.tum.in.tumcampusapp.component.ui.cafeteria.model.deserialization.*
