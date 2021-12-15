@@ -383,7 +383,8 @@ object Utils {
         val pattern = Pattern.compile("\\((.*?)\\)")
         val matcher = pattern.matcher(location)
         return if (matcher.find()) {
-            matcher.group(1)
+            // The string returned by matcher.group() might be null, but this method requires a non-null string as return value
+            matcher.group(1) ?: location
         } else {
             location
         }
