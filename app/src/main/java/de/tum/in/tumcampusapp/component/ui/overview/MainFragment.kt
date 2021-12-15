@@ -7,7 +7,9 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkRequest
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +25,7 @@ import de.tum.`in`.tumcampusapp.component.other.generic.adapter.EqualSpacingItem
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.BaseFragment
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
+import de.tum.`in`.tumcampusapp.databinding.FragmentMainBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.service.DownloadWorker
@@ -31,25 +34,23 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.observe
-import kotlinx.android.synthetic.main.fragment_main.*
 import org.jetbrains.anko.connectivityManager
 import org.jetbrains.anko.support.v4.runOnUiThread
 import org.joda.time.DateTime
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Provider
+import kotlin.math.roundToInt
 
 class MainFragment : BaseFragment<Unit>(
-    R.layout.fragment_main,
-    R.string.home
+        R.layout.fragment_main,
+        R.string.home
 ), SwipeRefreshLayout.OnRefreshListener, CardInteractionListener {
 
     private var isConnectivityChangeReceiverRegistered = false
-
     private val connectivityManager: ConnectivityManager by lazy {
         requireContext().connectivityManager
     }
-
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
             runOnUiThread { this@MainFragment.refreshCards() }
@@ -60,10 +61,23 @@ class MainFragment : BaseFragment<Unit>(
 
     @Inject
     lateinit var viewModelProvider: Provider<MainActivityViewModel>
-
     private val viewModel: MainActivityViewModel by lazy {
         val factory = ViewModelFactory(viewModelProvider)
         ViewModelProviders.of(this, factory).get(MainActivityViewModel::class.java)
+    }
+
+    private var _binding: FragmentMainBinding? = null
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentMainBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onAttach(context: Context) {
@@ -81,17 +95,21 @@ class MainFragment : BaseFragment<Unit>(
                 R.color.tum_A100,
                 R.color.tum_A200)
 
-        registerForContextMenu(cardsRecyclerView)
 
-        cardsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        cardsRecyclerView.adapter = cardsAdapter
+        with(binding) {
+            registerForContextMenu(cardsRecyclerView)
 
-        // Add equal spacing between CardViews in the RecyclerView
-        val spacing = Math.round(resources.getDimension(R.dimen.material_card_view_padding))
-        cardsRecyclerView.addItemDecoration(EqualSpacingItemDecoration(spacing))
+            cardsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+            cardsRecyclerView.adapter = cardsAdapter
 
-        // Swipe gestures
-        ItemTouchHelper(ItemTouchHelperCallback()).attachToRecyclerView(cardsRecyclerView)
+            // Add equal spacing between CardViews in the RecyclerView
+            val spacing = resources.getDimension(R.dimen.material_card_view_padding).roundToInt()
+            cardsRecyclerView.addItemDecoration(EqualSpacingItemDecoration(spacing))
+
+            // Swipe gestures
+            ItemTouchHelper(ItemTouchHelperCallback()).attachToRecyclerView(cardsRecyclerView)
+        }
+
 
         // Start silence Service (if already started it will just invoke a check)
         val service = Intent(requireContext(), SilenceService::class.java)
@@ -160,6 +178,11 @@ class MainFragment : BaseFragment<Unit>(
         super.onDestroy()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     /**
      * Handles the setup for the in-app Google Play store review flow. The review prompt is only actually opened based on certain quotas
      * that specified by Google Play.
@@ -188,14 +211,15 @@ class MainFragment : BaseFragment<Unit>(
     }
 
     companion object {
-        @JvmStatic fun newInstance() = MainFragment()
+        @JvmStatic
+        fun newInstance() = MainFragment()
     }
 
     private inner class ItemTouchHelperCallback : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
         override fun getSwipeDirs(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
         ): Int {
             val cardViewHolder = viewHolder as CardViewHolder
             val card = cardViewHolder.currentCard
@@ -203,9 +227,9 @@ class MainFragment : BaseFragment<Unit>(
         }
 
         override fun onMove(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
         ): Boolean {
             cardsAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
             return true
@@ -221,27 +245,29 @@ class MainFragment : BaseFragment<Unit>(
             val lastPos = cardViewHolder.adapterPosition
             cardsAdapter.remove(lastPos)
 
-            Snackbar.make(cardsRecyclerView, R.string.card_dismissed, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.undo) {
-                        card?.let {
-                            cardsAdapter.insert(lastPos, it)
-                        }
-
-                        val layoutManager = cardsRecyclerView.layoutManager
-                        layoutManager?.smoothScrollToPosition(cardsRecyclerView, null, lastPos)
-                    }
-                    .setActionTextColor(Color.WHITE)
-                    .addCallback(object : Snackbar.Callback() {
-                        override fun onDismissed(snackbar: Snackbar?, event: Int) {
-                            super.onDismissed(snackbar, event)
-                            if (event != DISMISS_EVENT_ACTION) {
-                                // DISMISS_EVENT_ACTION means, the snackbar was dismissed via the undo button
-                                // and therefore, we didn't really dismiss the card
-                                card?.discard()
+            with(binding) {
+                Snackbar.make(cardsRecyclerView, R.string.card_dismissed, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.undo) {
+                            card?.let {
+                                cardsAdapter.insert(lastPos, it)
                             }
+
+                            val layoutManager = cardsRecyclerView.layoutManager
+                            layoutManager?.smoothScrollToPosition(cardsRecyclerView, null, lastPos)
                         }
-                    })
-                    .show()
+                        .setActionTextColor(Color.WHITE)
+                        .addCallback(object : Snackbar.Callback() {
+                            override fun onDismissed(snackbar: Snackbar?, event: Int) {
+                                super.onDismissed(snackbar, event)
+                                if (event != DISMISS_EVENT_ACTION) {
+                                    // DISMISS_EVENT_ACTION means, the snackbar was dismissed via the undo button
+                                    // and therefore, we didn't really dismiss the card
+                                    card?.discard()
+                                }
+                            }
+                        })
+                        .show()
+            }
         }
     }
 }
