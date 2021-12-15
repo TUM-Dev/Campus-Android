@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.component.ui.cafeteria.model
+package de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization
 
 import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTime
