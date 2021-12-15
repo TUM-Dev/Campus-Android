@@ -228,7 +228,7 @@ object Utils {
      * @param message Information or Debug message
      */
     @JvmStatic
-    fun logwithTag(tag: String, message: String) {
+    fun logWithTag(tag: String, message: String) {
         if (!BuildConfig.DEBUG) {
             return
         }

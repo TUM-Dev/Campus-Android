@@ -76,7 +76,7 @@ class ChatMessageViewModel(
                     }
                     broadcastManager.sendBroadcast(intent)
                 }, { t ->
-                    Utils.logwithTag("ChatMessageViewModel", t.message ?: "unknown")
+                    Utils.logWithTag("ChatMessageViewModel", t.message ?: "unknown")
                     chatMessage.sendingStatus = ChatMessage.STATUS_ERROR
                     localRepository.replaceMessage(chatMessage)
                     val intent = Intent(Const.CHAT_BROADCAST_NAME)
