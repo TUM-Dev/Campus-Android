@@ -6,7 +6,7 @@ import de.tum.`in`.tumcampusapp.api.app.ApiHelper
 import de.tum.`in`.tumcampusapp.api.app.DateSerializer
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.api.tumonline.interceptors.CacheResponseInterceptor
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaResponse
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization.CafeteriaResponse
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 import org.joda.time.DateTime
 import retrofit2.Call
