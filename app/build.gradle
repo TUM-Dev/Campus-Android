@@ -59,6 +59,9 @@ android {
                 'UnusedResources',    // unused resources get purged by shrinkResources
                 'SelectableText'      // disabled by default
     }
+    buildFeatures {
+        viewBinding true
+    }
     packagingOptions {
         exclude 'META-INF/maven/com.google.guava/guava/pom.properties'
         exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
