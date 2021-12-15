@@ -3,12 +3,9 @@ package de.tum.`in`.tumcampusapp.utils
 import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.os.BatteryManager
 import android.os.Build
 import android.text.Html
 import android.text.Spanned
@@ -21,7 +18,6 @@ import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.BuildConfig
 import org.jetbrains.anko.defaultSharedPreferences
 import java.io.IOException
-import java.io.InputStream
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.text.DecimalFormat
