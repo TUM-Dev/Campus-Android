@@ -10,13 +10,13 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.BatteryManager
 import android.os.Build
-import android.preference.PreferenceManager
 import android.text.Html
 import android.text.Spanned
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.pm.PackageInfoCompat
+import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.BuildConfig
 import org.jetbrains.anko.defaultSharedPreferences
