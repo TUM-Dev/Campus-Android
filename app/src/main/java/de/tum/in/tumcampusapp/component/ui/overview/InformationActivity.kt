@@ -37,24 +37,22 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
         binding = ActivityInformationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        with(binding) {
-            buttonFacebook.setOnClickListener {
-                    openFacebook()
-                }
-            buttonGithub.setOnClickListener {
-                    startActivity(Intent(ACTION_VIEW, Uri.parse(getString(R.string.github_link))))
-                }
-            buttonPrivacy.setOnClickListener {
-                    startActivity(Intent(ACTION_VIEW, Uri.parse(getString(R.string.url_privacy_policy))))
-                }
-            buttonLicenses.setOnClickListener {
-                    LicensesDialog.Builder(applicationContext)
-                            .setNotices(R.raw.notices)
-                            .setShowFullLicenseText(false)
-                            .setIncludeOwnLicense(true)
-                            .build()
-                            .show()
-                }
+        binding.buttonFacebook.setOnClickListener {
+            openFacebook()
+        }
+        binding.buttonGithub.setOnClickListener {
+            startActivity(Intent(ACTION_VIEW, Uri.parse(getString(R.string.github_link))))
+        }
+        binding.buttonPrivacy.setOnClickListener {
+            startActivity(Intent(ACTION_VIEW, Uri.parse(getString(R.string.url_privacy_policy))))
+        }
+        binding.buttonLicenses.setOnClickListener {
+            LicensesDialog.Builder(this)
+                    .setNotices(R.raw.notices)
+                    .setShowFullLicenseText(false)
+                    .setIncludeOwnLicense(true)
+                    .build()
+                    .show()
         }
 
 
