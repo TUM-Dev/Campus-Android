@@ -102,24 +102,6 @@ object Utils {
      * @return setting value, defaultVal if undefined
      */
     @JvmStatic
-    fun getSettingFloat(c: Context, key: String, defaultVal: Float): Float {
-        val sp = PreferenceManager.getDefaultSharedPreferences(c)
-        return try {
-            sp.getFloat(key, defaultVal)
-        } catch (ignore: ClassCastException) {
-            sp.getString(key, null)?.toFloatOrNull() ?: defaultVal
-        }
-    }
-
-    /**
-     * Get a value from the default shared preferences.
-     *
-     * @param c Context
-     * @param key setting name
-     * @param defaultVal default value
-     * @return setting value, defaultVal if undefined
-     */
-    @JvmStatic
     fun getSettingInt(c: Context, key: String, defaultVal: Int): Int {
         val sp = PreferenceManager.getDefaultSharedPreferences(c)
         return try {
@@ -254,25 +236,6 @@ object Utils {
     }
 
     /**
-     * Returns a String[]-List from a CSV input stream
-     *
-     * @param fin CSV input stream
-     * @return String[]-List with Columns matched to array values
-     */
-    @JvmStatic
-    fun readCsv(fin: InputStream): List<Array<String>> {
-        return try {
-            fin.bufferedReader(Charsets.UTF_8)
-                    .lineSequence()
-                    .map { splitCsvLine(it) }
-                    .toList()
-        } catch (e: IOException) {
-            log(e)
-            emptyList()
-        }
-    }
-
-    /**
      * Sets the value of a setting
      *
      * @param c Context
@@ -335,36 +298,6 @@ object Utils {
     @JvmStatic
     fun showToast(context: Context, msg: CharSequence) {
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
-    }
-
-    /**
-     * Splits a line from a CSV file into column values
-     *
-     *
-     * e.g. "aaa;aaa";"bbb";1 gets aaa,aaa;bbb;1;
-     *
-     * @param str CSV line
-     * @return String[] with CSV column values
-     */
-    private fun splitCsvLine(str: CharSequence): Array<String> {
-        val result = StringBuilder()
-        var open = false
-        for (i in 0 until str.length) {
-            val c = str[i]
-            if (c == '"') {
-                open = !open
-                continue
-            }
-            if (open && c == ';') {
-                result.append(',')
-            } else {
-                result.append(c)
-            }
-        }
-        // fix trailing ";", e.g. ";;;".split().length = 0
-        result.append("; ")
-        return result.toString()
-                .split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
     }
 
     /**
@@ -443,17 +376,6 @@ object Utils {
             Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY)
         else
             Html.fromHtml(source)
-    }
-
-    @JvmStatic
-    fun getBatteryLevel(context: Context): Float {
-        val batteryIntent = context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-                ?: return -1f
-        val level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-        val scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
-        return if (level == -1 || scale == -1) {
-            -1f
-        } else level.toFloat() / scale.toFloat() * 100.0f
     }
 
     @JvmStatic
