@@ -19,6 +19,7 @@ import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseNavigationActivity
+import de.tum.`in`.tumcampusapp.databinding.ActivityStartupBinding
 import de.tum.`in`.tumcampusapp.service.DownloadWorker
 import de.tum.`in`.tumcampusapp.service.StartSyncReceiver
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -26,9 +27,6 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.observe
 import io.reactivex.Flowable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_startup.container
-import kotlinx.android.synthetic.main.activity_startup.startupLoadingProgressBar
-import kotlinx.android.synthetic.main.activity_startup.startupTumLogo
 import org.jetbrains.anko.doAsync
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
@@ -44,8 +42,14 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
     @Inject
     lateinit var authManager: AuthenticationManager
 
+    private lateinit var binding: ActivityStartupBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        binding = ActivityStartupBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        
         injector.downloadComponent().inject(this)
 
         // Only use Crashlytics if we are not compiling debug
@@ -72,18 +76,18 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
 
     private fun initEasterEgg() {
         if (Utils.getSettingBool(this, Const.RAINBOW_MODE, false)) {
-            startupTumLogo.setImageResource(R.drawable.tum_logo_rainbow)
+            binding.startupTumLogo.setImageResource(R.drawable.tum_logo_rainbow)
         }
 
-        container.setOnClickListener {
+        binding.container.setOnClickListener {
             if (tapCounter++ % 3 == 0) {
                 // Switch to the other logo and invert the setting
                 val shouldEnableRainbow = Utils.getSettingBool(this, Const.RAINBOW_MODE, false).not()
 
                 if (shouldEnableRainbow) {
-                    startupTumLogo.setImageResource(R.drawable.tum_logo_rainbow)
+                    binding.startupTumLogo.setImageResource(R.drawable.tum_logo_rainbow)
                 } else {
-                    startupTumLogo.setImageResource(R.drawable.tum_logo_blue)
+                    binding.startupTumLogo.setImageResource(R.drawable.tum_logo_blue)
                 }
 
                 Utils.setSetting(this, Const.RAINBOW_MODE, shouldEnableRainbow)
@@ -101,7 +105,7 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
 
         // On first setup show remark that loading could last longer than normally
         runOnUiThread {
-            startupLoadingProgressBar.show()
+            binding.startupLoadingProgressBar.show()
         }
 
         // Start download workers and listen for finalization
