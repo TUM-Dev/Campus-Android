@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.edit
 import com.google.gson.Gson
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
@@ -17,16 +18,12 @@ import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomController
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMember
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponent
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponentProvider
+import de.tum.`in`.tumcampusapp.databinding.FragmentOnboardingExtrasBinding
 import de.tum.`in`.tumcampusapp.service.SilenceService
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
-import kotlinx.android.synthetic.main.fragment_onboarding_extras.bugReportsCheckBox
-import kotlinx.android.synthetic.main.fragment_onboarding_extras.finishButton
-import kotlinx.android.synthetic.main.fragment_onboarding_extras.groupChatCheckBox
-import kotlinx.android.synthetic.main.fragment_onboarding_extras.privacyPolicyButton
-import kotlinx.android.synthetic.main.fragment_onboarding_extras.silentModeCheckBox
 import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.support.v4.browse
 import java.io.IOException
@@ -56,6 +53,8 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
     @Inject
     lateinit var navigator: OnboardingNavigator
 
+    private val binding by viewBinding(FragmentOnboardingExtrasBinding::bind)
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         onboardingComponent.inject(this)
@@ -63,36 +62,40 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        bugReportsCheckBox.isChecked = Utils.getSettingBool(requireContext(), Const.BUG_REPORTS, true)
 
-        if (AccessTokenManager.hasValidAccessToken(requireContext())) {
-            silentModeCheckBox.isChecked =
-                Utils.getSettingBool(requireContext(), Const.SILENCE_SERVICE, false)
-            silentModeCheckBox.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked && !SilenceService.hasPermissions(requireContext())) {
-                    SilenceService.requestPermissions(requireContext())
-                    silentModeCheckBox.isChecked = false
+        with(binding) {
+            bugReportsCheckBox.isChecked = Utils.getSettingBool(requireContext(), Const.BUG_REPORTS, true)
+
+            if (AccessTokenManager.hasValidAccessToken(requireContext())) {
+                silentModeCheckBox.isChecked =
+                    Utils.getSettingBool(requireContext(), Const.SILENCE_SERVICE, false)
+                silentModeCheckBox.setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked && !SilenceService.hasPermissions(requireContext())) {
+                        SilenceService.requestPermissions(requireContext())
+                        silentModeCheckBox.isChecked = false
+                    }
                 }
+            } else {
+                silentModeCheckBox.isChecked = false
+                silentModeCheckBox.isEnabled = false
             }
-        } else {
-            silentModeCheckBox.isChecked = false
-            silentModeCheckBox.isEnabled = false
+
+            if (AccessTokenManager.hasValidAccessToken(requireContext())) {
+                groupChatCheckBox.isChecked =
+                    Utils.getSettingBool(requireContext(), Const.GROUP_CHAT_ENABLED, true)
+            } else {
+                groupChatCheckBox.isChecked = false
+                groupChatCheckBox.isEnabled = false
+            }
+
+            if (AccessTokenManager.hasValidAccessToken(requireContext())) {
+                cacheManager.fillCache()
+            }
+
+            privacyPolicyButton.setOnClickListener { browse(getString(R.string.url_privacy_policy)) }
+            finishButton.setOnClickListener { startLoading() }
         }
 
-        if (AccessTokenManager.hasValidAccessToken(requireContext())) {
-            groupChatCheckBox.isChecked =
-                Utils.getSettingBool(requireContext(), Const.GROUP_CHAT_ENABLED, true)
-        } else {
-            groupChatCheckBox.isChecked = false
-            groupChatCheckBox.isEnabled = false
-        }
-
-        if (AccessTokenManager.hasValidAccessToken(requireContext())) {
-            cacheManager.fillCache()
-        }
-
-        privacyPolicyButton.setOnClickListener { browse(getString(R.string.url_privacy_policy)) }
-        finishButton.setOnClickListener { startLoading() }
     }
 
     override fun onLoadInBackground(): ChatMember? {
@@ -167,14 +170,16 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
         requireContext()
             .defaultSharedPreferences
             .edit {
-                putBoolean(Const.SILENCE_SERVICE, silentModeCheckBox.isChecked)
-                putBoolean(Const.BACKGROUND_MODE, true) // Enable by default
-                putBoolean(Const.BUG_REPORTS, bugReportsCheckBox.isChecked)
+                with(binding) {
+                    putBoolean(Const.SILENCE_SERVICE, silentModeCheckBox.isChecked)
+                    putBoolean(Const.BACKGROUND_MODE, true) // Enable by default
+                    putBoolean(Const.BUG_REPORTS, bugReportsCheckBox.isChecked)
 
-                if (!result.lrzId.isNullOrEmpty()) {
-                    putBoolean(Const.GROUP_CHAT_ENABLED, groupChatCheckBox.isChecked)
-                    putBoolean(Const.AUTO_JOIN_NEW_ROOMS, groupChatCheckBox.isChecked)
-                    put(Const.CHAT_MEMBER, result)
+                    if (!result.lrzId.isNullOrEmpty()) {
+                        putBoolean(Const.GROUP_CHAT_ENABLED, groupChatCheckBox.isChecked)
+                        putBoolean(Const.AUTO_JOIN_NEW_ROOMS, groupChatCheckBox.isChecked)
+                        put(Const.CHAT_MEMBER, result)
+                    }
                 }
             }
 
