@@ -7,6 +7,7 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.jakewharton.rxbinding3.widget.textChanges
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
 import de.tum.`in`.tumcampusapp.api.app.exception.NoPublicKey
@@ -21,15 +22,13 @@ import de.tum.`in`.tumcampusapp.api.tumonline.model.AccessToken
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.BaseFragment
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponent
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponentProvider
+import de.tum.`in`.tumcampusapp.databinding.FragmentOnboardingStartBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_onboarding_start.lrzIdTextView
-import kotlinx.android.synthetic.main.fragment_onboarding_start.nextButton
-import kotlinx.android.synthetic.main.toolbar.toolbar
 import org.jetbrains.anko.inputMethodManager
 import java.util.Locale
 import javax.inject.Inject
@@ -59,6 +58,8 @@ class OnboardingStartFragment : BaseFragment<Unit>(
     @Inject
     lateinit var navigator: OnboardingNavigator
 
+    private val binding by viewBinding(FragmentOnboardingStartBinding::bind)
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         onboardingComponent.inject(this)
@@ -70,18 +71,22 @@ class OnboardingStartFragment : BaseFragment<Unit>(
         setCustomCloseIcon()
 
         val lrzId = Utils.getSetting(requireContext(), Const.LRZ_ID, "")
-        lrzIdTextView.setText(lrzId)
 
-        compositeDisposable += lrzIdTextView.textChanges()
-            .map { it.toString() }
-            .subscribe {
-                val isEmpty = it.isBlank()
-                val alpha = if (isEmpty) 0.5f else 1.0f
-                nextButton.isClickable = !isEmpty
-                nextButton.alpha = alpha
-            }
+        with(binding) {
+            lrzIdTextView.setText(lrzId)
 
-        nextButton.setOnClickListener { onNextPressed() }
+            compositeDisposable += lrzIdTextView.textChanges()
+                .map { it.toString() }
+                .subscribe {
+                    val isEmpty = it.isBlank()
+                    val alpha = if (isEmpty) 0.5f else 1.0f
+                    nextButton.isClickable = !isEmpty
+                    nextButton.alpha = alpha
+                }
+
+            nextButton.setOnClickListener { onNextPressed() }
+        }
+
     }
 
     private fun setCustomCloseIcon() {
@@ -90,12 +95,15 @@ class OnboardingStartFragment : BaseFragment<Unit>(
             val color = ContextCompat.getColor(requireContext(), R.color.color_primary)
             closeIcon.setTint(color)
         }
-        toolbar.navigationIcon = closeIcon
-        toolbar.setNavigationOnClickListener { requireActivity().finish() }
+        with(binding.toolbarBinding) {
+            toolbar.navigationIcon = closeIcon
+            toolbar.setNavigationOnClickListener { requireActivity().finish() }
+        }
+
     }
 
     private fun onNextPressed() {
-        val enteredId = lrzIdTextView.text.toString().toLowerCase(Locale.GERMANY)
+        val enteredId = binding.lrzIdTextView.text.toString().lowercase(Locale.GERMANY)
 
         if (!enteredId.matches(Const.TUM_ID_PATTERN.toRegex())) {
             Utils.showToast(requireContext(), R.string.error_invalid_tum_id)
@@ -211,7 +219,7 @@ class OnboardingStartFragment : BaseFragment<Unit>(
     }
 
     private fun hideKeyboard() {
-        requireContext().inputMethodManager.hideSoftInputFromWindow(lrzIdTextView.windowToken, 0)
+        requireContext().inputMethodManager.hideSoftInputFromWindow(binding.lrzIdTextView.windowToken, 0)
     }
 
     private fun openNextOnboardingStep() {
