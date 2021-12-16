@@ -20,6 +20,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.review.ReviewException
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.android.play.core.review.model.ReviewErrorCode
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.BaseFragment
@@ -59,25 +60,13 @@ class MainFragment : BaseFragment<Unit>(
 
     private val cardsAdapter: CardAdapter by lazy { CardAdapter(this) }
 
+    private val binding by viewBinding(FragmentMainBinding::bind)
+
     @Inject
     lateinit var viewModelProvider: Provider<MainActivityViewModel>
     private val viewModel: MainActivityViewModel by lazy {
         val factory = ViewModelFactory(viewModelProvider)
         ViewModelProviders.of(this, factory).get(MainActivityViewModel::class.java)
-    }
-
-    private var _binding: FragmentMainBinding? = null
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentMainBinding.inflate(inflater, container, false)
-        return binding.root
     }
 
     override fun onAttach(context: Context) {
@@ -176,11 +165,6 @@ class MainFragment : BaseFragment<Unit>(
             isConnectivityChangeReceiverRegistered = false
         }
         super.onDestroy()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     /**
