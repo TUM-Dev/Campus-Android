@@ -7,7 +7,7 @@ import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaNotificationSettings
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaNotificationSettingsAdapter
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaNotificationTime
-import kotlinx.android.synthetic.main.activity_cafeteria_notification_settings.*
+import de.tum.`in`.tumcampusapp.databinding.ActivityCafeteriaNotificationSettingsBinding
 import org.joda.time.DateTime
 import org.joda.time.DateTimeConstants
 
@@ -17,21 +17,27 @@ import org.joda.time.DateTimeConstants
  */
 class CafeteriaNotificationSettingsActivity : BaseActivity(R.layout.activity_cafeteria_notification_settings) {
 
+    private lateinit var binding: ActivityCafeteriaNotificationSettingsBinding
+    
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        binding = ActivityCafeteriaNotificationSettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
-        notificationSettingsRecyclerView.layoutManager = layoutManager
-        notificationSettingsRecyclerView.setHasFixedSize(true)
+        binding.notificationSettingsRecyclerView.layoutManager = layoutManager
+        binding.notificationSettingsRecyclerView.setHasFixedSize(true)
 
         val notificationSettings = CafeteriaNotificationSettings.getInstance(this)
         val dailySchedule = buildDailySchedule(notificationSettings)
 
         val adapter = CafeteriaNotificationSettingsAdapter(this, dailySchedule)
-        notificationSettingsRecyclerView.adapter = adapter
+        binding.notificationSettingsRecyclerView.adapter = adapter
 
-        notificationSettingsSaveButton.setOnClickListener {
+        binding.notificationSettingsSaveButton.setOnClickListener {
             notificationSettings.saveEntireSchedule(dailySchedule)
             finish()
         }
