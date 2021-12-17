@@ -3,17 +3,13 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria.fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.FragmentForDownloadingExternal
 import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
@@ -23,15 +19,13 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManag
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionsPagerAdapter
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
+import de.tum.`in`.tumcampusapp.databinding.FragmentCafeteriaBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.service.DownloadWorker
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.observeNonNull
-import kotlinx.android.synthetic.main.fragment_cafeteria.pager
-import kotlinx.android.synthetic.main.fragment_cafeteria.spinnerToolbar
-import kotlinx.android.synthetic.main.layout_error.*
 import org.joda.time.DateTime
 import javax.inject.Inject
 import javax.inject.Provider
@@ -57,7 +51,7 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
 
     private val cafeteriaViewModel: CafeteriaViewModel by lazy {
         val factory = ViewModelFactory(viewModelProvider)
-        ViewModelProviders.of(this, factory).get(CafeteriaViewModel::class.java)
+        ViewModelProvider(this, factory).get(CafeteriaViewModel::class.java)
     }
 
     private val adapter: ArrayAdapter<Cafeteria> by lazy { createArrayAdapter() }
@@ -67,6 +61,8 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
 
     override val method: DownloadWorker.Action?
         get() = cafeteriaDownloadAction
+
+    private val binding by viewBinding(FragmentCafeteriaBinding::bind)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -81,10 +77,10 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        pager.offscreenPageLimit = 50
+        binding.pager.offscreenPageLimit = 50
 
-        spinnerToolbar.adapter = adapter
-        spinnerToolbar.onItemSelectedListener = this
+        binding.spinnerToolbar.adapter = adapter
+        binding.spinnerToolbar.onItemSelectedListener = this
 
         cafeteriaViewModel.cafeterias.observeNonNull(this) { updateCafeterias(it) }
         cafeteriaViewModel.selectedCafeteria.observeNonNull(this) { onNewCafeteriaSelected(it) }
@@ -149,14 +145,16 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
         }
 
         if (selectedIndex != NONE_SELECTED) {
-            spinnerToolbar.setSelection(selectedIndex)
+            binding.spinnerToolbar.setSelection(selectedIndex)
         }
     }
 
     private fun updateSectionsPagerAdapter(menuDates: List<DateTime>) {
-        pager.adapter = null
-        sectionsPagerAdapter.update(menuDates)
-        pager.adapter = sectionsPagerAdapter
+        with(binding) {
+            pager.adapter = null
+            sectionsPagerAdapter.update(menuDates)
+            pager.adapter = sectionsPagerAdapter
+        }
     }
 
     private fun createArrayAdapter(): ArrayAdapter<Cafeteria> {
@@ -185,7 +183,7 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-        val selected = cafeterias.get(position)
+        val selected = cafeterias[position]
         cafeteriaViewModel.updateSelectedCafeteria(selected)
     }
 
