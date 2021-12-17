@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.app.model.TUMCabeVerification
@@ -34,10 +35,9 @@ import de.tum.`in`.tumcampusapp.component.ui.chat.adapter.ChatRoomListAdapter
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMember
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatRoom
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatRoomAndLastMessage
+import de.tum.`in`.tumcampusapp.databinding.FragmentChatRoomsBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
-import kotlinx.android.synthetic.main.fragment_chat_rooms.chatRoomTabs
-import kotlinx.android.synthetic.main.fragment_chat_rooms.chatRoomsListView
 import org.jetbrains.anko.support.v4.runOnUiThread
 import retrofit2.Call
 import retrofit2.Callback
@@ -60,6 +60,8 @@ class ChatRoomsFragment : FragmentForAccessingTumOnline<LecturesResponse>(
 
     private lateinit var chatRoomsAdapter: ChatRoomListAdapter
 
+    private val binding by viewBinding(FragmentChatRoomsBinding::bind)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -67,24 +69,27 @@ class ChatRoomsFragment : FragmentForAccessingTumOnline<LecturesResponse>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        chatRoomsListView.setOnItemClickListener(this::onItemClick)
+        binding.chatRoomsListView.setOnItemClickListener(this::onItemClick)
 
-        chatRoomTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                // show the given tab
-                currentMode = 1 - tab.position
-                loadPersonalLectures(USE_CACHE)
-            }
+        with(binding) {
+            chatRoomTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                override fun onTabSelected(tab: TabLayout.Tab) {
+                    // show the given tab
+                    currentMode = 1 - tab.position
+                    loadPersonalLectures(USE_CACHE)
+                }
 
-            override fun onTabUnselected(tab: TabLayout.Tab) = Unit
+                override fun onTabUnselected(tab: TabLayout.Tab) = Unit
 
-            override fun onTabReselected(tab: TabLayout.Tab) {
-                chatRoomsListView.smoothScrollToPosition(0)
-            }
-        })
+                override fun onTabReselected(tab: TabLayout.Tab) {
+                    chatRoomsListView.smoothScrollToPosition(0)
+                }
+            })
 
-        chatRoomTabs.addTab(chatRoomTabs.newTab().setText(R.string.joined))
-        chatRoomTabs.addTab(chatRoomTabs.newTab().setText(R.string.not_joined))
+            chatRoomTabs.addTab(chatRoomTabs.newTab().setText(R.string.joined))
+            chatRoomTabs.addTab(chatRoomTabs.newTab().setText(R.string.not_joined))
+        }
+
     }
 
     override fun onStart() {
@@ -151,12 +156,15 @@ class ChatRoomsFragment : FragmentForAccessingTumOnline<LecturesResponse>(
     }
 
     private fun displayChatRoomsAndMessages(results: List<ChatRoomAndLastMessage>) {
-        if (results.isEmpty()) {
-            chatRoomsListView.adapter = NoResultsAdapter(requireContext())
-        } else {
-            chatRoomsAdapter = ChatRoomListAdapter(requireContext(), results, currentMode)
-            chatRoomsListView.adapter = chatRoomsAdapter
+        with(binding) {
+            if (results.isEmpty()) {
+                chatRoomsListView.adapter = NoResultsAdapter(requireContext())
+            } else {
+                chatRoomsAdapter = ChatRoomListAdapter(requireContext(), results, currentMode)
+                chatRoomsListView.adapter = chatRoomsAdapter
+            }
         }
+
     }
 
     /**
@@ -170,7 +178,7 @@ class ChatRoomsFragment : FragmentForAccessingTumOnline<LecturesResponse>(
     }
 
     private fun onItemClick(adapterView: AdapterView<*>, v: View, position: Int, id: Long) {
-        val item = chatRoomsListView.getItemAtPosition(position) as ChatRoomAndLastMessage
+        val item = binding.chatRoomsListView.getItemAtPosition(position) as ChatRoomAndLastMessage
 
         // set bundle for LectureDetails and show it
         val bundle = Bundle()
