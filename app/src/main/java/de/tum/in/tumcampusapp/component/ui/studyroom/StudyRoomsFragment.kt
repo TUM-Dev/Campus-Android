@@ -7,12 +7,11 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.FragmentForAccessingTumCabe
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup
-import kotlinx.android.synthetic.main.fragment_study_rooms.pager
-import kotlinx.android.synthetic.main.fragment_study_rooms.spinner
-import kotlinx.android.synthetic.main.fragment_study_rooms.spinnerContainer
+import de.tum.`in`.tumcampusapp.databinding.FragmentStudyRoomsBinding
 import org.jetbrains.anko.support.v4.runOnUiThread
 
 class StudyRoomsFragment : FragmentForAccessingTumCabe<List<StudyRoomGroup>>(
@@ -20,11 +19,13 @@ class StudyRoomsFragment : FragmentForAccessingTumCabe<List<StudyRoomGroup>>(
     R.string.study_rooms
 ), AdapterView.OnItemSelectedListener {
 
-    private val sectionsPagerAdapter by lazy { StudyRoomsPagerAdapter(requireFragmentManager()) }
+    private val sectionsPagerAdapter by lazy { StudyRoomsPagerAdapter(childFragmentManager) }
     private val studyRoomGroupManager by lazy { StudyRoomGroupManager(requireContext()) }
 
     private var groups = emptyList<StudyRoomGroup>()
     private var groupId: Int = -1
+
+    private val binding by viewBinding(FragmentStudyRoomsBinding::bind)
 
     // Drop-down navigation
     private val studyRoomGroupsSpinner: Spinner
@@ -47,7 +48,7 @@ class StudyRoomsFragment : FragmentForAccessingTumCabe<List<StudyRoomGroup>>(
             }
 
             groupAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            return spinner.apply {
+            return binding.spinner.apply {
                 adapter = groupAdapter
                 onItemSelectedListener = this@StudyRoomsFragment
             }
@@ -73,9 +74,12 @@ class StudyRoomsFragment : FragmentForAccessingTumCabe<List<StudyRoomGroup>>(
      * Change the group ID of the view pager, carefully unsetting the adapter while updating
      */
     private fun changeViewPagerAdapter(selectedRoomGroupId: Int) {
-        pager.adapter = null
-        sectionsPagerAdapter.setStudyRoomGroupId(selectedRoomGroupId)
-        pager.adapter = sectionsPagerAdapter
+        with(binding) {
+            pager.adapter = null
+            sectionsPagerAdapter.setStudyRoomGroupId(selectedRoomGroupId)
+            pager.adapter = sectionsPagerAdapter
+        }
+
     }
 
     private fun loadStudyRooms() {
@@ -93,7 +97,7 @@ class StudyRoomsFragment : FragmentForAccessingTumCabe<List<StudyRoomGroup>>(
 
     private fun displayStudyRooms() {
         selectCurrentSpinnerItem()
-        spinnerContainer.visibility = View.VISIBLE
+        binding.spinnerContainer.visibility = View.VISIBLE
         showLoadingEnded()
     }
 
