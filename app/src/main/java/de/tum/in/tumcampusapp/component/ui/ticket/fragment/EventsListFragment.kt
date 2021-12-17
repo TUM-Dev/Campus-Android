@@ -6,10 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMember
@@ -17,12 +18,12 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsViewModel
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsViewState
 import de.tum.`in`.tumcampusapp.component.ui.ticket.adapter.EventsAdapter
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.EventType
+import de.tum.`in`.tumcampusapp.databinding.FragmentEventsListBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.utils.Const.CHAT_MEMBER
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.observeNonNull
-import kotlinx.android.synthetic.main.fragment_events_list.*
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -37,8 +38,10 @@ class EventsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private val viewModel: EventsViewModel by lazy {
         val factory = ViewModelFactory(provider)
-        ViewModelProviders.of(this, factory).get(EventsViewModel::class.java)
+        ViewModelProvider(this, factory).get(EventsViewModel::class.java)
     }
+
+    private val binding by viewBinding(FragmentEventsListBinding::bind)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -57,16 +60,16 @@ class EventsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(view) {
-        eventsRecyclerView.setHasFixedSize(true)
-        eventsRecyclerView.layoutManager = LinearLayoutManager(context)
-        eventsRecyclerView.itemAnimator = DefaultItemAnimator()
-        eventsRecyclerView.adapter = EventsAdapter(context)
+        binding.eventsRecyclerView.setHasFixedSize(true)
+        binding.eventsRecyclerView.layoutManager = LinearLayoutManager(context)
+        binding.eventsRecyclerView.itemAnimator = DefaultItemAnimator()
+        binding.eventsRecyclerView.adapter = EventsAdapter(context)
 
         val spacing = Math.round(resources.getDimension(R.dimen.material_card_view_padding))
-        eventsRecyclerView.addItemDecoration(EqualSpacingItemDecoration(spacing))
+        binding.eventsRecyclerView.addItemDecoration(EqualSpacingItemDecoration(spacing))
 
-        eventsRefreshLayout.setOnRefreshListener(this@EventsListFragment)
-        eventsRefreshLayout.setColorSchemeResources(
+        binding.eventsRefreshLayout.setOnRefreshListener(this@EventsListFragment)
+        binding.eventsRefreshLayout.setColorSchemeResources(
                 R.color.color_primary,
                 R.color.tum_A100,
                 R.color.tum_A200
@@ -80,22 +83,24 @@ class EventsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun render(viewState: EventsViewState) {
         val isEmpty = viewState.events.isEmpty()
-        eventsRecyclerView.visibility = if (isEmpty) View.GONE else View.VISIBLE
-        eventPlaceholder.visibility = if (isEmpty) View.VISIBLE else View.GONE
+        with(binding) {
+            eventsRecyclerView.visibility = if (isEmpty) View.GONE else View.VISIBLE
+            eventPlaceholder.visibility = if (isEmpty) View.VISIBLE else View.GONE
 
-        eventsRefreshLayout.isRefreshing = false
+            eventsRefreshLayout.isRefreshing = false
 
-        if (viewState.events.isNotEmpty()) {
-            val adapter = eventsRecyclerView.adapter as EventsAdapter
-            adapter.update(viewState.events.toMutableList())
-        } else {
-            placeholderTextView.setText(eventType.placeholderTextId)
-            placeholderImage.setImageResource(eventType.placeholderImageId)
-        }
+            if (viewState.events.isNotEmpty()) {
+                val adapter = eventsRecyclerView.adapter as EventsAdapter
+                adapter.update(viewState.events.toMutableList())
+            } else {
+                placeholderTextView.setText(eventType.placeholderTextId)
+                placeholderImage.setImageResource(eventType.placeholderImageId)
+            }
 
-        eventsRefreshLayout.isRefreshing = viewState.isLoading
-        viewState.errorResId?.let {
-            Utils.showToast(requireContext(), it)
+            eventsRefreshLayout.isRefreshing = viewState.isLoading
+            viewState.errorResId?.let {
+                Utils.showToast(requireContext(), it)
+            }
         }
     }
 
