@@ -209,7 +209,9 @@
 
             </ScrollView>
 
-            <include layout="@layout/loading_overlay"/>
+            <include
+                android:id="@+id/loadingOverlayBinding"
+                layout="@layout/loading_overlay"/>
 
         </FrameLayout>
 

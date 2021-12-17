@@ -19,13 +19,12 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.payload.TicketReservation
 import de.tum.`in`.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse
 import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsRemoteRepository
+import de.tum.`in`.tumcampusapp.databinding.ActivityBuyTicketBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_buy_ticket.*
-import kotlinx.android.synthetic.main.loading_overlay.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -70,12 +69,18 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
 
     private val ticketTypeIds: Array<Int>
         get() = ticketTypes?.map { it.id }?.toTypedArray() ?: emptyArray()
+    
+    private lateinit var binding: ActivityBuyTicketBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        binding = ActivityBuyTicketBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        
         eventId = intent.getIntExtra(Const.KEY_EVENT_ID, 0)
 
-        totalPriceTextView.text = Utils.formatPrice(0)
+        binding.totalPriceTextView.text = Utils.formatPrice(0)
 
         injector.ticketsComponent()
                 .eventId(eventId)
@@ -105,8 +110,9 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
         initEventTextViews()
         initTicketAmount()
 
-        loadingLayout.isVisible = false
-        paymentButton.setOnClickListener { reserveTicket() }
+
+        binding.loadingOverlayBinding.loadingLayout.isVisible = false
+        binding.paymentButton.setOnClickListener { reserveTicket() }
     }
 
     private fun initTicketAmount() {
@@ -121,7 +127,7 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
 
     override fun ticketAmountUpdated(ticketTypeId: Int, amount: Int) {
         currentTicketAmounts?.set(ticketTypeId, amount)
-        totalPriceTextView.text = Utils.formatPrice(totalPrice)
+        binding.totalPriceTextView.text = Utils.formatPrice(totalPrice)
     }
 
     private fun showError(title: Int, message: Int) {
@@ -137,9 +143,9 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
     private fun initEventTextViews() {
         val event = eventsLocalRepo.getEventById(eventId)
         event?.let {
-            eventName.text = it.title
-            buyEventLocation.text = it.locality
-            eventDate.text = it.getFormattedStartDateTime(this)
+            binding.eventName.text = it.title
+            binding.buyEventLocation.text = it.locality
+            binding.eventDate.text = it.getFormattedStartDateTime(this)
         }
     }
 
@@ -220,9 +226,12 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
     }
 
     private fun showLoadingLayout(show: Boolean) {
-        loadingLayout.isVisible = show
-        TransitionManager.beginDelayedTransition(loadingLayout)
-        paymentButton.isEnabled = show.not()
+        with(binding) {
+            loadingOverlayBinding.loadingLayout.isVisible = show
+            TransitionManager.beginDelayedTransition(loadingOverlayBinding.loadingLayout)
+            paymentButton.isEnabled = show.not()
+        }
+
     }
 
     override fun onDestroy() {
