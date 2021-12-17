@@ -21,10 +21,10 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.model.TicketInfo
 import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsRemoteRepository
+import de.tum.`in`.tumcampusapp.databinding.ActivityShowTicketBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.activity_show_ticket.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -65,8 +65,13 @@ class ShowTicketActivity : BaseActivity(R.layout.activity_show_ticket) {
             }
         }
 
+    private lateinit var binding: ActivityShowTicketBinding
+    
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        binding = ActivityShowTicketBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val eventId = intent.getIntExtra(Const.KEY_EVENT_ID, 0)
         injector.ticketsComponent()
@@ -89,19 +94,23 @@ class ShowTicketActivity : BaseActivity(R.layout.activity_show_ticket) {
     }
 
     private fun initViews() {
-        ticketList.layoutManager = LinearLayoutManager(this)
-        ticketList.setHasFixedSize(true)
-        ticketList.isNestedScrollingEnabled = false
+        binding.ticketList.layoutManager = LinearLayoutManager(this)
 
-        val spacing = resources.getDimension(R.dimen.material_tiny_padding).roundToInt()
-        ticketList.addItemDecoration(EqualSpacingItemDecoration(spacing))
+        with(binding) {
+            ticketList.setHasFixedSize(true)
+            ticketList.isNestedScrollingEnabled = false
 
-        swipeRefreshLayout.setColorSchemeResources(
-                R.color.color_primary,
-                R.color.tum_A100,
-                R.color.tum_A200
-        )
-        swipeRefreshLayout.setOnRefreshListener { loadRedemptionStatus() }
+            val spacing = resources.getDimension(R.dimen.material_tiny_padding).roundToInt()
+            ticketList.addItemDecoration(EqualSpacingItemDecoration(spacing))
+
+            swipeRefreshLayout.setColorSchemeResources(
+                    R.color.color_primary,
+                    R.color.tum_A100,
+                    R.color.tum_A200
+            )
+            swipeRefreshLayout.setOnRefreshListener { loadRedemptionStatus() }
+        }
+
     }
 
     private fun loadRedemptionStatus() {
@@ -115,12 +124,12 @@ class ShowTicketActivity : BaseActivity(R.layout.activity_show_ticket) {
         ticketsLocalRepo.insert(*tickets.toTypedArray())
         ticketInfoList = ticketsLocalRepo.getTicketsByEventId(event.id)
         setViewData()
-        swipeRefreshLayout.isRefreshing = false
+        binding.swipeRefreshLayout.isRefreshing = false
     }
 
     private fun handleTicketRefreshFailure() {
         Utils.showToast(this, R.string.error_something_wrong)
-        swipeRefreshLayout.isRefreshing = false
+        binding.swipeRefreshLayout.isRefreshing = false
     }
 
     private fun loadTicketData(eventId: Int) {
@@ -139,13 +148,13 @@ class ShowTicketActivity : BaseActivity(R.layout.activity_show_ticket) {
     }
 
     private fun setViewData() {
-        eventTitle.text = event.title
-        eventDateTime.text = event.getFormattedStartDateTime(this)
-        redemptionStateTextView.text = redemptionState
-        eventLocation.text = event.locality
-        eventLocation.setOnClickListener { this.showMap(it) }
+        binding.eventTitle.text = event.title
+        binding.eventDateTime.text = event.getFormattedStartDateTime(this)
+        binding.redemptionStateTextView.text = redemptionState
+        binding.eventLocation.text = event.locality
+        binding.eventLocation.setOnClickListener { this.showMap(it) }
 
-        ticketList?.adapter = BoughtTicketAdapter(ticketInfoList)
+        binding.ticketList?.adapter = BoughtTicketAdapter(ticketInfoList)
     }
 
     private fun showMap(view: View) {
@@ -163,7 +172,7 @@ class ShowTicketActivity : BaseActivity(R.layout.activity_show_ticket) {
         try {
             val bitMatrix = multiFormatWriter.encode(text, BarcodeFormat.QR_CODE, 200, 200)
             val bitmap = BarcodeEncoder().createBitmap(bitMatrix)
-            qrCode.setImageBitmap(bitmap)
+            binding.qrCode.setImageBitmap(bitmap)
         } catch (e: WriterException) {
             Utils.log(e)
             Utils.showToast(this, R.string.error_something_wrong)
