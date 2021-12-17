@@ -14,7 +14,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
@@ -57,7 +57,7 @@ class KinoDetailsFragment : Fragment() {
                 .inject(this)
 
         val factory = ViewModelFactory(viewModelProvider)
-        kinoViewModel = ViewModelProviders.of(this, factory).get(KinoDetailsViewModel::class.java)
+        kinoViewModel = ViewModelProvider(this, factory).get(KinoDetailsViewModel::class.java)
 
         kinoViewModel.kino.observe(this, Observer<Kino> { showMovieDetails(it) })
         kinoViewModel.event.observe(this, Observer<Event> { showEventTicketDetails(it) })
