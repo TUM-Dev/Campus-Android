@@ -1,14 +1,13 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria.details
 
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaMenuFormatter
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.FavoriteDishDao
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.FavoriteDish
-import kotlinx.android.synthetic.main.cafeteria_menu_header.view.*
-import kotlinx.android.synthetic.main.card_price_line.view.*
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
@@ -30,6 +29,8 @@ sealed class CafeteriaMenuAdapterItem {
             holder: CafeteriaMenusAdapter.ViewHolder,
             listener: (() -> Unit)?
         ) = with(holder.itemView) {
+            val headerTextView = findViewById<TextView>(R.id.headerTextView)
+
             headerTextView.text = menu.typeLong.replace("[0-9]", "").trim()
             setOnClickListener { listener?.invoke() }
         }
@@ -64,6 +65,9 @@ sealed class CafeteriaMenuAdapterItem {
             itemView: View,
             price: String
         ) = with(itemView) {
+            val priceTextView = findViewById<TextView>(R.id.priceTextView)
+            val favoriteDish = findViewById<ImageView>(R.id.favoriteDish)
+
             priceTextView.text = kotlin.String.format("%s €", price)
 
             favoriteDish.isSelected = isFavorite
@@ -81,6 +85,9 @@ sealed class CafeteriaMenuAdapterItem {
         }
 
         private fun hidePrice(itemView: View) = with(itemView) {
+            val priceTextView = findViewById<TextView>(R.id.priceTextView)
+            val favoriteDish = findViewById<ImageView>(R.id.favoriteDish)
+
             priceTextView.visibility = View.GONE
             favoriteDish.visibility = View.GONE
         }
