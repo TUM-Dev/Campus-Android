@@ -73,7 +73,7 @@ object FcmTokenHandler {
     private fun sendTokenToBackend(context: Context, token: String?) {
         // Check if all parameters are present
         if (token == null || token.isEmpty()) {
-            Utils.logv("Parameter missing for sending reg id")
+            Utils.logVerbose("Parameter missing for sending reg id")
             return
         }
 
@@ -86,12 +86,12 @@ object FcmTokenHandler {
                 .deviceUploadGcmToken(uploadToken, object : Callback<TUMCabeStatus> {
                     override fun onResponse(call: Call<TUMCabeStatus>, response: Response<TUMCabeStatus>) {
                         if (!response.isSuccessful) {
-                            Utils.logv("Uploading FCM registration failed...")
+                            Utils.logVerbose("Uploading FCM registration failed...")
                             return
                         }
 
                         val body = response.body() ?: return
-                        Utils.logv("Success uploading FCM registration id: ${body.status}")
+                        Utils.logVerbose("Success uploading FCM registration id: ${body.status}")
 
                         // Store in shared preferences the information that the GCM registration id
                         // was sent to the TCA server successfully

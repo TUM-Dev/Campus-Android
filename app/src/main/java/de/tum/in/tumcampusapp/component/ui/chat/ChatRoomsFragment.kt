@@ -188,7 +188,7 @@ class ChatRoomsFragment : FragmentForAccessingTumOnline<LecturesResponse>(
      * Works asynchronously.
      */
     private fun createOrJoinChatRoom(name: String) {
-        Utils.logv("create or join chat room $name")
+        Utils.logVerbose("create or join chat room $name")
         if (this.currentChatMember == null) {
             Utils.showToast(requireContext(), getString(R.string.chat_not_setup))
             return
@@ -205,12 +205,12 @@ class ChatRoomsFragment : FragmentForAccessingTumOnline<LecturesResponse>(
         val callback = object : Callback<ChatRoom> {
             override fun onResponse(call: Call<ChatRoom>, response: Response<ChatRoom>) {
                 if (!response.isSuccessful) {
-                    Utils.logv("Error creating&joining chat room: " + response.message())
+                    Utils.logVerbose("Error creating&joining chat room: " + response.message())
                     return
                 }
 
                 // The POST request is successful: go to room. API should have auto joined it
-                Utils.logv("Success creating&joining chat room: " + response.body()!!)
+                Utils.logVerbose("Success creating&joining chat room: " + response.body()!!)
                 currentChatRoom = response.body()
 
                 manager.join(currentChatRoom)

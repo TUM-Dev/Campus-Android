@@ -3,25 +3,21 @@ package de.tum.`in`.tumcampusapp.utils
 import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.os.BatteryManager
 import android.os.Build
-import android.preference.PreferenceManager
 import android.text.Html
 import android.text.Spanned
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.pm.PackageInfoCompat
+import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.BuildConfig
 import org.jetbrains.anko.defaultSharedPreferences
 import java.io.IOException
-import java.io.InputStream
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.text.DecimalFormat
@@ -90,24 +86,6 @@ object Utils {
             sp.getLong(key, defaultVal)
         } catch (ignore: ClassCastException) {
             sp.getString(key, null)?.toLongOrNull() ?: defaultVal
-        }
-    }
-
-    /**
-     * Get a value from the default shared preferences.
-     *
-     * @param c Context
-     * @param key setting name
-     * @param defaultVal default value
-     * @return setting value, defaultVal if undefined
-     */
-    @JvmStatic
-    fun getSettingFloat(c: Context, key: String, defaultVal: Float): Float {
-        val sp = PreferenceManager.getDefaultSharedPreferences(c)
-        return try {
-            sp.getFloat(key, defaultVal)
-        } catch (ignore: ClassCastException) {
-            sp.getString(key, null)?.toFloatOrNull() ?: defaultVal
         }
     }
 
@@ -229,7 +207,7 @@ object Utils {
      * @param message Information or Debug message
      */
     @JvmStatic
-    fun logv(message: String) {
+    fun logVerbose(message: String) {
         if (!BuildConfig.DEBUG) {
             return
         }
@@ -246,30 +224,11 @@ object Utils {
      * @param message Information or Debug message
      */
     @JvmStatic
-    fun logwithTag(tag: String, message: String) {
+    fun logWithTag(tag: String, message: String) {
         if (!BuildConfig.DEBUG) {
             return
         }
         Log.v(tag, message)
-    }
-
-    /**
-     * Returns a String[]-List from a CSV input stream
-     *
-     * @param fin CSV input stream
-     * @return String[]-List with Columns matched to array values
-     */
-    @JvmStatic
-    fun readCsv(fin: InputStream): List<Array<String>> {
-        return try {
-            fin.bufferedReader(Charsets.UTF_8)
-                    .lineSequence()
-                    .map { splitCsvLine(it) }
-                    .toList()
-        } catch (e: IOException) {
-            log(e)
-            emptyList()
-        }
     }
 
     /**
@@ -338,36 +297,6 @@ object Utils {
     }
 
     /**
-     * Splits a line from a CSV file into column values
-     *
-     *
-     * e.g. "aaa;aaa";"bbb";1 gets aaa,aaa;bbb;1;
-     *
-     * @param str CSV line
-     * @return String[] with CSV column values
-     */
-    private fun splitCsvLine(str: CharSequence): Array<String> {
-        val result = StringBuilder()
-        var open = false
-        for (i in 0 until str.length) {
-            val c = str[i]
-            if (c == '"') {
-                open = !open
-                continue
-            }
-            if (open && c == ';') {
-                result.append(',')
-            } else {
-                result.append(c)
-            }
-        }
-        // fix trailing ";", e.g. ";;;".split().length = 0
-        result.append("; ")
-        return result.toString()
-                .split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-    }
-
-    /**
      * Converts a meter based value to a formatted string
      *
      * @param meters Meters to represent
@@ -402,12 +331,12 @@ object Utils {
 
     @JvmStatic
     fun showToastOnUIThread(activity: Activity, s: Int) {
-        activity.runOnUiThread { Utils.showToast(activity, s) }
+        activity.runOnUiThread { showToast(activity, s) }
     }
 
     @JvmStatic
     fun showToastOnUIThread(activity: Activity, s: CharSequence) {
-        activity.runOnUiThread { Utils.showToast(activity, s) }
+        activity.runOnUiThread { showToast(activity, s) }
     }
 
     /**
@@ -428,11 +357,11 @@ object Utils {
     }
 
     private fun isBackgroundServiceEnabled(context: Context): Boolean {
-        return Utils.getSettingBool(context, Const.BACKGROUND_MODE, false)
+        return getSettingBool(context, Const.BACKGROUND_MODE, false)
     }
 
     private fun isBackgroundServiceAlwaysEnabled(context: Context): Boolean {
-        return "0" == Utils.getSetting(context, "background_mode_set_to", "0")
+        return "0" == getSetting(context, "background_mode_set_to", "0")
     }
 
     @JvmStatic
@@ -446,22 +375,12 @@ object Utils {
     }
 
     @JvmStatic
-    fun getBatteryLevel(context: Context): Float {
-        val batteryIntent = context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-                ?: return -1f
-        val level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-        val scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
-        return if (level == -1 || scale == -1) {
-            -1f
-        } else level.toFloat() / scale.toFloat() * 100.0f
-    }
-
-    @JvmStatic
     fun extractRoomNumberFromLocation(location: String): String {
         val pattern = Pattern.compile("\\((.*?)\\)")
         val matcher = pattern.matcher(location)
         return if (matcher.find()) {
-            matcher.group(1)
+            // The string returned by matcher.group() might be null, but this method requires a non-null string as return value
+            matcher.group(1) ?: location
         } else {
             location
         }

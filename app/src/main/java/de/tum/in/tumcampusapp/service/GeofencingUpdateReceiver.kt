@@ -17,10 +17,10 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 class GeofencingUpdateReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        Utils.logwithTag(TAG, "Received event")
+        Utils.logWithTag(TAG, "Received event")
         val geofencingEvent = GeofencingEvent.fromIntent(intent)
         if (geofencingEvent.hasError()) {
-            Utils.logwithTag(TAG, "Geofencing event contained errors.")
+            Utils.logWithTag(TAG, "Geofencing event contained errors.")
             return
         }
 
@@ -30,12 +30,12 @@ class GeofencingUpdateReceiver : BroadcastReceiver() {
         if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
             Utils.setSetting(context, Const.BACKGROUND_MODE, true)
             StartSyncReceiver.startBackground(context)
-            Utils.logwithTag(TAG, "Geofencing detected user entering munich, " +
+            Utils.logWithTag(TAG, "Geofencing detected user entering munich, " +
                     "enabling Auto updates")
         } else if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
             Utils.setSetting(context, Const.BACKGROUND_MODE, false)
             StartSyncReceiver.cancelBackground()
-            Utils.logwithTag(TAG, "Geofencing detected user leaving munich, " +
+            Utils.logWithTag(TAG, "Geofencing detected user leaving munich, " +
                     "disabling Auto updates")
         }
     }

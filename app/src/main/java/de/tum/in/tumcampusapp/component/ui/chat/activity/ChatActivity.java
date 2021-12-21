@@ -152,7 +152,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
     }
 
     private void handleBroadcastReceive(Intent intent) {
-        Utils.logv("Message sent. Trying to parse...");
+        Utils.logVerbose("Message sent. Trying to parse...");
 
         FcmChat chat = (FcmChat) intent.getSerializableExtra(Const.FCM_CHAT);
         if (chat != null) {

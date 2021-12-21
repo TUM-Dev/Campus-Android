@@ -25,7 +25,7 @@ class LectureListSelectionAdapter(
 
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
         // save new preferences
-        Utils.logv("Widget asked to change ${buttonView.text} to $isChecked")
+        Utils.logVerbose("Widget asked to change ${buttonView.text} to $isChecked")
         if (isChecked) {
             calendarController.deleteLectureFromBlacklist(this.appWidgetId, buttonView.text as String)
         } else {
