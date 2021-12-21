@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.InactiveTokenException
@@ -11,14 +12,13 @@ import de.tum.`in`.tumcampusapp.component.other.generic.fragment.BaseFragment
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.IdentitySet
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponent
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponentProvider
+import de.tum.`in`.tumcampusapp.databinding.FragmentCheckTokenBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_check_token.nextButton
-import kotlinx.android.synthetic.main.fragment_check_token.openTumOnlineButton
 import org.jetbrains.anko.support.v4.browse
 import java.net.UnknownHostException
 import javax.inject.Inject
@@ -45,6 +45,8 @@ class CheckTokenFragment : BaseFragment<Unit>(
     @Inject
     lateinit var navigator: OnboardingNavigator
 
+    private val binding by viewBinding(FragmentCheckTokenBinding::bind)
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         onboardingComponent.inject(this)
@@ -53,8 +55,11 @@ class CheckTokenFragment : BaseFragment<Unit>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         disableRefresh()
-        openTumOnlineButton.setOnClickListener { browse(Const.TUM_CAMPUS_URL) }
-        nextButton.setOnClickListener { loadIdentitySet() }
+        with(binding) {
+            openTumOnlineButton.setOnClickListener { browse(Const.TUM_CAMPUS_URL) }
+            nextButton.setOnClickListener { loadIdentitySet() }
+        }
+
     }
 
     private fun loadIdentitySet() {

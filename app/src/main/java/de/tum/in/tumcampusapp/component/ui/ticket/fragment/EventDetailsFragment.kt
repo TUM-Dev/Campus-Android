@@ -11,23 +11,23 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.squareup.picasso.Picasso
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CreateEventActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventHelper
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.payload.TicketStatus
+import de.tum.`in`.tumcampusapp.databinding.FragmentEventDetailsBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Const.KEY_EVENT_ID
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import de.tum.`in`.tumcampusapp.utils.into
-import kotlinx.android.synthetic.main.fragment_event_details.*
-import kotlinx.android.synthetic.main.fragment_event_details.view.*
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -44,11 +44,13 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private val viewModel: EventDetailsViewModel by lazy {
         val factory = ViewModelFactory(viewModelProviders)
-        ViewModelProviders.of(this, factory).get(EventDetailsViewModel::class.java)
+        ViewModelProvider(this, factory).get(EventDetailsViewModel::class.java)
     }
 
     @Inject
     lateinit var viewModelProviders: Provider<EventDetailsViewModel>
+
+    private val binding by viewBinding(FragmentEventDetailsBinding::bind)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -66,8 +68,8 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         val view = LayoutInflater.from(container?.context)
                 .inflate(R.layout.fragment_event_details, container, false)
 
-        view.swipeRefreshLayout.setOnRefreshListener(this)
-        view.swipeRefreshLayout.setColorSchemeResources(
+        binding.swipeRefreshLayout.setOnRefreshListener(this)
+        binding.swipeRefreshLayout.setColorSchemeResources(
                 R.color.color_primary,
                 R.color.tum_A100,
                 R.color.tum_A200
@@ -87,38 +89,41 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun showEventDetails(event: Event) {
         val url = event.imageUrl
-        if (url != null) {
-            Picasso.get()
-                    .load(url)
-                    .noPlaceholder()
-                    .into(posterView) {
-                        posterProgressBar?.visibility = View.GONE
-                    }
-        } else {
-            posterProgressBar.visibility = View.GONE
+        with(binding) {
+            if (url != null) {
+                Picasso.get()
+                        .load(url)
+                        .noPlaceholder()
+                        .into(posterView) {
+                            posterProgressBar?.visibility = View.GONE
+                        }
+            } else {
+                posterProgressBar.visibility = View.GONE
+            }
+
+            if (viewModel.isEventBooked(event)) {
+                ticketButton.text = getString(R.string.show_ticket)
+                ticketButton.text = resources.getQuantityText(R.plurals.show_tickets, viewModel.getBookedTicketCount(event))
+                ticketButton.setOnClickListener { showTicket(event) }
+            } else {
+                ticketButton.text = getString(R.string.buy_ticket)
+                ticketButton.setOnClickListener { EventHelper.buyTicket(event, ticketButton, context) }
+            }
+
+            context?.let {
+                dateTextView.text = event.getFormattedStartDateTime(it)
+                dateContainer.setOnClickListener { displayAddToCalendarDialog() }
+            }
+
+            locationTextView.text = event.locality
+            locationContainer.setOnClickListener { openMaps(event) }
+
+            descriptionTextView.text = event.description
+
+            linkButton.setOnClickListener { openEventLink(event) }
+            linkButton.visibility = if (event.eventUrl.isNotBlank()) View.VISIBLE else View.GONE
         }
 
-        if (viewModel.isEventBooked(event)) {
-            ticketButton.text = getString(R.string.show_ticket)
-            ticketButton.text = resources.getQuantityText(R.plurals.show_tickets, viewModel.getBookedTicketCount(event))
-            ticketButton.setOnClickListener { showTicket(event) }
-        } else {
-            ticketButton.text = getString(R.string.buy_ticket)
-            ticketButton.setOnClickListener { EventHelper.buyTicket(event, ticketButton, context) }
-        }
-
-        context?.let {
-            dateTextView.text = event.getFormattedStartDateTime(it)
-            dateContainer.setOnClickListener { displayAddToCalendarDialog() }
-        }
-
-        locationTextView.text = event.locality
-        locationContainer.setOnClickListener { openMaps(event) }
-
-        descriptionTextView.text = event.description
-
-        linkButton.setOnClickListener { openEventLink(event) }
-        linkButton.visibility = if (event.eventUrl.isNotBlank()) View.VISIBLE else View.GONE
     }
 
     private fun openEventLink(event: Event) {
@@ -127,16 +132,19 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun showTicketCount(status: TicketStatus?) {
-        EventHelper.showRemainingTickets(
-                status,
-                viewModel.isEventBooked(event),
-                EventHelper.isEventImminent(event),
-                ticketButton,
-                remainingTicketsContainer,
-                remainingTicketsTextView,
-                getString(R.string.no_tickets_remaining_message))
+        with(binding) {
+            EventHelper.showRemainingTickets(
+                    status,
+                    viewModel.isEventBooked(event),
+                    EventHelper.isEventImminent(event),
+                    ticketButton,
+                    remainingTicketsContainer,
+                    remainingTicketsTextView,
+                    getString(R.string.no_tickets_remaining_message))
 
-        swipeRefreshLayout.isRefreshing = false
+            swipeRefreshLayout.isRefreshing = false
+        }
+
     }
 
     private fun showTicket(event: Event) {

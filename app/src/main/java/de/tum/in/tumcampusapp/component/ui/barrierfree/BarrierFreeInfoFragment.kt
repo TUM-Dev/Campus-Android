@@ -3,18 +3,21 @@ package de.tum.`in`.tumcampusapp.component.ui.barrierfree
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.BaseFragment
-import kotlinx.android.synthetic.main.fragment_barrierfree_info.barrierFreeListView
+import de.tum.`in`.tumcampusapp.databinding.FragmentBarrierfreeInfoBinding
 
 class BarrierFreeInfoFragment : BaseFragment<Unit>(
     R.layout.fragment_barrierfree_info,
     R.string.barrier_free
 ) {
 
+    private val binding by viewBinding(FragmentBarrierfreeInfoBinding::bind)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        barrierFreeListView.setOnItemClickListener { _, _, position, _ ->
+        binding.barrierFreeListView.setOnItemClickListener { _, _, position, _ ->
             val intent = when (position) {
                 0 -> Intent(requireContext(), BarrierFreeContactActivity::class.java)
                 1 -> Intent(requireContext(), BarrierFreeFacilitiesActivity::class.java)

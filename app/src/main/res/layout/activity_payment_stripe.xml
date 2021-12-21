@@ -201,7 +201,9 @@
 
             </LinearLayout>
 
-            <include layout="@layout/loading_overlay" />
+            <include
+                android:id="@+id/loadingLayoutBinding"
+                layout="@layout/loading_overlay" />
 
         </FrameLayout>
 

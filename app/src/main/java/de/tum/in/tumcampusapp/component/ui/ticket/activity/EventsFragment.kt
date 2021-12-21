@@ -8,15 +8,15 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.FragmentForDownloadingExternal
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsDownloadAction
 import de.tum.`in`.tumcampusapp.component.ui.ticket.fragment.EventsListFragment
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.EventType
+import de.tum.`in`.tumcampusapp.databinding.FragmentEventsBinding
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.service.DownloadWorker
-import kotlinx.android.synthetic.main.fragment_events.viewPager
-import java.util.Arrays
 import javax.inject.Inject
 
 class EventsFragment : FragmentForDownloadingExternal(
@@ -30,6 +30,8 @@ class EventsFragment : FragmentForDownloadingExternal(
     override val method: DownloadWorker.Action?
         get() = eventsDownloadAction
 
+    private val binding by viewBinding(FragmentEventsBinding::bind)
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         injector.downloadComponent().inject(this)
@@ -37,14 +39,14 @@ class EventsFragment : FragmentForDownloadingExternal(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupViewPager(viewPager)
+        setupViewPager(binding.viewPager)
 
         val eventTab = requireActivity().findViewById<TabLayout>(R.id.event_tab)
-        eventTab.setupWithViewPager(viewPager)
+        eventTab.setupWithViewPager(binding.viewPager)
 
         eventTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                viewPager.currentItem = tab.position
+                binding.viewPager.currentItem = tab.position
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab) = Unit
@@ -54,7 +56,7 @@ class EventsFragment : FragmentForDownloadingExternal(
     }
 
     private fun setupViewPager(viewPager: ViewPager) {
-        val adapter = EventsViewPagerAdapter(requireContext(), requireFragmentManager())
+        val adapter = EventsViewPagerAdapter(requireContext(), childFragmentManager)
         viewPager.adapter = adapter
     }
 
@@ -67,7 +69,7 @@ class EventsFragment : FragmentForDownloadingExternal(
         manager: FragmentManager
     ) : FragmentPagerAdapter(manager) {
 
-        private val titles = Arrays.asList(
+        private val titles = listOf(
             context.getString(R.string.all_events),
             context.getString(R.string.booked_events)
         )

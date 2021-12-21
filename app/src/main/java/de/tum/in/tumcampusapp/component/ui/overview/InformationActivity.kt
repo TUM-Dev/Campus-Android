@@ -7,7 +7,7 @@ import android.content.Intent.ACTION_VIEW
 import android.content.pm.PackageManager.NameNotFoundException
 import android.net.Uri
 import android.os.Bundle
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import android.text.format.DateUtils
 import android.view.View
 import android.view.ViewGroup
@@ -19,31 +19,34 @@ import de.psdev.licensesdialog.LicensesDialog
 import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
+import de.tum.`in`.tumcampusapp.databinding.ActivityInformationBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
-import kotlinx.android.synthetic.main.activity_information.*
 
 /**
  * Provides information about this app and all contributors
  */
 class InformationActivity : BaseActivity(R.layout.activity_information) {
 
+    private lateinit var binding: ActivityInformationBinding
     private val rowParams = TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.displayDebugInfo()
 
-        button_facebook.setOnClickListener {
+        binding = ActivityInformationBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.buttonFacebook.setOnClickListener {
             openFacebook()
         }
-        button_github.setOnClickListener {
+        binding.buttonGithub.setOnClickListener {
             startActivity(Intent(ACTION_VIEW, Uri.parse(getString(R.string.github_link))))
         }
-        button_privacy.setOnClickListener {
+        binding.buttonPrivacy.setOnClickListener {
             startActivity(Intent(ACTION_VIEW, Uri.parse(getString(R.string.url_privacy_policy))))
         }
-        button_licenses.setOnClickListener {
+        binding.buttonLicenses.setOnClickListener {
             LicensesDialog.Builder(this)
                     .setNotices(R.raw.notices)
                     .setShowFullLicenseText(false)
@@ -51,6 +54,9 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
                     .build()
                     .show()
         }
+
+
+        displayDebugInfo()
     }
 
     /**
@@ -72,34 +78,36 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
         // Setup showing of debug information
         val sp = PreferenceManager.getDefaultSharedPreferences(this)
 
-        try {
-            val packageInfo = packageManager.getPackageInfo(packageName, 0)
-            this.addDebugRow(debugInfos, "App version", packageInfo.versionName)
-        } catch (ignore: NameNotFoundException) {
+        with(binding) {
+            try {
+                val packageInfo = packageManager.getPackageInfo(packageName, 0)
+                addDebugRow(debugInfos, "App version", packageInfo.versionName)
+            } catch (ignore: NameNotFoundException) {
+            }
+
+            addDebugRow(debugInfos, "TUM ID", sp.getString(Const.LRZ_ID, ""))
+            val token = sp.getString(Const.ACCESS_TOKEN, "")
+            if (token == "") {
+                addDebugRow(debugInfos, "TUM access token", "")
+            } else {
+                addDebugRow(debugInfos, "TUM access token", token?.substring(0, 5) + "...")
+            }
+            addDebugRow(debugInfos, "Bug reports", sp.getBoolean(Const.BUG_REPORTS, false).toString() + " ")
+
+            addDebugRow(debugInfos, "REG ID", Utils.getSetting(applicationContext, Const.FCM_REG_ID, ""))
+            addDebugRow(debugInfos, "REG transmission", DateUtils.getRelativeDateTimeString(applicationContext,
+                    Utils.getSettingLong(applicationContext, Const.FCM_REG_ID_LAST_TRANSMISSION, 0),
+                    DateUtils.MINUTE_IN_MILLIS, DateUtils.DAY_IN_MILLIS * 2, 0).toString())
+            try {
+                val packageInfo = packageManager.getPackageInfo(packageName, 0)
+                addDebugRow(debugInfos, "Version code", PackageInfoCompat.getLongVersionCode(packageInfo).toString())
+            } catch (ignore: NameNotFoundException) {
+            }
+
+            addDebugRow(debugInfos, "Build configuration", BuildConfig.DEBUG.toString())
+            debugInfos.visibility = View.VISIBLE
         }
 
-        this.addDebugRow(debugInfos, "TUM ID", sp.getString(Const.LRZ_ID, ""))
-        val token = sp.getString(Const.ACCESS_TOKEN, "")
-        if (token == "") {
-            this.addDebugRow(debugInfos, "TUM access token", "")
-        } else {
-            this.addDebugRow(debugInfos, "TUM access token", token?.substring(0, 5) + "...")
-        }
-        this.addDebugRow(debugInfos, "Bug reports", sp.getBoolean(Const.BUG_REPORTS, false).toString() + " ")
-
-        this.addDebugRow(debugInfos, "REG ID", Utils.getSetting(this, Const.FCM_REG_ID, ""))
-        this.addDebugRow(debugInfos, "REG transmission", DateUtils.getRelativeDateTimeString(this,
-                Utils.getSettingLong(this, Const.FCM_REG_ID_LAST_TRANSMISSION, 0),
-                DateUtils.MINUTE_IN_MILLIS, DateUtils.DAY_IN_MILLIS * 2, 0).toString())
-        try {
-            val packageInfo = packageManager.getPackageInfo(packageName, 0)
-            this.addDebugRow(debugInfos, "Version code", PackageInfoCompat.getLongVersionCode(packageInfo).toString())
-        } catch (ignore: NameNotFoundException) {
-        }
-
-        this.addDebugRow(debugInfos, "Build configuration", BuildConfig.DEBUG.toString())
-
-        debugInfos.visibility = View.VISIBLE
     }
 
     private fun addDebugRow(tableLayout: TableLayout, label: String, value: String?) {

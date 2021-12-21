@@ -549,9 +549,6 @@ Signature: %5$s</string>
     <string name="title_activity_cards">Study Cards</string>
     <string name="study_cards_title">Cards</string>
     <string name="create_card">create card</string>
-    <string name="card_title">Title</string>
-    <string name="card_front_text">Front text</string>
-    <string name="card_back_text">Back text</string>
     <string name="title_activity_cards_detail">Add Card</string>
     <string name="card_question">Question</string>
     <string name="card_answer">Answer</string>

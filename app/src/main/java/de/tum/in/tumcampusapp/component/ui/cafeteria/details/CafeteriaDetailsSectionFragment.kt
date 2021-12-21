@@ -8,16 +8,17 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
+import de.tum.`in`.tumcampusapp.databinding.FragmentCafeteriadetailsSectionBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
-import kotlinx.android.synthetic.main.fragment_cafeteriadetails_section.*
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import javax.inject.Inject
@@ -32,8 +33,10 @@ class CafeteriaDetailsSectionFragment : Fragment() {
     internal lateinit var viewModelProvider: Provider<CafeteriaViewModel>
 
     private val cafeteriaViewModel by lazy {
-        ViewModelProviders.of(this, ViewModelFactory(viewModelProvider)).get(CafeteriaViewModel::class.java)
+        ViewModelProvider(this, ViewModelFactory(viewModelProvider)).get(CafeteriaViewModel::class.java)
     }
+
+    private val binding by viewBinding(FragmentCafeteriadetailsSectionBinding::bind)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -57,20 +60,22 @@ class CafeteriaDetailsSectionFragment : Fragment() {
             return
         }
 
-        menuDateTextView.text = menuDateString
+        with(binding) {
+            menuDateTextView.text = menuDateString
 
-        val hours = OpenHoursHelper(requireContext()).getHoursByIdAsString(cafeteriaId, menuDate)
-        menuOpeningHours.text = hours
-        menuOpeningHours.isVisible = hours.isNotEmpty()
+            val hours = OpenHoursHelper(requireContext()).getHoursByIdAsString(cafeteriaId, menuDate)
+            menuOpeningHours.text = hours
+            menuOpeningHours.isVisible = hours.isNotEmpty()
 
-        menusRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        menusRecyclerView.itemAnimator = DefaultItemAnimator()
+            menusRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+            menusRecyclerView.itemAnimator = DefaultItemAnimator()
 
-        val adapter = CafeteriaMenusAdapter(requireContext(), true, null)
-        menusRecyclerView.adapter = adapter
+            val adapter = CafeteriaMenusAdapter(requireContext(), true, null)
+            menusRecyclerView.adapter = adapter
 
-        cafeteriaViewModel.cafeteriaMenus.observe(viewLifecycleOwner, Observer<List<CafeteriaMenu>> { adapter.update(it) })
-        cafeteriaViewModel.fetchCafeteriaMenus(cafeteriaId, menuDate)
+            cafeteriaViewModel.cafeteriaMenus.observe(viewLifecycleOwner, Observer<List<CafeteriaMenu>> { adapter.update(it) })
+            cafeteriaViewModel.fetchCafeteriaMenus(cafeteriaId, menuDate)
+        }
     }
 
     companion object {

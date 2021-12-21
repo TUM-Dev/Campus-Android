@@ -1,17 +1,20 @@
 package de.tum.`in`.tumcampusapp.component.ui.chat
 
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMessage
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
-import kotlinx.android.synthetic.main.card_chat_messages.view.*
 
 class ChatMessagesCardViewHolder(
     itemView: View,
     interactionListener: CardInteractionListener
 ) : CardViewHolder(itemView, interactionListener) {
+
+    private val chatRoomNameTextView = itemView.findViewById<TextView>(R.id.chatRoomNameTextView)
+    private val contentContainerLayout = itemView.findViewById<LinearLayout>(R.id.contentContainerLayout)
 
     @Suppress("UNUSED_PARAMETER")
     fun bind(roomName: String, roomId: Int, roomIdStr: String, unreadMessages: List<ChatMessage>) {

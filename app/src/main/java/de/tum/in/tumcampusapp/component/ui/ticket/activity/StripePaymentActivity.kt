@@ -25,10 +25,9 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.TicketEphemeralKeyProvider
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Ticket
 import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository
 import de.tum.`in`.tumcampusapp.database.TcaDb
+import de.tum.`in`.tumcampusapp.databinding.ActivityPaymentStripeBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
-import kotlinx.android.synthetic.main.activity_payment_stripe.*
-import kotlinx.android.synthetic.main.loading_overlay.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -47,8 +46,13 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
 
     private lateinit var localTicketRepo: TicketsLocalRepository
 
+    private lateinit var binding: ActivityPaymentStripeBinding
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        binding = ActivityPaymentStripeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         localTicketRepo = TicketsLocalRepository(TcaDb.getInstance(this))
 
@@ -78,53 +82,59 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
 
     private fun initViews() {
         val cardholder = Utils.getSetting(this, Const.KEY_CARD_HOLDER, "")
-        cardholderEditText.setText(cardholder)
-        cardholderEditText.setSelection(cardholder.length)
+        with(binding) {
+            cardholderEditText.setText(cardholder)
+            cardholderEditText.setSelection(cardholder.length)
 
-        if (cardholder.isEmpty()) {
-            // We only request focus if the user has not entered their name. Otherwise, we assume
-            // that the user will perform the payment method selection next.
-            cardholderEditText.requestFocus()
-        }
-
-        cardholderEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                val input = s.toString().trim { it <= ' ' }
-                Utils.setSetting(this@StripePaymentActivity, Const.KEY_CARD_HOLDER, input)
-                updateBuyButton()
+            if (cardholder.isEmpty()) {
+                // We only request focus if the user has not entered their name. Otherwise, we assume
+                // that the user will perform the payment method selection next.
+                cardholderEditText.requestFocus()
             }
 
-            override fun afterTextChanged(s: Editable) {}
-        })
+            cardholderEditText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
-        selectPaymentMethodSwitcher.setOnClickListener { paymentSession?.presentPaymentMethodSelection() }
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                    val input = s.toString().trim { it <= ' ' }
+                    Utils.setSetting(this@StripePaymentActivity, Const.KEY_CARD_HOLDER, input)
+                    updateBuyButton()
+                }
 
-        completePurchaseButton.text = getString(R.string.buy_format_string, ticketPrice)
-        completePurchaseButton.setOnClickListener { purchaseTicket() }
+                override fun afterTextChanged(s: Editable) {}
+            })
 
-        termsOfServiceCheckBox.setOnClickListener { updateBuyButton() }
-        termsOfServiceButton.setOnClickListener { view ->
-            val browserIntent = Intent(Intent.ACTION_VIEW)
-            browserIntent.data = Uri.parse(termsOfServiceLink)
-            view.context.startActivity(browserIntent)
+            selectPaymentMethodSwitcher.setOnClickListener { paymentSession?.presentPaymentMethodSelection() }
+
+            completePurchaseButton.text = getString(R.string.buy_format_string, ticketPrice)
+            completePurchaseButton.setOnClickListener { purchaseTicket() }
+
+            termsOfServiceCheckBox.setOnClickListener { updateBuyButton() }
+            termsOfServiceButton.setOnClickListener { view ->
+                val browserIntent = Intent(Intent.ACTION_VIEW)
+                browserIntent.data = Uri.parse(termsOfServiceLink)
+                view.context.startActivity(browserIntent)
+            }
         }
+
     }
 
     private fun updateBuyButton() {
-        val hasCardholder = cardholderEditText.text.toString().isNotEmpty()
-        val enabled = (hasCardholder &&
-                didSelectPaymentMethod &&
-                termsOfServiceCheckBox.isChecked)
-        val alpha = if (enabled) 1.0f else 0.5f
+        with(binding) {
+            val hasCardholder = cardholderEditText.text.toString().isNotEmpty()
+            val enabled = (hasCardholder &&
+                    didSelectPaymentMethod &&
+                    termsOfServiceCheckBox.isChecked)
+            val alpha = if (enabled) 1.0f else 0.5f
 
-        completePurchaseButton.isEnabled = enabled
-        completePurchaseButton.alpha = alpha
+            completePurchaseButton.isEnabled = enabled
+            completePurchaseButton.alpha = alpha
+        }
+
     }
 
     private fun purchaseTicket() {
-        val cardholder = cardholderEditText.text.toString()
+        val cardholder = binding.cardholderEditText.text.toString()
         showLoading(true)
 
         try {
@@ -180,8 +190,8 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
     }
 
     private fun showLoading(isLoading: Boolean) {
-        loadingLayout.visibility = if (isLoading) View.VISIBLE else View.GONE
-        TransitionManager.beginDelayedTransition(loadingLayout)
+        binding.loadingLayoutBinding.loadingLayout.visibility = if (isLoading) View.VISIBLE else View.GONE
+        TransitionManager.beginDelayedTransition(binding.loadingLayoutBinding.loadingLayout)
     }
 
     private fun showError(message: String) {
@@ -214,7 +224,7 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
             methodTextView.text = buildCardString(cardData)
             cardBrandTextView.text = cardData.brand
 
-            selectPaymentMethodSwitcher.showNext()
+            binding.selectPaymentMethodSwitcher.showNext()
 
             didSelectPaymentMethod = true
             updateBuyButton()
@@ -244,14 +254,17 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private fun requestAutofillIfEmptyCardholder() {
-        if (cardholderEditText.text.toString().isEmpty()) {
-            cardholderEditText.setAutofillHints(View.AUTOFILL_HINT_NAME)
+        with(binding) {
+            if (cardholderEditText.text.toString().isEmpty()) {
+                cardholderEditText.setAutofillHints(View.AUTOFILL_HINT_NAME)
 
-            val autofillManager = getSystemService(AutofillManager::class.java)
-            if (autofillManager != null && autofillManager.isEnabled) {
-                autofillManager.requestAutofill(cardholderEditText)
+                val autofillManager = getSystemService(AutofillManager::class.java)
+                if (autofillManager != null && autofillManager.isEnabled) {
+                    autofillManager.requestAutofill(cardholderEditText)
+                }
             }
         }
+
     }
 
     private fun initPaymentSession() {
@@ -264,8 +277,11 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
         paymentSession?.init(object : PaymentSession.PaymentSessionListener {
 
             override fun onCommunicatingStateChanged(isCommunicating: Boolean) {
-                loadingLayout.isVisible = isCommunicating
-                TransitionManager.beginDelayedTransition(loadingLayout)
+                with(binding.loadingLayoutBinding) {
+                    loadingLayout.isVisible = isCommunicating
+                    TransitionManager.beginDelayedTransition(loadingLayout)
+                }
+
             }
 
             override fun onError(errorCode: Int, errorMessage: String?) {
@@ -275,7 +291,7 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
 
             override fun onPaymentSessionDataChanged(data: PaymentSessionData) {
                 updateBuyButton()
-                selectPaymentMethodSwitcher.isEnabled = true
+                binding.selectPaymentMethodSwitcher.isEnabled = true
             }
         }, config)
     }
