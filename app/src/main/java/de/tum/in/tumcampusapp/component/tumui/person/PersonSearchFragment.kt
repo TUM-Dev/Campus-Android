@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
@@ -12,8 +13,7 @@ import de.tum.`in`.tumcampusapp.component.other.generic.fragment.FragmentForSear
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.PersonList
 import de.tum.`in`.tumcampusapp.database.TcaDb
-import kotlinx.android.synthetic.main.fragment_person_search.personsRecyclerView
-import kotlinx.android.synthetic.main.fragment_person_search.recentsHeader
+import de.tum.`in`.tumcampusapp.databinding.FragmentPersonSearchBinding
 
 class PersonSearchFragment : FragmentForSearchingTumOnline<PersonList>(
     R.layout.fragment_person_search,
@@ -30,21 +30,23 @@ class PersonSearchFragment : FragmentForSearchingTumOnline<PersonList>(
             return recents.map { recent -> Person.fromRecent(recent) }
         }
 
+    private val binding by viewBinding(FragmentPersonSearchBinding::bind)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recentsDao = TcaDb.getInstance(requireContext()).recentsDao()
 
-        personsRecyclerView.setHasFixedSize(true)
+        binding.personsRecyclerView.setHasFixedSize(true)
         disableRefresh()
 
         val adapter = PersonSearchResultsAdapter(recents, this::onItemClick)
         if (adapter.itemCount == 0) {
             openSearch()
         }
-        personsRecyclerView.adapter = adapter
+        binding.personsRecyclerView.adapter = adapter
 
         val itemDecoration = DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL)
-        personsRecyclerView.addItemDecoration(itemDecoration)
+        binding.personsRecyclerView.addItemDecoration(itemDecoration)
     }
 
     private fun onItemClick(person: Person) {
@@ -54,9 +56,11 @@ class PersonSearchFragment : FragmentForSearchingTumOnline<PersonList>(
     }
 
     override fun onStartSearch() {
-        recentsHeader.visibility = View.VISIBLE
-        val adapter = personsRecyclerView.adapter as? PersonSearchResultsAdapter
-        adapter?.update(recents)
+        with(binding) {
+            recentsHeader.visibility = View.VISIBLE
+            val adapter = personsRecyclerView.adapter as? PersonSearchResultsAdapter
+            adapter?.update(recents)
+        }
     }
 
     override fun onStartSearch(query: String?) {
@@ -69,13 +73,15 @@ class PersonSearchFragment : FragmentForSearchingTumOnline<PersonList>(
     }
 
     override fun onDownloadSuccessful(response: PersonList) {
-        recentsHeader.visibility = View.GONE
+        with(binding) {
+            recentsHeader.visibility = View.GONE
 
-        if (response.persons.size == 1) {
-            showPersonDetails(response.persons.first())
-        } else {
-            val adapter = personsRecyclerView.adapter as? PersonSearchResultsAdapter
-            adapter?.update(response.persons)
+            if (response.persons.size == 1) {
+                showPersonDetails(response.persons.first())
+            } else {
+                val adapter = personsRecyclerView.adapter as? PersonSearchResultsAdapter
+                adapter?.update(response.persons)
+            }
         }
     }
 
