@@ -15,18 +15,20 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat.getColor
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.FragmentForAccessingTumOnline
 import de.tum.`in`.tumcampusapp.component.tumui.grades.model.Exam
 import de.tum.`in`.tumcampusapp.component.tumui.grades.model.ExamList
+import de.tum.`in`.tumcampusapp.databinding.FragmentGradesBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
-import kotlinx.android.synthetic.main.fragment_grades.*
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
 import java.text.NumberFormat
 import java.util.*
@@ -52,6 +54,8 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
     }
 
+    private val binding by viewBinding(FragmentGradesBinding::bind)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -65,16 +69,19 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (showBarChartAfterRotate) {
-            barMenuItem?.isVisible = false
-            pieMenuItem?.isVisible = true
+        with(binding) {
+            if (showBarChartAfterRotate) {
+                barMenuItem?.isVisible = false
+                pieMenuItem?.isVisible = true
 
-            barChartView.visibility = View.VISIBLE
-            pieChartView.visibility = View.GONE
+                barChartView.visibility = View.VISIBLE
+                pieChartView.visibility = View.GONE
+            }
+
+            showListButton?.setOnClickListener { toggleInLandscape() }
+            showChartButton?.setOnClickListener { toggleInLandscape() }
         }
 
-        showListButton?.setOnClickListener { toggleInLandscape() }
-        showChartButton?.setOnClickListener { toggleInLandscape() }
 
         loadGrades(CacheControl.USE_CACHE)
 
@@ -127,22 +134,25 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             setDrawValues(false)
         }
 
-        pieChartView.apply {
-            data = PieData(set)
-            setDrawEntryLabels(false)
-            legend.isWordWrapEnabled = true
-            description = null
-            // the legend should not contain all possible grades but rather the most common ones
-            legend.setEntries(legend.entries.filter {
-                it.label != null && !it.label.contains(uncommonGradeRe)
-            })
-            legend.setCustom(legend.entries)
-            setTouchEnabled(false)
+        with(binding) {
+            pieChartView.apply {
+                data = PieData(set)
+                setDrawEntryLabels(false)
+                legend.isWordWrapEnabled = true
+                description = null
+                // the legend should not contain all possible grades but rather the most common ones
+                legend.setEntries(legend.entries.filter {
+                    it.label != null && !it.label.contains(uncommonGradeRe)
+                })
+                legend.setCustom(legend.entries)
+                setTouchEnabled(false)
 
-            setHoleColor(Color.TRANSPARENT)
-            legend.textColor = resources.getColor(R.color.text_primary) // TODO exchange deprecated function
+                setHoleColor(Color.TRANSPARENT)
+                legend.textColor = getColor(resources, R.color.text_primary, null)
 
-            invalidate()
+                invalidate()
+        }
+
         }
     }
 
@@ -162,47 +172,48 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             valueTextColor = resources.getColor(R.color.text_primary)
         }
 
-        barChartView.apply {
-            data = BarData(set)
-            setFitBars(true)
+        with(binding) {
+            barChartView.apply {
+                data = BarData(set)
+                setFitBars(true)
 
-            // only label grades that are associated with at least one grade
-            data.setValueFormatter(object : ValueFormatter() {
-                override fun getFormattedValue(value: Float): String? {
-                    if (value > 0.0)
-                        return value.toString()
-                    return ""
-                }
-            })
+                // only label grades that are associated with at least one grade
+                data.setValueFormatter(object : ValueFormatter() {
+                    override fun getFormattedValue(value: Float): String? {
+                        if (value > 0.0)
+                            return value.toString()
+                        return ""
+                    }
+                })
 
-            description = null
-            setTouchEnabled(false)
+                description = null
+                setTouchEnabled(false)
 
-            axisLeft.granularity = 1f
-            axisRight.granularity = 1f
+                axisLeft.granularity = 1f
+                axisRight.granularity = 1f
 
-            description = null
-            setTouchEnabled(false)
-            legend.setCustom(
-                    arrayOf(
-                            LegendEntry(
-                                    getString(R.string.grades_without_weight),
-                                    Legend.LegendForm.SQUARE,
-                                    10f,
-                                    0f,
-                                    null,
-                                    ContextCompat.getColor(context, R.color.grade_default)
-                            )
-                    )
-            )
+                description = null
+                setTouchEnabled(false)
+                legend.setCustom(
+                        arrayOf(
+                                LegendEntry(
+                                        getString(R.string.grades_without_weight),
+                                        Legend.LegendForm.SQUARE,
+                                        10f,
+                                        0f,
+                                        null,
+                                        ContextCompat.getColor(context, R.color.grade_default)
+                                )
+                        )
+                )
 
-            // TODO exchange deprecated function
-            legend.textColor = resources.getColor(R.color.text_primary)
-            xAxis.textColor = resources.getColor(R.color.text_primary)
-            axisLeft.textColor = resources.getColor(R.color.text_primary)
-            axisRight.textColor = resources.getColor(R.color.text_primary)
+                legend.textColor = getColor(resources, R.color.text_primary, null)
+                xAxis.textColor = getColor(resources, R.color.text_primary, null)
+                axisLeft.textColor = getColor(resources, R.color.text_primary, null)
+                axisRight.textColor = getColor(resources, R.color.text_primary, null)
 
-            invalidate()
+                invalidate()
+            }
         }
     }
 
@@ -260,13 +271,16 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         val spinnerArrayAdapter = ArrayAdapter(
                 requireContext(), R.layout.simple_spinner_item_actionbar, filters)
 
-        filterSpinner?.apply {
-            adapter = spinnerArrayAdapter
-            setSelection(spinnerPosition)
-            visibility = View.VISIBLE
+        with(binding) {
+            filterSpinner?.apply {
+                adapter = spinnerArrayAdapter
+                setSelection(spinnerPosition)
+                visibility = View.VISIBLE
+            }
         }
 
-        filterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+
+        binding.filterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val filter = filters[position]
                 spinnerPosition = position
@@ -295,13 +309,13 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             return
         }
 
-        gradesListView.adapter = ExamListAdapter(requireContext(), exams)
+        binding.gradesListView.adapter = ExamListAdapter(requireContext(), exams)
 
         if (!isFetched) {
             // We hide the charts container in the beginning. Then, when we load data for the first
             // time, we make it visible. We don't do this on subsequent refreshes, as the user might
             // have decided to collapse the charts container and we don't want to revert that.
-            chartsContainer.visibility = View.VISIBLE
+            binding.chartsContainer.visibility = View.VISIBLE
         }
 
         calculateGradeDistribution(exams).apply {
@@ -310,7 +324,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         }
 
         val averageGrade = calculateAverageGrade(exams)
-        averageGradeTextView.text = String.format("%s: %.2f", getString(R.string.average_grade), averageGrade)
+        binding.averageGradeTextView.text = String.format("%s: %.2f", getString(R.string.average_grade), averageGrade)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -323,43 +337,19 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      * Toggles between list view and chart view in landscape mode.
      */
     private fun toggleInLandscape() {
-        val showChart = chartsContainer.visibility == View.GONE
+        with(binding) {
+            val showChart = chartsContainer.visibility == View.GONE
 
-        showListButton?.visibility = if (showChart) View.VISIBLE else View.GONE
-        showChartButton?.visibility = if (showChart) View.GONE else View.VISIBLE
+            showListButton?.visibility = if (showChart) View.VISIBLE else View.GONE
+            showChartButton?.visibility = if (showChart) View.GONE else View.VISIBLE
 
-        val refreshLayout = swipeRefreshLayout ?: return
+            val refreshLayout = swipeRefreshLayout ?: return
 
-        if (chartsContainer.visibility == View.GONE) {
-            crossFadeViews(refreshLayout, chartsContainer)
-        } else {
-            crossFadeViews(chartsContainer, refreshLayout)
-        }
-    }
-
-    /**
-     * Collapses or expands the chart above the list view. Only available in portrait mode. The
-     * transition is animated via android:animateLayoutChanges in the layout file.
-     */
-    // TODO ???
-    fun toggleChart(view: View) {
-        val transition = LayoutTransition()
-
-        val showCharts = chartsContainer.visibility == View.GONE
-        chartsContainer.visibility = if (showCharts) View.VISIBLE else View.GONE
-
-        val arrow = if (showCharts) R.drawable.ic_arrow_anim_up else R.drawable.ic_arrow_anim_down
-
-        if (showCharts) {
-            transition.addChild(gradesLayout, chartsContainer)
-        } else {
-            transition.removeChild(gradesLayout, chartsContainer)
-        }
-
-        // Animate arrow
-        (view as ImageView).apply {
-            setImageResource(arrow)
-            (drawable as Animatable).start()
+            if (chartsContainer.visibility == View.GONE) {
+                crossFadeViews(refreshLayout, chartsContainer)
+            } else {
+                crossFadeViews(chartsContainer, refreshLayout)
+            }
         }
     }
 
@@ -399,20 +389,22 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      * Toggles between the pie chart and the bar chart.
      */
     private fun toggleChart() {
-        val showBarChart = barChartView.visibility == View.GONE
+        with(binding) {
+            val showBarChart = barChartView.visibility == View.GONE
 
-        barMenuItem?.isVisible = !showBarChart
-        pieMenuItem?.isVisible = showBarChart
+            barMenuItem?.isVisible = !showBarChart
+            pieMenuItem?.isVisible = showBarChart
 
-        if (chartsContainer.visibility == View.VISIBLE) {
-            val fadeOut = if (showBarChart) pieChartView else barChartView
-            val fadeIn = if (showBarChart) barChartView else pieChartView
-            crossFadeViews(fadeOut, fadeIn)
-        } else {
-            // Switch layouts even though they are not visible. Once they are visible again,
-            // the right chart will be displayed
-            barChartView.visibility = if (showBarChart) View.VISIBLE else View.GONE
-            pieChartView.visibility = if (!showBarChart) View.VISIBLE else View.GONE
+            if (chartsContainer.visibility == View.VISIBLE) {
+                val fadeOut = if (showBarChart) pieChartView else barChartView
+                val fadeIn = if (showBarChart) barChartView else pieChartView
+                crossFadeViews(fadeOut, fadeIn)
+            } else {
+                // Switch layouts even though they are not visible. Once they are visible again,
+                // the right chart will be displayed
+                barChartView.visibility = if (showBarChart) View.VISIBLE else View.GONE
+                pieChartView.visibility = if (!showBarChart) View.VISIBLE else View.GONE
+            }
         }
     }
 
