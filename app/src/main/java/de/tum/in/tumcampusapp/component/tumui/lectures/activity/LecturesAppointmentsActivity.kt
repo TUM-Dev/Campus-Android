@@ -6,8 +6,8 @@ import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.adapter.LectureAppointmentsListAdapter
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LectureAppointmentsResponse
+import de.tum.`in`.tumcampusapp.databinding.ActivityLecturesappointmentsBinding
 import de.tum.`in`.tumcampusapp.utils.Const
-import kotlinx.android.synthetic.main.activity_lecturesappointments.*
 
 /**
  * This activity provides the appointment dates to a given lecture using the
@@ -23,11 +23,18 @@ class LecturesAppointmentsActivity : ActivityForAccessingTumOnline<LectureAppoin
 
     private var lectureId: String? = null
 
+    private lateinit var binding: ActivityLecturesappointmentsBinding
+
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        binding = ActivityLecturesappointmentsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        tvTermineLectureName.text = intent.getStringExtra(Const.TITLE_EXTRA)
+        binding.tvTermineLectureName.text = intent.getStringExtra(Const.TITLE_EXTRA)
         lectureId = intent.getStringExtra(Const.LECTURE_ID_EXTRA)
 
         if (lectureId == null) {
@@ -55,6 +62,6 @@ class LecturesAppointmentsActivity : ActivityForAccessingTumOnline<LectureAppoin
             return
         }
 
-        lvTerminList.adapter = LectureAppointmentsListAdapter(this, appointments)
+        binding.lvTerminList.adapter = LectureAppointmentsListAdapter(this, appointments)
     }
 }
