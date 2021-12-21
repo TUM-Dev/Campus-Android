@@ -9,7 +9,7 @@ import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.NoResultsAdapter
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.FragmentForSearchingTumOnline
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.LectureSearchSuggestionProvider
-import de.tum.`in`.tumcampusapp.component.tumui.lectures.activity.LecturesDetailsActivity
+import de.tum.`in`.tumcampusapp.component.tumui.lectures.activity.LectureDetailsActivity
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.adapter.LecturesListAdapter
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.Lecture
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LecturesResponse
@@ -29,7 +29,7 @@ class LecturesFragment : FragmentForSearchingTumOnline<LecturesResponse>(
 
         binding.lecturesListView.setOnItemClickListener { _, _, position, _ ->
             val item = binding.lecturesListView.getItemAtPosition(position) as Lecture
-            val intent = Intent(requireContext(), LecturesDetailsActivity::class.java)
+            val intent = Intent(requireContext(), LectureDetailsActivity::class.java)
             intent.putExtra(Lecture.STP_SP_NR, item.stp_sp_nr)
             startActivity(intent)
         }
