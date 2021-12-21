@@ -17,9 +17,9 @@ import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAcce
 import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.*
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Employee
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
+import de.tum.`in`.tumcampusapp.databinding.ActivityPersonDetailsBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.ContactsHelper
-import kotlinx.android.synthetic.main.activity_person_details.*
 
 /**
  * Activity to show information about a person at TUM.
@@ -28,9 +28,14 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
 
     private lateinit var personId: String
     private var employee: Employee? = null
+    
+    private lateinit var binding: ActivityPersonDetailsBinding
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        binding = ActivityPersonDetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val person = intent.extras?.getSerializable("personObject") as? Person
         if (person == null) {
@@ -96,23 +101,23 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
      * @param employee The employee whose information should be displayed.
      */
     private fun displayResult(employee: Employee) {
-        scrollView.visibility = View.VISIBLE
+        binding.scrollView.visibility = View.VISIBLE
 
         val image = employee.image ?: BitmapFactory.decodeResource(
                 resources, R.drawable.photo_not_available)
 
-        pictureImageView.setImageBitmap(image)
-        nameTextView.text = employee.getNameWithTitle(this)
+        binding.pictureImageView.setImageBitmap(image)
+        binding.nameTextView.text = employee.getNameWithTitle(this)
 
         // Set up employee groups
         val groups = employee.groups
         if (groups?.isNotEmpty() == true) {
-            groupsRecyclerView.setHasFixedSize(true)
-            groupsRecyclerView.layoutManager = LinearLayoutManager(this)
-            groupsRecyclerView.adapter = PersonGroupsAdapter(groups)
+            binding.groupsRecyclerView.setHasFixedSize(true)
+            binding.groupsRecyclerView.layoutManager = LinearLayoutManager(this)
+            binding.groupsRecyclerView.adapter = PersonGroupsAdapter(groups)
         } else {
-            dividerNameGroups.visibility = View.GONE
-            groupsRecyclerView.visibility = View.GONE
+            binding.dividerNameGroups.visibility = View.GONE
+            binding.groupsRecyclerView.visibility = View.GONE
         }
 
         // Setup contact items
@@ -157,12 +162,12 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
         }
 
         if (contactItems.isNotEmpty()) {
-            contactItemsRecyclerView.setHasFixedSize(true)
-            contactItemsRecyclerView.layoutManager = LinearLayoutManager(this)
-            contactItemsRecyclerView.adapter = PersonContactItemsAdapter(contactItems)
+            binding.contactItemsRecyclerView.setHasFixedSize(true)
+            binding.contactItemsRecyclerView.layoutManager = LinearLayoutManager(this)
+            binding.contactItemsRecyclerView.adapter = PersonContactItemsAdapter(contactItems)
         } else {
-            dividerGroupsContactItems.visibility = View.GONE
-            contactItemsRecyclerView.visibility = View.GONE
+            binding.dividerGroupsContactItems.visibility = View.GONE
+            binding.contactItemsRecyclerView.visibility = View.GONE
         }
     }
 
