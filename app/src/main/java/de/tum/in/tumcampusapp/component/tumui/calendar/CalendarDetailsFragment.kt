@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.RequestLimitReachedException
@@ -19,12 +20,12 @@ import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity
 import de.tum.`in`.tumcampusapp.database.TcaDb
+import de.tum.`in`.tumcampusapp.databinding.FragmentCalendarDetailsBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Const.CALENDAR_ID_PARAM
 import de.tum.`in`.tumcampusapp.utils.Const.CALENDAR_SHOWN_IN_CALENDAR_ACTIVITY_PARAM
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.ui.RoundedBottomSheetDialogFragment
-import kotlinx.android.synthetic.main.fragment_calendar_details.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -45,6 +46,8 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
 
     private var deleteApiCall: Call<DeleteEventResponse>? = null
 
+    private val binding by viewBinding(FragmentCalendarDetailsBinding::bind)
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -64,60 +67,63 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     private fun updateView(calendarItemList: List<CalendarItem>) {
         val calendarItem = calendarItemList[0]
 
-        if (calendarItemList.all { it.isCanceled }) {
-            cancelButtonsContainer.visibility = View.VISIBLE
-            descriptionTextView.setTextColor(Color.RED)
-        }
+        with(binding) {
+            if (calendarItemList.all { it.isCanceled }) {
+                cancelButtonsContainer.visibility = View.VISIBLE
+                descriptionTextView.setTextColor(Color.RED)
+            }
 
-        titleTextView.text = calendarItem.getFormattedTitle()
-        dateTextView.text = calendarItem.getEventDateString()
+            titleTextView.text = calendarItem.getFormattedTitle()
+            dateTextView.text = calendarItem.getEventDateString()
 
-        val locationList = calendarItemList.map { it.location }
-        if (locationList.all { it.isBlank() }) {
-            locationIcon.visibility = View.GONE
-        } else {
-            locationIcon.visibility = View.VISIBLE
-            for (item in calendarItemList) {
-                if (item.location.isBlank()) {
-                    continue
+            val locationList = calendarItemList.map { it.location }
+            if (locationList.all { it.isBlank() }) {
+                locationIcon.visibility = View.GONE
+            } else {
+                locationIcon.visibility = View.VISIBLE
+                for (item in calendarItemList) {
+                    if (item.location.isBlank()) {
+                        continue
+                    }
+                    val locationText: TextView = layoutInflater
+                            .inflate(R.layout.calendar_location_text, locationLinearLayout, false) as TextView
+                    if (item.isCanceled) {
+                        locationText.setTextColor(ContextCompat.getColor(requireContext(), R.color.event_canceled))
+                        val textForCancelledEvent = "${item.location} (${R.string.event_canceled})"
+                        locationText.text = textForCancelledEvent
+                    } else {
+                        locationText.text = item.location
+                    }
+                    locationText.setOnClickListener { onLocationClicked(item.location) }
+                    locationLinearLayout.addView(locationText)
                 }
-                val locationText: TextView = layoutInflater
-                        .inflate(R.layout.calendar_location_text, locationLinearLayout, false) as TextView
-                if (item.isCanceled) {
-                    locationText.setTextColor(ContextCompat.getColor(requireContext(), R.color.event_canceled))
-                    val textForCancelledEvent = "${item.location} (${R.string.event_canceled})"
-                    locationText.text = textForCancelledEvent
-                } else {
-                    locationText.text = item.location
+            }
+
+            if (calendarItem.description.isEmpty()) {
+                descriptionTextView.visibility = View.GONE
+            } else {
+                descriptionTextView.text = calendarItem.description
+            }
+
+            if (!isShownInCalendarActivity) {
+                showInCalendarButtonContainer.visibility = View.VISIBLE
+                showInCalendarButton.setOnClickListener {
+                    openEventInCalendarActivity(calendarItem)
+                    dismiss()
                 }
-                locationText.setOnClickListener { onLocationClicked(item.location) }
-                locationLinearLayout.addView(locationText)
+            }
+
+            if (calendarItem.isEditable && isShownInCalendarActivity) {
+                // We only provide edit and delete functionality if the user is in CalendarActivity,
+                // but not if the user opens the fragment from MainActivity.
+                buttonsContainer.visibility = View.VISIBLE
+                deleteButton.setOnClickListener { displayDeleteDialog(calendarItem.nr) }
+                editButton.setOnClickListener { listener?.onEditEvent(calendarItem) }
+            } else {
+                buttonsContainer.visibility = View.GONE
             }
         }
 
-        if (calendarItem.description.isEmpty()) {
-            descriptionTextView.visibility = View.GONE
-        } else {
-            descriptionTextView.text = calendarItem.description
-        }
-
-        if (!isShownInCalendarActivity) {
-            showInCalendarButtonContainer.visibility = View.VISIBLE
-            showInCalendarButton.setOnClickListener {
-                openEventInCalendarActivity(calendarItem)
-                dismiss()
-            }
-        }
-
-        if (calendarItem.isEditable && isShownInCalendarActivity) {
-            // We only provide edit and delete functionality if the user is in CalendarActivity,
-            // but not if the user opens the fragment from MainActivity.
-            buttonsContainer.visibility = View.VISIBLE
-            deleteButton.setOnClickListener { displayDeleteDialog(calendarItem.nr) }
-            editButton.setOnClickListener { listener?.onEditEvent(calendarItem) }
-        } else {
-            buttonsContainer.visibility = View.GONE
-        }
     }
 
     private fun openEventInCalendarActivity(calendarItem: CalendarItem) {
