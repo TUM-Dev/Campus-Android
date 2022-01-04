@@ -2,16 +2,16 @@ package de.tum.`in`.tumcampusapp.component.other.generic.activity
 
 import android.content.Context
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.view.MenuItem
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import de.tum.`in`.tumcampusapp.di.AppComponent
 import de.tum.`in`.tumcampusapp.di.app
-import kotlinx.android.synthetic.main.toolbar.toolbar
 import java.util.Locale
 import android.content.pm.PackageManager
+import androidx.appcompat.widget.Toolbar
+import androidx.preference.PreferenceManager
 import de.tum.`in`.tumcampusapp.R
 
 abstract class BaseActivity(
@@ -23,6 +23,8 @@ abstract class BaseActivity(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutId)
+
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
 
         // TODO Refactor
         if (this !is BaseNavigationActivity) {

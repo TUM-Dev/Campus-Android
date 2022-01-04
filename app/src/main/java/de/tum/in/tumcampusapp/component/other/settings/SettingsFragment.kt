@@ -40,7 +40,6 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_setup_eduroam.*
 import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.notificationManager
 import java.util.concurrent.ExecutionException
