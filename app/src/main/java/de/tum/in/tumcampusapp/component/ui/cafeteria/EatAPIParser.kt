@@ -8,6 +8,10 @@ class EatAPIParser {
 
     companion object {
 
+        /***
+         * @param response CafeteriaResponse from which menu items should be extracted
+         * @return a list of all extracted CafeteriaMenuItems
+         */
         fun parse(response: CafeteriaResponse): List<CafeteriaMenu> {
             val menus: MutableList<CafeteriaMenu> = mutableListOf()
 
@@ -32,6 +36,7 @@ class EatAPIParser {
                             dishType = dish.type
                             dishLabels = dish.labels.toString()
 
+                            // Set id to 0 so that room will autogenerate the primary key
                             menus.add(CafeteriaMenu(
                                     id = 0,
                                     cafeteriaId = cafeteriaId,
