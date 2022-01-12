@@ -6,7 +6,7 @@ data class Dish(
         @SerializedName("name")
         var name: String,
         @SerializedName("labels")
-        var labels: String,
+        var labels: List<String>,
         @SerializedName("dish_type")
         var type: String
 )
