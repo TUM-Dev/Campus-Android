@@ -15,11 +15,12 @@ class Migration6to7 : Migration(6, 7) {
 
         // Create new table with updated new fields
         database.execSQL("CREATE TABLE IF NOT EXISTS `CafeteriaMenu` (" +
-                "`id` INTEGER NOT NULL AUTOINCREMENT," +
+                "`id` INTEGER NOT NULL," +
                 "`cafeteriaId` TEXT NOT NULL," +
-                "`date` TEXT NOT NULL" +
-                "`dishType` TEXT NOT NULL" +
-                "`labels` TEXT NOT NULL" +
+                "`date` TEXT," +
+                "`name` TEXT NOT NULL," +
+                "`dishType` TEXT NOT NULL," +
+                "`labels` TEXT NOT NULL," +
                 "`calendarWeek` INTEGER NOT NULL," +
                 "PRIMARY KEY(`id`))")
     }
