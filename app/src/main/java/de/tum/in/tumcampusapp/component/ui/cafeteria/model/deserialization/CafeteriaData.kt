@@ -4,9 +4,9 @@ import com.google.gson.annotations.SerializedName
 
 data class CafeteriaData(
         @SerializedName("version")
-        var version: String? = null,
+        var version: String,
         @SerializedName("canteen_id")
-        var cafeteriaSlug: String? = null,
+        var cafeteriaId: String,
         @SerializedName("weeks")
         var menusByWeeks: List<WeeklyMenu>
 )

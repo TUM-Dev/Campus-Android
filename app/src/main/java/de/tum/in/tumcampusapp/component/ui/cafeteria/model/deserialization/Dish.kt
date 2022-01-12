@@ -4,9 +4,9 @@ import com.google.gson.annotations.SerializedName
 
 data class Dish(
         @SerializedName("name")
-        var name: String? = null,
+        var name: String,
         @SerializedName("labels")
-        var labels: List<String>,
+        var labels: String,
         @SerializedName("dish_type")
-        var type: String? = null
+        var type: String
 )
