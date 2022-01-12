@@ -25,8 +25,8 @@ interface CafeteriaMenuDao {
             "ORDER BY date ASC")
     fun getNextDatesForDish(cafeteriaId: Int, dishName: String): Flowable<List<String>>
 
-    @Query("SELECT id, cafeteriaId, date, typeShort, typeLong, 0 AS typeNr, group_concat(name, '\n') AS name FROM cafeteriaMenu " +
+    @Query("SELECT id, cafeteriaId, date, dishType, name FROM cafeteriaMenu " +
             "WHERE cafeteriaId = :cafeteriaId AND date = :date " +
-            "GROUP BY typeLong ORDER BY typeShort=\"tg\" DESC, typeShort ASC, typeNr")
+            "GROUP BY dishType ORDER BY dishType DESC")
     fun getCafeteriaMenus(cafeteriaId: Int, date: DateTime): List<CafeteriaMenu>
 }
