@@ -7,9 +7,10 @@ import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
 import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaMenuDao
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaNotificationSettings
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.EatAPIParser
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.FavoriteDishDao
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaResponse
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization.CafeteriaResponse
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -65,8 +66,9 @@ constructor(private val context: Context) {
 
     private fun onDownloadSuccess(response: CafeteriaResponse) {
         menuDao.removeCache()
-        menuDao.insert(response.menus)
-        menuDao.insert(response.sideDishes)
+
+        val menusToInsert = EatAPIParser.parse(response)
+        menuDao.insert(menusToInsert)
 
         scheduleNotificationAlarms()
     }
@@ -92,7 +94,7 @@ constructor(private val context: Context) {
      * @param date The date for which to return the favorite dishes served
      * @return the favourite dishes at the given date
      */
-    fun getFavoriteDishesServed(queriedMensaId: Int, date: DateTime): List<CafeteriaMenu> {
+    fun getFavoriteDishesServed(queriedMensaId: String, date: DateTime): List<CafeteriaMenu> {
         val dateString = DateTimeUtils.getDateString(date)
 
         val upcomingServings = favoriteDishDao.getFavouritedCafeteriaMenuOnDate(dateString)
