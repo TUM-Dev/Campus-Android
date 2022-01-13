@@ -9,7 +9,7 @@ import org.joda.time.LocalDate
 import org.joda.time.Period
 import java.util.*
 
-data class CafeteriaWithMenus(val id: Int) {
+data class CafeteriaWithMenus(val cafeteria: CafeteriaLocation) {
 
     var name: String? = null
     var menus: List<CafeteriaMenu> = ArrayList()
@@ -32,7 +32,7 @@ data class CafeteriaWithMenus(val id: Int) {
 
     fun getIntent(context: Context): Intent? =
             Intent(context, CafeteriaActivity::class.java).apply {
-                putExtra(Const.CAFETERIA_ID, id)
+                putExtra(Const.CAFETERIA_ID, cafeteria.toId())
             }
 
     // We notify the user when the cafeteria typically opens
