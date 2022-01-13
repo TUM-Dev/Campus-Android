@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria.model
 
-// TODO double check that these esp the one with two underscores and check spelling
-enum class Cafeterias {
+enum class CafeteriaLocation {
     STUCAFE_KARLSTR,
     STUCAFE_BOLTZMANNSTR,
     STUCAFE_GARCHING,
@@ -28,7 +27,7 @@ enum class Cafeterias {
      * Used to get the actual raw string cafeteriaId stored in the database. This method should be called when interacting
      * with a DAO method that requires a cafeteriaId as a parameter.
      */
-    fun toIdString(): String {
+    fun toId(): String {
         return this.toString().replace('_','-').lowercase()
     }
 }
