@@ -4,6 +4,7 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManag
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaLocation
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.sync.model.Sync
 import io.reactivex.Flowable
@@ -18,36 +19,31 @@ class CafeteriaLocalRepository @Inject constructor(
 
     private val executor: Executor = Executors.newSingleThreadExecutor()
 
-    fun getCafeteriaWithMenus(cafeteriaId: Int): CafeteriaWithMenus {
-        return CafeteriaWithMenus(cafeteriaId).apply {
-            name = getCafeteriaNameFromId(id)
+    fun getCafeteriaWithMenus(cafeteriaLocation: CafeteriaLocation): CafeteriaWithMenus {
+        return CafeteriaWithMenus(cafeteriaLocation).apply {
+            name = getCafeteriaNameFromId(cafeteriaLocation)
             menuDates = getAllMenuDates()
-            menus = getCafeteriaMenus(id, nextMenuDate)
+            menus = getCafeteriaMenus(cafeteriaLocation, nextMenuDate)
         }
     }
 
-    private fun getCafeteriaNameFromId(id: Int): String? = getCafeteria(id)?.name
-
     // Menu methods //
-
-    fun getCafeteriaMenus(id: Int, date: DateTime): List<CafeteriaMenu> {
-        return database.cafeteriaMenuDao().getCafeteriaMenus(id, date)
+    fun getCafeteriaMenus(cafeteriaLocation: CafeteriaLocation, date: DateTime): List<CafeteriaMenu> {
+        return database.cafeteriaMenuDao().getCafeteriaMenus(cafeteriaLocation.toId(), date)
     }
 
     fun getAllMenuDates(): List<DateTime> = database.cafeteriaMenuDao().allDates
 
     // Canteen methods //
+    private fun getCafeteriaNameFromId(cafeteriaLocation: CafeteriaLocation): String? = database.cafeteriaDao().getById(cafeteriaLocation.toId())?.name
 
     fun getAllCafeterias(): Flowable<List<Cafeteria>> = database.cafeteriaDao().all
-
-    fun getCafeteria(id: Int): Cafeteria? = database.cafeteriaDao().getById(id)
 
     fun addCafeterias(cafeterias: List<Cafeteria>) = executor.execute {
         database.cafeteriaDao().insert(cafeterias)
     }
 
     // Sync methods //
-
     fun getLastSync() = database.syncDao().getSyncSince(CafeteriaManager::class.java.name, TIME_TO_SYNC)
 
     fun updateLastSync() = database.syncDao().insert(Sync(CafeteriaManager::class.java.name, DateTime.now()))
