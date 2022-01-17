@@ -3,6 +3,7 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.RoomWarnings
+import com.google.gson.annotations.SerializedName
 
 /**
  * new Cafeteria
@@ -17,7 +18,7 @@ import androidx.room.RoomWarnings
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
 data class Cafeteria(
     @field:PrimaryKey
-    var id: Int = -1,
+    var id: String = "",
     var name: String = "",
     var address: String = "",
     var latitude: Double = -1.0,
