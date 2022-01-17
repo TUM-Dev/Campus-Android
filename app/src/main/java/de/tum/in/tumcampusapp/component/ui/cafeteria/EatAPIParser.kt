@@ -1,5 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria
 
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization.*
 import org.joda.time.DateTime
@@ -52,6 +53,39 @@ class EatAPIParser {
             }
 
             return menus
+        }
+
+        /***
+         * @param response List of CafeteriaMetadata from the EatAPI /canteens.json endpoint
+         * @return a list of all extracted Cafeterias
+         */
+        fun parseCafeteriaFrom(response: List<CafeteriaMetadata>) : List<Cafeteria> {
+            val cafeterias: MutableList<Cafeteria> = mutableListOf()
+
+            var id: String
+            var name: String
+            var address: String
+            var latitude: Double
+            var longitude: Double
+
+            response.forEach { cafeteriaMetadata: CafeteriaMetadata ->
+                id = cafeteriaMetadata.id
+                name = cafeteriaMetadata.name
+
+                address = cafeteriaMetadata.geoMetadata.address
+                latitude = cafeteriaMetadata.geoMetadata.latitude
+                longitude = cafeteriaMetadata.geoMetadata.longitude
+
+                cafeterias.add(Cafeteria(
+                        id = id,
+                        name = name,
+                        address = address,
+                        latitude = latitude,
+                        longitude = longitude
+                ))
+            }
+
+            return cafeterias
         }
     }
 }
