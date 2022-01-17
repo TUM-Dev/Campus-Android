@@ -1,10 +1,12 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository
 
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.EatAPIParser
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaLocation
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization.CafeteriaMetadata
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.sync.model.Sync
 import io.reactivex.Flowable
@@ -39,8 +41,10 @@ class CafeteriaLocalRepository @Inject constructor(
 
     fun getAllCafeterias(): Flowable<List<Cafeteria>> = database.cafeteriaDao().all
 
-    fun addCafeterias(cafeterias: List<Cafeteria>) = executor.execute {
-        database.cafeteriaDao().insert(cafeterias)
+    fun addCafeterias(cafeterias: List<CafeteriaMetadata>) = executor.execute {
+        database.cafeteriaDao().insert(
+                EatAPIParser.parseCafeteriaFrom(cafeterias)
+        )
     }
 
     // Sync methods //
