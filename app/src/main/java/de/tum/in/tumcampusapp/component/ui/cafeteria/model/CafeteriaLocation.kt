@@ -28,6 +28,30 @@ enum class CafeteriaLocation {
      * with a DAO method that requires a cafeteriaId as a parameter.
      */
     fun toId(): String {
-        return this.toString().replace('_','-').lowercase()
+        return mapStringToIdPattern(this.toString())
+    }
+
+    companion object {
+        /**
+         * Finds the CafeteriaLocation corresponding to the provided string. Used to get a CafeteriaLocation from strings stored in the preferences or database.
+         */
+        fun fromString(raw: String?): CafeteriaLocation? {
+            if(raw != null){
+                values().forEach { cafeteriaLocation: CafeteriaLocation ->
+                    if(cafeteriaLocation.toId() == mapStringToIdPattern(raw))
+                        return cafeteriaLocation
+                }
+            }
+
+            return null
+        }
+
+        /**
+         * @param raw the input string upon which the cafeteria id pattern is to be enforced
+         * @return string complying with the cafeteria if pattern
+         */
+        private fun mapStringToIdPattern(raw: String): String {
+            return raw.replace('_','-').lowercase()
+        }
     }
 }
