@@ -67,7 +67,7 @@ constructor(private val context: Context) {
     private fun onDownloadSuccess(response: CafeteriaResponse) {
         menuDao.removeCache()
 
-        val menusToInsert = EatAPIParser.parse(response)
+        val menusToInsert = EatAPIParser.parseCafeteriaMenuFrom(response)
         menuDao.insert(menusToInsert)
 
         scheduleNotificationAlarms()
