@@ -12,7 +12,7 @@ class EatAPIParser {
          * @param response CafeteriaResponse from which menu items should be extracted
          * @return a list of all extracted CafeteriaMenuItems
          */
-        fun parse(response: CafeteriaResponse): List<CafeteriaMenu> {
+        fun parseCafeteriaMenuFrom(response: CafeteriaResponse): List<CafeteriaMenu> {
             val menus: MutableList<CafeteriaMenu> = mutableListOf()
 
             var cafeteriaId: String
