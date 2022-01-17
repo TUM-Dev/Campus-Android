@@ -6,7 +6,7 @@ data class CafeteriaGeoMetadata(
         @SerializedName("address")
         var address: String = "",
         @SerializedName("latitude")
-        var latitude: Float = 0.0f,
+        var latitude: Double = 0.0,
         @SerializedName("longitude")
-        var longitude: Float = 0.0f
+        var longitude: Double = 0.0
 )
