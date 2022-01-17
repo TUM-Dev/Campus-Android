@@ -61,7 +61,7 @@ import de.tum.`in`.tumcampusapp.utils.sync.SyncDao
 import de.tum.`in`.tumcampusapp.utils.sync.model.Sync
 import java.util.concurrent.ExecutionException
 
-@Database(version = 7, entities = [
+@Database(version = 8, entities = [
     Cafeteria::class,
     CafeteriaMenu::class,
     FavoriteDish::class,
@@ -146,7 +146,8 @@ abstract class TcaDb : RoomDatabase() {
                 Migration3to4(),
                 Migration4to5(),
                 Migration5to6(),
-                Migration6to7()
+                Migration6to7(),
+                Migration7to8()
         )
 
         private var instance: TcaDb? = null
