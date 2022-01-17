@@ -21,6 +21,7 @@ import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotificationLocation;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierFreeContact;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierFreeMoreInfo;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.model.deserialization.CafeteriaMetadata;
 import de.tum.in.tumcampusapp.component.ui.openinghour.model.Location;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
@@ -192,7 +193,7 @@ public interface TUMCabeAPIService {
     Call<FeedbackResult> sendFeedbackImage(@Part MultipartBody.Part image, @Path("image") int imageNr, @Path("id") String feedbackId);
 
     @GET(API_CAFETERIAS)
-    Observable<List<Cafeteria>> getCafeterias();
+    Observable<List<CafeteriaMetadata>> getCafeterias();
 
     @GET(API_KINOS + "{lastId}")
     Flowable<List<Kino>> getKinos(@Path("lastId") String lastId);
