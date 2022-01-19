@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName
 /**
  * new Cafeteria
  *
- * @param id Cafeteria ID, e.g. 412
+ * @param id Cafeteria ID, e.g. mensa-garching
  * @param name Name, e.g. MensaX
  * @param address Address, e.g. Boltzmannstr. 3
  * @param latitude Coordinates of the cafeteria
