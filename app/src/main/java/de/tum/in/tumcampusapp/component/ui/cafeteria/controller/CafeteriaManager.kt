@@ -1,11 +1,12 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller
 
 import android.content.Context
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.notifications.ProvidesNotifications
 import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaMenuCard
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaLocation
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
@@ -35,16 +36,14 @@ class CafeteriaManager @Inject constructor(private val context: Context) : Provi
     val bestMatchCafeteriaMenus: List<CafeteriaMenu>
         get() {
             val cafeteriaId = bestMatchCafeteriaId
-            return if (cafeteriaId == Const.NO_CAFETERIA_FOUND) {
-                emptyList()
-            } else getCafeteriaMenusByCafeteriaId(cafeteriaId)
+            return if (cafeteriaId == CafeteriaLocation.NONE) emptyList() else getCafeteriaMenusByCafeteriaId(cafeteriaId)
         }
 
     // Choose which mensa should be shown
-    val bestMatchCafeteriaId: Int
+    val bestMatchCafeteriaId: CafeteriaLocation
         get() {
             val cafeteriaId = LocationManager(context).getCafeteria()
-            if (cafeteriaId == Const.NO_CAFETERIA_FOUND) {
+            if (cafeteriaId == CafeteriaLocation.NONE) {
                 Utils.log("could not get a Cafeteria from locationManager!")
             }
             return cafeteriaId
@@ -66,8 +65,8 @@ class CafeteriaManager @Inject constructor(private val context: Context) : Provi
 
         // TODO cafeteriaIds is empty here
         for (id in cafeteriaIds) {
-            val cafeteria = Integer.parseInt(id)
-            if (cafeteria == Const.NO_CAFETERIA_FOUND) {
+            val cafeteria = CafeteriaLocation.fromString(id)
+            if (cafeteria == CafeteriaLocation.NONE) {
                 // no cafeteria based on the location could be found
                 continue
             }
@@ -84,10 +83,10 @@ class CafeteriaManager @Inject constructor(private val context: Context) : Provi
         return Utils.getSettingBool(context, "card_cafeteria_phone", true)
     }
 
-    private fun getCafeteriaMenusByCafeteriaId(cafeteriaId: Int): List<CafeteriaMenu> {
-        val cafeteria = CafeteriaWithMenus(cafeteriaId)
+    private fun getCafeteriaMenusByCafeteriaId(cafeteriaLocation: CafeteriaLocation): List<CafeteriaMenu> {
+        val cafeteria = CafeteriaWithMenus(cafeteriaLocation)
 
         cafeteria.menuDates = localRepository.getAllMenuDates()
-        return localRepository.getCafeteriaMenus(cafeteriaId, cafeteria.nextMenuDate)
+        return localRepository.getCafeteriaMenus(cafeteriaLocation, cafeteria.nextMenuDate)
     }
 }
