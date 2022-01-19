@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import androidx.core.content.ContextCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -15,6 +15,7 @@ import de.tum.`in`.tumcampusapp.component.other.locations.model.Geo
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordinate
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaLocation
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -173,18 +174,19 @@ class LocationManager @Inject constructor(c: Context) {
     /**
      * If the user is in university or a lecture has been recognized => Get nearest cafeteria
      */
-    fun getCafeteria(): Int {
+    fun getCafeteria(): CafeteriaLocation {
         val campus = getCurrentOrNextCampus()
+
         if (campus != null) {
             val prefs = PreferenceManager.getDefaultSharedPreferences(mContext)
             val cafeteria = prefs.getString("card_cafeteria_default_" + campus.short, campus.defaultMensa)
             if (cafeteria != null) {
-                return Integer.parseInt(cafeteria)
+                CafeteriaLocation.fromString(cafeteria)
             }
         }
 
         val allCafeterias = getCafeterias()
-        return if (allCafeterias.isEmpty()) Const.NO_CAFETERIA_FOUND else allCafeterias[0].id
+        return if (allCafeterias.isEmpty()) CafeteriaLocation.NONE else CafeteriaLocation.fromString(allCafeterias[0].id)
     }
 
     /**
@@ -362,14 +364,16 @@ class LocationManager @Inject constructor(c: Context) {
     }
 
     companion object {
+        // defaultMensa is of type String instead of CafeteriaLocation, because the default value of the settings in "settings.xml" have to be
+        // of type string
         private enum class Campus(val short: String, val lat: Double, val lon: Double, val defaultMensa: String?, val defaultStation: Stations) {
-            GarchingForschungszentrum("G", 48.2648424, 11.6709511, "422", Stations.GarchingForschungszentrum),
+            GarchingForschungszentrum("G", 48.2648424, 11.6709511, CafeteriaLocation.MENSA_GARCHING.toId(), Stations.GarchingForschungszentrum),
             GarchingHochbrueck("H", 48.249432, 11.633905, null, Stations.GarchingHochbrueck),
-            Weihenstephan("W", 48.397990, 11.722727, "423", Stations.Weihenstephan),
-            Stammgelaende("C", 48.149436, 11.567635, "421", Stations.Stammgelaende),
-            KlinikumGrosshadern("K", 48.110847, 11.4703001, "414", Stations.KlinikumGrosshadern),
+            Weihenstephan("W", 48.397990, 11.722727, CafeteriaLocation.MENSA_WEIHENSTEPHAN.toId(), Stations.Weihenstephan),
+            Stammgelaende("C", 48.149436, 11.567635, CafeteriaLocation.MENSA_ARCISSTR.toId(), Stations.Stammgelaende),
+            KlinikumGrosshadern("K", 48.110847, 11.4703001, CafeteriaLocation.STUBISTRO_GROSSHADERN.toId(), Stations.KlinikumGrosshadern),
             KlinikumRechtsDerIsar("I", 48.137, 11.601119, null, Stations.KlinikumRechtsDerIsar),
-            Leopoldstrasse("L", 48.155916, 11.583095, "411", Stations.Leopoldstrasse),
+            Leopoldstrasse("L", 48.155916, 11.583095, CafeteriaLocation.MENSA_LEOPOLDSTR.toId(), Stations.Leopoldstrasse),
             GeschwisterSchollplatzAdalbertstrasse("S", 48.150244, 11.580665, null, Stations.GeschwisterSchollplatzAdalbertstrasse);
 
             fun getLocation(): Location {
