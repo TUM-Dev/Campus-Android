@@ -17,7 +17,6 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.utils.Const
-import java.util.*
 
 /**
  * Card that shows the cafeteria menu
@@ -39,25 +38,25 @@ class CafeteriaMenuCard(context: Context, private val cafeteria: CafeteriaWithMe
 
     override fun getNavigationDestination(): NavDestination? {
         val bundle = Bundle()
-        bundle.putInt(Const.CAFETERIA_ID, cafeteria.id)
+        bundle.putString(Const.CAFETERIA_ID, cafeteria.cafeteriaLocation.toId())
         return NavDestination.Fragment(CafeteriaFragment::class.java, bundle)
     }
 
     public override fun discard(editor: Editor) {
         val date = cafeteria.nextMenuDate
-        editor.putLong(CAFETERIA_DATE + "_" + cafeteria.id, date.millis)
+        editor.putLong(CAFETERIA_DATE + "_" + cafeteria.cafeteriaLocation.toId(), date.millis)
     }
 
     override fun shouldShow(prefs: SharedPreferences): Boolean {
         // the card reappears when the day is over and a new menu will be shown
-        val prevDate = prefs.getLong(CAFETERIA_DATE + "_" + cafeteria.id, 0)
+        val prevDate = prefs.getLong(CAFETERIA_DATE + "_" + cafeteria.cafeteriaLocation.toId(), 0)
         val date = cafeteria.nextMenuDate
         return prevDate < date.millis
     }
 
     override fun hideAlways() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        val id = cafeteria.id.toString()
+        val id = cafeteria.cafeteriaLocation.toId()
         val ids = prefs.getStringSet(Const.CAFETERIA_CARDS_SETTING, HashSet())!!
         if (ids.contains(id)) {
             ids.remove(id)
