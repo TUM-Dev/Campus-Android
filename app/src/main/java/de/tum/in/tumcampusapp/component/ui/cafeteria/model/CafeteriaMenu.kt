@@ -39,9 +39,22 @@ data class CafeteriaMenu(
     var calendarWeek: Short = -1
 ) {
 
-    // TODO pricing, dishType enum, label enum?, mensa enum?
+    val tag: String
+        get() = "${name}__$cafeteriaId"
 
-    val dishTypeWithoutEnumeration: String
+    // TODO pricing, dishType enum, label enum?, mensa enum?
+    val menuType: MenuType
+        get() {
+            return when (dishType) {
+                "tg" -> MenuType.DAILY_SPECIAL
+                "ae" -> MenuType.DISCOUNTED_COURSE
+                "akt" -> MenuType.SPECIALS
+                "bio" -> MenuType.BIO
+                else -> MenuType.SIDE_DISH
+            }
+        }
+
+    val notificationTitle: String
         get() {
             return REMOVE_DISH_ENUMERATION_PATTERN
                     .matcher(dishType)
