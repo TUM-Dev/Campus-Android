@@ -15,11 +15,11 @@ import kotlin.collections.ArrayList
  */
 class CafeteriaDetailsSectionsPagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager) {
 
-    private var cafeteriaId: Int = 0
+    private var cafeteriaId: CafeteriaLocation = CafeteriaLocation.NONE
     private var dates: List<DateTime> = ArrayList()
     private val formatter: DateTimeFormatter = DateTimeFormat.fullDate()
 
-    fun setCafeteriaId(cafeteriaId: Int) {
+    fun setCafeteriaId(cafeteriaId: CafeteriaLocation) {
         this.cafeteriaId = cafeteriaId
     }
 
@@ -34,7 +34,7 @@ class CafeteriaDetailsSectionsPagerAdapter(fragmentManager: FragmentManager) : F
         CafeteriaDetailsSectionFragment.newInstance(cafeteriaId, dates[position])
 
     override fun getPageTitle(position: Int) =
-            formatter.print(dates[position]).uppercase(Locale.getDefault())
+        formatter.print(dates[position]).uppercase(Locale.getDefault())
 
     override fun getItemPosition(`object`: Any): Int = PagerAdapter.POSITION_NONE
 }

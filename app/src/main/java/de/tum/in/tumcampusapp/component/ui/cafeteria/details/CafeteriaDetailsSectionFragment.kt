@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaLocation
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.databinding.FragmentCafeteriadetailsSectionBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
@@ -54,8 +55,8 @@ class CafeteriaDetailsSectionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val menuDate = arguments?.getSerializable(Const.DATE) as DateTime
         val menuDateString = DateTimeFormat.fullDate().print(menuDate)
-        val cafeteriaId = arguments?.getInt(Const.CAFETERIA_ID)
-        if (cafeteriaId == null) {
+        val cafeteriaId = CafeteriaLocation.fromString(arguments?.getString(Const.CAFETERIA_ID))
+        if (cafeteriaId == CafeteriaLocation.NONE) {
             Utils.log("Argument missing: cafeteriaId")
             return
         }
@@ -80,11 +81,11 @@ class CafeteriaDetailsSectionFragment : Fragment() {
 
     companion object {
 
-        fun newInstance(cafeteriaId: Int, dateTime: DateTime): CafeteriaDetailsSectionFragment {
+        fun newInstance(cafeteriaId: CafeteriaLocation, dateTime: DateTime): CafeteriaDetailsSectionFragment {
             val fragment = CafeteriaDetailsSectionFragment()
             fragment.arguments = Bundle().apply {
                 putSerializable(Const.DATE, dateTime)
-                putInt(Const.CAFETERIA_ID, cafeteriaId)
+                putString(Const.CAFETERIA_ID, cafeteriaId.toId())
             }
             return fragment
         }
