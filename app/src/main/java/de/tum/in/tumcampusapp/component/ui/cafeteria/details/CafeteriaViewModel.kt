@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaLocation
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.utils.LocationHelper.calculateDistanceToCafeteria
@@ -72,8 +73,8 @@ class CafeteriaViewModel @Inject constructor(
                 .subscribe(_menuDates::postValue, Utils::log)
     }
 
-    fun fetchCafeteriaMenus(id: Int, date: DateTime) {
-        compositeDisposable += Flowable.fromCallable { localRepository.getCafeteriaMenus(id, date) }
+    fun fetchCafeteriaMenus(cafeteriaLocation: CafeteriaLocation, date: DateTime) {
+        compositeDisposable += Flowable.fromCallable { localRepository.getCafeteriaMenus(cafeteriaLocation, date) }
                 .subscribeOn(Schedulers.io())
                 .defaultIfEmpty(emptyList())
                 .subscribe { _cafeteriaMenus.postValue(it) }
