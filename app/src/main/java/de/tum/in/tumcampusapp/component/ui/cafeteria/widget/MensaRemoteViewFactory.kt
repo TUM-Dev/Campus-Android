@@ -29,17 +29,14 @@ class MensaRemoteViewFactory(private val applicationContext: Context) : RemoteVi
             return loadingView
         }
 
-        val (_, _, _, _, typeLong, _, name) = menus[position]
+        val (_, _, _, dishType, name, _, _) = menus[position]
         val remoteViews = RemoteViews(applicationContext.packageName, R.layout.mensa_widget_item)
 
-        val menuContent = PATTERN.matcher(name)
-                .replaceAll("")
-                .trim { it <= ' ' }
         val menuText = applicationContext.getString(
-                R.string.menu_with_long_type_format_string, menuContent, typeLong)
+                R.string.menu_with_long_type_format_string, name, dishType)
         remoteViews.setTextViewText(R.id.menu_content, menuText)
 
-        CafeteriaPrices.getPrice(applicationContext, typeLong)?.let {
+        CafeteriaPrices.getPrice(applicationContext, dishType)?.let {
             remoteViews.setTextViewText(R.id.menu_price, "$it €")
         }
 
@@ -53,9 +50,4 @@ class MensaRemoteViewFactory(private val applicationContext: Context) : RemoteVi
     override fun getItemId(position: Int) = position.toLong()
 
     override fun hasStableIds() = true
-
-    companion object {
-
-        private val PATTERN = Pattern.compile("\\([^\\)]+\\)")
-    }
 }
