@@ -9,6 +9,7 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaMenuDao
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaNotificationSettings
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.EatAPIParser
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.FavoriteDishDao
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaLocation
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization.CafeteriaResponse
 import de.tum.`in`.tumcampusapp.database.TcaDb
@@ -46,7 +47,7 @@ constructor(private val context: Context) {
         // we add a "no-cache" header to the request.
         CafeteriaAPIClient
                 .getInstance(context)
-                .getMenus(cacheControl)
+                .getMenus(cacheControl, CafeteriaLocation.MENSA_GARCHING) // TODO Implement lazy/dynamic menu fetching
                 .enqueue(object : Callback<CafeteriaResponse> {
                     override fun onResponse(
                         call: Call<CafeteriaResponse>,
