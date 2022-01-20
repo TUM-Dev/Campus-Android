@@ -19,6 +19,7 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManag
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionsPagerAdapter
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaLocation
 import de.tum.`in`.tumcampusapp.databinding.FragmentCafeteriaBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
@@ -114,19 +115,19 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
     }
 
     private fun onNewCafeteriaSelected(cafeteria: Cafeteria) {
-        sectionsPagerAdapter.setCafeteriaId(cafeteria.id)
+        sectionsPagerAdapter.setCafeteriaId(CafeteriaLocation.fromString(cafeteria.id))
         cafeteriaViewModel.fetchMenuDates()
     }
 
     private fun initCafeteriaSpinner() {
         val intent = requireActivity().intent
-        val cafeteriaId: Int
+        val cafeteriaId: CafeteriaLocation
 
         if (intent != null && intent.hasExtra(Const.MENSA_FOR_FAVORITEDISH)) {
-            cafeteriaId = intent.getIntExtra(Const.MENSA_FOR_FAVORITEDISH, NONE_SELECTED)
+            cafeteriaId = CafeteriaLocation.fromString(intent.getStringExtra(Const.MENSA_FOR_FAVORITEDISH))
             intent.removeExtra(Const.MENSA_FOR_FAVORITEDISH)
         } else if (intent != null && intent.hasExtra(Const.CAFETERIA_ID)) {
-            cafeteriaId = intent.getIntExtra(Const.CAFETERIA_ID, 0)
+            cafeteriaId = CafeteriaLocation.fromString(intent.getStringExtra(Const.CAFETERIA_ID))
         } else {
             // If we're not provided with a cafeteria ID, we choose the best matching cafeteria.
             cafeteriaId = cafeteriaManager.bestMatchCafeteriaId
@@ -135,15 +136,16 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
         updateCafeteriaSpinner(cafeteriaId)
     }
 
-    private fun updateCafeteriaSpinner(cafeteriaId: Int) {
+    private fun updateCafeteriaSpinner(cafeteriaLocation: CafeteriaLocation) {
         var selectedIndex = NONE_SELECTED
 
         for (cafeteria in cafeterias) {
             val index = cafeterias.indexOf(cafeteria)
-            if (cafeteriaId == NONE_SELECTED || cafeteriaId == cafeteria.id) {
+            if (cafeteriaLocation == CafeteriaLocation.NONE || cafeteriaLocation == CafeteriaLocation.fromString(cafeteria.id)) {
                 selectedIndex = index
                 break
             }
+            selectedIndex = index
         }
 
         if (selectedIndex != NONE_SELECTED) {
