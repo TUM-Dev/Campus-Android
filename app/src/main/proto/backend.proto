@@ -7,17 +7,29 @@ option java_outer_classname = "CampusApiProto";
 
 package api;
 
+import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
 service Campus {
-    rpc GetTopNews (GetTopNewsRequest) returns (GetTopNewsReply);
+    rpc GetTopNews (google.protobuf.Empty) returns (GetTopNewsReply) {
+    }
+
+    rpc GetNewsSources (google.protobuf.Empty) returns (NewsSourceArray) {
+    }
 }
 
-message GetTopNewsRequest {
+message NewsSourceArray {
+    repeated NewsSource sources = 1;
+}
+
+message NewsSource {
+    string source = 1;
+    string title = 2;
+    string icon = 3;
 }
 
 message GetTopNewsReply {
-    string name = 1;
+    string image_url = 1;
     string link = 2;
     google.protobuf.Timestamp created = 3;
     google.protobuf.Timestamp from = 4;

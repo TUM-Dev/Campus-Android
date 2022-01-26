@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
+import de.tum.`in`.tumcampusapp.api.app.BackendHelper
 import de.tum.`in`.tumcampusapp.component.notifications.NotificationUtils.setupNotificationChannels
 import de.tum.`in`.tumcampusapp.component.other.settings.ThemeProvider
 import de.tum.`in`.tumcampusapp.di.AppComponent
@@ -32,6 +33,7 @@ open class App : Application() {
         }
         setupStrictMode()
         loadTheme()
+        //BackendHelper.getBackendConnection()
     }
 
     private fun buildAppComponent() {
