@@ -3,16 +3,17 @@ package de.tum.`in`.tumcampusapp.component.tumui.lectures.fragment
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.NoResultsAdapter
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.FragmentForSearchingTumOnline
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.LectureSearchSuggestionProvider
-import de.tum.`in`.tumcampusapp.component.tumui.lectures.activity.LecturesDetailsActivity
+import de.tum.`in`.tumcampusapp.component.tumui.lectures.activity.LectureDetailsActivity
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.adapter.LecturesListAdapter
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.Lecture
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LecturesResponse
-import kotlinx.android.synthetic.main.fragment_lectures.*
+import de.tum.`in`.tumcampusapp.databinding.FragmentLecturesBinding
 
 class LecturesFragment : FragmentForSearchingTumOnline<LecturesResponse>(
     R.layout.fragment_lectures,
@@ -21,12 +22,14 @@ class LecturesFragment : FragmentForSearchingTumOnline<LecturesResponse>(
     minLength = 4
 ) {
 
+    private val binding by viewBinding(FragmentLecturesBinding::bind)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lecturesListView.setOnItemClickListener { _, _, position, _ ->
-            val item = lecturesListView.getItemAtPosition(position) as Lecture
-            val intent = Intent(requireContext(), LecturesDetailsActivity::class.java)
+        binding.lecturesListView.setOnItemClickListener { _, _, position, _ ->
+            val item = binding.lecturesListView.getItemAtPosition(position) as Lecture
+            val intent = Intent(requireContext(), LectureDetailsActivity::class.java)
             intent.putExtra(Lecture.STP_SP_NR, item.stp_sp_nr)
             startActivity(intent)
         }
@@ -62,10 +65,10 @@ class LecturesFragment : FragmentForSearchingTumOnline<LecturesResponse>(
 
     override fun onDownloadSuccessful(response: LecturesResponse) {
         if (response.lectures.isEmpty()) {
-            lecturesListView.adapter = NoResultsAdapter(requireContext())
+            binding.lecturesListView.adapter = NoResultsAdapter(requireContext())
         } else {
             val lectures = response.lectures.sorted()
-            lecturesListView.adapter = LecturesListAdapter(requireContext(), lectures.toMutableList())
+            binding.lecturesListView.adapter = LecturesListAdapter(requireContext(), lectures.toMutableList())
         }
     }
 

@@ -5,14 +5,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.FragmentForAccessingTumOnline
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.model.TuitionList
-import kotlinx.android.synthetic.main.fragment_tuition_fees.amountTextView
-import kotlinx.android.synthetic.main.fragment_tuition_fees.deadlineTextView
-import kotlinx.android.synthetic.main.fragment_tuition_fees.financialAidButton
-import kotlinx.android.synthetic.main.fragment_tuition_fees.semesterTextView
+import de.tum.`in`.tumcampusapp.databinding.FragmentTuitionFeesBinding
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import java.util.Locale
@@ -22,10 +20,12 @@ class TuitionFeesFragment : FragmentForAccessingTumOnline<TuitionList>(
     R.string.tuition_fees
 ) {
 
+    private val binding by viewBinding(FragmentTuitionFeesBinding::bind)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        financialAidButton.setOnClickListener {
+        binding.financialAidButton.setOnClickListener {
             val url = getString(R.string.student_financial_aid_link)
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             startActivity(intent)
@@ -46,28 +46,31 @@ class TuitionFeesFragment : FragmentForAccessingTumOnline<TuitionList>(
     override fun onDownloadSuccessful(response: TuitionList) {
         val tuition = response.tuitions.first()
 
-        val amountText = tuition.getAmountText(requireContext())
-        amountTextView.text = amountText
+        with(binding) {
+            val amountText = tuition.getAmountText(requireContext())
+            amountTextView.text = amountText
 
-        val deadline = tuition.deadline
-        val formatter = DateTimeFormat.longDate().withLocale(Locale.getDefault())
-        val formattedDeadline = formatter.print(deadline)
-        deadlineTextView.text = getString(R.string.due_on_format_string, formattedDeadline)
+            val deadline = tuition.deadline
+            val formatter = DateTimeFormat.longDate().withLocale(Locale.getDefault())
+            val formattedDeadline = formatter.print(deadline)
+            deadlineTextView.text = getString(R.string.due_on_format_string, formattedDeadline)
 
-        semesterTextView.text = tuition.semester
+            semesterTextView.text = tuition.semester
 
-        if (tuition.isPaid) {
-            amountTextView.setTextColor(
-                    ContextCompat.getColor(requireContext(), R.color.sections_green))
-        } else {
-            // check if the deadline is less than a week from now
-            val nextWeek = DateTime().plusWeeks(1)
-            if (nextWeek.isAfter(deadline)) {
-                amountTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.error))
+            if (tuition.isPaid) {
+                amountTextView.setTextColor(
+                        ContextCompat.getColor(requireContext(), R.color.sections_green))
             } else {
-                amountTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary))
+                // check if the deadline is less than a week from now
+                val nextWeek = DateTime().plusWeeks(1)
+                if (nextWeek.isAfter(deadline)) {
+                    amountTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.error))
+                } else {
+                    amountTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary))
+                }
             }
         }
+
     }
 
     companion object {

@@ -5,13 +5,14 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.AbstractContactItem
 import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.MobilePhoneContactItem
 import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.PhoneContactItem
 import de.tum.`in`.tumcampusapp.utils.Utils
-import kotlinx.android.synthetic.main.person_contact_item.view.*
 
 class PersonContactItemsAdapter(
     private val items: List<AbstractContactItem>
@@ -46,6 +47,10 @@ class PersonContactItemsAdapter(
 
         fun bind(item: AbstractContactItem, showIcon: Boolean = true) = with(itemView) {
             val resourceId = if (showIcon) item.iconResourceId else android.R.color.transparent
+            val iconImageView = findViewById<ImageView>(R.id.iconImageView)
+            val labelTextView = findViewById<TextView>(R.id.labelTextView)
+            val valueTextView = findViewById<TextView>(R.id.valueTextView)
+
             iconImageView.setImageResource(resourceId)
 
             labelTextView.text = context.getString(item.labelResourceId)

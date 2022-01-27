@@ -29,10 +29,10 @@ import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackPresenter.Compa
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackPresenter.Companion.PERMISSION_LOCATION
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackPresenter.Companion.REQUEST_GALLERY
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackPresenter.Companion.REQUEST_TAKE_PHOTO
+import de.tum.`in`.tumcampusapp.databinding.ActivityFeedbackBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.Observable
-import kotlinx.android.synthetic.main.activity_feedback.*
 import java.io.File
 import javax.inject.Inject
 
@@ -43,9 +43,14 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
 
     @Inject
     lateinit var presenter: FeedbackContract.Presenter
-
+    
+    private lateinit var binding: ActivityFeedbackBinding
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        binding = ActivityFeedbackBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val lrzId = Utils.getSetting(this, Const.LRZ_ID, "")
         injector.feedbackComponent()
@@ -74,14 +79,14 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     }
 
     private fun initPictureGallery() {
-        imageRecyclerView.layoutManager = LinearLayoutManager(this, HORIZONTAL, false)
+        binding.imageRecyclerView.layoutManager = LinearLayoutManager(this, HORIZONTAL, false)
 
         val imagePaths = presenter.feedback.picturePaths
         val thumbnailSize = resources.getDimension(R.dimen.thumbnail_size).toInt()
         thumbnailsAdapter = FeedbackThumbnailsAdapter(imagePaths, { onThumbnailRemoved(it) }, thumbnailSize)
-        imageRecyclerView.adapter = thumbnailsAdapter
+        binding.imageRecyclerView.adapter = thumbnailsAdapter
 
-        addImageButton.setOnClickListener { showImageOptionsDialog() }
+        binding.addImageButton.setOnClickListener { showImageOptionsDialog() }
     }
 
     private fun onThumbnailRemoved(path: String) {
@@ -116,20 +121,20 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     }
 
     override fun getMessage(): Observable<String> =
-            feedbackMessage.textChanges().map { it.toString() }
+            binding.feedbackMessage.textChanges().map { it.toString() }
 
     override fun getEmail(): Observable<String> =
-            customEmailInput.textChanges().map { it.toString() }
+            binding.customEmailInput.textChanges().map { it.toString() }
 
-    override fun getTopicInput(): Observable<Int> = radioButtonsGroup.checkedChanges()
-    override fun getIncludeEmail(): Observable<Boolean> = includeEmailCheckbox.checkedChanges()
-    override fun getIncludeLocation(): Observable<Boolean> = includeLocationCheckBox.checkedChanges()
+    override fun getTopicInput(): Observable<Int> = binding.radioButtonsGroup.checkedChanges()
+    override fun getIncludeEmail(): Observable<Boolean> = binding.includeEmailCheckbox.checkedChanges()
+    override fun getIncludeLocation(): Observable<Boolean> = binding.includeLocationCheckBox.checkedChanges()
 
     @SuppressLint("MissingPermission")
     override fun getLocation(): Observable<Location> = RxLocation(this).location().updates(LocationRequest.create())
 
     override fun setFeedback(message: String) {
-        feedbackMessage.setText(message)
+        binding.feedbackMessage.setText(message)
     }
 
     override fun openCamera(intent: Intent) {
@@ -146,24 +151,27 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     }
 
     private fun initIncludeLocation() {
-        includeLocationCheckBox.isChecked = presenter.feedback.includeLocation
+        binding.includeLocationCheckBox.isChecked = presenter.feedback.includeLocation
     }
 
     private fun initIncludeEmail() {
         val feedback = presenter.feedback
         val email = feedback.email
-        includeEmailCheckbox.isChecked = feedback.includeEmail
+        with(binding) {
+            includeEmailCheckbox.isChecked = feedback.includeEmail
 
-        if (presenter.lrzId.isEmpty()) {
-            includeEmailCheckbox.text = getString(R.string.feedback_include_email)
-            customEmailInput.setText(email)
-        } else {
-            includeEmailCheckbox.text = getString(R.string.feedback_include_email_tum_id, email)
+            if (presenter.lrzId.isEmpty()) {
+                includeEmailCheckbox.text = getString(R.string.feedback_include_email)
+                customEmailInput.setText(email)
+            } else {
+                includeEmailCheckbox.text = getString(R.string.feedback_include_email_tum_id, email)
+            }
         }
+
     }
 
     override fun showEmailInput(show: Boolean) {
-        customEmailLayout.isVisible = show
+        binding.customEmailLayout.isVisible = show
     }
 
     fun onSendClicked(view: View) {
@@ -171,7 +179,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     }
 
     override fun showEmptyMessageError() {
-        feedbackMessage.error = getString(R.string.feedback_empty)
+        binding.feedbackMessage.error = getString(R.string.feedback_empty)
     }
 
     override fun showWarning(message: String) {
@@ -229,6 +237,8 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
         if (resultCode != Activity.RESULT_OK) {
             return
         }
@@ -263,7 +273,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
 
         when (requestCode) {
             PERMISSION_LOCATION -> {
-                includeLocationCheckBox.isChecked = isGranted
+                binding.includeLocationCheckBox.isChecked = isGranted
                 if (isGranted) {
                     presenter.listenForLocation()
                 }

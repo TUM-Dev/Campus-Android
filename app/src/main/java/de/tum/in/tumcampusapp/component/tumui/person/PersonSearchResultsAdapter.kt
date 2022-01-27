@@ -3,10 +3,10 @@ package de.tum.`in`.tumcampusapp.component.tumui.person
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
-import kotlinx.android.synthetic.main.person_search_result_item.view.textView
 
 class PersonSearchResultsAdapter(
     private var items: List<Person>,
@@ -36,6 +36,7 @@ class PersonSearchResultsAdapter(
             person: Person,
             onItemClick: (Person) -> Unit
         ) = with(itemView) {
+            val textView = findViewById<TextView>(R.id.textView)
             textView.text = person.getFullName()
             setOnClickListener { onItemClick(person) }
         }

@@ -20,10 +20,9 @@ import de.tum.`in`.tumcampusapp.api.tumonline.exception.RequestLimitReachedExcep
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.*
 import de.tum.`in`.tumcampusapp.database.TcaDb
+import de.tum.`in`.tumcampusapp.databinding.ActivityCreateEventBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
-import kotlinx.android.synthetic.main.activity_create_event.*
-import kotlinx.android.synthetic.main.activity_create_event.view.*
 import org.jetbrains.anko.sdk27.coroutines.textChangedListener
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
@@ -49,9 +48,14 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     private var apiCallsFailed = 0
 
     private val repeatHelper = RepeatHelper()
+    
+    private lateinit var binding: ActivityCreateEventBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        binding = ActivityCreateEventBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val closeIcon = ContextCompat.getDrawable(this, R.drawable.ic_clear)
         val color = ContextCompat.getColor(this, R.color.color_primary)
@@ -64,38 +68,45 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         // the user to pull to refresh.
         swipeRefreshLayout?.isEnabled = false
 
-        eventTitleView.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+        with(binding) {
+            eventTitleView.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                val isEmpty = s.toString().isEmpty()
-                val alpha = if (isEmpty) 0.5f else 1.0f
-                createEventButton.isEnabled = !isEmpty
-                createEventButton.alpha = alpha
-            }
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                    val isEmpty = s.toString().isEmpty()
+                    val alpha = if (isEmpty) 0.5f else 1.0f
+                    createEventButton.isEnabled = !isEmpty
+                    createEventButton.alpha = alpha
+                }
 
-            override fun afterTextChanged(s: Editable) {}
-        })
+                override fun afterTextChanged(s: Editable) {}
+            })
+        }
+
 
         val extras = intent.extras
-        if (extras != null) {
-            // an event with extras can either be editing an existing event
-            // or adding a new event from Tickets & Events
-            isEditing = extras.getBoolean(Const.EVENT_EDIT)
-            if (isEditing) {
-                createEventButton.setText(R.string.event_save_edit_button)
+        with(binding) {
+            if (extras != null) {
+                // an event with extras can either be editing an existing event
+                // or adding a new event from Tickets & Events
+                isEditing = extras.getBoolean(Const.EVENT_EDIT)
+                if (isEditing) {
+                    createEventButton.setText(R.string.event_save_edit_button)
+                }
+                eventTitleView.setText(extras.getString(Const.EVENT_TITLE))
+                eventDescriptionView.setText(extras.getString(Const.EVENT_COMMENT))
+            } else {
+                eventTitleView.requestFocus()
+                showKeyboard()
             }
-            eventTitleView.setText(extras.getString(Const.EVENT_TITLE))
-            eventDescriptionView.setText(extras.getString(Const.EVENT_COMMENT))
-        } else {
-            eventTitleView.requestFocus()
-            showKeyboard()
         }
+
         initStartEndDates(extras)
         setDateAndTimeListeners()
         initRepeatingSettingsListeners()
 
-        createEventButton.setOnClickListener {
+
+        binding.createEventButton.setOnClickListener {
             if (end.isBefore(start)) {
                 showErrorDialog(getString(R.string.create_event_time_error))
                 return@setOnClickListener
@@ -117,53 +128,55 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
 
         // edited events cannot repeat
         if (isEditing) {
-            repeatingSwitch.visibility = View.GONE
+            binding.repeatingSwitch.visibility = View.GONE
         }
     }
 
     private fun initRepeatingSettingsListeners() {
-        repeatingSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                repeatHelper.setRepeatingNTimes()
-                endAfterRadioBtn.isChecked = true
-                repeatingSettings.layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
-                repeatingSettings.requestLayout()
-            } else {
-                repeatHelper.setNotRepeating()
-                repeatingSettings.layoutParams.height = 0
-                repeatingSettings.requestLayout()
-            }
-        }
-
-        endOnRadioBtn.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                repeatHelper.setRepeatingUntil()
-            }
-        }
-
-        endAfterRadioBtn.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                repeatHelper.setRepeatingNTimes()
-            }
-        }
-
-        eventRepeatsTimes.textChangedListener {
-            afterTextChanged {
-                if (it.toString() != "") {
-                    repeatHelper.times = it.toString().toInt()
-                } else {
-                    repeatHelper.times = 0
+            with(binding) {
+                repeatingSwitch.setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) {
+                        repeatHelper.setRepeatingNTimes()
+                        endAfterRadioBtn.isChecked = true
+                        repeatingSettings.layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
+                        repeatingSettings.requestLayout()
+                    } else {
+                        repeatHelper.setNotRepeating()
+                        repeatingSettings.layoutParams.height = 0
+                        repeatingSettings.requestLayout()
+                    }
                 }
             }
-        }
 
-        eventLastDateView.setOnClickListener {
-            hideKeyboard()
-            DatePickerDialog(this, { _, year, month, dayOfMonth ->
-                repeatHelper.end = repeatHelper.end?.withDate(year, month + 1, dayOfMonth)
-                updateDateViews()
-            }, repeatHelper.end?.year!!, repeatHelper.end?.monthOfYear!! - 1, repeatHelper.end?.dayOfMonth!!).show()
-        }
+            binding.endOnRadioBtn.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    repeatHelper.setRepeatingUntil()
+                }
+            }
+
+            binding.endAfterRadioBtn.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    repeatHelper.setRepeatingNTimes()
+                }
+            }
+
+            binding.eventRepeatsTimes.textChangedListener {
+                afterTextChanged {
+                    if (it.toString() != "") {
+                        repeatHelper.times = it.toString().toInt()
+                    } else {
+                        repeatHelper.times = 0
+                    }
+                }
+            }
+
+            binding.eventLastDateView.setOnClickListener {
+                hideKeyboard()
+                DatePickerDialog(this, { _, year, month, dayOfMonth ->
+                    repeatHelper.end = repeatHelper.end?.withDate(year, month + 1, dayOfMonth)
+                    updateDateViews()
+                }, repeatHelper.end?.year!!, repeatHelper.end?.monthOfYear!! - 1, repeatHelper.end?.dayOfMonth!!).show()
+            }
     }
 
     private fun initStartEndDates(extras: Bundle?) {
@@ -199,7 +212,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
 
         // Month +/- 1 is needed because the date picker uses zero-based month values while DateTime
         // starts counting months at 1.
-        eventStartDateView.setOnClickListener {
+        binding.eventStartDateView.setOnClickListener {
             hideKeyboard()
             DatePickerDialog(this, { _, year, month, dayOfMonth ->
                 start = start.withDate(year, month + 1, dayOfMonth)
@@ -209,7 +222,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
                 updateDateViews()
             }, start.year, start.monthOfYear - 1, start.dayOfMonth).show()
         }
-        eventEndDateView.setOnClickListener {
+        binding.eventEndDateView.setOnClickListener {
             hideKeyboard()
             DatePickerDialog(this, { _, year, month, dayOfMonth ->
                 end = end.withDate(year, month + 1, dayOfMonth)
@@ -218,7 +231,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         }
 
         // TIME
-        eventStartTimeView.setOnClickListener { view ->
+        binding.eventStartTimeView.setOnClickListener { view ->
             hideKeyboard()
             TimePickerDialog(this, { timePicker, hour, minute ->
                 val eventLength = end.millis - start.millis
@@ -229,7 +242,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
             }, start.hourOfDay, start.minuteOfHour, true).show()
         }
 
-        eventEndTimeView.setOnClickListener { view ->
+        binding.eventEndTimeView.setOnClickListener { view ->
             hideKeyboard()
             TimePickerDialog(this, { timePicker, hour, minute ->
                 end = end.withHourOfDay(hour)
@@ -242,16 +255,20 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     private fun updateTimeViews() {
         val format = DateTimeFormat.forPattern("HH:mm")
                 .withLocale(Locale.getDefault())
-        eventStartTimeView.text = format.print(start)
-        eventEndTimeView.text = format.print(end)
+        with(binding) {
+            eventStartTimeView.text = format.print(start)
+            eventEndTimeView.text = format.print(end)
+        }
     }
 
     private fun updateDateViews() {
         val format = DateTimeFormat.forPattern("EEE, dd.MM.yyyy")
                 .withLocale(Locale.getDefault())
-        eventStartDateView.text = format.print(start)
-        eventEndDateView.text = format.print(end)
-        eventLastDateView.text = format.print(repeatHelper.end)
+        with(binding) {
+            eventStartDateView.text = format.print(start)
+            eventEndDateView.text = format.print(end)
+            eventLastDateView.text = format.print(repeatHelper.end)
+        }
     }
 
     private fun editEvent() {
@@ -302,13 +319,13 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         event.dtstart = start
         event.dtend = end
 
-        var title = eventTitleView.text.toString()
+        var title = binding.eventTitleView.text.toString()
         if (title.length > 255) {
             title = title.substring(0, 255)
         }
         event.title = title
 
-        var description = eventDescriptionView.text.toString()
+        var description = binding.eventDescriptionView.text.toString()
         if (description.length > 4000) {
             description = description.substring(0, 4000)
         }
@@ -409,15 +426,17 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
 
     private fun hideKeyboard() {
         val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputManager.hideSoftInputFromWindow(eventTitleView.windowToken, 0)
+        inputManager.hideSoftInputFromWindow(binding.eventTitleView.windowToken, 0)
     }
 
     private fun handleOnBackPressed(): Boolean {
-        val title = eventTitleView.text.toString()
-        val description = eventDescriptionView.text.toString()
+        with(binding) {
+            val title = eventTitleView.text.toString()
+            val description = eventDescriptionView.text.toString()
 
-        // TODO: If the user is in edit mode, check whether any data was changed.
-        return title.isEmpty() && description.isEmpty()
+            // TODO: If the user is in edit mode, check whether any data was changed.
+            return title.isEmpty() && description.isEmpty()
+        }
     }
 
     private fun displayCloseDialog() {

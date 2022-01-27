@@ -4,9 +4,10 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Group
-import kotlinx.android.synthetic.main.person_group_item.view.*
 
 class PersonGroupsAdapter(private val items: List<Group>) : RecyclerView.Adapter<PersonGroupsAdapter.ViewHolder>() {
 
@@ -25,6 +26,10 @@ class PersonGroupsAdapter(private val items: List<Group>) : RecyclerView.Adapter
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(group: Group) = with(itemView) {
+            val iconImageView = findViewById<ImageView>(R.id.iconImageView)
+            val functionTextView = findViewById<TextView>(R.id.functionTextView)
+            val orgTextView = findViewById<TextView>(R.id.orgTextView)
+
             iconImageView.visibility = if (adapterPosition == 0) View.VISIBLE else View.INVISIBLE
             functionTextView.text = group.title
             orgTextView.text = group.org

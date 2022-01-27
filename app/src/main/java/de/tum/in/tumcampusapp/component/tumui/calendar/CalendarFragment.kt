@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat.checkSelfPermission
 import com.alamkanak.weekview.DateTimeInterpreter
 import com.alamkanak.weekview.WeekView
 import com.alamkanak.weekview.WeekViewDisplayable
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
@@ -25,6 +26,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.Event
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventsResponse
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
 import de.tum.`in`.tumcampusapp.database.TcaDb
+import de.tum.`in`.tumcampusapp.databinding.FragmentCalendarBinding
 import de.tum.`in`.tumcampusapp.service.QueryLocationsService
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -33,7 +35,6 @@ import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_calendar.todayButton
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
@@ -72,6 +73,8 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
 
     private var detailsFragment: CalendarDetailsFragment? = null
 
+    private val binding by viewBinding(FragmentCalendarBinding::bind)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -98,7 +101,7 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
             openEvent(data)
         }
 
-        todayButton.setOnClickListener { weekView.goToToday() }
+        binding.todayButton.setOnClickListener { weekView.goToToday() }
         showDate?.let { openEvent(eventId) }
 
         isWeekMode = Utils.getSettingBool(requireContext(), Const.CALENDAR_WEEK_MODE, false)
@@ -373,7 +376,7 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
 
     private fun openEvent(event: CalendarItem) {
         detailsFragment = CalendarDetailsFragment.newInstance(event.nr, true, this)
-        detailsFragment?.show(requireFragmentManager(), null)
+        detailsFragment?.show(childFragmentManager, null)
     }
 
     override fun onEditEvent(calendarItem: CalendarItem) {
@@ -454,7 +457,7 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
                         requireContext(), date.timeInMillis,
                         DateUtils.FORMAT_NUMERIC_DATE or DateUtils.FORMAT_NO_YEAR)
 
-                return weekDay.toUpperCase(Locale.getDefault()) + ' '.toString() + dateString
+                return weekDay.uppercase(Locale.getDefault()) + ' '.toString() + dateString
             }
 
             override fun interpretTime(hour: Int): String {

@@ -4,6 +4,7 @@ import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
@@ -12,9 +13,9 @@ import de.tum.`in`.tumcampusapp.component.other.generic.adapter.NoResultsAdapter
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.FragmentForSearchingInBackground
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom
 import de.tum.`in`.tumcampusapp.database.TcaDb
+import de.tum.`in`.tumcampusapp.databinding.FragmentRoomfinderBinding
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
-import kotlinx.android.synthetic.main.fragment_roomfinder.listView
 import java.io.IOException
 import java.io.Serializable
 import java.util.regex.Pattern
@@ -40,12 +41,14 @@ class RoomFinderFragment : FragmentForSearchingInBackground<List<RoomFinderRoom>
             }.orEmpty()
         }
 
+    private val binding by viewBinding(FragmentRoomfinderBinding::bind)
+    
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter = RoomFinderListAdapter(requireContext(), recents)
 
-        listView.setOnItemClickListener { _, _, position, _ ->
-            val room = listView.adapter.getItem(position) as RoomFinderRoom
+        binding.listView.setOnItemClickListener { _, _, position, _ ->
+            val room = binding.listView.adapter.getItem(position) as RoomFinderRoom
             openRoomDetails(room)
         }
 
@@ -59,7 +62,7 @@ class RoomFinderFragment : FragmentForSearchingInBackground<List<RoomFinderRoom>
         if (adapter.isEmpty) {
             openSearch()
         } else {
-            listView.adapter = adapter
+            binding.listView.adapter = adapter
         }
     }
 
@@ -87,10 +90,10 @@ class RoomFinderFragment : FragmentForSearchingInBackground<List<RoomFinderRoom>
         }
 
         if (result.isEmpty()) {
-            listView.adapter = NoResultsAdapter(requireContext())
+            binding.listView.adapter = NoResultsAdapter(requireContext())
         } else {
             adapter = RoomFinderListAdapter(requireContext(), result)
-            listView.adapter = adapter
+            binding.listView.adapter = adapter
         }
         showLoadingEnded()
     }

@@ -8,9 +8,9 @@ import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LectureDetails
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LectureDetailsResponse
+import de.tum.`in`.tumcampusapp.databinding.ActivityLecturedetailsBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
-import kotlinx.android.synthetic.main.activity_lecturedetails.*
 
 /**
  * This Activity will show all details found on the TUMOnline web service
@@ -27,15 +27,21 @@ import kotlinx.android.synthetic.main.activity_lecturedetails.*
  *
  * NEEDS: stp_sp_nr set in incoming bundle (lecture id)
  */
-class LecturesDetailsActivity : ActivityForAccessingTumOnline<LectureDetailsResponse>(R.layout.activity_lecturedetails) {
+class LectureDetailsActivity : ActivityForAccessingTumOnline<LectureDetailsResponse>(R.layout.activity_lecturedetails) {
 
     private lateinit var currentItem: LectureDetails
     private lateinit var mLectureId: String
 
+    private lateinit var binding: ActivityLecturedetailsBinding
+
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        binding = ActivityLecturedetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        appointmentsButton.setOnClickListener {
+        binding.appointmentsButton.setOnClickListener {
             // LectureAppointments need the name and id of the facing lecture
             val bundle = Bundle()
             bundle.putString("stp_sp_nr", currentItem.stp_sp_nr)
@@ -68,44 +74,47 @@ class LecturesDetailsActivity : ActivityForAccessingTumOnline<LectureDetailsResp
         }
         currentItem = lectureDetails[0]
 
-        lectureNameTextView.text = currentItem.title
+        with(binding) {
+            lectureNameTextView.text = currentItem.title
 
-        val strLectureLanguage = StringBuilder(currentItem.semesterName ?: getString(R.string.unknown))
-        if (currentItem.mainLanguage != null) {
-            strLectureLanguage.append(" - ").append(currentItem.mainLanguage)
+            val strLectureLanguage = StringBuilder(currentItem.semesterName ?: getString(R.string.unknown))
+            if (currentItem.mainLanguage != null) {
+                strLectureLanguage.append(" - ").append(currentItem.mainLanguage)
+            }
+            semesterTextView.text = strLectureLanguage
+
+            swsTextView.text = getString(R.string.lecture_details_format_string, currentItem.lectureType, currentItem.duration)
+            professorTextView.text = currentItem.lecturers
+            orgTextView.text = currentItem.chairName
+            contentTextView.text = currentItem.lectureContent
+            dateTextView.text = currentItem.firstAppointment
+
+            val teachingMethod = currentItem.teachingMethod
+            if (teachingMethod == null || teachingMethod.isEmpty()) {
+                methodHeaderTextView.isVisible = false
+                methodTextView.isVisible = false
+            } else {
+                methodTextView.text = teachingMethod
+            }
+
+            val targets = currentItem.teachingTargets
+            if (targets == null || targets.isEmpty()) {
+                targetsHeaderTextView.isVisible = false
+                targetsTextView.isVisible = false
+            } else {
+                targetsTextView.text = targets
+            }
+
+            val aids = currentItem.examinationAids
+            if (aids == null || aids.isEmpty()) {
+                examinationAidsHeaderTextView.isVisible = false
+                examinationAidsTextView.isVisible = false
+            } else {
+                examinationAidsTextView.text = aids
+            }
+
+            appointmentsButton.isEnabled = true
         }
-        semesterTextView.text = strLectureLanguage
 
-        swsTextView.text = getString(R.string.lecture_details_format_string, currentItem.lectureType, currentItem.duration)
-        professorTextView.text = currentItem.lecturers
-        orgTextView.text = currentItem.chairName
-        contentTextView.text = currentItem.lectureContent
-        dateTextView.text = currentItem.firstAppointment
-
-        val teachingMethod = currentItem.teachingMethod
-        if (teachingMethod == null || teachingMethod.isEmpty()) {
-            methodHeaderTextView.isVisible = false
-            methodTextView.isVisible = false
-        } else {
-            methodTextView.text = teachingMethod
-        }
-
-        val targets = currentItem.teachingTargets
-        if (targets == null || targets.isEmpty()) {
-            targetsHeaderTextView.isVisible = false
-            targetsTextView.isVisible = false
-        } else {
-            targetsTextView.text = targets
-        }
-
-        val aids = currentItem.examinationAids
-        if (aids == null || aids.isEmpty()) {
-            examinationAidsHeaderTextView.isVisible = false
-            examinationAidsTextView.isVisible = false
-        } else {
-            examinationAidsTextView.text = aids
-        }
-
-        appointmentsButton.isEnabled = true
     }
 }
