@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 8,
-    "identityHash": "4451b111f2fb509265dc7c9443929041",
+    "identityHash": "1a55f64d546d16b03da9636aa0a7fee7",
     "entities": [
       {
         "tableName": "Cafeteria",
@@ -1170,7 +1170,7 @@
       },
       {
         "tableName": "scheduled_notifications",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type_id` INTEGER NOT NULL, `content_id` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type_id` TEXT NOT NULL, `content_id` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -1181,7 +1181,7 @@
           {
             "fieldPath": "typeId",
             "columnName": "type_id",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -1224,7 +1224,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4451b111f2fb509265dc7c9443929041')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1a55f64d546d16b03da9636aa0a7fee7')"
     ]
   }
 }
