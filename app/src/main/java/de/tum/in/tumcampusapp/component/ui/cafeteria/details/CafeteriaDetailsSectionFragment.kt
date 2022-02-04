@@ -55,8 +55,8 @@ class CafeteriaDetailsSectionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val menuDate = arguments?.getSerializable(Const.DATE) as DateTime
         val menuDateString = DateTimeFormat.fullDate().print(menuDate)
-        val cafeteriaId = CafeteriaLocation.fromString(arguments?.getString(Const.CAFETERIA_ID))
-        if (cafeteriaId == CafeteriaLocation.NONE) {
+        val cafeteriaId = arguments?.getInt(Const.CAFETERIA_ID)
+        if (cafeteriaId == null) {
             Utils.log("Argument missing: cafeteriaId")
             return
         }
@@ -75,6 +75,7 @@ class CafeteriaDetailsSectionFragment : Fragment() {
             menusRecyclerView.adapter = adapter
 
             cafeteriaViewModel.cafeteriaMenus.observe(viewLifecycleOwner, Observer<List<CafeteriaMenu>> { adapter.update(it) })
+            // TODO directly download menu
             cafeteriaViewModel.fetchCafeteriaMenus(cafeteriaId, menuDate)
         }
     }
