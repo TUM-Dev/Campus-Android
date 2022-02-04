@@ -17,38 +17,33 @@ class EatAPIParser {
             val menus: MutableList<CafeteriaMenu> = mutableListOf()
 
             var cafeteriaId: String
-            var calendarWeek: Short
             var date: DateTime?
             var dishName: String
             var dishType: String
             var dishLabels: String
 
-            response.cafeterias.forEach { cafeteria: CafeteriaData ->
-                cafeteriaId = cafeteria.cafeteriaId
+            val calendarWeek: Int = response.calendarWeek
 
-                cafeteria.menusByWeeks.forEach { weeklyMenu: WeeklyMenu ->
-                    calendarWeek = weeklyMenu.weekOfYear
 
-                    weeklyMenu.dishesForWeek.forEach { dailyMenu: DailyMenu ->
-                        date = dailyMenu.date
+            response.dishesForWeek.forEach { dailyMenu: DailyMenu ->
+                date = dailyMenu.date
 
-                        dailyMenu.dishesForDay.forEach { dish: Dish ->
-                            dishName = dish.name
-                            dishType = dish.type
-                            dishLabels = dish.labels.toString()
+                dailyMenu.dishesForDay.forEach { dish: Dish ->
+                    dishName = dish.name
+                    dishType = dish.type
+                    dishLabels = dish.labels.toString()
 
-                            // Set id to 0 so that room will autogenerate the primary key
-                            menus.add(CafeteriaMenu(
-                                    id = 0,
-                                    cafeteriaId = cafeteriaId,
-                                    date = date,
-                                    dishType = dishType,
-                                    name = dishName,
-                                    labels = dishLabels,
-                                    calendarWeek = calendarWeek
-                            ))
-                        }
-                    }
+                    // Set id to 0 so that room will autogenerate the primary key
+                    // TODO Id is not longer in any table, need to get it from the call
+                    menus.add(CafeteriaMenu(
+                            id = 0,
+                            cafeteriaId = "mensa-garching",
+                            date = date,
+                            dishType = dishType,
+                            name = dishName,
+                            labels = dishLabels,
+                            calendarWeek = calendarWeek
+                    ))
                 }
             }
 
@@ -59,17 +54,17 @@ class EatAPIParser {
          * @param response List of CafeteriaMetadata from the EatAPI /canteens.json endpoint
          * @return a list of all extracted Cafeterias
          */
-        fun parseCafeteriaFrom(response: List<CafeteriaMetadata>) : List<Cafeteria> {
+        fun parseCafeteriaFrom(response: List<CafeteriaMetadata>): List<Cafeteria> {
             val cafeterias: MutableList<Cafeteria> = mutableListOf()
 
-            var id: String
+            var cafeteriaId: String
             var name: String
             var address: String
             var latitude: Double
             var longitude: Double
 
             response.forEach { cafeteriaMetadata: CafeteriaMetadata ->
-                id = cafeteriaMetadata.id
+                cafeteriaId = cafeteriaMetadata.cafeteriaId
                 name = cafeteriaMetadata.name
 
                 address = cafeteriaMetadata.geoMetadata.address
@@ -77,7 +72,8 @@ class EatAPIParser {
                 longitude = cafeteriaMetadata.geoMetadata.longitude
 
                 cafeterias.add(Cafeteria(
-                        id = id,
+                        id = 0,
+                        cafeteriaId = cafeteriaId,
                         name = name,
                         address = address,
                         latitude = latitude,
