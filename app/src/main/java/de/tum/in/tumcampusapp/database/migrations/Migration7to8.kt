@@ -9,7 +9,8 @@ class Migration7to8 : Migration(7, 8) {
         database.execSQL("DROP TABLE IF EXISTS `Cafeteria`")
 
         database.execSQL("CREATE TABLE IF NOT EXISTS `Cafeteria` (" +
-                "`id` TEXT NOT NULL," +
+                "`id` INTEGER NOT NULL," +
+                "`cafeteriaId` TEXT NOT NULL," +
                 "`name` TEXT NOT NULL," +
                 "`address` TEXT NOT NULL," +
                 "`latitude` REAL NOT NULL," +
