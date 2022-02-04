@@ -17,12 +17,13 @@ import com.google.gson.annotations.SerializedName
 @Entity
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
 data class Cafeteria(
-    @field:PrimaryKey
-    var id: String = "",
-    var name: String = "",
-    var address: String = "",
-    var latitude: Double = -1.0,
-    var longitude: Double = -1.0
+        @PrimaryKey(autoGenerate = true)
+        var id: Int = 0,
+        var cafeteriaId: String = "",
+        var name: String = "",
+        var address: String = "",
+        var latitude: Double = -1.0,
+        var longitude: Double = -1.0
 ) : Comparable<Cafeteria> {
 
     // Used for ordering cafeterias

@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class CafeteriaMetadata(
         @SerializedName("canteen_id")
-        var id: String = "",
+        var cafeteriaId: String = "",
         @SerializedName("name")
         var name: String = "",
         @SerializedName("location")
