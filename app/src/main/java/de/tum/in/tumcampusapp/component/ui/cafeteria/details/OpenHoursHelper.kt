@@ -19,7 +19,7 @@ class OpenHoursHelper(private val context: Context) {
      * HINT: Currently only works for cafeterias, and institutions
      * that have Mo-Do xx-yy.yy, Fr aa-bb and Mo-Fr xx-yy format
      *
-     * @param id Location ID, e.g. 100
+     * @param id the cafeteria for which to fetch the opening hours
      * @param date Relative date
      * @return Readable opening string
      */
