@@ -38,25 +38,25 @@ class CafeteriaMenuCard(context: Context, private val cafeteria: CafeteriaWithMe
 
     override fun getNavigationDestination(): NavDestination? {
         val bundle = Bundle()
-        bundle.putString(Const.CAFETERIA_ID, cafeteria.cafeteriaLocation.toId())
+        bundle.putInt(Const.CAFETERIA_ID, cafeteria.id)
         return NavDestination.Fragment(CafeteriaFragment::class.java, bundle)
     }
 
     public override fun discard(editor: Editor) {
         val date = cafeteria.nextMenuDate
-        editor.putLong(CAFETERIA_DATE + "_" + cafeteria.cafeteriaLocation.toId(), date.millis)
+        editor.putLong(CAFETERIA_DATE + "_" + cafeteria.id, date.millis)
     }
 
     override fun shouldShow(prefs: SharedPreferences): Boolean {
         // the card reappears when the day is over and a new menu will be shown
-        val prevDate = prefs.getLong(CAFETERIA_DATE + "_" + cafeteria.cafeteriaLocation.toId(), 0)
+        val prevDate = prefs.getLong(CAFETERIA_DATE + "_" + cafeteria.id, 0)
         val date = cafeteria.nextMenuDate
         return prevDate < date.millis
     }
 
     override fun hideAlways() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        val id = cafeteria.cafeteriaLocation.toId()
+        val id = cafeteria.id.toString()
         val ids = prefs.getStringSet(Const.CAFETERIA_CARDS_SETTING, HashSet())!!
         if (ids.contains(id)) {
             ids.remove(id)
