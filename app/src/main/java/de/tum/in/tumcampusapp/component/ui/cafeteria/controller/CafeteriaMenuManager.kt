@@ -47,7 +47,11 @@ constructor(private val context: Context) {
         // we add a "no-cache" header to the request.
         CafeteriaAPIClient
                 .getInstance(context)
-                .getMenus(cacheControl, CafeteriaLocation.MENSA_GARCHING) // TODO Implement lazy/dynamic menu fetching
+                .getMenus(cacheControl, CafeteriaLocation.MENSA_GARCHING)
+                // TODO Implement lazy/dynamic menu fetching
+                //  Actually have to do this right away, as this is the only way of getting the cafeteriaId
+                //  If I dont know the id with which this fetching is called, then I have no way of getting the id at all
+                //      => breaks new DB
                 .enqueue(object : Callback<CafeteriaResponse> {
                     override fun onResponse(
                         call: Call<CafeteriaResponse>,
@@ -56,6 +60,8 @@ constructor(private val context: Context) {
                         val cafeteriaResponse = response.body()
                         if (cafeteriaResponse != null) {
                             onDownloadSuccess(cafeteriaResponse)
+                        } else {
+                             Utils.logWithTag(this.javaClass.name, "Error fetching cafeteria menus. 'cafeteriaResponse' was null.")
                         }
                     }
 
@@ -95,12 +101,13 @@ constructor(private val context: Context) {
      * @param date The date for which to return the favorite dishes served
      * @return the favourite dishes at the given date
      */
-    fun getFavoriteDishesServed(queriedMensaId: String, date: DateTime): List<CafeteriaMenu> {
+    fun getFavoriteDishesServed(queriedMensaId: Int, date: DateTime): List<CafeteriaMenu> {
         val dateString = DateTimeUtils.getDateString(date)
 
-        val upcomingServings = favoriteDishDao.getFavouritedCafeteriaMenuOnDate(dateString)
-        return upcomingServings.filter {
-            it.cafeteriaId == queriedMensaId
+        // TODO revert/ fix Favorite dish
+        val upcomingServings = /*favoriteDishDao.getFavouritedCafeteriaMenuOnDate(dateString)*/ emptyList<CafeteriaMenu>()
+        return upcomingServings.filter { cafeteria: CafeteriaMenu ->
+            cafeteria.id == queriedMensaId
         }
     }
 }
