@@ -16,7 +16,7 @@ interface CafeteriaDao {
      * @param cafeteriaId A valid cafeteriaId, generated via the CafeteriaLocation enum.
      */
     @Query("SELECT * FROM cafeteria WHERE id = :cafeteriaId")
-    fun getById(cafeteriaId: String): Cafeteria?
+    fun getById(cafeteriaId: Int): Cafeteria?
 
     @Query("DELETE FROM cafeteria")
     fun removeCache()
@@ -28,5 +28,5 @@ interface CafeteriaDao {
      * @param cafeteriaId A valid cafeteriaId, generated via the CafeteriaLocation enum.
      */
     @Query("SELECT name FROM cafeteria WHERE id = :cafeteriaId")
-    fun getMensaNameFromId(cafeteriaId: String): String
+    fun getMensaNameFromId(cafeteriaId: Int): String
 }
