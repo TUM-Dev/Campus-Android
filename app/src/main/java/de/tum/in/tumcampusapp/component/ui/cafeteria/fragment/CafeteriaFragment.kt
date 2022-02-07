@@ -114,20 +114,22 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
         initCafeteriaSpinner()
     }
 
+    // TODO implement lazy fetching here?
+    // Also need a place for init
     private fun onNewCafeteriaSelected(cafeteria: Cafeteria) {
-        sectionsPagerAdapter.setCafeteriaId(CafeteriaLocation.fromString(cafeteria.id))
+        sectionsPagerAdapter.setCafeteriaId(cafeteria.id)
         cafeteriaViewModel.fetchMenuDates()
     }
 
     private fun initCafeteriaSpinner() {
         val intent = requireActivity().intent
-        val cafeteriaId: CafeteriaLocation
+        val cafeteriaId: Int
 
         if (intent != null && intent.hasExtra(Const.MENSA_FOR_FAVORITEDISH)) {
-            cafeteriaId = CafeteriaLocation.fromString(intent.getStringExtra(Const.MENSA_FOR_FAVORITEDISH))
+            cafeteriaId = intent.getIntExtra(Const.MENSA_FOR_FAVORITEDISH, NONE_SELECTED)
             intent.removeExtra(Const.MENSA_FOR_FAVORITEDISH)
         } else if (intent != null && intent.hasExtra(Const.CAFETERIA_ID)) {
-            cafeteriaId = CafeteriaLocation.fromString(intent.getStringExtra(Const.CAFETERIA_ID))
+            cafeteriaId = intent.getIntExtra(Const.CAFETERIA_ID, 0)
         } else {
             // If we're not provided with a cafeteria ID, we choose the best matching cafeteria.
             cafeteriaId = cafeteriaManager.bestMatchCafeteriaId
@@ -136,12 +138,12 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
         updateCafeteriaSpinner(cafeteriaId)
     }
 
-    private fun updateCafeteriaSpinner(cafeteriaLocation: CafeteriaLocation) {
+    private fun updateCafeteriaSpinner(cafeteriaId: Int) {
         var selectedIndex = NONE_SELECTED
 
         for (cafeteria in cafeterias) {
             val index = cafeterias.indexOf(cafeteria)
-            if (cafeteriaLocation == CafeteriaLocation.NONE || cafeteriaLocation == CafeteriaLocation.fromString(cafeteria.id)) {
+            if (cafeteriaId == NONE_SELECTED || cafeteriaId == cafeteria.id) {
                 selectedIndex = index
                 break
             }
