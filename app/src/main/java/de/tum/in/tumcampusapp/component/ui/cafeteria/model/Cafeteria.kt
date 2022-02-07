@@ -9,6 +9,7 @@ import com.google.gson.annotations.SerializedName
  * new Cafeteria
  *
  * @param id Cafeteria ID, e.g. mensa-garching
+ * @param slug cafeteria string identification slug e.g.: "mensa-garching"
  * @param name Name, e.g. MensaX
  * @param address Address, e.g. Boltzmannstr. 3
  * @param latitude Coordinates of the cafeteria
@@ -19,7 +20,7 @@ import com.google.gson.annotations.SerializedName
 data class Cafeteria(
         @PrimaryKey(autoGenerate = true)
         var id: Int = 0,
-        var cafeteriaId: String = "",
+        var slug: String = "",
         var name: String = "",
         var address: String = "",
         var latitude: Double = -1.0,
