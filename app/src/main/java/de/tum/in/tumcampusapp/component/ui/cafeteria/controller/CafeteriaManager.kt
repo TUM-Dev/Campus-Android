@@ -33,17 +33,18 @@ class CafeteriaManager @Inject constructor(private val context: Context) : Provi
      * Returns a list of [CafeteriaMenu]s of the best-matching cafeteria. If there's no
      * best-matching cafeteria, it returns an empty list.
      */
+    // TODO this seems to be pretty much what I want. Have CafeteriaLocation and menus for it => Debug for details
     val bestMatchCafeteriaMenus: List<CafeteriaMenu>
         get() {
             val cafeteriaId = bestMatchCafeteriaId
-            return if (cafeteriaId == CafeteriaLocation.NONE) emptyList() else getCafeteriaMenusByCafeteriaId(cafeteriaId)
+            return if (cafeteriaId == Const.NO_CAFETERIA_FOUND) emptyList() else getCafeteriaMenusByCafeteriaId(cafeteriaId)
         }
 
     // Choose which mensa should be shown
-    val bestMatchCafeteriaId: CafeteriaLocation
+    val bestMatchCafeteriaId: Int
         get() {
             val cafeteriaId = LocationManager(context).getCafeteria()
-            if (cafeteriaId == CafeteriaLocation.NONE) {
+            if (cafeteriaId == Const.NO_CAFETERIA_FOUND) {
                 Utils.log("could not get a Cafeteria from locationManager!")
             }
             return cafeteriaId
@@ -65,8 +66,8 @@ class CafeteriaManager @Inject constructor(private val context: Context) : Provi
 
         // TODO cafeteriaIds is empty here
         for (id in cafeteriaIds) {
-            val cafeteria = CafeteriaLocation.fromString(id)
-            if (cafeteria == CafeteriaLocation.NONE) {
+            val cafeteria = Integer.parseInt(id)
+            if (cafeteria == Const.NO_CAFETERIA_FOUND) {
                 // no cafeteria based on the location could be found
                 continue
             }
@@ -83,10 +84,10 @@ class CafeteriaManager @Inject constructor(private val context: Context) : Provi
         return Utils.getSettingBool(context, "card_cafeteria_phone", true)
     }
 
-    private fun getCafeteriaMenusByCafeteriaId(cafeteriaLocation: CafeteriaLocation): List<CafeteriaMenu> {
-        val cafeteria = CafeteriaWithMenus(cafeteriaLocation)
+    private fun getCafeteriaMenusByCafeteriaId(cafeteriaId: Int): List<CafeteriaMenu> {
+        val cafeteria = CafeteriaWithMenus(cafeteriaId)
 
         cafeteria.menuDates = localRepository.getAllMenuDates()
-        return localRepository.getCafeteriaMenus(cafeteriaLocation, cafeteria.nextMenuDate)
+        return localRepository.getCafeteriaMenus(cafeteriaId, cafeteria.nextMenuDate)
     }
 }
