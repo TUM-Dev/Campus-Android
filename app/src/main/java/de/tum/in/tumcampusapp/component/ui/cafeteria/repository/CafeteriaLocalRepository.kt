@@ -21,12 +21,9 @@ class CafeteriaLocalRepository @Inject constructor(
 
     private val executor: Executor = Executors.newSingleThreadExecutor()
 
-    fun getCafeteriaWithMenus(cafeteriaLocation: CafeteriaLocation): CafeteriaWithMenus {
-
-        val cafeteriaId = database.cafeteriaMenuDao().getIdFrom(cafeteriaLocation.toId())
-
+        fun getCafeteriaWithMenus(cafeteriaId: Int): CafeteriaWithMenus {
         return CafeteriaWithMenus(cafeteriaId).apply {
-            name = getCafeteriaNameFromId(cafeteriaLocation)
+            name = getCafeteriaNameFromId(cafeteriaId)
             menuDates = getAllMenuDates()
             menus = getCafeteriaMenus(cafeteriaId , nextMenuDate)
         }
@@ -40,7 +37,7 @@ class CafeteriaLocalRepository @Inject constructor(
     fun getAllMenuDates(): List<DateTime> = database.cafeteriaMenuDao().allDates
 
     // Canteen methods //
-    private fun getCafeteriaNameFromId(cafeteriaLocation: CafeteriaLocation): String? = database.cafeteriaDao().getById(cafeteriaLocation.toId())?.name
+    private fun getCafeteriaNameFromId(cafeteriaId: Int): String? = database.cafeteriaDao().getById(cafeteriaId)?.name
 
     fun getAllCafeterias(): Flowable<List<Cafeteria>> = database.cafeteriaDao().all
 
