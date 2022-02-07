@@ -146,8 +146,7 @@ abstract class TcaDb : RoomDatabase() {
                 Migration3to4(),
                 Migration4to5(),
                 Migration5to6(),
-                Migration6to7(),
-                Migration7to8()
+                Migration6to7()
         )
 
         private var instance: TcaDb? = null

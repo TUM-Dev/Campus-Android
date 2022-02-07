@@ -16,12 +16,27 @@ class Migration6to7 : Migration(6, 7) {
         // Create new table with updated new fields
         database.execSQL("CREATE TABLE IF NOT EXISTS `CafeteriaMenu` (" +
                 "`id` INTEGER NOT NULL," +
-                "`cafeteriaId` TEXT NOT NULL," +
+                "`slug` TEXT NOT NULL," +
                 "`date` TEXT," +
                 "`name` TEXT NOT NULL," +
                 "`dishType` TEXT NOT NULL," +
                 "`labels` TEXT NOT NULL," +
                 "`calendarWeek` INTEGER NOT NULL," +
                 "PRIMARY KEY(`id`))")
+
+        // Same as above for Cafeteria
+        database.execSQL("DROP TABLE IF EXISTS `Cafeteria`")
+
+        database.execSQL("CREATE TABLE IF NOT EXISTS `Cafeteria` (" +
+                "`id` INTEGER NOT NULL," +
+                "`slug` TEXT NOT NULL," +
+                "`name` TEXT NOT NULL," +
+                "`address` TEXT NOT NULL," +
+                "`latitude` REAL NOT NULL," +
+                "`longitude` REAL NOT NULL," +
+                "`distance` REAL NOT NULL," +
+                "PRIMARY KEY(`id`))")
+
+        // TODO FavDish
     }
 }
