@@ -1,6 +1,9 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria.model
 
+import de.tum.`in`.tumcampusapp.utils.Utils
+
 enum class CafeteriaLocation {
+    NONE,
     STUCAFE_KARLSTR,
     STUCAFE_BOLTZMANNSTR,
     STUCAFE_GARCHING,
@@ -27,7 +30,7 @@ enum class CafeteriaLocation {
      * Used to get the actual raw string cafeteriaId stored in the database. This method should be called when interacting
      * with a DAO method that requires a cafeteriaId as a parameter.
      */
-    fun toId(): String {
+    fun toSlug(): String {
         return mapStringToIdPattern(this.toString())
     }
 
@@ -35,15 +38,16 @@ enum class CafeteriaLocation {
         /**
          * Finds the CafeteriaLocation corresponding to the provided string. Used to get a CafeteriaLocation from strings stored in the preferences or database.
          */
-        fun fromString(raw: String?): CafeteriaLocation? {
+        fun fromString(raw: String?): CafeteriaLocation {
             if(raw != null){
                 values().forEach { cafeteriaLocation: CafeteriaLocation ->
-                    if(cafeteriaLocation.toId() == mapStringToIdPattern(raw))
+                    if(cafeteriaLocation.toSlug() == mapStringToIdPattern(raw))
                         return cafeteriaLocation
                 }
             }
 
-            return null
+            Utils.logWithTag("CafeteriaLocation", "Could not convert raw string: \'$raw\' to CafeteriaLocation.")
+            return NONE
         }
 
         /**
