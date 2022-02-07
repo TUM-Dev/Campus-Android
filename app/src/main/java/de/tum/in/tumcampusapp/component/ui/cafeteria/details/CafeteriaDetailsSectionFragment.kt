@@ -82,11 +82,11 @@ class CafeteriaDetailsSectionFragment : Fragment() {
 
     companion object {
 
-        fun newInstance(cafeteriaId: CafeteriaLocation, dateTime: DateTime): CafeteriaDetailsSectionFragment {
+        fun newInstance(cafeteriaId: Int, dateTime: DateTime): CafeteriaDetailsSectionFragment {
             val fragment = CafeteriaDetailsSectionFragment()
             fragment.arguments = Bundle().apply {
                 putSerializable(Const.DATE, dateTime)
-                putString(Const.CAFETERIA_ID, cafeteriaId.toId())
+                putInt(Const.CAFETERIA_ID, cafeteriaId)
             }
             return fragment
         }
