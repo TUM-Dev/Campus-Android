@@ -174,19 +174,19 @@ class LocationManager @Inject constructor(c: Context) {
     /**
      * If the user is in university or a lecture has been recognized => Get nearest cafeteria
      */
-    fun getCafeteria(): CafeteriaLocation {
+    fun getCafeteria(): Int {
         val campus = getCurrentOrNextCampus()
 
         if (campus != null) {
             val prefs = PreferenceManager.getDefaultSharedPreferences(mContext)
             val cafeteria = prefs.getString("card_cafeteria_default_" + campus.short, campus.defaultMensa)
             if (cafeteria != null) {
-                CafeteriaLocation.fromString(cafeteria)
+                return Integer.parseInt(cafeteria)
             }
         }
 
         val allCafeterias = getCafeterias()
-        return if (allCafeterias.isEmpty()) CafeteriaLocation.NONE else CafeteriaLocation.fromString(allCafeterias[0].id)
+        return if (allCafeterias.isEmpty()) Const.NO_CAFETERIA_FOUND else allCafeterias[0].id
     }
 
     /**
@@ -367,13 +367,13 @@ class LocationManager @Inject constructor(c: Context) {
         // defaultMensa is of type String instead of CafeteriaLocation, because the default value of the settings in "settings.xml" have to be
         // of type string
         private enum class Campus(val short: String, val lat: Double, val lon: Double, val defaultMensa: String?, val defaultStation: Stations) {
-            GarchingForschungszentrum("G", 48.2648424, 11.6709511, CafeteriaLocation.MENSA_GARCHING.toId(), Stations.GarchingForschungszentrum),
+            GarchingForschungszentrum("G", 48.2648424, 11.6709511, CafeteriaLocation.MENSA_GARCHING.toSlug(), Stations.GarchingForschungszentrum),
             GarchingHochbrueck("H", 48.249432, 11.633905, null, Stations.GarchingHochbrueck),
-            Weihenstephan("W", 48.397990, 11.722727, CafeteriaLocation.MENSA_WEIHENSTEPHAN.toId(), Stations.Weihenstephan),
-            Stammgelaende("C", 48.149436, 11.567635, CafeteriaLocation.MENSA_ARCISSTR.toId(), Stations.Stammgelaende),
-            KlinikumGrosshadern("K", 48.110847, 11.4703001, CafeteriaLocation.STUBISTRO_GROSSHADERN.toId(), Stations.KlinikumGrosshadern),
+            Weihenstephan("W", 48.397990, 11.722727, CafeteriaLocation.MENSA_WEIHENSTEPHAN.toSlug(), Stations.Weihenstephan),
+            Stammgelaende("C", 48.149436, 11.567635, CafeteriaLocation.MENSA_ARCISSTR.toSlug(), Stations.Stammgelaende),
+            KlinikumGrosshadern("K", 48.110847, 11.4703001, CafeteriaLocation.STUBISTRO_GROSSHADERN.toSlug(), Stations.KlinikumGrosshadern),
             KlinikumRechtsDerIsar("I", 48.137, 11.601119, null, Stations.KlinikumRechtsDerIsar),
-            Leopoldstrasse("L", 48.155916, 11.583095, CafeteriaLocation.MENSA_LEOPOLDSTR.toId(), Stations.Leopoldstrasse),
+            Leopoldstrasse("L", 48.155916, 11.583095, CafeteriaLocation.MENSA_LEOPOLDSTR.toSlug(), Stations.Leopoldstrasse),
             GeschwisterSchollplatzAdalbertstrasse("S", 48.150244, 11.580665, null, Stations.GeschwisterSchollplatzAdalbertstrasse);
 
             fun getLocation(): Location {
