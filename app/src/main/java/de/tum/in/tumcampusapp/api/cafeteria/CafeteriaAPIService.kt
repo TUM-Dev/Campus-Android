@@ -9,10 +9,10 @@ import retrofit2.http.Path
 
 interface CafeteriaAPIService {
 
-    @GET("{cafeteriaLocation}/{year}/{calendarWeek}.json")
+    @GET("{cafeteriaSlug}/{year}/{calendarWeek}.json")
     fun getMenus(
         @Header("Cache-Control") cacheControl: String,
-        @Path("cafeteriaLocation") cafeteriaLocation: CafeteriaLocation,
+        @Path("cafeteriaSlug") cafeteriaSlug: String,
         @Path("year") year: Int,
         @Path("calendarWeek") calendarWeek: String
     ): Call<CafeteriaResponse>
