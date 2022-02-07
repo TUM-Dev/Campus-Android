@@ -16,7 +16,7 @@ class EatAPIParser {
         fun parseCafeteriaMenuFrom(response: CafeteriaResponse): List<CafeteriaMenu> {
             val menus: MutableList<CafeteriaMenu> = mutableListOf()
 
-            var cafeteriaId: String
+            var slug: String
             var date: DateTime?
             var dishName: String
             var dishType: String
@@ -37,7 +37,7 @@ class EatAPIParser {
                     // TODO Id is not longer in any table, need to get it from the call
                     menus.add(CafeteriaMenu(
                             id = 0,
-                            cafeteriaId = "mensa-garching",
+                            slug = "mensa-garching",
                             date = date,
                             dishType = dishType,
                             name = dishName,
@@ -57,14 +57,14 @@ class EatAPIParser {
         fun parseCafeteriaFrom(response: List<CafeteriaMetadata>): List<Cafeteria> {
             val cafeterias: MutableList<Cafeteria> = mutableListOf()
 
-            var cafeteriaId: String
+            var slug: String
             var name: String
             var address: String
             var latitude: Double
             var longitude: Double
 
             response.forEach { cafeteriaMetadata: CafeteriaMetadata ->
-                cafeteriaId = cafeteriaMetadata.cafeteriaId
+                slug = cafeteriaMetadata.cafeteriaSlug
                 name = cafeteriaMetadata.name
 
                 address = cafeteriaMetadata.geoMetadata.address
@@ -73,7 +73,7 @@ class EatAPIParser {
 
                 cafeterias.add(Cafeteria(
                         id = 0,
-                        cafeteriaId = cafeteriaId,
+                        slug = slug,
                         name = name,
                         address = address,
                         latitude = latitude,
