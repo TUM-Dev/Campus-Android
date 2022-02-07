@@ -10,6 +10,7 @@ object Const {
     const val CAFETERIA_ID = "cafeteriasId"
     const val CAFETERIA_DATE = "cafeteriaDate"
     const val CAFETERIAS = "cafeterias"
+    const val NO_CAFETERIA_FOUND = -1
     const val CAFETERIA_BY_LOCATION_SETTINGS_ID = "-1"
     const val CALENDAR_WEEK_MODE = "calender_week_mode"
     const val EVENT_BOOKED_MODE = "event_booked_mode"
@@ -168,7 +169,6 @@ object Const {
     const val SAVED_APP_VERSION = "savedAppVersion"
 
     const val CAFETERIA_CARDS_SETTING = "cafeteria_cards_selection"
-    const val NO_CAFETERIA_FOUND = -1
 
     const val SETTINGS_RESTART = "settingsRestart"
 
