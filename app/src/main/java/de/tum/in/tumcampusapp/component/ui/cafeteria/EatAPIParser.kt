@@ -63,6 +63,11 @@ class EatAPIParser {
             var latitude: Double
             var longitude: Double
 
+            // Manually set id here, because auto-generating causes the data to be inserted multiple times
+            // The PK is simply increased and thus their is no conflict as the rows differ and they are inserted
+            // By setting ids here a conflict is forced
+            var id = 0
+
             response.forEach { cafeteriaMetadata: CafeteriaMetadata ->
                 slug = cafeteriaMetadata.cafeteriaSlug
                 name = cafeteriaMetadata.name
@@ -72,13 +77,15 @@ class EatAPIParser {
                 longitude = cafeteriaMetadata.geoMetadata.longitude
 
                 cafeterias.add(Cafeteria(
-                        id = 0,
+                        id = id,
                         slug = slug,
                         name = name,
                         address = address,
                         latitude = latitude,
                         longitude = longitude
                 ))
+
+                id++
             }
 
             return cafeterias

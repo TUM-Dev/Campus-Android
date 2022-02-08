@@ -18,7 +18,7 @@ import com.google.gson.annotations.SerializedName
 @Entity
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
 data class Cafeteria(
-        @PrimaryKey(autoGenerate = true)
+        @PrimaryKey
         var id: Int = 0,
         var slug: String = "",
         var name: String = "",
