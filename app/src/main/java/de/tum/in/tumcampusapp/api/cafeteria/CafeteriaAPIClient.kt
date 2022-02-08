@@ -9,6 +9,7 @@ import de.tum.`in`.tumcampusapp.api.tumonline.interceptors.CacheResponseIntercep
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaLocation
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization.CafeteriaResponse
 import de.tum.`in`.tumcampusapp.utils.CacheManager
+import de.tum.`in`.tumcampusapp.utils.Const
 import org.joda.time.DateTime
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -30,8 +31,31 @@ class CafeteriaAPIClient(private val apiService: CafeteriaAPIService) {
     }
 
     private fun getCalendarWeek(year: Int, defaultCalendarInstance: Calendar): Int {
+        val cafeteriaReopeningCalendarInstance = setCalendarToFirstFullWeekAfterHolidays(year)
+        val isFirstWeekOfYearPartial = doesYearStartOnPartialWeek(year)
+
+        // Since the cafeteria only reopens for the first full week of uni in the new year, no menus are provided for weeks before 7.1 by the eat-api
+        //      => If the current calendarWeek is less than the calendarWeek of the first full week after 7.1 (end of holidays), set it to the first full week after the holidays,
+        //      to have some menu to display, that makes sense semantically
+        return if (defaultCalendarInstance.get(Calendar.WEEK_OF_YEAR) < cafeteriaReopeningCalendarInstance.get(Calendar.WEEK_OF_YEAR))
+            if (isFirstWeekOfYearPartial) cafeteriaReopeningCalendarInstance.get(Calendar.WEEK_OF_YEAR) - 1 else cafeteriaReopeningCalendarInstance.get(Calendar.WEEK_OF_YEAR)
+        else
+            if (isFirstWeekOfYearPartial) defaultCalendarInstance.get(Calendar.WEEK_OF_YEAR) - 1 else defaultCalendarInstance.get(Calendar.WEEK_OF_YEAR)
+    }
+
+    private fun doesYearStartOnPartialWeek(year: Int): Boolean {
+        val yearStartCalendarInstance = Calendar.getInstance(TimeZone.getDefault())
+        yearStartCalendarInstance.set(year, 0, 1)
+
+        // Check if offset is needed to adjust for the year starting in the middle of a week (ie.: not on monday)
+        return yearStartCalendarInstance.get(Calendar.DAY_OF_WEEK) != Const.MONDAY
+    }
+
+    private fun setCalendarToFirstFullWeekAfterHolidays(year: Int): Calendar {
         val cafeteriaReopeningCalendarInstance = Calendar.getInstance(TimeZone.getDefault())
-        cafeteriaReopeningCalendarInstance.set(year, 0, 6)
+
+        // The winter holidays end on 7.1 (after Epiphany on 6.1)
+        cafeteriaReopeningCalendarInstance.set(year, 0, 7)
 
         when (cafeteriaReopeningCalendarInstance.get(Calendar.DAY_OF_WEEK)) {
             Calendar.TUESDAY -> cafeteriaReopeningCalendarInstance.add(Calendar.DAY_OF_MONTH, 6)
@@ -42,13 +66,7 @@ class CafeteriaAPIClient(private val apiService: CafeteriaAPIService) {
             Calendar.SUNDAY -> cafeteriaReopeningCalendarInstance.add(Calendar.DAY_OF_MONTH, 1)
         }
 
-        // Since the cafeteria only reopens for the first full week of uni in the new year, no menus are provided for weeks before 6.1 by the eat-api
-        //      => If the current calendarWeek is less than the calendarWeek of the first full week after 6.1 (end of holidays), set it to the first full week after the holidays,
-        //      to have some menu to display, that makes sense semantically
-        return if (defaultCalendarInstance.get(Calendar.WEEK_OF_YEAR) < cafeteriaReopeningCalendarInstance.get(Calendar.WEEK_OF_YEAR))
-            cafeteriaReopeningCalendarInstance.get(Calendar.WEEK_OF_YEAR)
-        else
-            defaultCalendarInstance.get(Calendar.WEEK_OF_YEAR)
+        return cafeteriaReopeningCalendarInstance
     }
 
     companion object {
