@@ -35,9 +35,9 @@ class LocationManager @Inject constructor(c: Context) {
     private val mContext: Context = c.applicationContext
     private val buildingToGpsDao: BuildingToGpsDao
     private var manager: android.location.LocationManager? = null
+    private val db = TcaDb.getInstance(c)
 
     init {
-        val db = TcaDb.getInstance(c)
         buildingToGpsDao = db.buildingToGpsDao()
     }
 
@@ -181,7 +181,7 @@ class LocationManager @Inject constructor(c: Context) {
             val prefs = PreferenceManager.getDefaultSharedPreferences(mContext)
             val cafeteria = prefs.getString("card_cafeteria_default_" + campus.short, campus.defaultMensa)
             if (cafeteria != null) {
-                return Integer.parseInt(cafeteria)
+                return db.cafeteriaDao().getIdFrom(cafeteria)
             }
         }
 
