@@ -178,4 +178,7 @@ object Const {
     const val HAS_VISITED_CALENDAR = "has_visited_calendar"
     const val HAS_VISITED_GRADES = "has_visited_grades"
     const val LAST_REVIEW_PROMPT = "last_review_prompt"
+
+    // Workaround for DayOfWeek.MONDAY, since this would require Android SDK 26 (but project min is 21)
+    const val MONDAY = 1
 }
