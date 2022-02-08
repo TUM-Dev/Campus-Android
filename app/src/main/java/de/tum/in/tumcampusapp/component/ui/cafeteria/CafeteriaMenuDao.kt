@@ -11,6 +11,7 @@ import org.joda.time.DateTime
 @Dao
 interface CafeteriaMenuDao {
 
+    // TODO this only provides dishes for future dates? Do I want backwards buffering?
     @get:Query("SELECT DISTINCT date FROM cafeteriaMenu WHERE date >= date('now','localtime') ORDER BY date")
     val allDates: List<DateTime>
 
@@ -21,17 +22,17 @@ interface CafeteriaMenuDao {
     fun insert(cafeteriaMenus: List<CafeteriaMenu>)
 
     @Query("SELECT strftime('%d-%m-%Y', date) FROM cafeteriaMenu " +
-            "WHERE date > date('now','localtime') AND id = :cafeteriaId AND name = :dishName " +
+            "WHERE date > date('now','localtime') AND cafeteriaId = :cafeteriaId AND name = :dishName " +
             "ORDER BY date ASC")
-    fun getNextDatesForDish(cafeteriaId: String, dishName: String): Flowable<List<String>>
+    fun getNextDatesForDish(cafeteriaId: Int, dishName: String): Flowable<List<String>>
 
     /**
      * @param cafeteriaId the cafeteria for which dishes should be fetched (auto generated integer primary key)
      * @param date the date for which dishes should be fetched.
      * @return Any CafeteriaMenu items matching the criterion specified by the parameters
      */
-    @Query("SELECT id, slug, date, dishType, name, labels, calendarWeek FROM cafeteriaMenu " +
-            "WHERE id = :cafeteriaId AND date = :date " +
+    @Query("SELECT menuId, cafeteriaId, slug, date, dishType, name, labels, calendarWeek FROM cafeteriaMenu " +
+            "WHERE cafeteriaId = :cafeteriaId AND strftime('%d-%m-%Y', date) = strftime('%d-%m-%Y', :date) " +
             "GROUP BY dishType ORDER BY dishType DESC")
     fun getCafeteriaMenus(cafeteriaId: Int, date: DateTime): List<CafeteriaMenu>
 }

@@ -13,7 +13,7 @@ class EatAPIParser {
          * @param response CafeteriaResponse from which menu items should be extracted
          * @return a list of all extracted CafeteriaMenuItems
          */
-        fun parseCafeteriaMenuFrom(response: CafeteriaResponse): List<CafeteriaMenu> {
+        fun parseCafeteriaMenuFrom(response: CafeteriaResponse, cafeteriaId: Int): List<CafeteriaMenu> {
             val menus: MutableList<CafeteriaMenu> = mutableListOf()
 
             var slug: String
@@ -34,9 +34,10 @@ class EatAPIParser {
                     dishLabels = dish.labels.toString()
 
                     // Set id to 0 so that room will autogenerate the primary key
-                    // TODO Id is not longer in any table, need to get it from the call
+                    // TODO slug is not longer in any table, need to get it from the call
                     menus.add(CafeteriaMenu(
-                            id = 0,
+                            menuId = 0,
+                            cafeteriaId = cafeteriaId,
                             slug = "mensa-garching",
                             date = date,
                             dishType = dishType,

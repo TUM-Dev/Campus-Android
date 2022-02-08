@@ -2,15 +2,21 @@
   "formatVersion": 1,
   "database": {
     "version": 7,
-    "identityHash": "4451b111f2fb509265dc7c9443929041",
+    "identityHash": "9fb96113246c94b3c3a6762efe09e242",
     "entities": [
       {
         "tableName": "Cafeteria",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `address` TEXT NOT NULL, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `distance` REAL NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `slug` TEXT NOT NULL, `name` TEXT NOT NULL, `address` TEXT NOT NULL, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `distance` REAL NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "slug",
+            "columnName": "slug",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -56,17 +62,23 @@
       },
       {
         "tableName": "CafeteriaMenu",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cafeteriaId` TEXT NOT NULL, `date` TEXT, `dishType` TEXT NOT NULL, `name` TEXT NOT NULL, `labels` TEXT NOT NULL, `calendarWeek` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`menuId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cafeteriaId` INTEGER NOT NULL, `slug` TEXT NOT NULL, `date` TEXT, `dishType` TEXT NOT NULL, `name` TEXT NOT NULL, `labels` TEXT NOT NULL, `calendarWeek` INTEGER NOT NULL)",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "menuId",
+            "columnName": "menuId",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "cafeteriaId",
             "columnName": "cafeteriaId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "slug",
+            "columnName": "slug",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -103,7 +115,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "menuId"
           ],
           "autoGenerate": true
         },
@@ -1224,7 +1236,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4451b111f2fb509265dc7c9443929041')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9fb96113246c94b3c3a6762efe09e242')"
     ]
   }
 }

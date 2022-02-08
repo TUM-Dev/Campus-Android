@@ -11,7 +11,8 @@ import java.util.regex.Pattern
 /**
  * CafeteriaMenu
  *
- * @param id CafeteriaMenu Id (empty for addendum)
+ * @param menuId CafeteriaMenu Id (empty for addendum)
+ * @param cafeteriaId primary key of the associated cafeteria
  * @param slug cafeteria string identification slug e.g.: "mensa-garching"
  * @param date date on which the dish is served
  * @param dishType
@@ -23,8 +24,10 @@ import java.util.regex.Pattern
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
 data class CafeteriaMenu(
     @PrimaryKey(autoGenerate = true)
+    @SerializedName("menuId")
+    var menuId: Int = 0,
     @SerializedName("cafeteriaId")
-    var id: Int = 0,
+    var cafeteriaId: Int = 0,
     @SerializedName("cafeteriaSlug")
     var slug: String = "",
     @SerializedName("date")
@@ -40,7 +43,7 @@ data class CafeteriaMenu(
 ) {
 
     val tag: String
-        get() = "${name}__$id"
+        get() = "${name}__$cafeteriaId"
 
     // TODO pricing, dishType enum, label enum?, mensa enum?
     val menuType: MenuType

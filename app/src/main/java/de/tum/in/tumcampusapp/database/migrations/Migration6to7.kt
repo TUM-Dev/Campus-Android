@@ -15,14 +15,15 @@ class Migration6to7 : Migration(6, 7) {
 
         // Create new table with updated new fields
         database.execSQL("CREATE TABLE IF NOT EXISTS `CafeteriaMenu` (" +
-                "`id` INTEGER NOT NULL," +
+                "`menuId` INTEGER NOT NULL," +
+                "`cafeteriaId` INTEGER NOT NULL," +
                 "`slug` TEXT NOT NULL," +
                 "`date` TEXT," +
                 "`name` TEXT NOT NULL," +
                 "`dishType` TEXT NOT NULL," +
                 "`labels` TEXT NOT NULL," +
                 "`calendarWeek` INTEGER NOT NULL," +
-                "PRIMARY KEY(`id`))")
+                "PRIMARY KEY(`menuId`))")
 
         // Same as above for Cafeteria
         database.execSQL("DROP TABLE IF EXISTS `Cafeteria`")
@@ -37,6 +38,6 @@ class Migration6to7 : Migration(6, 7) {
                 "`distance` REAL NOT NULL," +
                 "PRIMARY KEY(`id`))")
 
-        // TODO FavDish
+        // Reset location, to get rid of old references && Fav Dish
     }
 }

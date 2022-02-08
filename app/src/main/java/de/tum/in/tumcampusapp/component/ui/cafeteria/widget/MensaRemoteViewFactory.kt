@@ -29,7 +29,7 @@ class MensaRemoteViewFactory(private val applicationContext: Context) : RemoteVi
             return loadingView
         }
 
-        val (_, _, _, dishType, name, _, _) = menus[position]
+        val (_, _, _, _, dishType, name, _, _) = menus[position]
         val remoteViews = RemoteViews(applicationContext.packageName, R.layout.mensa_widget_item)
 
         val menuText = applicationContext.getString(

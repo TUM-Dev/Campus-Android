@@ -5,10 +5,7 @@ import de.tum.`in`.tumcampusapp.api.cafeteria.CafeteriaAPIClient
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
 import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaMenuDao
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaNotificationSettings
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.EatAPIParser
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.FavoriteDishDao
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.*
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaLocation
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization.CafeteriaResponse
@@ -29,12 +26,14 @@ class CafeteriaMenuManager
 @Inject
 constructor(private val context: Context) {
     private val menuDao: CafeteriaMenuDao
+    private val cafeteriaDao: CafeteriaDao
     private val favoriteDishDao: FavoriteDishDao
 
     init {
         val db = TcaDb.getInstance(context)
         menuDao = db.cafeteriaMenuDao()
         favoriteDishDao = db.favoriteDishDao()
+        cafeteriaDao = db.cafeteriaDao()
     }
 
     /**
@@ -74,7 +73,7 @@ constructor(private val context: Context) {
     private fun onDownloadSuccess(response: CafeteriaResponse) {
         menuDao.removeCache()
 
-        val menusToInsert = EatAPIParser.parseCafeteriaMenuFrom(response)
+        val menusToInsert = EatAPIParser.parseCafeteriaMenuFrom(response, cafeteriaDao.getIdFrom(CafeteriaLocation.MENSA_GARCHING.toSlug()))
         menuDao.insert(menusToInsert)
 
         scheduleNotificationAlarms()
@@ -107,7 +106,7 @@ constructor(private val context: Context) {
         // TODO revert/ fix Favorite dish
         val upcomingServings = /*favoriteDishDao.getFavouritedCafeteriaMenuOnDate(dateString)*/ emptyList<CafeteriaMenu>()
         return upcomingServings.filter { cafeteria: CafeteriaMenu ->
-            cafeteria.id == queriedMensaId
+            cafeteria.cafeteriaId == queriedMensaId
         }
     }
 }
