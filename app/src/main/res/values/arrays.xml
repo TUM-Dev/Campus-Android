@@ -42,9 +42,9 @@
         <item>StuCafé Mensa Garching</item>
     </string-array>
     <string-array name="cafeterias_G_val" translatable="false">
-        <item>422</item>
-        <item>527</item>
-        <item>524</item>
+        <item>mensa-garching</item>
+        <item>stucafe-boltzmannstr</item>
+        <item>stucafe-garching</item>
     </string-array>
     <string-array name="stations_G" translatable="false">
         <item>Garching-Forschungszentrum</item>
@@ -64,11 +64,11 @@
     <!-- Campus Klinikum Großhadern -->
     <string-array name="cafeterias_K" translatable="false">
         <item>Mensa Martinsried</item>
-        <item>Mensaria Großhadern</item>
+        <item>StuBistro Großhadern</item>
     </string-array>
     <string-array name="cafeterias_K_val" translatable="false">
-        <item>412</item>
-        <item>414</item>
+        <item>mensa-martinsried</item>
+        <item>stubistro-grosshadern</item>
     </string-array>
     <string-array name="stations_K" translatable="false">
         <item>Klinikum Großhadern</item>
@@ -80,12 +80,10 @@
     <string-array name="cafeterias_W" translatable="false">
         <item>Mensa Weihenstephan</item>
         <item>StuCafé Akademie</item>
-        <item>StuCafé Mensa-WST</item>
     </string-array>
     <string-array name="cafeterias_W_val" translatable="false">
-        <item>423</item>
-        <item>526</item>
-        <item>525</item>
+        <item>mensa-weihenstephan</item>
+        <item>stucafe-akademie-weihenstephan</item>
     </string-array>
 
     <string-array name="newspread_entries" translatable="false">
