@@ -65,7 +65,7 @@ class CafeteriaMenusAdapter(
         val shouldShowMenuType = Utils.getSettingBool(
                 context,
                 "card_cafeteria_${menu.dishType}",
-                false//"tg" == menu.typeShort || "ae" == menu.typeShort
+                true//"tg" == menu.typeShort || "ae" == menu.typeShort
         // TODO look into fxing this properly
         )
         return shouldShowMenuType || isBigLayout
