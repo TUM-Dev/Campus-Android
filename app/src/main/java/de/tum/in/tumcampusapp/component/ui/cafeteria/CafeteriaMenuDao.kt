@@ -34,13 +34,4 @@ interface CafeteriaMenuDao {
             "WHERE id = :cafeteriaId AND date = :date " +
             "GROUP BY dishType ORDER BY dishType DESC")
     fun getCafeteriaMenus(cafeteriaId: Int, date: DateTime): List<CafeteriaMenu>
-
-    /**
-     * Used for fetching the actual primary key 'id' from the table via the CafeteriaLocation enum and the cafeteriaId embedded in that enum.
-     *
-     * @param cafeteriaSlug the cafeteria for which dishes should be fetched as valid cafeteria slug e.g.: "mensa-garching"
-     * @return the 'id' corresponding to the provided cafeteriaId
-     */
-    @Query("SELECT id FROM cafeteriaMenu WHERE slug = :cafeteriaSlug")
-    fun getIdFrom(cafeteriaSlug: String): Int
 }
