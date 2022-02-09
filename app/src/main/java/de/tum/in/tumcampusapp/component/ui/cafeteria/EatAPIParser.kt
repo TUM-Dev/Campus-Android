@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria
 
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaLocation
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization.*
 import org.joda.time.DateTime
@@ -13,10 +14,10 @@ class EatAPIParser {
          * @param response CafeteriaResponse from which menu items should be extracted
          * @return a list of all extracted CafeteriaMenuItems
          */
-        fun parseCafeteriaMenuFrom(response: CafeteriaResponse, cafeteriaId: Int): List<CafeteriaMenu> {
+        fun parseCafeteriaMenuFrom(response: CafeteriaResponse, cafeteriaId: Int, cafeteriaLocation: CafeteriaLocation): List<CafeteriaMenu> {
             val menus: MutableList<CafeteriaMenu> = mutableListOf()
 
-            var slug: String
+            val slug: String = cafeteriaLocation.toSlug()
             var date: DateTime?
             var dishName: String
             var dishType: String
@@ -34,11 +35,10 @@ class EatAPIParser {
                     dishLabels = dish.labels.toString()
 
                     // Set id to 0 so that room will autogenerate the primary key
-                    // TODO slug is not longer in any table, need to get it from the call
                     menus.add(CafeteriaMenu(
                             menuId = 0,
                             cafeteriaId = cafeteriaId,
-                            slug = "mensa-garching",
+                            slug = slug,
                             date = date,
                             dishType = dishType,
                             name = dishName,
