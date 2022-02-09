@@ -7,7 +7,7 @@ import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 /**
  * Shows information about reservable study rooms.
  */
-class StudyRoomsActivity : BaseActivity(
+class StudyRoomsActivity: BaseActivity(
         R.layout.activity_study_rooms
 ) {
 

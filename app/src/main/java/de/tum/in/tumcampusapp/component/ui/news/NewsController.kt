@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.ui.news
 
 import android.content.Context
-import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
+import de.tum.`in`.tumcampusapp.api.app.TUMAppClient
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
 import de.tum.`in`.tumcampusapp.component.notifications.ProvidesNotifications
@@ -61,9 +61,10 @@ class NewsController @Inject constructor(
      */
     fun downloadFromExternal(force: CacheControl) {
         val sync = SyncManager(context)
-        if (force === CacheControl.USE_CACHE && !sync.needSync(this, TIME_TO_SYNC)) {
+        /*if (force === CacheControl.USE_CACHE && !sync.needSync(this, TIME_TO_SYNC)) {
             return
         }
+         */
 
         val latestNews = newsDao.last
         val latestNewsDate = latestNews?.date ?: DateTime.now()
@@ -71,13 +72,18 @@ class NewsController @Inject constructor(
         // Delete all too old items
         newsDao.cleanUp()
 
-        val api = TUMCabeClient.getInstance(context)
+        val api = TUMAppClient.getInstance()
 
         // Load all news sources
         try {
             val sources = api.getNewsSources()
             if (sources != null) {
-                newsSourcesDao.insert(sources)
+                val s = sources.get()?.sourcesList?.map { it ->
+                    NewsSources(it.source.toInt(), it.title, it.icon)
+                }
+                if (s != null) {
+                    newsSourcesDao.insert(s)
+                }
             }
         } catch (e: IOException) {
             Utils.log(e)
@@ -90,7 +96,7 @@ class NewsController @Inject constructor(
             if (news != null) {
                 newsDao.insert(news)
             }
-            showNewsNotification(news, latestNewsDate)
+            /*showNewsNotification(news, latestNewsDate)*/
         } catch (e: IOException) {
             Utils.log(e)
             return
