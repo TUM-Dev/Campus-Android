@@ -15,6 +15,7 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.sync.SyncManager
 import org.joda.time.DateTime
 import java.io.IOException
+import java.lang.Exception
 import javax.inject.Inject
 
 private const val TIME_TO_SYNC = 86400
@@ -75,16 +76,12 @@ class NewsController @Inject constructor(
         val api = TUMAppClient.getInstance()
 
         // Load all news sources
-        try {
-            api.getNewsSources(
-                fun(s : List<NewsSources>){
-                    newsSourcesDao.insert(s)
-                }
-            )
-        } catch (e: IOException) {
-            Utils.log(e)
-            return
-        }
+        api.getNewsSources(
+            fun(s: List<NewsSources>) {
+                newsSourcesDao.insert(s)
+            },
+            fun(e: Exception) { Utils.log(e) }
+        )
 
         // Load all news since the last sync
         try {

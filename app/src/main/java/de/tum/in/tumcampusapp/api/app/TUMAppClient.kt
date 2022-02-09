@@ -8,6 +8,8 @@ import de.tum.`in`.tumcampusapp.component.ui.news.model.NewsSources
 import io.grpc.ManagedChannelBuilder
 import io.grpc.Metadata
 import io.grpc.stub.MetadataUtils
+import org.jetbrains.anko.doAsync
+import java.lang.Exception
 
 private var instance: TUMAppClient? = null
 private lateinit var stub: CampusGrpc.CampusFutureStub
@@ -26,11 +28,19 @@ class TUMAppClient {
         return header
     }
 
-
-    fun getNewsSources(callback: (List<NewsSources>) -> Unit) {
-        val arr = stub.getNewsSources(Empty.getDefaultInstance())
-        val sources = arr.get().sourcesList.map { NewsSources(it.source.toInt(), it.title , it.icon) }
-        callback(sources)
+    /**
+     * getNewsSources calls @callback with all NewsSources currently in the api.
+     * On error, error is called with an error message.
+     */
+    fun getNewsSources(callback: (List<NewsSources>) -> Unit, error: (message: Exception) -> Unit) {
+        doAsync {
+            val res = stub.getNewsSources(Empty.getDefaultInstance())
+            try {
+                callback(res.get().sourcesList.map { NewsSources(it.source.toInt(), it.title, it.icon) })
+            }catch (e : Exception){
+                error(e)
+            }
+        }
     }
 
     companion object {
