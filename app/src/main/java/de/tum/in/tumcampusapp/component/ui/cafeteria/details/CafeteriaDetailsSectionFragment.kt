@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaLocation
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.databinding.FragmentCafeteriadetailsSectionBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
@@ -75,8 +74,7 @@ class CafeteriaDetailsSectionFragment : Fragment() {
             menusRecyclerView.adapter = adapter
 
             cafeteriaViewModel.cafeteriaMenus.observe(viewLifecycleOwner, Observer<List<CafeteriaMenu>> { adapter.update(it) })
-            // TODO directly download menu
-            cafeteriaViewModel.fetchCafeteriaMenus(cafeteriaId, menuDate)
+            cafeteriaViewModel.fetchCafeteriaMenus(context, cafeteriaId, menuDate)
         }
     }
 
