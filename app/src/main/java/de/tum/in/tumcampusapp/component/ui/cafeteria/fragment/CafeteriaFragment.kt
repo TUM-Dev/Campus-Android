@@ -19,7 +19,6 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManag
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionsPagerAdapter
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaLocation
 import de.tum.`in`.tumcampusapp.databinding.FragmentCafeteriaBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
@@ -114,8 +113,6 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
         initCafeteriaSpinner()
     }
 
-    // TODO implement lazy fetching here?
-    // Also need a place for init
     private fun onNewCafeteriaSelected(cafeteria: Cafeteria) {
         sectionsPagerAdapter.setCafeteriaId(cafeteria.id)
         cafeteriaViewModel.fetchMenuDates()
