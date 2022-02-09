@@ -76,15 +76,11 @@ class NewsController @Inject constructor(
 
         // Load all news sources
         try {
-            val sources = api.getNewsSources()
-            if (sources != null) {
-                val s = sources.get()?.sourcesList?.map { it ->
-                    NewsSources(it.source.toInt(), it.title, it.icon)
-                }
-                if (s != null) {
+            api.getNewsSources(
+                fun(s : List<NewsSources>){
                     newsSourcesDao.insert(s)
                 }
-            }
+            )
         } catch (e: IOException) {
             Utils.log(e)
             return
@@ -92,10 +88,10 @@ class NewsController @Inject constructor(
 
         // Load all news since the last sync
         try {
-            val news = api.getNews(getLastId())
+            /*val news = api.getNews(getLastId())
             if (news != null) {
                 newsDao.insert(news)
-            }
+            }*/
             /*showNewsNotification(news, latestNewsDate)*/
         } catch (e: IOException) {
             Utils.log(e)

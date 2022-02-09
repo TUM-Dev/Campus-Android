@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ListenableFuture
 import com.google.protobuf.Empty
 import de.tum.`in`.tumcampusapp.api.backend.CampusGrpc
 import de.tum.`in`.tumcampusapp.api.backend.NewsSourceArray
+import de.tum.`in`.tumcampusapp.component.ui.news.model.NewsSources
 import io.grpc.ManagedChannelBuilder
 import io.grpc.Metadata
 import io.grpc.stub.MetadataUtils
@@ -26,8 +27,10 @@ class TUMAppClient {
     }
 
 
-    fun getNewsSources(): ListenableFuture<NewsSourceArray>? {
-        return stub.getNewsSources(Empty.getDefaultInstance())
+    fun getNewsSources(callback: (List<NewsSources>) -> Unit) {
+        val arr = stub.getNewsSources(Empty.getDefaultInstance())
+        val sources = arr.get().sourcesList.map { NewsSources(it.source.toInt(), it.title , it.icon) }
+        callback(sources)
     }
 
     companion object {
