@@ -105,15 +105,22 @@ class OpenHoursHelper(private val context: Context) {
         }
     }
 
-    private fun stringToDateTime(date: DateTime, time: String): DateTime {
-        return if (time.contains(":")) {
-            val hour = Integer.parseInt(time.substring(0, time.indexOf(':')))
-            val min = Integer.parseInt(time.substring(time.indexOf(':') + 1))
+    private fun stringToDateTime(date: DateTime, rawTime: String): DateTime {
+        return if (rawTime.contains(":")) {
+            val hour = Integer.parseInt(rawTime.substring(0, rawTime.indexOf(':')))
+            val min = Integer.parseInt(rawTime.substring(rawTime.indexOf(':') + 1))
             date.withHourOfDay(hour)
                     .withMinuteOfHour(min)
         } else {
-            date.withHourOfDay(Integer.parseInt(time))
-                    .withMinuteOfHour(0)
+            val time = Integer.parseInt(rawTime)
+
+            // Some cafeterias are open until midnight, thus rawTime can be passed as 24
+            // However, withHourOfDay only takes values in the range [0;23]
+            if(time == 24)
+                date.withHourOfDay(23).withMinuteOfHour(59)
+            else
+                date.withHourOfDay(time).withMinuteOfHour(0)
+
         }
     }
 }
