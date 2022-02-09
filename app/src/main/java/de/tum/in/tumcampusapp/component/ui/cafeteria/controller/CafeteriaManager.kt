@@ -33,7 +33,6 @@ class CafeteriaManager @Inject constructor(private val context: Context) : Provi
      * Returns a list of [CafeteriaMenu]s of the best-matching cafeteria. If there's no
      * best-matching cafeteria, it returns an empty list.
      */
-    // TODO this seems to be pretty much what I want. Have CafeteriaLocation and menus for it => Debug for details
     val bestMatchCafeteriaMenus: List<CafeteriaMenu>
         get() {
             val cafeteriaId = bestMatchCafeteriaId
