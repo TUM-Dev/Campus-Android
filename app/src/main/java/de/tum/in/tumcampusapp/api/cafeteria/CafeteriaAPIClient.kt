@@ -18,15 +18,20 @@ import java.util.*
 
 class CafeteriaAPIClient(private val apiService: CafeteriaAPIService) {
 
-    fun getMenus(cacheControl: CacheControl, cafeteriaLocation: CafeteriaLocation): Call<CafeteriaResponse> {
+    fun getMenus(cafeteriaLocation: CafeteriaLocation, dateTime: DateTime): Call<CafeteriaResponse> {
         val defaultCalendarInstance = Calendar.getInstance(TimeZone.getDefault())
+
+        // Subtract 1 from dateTime.monthOfYear, since java.util Calendar months start from 0 (for January), whereas joda.time.DateTime
+        // months start at 1
+        defaultCalendarInstance.set(dateTime.year, dateTime.monthOfYear - 1, dateTime.dayOfMonth)
+
         val year: Int = defaultCalendarInstance.get(Calendar.YEAR)
         val calendarWeek = getCalendarWeek(year, defaultCalendarInstance)
 
         return if(calendarWeek in 1..9){
-            apiService.getMenus(cacheControl.header, cafeteriaLocation.toSlug(), year, "0$calendarWeek")
+            apiService.getMenus(CacheControl.BYPASS_CACHE.header, cafeteriaLocation.toSlug(), year, "0$calendarWeek")
         } else {
-            apiService.getMenus(cacheControl.header, cafeteriaLocation.toSlug(), year, calendarWeek.toString())
+            apiService.getMenus(CacheControl.BYPASS_CACHE.header, cafeteriaLocation.toSlug(), year, calendarWeek.toString())
         }
     }
 
