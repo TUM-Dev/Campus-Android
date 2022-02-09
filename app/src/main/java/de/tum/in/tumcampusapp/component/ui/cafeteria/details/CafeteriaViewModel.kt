@@ -1,24 +1,27 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria.details
 
+import android.content.Context
 import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaLocation
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.utils.LocationHelper.calculateDistanceToCafeteria
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.runBlocking
 import org.joda.time.DateTime
 import javax.inject.Inject
 
 class CafeteriaViewModel @Inject constructor(
-    private val localRepository: CafeteriaLocalRepository
+    private val localRepository: CafeteriaLocalRepository,
+    private val remoteRepository: CafeteriaRemoteRepository
 ) : ViewModel() {
 
     private val _cafeterias = MutableLiveData<List<Cafeteria>>()
@@ -73,11 +76,27 @@ class CafeteriaViewModel @Inject constructor(
                 .subscribe(_menuDates::postValue, Utils::log)
     }
 
-    fun fetchCafeteriaMenus(cafeteriaId: Int, date: DateTime) {
+    fun fetchCafeteriaMenus(context: Context?, cafeteriaId: Int, date: DateTime) {
+        if(localRepository.hasNoMenusFor(cafeteriaId, date)) {
+            if (context != null) {
+                downloadRemoteCafeteriaMenus(cafeteriaId, date, context)
+            } else {
+                Utils.logWithTag(this::class.java.name, "Cannot download remote cafeteria menus, because the provided context was 'null'.")
+            }
+        }
+
+        fetchLocalCafeteriaMenus(cafeteriaId, date)
+    }
+
+    private fun fetchLocalCafeteriaMenus(cafeteriaId: Int, date: DateTime) {
         compositeDisposable += Flowable.fromCallable { localRepository.getCafeteriaMenus(cafeteriaId, date) }
                 .subscribeOn(Schedulers.io())
                 .defaultIfEmpty(emptyList())
                 .subscribe { _cafeteriaMenus.postValue(it) }
+    }
+
+    private fun downloadRemoteCafeteriaMenus(cafeteriaId: Int, date: DateTime, context: Context) {
+        remoteRepository.downloadRemoteMenus(cafeteriaId, date, context)
     }
 
     /**
