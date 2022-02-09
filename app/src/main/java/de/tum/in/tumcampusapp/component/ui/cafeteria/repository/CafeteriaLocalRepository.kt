@@ -5,7 +5,6 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManag
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaLocation
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization.CafeteriaMetadata
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.sync.model.Sync
@@ -35,6 +34,10 @@ class CafeteriaLocalRepository @Inject constructor(
     }
 
     fun getAllMenuDates(): List<DateTime> = database.cafeteriaMenuDao().allDates
+
+    fun hasNoMenusFor(cafeteriaId: Int, date: DateTime): Boolean {
+        return database.cafeteriaMenuDao().hasMenusFor(cafeteriaId, date) <= 0
+    }
 
     // Canteen methods //
     private fun getCafeteriaNameFromId(cafeteriaId: Int): String? = database.cafeteriaDao().getById(cafeteriaId)?.name
