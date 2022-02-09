@@ -32,7 +32,6 @@ data class CafeteriaWithMenus(val id: Int) {
 
     fun getIntent(context: Context): Intent? =
             Intent(context, CafeteriaActivity::class.java).apply {
-                // TODO Verify extra integrity. Should be int all over the place
                 putExtra(Const.CAFETERIA_ID, id)
             }
 
