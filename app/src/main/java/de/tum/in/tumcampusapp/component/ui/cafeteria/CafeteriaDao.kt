@@ -30,12 +30,17 @@ interface CafeteriaDao {
     @Query("SELECT name FROM cafeteria WHERE id = :cafeteriaId")
     fun getMensaNameFromId(cafeteriaId: Int): String
 
-    /**
-     * Used for fetching the actual primary key 'id' from the table via the CafeteriaLocation enum and the cafeteriaId embedded in that enum.
-     *
-     * @param cafeteriaSlug the cafeteria for which dishes should be fetched as valid cafeteria slug e.g.: "mensa-garching"
-     * @return the 'id' corresponding to the provided cafeteriaId
+    /***
+     * @param cafeteriaSlug the cafeteria for which the id is needed
+     * @return the 'id' corresponding to the provided cafeteriaSlug
      */
     @Query("SELECT id FROM cafeteria WHERE slug = :cafeteriaSlug")
     fun getIdFrom(cafeteriaSlug: String): Int
+
+    /**
+     * @param cafeteriaId the cafeteria for which the slug is needed
+     * @return the 'slug' (e.g: 'mensa-garching') corresponding to the provided cafeteriaId
+     */
+    @Query("SELECT slug FROM cafeteria WHERE id = :cafeteriaId")
+    fun getSlugFrom(cafeteriaId: Int): String
 }
