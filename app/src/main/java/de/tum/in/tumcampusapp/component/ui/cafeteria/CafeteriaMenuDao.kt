@@ -11,7 +11,6 @@ import org.joda.time.DateTime
 @Dao
 interface CafeteriaMenuDao {
 
-    // TODO this only provides dishes for future dates? Do I want backwards buffering?
     @get:Query("SELECT DISTINCT date FROM cafeteriaMenu WHERE date >= date('now','localtime') ORDER BY date")
     val allDates: List<DateTime>
 
@@ -32,7 +31,15 @@ interface CafeteriaMenuDao {
      * @return Any CafeteriaMenu items matching the criterion specified by the parameters
      */
     @Query("SELECT menuId, cafeteriaId, slug, date, dishType, name, labels, calendarWeek FROM cafeteriaMenu " +
-            "WHERE cafeteriaId = :cafeteriaId AND strftime('%d-%m-%Y', date) = strftime('%d-%m-%Y', :date) " +
-            "GROUP BY dishType ORDER BY dishType DESC")
+            "WHERE cafeteriaId = :cafeteriaId AND strftime('%d-%m-%Y', date) = strftime('%d-%m-%Y', :date)")
     fun getCafeteriaMenus(cafeteriaId: Int, date: DateTime): List<CafeteriaMenu>
+
+    /**
+     * @param cafeteriaId the cafeteria for which dishes should be fetched (auto generated integer primary key)
+     * @param date the date for which dishes should be fetched.
+     * @return The number of menus available in the local database for the provided params
+     */
+    @Query("SELECT COUNT(*) AS menus FROM CafeteriaMenu " +
+    "WHERE cafeteriaId = :cafeteriaId AND strftime('%d-%m-%Y', date) = strftime('%d-%m-%Y', :date)")
+    fun hasMenusFor(cafeteriaId: Int, date: DateTime): Int
 }
