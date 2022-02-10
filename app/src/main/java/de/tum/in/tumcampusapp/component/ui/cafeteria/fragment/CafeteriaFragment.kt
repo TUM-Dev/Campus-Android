@@ -59,6 +59,7 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
         CafeteriaDetailsSectionsPagerAdapter(childFragmentManager)
     }
 
+    // TODO this seems like a remnant of the previous fetching approach
     override val method: DownloadWorker.Action?
         get() = cafeteriaDownloadAction
 
@@ -115,6 +116,13 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
 
     private fun onNewCafeteriaSelected(cafeteria: Cafeteria) {
         sectionsPagerAdapter.setCafeteriaId(cafeteria.id)
+
+        // TODO This works, though it might be a bit hacky? Since it sort of is called twice, this triggers the first call, then the remaining
+        // dates of the week are found, triggering the observer again and running through all of this code again
+        if(cafeteriaViewModel.menuDates.value == null || cafeteriaViewModel.menuDates.value!!.isEmpty()) {
+            cafeteriaViewModel.initializeMenuDatesWithCurrentDate()
+        }
+
         cafeteriaViewModel.fetchMenuDates()
     }
 
