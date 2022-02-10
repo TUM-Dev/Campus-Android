@@ -88,6 +88,10 @@ class CafeteriaViewModel @Inject constructor(
         fetchLocalCafeteriaMenus(cafeteriaId, date)
     }
 
+    fun initializeMenuDatesWithCurrentDate() {
+        _menuDates.value = listOf(DateTime.now())
+    }
+
     private fun fetchLocalCafeteriaMenus(cafeteriaId: Int, date: DateTime) {
         compositeDisposable += Flowable.fromCallable { localRepository.getCafeteriaMenus(cafeteriaId, date) }
                 .subscribeOn(Schedulers.io())
