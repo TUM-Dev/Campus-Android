@@ -120,7 +120,6 @@ class OpenHoursHelper(private val context: Context) {
                 date.withHourOfDay(23).withMinuteOfHour(59)
             else
                 date.withHourOfDay(time).withMinuteOfHour(0)
-
         }
     }
 }
