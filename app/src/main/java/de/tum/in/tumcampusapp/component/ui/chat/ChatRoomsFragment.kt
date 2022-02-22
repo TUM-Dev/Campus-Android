@@ -62,6 +62,9 @@ class ChatRoomsFragment : FragmentForAccessingTumOnline<LecturesResponse>(
 
     private val binding by viewBinding(FragmentChatRoomsBinding::bind)
 
+    override val swipeRefreshLayout get() = binding.swipeRefreshLayout
+    override val layoutAllErrorsBinding get() = binding.layoutAllErrors
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)

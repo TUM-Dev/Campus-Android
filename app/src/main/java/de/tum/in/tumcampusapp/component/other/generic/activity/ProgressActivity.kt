@@ -53,7 +53,7 @@ abstract class ProgressActivity<T>(
     }
 
     private val errorLayout: LinearLayout by lazy {
-        findViewById<LinearLayout>(R.id.error_layout)
+        findViewById<LinearLayout>(R.id.layout_error)
     }
 
     private val errorIconImageView: ImageView by lazy {
@@ -73,7 +73,7 @@ abstract class ProgressActivity<T>(
     }
 
     private val progressLayout: FrameLayout by lazy {
-        findViewById<FrameLayout>(R.id.progress_layout)
+        findViewById<FrameLayout>(R.id.layout_progress)
     }
 
     private var registered: Boolean = false

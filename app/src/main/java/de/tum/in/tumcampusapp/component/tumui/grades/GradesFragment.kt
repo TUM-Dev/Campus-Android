@@ -2,9 +2,7 @@ package de.tum.`in`.tumcampusapp.component.tumui.grades
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.animation.LayoutTransition
 import android.graphics.Color
-import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.util.ArrayMap
 import android.view.Menu
@@ -13,7 +11,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat.getColor
 import com.github.mikephil.charting.components.Legend
@@ -56,6 +53,9 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
     private val binding by viewBinding(FragmentGradesBinding::bind)
 
+    override val swipeRefreshLayout get() = binding.swipeRefreshLayout
+    override val layoutAllErrorsBinding get() = binding.layoutAllErrors
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -81,7 +81,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             showListButton?.setOnClickListener { toggleInLandscape() }
             showChartButton?.setOnClickListener { toggleInLandscape() }
         }
-
 
         loadGrades(CacheControl.USE_CACHE)
 

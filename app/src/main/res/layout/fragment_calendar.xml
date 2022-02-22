@@ -18,7 +18,9 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <include layout="@layout/layout_all_errors" />
+            <include
+                android:id="@+id/layout_all_errors"
+                layout="@layout/layout_all_errors" />
 
             <FrameLayout
                 android:layout_width="match_parent"

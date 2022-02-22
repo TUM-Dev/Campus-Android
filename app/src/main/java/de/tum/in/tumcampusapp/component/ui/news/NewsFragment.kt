@@ -40,6 +40,9 @@ class NewsFragment : FragmentForDownloadingExternal(
 
     private val binding by viewBinding(FragmentNewsBinding::bind)
 
+    override val swipeRefreshLayout get() = binding.swipeRefreshLayout
+    override val layoutAllErrorsBinding get() = binding.layoutAllErrors
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         injector.newsComponent().inject(this)

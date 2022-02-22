@@ -42,6 +42,8 @@ class RoomFinderFragment : FragmentForSearchingInBackground<List<RoomFinderRoom>
         }
 
     private val binding by viewBinding(FragmentRoomfinderBinding::bind)
+
+    override val layoutAllErrorsBinding get() = binding.layoutAllErrors
     
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

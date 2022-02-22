@@ -64,6 +64,8 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
 
     private val binding by viewBinding(FragmentCafeteriaBinding::bind)
 
+    override val layoutAllErrorsBinding get() = binding.layoutAllErrors
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         injector.cafeteriaComponent().inject(this)
