@@ -68,8 +68,6 @@ class CafeteriaRemoteRepository @Inject constructor(
     private fun onDownloadSuccess(response: CafeteriaResponse, cafeteriaLocation: CafeteriaLocation, context: Context) {
         val cafeteriaMenuManager = CafeteriaMenuManager(context)
 
-        db.cafeteriaMenuDao().removeCache()
-
         val menusToInsert = EatAPIParser.parseCafeteriaMenuFrom(response, db.cafeteriaDao().getIdFrom(cafeteriaLocation.toSlug()), cafeteriaLocation)
         db.cafeteriaMenuDao().insert(menusToInsert)
 
