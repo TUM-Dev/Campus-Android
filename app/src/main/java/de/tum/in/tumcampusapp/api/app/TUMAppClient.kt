@@ -36,7 +36,7 @@ class TUMAppClient {
         doAsync {
             val res = stub.getNewsSources(Empty.getDefaultInstance())
             try {
-                callback(res.get().sourcesList.map { NewsSources(it.source.toInt(), it.title, it.icon) })
+                callback(res.get().sourcesList.map { s -> NewsSources.CampusMapper.from(s) })
             }catch (e : Exception){
                 error(e)
             }

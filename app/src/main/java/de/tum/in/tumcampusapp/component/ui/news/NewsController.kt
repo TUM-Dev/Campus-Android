@@ -17,6 +17,7 @@ import org.joda.time.DateTime
 import java.io.IOException
 import java.lang.Exception
 import javax.inject.Inject
+import kotlin.math.log
 
 private const val TIME_TO_SYNC = 86400
 
@@ -77,10 +78,11 @@ class NewsController @Inject constructor(
 
         // Load all news sources
         api.getNewsSources(
-            fun(s: List<NewsSources>) {
+            callback = fun(s: List<NewsSources>) {
+                println(s)
                 newsSourcesDao.insert(s)
             },
-            fun(e: Exception) { Utils.log(e) }
+            error = fun(e: Exception) { Utils.log(e) }
         )
 
         // Load all news since the last sync

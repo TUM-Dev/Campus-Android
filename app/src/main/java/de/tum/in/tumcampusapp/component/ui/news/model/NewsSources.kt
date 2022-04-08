@@ -4,6 +4,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.RoomWarnings
 import com.google.gson.annotations.SerializedName
+import de.tum.`in`.tumcampusapp.api.backend.NewsSource
+import de.tum.`in`.tumcampusapp.api.backend.NewsSourceArray
 
 /**
  * This class contains information about the source of a [News] item.
@@ -26,4 +28,8 @@ data class NewsSources(
 
     val isNewspread: Boolean
         get() = setOf(7, 8, 9, 13).contains(id)
+
+    object CampusMapper {
+        fun from(o: NewsSource) = NewsSources(o.source.toInt() ,o.title, o.icon)
+    }
 }
