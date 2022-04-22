@@ -60,6 +60,9 @@ class OnboardingStartFragment : BaseFragment<Unit>(
 
     private val binding by viewBinding(FragmentOnboardingStartBinding::bind)
 
+    override val swipeRefreshLayout get() = binding.swipeRefreshLayout
+    override val layoutAllErrorsBinding get() = binding.layoutAllErrors
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         onboardingComponent.inject(this)

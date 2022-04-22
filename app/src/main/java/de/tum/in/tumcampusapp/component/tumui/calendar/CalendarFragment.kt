@@ -75,6 +75,9 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
 
     private val binding by viewBinding(FragmentCalendarBinding::bind)
 
+    override val swipeRefreshLayout get() = binding.swipeRefreshLayout
+    override val layoutAllErrorsBinding get() = binding.layoutAllErrors
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)

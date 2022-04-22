@@ -7,9 +7,7 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkRequest
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -62,6 +60,8 @@ class MainFragment : BaseFragment<Unit>(
 
     private val binding by viewBinding(FragmentMainBinding::bind)
 
+    override val swipeRefreshLayout get() = binding.swipeRefreshLayout
+
     @Inject
     lateinit var viewModelProvider: Provider<MainActivityViewModel>
     private val viewModel: MainActivityViewModel by lazy {
@@ -77,15 +77,14 @@ class MainFragment : BaseFragment<Unit>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        swipeRefreshLayout?.setOnRefreshListener(this)
-        swipeRefreshLayout?.isRefreshing = true
-        swipeRefreshLayout?.setColorSchemeResources(
-                R.color.color_primary,
-                R.color.tum_A100,
-                R.color.tum_A200)
-
-
         with(binding) {
+            swipeRefreshLayout.setOnRefreshListener(this@MainFragment)
+            swipeRefreshLayout.isRefreshing = true
+            swipeRefreshLayout.setColorSchemeResources(
+                    R.color.color_primary,
+                    R.color.tum_A100,
+                    R.color.tum_A200)
+
             registerForContextMenu(cardsRecyclerView)
 
             cardsRecyclerView.layoutManager = LinearLayoutManager(requireContext())

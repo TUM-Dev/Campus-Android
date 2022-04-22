@@ -24,6 +24,9 @@ class LecturesFragment : FragmentForSearchingTumOnline<LecturesResponse>(
 
     private val binding by viewBinding(FragmentLecturesBinding::bind)
 
+    override val swipeRefreshLayout get() = binding.swipeRefreshLayout
+    override val layoutAllErrorsBinding get() = binding.layoutAllErrors
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
