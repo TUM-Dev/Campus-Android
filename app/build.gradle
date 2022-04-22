@@ -38,8 +38,8 @@ android {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 26
         targetSdkVersion 32
-        versionCode 581
-        versionName "3.15-dev"
+        versionCode 582
+        versionName "3.16-dev"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
