@@ -37,7 +37,7 @@ android {
     defaultConfig {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 26
-        targetSdkVersion 30
+        targetSdkVersion 32
         versionCode 581
         versionName "3.15-dev"
 

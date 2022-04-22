@@ -53,7 +53,8 @@
 
         <uses-library android:name="android.test.runner" />
 
-        <receiver android:name=".service.ScanResultsAvailableReceiver">
+        <receiver android:name=".service.ScanResultsAvailableReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.net.wifi.SCAN_RESULTS" />
             </intent-filter>
@@ -88,7 +89,8 @@
         <activity
             android:name=".component.ui.onboarding.StartupActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -107,7 +109,8 @@
         <activity
             android:name=".component.other.generic.activity.BaseNavigationActivity"
             android:configChanges="orientation|screenSize"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTop"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -164,7 +167,8 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/mvv"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
+            android:parentActivityName=".component.ui.overview.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -205,7 +209,8 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/my_lectures"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
+            android:parentActivityName=".component.ui.overview.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -252,7 +257,8 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/person_search"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
+            android:parentActivityName=".component.ui.overview.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -278,7 +284,8 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/roomfinder"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
+            android:parentActivityName=".component.ui.overview.MainActivity"
+            android:exported="true">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.overview.MainActivity" />
@@ -453,7 +460,8 @@
         </activity> <!-- receiver for the mensaWidget -->
         <receiver
             android:name=".component.ui.cafeteria.widget.MensaWidget"
-            android:label="@string/mensa_widget">
+            android:label="@string/mensa_widget"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -468,7 +476,8 @@
             android:permission="android.permission.BIND_REMOTEVIEWS" /> <!-- receiver for the MVVWidget -->
         <receiver
             android:name=".component.ui.transportation.widget.MVVWidget"
-            android:label="@string/mvv_widget">
+            android:label="@string/mvv_widget"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="de.tum.in.newtumcampus.intent.action.MVV_WIDGET_FORCE_RELOAD" />
@@ -490,7 +499,8 @@
             android:excludeFromRecents="true"
             android:label="@string/mvv_widget_select_station"
             android:launchMode="singleTop"
-            android:taskAffinity="">
+            android:taskAffinity=""
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -505,7 +515,8 @@
         </activity> <!-- receiver for the TimetableWidget -->
         <receiver
             android:name=".component.tumui.calendar.widget.TimetableWidget"
-            android:label="@string/timetable_widget">
+            android:label="@string/timetable_widget"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -526,12 +537,13 @@
             android:excludeFromRecents="true"
             android:label="@string/timetable_widget_select_lectures"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoDrawerLayout">
+            android:theme="@style/AppTheme.NoDrawerLayout"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity> <!-- Used to restart alarm when device has been restarted -->
-        <receiver android:name=".service.StartSyncReceiver">
+        <receiver android:name=".service.StartSyncReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -564,7 +576,8 @@
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver android:name=".service.GeofencingUpdateReceiver" />
-        <receiver android:name=".service.GeofencingStartupReceiver">
+        <receiver android:name=".service.GeofencingStartupReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.location.MODE_CHANGED" />
