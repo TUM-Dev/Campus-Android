@@ -6,6 +6,7 @@
     tools:ignore="UnusedAttribute">
     <!-- Standard access rights -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- For google calendar synchronisation -->
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" /> <!-- To add searched person to contact list -->

@@ -17,7 +17,7 @@ apply from: '../gradle/scripts/checkstyle.gradle'
 apply from: '../gradle/scripts/testLogging.gradle'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
     buildTypes {
         all {
             proguardFiles(file('../proguard').listFiles())
@@ -179,7 +179,7 @@ dependencies {
     kapt 'com.google.dagger:dagger-compiler:2.28.3'
 
     // LeakCanary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
 
     // DebugDatabase
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
