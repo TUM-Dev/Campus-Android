@@ -144,6 +144,8 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.7.0'
     // Note: upgrading this and or androidx.appcompat:appcompat will break the toolbar
     implementation 'androidx.fragment:fragment-ktx:1.2.5'
+    // Note: fix for internal androidx libraries using outdated WorkManager causing a crash
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
 
     // RxJava
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
