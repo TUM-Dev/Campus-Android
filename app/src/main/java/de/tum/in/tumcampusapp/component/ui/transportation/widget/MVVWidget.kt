@@ -56,7 +56,7 @@ class MVVWidget : AppWidgetProvider() {
         }
 
         val intent = Intent(context, MVVWidget::class.java)
-        val sender = PendingIntent.getBroadcast(context, 0, intent, 0)
+        val sender = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         val alarmManager = context.alarmManager
         alarmManager.cancel(sender)
         if (autoReload) {
@@ -114,7 +114,7 @@ class MVVWidget : AppWidgetProvider() {
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
         }
         val pendingIntent = PendingIntent.getActivity(
-                context, appWidgetId, configIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+                context, appWidgetId, configIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         remoteViews.setOnClickPendingIntent(R.id.mvv_widget_setting_button, pendingIntent)
 
         // Set up the reload functionality

@@ -32,11 +32,11 @@ class GradesNotificationProvider(
                 R.plurals.new_grades_format_string, size, size, formattedNewGrades)
 
         val intent = GradesActivity.newIntent(context)
-        val pendingIntent = PendingIntent.getActivity(context, 0, intent, FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT)
 
         val deleteIntent = GradeNotificationDeleteReceiver.newIntent(context, newGrades)
         val deletePendingIntent = PendingIntent.getBroadcast(
-                context, DELETE_REQUEST_CODE, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+                context, DELETE_REQUEST_CODE, deleteIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
         val notification = getNotificationBuilder()
                 .setContentTitle(title)

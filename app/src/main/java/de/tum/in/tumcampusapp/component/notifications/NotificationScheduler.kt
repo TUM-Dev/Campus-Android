@@ -156,7 +156,7 @@ class NotificationScheduler @Inject constructor(private val context: Context) {
             putExtra(Const.KEY_NOTIFICATION, futureNotification.notification)
         }
         return PendingIntent.getBroadcast(context,
-                futureNotification.id, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+                futureNotification.id, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT)
     }
 
     /**
@@ -171,7 +171,7 @@ class NotificationScheduler @Inject constructor(private val context: Context) {
         val intent = Intent(context, NotificationAlarmReceiver::class.java).apply {
             putExtra(Const.KEY_NOTIFICATION_TYPE_ID, type.id)
         }
-        return PendingIntent.getBroadcast(context, type.id, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+        return PendingIntent.getBroadcast(context, type.id, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT)
     }
 
     companion object {

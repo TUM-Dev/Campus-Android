@@ -17,7 +17,7 @@ apply from: '../gradle/scripts/checkstyle.gradle'
 apply from: '../gradle/scripts/testLogging.gradle'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
     buildTypes {
         all {
             proguardFiles(file('../proguard').listFiles())
@@ -144,6 +144,8 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.7.0'
     // Note: upgrading this and or androidx.appcompat:appcompat will break the toolbar
     implementation 'androidx.fragment:fragment-ktx:1.2.5'
+    // Note: fix for internal androidx libraries using outdated WorkManager causing a crash
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
 
     // RxJava
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
@@ -179,7 +181,7 @@ dependencies {
     kapt 'com.google.dagger:dagger-compiler:2.28.3'
 
     // LeakCanary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
 
     // DebugDatabase
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'

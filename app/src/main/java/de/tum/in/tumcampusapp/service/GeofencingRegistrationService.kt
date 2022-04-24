@@ -45,7 +45,7 @@ class GeofencingRegistrationService : JobIntentService() {
         val request = intent.getParcelableExtra<GeofencingRequest>(Const.ADD_GEOFENCE_EXTRA) ?: return
         val geofenceIntent = Intent(this, GeofencingUpdateReceiver::class.java)
         val geofencePendingIntent = PendingIntent.getBroadcast(
-                this, 0, geofenceIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+                this, 0, geofenceIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
         locationClient.addGeofences(request, geofencePendingIntent)
         Utils.log("Registered new Geofence")
