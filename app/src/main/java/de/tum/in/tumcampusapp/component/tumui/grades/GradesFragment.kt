@@ -99,8 +99,10 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     }
 
     override fun onDownloadSuccessful(response: ExamList) {
-        initSpinner(response.exams)
-        showExams(response.exams)
+        val exams = response.exams.orEmpty()
+
+        initSpinner(exams)
+        showExams(exams)
 
         barMenuItem?.isEnabled = true
         pieMenuItem?.isEnabled = true
@@ -108,7 +110,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         isFetched = true
         requireActivity().invalidateOptionsMenu()
 
-        storeGradedCourses(response.exams)
+        storeGradedCourses(exams)
     }
 
     private fun storeGradedCourses(exams: List<Exam>) {
