@@ -73,6 +73,7 @@
     <!-- Exam/Grades -->
     <string name="average_grade">Average grade</string>
     <string name="average_grade_hint">Estimated average. Please refer to TUMOnline for the precise one.</string>
+    <string name="edit_grades">Edit Grades</string>
     <string name="show_column_chart">Show Column Chart</string>
     <string name="show_pie_chart">Show Pie Chart</string>
     <string name="result_extra">Result:&#160;</string>
@@ -769,4 +770,5 @@ Signature: %5$s</string>
     // for opening hours
     <string name="language">en</string>
     <string name="use_existing">Use existing</string>
+
 </resources>
