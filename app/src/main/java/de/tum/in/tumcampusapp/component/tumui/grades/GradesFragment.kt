@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.graphics.Color
 import android.os.Bundle
 import android.util.ArrayMap
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -13,6 +14,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat.getColor
+import androidx.core.view.isVisible
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.data.*
@@ -26,13 +28,14 @@ import de.tum.`in`.tumcampusapp.component.tumui.grades.model.ExamList
 import de.tum.`in`.tumcampusapp.databinding.FragmentGradesBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
+import kotlinx.android.synthetic.main.activity_grades_listview.*
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
 import java.text.NumberFormat
 import java.util.*
 
 class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
-        R.layout.fragment_grades,
-        R.string.my_grades
+    R.layout.fragment_grades,
+    R.string.my_grades
 ) {
 
     private var spinnerPosition = 0
@@ -152,7 +155,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 legend.textColor = getColor(resources, R.color.text_primary, null)
 
                 invalidate()
-        }
+            }
 
         }
     }
@@ -196,16 +199,16 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 description = null
                 setTouchEnabled(false)
                 legend.setCustom(
-                        arrayOf(
-                                LegendEntry(
-                                        getString(R.string.grades_without_weight),
-                                        Legend.LegendForm.SQUARE,
-                                        10f,
-                                        0f,
-                                        null,
-                                        ContextCompat.getColor(context, R.color.grade_default)
-                                )
+                    arrayOf(
+                        LegendEntry(
+                            getString(R.string.grades_without_weight),
+                            Legend.LegendForm.SQUARE,
+                            10f,
+                            0f,
+                            null,
+                            ContextCompat.getColor(context, R.color.grade_default)
                         )
+                    )
                 )
 
                 legend.textColor = getColor(resources, R.color.text_primary, null)
@@ -227,8 +230,8 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     private fun calculateAverageGrade(exams: List<Exam>): Double {
         val numberFormat = NumberFormat.getInstance(Locale.GERMAN)
         val grades = exams
-                .filter { it.isPassed }
-                .map { numberFormat.parse(it.grade).toDouble() }
+            .filter { it.isPassed }
+            .map { numberFormat.parse(it.grade).toDouble() }
 
         val gradeSum = grades.sum()
         return gradeSum / grades.size.toDouble()
@@ -262,15 +265,16 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      */
     private fun initSpinner(exams: List<Exam>) {
         val programIds = exams
-                .map { it.programID }
-                .distinct()
-                .map { getString(R.string.study_program_format_string, it) }
+            .map { it.programID }
+            .distinct()
+            .map { getString(R.string.study_program_format_string, it) }
 
         val filters = mutableListOf(getString(R.string.all_programs))
         filters.addAll(programIds)
 
         val spinnerArrayAdapter = ArrayAdapter(
-                requireContext(), R.layout.simple_spinner_item_actionbar, filters)
+            requireContext(), R.layout.simple_spinner_item_actionbar, filters
+        )
 
         with(binding) {
             filterSpinner?.apply {
@@ -282,7 +286,12 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
 
         binding.filterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 val filter = filters[position]
                 spinnerPosition = position
 
@@ -325,7 +334,8 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         }
 
         val averageGrade = calculateAverageGrade(exams)
-        binding.averageGradeTextView.text = String.format("%s: %.2f", getString(R.string.average_grade), averageGrade)
+        binding.averageGradeTextView.text =
+            String.format("%s: %.2f", getString(R.string.average_grade), averageGrade)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -382,7 +392,19 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         return when (item.itemId) {
             R.id.bar_chart_menu,
             R.id.pie_chart_menu -> toggleChart().run { true }
+            R.id.edit_grades_menu -> changeEditMode().run { true }
             else -> super.onOptionsItemSelected(item)
+
+        }
+    }
+
+    /**
+     * Toggles between the standard mode and the mode which allows to change grades.
+     */
+    private fun changeEditMode() {
+        with(binding) {
+            val editIsOn = editGradesContainer.visibility == View.VISIBLE
+            editGradesContainer.isVisible=!editIsOn;
         }
     }
 
@@ -424,21 +446,21 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         // Animate the content view to 100% opacity, and clear any animation
         // listener set on the view.
         fadeIn.animate()
-                .alpha(1f)
-                .setDuration(animationDuration)
-                .setListener(null)
+            .alpha(1f)
+            .setDuration(animationDuration)
+            .setListener(null)
 
         // Animate the loading view to 0% opacity. After the animation ends,
         // set its visibility to GONE as an optimization step (it won't
         // participate in layout passes, etc.)
         fadeOut.animate()
-                .alpha(0f)
-                .setDuration(animationDuration)
-                .setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator) {
-                        fadeOut.visibility = View.GONE
-                    }
-                })
+            .alpha(0f)
+            .setDuration(animationDuration)
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    fadeOut.visibility = View.GONE
+                }
+            })
     }
 
     companion object {
@@ -451,19 +473,19 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         private val longGradeRe = Regex("[1-4],[0-9][0-9]+")
 
         private val GRADE_COLORS = intArrayOf(
-                R.color.grade_1_0, R.color.grade_1_1, R.color.grade_1_2, R.color.grade_1_3,
-                R.color.grade_1_4, R.color.grade_1_5, R.color.grade_1_6, R.color.grade_1_7,
-                R.color.grade_1_8, R.color.grade_1_9,
-                R.color.grade_2_0, R.color.grade_2_1, R.color.grade_2_2, R.color.grade_2_3,
-                R.color.grade_2_4, R.color.grade_2_5, R.color.grade_2_6, R.color.grade_2_7,
-                R.color.grade_2_8, R.color.grade_2_9,
-                R.color.grade_3_0, R.color.grade_3_1, R.color.grade_3_2, R.color.grade_3_3,
-                R.color.grade_3_4, R.color.grade_3_5, R.color.grade_3_6, R.color.grade_3_7,
-                R.color.grade_3_8, R.color.grade_3_9,
-                R.color.grade_4_0, R.color.grade_4_1, R.color.grade_4_2, R.color.grade_4_3,
-                R.color.grade_4_4, R.color.grade_4_5, R.color.grade_4_6, R.color.grade_4_7,
-                R.color.grade_4_8, R.color.grade_4_9,
-                R.color.grade_5_0, R.color.grade_default
+            R.color.grade_1_0, R.color.grade_1_1, R.color.grade_1_2, R.color.grade_1_3,
+            R.color.grade_1_4, R.color.grade_1_5, R.color.grade_1_6, R.color.grade_1_7,
+            R.color.grade_1_8, R.color.grade_1_9,
+            R.color.grade_2_0, R.color.grade_2_1, R.color.grade_2_2, R.color.grade_2_3,
+            R.color.grade_2_4, R.color.grade_2_5, R.color.grade_2_6, R.color.grade_2_7,
+            R.color.grade_2_8, R.color.grade_2_9,
+            R.color.grade_3_0, R.color.grade_3_1, R.color.grade_3_2, R.color.grade_3_3,
+            R.color.grade_3_4, R.color.grade_3_5, R.color.grade_3_6, R.color.grade_3_7,
+            R.color.grade_3_8, R.color.grade_3_9,
+            R.color.grade_4_0, R.color.grade_4_1, R.color.grade_4_2, R.color.grade_4_3,
+            R.color.grade_4_4, R.color.grade_4_5, R.color.grade_4_6, R.color.grade_4_7,
+            R.color.grade_4_8, R.color.grade_4_9,
+            R.color.grade_5_0, R.color.grade_default
         )
     }
 }
