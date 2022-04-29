@@ -66,73 +66,84 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/editGradesContainer"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="10">
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/buttonresetGradeParameters"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Reset Grade" />
+            android:orientation="horizontal"
+            android:weightSum="10">
 
-        <CheckBox
-            android:id="@+id/checkBox2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:text="Note ausblenden" />
+            <Button
+                android:id="@+id/buttonresetGradeParameters"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:text="Reset Grade" />
 
-    </LinearLayout>
+            <CheckBox
+                android:id="@+id/checkBox2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:text="Note ausblenden" />
+
+        </LinearLayout>
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="10">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:labelFor="@+id/editTextCreditsofSubject"
-            android:text="Credits:" />
-
-        <EditText
-            android:id="@+id/editTextCreditsofSubject"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autofillHints="8"
-            android:ems="10"
-            android:inputType="numberSigned" />
+            android:orientation="horizontal"
+            android:weightSum="10">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:labelFor="@+id/editTextCreditsofSubject"
+                android:text="Credits:" />
+
+            <EditText
+                android:id="@+id/editTextCreditsofSubject"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:autofillHints="8"
+                android:ems="10"
+                android:inputType="numberSigned" />
 
 
-    </LinearLayout>
+        </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="10">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:labelFor="@+id/editTextGradeWeight"
-            android:text="Gewichtung der Note:" />
-
-        <EditText
-            android:id="@+id/editTextGradeWeight"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autofillHints="1.0"
-            android:ems="10"
-            android:inputType="numberDecimal" />
+            android:orientation="horizontal"
+            android:weightSum="10"
+            android:layout_marginBottom="@dimen/material_default_padding">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:labelFor="@+id/editTextGradeWeight"
+                android:text="Gewichtung der Note:" />
+
+            <EditText
+                android:id="@+id/editTextGradeWeight"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:autofillHints="1.0"
+                android:ems="10"
+                android:inputType="numberDecimal" />
 
 
+        </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>
