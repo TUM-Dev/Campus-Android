@@ -143,7 +143,7 @@ class OnboardingStartFragment : BaseFragment<Unit>(
 
         compositeDisposable += tumOnlineClient
             .requestToken(publicKey, tokenName)
-            .map { TokenResponse.Success(it) }
+            .map<TokenResponse> { TokenResponse.Success(it) }
             .doOnError(Utils::log)
             .onErrorReturn { TokenResponse.Failure(it) }
             .subscribeOn(Schedulers.io())

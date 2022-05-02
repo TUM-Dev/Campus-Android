@@ -69,7 +69,7 @@ class CheckTokenFragment : BaseFragment<Unit>(
         toast.show()
 
         compositeDisposable += tumOnlineClient.getIdentity()
-            .map { IdentityResponse.Success(it) }
+            .map<IdentityResponse> { IdentityResponse.Success(it) }
             .doOnError(Utils::log)
             .onErrorReturn { IdentityResponse.Failure(it) }
             .subscribeOn(Schedulers.io())
