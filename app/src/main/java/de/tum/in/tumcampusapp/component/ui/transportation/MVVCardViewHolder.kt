@@ -22,7 +22,7 @@ class MVVCardViewHolder(
             val stationNameTextView = itemView.findViewById<TextView>(R.id.stationNameTextView)
             val contentContainerLayout = itemView.findViewById<LinearLayout>(R.id.contentContainerLayout)
 
-            if(stationNameTextView.text != station.station){
+            if (stationNameTextView.text != station.station) {
                 stationNameTextView.text = station.station
                 contentContainerLayout.removeAllViews()
             }

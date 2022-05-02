@@ -92,7 +92,6 @@ class ChatRoomsFragment : FragmentForAccessingTumOnline<LecturesResponse>(
             chatRoomTabs.addTab(chatRoomTabs.newTab().setText(R.string.joined))
             chatRoomTabs.addTab(chatRoomTabs.newTab().setText(R.string.not_joined))
         }
-
     }
 
     override fun onStart() {
@@ -167,7 +166,6 @@ class ChatRoomsFragment : FragmentForAccessingTumOnline<LecturesResponse>(
                 chatRoomsListView.adapter = chatRoomsAdapter
             }
         }
-
     }
 
     /**
@@ -261,7 +259,7 @@ class ChatRoomsFragment : FragmentForAccessingTumOnline<LecturesResponse>(
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater?.inflate(R.menu.menu_activity_chat_rooms, menu)
+        inflater.inflate(R.menu.menu_activity_chat_rooms, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 

@@ -123,7 +123,6 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
                 buttonsContainer.visibility = View.GONE
             }
         }
-
     }
 
     private fun openEventInCalendarActivity(calendarItem: CalendarItem) {

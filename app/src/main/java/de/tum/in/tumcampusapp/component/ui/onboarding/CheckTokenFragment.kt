@@ -62,7 +62,6 @@ class CheckTokenFragment : BaseFragment<Unit>(
             openTumOnlineButton.setOnClickListener { browse(Const.TUM_CAMPUS_URL) }
             nextButton.setOnClickListener { loadIdentitySet() }
         }
-
     }
 
     private fun loadIdentitySet() {
@@ -70,7 +69,7 @@ class CheckTokenFragment : BaseFragment<Unit>(
         toast.show()
 
         compositeDisposable += tumOnlineClient.getIdentity()
-            .map { IdentityResponse.Success(it) as IdentityResponse }
+            .map { IdentityResponse.Success(it) }
             .doOnError(Utils::log)
             .onErrorReturn { IdentityResponse.Failure(it) }
             .subscribeOn(Schedulers.io())
