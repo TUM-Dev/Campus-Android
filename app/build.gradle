@@ -187,6 +187,8 @@ dependencies {
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 
     // Testing
+    testImplementation "commons-io:commons-io:2.11.0"
+
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:3.5.11'
     testImplementation 'org.assertj:assertj-core:3.17.1'
@@ -196,7 +198,8 @@ dependencies {
     testImplementation 'com.android.support.test:rules:1.0.2'
     testImplementation 'com.android.support.test:runner:1.0.2'
     testImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    testImplementation "org.robolectric:robolectric:4.5.1"
+    testImplementation "org.robolectric:robolectric:4.8"
+
 
     // TicketSale
     implementation 'com.stripe:stripe-android:8.1.0'
