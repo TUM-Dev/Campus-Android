@@ -46,6 +46,9 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
     private var showBarChartAfterRotate = false
 
+    private var globaledit = false;
+    private var exams = listOf<Exam>();
+
     private val grades: Array<String> by lazy {
         resources.getStringArray(R.array.grades)
     }
@@ -102,7 +105,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     }
 
     override fun onDownloadSuccessful(response: ExamList) {
-        val exams = response.exams.orEmpty()
+        exams = response.exams.orEmpty()
 
         initSpinner(exams)
         showExams(exams)
@@ -319,7 +322,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             return
         }
 
-        binding.gradesListView.adapter = ExamListAdapter(requireContext(), exams)
+        binding.gradesListView.adapter = ExamListAdapter(requireContext(), exams, this)
 
         if (!isFetched) {
             // We hide the charts container in the beginning. Then, when we load data for the first
@@ -403,8 +406,10 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      */
     private fun changeEditMode() {
         with(binding) {
-            val editIsOn = editGradesContainer.visibility == View.VISIBLE
-            editGradesContainer.isVisible=!editIsOn;
+            globaledit = !globaledit;
+
+            // Refresh all values for the ui
+            (gradesListView.adapter as ExamListAdapter).notifyDataSetChanged()
         }
     }
 
@@ -461,6 +466,10 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                     fadeOut.visibility = View.GONE
                 }
             })
+    }
+
+    fun getGlobalEdit(): Boolean {
+        return globaledit;
     }
 
     companion object {
