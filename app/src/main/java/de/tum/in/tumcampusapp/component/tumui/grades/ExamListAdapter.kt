@@ -3,6 +3,8 @@ package de.tum.`in`.tumcampusapp.component.tumui.grades
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
@@ -12,7 +14,10 @@ import org.joda.time.format.DateTimeFormat
 /**
  * Custom UI adapter for a list of exams.
  */
-class ExamListAdapter(context: Context, results: List<Exam>) : SimpleStickyListHeadersAdapter<Exam>(context, results.toMutableList()) {
+class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: GradesFragment) :
+    SimpleStickyListHeadersAdapter<Exam>(context, results.toMutableList()) {
+
+    val localGradesFragment: GradesFragment = gradesFragment
 
     init {
         itemList.sort()
@@ -43,11 +48,20 @@ class ExamListAdapter(context: Context, results: List<Exam>) : SimpleStickyListH
         } else {
             DATE_FORMAT.print(exam.date)
         }
-        holder.examDateTextView.text = String.format("%s: %s", context.getString(R.string.date), date)
+        holder.examDateTextView.text =
+            String.format("%s: %s", context.getString(R.string.date), date)
 
-        holder.additionalInfoTextView.text = String.format("%s: %s, %s: %s",
-                context.getString(R.string.examiner), exam.examiner,
-                context.getString(R.string.mode), exam.modus)
+        holder.additionalInfoTextView.text = String.format(
+            "%s: %s, %s: %s",
+            context.getString(R.string.examiner), exam.examiner,
+            context.getString(R.string.mode), exam.modus
+        )
+
+        if (localGradesFragment.getGlobalEdit()) {
+            holder.editGradesContainer.visibility=View.GONE
+        } else {
+            holder.editGradesContainer.visibility=View.VISIBLE
+        }
 
         return view
     }
@@ -71,9 +85,15 @@ class ExamListAdapter(context: Context, results: List<Exam>) : SimpleStickyListH
         var gradeTextView: TextView = itemView.findViewById(R.id.gradeTextView)
         var examDateTextView: TextView = itemView.findViewById(R.id.examDateTextView)
         var additionalInfoTextView: TextView = itemView.findViewById(R.id.additionalInfoTextView)
+
+        var editTextGradeWeights: EditText = itemView.findViewById(R.id.editTextGradeWeight)
+        var editGradesContainer: LinearLayout = itemView.findViewById(R.id.editGradesContainer)
+
+        //todo hier die Knöpfe definieren
     }
 
     companion object {
         private val DATE_FORMAT = DateTimeFormat.mediumDate()
     }
+
 }
