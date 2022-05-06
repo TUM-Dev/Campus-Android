@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,7 +9,9 @@
     android:paddingStart="@dimen/material_default_padding"
     android:paddingTop="@dimen/material_small_padding"
     android:paddingEnd="@dimen/material_default_padding"
-    android:paddingBottom="@dimen/material_small_padding">
+    android:paddingBottom="@dimen/material_small_padding"
+
+    android:layout_marginBottom="@dimen/material_default_padding">
 
 
     <LinearLayout
@@ -46,6 +49,90 @@
                 android:visibility="visible"
                 tools:text="Examiner" />
 
+            <LinearLayout
+                android:id="@+id/editGradesContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:id="@+id/textViewCreditsosSubject"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:labelFor="@+id/editTextCreditsofSubject"
+                        android:text="Credits:" />
+
+                    <EditText
+                        android:id="@+id/editTextCreditsofSubject"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:autofillHints="8"
+                        android:ems="10"
+                        android:inputType="numberSigned" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:labelFor="@+id/editTextGradeWeight"
+                        android:text="Gewichtung der Note:" />
+
+                    <EditText
+                        android:id="@+id/editTextGradeWeight"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:autofillHints="1.0"
+                        android:ems="10"
+                        android:inputType="numberDecimal" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <CheckBox
+                        android:id="@+id/checkBoxUseGradeForAverage"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:text="Note ausblenden" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonresetGradeParameters"
+                        style="@style/BlueButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="5"
+                        android:text="Reset Grade"
+                        android:textAllCaps="false"
+                        app:cornerRadius="@dimen/material_corner_radius" />
+
+
+                </LinearLayout>
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -53,98 +140,18 @@
         <TextView
             android:id="@+id/gradeTextView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:background="@drawable/grade_background"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="bold"
+            android:padding="@dimen/material_default_padding"
             tools:text="1,0" />
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/editGradesContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="10">
-
-            <Button
-                android:id="@+id/buttonresetGradeParameters"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:text="Reset Grade" />
-
-            <CheckBox
-                android:id="@+id/checkBoxUseGradeForAverage"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:text="Note ausblenden" />
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="10">
-
-            <TextView
-                android:layout_width="0dp"
-                android:id="@+id/textViewCreditsosSubject"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:labelFor="@+id/editTextCreditsofSubject"
-                android:text="Credits:" />
-
-            <EditText
-                android:id="@+id/editTextCreditsofSubject"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:autofillHints="8"
-                android:ems="10"
-                android:inputType="numberSigned" />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="10"
-            android:layout_marginBottom="@dimen/material_default_padding">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:labelFor="@+id/editTextGradeWeight"
-                android:text="Gewichtung der Note:" />
-
-            <EditText
-                android:id="@+id/editTextGradeWeight"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:autofillHints="1.0"
-                android:ems="10"
-                android:inputType="numberDecimal" />
-
-
-        </LinearLayout>
-    </LinearLayout>
 </LinearLayout>
