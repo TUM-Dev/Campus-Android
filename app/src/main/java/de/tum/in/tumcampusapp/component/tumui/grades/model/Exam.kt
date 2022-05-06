@@ -38,7 +38,7 @@ data class Exam(
     @PropertyElement(name = "lv_semester")
     val semester: String = "",
     @PropertyElement(name = "weight")
-    var weight: Int = 0,
+    var weight: Double = 1.0,
     @PropertyElement(name = "gradeUsedInAverage")
     var gradeUsedInAverage: Boolean? = false,
     @PropertyElement(name = "subjectcredits")               //must not be "credits" -> otherwise naming collision will occur
