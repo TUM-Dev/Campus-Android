@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.grades
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
@@ -10,6 +11,7 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
 import de.tum.`in`.tumcampusapp.component.tumui.grades.model.Exam
 import org.joda.time.format.DateTimeFormat
+
 
 /**
  * Custom UI adapter for a list of exams.
@@ -57,10 +59,15 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
             context.getString(R.string.mode), exam.modus
         )
 
+       // exam.weight = "new weight"
+        //holder.textViewCreditsosSubject.text = exam.weight;
+        //storeExam(exam)
+        //holder.editTextGradeWeights.getText().insert(holder.editTextGradeWeights.getSelectionStart(), 0);
         if (localGradesFragment.getGlobalEdit()) {
-            holder.editGradesContainer.visibility=View.GONE
+            holder.editGradesContainer.visibility = View.GONE
         } else {
-            holder.editGradesContainer.visibility=View.VISIBLE
+            holder.editGradesContainer.visibility = View.VISIBLE
+
         }
 
         return view
@@ -88,6 +95,8 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
 
         var editTextGradeWeights: EditText = itemView.findViewById(R.id.editTextGradeWeight)
         var editGradesContainer: LinearLayout = itemView.findViewById(R.id.editGradesContainer)
+        var textViewCreditsosSubject: TextView =
+            itemView.findViewById(R.id.textViewCreditsosSubject)
 
         //todo hier die Knöpfe definieren
     }

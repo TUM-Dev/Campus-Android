@@ -2,6 +2,7 @@ package de.tum.`in`.tumcampusapp.component.tumui.grades
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.ArrayMap
@@ -14,11 +15,12 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat.getColor
-import androidx.core.view.isVisible
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.google.gson.*
+import com.google.gson.reflect.TypeToken
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
@@ -28,10 +30,15 @@ import de.tum.`in`.tumcampusapp.component.tumui.grades.model.ExamList
 import de.tum.`in`.tumcampusapp.databinding.FragmentGradesBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
-import kotlinx.android.synthetic.main.activity_grades_listview.*
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.format.DateTimeFormatter
+import java.lang.reflect.Type
 import java.text.NumberFormat
 import java.util.*
+import javax.inject.Inject
+
 
 class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     R.layout.fragment_grades,
@@ -88,7 +95,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             showChartButton?.setOnClickListener { toggleInLandscape() }
         }
 
-        loadGrades(CacheControl.USE_CACHE)
+                loadGrades(CacheControl.USE_CACHE)      //set to BYPASS_CACHE to force a reload
 
         // Tracks whether the user has used the calendar module before. This is used in determining when to prompt for a
         // Google Play store review
@@ -106,6 +113,9 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
     override fun onDownloadSuccessful(response: ExamList) {
         exams = response.exams.orEmpty()
+//todo these exams should be loaded from shared prefrences, not from the cahe -> allows to modify weights
+        storeExamListInSharedPreferences()
+        loadExamListFromSharedPreferences()
 
         initSpinner(exams)
         showExams(exams)
@@ -119,7 +129,82 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         storeGradedCourses(exams)
     }
 
-    private fun storeGradedCourses(exams: List<Exam>) {
+    fun loadExamListFromSharedPreferences() {
+        //    val jsonList = activity?.getSharedPreferences(
+        //        getString(R.string.examlistpreferences), Context.MODE_PRIVATE)
+        //val mPrefs: SharedPreferences = getPreferences(MODE_PRIVATE)
+        // val prefsEditor: Editor = sharedPref.edit()
+
+        //val userListType : Type = TypeToken<ArrayList<Exam>>() {}.type;
+        // val examListType: Type = TypeToken<List<Exam>>(){}.getType();
+
+        //val json = gson.fromJson(jsonList, Array<Exam>::class.java)
+        //prefsEditor.putString("MyObject", json)
+        //prefsEditor.commit()
+
+        //exams= activity?.getPreferences(Context.MODE_PRIVATE)!!.getStringSet("ExamList", emptySet())!!.toList().sorted()
+        // val gson = Gson()
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+        val dateTimeConverter = DateTimeConverter()
+        val gson = GsonBuilder().registerTypeAdapter(DateTime::class.java, dateTimeConverter)
+            .create()
+        val listType = object : TypeToken<List<Exam>>() {}.type
+        if (sharedPref != null) {
+            val jsonString = sharedPref.getString("ExamList", "");
+            Log.d("Examlistdebugging: ", jsonString!!)
+            if (jsonString != null) {
+                val helperExams: List<Exam> = gson.fromJson(jsonString, listType)
+                Log.d("Examlistdebugging: ", helperExams.toString())
+            }
+        }
+    }
+
+    fun storeExamListInSharedPreferences() {
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+       // val gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create()
+        val dateTimeConverter = DateTimeConverter()
+        val gson = GsonBuilder().registerTypeAdapter(DateTime::class.java, dateTimeConverter)
+            .create()
+        val jsonlist = gson.toJson(exams)
+        Log.d("Examlistdebugging: ", jsonlist)
+        with(sharedPref.edit()) {
+            putString("ExamList", jsonlist)
+            apply()
+        }
+    }
+
+
+    /**
+     * Gson serialiser/deserialiser for converting Joda [DateTime] objects.
+     * Source: https://riptutorial.com/android/example/14799/adding-a-custom-converter-to-gson
+     */
+    class DateTimeConverter @Inject constructor() : JsonSerializer<DateTime?>,
+        JsonDeserializer<DateTime?> {
+        private val dateTimeFormatter: DateTimeFormatter
+        override fun serialize(
+            src: DateTime?,
+            typeOfSrc: Type?,
+            context: JsonSerializationContext?
+        ): JsonElement {
+            return JsonPrimitive(dateTimeFormatter.print(src))
+        }
+
+        @Throws(JsonParseException::class)
+        override fun deserialize(
+            json: JsonElement,
+            typeOfT: Type?,
+            context: JsonDeserializationContext?
+        ): DateTime? {
+            return if (json.asString == null || json.asString.isEmpty()) {
+                null
+            } else dateTimeFormatter.parseDateTime(json.asString)
+        }
+
+        init {
+            dateTimeFormatter = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm")
+        }
+    }
+    public fun storeGradedCourses(exams: List<Exam>) {
         val gradesStore = GradesStore(defaultSharedPreferences)
         val courses = exams.map { it.course }
         gradesStore.store(courses)
