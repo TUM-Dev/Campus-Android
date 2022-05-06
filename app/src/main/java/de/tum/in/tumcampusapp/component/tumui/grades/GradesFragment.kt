@@ -6,7 +6,6 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.ArrayMap
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -30,6 +29,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.grades.model.ExamList
 import de.tum.`in`.tumcampusapp.databinding.FragmentGradesBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
+import kotlinx.android.synthetic.main.fragment_grades.*
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -56,7 +56,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     private var globaledit = false;
     private val exams = mutableListOf<Exam>();
 
-    private val examSharedPreferences: String="ExamList";
+    private val examSharedPreferences: String = "ExamList";
 
     private val grades: Array<String> by lazy {
         resources.getStringArray(R.array.grades)
@@ -97,8 +97,8 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             showChartButton?.setOnClickListener { toggleInLandscape() }
         }
 
-        //    loadGrades(CacheControl.USE_CACHE)      //set to BYPASS_CACHE to force a reload
-        loadExamListFromSharedPreferences();
+        loadGrades(CacheControl.USE_CACHE)      //set to BYPASS_CACHE to force a reload
+        //loadExamListFromSharedPreferences();
         // Tracks whether the user has used the calendar module before. This is used in determining when to prompt for a
         // Google Play store review
         Utils.setSetting(requireContext(), Const.HAS_VISITED_GRADES, true)
@@ -113,12 +113,11 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         fetch(apiCall)
     }
 
-    override fun onDownloadSuccessful(response: ExamList) {     //todo compare both datasets in this method exams einfügen und vergleichen wie anosnten nur bei dem downloader
-        //examsDownloaded = response.exams.orEmpty()
-//todo these exams should be loaded from shared prefrences, not from the cahe -> allows to modify weights
-        //storeExamListInSharedPreferences()
-        //loadExamListFromSharedPreferences()
+    override fun onDownloadSuccessful(response: ExamList) {
+        val examsDownloaded: MutableList<Exam> = response.exams.orEmpty().toMutableList()
 
+        loadExamListFromSharedPreferences()
+        addAllNewItemsToExamList(examsDownloaded)
         initSpinner(exams)
         showExams(exams)
 
@@ -131,6 +130,21 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         storeGradedCourses(exams)
     }
 
+    /**
+     * Adds all exams which are part f the new list to the existing exams list
+     */
+    private fun addAllNewItemsToExamList(examsDownloaded: MutableList<Exam>) {
+
+        val examsTitels = exams.map { it.course }
+        examsDownloaded.removeAll { examsTitels.contains(it.course) }
+
+        if (!examsDownloaded.isEmpty()) {
+            exams.addAll(examsDownloaded)
+            (gradesListView.adapter as ExamListAdapter).notifyDataSetChanged()
+            storeExamListInSharedPreferences()
+        }
+    }
+
     fun loadExamListFromSharedPreferences() {
         try {
             val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
@@ -138,7 +152,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             val gson = GsonBuilder().registerTypeAdapter(DateTime::class.java, dateTimeConverter)
                 .create()
             val listType = object : TypeToken<List<Exam>>() {}.type
-            val jsonString = sharedPref.getString("ExamList", "");
+            val jsonString = sharedPref.getString(examSharedPreferences, "");
             if (jsonString != null) {
                 exams.clear();
                 exams.addAll(gson.fromJson(jsonString, listType))
@@ -147,9 +161,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         } catch (e: Exception) {
             exams.clear();
         }
-
         // Exam list could no be loaded - will always e a list, some error occured - clear to prevent any intermediate error states
-
     }
 
     fun storeExamListInSharedPreferences() {
