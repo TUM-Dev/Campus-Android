@@ -54,7 +54,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     private var showBarChartAfterRotate = false
 
     private var globaledit = false;
-    private var exams = listOf<Exam>();
+    private val exams = mutableListOf<Exam>();
 
     private val grades: Array<String> by lazy {
         resources.getStringArray(R.array.grades)
@@ -95,8 +95,8 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             showChartButton?.setOnClickListener { toggleInLandscape() }
         }
 
-                loadGrades(CacheControl.USE_CACHE)      //set to BYPASS_CACHE to force a reload
-
+        //    loadGrades(CacheControl.USE_CACHE)      //set to BYPASS_CACHE to force a reload
+        loadExamListFromSharedPreferences();
         // Tracks whether the user has used the calendar module before. This is used in determining when to prompt for a
         // Google Play store review
         Utils.setSetting(requireContext(), Const.HAS_VISITED_GRADES, true)
@@ -111,11 +111,11 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         fetch(apiCall)
     }
 
-    override fun onDownloadSuccessful(response: ExamList) {
-        exams = response.exams.orEmpty()
+    override fun onDownloadSuccessful(response: ExamList) {     //todo compare both datasets in this method exams einfügen und vergleichen wie anosnten nur bei dem downloader
+        //examsDownloaded = response.exams.orEmpty()
 //todo these exams should be loaded from shared prefrences, not from the cahe -> allows to modify weights
-        storeExamListInSharedPreferences()
-        loadExamListFromSharedPreferences()
+        //storeExamListInSharedPreferences()
+        //loadExamListFromSharedPreferences()
 
         initSpinner(exams)
         showExams(exams)
@@ -130,38 +130,29 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     }
 
     fun loadExamListFromSharedPreferences() {
-        //    val jsonList = activity?.getSharedPreferences(
-        //        getString(R.string.examlistpreferences), Context.MODE_PRIVATE)
-        //val mPrefs: SharedPreferences = getPreferences(MODE_PRIVATE)
-        // val prefsEditor: Editor = sharedPref.edit()
-
-        //val userListType : Type = TypeToken<ArrayList<Exam>>() {}.type;
-        // val examListType: Type = TypeToken<List<Exam>>(){}.getType();
-
-        //val json = gson.fromJson(jsonList, Array<Exam>::class.java)
-        //prefsEditor.putString("MyObject", json)
-        //prefsEditor.commit()
-
-        //exams= activity?.getPreferences(Context.MODE_PRIVATE)!!.getStringSet("ExamList", emptySet())!!.toList().sorted()
-        // val gson = Gson()
-        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
-        val dateTimeConverter = DateTimeConverter()
-        val gson = GsonBuilder().registerTypeAdapter(DateTime::class.java, dateTimeConverter)
-            .create()
-        val listType = object : TypeToken<List<Exam>>() {}.type
-        if (sharedPref != null) {
+        try {
+            val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+            val dateTimeConverter = DateTimeConverter()
+            val gson = GsonBuilder().registerTypeAdapter(DateTime::class.java, dateTimeConverter)
+                .create()
+            val listType = object : TypeToken<List<Exam>>() {}.type
             val jsonString = sharedPref.getString("ExamList", "");
-            Log.d("Examlistdebugging: ", jsonString!!)
             if (jsonString != null) {
-                val helperExams: List<Exam> = gson.fromJson(jsonString, listType)
-                Log.d("Examlistdebugging: ", helperExams.toString())
+                exams.clear();
+                exams.addAll(gson.fromJson(jsonString, listType))
+                return
             }
+        } catch (e: Exception) {
+            exams.clear();
         }
+
+        // Exam list could no be loaded - will always e a list, some error occured - clear to prevent any intermediate error states
+
     }
 
     fun storeExamListInSharedPreferences() {
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
-       // val gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create()
+        // val gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create()
         val dateTimeConverter = DateTimeConverter()
         val gson = GsonBuilder().registerTypeAdapter(DateTime::class.java, dateTimeConverter)
             .create()
@@ -204,7 +195,8 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             dateTimeFormatter = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm")
         }
     }
-    public fun storeGradedCourses(exams: List<Exam>) {
+
+    fun storeGradedCourses(exams: List<Exam>) {
         val gradesStore = GradesStore(defaultSharedPreferences)
         val courses = exams.map { it.course }
         gradesStore.store(courses)
