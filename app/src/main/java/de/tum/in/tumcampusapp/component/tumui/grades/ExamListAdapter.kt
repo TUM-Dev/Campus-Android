@@ -3,7 +3,6 @@ package de.tum.`in`.tumcampusapp.component.tumui.grades
 import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
@@ -14,8 +13,6 @@ import androidx.core.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
 import de.tum.`in`.tumcampusapp.component.tumui.grades.model.Exam
-import kotlinx.android.synthetic.main.activity_grades_listview.view.*
-import org.jetbrains.anko.db.INTEGER
 import org.joda.time.format.DateTimeFormat
 
 

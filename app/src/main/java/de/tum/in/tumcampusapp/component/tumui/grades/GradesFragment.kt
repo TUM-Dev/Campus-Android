@@ -56,6 +56,8 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     private var globaledit = false;
     private val exams = mutableListOf<Exam>();
 
+    private val examSharedPreferences: String="ExamList";
+
     private val grades: Array<String> by lazy {
         resources.getStringArray(R.array.grades)
     }
@@ -152,14 +154,12 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
     fun storeExamListInSharedPreferences() {
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
-        // val gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create()
         val dateTimeConverter = DateTimeConverter()
         val gson = GsonBuilder().registerTypeAdapter(DateTime::class.java, dateTimeConverter)
             .create()
         val jsonlist = gson.toJson(exams)
-        Log.d("Examlistdebugging: ", jsonlist)
         with(sharedPref.edit()) {
-            putString("ExamList", jsonlist)
+            putString(examSharedPreferences, jsonlist)
             apply()
         }
     }

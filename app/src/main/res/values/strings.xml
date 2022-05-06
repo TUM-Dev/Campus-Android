@@ -84,6 +84,10 @@
     <string name="date">Date</string>
     <string name="credits" translatable="false">ECTS</string>
     <string name="no_grades">You don\'t have any grades yet.</string>
+    <string name="reset_grade">Reset Grade</string>
+    <string name="hide_grade">Hide Grade</string>
+    <string name="grade_weight_label">Grade Weight:</string>
+    <string name="credits_grade_label">Credits:</string>
 
     <!-- Preferences -->
     <string name="lrz_id">TUM Identification</string>
@@ -770,5 +774,7 @@ Signature: %5$s</string>
     // for opening hours
     <string name="language">en</string>
     <string name="use_existing">Use existing</string>
+
+
 
 </resources>

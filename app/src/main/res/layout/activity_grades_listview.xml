@@ -68,7 +68,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="5"
                         android:labelFor="@+id/editTextCreditsofSubject"
-                        android:text="Credits:" />
+                        android:text="@string/credits_grade_label" />
 
                     <EditText
                         android:id="@+id/editTextCreditsofSubject"
@@ -93,7 +93,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="5"
                         android:labelFor="@+id/editTextGradeWeight"
-                        android:text="Gewichtung der Note:" />
+                        android:text="@string/grade_weight_label" />
 
                     <EditText
                         android:id="@+id/editTextGradeWeight"
@@ -118,7 +118,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="5"
-                        android:text="Note ausblenden" />
+                        android:text="@string/hide_grade" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonresetGradeParameters"
@@ -126,7 +126,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="5"
-                        android:text="Reset Grade"
+                        android:text="@string/reset_grade"
                         android:textAllCaps="false"
                         app:cornerRadius="@dimen/material_corner_radius" />
 
