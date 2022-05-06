@@ -1,6 +1,8 @@
 package de.tum.`in`.tumcampusapp.component.tumui.grades
 
 import android.content.Context
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +12,8 @@ import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
 import de.tum.`in`.tumcampusapp.component.tumui.grades.model.Exam
+import kotlinx.android.synthetic.main.activity_grades_listview.view.*
+import org.jetbrains.anko.db.INTEGER
 import org.joda.time.format.DateTimeFormat
 
 
@@ -59,19 +63,65 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
             context.getString(R.string.mode), exam.modus
         )
 
-       // exam.weight = "new weight"
-        //holder.textViewCreditsosSubject.text = exam.weight;
-        //storeExam(exam)
-        //holder.editTextGradeWeights.getText().insert(holder.editTextGradeWeights.getSelectionStart(), 0);
+
         if (localGradesFragment.getGlobalEdit()) {
             holder.editGradesContainer.visibility = View.GONE
         } else {
             holder.editGradesContainer.visibility = View.VISIBLE
 
         }
-
+       // localGradesFragment.storeExamListInSharedPreferences()
+initUIElements(holder, exam);
         return view
     }
+
+    private fun initUIElements(holder: ViewHolder, exam: Exam) {
+        holder.editTextGradeWeights.setText(""+exam.weight)
+        holder.editTextGradeCredits.setText(""+exam.credits_new)
+
+        //todo hier noch auf die Werte Setzten, die das feld laut der Exam instanz hat
+        holder.editTextGradeWeights.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                exam.weight= Integer.parseInt(s.toString())
+                localGradesFragment.storeExamListInSharedPreferences()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
+
+        holder.editTextGradeCredits.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                exam.credits_new= Integer.parseInt(s.toString())
+                localGradesFragment.storeExamListInSharedPreferences()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
+    }
+
+   /* fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
+        this.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(editable: Editable?) {
+                exam
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                Log.d("Editable before textChanges",s.toString())
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                Log.d("Editable on textChanges",s.toString())
+            }
+        })
+    }*/
 
     override fun generateHeaderName(item: Exam): String {
         val headerText = super.generateHeaderName(item)
@@ -94,11 +144,10 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
         var additionalInfoTextView: TextView = itemView.findViewById(R.id.additionalInfoTextView)
 
         var editTextGradeWeights: EditText = itemView.findViewById(R.id.editTextGradeWeight)
+        var editTextGradeCredits: EditText = itemView.findViewById(R.id.editTextCreditsofSubject)
         var editGradesContainer: LinearLayout = itemView.findViewById(R.id.editGradesContainer)
         var textViewCreditsosSubject: TextView =
             itemView.findViewById(R.id.textViewCreditsosSubject)
-
-        //todo hier die Knöpfe definieren
     }
 
     companion object {

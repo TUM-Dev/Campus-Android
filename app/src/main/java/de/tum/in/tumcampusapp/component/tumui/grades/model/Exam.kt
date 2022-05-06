@@ -24,8 +24,7 @@ import java.util.*
 data class Exam(
     @PropertyElement(name = "lv_titel")
     val course: String,
-    @PropertyElement(name = "lv_credits")
-    val credits: String? = null,
+
     @PropertyElement(name = "datum", converter = DateTimeConverter::class)
     val date: DateTime? = null,
     @PropertyElement(name = "pruefer_nachname")
@@ -38,8 +37,14 @@ data class Exam(
     val programID: String,
     @PropertyElement(name = "lv_semester")
     val semester: String = "",
-    @PropertyElement(name = "credits")
-    var weight: String? = "test",
+    @PropertyElement(name = "weight")
+    var weight: Int = 0,
+    @PropertyElement(name = "gradeUsedInAverage")
+    var gradeUsedInAverage: Boolean? = false,
+    @PropertyElement(name = "subjectcredits")               //must not be "credits" -> otherwise naming collision will occur
+    var credits_new: Int = 6,
+
+
 ) : Comparable<Exam>, SimpleStickyListHeadersAdapter.SimpleStickyListItem {
 
     override fun getHeadName() = semester
@@ -50,14 +55,14 @@ data class Exam(
      * Compare all Attributes which were send from tum online,
      * All added attributes for the individual grades can be neglected
      */
-    override fun equals(other: Any?): Boolean {
+   /* override fun equals(other: Any?): Boolean {
         if (other !is Exam){
             return false;
         }
         val otherExam=(other as Exam)
-        if (credits.isNullOrEmpty() xor otherExam.credits.isNullOrEmpty()){
-            return false
-        }
+        //if (credits.isNullOrEmpty() xor otherExam.credits.isNullOrEmpty()){
+        //    return false
+        //}
         //val test: String? ="lorem ipsum";
         //val test1: String? =null;
         //val test2: String? =null;
@@ -65,7 +70,7 @@ data class Exam(
         Log.d("Kotlin logic test: ", test.equals(test2).toString())
         Log.d("Kotlin logic test: ", test1.equals(test).toString())*/
         return otherExam.course.equals(course) && otherExam.programID.equals(programID) && otherExam.semester.equals(semester);
-    }
+    }*/
 
     override fun compareTo(other: Exam): Int {
         return compareByDescending<Exam> { it.semester }
