@@ -6,9 +6,11 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
 import de.tum.`in`.tumcampusapp.component.tumui.grades.model.Exam
@@ -70,19 +72,18 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
             holder.editGradesContainer.visibility = View.VISIBLE
 
         }
-       // localGradesFragment.storeExamListInSharedPreferences()
-initUIElements(holder, exam);
+        // localGradesFragment.storeExamListInSharedPreferences()
+        initUIElements(holder, exam);
         return view
     }
 
     private fun initUIElements(holder: ViewHolder, exam: Exam) {
-        holder.editTextGradeWeights.setText(""+exam.weight)
-        holder.editTextGradeCredits.setText(""+exam.credits_new)
+        holder.editTextGradeWeights.setText(exam.weight.toString())
+        holder.editTextGradeCredits.setText(exam.credits_new.toString())
 
-        //todo hier noch auf die Werte Setzten, die das feld laut der Exam instanz hat
         holder.editTextGradeWeights.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                exam.weight= Integer.parseInt(s.toString())
+                exam.weight = s.toString().toDouble()
                 localGradesFragment.storeExamListInSharedPreferences()
             }
 
@@ -95,7 +96,7 @@ initUIElements(holder, exam);
 
         holder.editTextGradeCredits.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                exam.credits_new= Integer.parseInt(s.toString())
+                exam.credits_new = s.toString().toInt()
                 localGradesFragment.storeExamListInSharedPreferences()
             }
 
@@ -105,23 +106,26 @@ initUIElements(holder, exam);
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
         })
+
+        holder.checkBoxUseGradeForAverage.setOnCheckedChangeListener { buttonView, isChecked ->
+            exam.gradeUsedInAverage=!isChecked
+
+            if (isChecked){
+                holder.editTextGradeCredits.isEnabled=false;
+                holder.editTextGradeWeights.isEnabled=false;
+                holder.gradeTextView.background.setTint(ContextCompat.getColor(context, R.color.transparent))
+                holder.gradeTextView.setTextColor(ContextCompat.getColor(context, R.color.grade_default))
+            }else{
+                holder.editTextGradeCredits.isEnabled=true;
+                holder.editTextGradeWeights.isEnabled=true;
+                val gradeColor = exam.getGradeColor(context)
+                holder.gradeTextView.background.setTint(gradeColor)
+                holder.gradeTextView.setTextColor(ContextCompat.getColor(context, R.color.white))
+            }
+           // texview deaktiveren, idealerweise auch die ein Zeichen um die note Setzten(irgendeine Art von Rand?)
+        }
     }
 
-   /* fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
-        this.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(editable: Editable?) {
-                exam
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                Log.d("Editable before textChanges",s.toString())
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                Log.d("Editable on textChanges",s.toString())
-            }
-        })
-    }*/
 
     override fun generateHeaderName(item: Exam): String {
         val headerText = super.generateHeaderName(item)
@@ -146,8 +150,8 @@ initUIElements(holder, exam);
         var editTextGradeWeights: EditText = itemView.findViewById(R.id.editTextGradeWeight)
         var editTextGradeCredits: EditText = itemView.findViewById(R.id.editTextCreditsofSubject)
         var editGradesContainer: LinearLayout = itemView.findViewById(R.id.editGradesContainer)
-        var textViewCreditsosSubject: TextView =
-            itemView.findViewById(R.id.textViewCreditsosSubject)
+        var checkBoxUseGradeForAverage: CheckBox =
+            itemView.findViewById(R.id.checkBoxUseGradeForAverage)
     }
 
     companion object {
