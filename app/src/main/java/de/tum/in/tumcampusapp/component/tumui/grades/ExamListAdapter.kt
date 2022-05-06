@@ -69,14 +69,19 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
             holder.editGradesContainer.visibility = View.VISIBLE
 
         }
-        // localGradesFragment.storeExamListInSharedPreferences()
         initUIElements(holder, exam);
         return view
     }
 
+
+    /**
+     * Init the ui Elements to change the parameters of the grade
+     */
     private fun initUIElements(holder: ViewHolder, exam: Exam) {
         holder.editTextGradeWeights.setText(exam.weight.toString())
         holder.editTextGradeCredits.setText(exam.credits_new.toString())
+        holder.checkBoxUseGradeForAverage.isChecked=exam.gradeUsedInAverage
+        adaptUIToCheckboxStatus(exam.gradeUsedInAverage, holder, exam)
 
         holder.editTextGradeWeights.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -107,7 +112,8 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
         holder.checkBoxUseGradeForAverage.setOnCheckedChangeListener { buttonView, isChecked ->
             exam.gradeUsedInAverage=!isChecked
 
-            if (isChecked){
+            adaptUIToCheckboxStatus(isChecked,holder,exam)
+         /*   if (isChecked){
                 holder.editTextGradeCredits.isEnabled=false;
                 holder.editTextGradeWeights.isEnabled=false;
                 holder.gradeTextView.background.setTint(ContextCompat.getColor(context, R.color.transparent))
@@ -118,8 +124,22 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
                 val gradeColor = exam.getGradeColor(context)
                 holder.gradeTextView.background.setTint(gradeColor)
                 holder.gradeTextView.setTextColor(ContextCompat.getColor(context, R.color.white))
-            }
-           // texview deaktiveren, idealerweise auch die ein Zeichen um die note Setzten(irgendeine Art von Rand?)
+            }*/
+        }
+    }
+
+    private fun adaptUIToCheckboxStatus(gradeUsedInAverage: Boolean, holder: ViewHolder, exam: Exam) {
+        if (gradeUsedInAverage){
+            holder.editTextGradeCredits.isEnabled=false;
+            holder.editTextGradeWeights.isEnabled=false;
+            holder.gradeTextView.background.setTint(ContextCompat.getColor(context, R.color.transparent))
+            holder.gradeTextView.setTextColor(ContextCompat.getColor(context, R.color.grade_default))
+        }else{
+            holder.editTextGradeCredits.isEnabled=true;
+            holder.editTextGradeWeights.isEnabled=true;
+            val gradeColor = exam.getGradeColor(context)
+            holder.gradeTextView.background.setTint(gradeColor)
+            holder.gradeTextView.setTextColor(ContextCompat.getColor(context, R.color.white))
         }
     }
 
