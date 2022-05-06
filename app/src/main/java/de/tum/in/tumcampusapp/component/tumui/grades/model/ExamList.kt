@@ -10,4 +10,4 @@ import com.tickaroo.tikxml.annotation.Xml
  * corresponding request.
  */
 @Xml(name = "rowset")
-data class ExamList(@Element val exams: List<Exam>?)
+data class ExamList(@Element val exams: MutableList<Exam>?)
