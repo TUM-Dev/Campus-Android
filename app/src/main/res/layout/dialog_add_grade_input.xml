@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:padding="@dimen/material_large_padding">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:labelFor="@+id/editTextaddGradeCourseName"
+            android:text="Course name *" />
+
+        <EditText
+            android:id="@+id/editTextaddGradeCourseName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Course name"
+            android:imeOptions="actionGo"
+            android:inputType="textCapWords|textAutoComplete"
+            android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:labelFor="@+id/editTextAddGrade"
+            android:text="Grade *" />
+
+        <EditText
+            android:id="@+id/editTextAddGrade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="1.0"
+            android:ems="10"
+            android:hint="1.0"
+            android:imeOptions="actionGo"
+            android:inputType="numberDecimal" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:labelFor="@+id/editTextaddGradeExaminer"
+            android:text="Examiner" />
+
+        <EditText
+            android:id="@+id/editTextaddGradeExaminer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Examiner name"
+            android:imeOptions="actionGo"
+            android:inputType="textCapWords|textAutoComplete"
+            android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:labelFor="@+id/editTextaddGradeCredits"
+            android:text="Credits" />
+
+        <EditText
+            android:id="@+id/editTextaddGradeCredits"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Credits"
+            android:imeOptions="actionGo"
+            android:inputType="numberSigned"
+            android:text="6"
+            android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:labelFor="@+id/editTextAddGradeWeight"
+            android:text="Grade weight" />
+
+        <EditText
+            android:id="@+id/editTextAddGradeWeight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="1.0"
+            android:ems="10"
+            android:hint="Grade Weight"
+            android:imeOptions="actionGo"
+            android:inputType="numberDecimal"
+            android:text="1.0" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:labelFor="@+id/editTextAddGradeDate"
+            android:text="Examination Date" />
+
+        <EditText
+            android:id="@+id/editTextAddGradeDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="date" />
+
+
+    </LinearLayout>
+</ScrollView>

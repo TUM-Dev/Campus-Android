@@ -5,10 +5,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.core.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
@@ -42,6 +39,15 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
         }
 
         val exam = itemList[position]
+
+
+
+        initUIDisplayElements(holder, exam)
+        initUIEditElements(holder, exam);
+        return view
+    }
+
+    private fun initUIDisplayElements(holder: ViewHolder, exam: Exam) {
         holder.nameTextView.text = exam.course
         holder.gradeTextView.text = exam.grade
 
@@ -61,7 +67,17 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
             context.getString(R.string.examiner), exam.examiner,
             context.getString(R.string.mode), exam.modus
         )
+    }
 
+
+    /**
+     * Init the ui Elements to change the parameters of the grade
+     */
+    private fun initUIEditElements(holder: ViewHolder, exam: Exam) {
+        holder.editTextGradeWeights.setText(exam.weight.toString())
+        holder.editTextGradeCredits.setText(exam.credits_new.toString())
+        holder.checkBoxUseGradeForAverage.isChecked = exam.gradeUsedInAverage
+        adaptUIToCheckboxStatus(exam.gradeUsedInAverage, holder, exam)
 
         if (localGradesFragment.getGlobalEdit()) {
             holder.editGradesContainer.visibility = View.GONE
@@ -69,20 +85,20 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
             holder.editGradesContainer.visibility = View.VISIBLE
 
         }
-        initUIElements(holder, exam);
-        return view
-    }
 
+        holder.buttonResetGradeParameters.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(p0: View?) {
+                exam.gradeUsedInAverage = false
+                exam.weight = 1.0
+                exam.credits_new = 6
+                adaptUIToCheckboxStatus(false, holder, exam)
+                holder.editTextGradeWeights.setText(exam.weight.toString())
+                holder.editTextGradeCredits.setText(exam.credits_new.toString())
+                localGradesFragment.storeExamListInSharedPreferences()
 
-    /**
-     * Init the ui Elements to change the parameters of the grade
-     */
-    private fun initUIElements(holder: ViewHolder, exam: Exam) {
-        holder.editTextGradeWeights.setText(exam.weight.toString())
-        holder.editTextGradeCredits.setText(exam.credits_new.toString())
-        holder.checkBoxUseGradeForAverage.isChecked=exam.gradeUsedInAverage
-        adaptUIToCheckboxStatus(exam.gradeUsedInAverage, holder, exam)
+            }
 
+        })
         holder.editTextGradeWeights.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 exam.weight = s.toString().toDouble()
@@ -110,33 +126,34 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
         })
 
         holder.checkBoxUseGradeForAverage.setOnCheckedChangeListener { buttonView, isChecked ->
-            exam.gradeUsedInAverage=!isChecked
-
-            adaptUIToCheckboxStatus(isChecked,holder,exam)
-         /*   if (isChecked){
-                holder.editTextGradeCredits.isEnabled=false;
-                holder.editTextGradeWeights.isEnabled=false;
-                holder.gradeTextView.background.setTint(ContextCompat.getColor(context, R.color.transparent))
-                holder.gradeTextView.setTextColor(ContextCompat.getColor(context, R.color.grade_default))
-            }else{
-                holder.editTextGradeCredits.isEnabled=true;
-                holder.editTextGradeWeights.isEnabled=true;
-                val gradeColor = exam.getGradeColor(context)
-                holder.gradeTextView.background.setTint(gradeColor)
-                holder.gradeTextView.setTextColor(ContextCompat.getColor(context, R.color.white))
-            }*/
+            exam.gradeUsedInAverage = !isChecked
+            adaptUIToCheckboxStatus(isChecked, holder, exam)
         }
     }
 
-    private fun adaptUIToCheckboxStatus(gradeUsedInAverage: Boolean, holder: ViewHolder, exam: Exam) {
-        if (gradeUsedInAverage){
-            holder.editTextGradeCredits.isEnabled=false;
-            holder.editTextGradeWeights.isEnabled=false;
-            holder.gradeTextView.background.setTint(ContextCompat.getColor(context, R.color.transparent))
-            holder.gradeTextView.setTextColor(ContextCompat.getColor(context, R.color.grade_default))
-        }else{
-            holder.editTextGradeCredits.isEnabled=true;
-            holder.editTextGradeWeights.isEnabled=true;
+    private fun adaptUIToCheckboxStatus(
+        gradeUsedInAverage: Boolean,
+        holder: ViewHolder,
+        exam: Exam
+    ) {
+        if (gradeUsedInAverage) {
+            holder.editTextGradeCredits.isEnabled = false;
+            holder.editTextGradeWeights.isEnabled = false;
+            holder.gradeTextView.background.setTint(
+                ContextCompat.getColor(
+                    context,
+                    R.color.transparent
+                )
+            )
+            holder.gradeTextView.setTextColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.grade_default
+                )
+            )
+        } else {
+            holder.editTextGradeCredits.isEnabled = true;
+            holder.editTextGradeWeights.isEnabled = true;
             val gradeColor = exam.getGradeColor(context)
             holder.gradeTextView.background.setTint(gradeColor)
             holder.gradeTextView.setTextColor(ContextCompat.getColor(context, R.color.white))
@@ -169,6 +186,9 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
         var editGradesContainer: LinearLayout = itemView.findViewById(R.id.editGradesContainer)
         var checkBoxUseGradeForAverage: CheckBox =
             itemView.findViewById(R.id.checkBoxUseGradeForAverage)
+        val buttonResetGradeParameters: Button =
+            itemView.findViewById(R.id.buttonResetGradeParameters)
+
     }
 
     companion object {
