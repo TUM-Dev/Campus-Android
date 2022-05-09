@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/material_default_padding"
     android:background="@color/default_window_background"
     android:orientation="vertical"
     android:paddingStart="@dimen/material_default_padding"
     android:paddingTop="@dimen/material_small_padding"
     android:paddingEnd="@dimen/material_default_padding"
-    android:paddingBottom="@dimen/material_small_padding"
 
-    android:layout_marginBottom="@dimen/material_default_padding">
+    android:paddingBottom="@dimen/material_small_padding">
 
 
     <LinearLayout
@@ -136,21 +136,39 @@
 
         </LinearLayout>
 
-
-        <TextView
-            android:id="@+id/gradeTextView"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/grade_background"
-            android:gravity="center_horizontal"
-            android:textColor="@color/white"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:padding="@dimen/material_default_padding"
-            tools:text="1,0" />
+            android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/gradeTextViewDeleteCustomGrade"
+                android:layout_width="wrap_content"
+                android:layout_height="64dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/grade_background"
+                android:gravity="center"
+                android:padding="@dimen/material_default_padding"
+                android:tint="@android:color/white"
+                android:layout_marginBottom="8dp"
+                android:drawableStart="@drawable/ic_clear"
+                />
+
+            <TextView
+                android:id="@+id/gradeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/grade_background"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/material_default_padding"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                tools:text="1,0" />
+        </LinearLayout>
     </LinearLayout>
 
 

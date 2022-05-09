@@ -147,8 +147,8 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      */
     private fun addAllNewItemsToExamList(examsDownloaded: MutableList<Exam>) {
         val examsTitles = exams.map { it.course }
-        /*exams.clear()
-
+        exams.clear()
+/*
         examsDownloaded.removeAll { examsTitles.contains(it.course) }
         examsDownloaded.get(0).course = "Esotheric Programming"
         examsDownloaded.get(0).grade = "1,0"
@@ -390,25 +390,14 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         )
 
         with(binding) {
-            filterSpinner?.apply {
+            filterSpinner.apply {
                 adapter = spinnerArrayAdapter
                 setSelection(spinnerPosition)
                 visibility = View.VISIBLE
             }
         }
-        binding.floatingbuttonAddExamGrade?.setOnClickListener(View.OnClickListener { openAddGradeDialog() })
-        /*AlertDialog.Builder(requireContext(), R.layout.dialog_add_grade_input)
-            .setTitle("alarm")
-            .setMessage("important message")
-            .setPositiveButton(R.string.logout) { _, _ -> Log.d("custom dialog","positive button") }
-            .setNegativeButton(R.string.cancel, null)
-            .setCancelable(false)
-            .create()
-            .apply {
-                window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-            }
-            .show()*/
-        // })
+        binding.floatingbuttonAddExamGrade.setOnClickListener({ openAddGradeDialog() })
+
 
         binding.filterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -438,9 +427,9 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     private fun openAddGradeDialog() {
         // Set an EditText view to get user input
         val view = View.inflate(requireContext(), R.layout.dialog_add_grade_input, null)
-        val input = view.findViewById<EditText>(R.id.editTextaddGradeCourseName)
 
-        AlertDialog.Builder(requireContext())
+
+        val dialog = AlertDialog.Builder(requireContext())
             .setTitle("Add a new exam manually")
             .setMessage(
                 "Grades are normally added automatically. In case special grades should be added, this can be done here. " +
@@ -448,15 +437,23 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             )
             .setView(view)
             .setPositiveButton(R.string.create) { dialogInterface, whichButton ->
-                Log.d("custom dialog", "positive button")
+
+                val name = view.findViewById<EditText>(R.id.editTextaddGradeCourseName).text
+                val grade = view.findViewById<EditText>(R.id.editTextAddGrade).text
+                val examiner = view.findViewById<EditText>(R.id.editTextaddGradeExaminer).text
+                val weight = view.findViewById<EditText>(R.id.editTextAddGradeWeight).text
+                val credits = view.findViewById<EditText>(R.id.editTextaddGradeCredits).text
+                val date = view.findViewById<EditText>(R.id.editTextAddGradeDate).text
+                Log.d("custom dialog", "positive button, Grade: " + grade)
             }
             .setNegativeButton(android.R.string.cancel, null)
-            .setCancelable(false)
             .create()
             .apply {
                 window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-            }
-            .show()
+            };
+        dialog.show()
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.text_primary));
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.text_primary));
     }
 
     /**
@@ -559,18 +556,18 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
             // Refresh all values for the ui
             (gradesListView.adapter as ExamListAdapter).notifyDataSetChanged()
-initUIVisibility()
+            initUIVisibility()
         }
     }
 
     private fun initUIVisibility() {
         if (!globalEditOn) {
-            frameLayoutAverageGrade?.visibility  = View.GONE
-            floatingbuttonAddExamGrade?.visibility  = View.VISIBLE
-        }else{
+            frameLayoutAverageGrade?.visibility = View.GONE
+            floatingbuttonAddExamGrade?.visibility = View.VISIBLE
+        } else {
 
-            frameLayoutAverageGrade?.visibility  = View.VISIBLE
-            floatingbuttonAddExamGrade?.visibility  = View.GONE
+            frameLayoutAverageGrade?.visibility = View.VISIBLE
+            floatingbuttonAddExamGrade?.visibility = View.GONE
         }
     }
 
