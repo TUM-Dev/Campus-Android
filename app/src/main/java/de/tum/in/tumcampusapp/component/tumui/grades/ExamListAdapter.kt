@@ -81,10 +81,19 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
 
         if (localGradesFragment.getGlobalEdit()) {
             holder.editGradesContainer.visibility = View.GONE
-        } else {
+            holder.gradeTextViewDeleteCustomGrade.visibility=View.GONE
+        } else {//todo show button only if the exam was added manually - test the parameter
             holder.editGradesContainer.visibility = View.VISIBLE
-
+            holder.gradeTextViewDeleteCustomGrade.visibility=View.VISIBLE
+            holder.gradeTextViewDeleteCustomGrade.background.setTint(
+                ContextCompat.getColor(
+                    context,
+                    R.color.grade_default
+                )
+            )
         }
+
+
 
         holder.buttonResetGradeParameters.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
@@ -129,6 +138,9 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
             exam.gradeUsedInAverage = !isChecked
             adaptUIToCheckboxStatus(isChecked, holder, exam)
         }
+
+
+       // holder.gradeTextViewDeleteCustomGrade.
     }
 
     private fun adaptUIToCheckboxStatus(
@@ -188,6 +200,9 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
             itemView.findViewById(R.id.checkBoxUseGradeForAverage)
         val buttonResetGradeParameters: Button =
             itemView.findViewById(R.id.buttonResetGradeParameters)
+        val gradeTextViewDeleteCustomGrade: TextView =
+            itemView.findViewById(R.id.gradeTextViewDeleteCustomGrade)
+
 
     }
 
