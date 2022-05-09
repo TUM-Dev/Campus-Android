@@ -4,14 +4,18 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.graphics.Color
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.ArrayMap
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat.getColor
 import com.github.mikephil.charting.components.Legend
@@ -30,6 +34,7 @@ import de.tum.`in`.tumcampusapp.databinding.FragmentGradesBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import kotlinx.android.synthetic.main.fragment_grades.*
+import org.jetbrains.anko.commit
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -53,10 +58,11 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
     private var showBarChartAfterRotate = false
 
-    private var globaledit = false;
+    private var globalEditOn = false;
     private val exams = mutableListOf<Exam>();
 
     private val examSharedPreferences: String = "ExamList";
+
 
     private val grades: Array<String> by lazy {
         resources.getStringArray(R.array.grades)
@@ -95,10 +101,11 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
             showListButton?.setOnClickListener { toggleInLandscape() }
             showChartButton?.setOnClickListener { toggleInLandscape() }
+            initUIVisibility()
         }
 
-        loadGrades(CacheControl.USE_CACHE)      //set to BYPASS_CACHE to force a reload
         //loadExamListFromSharedPreferences();
+        loadGrades(CacheControl.USE_CACHE)
         // Tracks whether the user has used the calendar module before. This is used in determining when to prompt for a
         // Google Play store review
         Utils.setSetting(requireContext(), Const.HAS_VISITED_GRADES, true)
@@ -130,17 +137,30 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         storeGradedCourses(exams)
     }
 
+    fun addExamToList(exam: Exam) {
+        exams.add(exam)
+        storeExamListInSharedPreferences()
+    }
+
     /**
      * Adds all exams which are part f the new list to the existing exams list
      */
     private fun addAllNewItemsToExamList(examsDownloaded: MutableList<Exam>) {
+        val examsTitles = exams.map { it.course }
+        /*exams.clear()
 
-        val examsTitels = exams.map { it.course }
-        examsDownloaded.removeAll { examsTitels.contains(it.course) }
+        examsDownloaded.removeAll { examsTitles.contains(it.course) }
+        examsDownloaded.get(0).course = "Esotheric Programming"
+        examsDownloaded.get(0).grade = "1,0"
+        examsDownloaded.get(0).examiner = "-"
+
+        examsDownloaded.get(1).course = "Advanced Singing and Clapping"
+        examsDownloaded.get(1).grade = "3,7"
+        examsDownloaded.get(1).examiner = "-"*/
 
         if (!examsDownloaded.isEmpty()) {
+            examsDownloaded.forEach { it.credits_new = 6; it.weight = 1.0; }
             exams.addAll(examsDownloaded)
-            (gradesListView.adapter as ExamListAdapter).notifyDataSetChanged()
             storeExamListInSharedPreferences()
         }
     }
@@ -173,6 +193,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         with(sharedPref.edit()) {
             putString(examSharedPreferences, jsonlist)
             apply()
+
         }
     }
 
@@ -324,7 +345,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         val grades = exams
             .filter { it.isPassed }
             .map { numberFormat.parse(it.grade).toDouble() }
-
+//todo multiply by it.weight and credits and theen divide by the combined numerb of used numbers
         val gradeSum = grades.sum()
         return gradeSum / grades.size.toDouble()
     }
@@ -375,7 +396,19 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 visibility = View.VISIBLE
             }
         }
-
+        binding.floatingbuttonAddExamGrade?.setOnClickListener(View.OnClickListener { openAddGradeDialog() })
+        /*AlertDialog.Builder(requireContext(), R.layout.dialog_add_grade_input)
+            .setTitle("alarm")
+            .setMessage("important message")
+            .setPositiveButton(R.string.logout) { _, _ -> Log.d("custom dialog","positive button") }
+            .setNegativeButton(R.string.cancel, null)
+            .setCancelable(false)
+            .create()
+            .apply {
+                window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
+            }
+            .show()*/
+        // })
 
         binding.filterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -397,6 +430,33 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
             override fun onNothingSelected(parent: AdapterView<*>) = Unit
         }
+    }
+
+    /**
+     * Prompt the user to type in a name for the new chat room
+     */
+    private fun openAddGradeDialog() {
+        // Set an EditText view to get user input
+        val view = View.inflate(requireContext(), R.layout.dialog_add_grade_input, null)
+        val input = view.findViewById<EditText>(R.id.editTextaddGradeCourseName)
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Add a new exam manually")
+            .setMessage(
+                "Grades are normally added automatically. In case special grades should be added, this can be done here. " +
+                        "Manually added Exams can be deleted later on.\n\n* required"
+            )
+            .setView(view)
+            .setPositiveButton(R.string.create) { dialogInterface, whichButton ->
+                Log.d("custom dialog", "positive button")
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .setCancelable(false)
+            .create()
+            .apply {
+                window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
+            }
+            .show()
     }
 
     /**
@@ -495,10 +555,22 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      */
     private fun changeEditMode() {
         with(binding) {
-            globaledit = !globaledit;
+            globalEditOn = !globalEditOn;
 
             // Refresh all values for the ui
             (gradesListView.adapter as ExamListAdapter).notifyDataSetChanged()
+initUIVisibility()
+        }
+    }
+
+    private fun initUIVisibility() {
+        if (!globalEditOn) {
+            frameLayoutAverageGrade?.visibility  = View.GONE
+            floatingbuttonAddExamGrade?.visibility  = View.VISIBLE
+        }else{
+
+            frameLayoutAverageGrade?.visibility  = View.VISIBLE
+            floatingbuttonAddExamGrade?.visibility  = View.GONE
         }
     }
 
@@ -558,7 +630,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     }
 
     fun getGlobalEdit(): Boolean {
-        return globaledit;
+        return globalEditOn;
     }
 
     companion object {
