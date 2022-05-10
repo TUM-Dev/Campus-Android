@@ -1,8 +1,8 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
-import android.app.SearchManager
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +18,6 @@ import de.tum.`in`.tumcampusapp.component.other.navigation.NavDestination
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse
-import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.databinding.FragmentCalendarDetailsBinding
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -189,10 +188,18 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     }
 
     private fun onLocationClicked(location: String) {
-        val findStudyRoomIntent = Intent()
-        findStudyRoomIntent.putExtra(SearchManager.QUERY, Utils.extractRoomNumberFromLocation(location))
-        findStudyRoomIntent.setClass(requireContext(), RoomFinderActivity::class.java)
-        startActivity(findStudyRoomIntent)
+//        val findStudyRoomIntent = Intent()
+//        findStudyRoomIntent.putExtra(SearchManager.QUERY, Utils.extractRoomNumberFromLocation(location))
+//        findStudyRoomIntent.setClass(requireContext(), RoomFinderActivity::class.java)
+//        startActivity(findStudyRoomIntent)
+
+        val encoded_location = java.net.URLEncoder.encode(location, "utf-8")
+        val url = "https://nav.tum.sexy/search?q=${encoded_location}"
+
+        val sendIntent: Intent = Intent().apply {
+            setData(Uri.parse(url))
+        }
+        startActivity(sendIntent)
     }
 
     companion object {
