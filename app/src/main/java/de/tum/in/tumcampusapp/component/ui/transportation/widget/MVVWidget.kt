@@ -161,6 +161,13 @@ class MVVWidget : AppWidgetProvider() {
                     updateAppWidget(context, AppWidgetManager.getInstance(context), appWidgetId, true)
                 }
             }
+            MVV_WIDGET_RELOAD_AFTER_CONFIG_CHANGES -> {
+                val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
+                if (appWidgetId >= 0) {
+                    updateAppWidget(context, AppWidgetManager.getInstance(context), appWidgetId, true)
+                }
+                setAlarm(context)
+            }
         }
         super.onReceive(context, intent)
     }
@@ -170,6 +177,7 @@ class MVVWidget : AppWidgetProvider() {
         private const val BROADCAST_RELOAD_ALL_ALARM = "de.tum.in.newtumcampus.intent.action.BROADCAST_MVV_WIDGET_RELOAD_ALL_ALARM"
         private const val BROADCAST_RELOAD_ALL = "de.tum.in.newtumcampus.intent.action.BROADCAST_MVV_WIDGET_RELOAD_ALL"
         internal const val MVV_WIDGET_FORCE_RELOAD = "de.tum.in.newtumcampus.intent.action.MVV_WIDGET_FORCE_RELOAD"
+        internal const val MVV_WIDGET_RELOAD_AFTER_CONFIG_CHANGES = "de.tum.in.newtumcampus.intent.action.MVV_WIDGET_RELOAD_AFTER_CONFIG_CHANGES"
 
         const val UPDATE_ALARM_DELAY = 60 * 1000
         const val UPDATE_TRIGGER_DELAY = 20 * 1000

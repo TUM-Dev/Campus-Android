@@ -149,7 +149,7 @@ class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
 
         // update widget
         val reloadIntent = Intent(this, MVVWidget::class.java)
-        reloadIntent.action = MVVWidget.MVV_WIDGET_FORCE_RELOAD
+        reloadIntent.action = MVVWidget.MVV_WIDGET_RELOAD_AFTER_CONFIG_CHANGES
         reloadIntent.putExtra(EXTRA_APPWIDGET_ID, appWidgetId)
         sendBroadcast(reloadIntent)
 
