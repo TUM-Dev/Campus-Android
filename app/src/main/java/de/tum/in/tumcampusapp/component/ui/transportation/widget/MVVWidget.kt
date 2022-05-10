@@ -123,7 +123,7 @@ class MVVWidget : AppWidgetProvider() {
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
         }
         val pendingReloadIntent = PendingIntent.getBroadcast(
-                context, appWidgetId, reloadIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+                context, appWidgetId, reloadIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         remoteViews.setOnClickPendingIntent(R.id.mvv_widget_reload_button, pendingReloadIntent)
 
         val isAutoReload = widgetDepartures.autoReload
