@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.tumui.grades
 
 import android.content.Context
-import android.database.DataSetObserver
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -45,12 +44,12 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
 
 
 
-        initUIDisplayElements(holder, exam)
+        initUIDisplayElements(holder, exam,position)
         initUIEditElements(holder, exam);
         return view
     }
 
-    private fun initUIDisplayElements(holder: ViewHolder, exam: Exam) {
+    private fun initUIDisplayElements(holder: ViewHolder, exam: Exam, position: Int) {
         holder.nameTextView.text = exam.course
         holder.gradeTextView.text = exam.grade
 
@@ -77,8 +76,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
      * Init the ui Elements to change the parameters of the grade
      */
     private fun initUIEditElements(holder: ViewHolder, exam: Exam) {
-        holder.editTextGradeWeights.setText(exam.weight.toString())
-        holder.editTextGradeCredits.setText(exam.credits_new.toString())
+
         holder.checkBoxUseGradeForAverage.isChecked = exam.gradeUsedInAverage
         adaptUIToCheckboxStatus(exam.gradeUsedInAverage, holder, exam)
 
@@ -134,6 +132,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
                 adaptUIToCheckboxStatus(false, holder, exam)
                 holder.editTextGradeWeights.setText(exam.weight.toString())
                 holder.editTextGradeCredits.setText(exam.credits_new.toString())
+                notifyDataSetChanged()
                 // localGradesFragment.storeExamListInSharedPreferences()
 
             }
@@ -142,6 +141,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
         holder.editTextGradeWeights.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 exam.weight = s.toString().toDouble()
+                notifyDataSetChanged()
                 //  localGradesFragment.storeExamListInSharedPreferences()
             }
 
@@ -154,7 +154,9 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
 
         holder.editTextGradeCredits.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
+                Log.d("Insert Credits",exam.course+" Store credits: "+s.toString())
                 exam.credits_new = s.toString().toInt()
+                notifyDataSetChanged()
                 // localGradesFragment.storeExamListInSharedPreferences()
             }
 
@@ -168,10 +170,10 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
         holder.checkBoxUseGradeForAverage.setOnCheckedChangeListener { buttonView, isChecked ->
             exam.gradeUsedInAverage = !isChecked
             adaptUIToCheckboxStatus(isChecked, holder, exam)
+            notifyDataSetChanged()
         }
-
-
-        // holder.gradeTextViewDeleteCustomGrade.
+        holder.editTextGradeWeights.setText(exam.weight.toString())
+        holder.editTextGradeCredits.setText(exam.credits_new.toString())
     }
 
     private fun adaptUIToCheckboxStatus(
@@ -237,9 +239,5 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
 
     companion object {
         private val DATE_FORMAT = DateTimeFormat.mediumDate()
-    }
-
-    override fun registerDataSetObserver(observer: DataSetObserver?) {
-        super.registerDataSetObserver(observer)
     }
 }
