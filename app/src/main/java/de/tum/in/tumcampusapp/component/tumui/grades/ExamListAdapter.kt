@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.grades
 
 import android.content.Context
+import android.database.DataSetObserver
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -127,7 +128,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
                 adaptUIToCheckboxStatus(false, holder, exam)
                 holder.editTextGradeWeights.setText(exam.weight.toString())
                 holder.editTextGradeCredits.setText(exam.credits_new.toString())
-                localGradesFragment.storeExamListInSharedPreferences()
+               // localGradesFragment.storeExamListInSharedPreferences()
 
             }
 
@@ -135,7 +136,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
         holder.editTextGradeWeights.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 exam.weight = s.toString().toDouble()
-                localGradesFragment.storeExamListInSharedPreferences()
+              //  localGradesFragment.storeExamListInSharedPreferences()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -148,7 +149,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
         holder.editTextGradeCredits.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 exam.credits_new = s.toString().toInt()
-                localGradesFragment.storeExamListInSharedPreferences()
+               // localGradesFragment.storeExamListInSharedPreferences()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -234,4 +235,11 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
         private val DATE_FORMAT = DateTimeFormat.mediumDate()
     }
 
+    override fun getCount(): Int {
+        return super.getCount()
+    }
+
+    override fun registerDataSetObserver(observer: DataSetObserver?) {
+        super.registerDataSetObserver(observer)
+    }
 }

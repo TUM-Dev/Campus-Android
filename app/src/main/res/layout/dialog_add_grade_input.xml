@@ -124,7 +124,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/material_default_padding"
                 android:labelFor="@+id/editTextSemester"
-                android:text="Year of the start of the semester (e.g. 22)" />
+                android:text="Year of the start of the semester (e.g. 22WS or 21SoSe)" />
 
             <EditText
                 android:id="@+id/editTextSemester"
@@ -132,8 +132,8 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="date"
-                android:hint="yy"
-                android:text="22"/>
+                android:hint="yyWS"
+                android:text="22WS"/>
 
 
         </LinearLayout>
