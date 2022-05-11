@@ -630,6 +630,11 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         return globalEditOn;
     }
 
+    fun deleteExamFromList(exam: Exam) {
+        exams.remove(exam)
+        (gradesListView.adapter as ExamListAdapter).notifyDataSetChanged()
+    }
+
     companion object {
         private const val KEY_SHOW_BAR_CHART = "showPieChart"
         private const val KEY_SPINNER_POSITION = "spinnerPosition"

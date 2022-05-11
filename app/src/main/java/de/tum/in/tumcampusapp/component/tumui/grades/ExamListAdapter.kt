@@ -3,9 +3,11 @@ package de.tum.`in`.tumcampusapp.component.tumui.grades
 import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
@@ -93,6 +95,28 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
             )
         }
 
+        holder.gradeTextViewDeleteCustomGrade.setOnClickListener(object: View.OnClickListener{
+            override fun onClick(p0: View?) {
+                val dialog = AlertDialog.Builder(localGradesFragment.requireContext())
+                    .setTitle("Delete Exam")
+                    .setMessage(
+                        "Should this exam be irrevocably deleted"
+                    )
+                    .setPositiveButton("Delete") { dialogInterface, whichButton ->
+
+                       localGradesFragment.deleteExamFromList(exam)
+                    }
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .create()
+                    .apply {
+                        window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
+                    };
+                dialog.show()
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(localGradesFragment.getResources().getColor(R.color.text_primary));
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(localGradesFragment.getResources().getColor(R.color.text_primary));
+            }
+
+        })
 
 
         holder.buttonResetGradeParameters.setOnClickListener(object : View.OnClickListener {
@@ -200,7 +224,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
             itemView.findViewById(R.id.checkBoxUseGradeForAverage)
         val buttonResetGradeParameters: Button =
             itemView.findViewById(R.id.buttonResetGradeParameters)
-        val gradeTextViewDeleteCustomGrade: TextView =
+        val gradeTextViewDeleteCustomGrade: ImageView =
             itemView.findViewById(R.id.gradeTextViewDeleteCustomGrade)
 
 
