@@ -6,14 +6,13 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.ArrayMap
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.Adapter
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -151,6 +150,11 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     }
 
     private fun changeNumberOfExams() {
+        //(binding.gradesListView.adapter as ExamListAdapter).
+        //(binding.gradesListView.adapter as ExamListAdapter).itemList=exams
+        //(binding.gradesListView.adapter as ExamListAdapter).notifyDataSetChanged()
+
+
         binding.gradesListView.adapter = ExamListAdapter(requireContext(), exams, this)
         storeExamListInSharedPreferences()
     }
@@ -482,54 +486,113 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
 
         val dialog = AlertDialog.Builder(requireContext())
-            .setTitle("Add a new exam manually")
+            .setTitle("Add a New Exam")
             .setMessage(
                 "Grades are normally added automatically. In case special grades should be added, this can be done here. " +
-                        "Manually added Exams can be deleted later on.\n\n* required"
+                        "Manually added Exams can be deleted later on."
             )
             .setView(view)
-            .setPositiveButton(R.string.create) { dialogInterface, whichButton ->
-
-                val title =
-                    view.findViewById<EditText>(R.id.editTextaddGradeCourseName).text.toString()
-                val grade = view.findViewById<EditText>(R.id.editTextAddGrade).text.toString()
-                val examiner =
-                    view.findViewById<EditText>(R.id.editTextaddGradeExaminer).text.toString()
-                val weight =
-                    (view.findViewById<EditText>(R.id.editTextAddGradeWeight).text.toString()).toDouble()
-                val credits =
-                    Integer.parseInt(view.findViewById<EditText>(R.id.editTextaddGradeCredits).text.toString())
-                val date = view.findViewById<EditText>(R.id.editTextAddGradeDate).text.toString()
-                val semester = view.findViewById<EditText>(R.id.editTextSemester).text.toString()
-
-                val typeConverter1 =
-                    de.tum.`in`.tumcampusapp.api.tumonline.converters.DateTimeConverter()
-                val exam = Exam(
-                    title,
-                    typeConverter1.read(date),
-                    examiner,
-                    grade,
-                    null,
-                    "",
-                    semester,
-                    weight,
-                    false,
-                    credits,
-                    true
-                )
-                addExamToList(exam)
-
-            }
+            .setPositiveButton(R.string.create, null)
             .setNegativeButton(android.R.string.cancel, null)
             .create()
             .apply {
                 window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
             };
+
+        dialog.setOnShowListener {
+            val button: Button =
+                (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
+            button.setOnClickListener(View.OnClickListener { // TODO Do something
+
+                val titleView =
+                    view.findViewById<EditText>(R.id.editTextaddGradeCourseName)
+                val gradeView = view.findViewById<EditText>(R.id.editTextAddGrade)
+                val examinerView =
+                    view.findViewById<EditText>(R.id.editTextaddGradeExaminer)
+                val weightView =
+                    view.findViewById<EditText>(R.id.editTextAddGradeWeight)
+                val creditsView =
+                    view.findViewById<EditText>(R.id.editTextaddGradeCredits)
+                val dateView = view.findViewById<EditText>(R.id.editTextAddGradeDate)
+                val semesterView = view.findViewById<EditText>(R.id.editTextSemester)
+
+                val title =
+                    titleView.text.toString()
+                var grade = gradeView.text.toString()
+                val examiner =
+                    examinerView.text.toString()
+
+                var weight=1.0
+                try {
+                    weight = (weightView.text.toString()).toDouble()
+                } catch (exception: Exception) {
+                    weight = 1.0
+                }
+
+                val credits =
+                    Integer.parseInt(creditsView.text.toString())
+                val date = dateView.text.toString()
+                val semester = semesterView.text.toString()
+
+                /* view.findViewById<EditText>(R.id.editTextSemester).setError("Wrong semester format. Correct two numbers for the year +WS/S")
+                 //todo input sanitization -> highlight wrong fields in red
+                 view.findViewById<EditText>(R.id.editTextSemester).getBackground()
+                     .setTint(getResources().getColor(R.color.grade_3_7))
+ */
+
+                //todo allen den error status wieder wegnehmen
+                semesterView.setError(null)
+                weightView.setError(null)
+                var changesRequired = false
+                if (semester.length < 3) {
+                    changesRequired = true;
+                    semesterView.setError("Wrong semester format: Too short. Correct two numbers for the year + W/S")
+                } else if (!(semester.get(2).equals('W') || semester.get(2)
+                        .equals('w') || semester.get(2).equals('S') || semester.get(2).equals('s'))
+                ) {
+                    changesRequired = true;
+                    semesterView.setError("Wrong semester format: Term not specified. Correct two numbers for the year + W/S")
+                }
+
+                if (weight < 0.0) {
+                    changesRequired = true;
+                    weightView.setError("Wrong weight format: Weights can not be negative.")
+                }
+
+                if (grade.equals("0") || grade.equals("0,0")) {
+                    grade="B"
+                }
+
+                if (!changesRequired) {
+                    val typeConverter1 =
+                        de.tum.`in`.tumcampusapp.api.tumonline.converters.DateTimeConverter()
+                    val exam = Exam(
+                        title,
+                        typeConverter1.read(date),
+                        examiner,
+                        grade,
+                        null,
+                        "",
+                        semester,
+                        weight,
+                        false,
+                        credits,
+                        true
+                    )
+                    addExamToList(exam)
+                    dialog.dismiss()
+                }
+            })
+        }
+
         dialog.show()
+
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
             .setTextColor(getResources().getColor(R.color.text_primary));
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)
             .setTextColor(getResources().getColor(R.color.text_primary));
+
+
     }
 
     /**
@@ -736,3 +799,4 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         )
     }
 }
+
