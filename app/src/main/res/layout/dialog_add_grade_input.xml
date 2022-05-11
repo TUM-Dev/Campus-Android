@@ -26,7 +26,8 @@
                 android:id="@+id/editTextaddGradeCourseName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Course name"
+                android:hint="Course Name"
+                android:text="Thesis"
                 android:imeOptions="actionGo"
                 android:inputType="textCapWords|textAutoComplete"
                 android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
@@ -36,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/material_default_padding"
                 android:labelFor="@+id/editTextAddGrade"
-                android:text="Grade *" />
+                android:text="Grade (comma separated) *" />
 
             <EditText
                 android:id="@+id/editTextAddGrade"
@@ -44,7 +45,8 @@
                 android:layout_height="wrap_content"
                 android:autofillHints="1.0"
                 android:ems="10"
-                android:hint="1.0"
+                android:hint="1,0"
+                android:text="1,0"
                 android:imeOptions="actionGo"
                 android:inputType="numberDecimal" />
 
@@ -60,6 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Examiner name"
+                android:text="@string/unknown"
                 android:imeOptions="actionGo"
                 android:inputType="textCapWords|textAutoComplete"
                 android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
@@ -112,7 +115,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="date" />
+                android:inputType="date"
+                android:hint="dd.mm.yy"
+                android:text="01.01.22"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/material_default_padding"
+                android:labelFor="@+id/editTextSemester"
+                android:text="Year of the start of the semester (e.g. 22)" />
+
+            <EditText
+                android:id="@+id/editTextSemester"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="date"
+                android:hint="yy"
+                android:text="22"/>
 
 
         </LinearLayout>
