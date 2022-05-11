@@ -4,7 +4,6 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.graphics.Color
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.ArrayMap
 import android.util.Log
@@ -34,7 +33,6 @@ import de.tum.`in`.tumcampusapp.databinding.FragmentGradesBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import kotlinx.android.synthetic.main.fragment_grades.*
-import org.jetbrains.anko.commit
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -157,6 +155,31 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         examsDownloaded.get(1).course = "Advanced Singing and Clapping"
         examsDownloaded.get(1).grade = "3,7"
         examsDownloaded.get(1).examiner = "-"*/
+
+        /* val title = "title"
+         val grade = "1,0"
+         val examiner = "examiner"
+         val weight = 1.0
+         val credits = 4
+         val date = "11.03.22"
+
+         val typeConverter1 =
+             de.tum.`in`.tumcampusapp.api.tumonline.converters.DateTimeConverter()
+         val exam: Exam = Exam(
+             title,
+             typeConverter1.read(date),
+             examiner,
+             grade,
+             "schriftlich",
+             "31415",
+             "22W",
+             weight,
+             false,
+             credits,
+             true
+         )
+         exams.add(exam)
+         Log.d("new exam", "exam was added")*/
 
         if (!examsDownloaded.isEmpty()) {
             examsDownloaded.forEach { it.credits_new = 6; it.weight = 1.0; }
@@ -438,13 +461,35 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             .setView(view)
             .setPositiveButton(R.string.create) { dialogInterface, whichButton ->
 
-                val name = view.findViewById<EditText>(R.id.editTextaddGradeCourseName).text
-                val grade = view.findViewById<EditText>(R.id.editTextAddGrade).text
-                val examiner = view.findViewById<EditText>(R.id.editTextaddGradeExaminer).text
-                val weight = view.findViewById<EditText>(R.id.editTextAddGradeWeight).text
-                val credits = view.findViewById<EditText>(R.id.editTextaddGradeCredits).text
-                val date = view.findViewById<EditText>(R.id.editTextAddGradeDate).text
-                Log.d("custom dialog", "positive button, Grade: " + grade)
+                val title =
+                    view.findViewById<EditText>(R.id.editTextaddGradeCourseName).text.toString()
+                val grade = view.findViewById<EditText>(R.id.editTextAddGrade).text.toString()
+                val examiner =
+                    view.findViewById<EditText>(R.id.editTextaddGradeExaminer).text.toString()
+                val weight =
+                    (view.findViewById<EditText>(R.id.editTextAddGradeWeight).text.toString()).toDouble()
+                val credits =
+                    Integer.parseInt(view.findViewById<EditText>(R.id.editTextaddGradeCredits).text.toString())
+                val date = view.findViewById<EditText>(R.id.editTextAddGradeDate).text.toString()
+                val semester = view.findViewById<EditText>(R.id.editTextSemester).text.toString()
+
+                val typeConverter1 =
+                    de.tum.`in`.tumcampusapp.api.tumonline.converters.DateTimeConverter()
+                val exam: Exam = Exam(
+                    title,
+                    typeConverter1.read(date),
+                    examiner,
+                    grade,
+                    null,
+                    "",
+                    semester,
+                    weight,
+                    false,
+                    credits,
+                    true
+                )
+                addExamToList(exam)
+
             }
             .setNegativeButton(android.R.string.cancel, null)
             .create()
@@ -452,8 +497,10 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
             };
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.text_primary));
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.text_primary));
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+            .setTextColor(getResources().getColor(R.color.text_primary));
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            .setTextColor(getResources().getColor(R.color.text_primary));
     }
 
     /**
