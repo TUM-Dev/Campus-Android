@@ -141,7 +141,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
+            <ImageView
                 android:id="@+id/gradeTextViewDeleteCustomGrade"
                 android:layout_width="wrap_content"
                 android:layout_height="64dp"
@@ -150,9 +150,9 @@
                 android:background="@drawable/grade_background"
                 android:gravity="center"
                 android:padding="@dimen/material_default_padding"
-                android:tint="@android:color/white"
+                app:tint="@android:color/white"
                 android:layout_marginBottom="8dp"
-                android:drawableStart="@drawable/ic_clear"
+                android:src="@drawable/ic_clear"
                 />
 
             <TextView
