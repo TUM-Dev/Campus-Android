@@ -84,19 +84,21 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
 
         if (localGradesFragment.getGlobalEdit()) {
             holder.editGradesContainer.visibility = View.GONE
-            holder.gradeTextViewDeleteCustomGrade.visibility=View.GONE
-        } else {//todo show button only if the exam was added manually - test the parameter
+            holder.gradeTextViewDeleteCustomGrade.visibility = View.GONE
+        } else {
             holder.editGradesContainer.visibility = View.VISIBLE
-            holder.gradeTextViewDeleteCustomGrade.visibility=View.VISIBLE
-            holder.gradeTextViewDeleteCustomGrade.background.setTint(
-                ContextCompat.getColor(
-                    context,
-                    R.color.grade_default
+            if (exam.manuallyAdded) {
+                holder.gradeTextViewDeleteCustomGrade.visibility = View.VISIBLE
+                holder.gradeTextViewDeleteCustomGrade.background.setTint(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.grade_default
+                    )
                 )
-            )
+            }
         }
 
-        holder.gradeTextViewDeleteCustomGrade.setOnClickListener(object: View.OnClickListener{
+        holder.gradeTextViewDeleteCustomGrade.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
                 val dialog = AlertDialog.Builder(localGradesFragment.requireContext())
                     .setTitle("Delete Exam")
@@ -105,7 +107,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
                     )
                     .setPositiveButton("Delete") { dialogInterface, whichButton ->
 
-                       localGradesFragment.deleteExamFromList(exam)
+                        localGradesFragment.deleteExamFromList(exam)
                     }
                     .setNegativeButton(android.R.string.cancel, null)
                     .create()
@@ -113,8 +115,12 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
                         window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
                     };
                 dialog.show()
-                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(localGradesFragment.getResources().getColor(R.color.text_primary));
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(localGradesFragment.getResources().getColor(R.color.text_primary));
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(
+                    localGradesFragment.getResources().getColor(R.color.text_primary)
+                );
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(
+                    localGradesFragment.getResources().getColor(R.color.text_primary)
+                );
             }
 
         })
@@ -128,7 +134,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
                 adaptUIToCheckboxStatus(false, holder, exam)
                 holder.editTextGradeWeights.setText(exam.weight.toString())
                 holder.editTextGradeCredits.setText(exam.credits_new.toString())
-               // localGradesFragment.storeExamListInSharedPreferences()
+                // localGradesFragment.storeExamListInSharedPreferences()
 
             }
 
@@ -136,7 +142,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
         holder.editTextGradeWeights.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 exam.weight = s.toString().toDouble()
-              //  localGradesFragment.storeExamListInSharedPreferences()
+                //  localGradesFragment.storeExamListInSharedPreferences()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -149,7 +155,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
         holder.editTextGradeCredits.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 exam.credits_new = s.toString().toInt()
-               // localGradesFragment.storeExamListInSharedPreferences()
+                // localGradesFragment.storeExamListInSharedPreferences()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -165,7 +171,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
         }
 
 
-       // holder.gradeTextViewDeleteCustomGrade.
+        // holder.gradeTextViewDeleteCustomGrade.
     }
 
     private fun adaptUIToCheckboxStatus(
@@ -227,16 +233,10 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
             itemView.findViewById(R.id.buttonResetGradeParameters)
         val gradeTextViewDeleteCustomGrade: ImageView =
             itemView.findViewById(R.id.gradeTextViewDeleteCustomGrade)
-
-
     }
 
     companion object {
         private val DATE_FORMAT = DateTimeFormat.mediumDate()
-    }
-
-    override fun getCount(): Int {
-        return super.getCount()
     }
 
     override fun registerDataSetObserver(observer: DataSetObserver?) {
