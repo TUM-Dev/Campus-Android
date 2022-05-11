@@ -34,6 +34,9 @@ import de.tum.`in`.tumcampusapp.databinding.FragmentGradesBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import kotlinx.android.synthetic.main.fragment_grades.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -61,6 +64,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     private val exams = mutableListOf<Exam>();
 
     private val examSharedPreferences: String = "ExamList";
+    private val scope = CoroutineScope(newSingleThreadContext("storetopreferences"))
 
 
     private val grades: Array<String> by lazy {
@@ -138,6 +142,15 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
     fun addExamToList(exam: Exam) {
         exams.add(exam)
+        changeNumberOfExams()
+    }
+
+    fun deleteExamFromList(exam: Exam) {
+        exams.remove(exam)
+        changeNumberOfExams()
+    }
+
+    private fun changeNumberOfExams() {
         binding.gradesListView.adapter = ExamListAdapter(requireContext(), exams, this)
         storeExamListInSharedPreferences()
     }
@@ -212,6 +225,12 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     }
 
     fun storeExamListInSharedPreferences() {
+
+        scope.launch { storeExamListInSharedPreferencesThread() }
+
+    }
+
+    private fun storeExamListInSharedPreferencesThread() {
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
         val dateTimeConverter = DateTimeConverter()
         val gson = GsonBuilder().registerTypeAdapter(DateTime::class.java, dateTimeConverter)
@@ -690,10 +709,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         return globalEditOn;
     }
 
-    fun deleteExamFromList(exam: Exam) {
-        exams.remove(exam)
-        (gradesListView.adapter as ExamListAdapter).notifyDataSetChanged()
-    }
 
     companion object {
         private const val KEY_SHOW_BAR_CHART = "showPieChart"
