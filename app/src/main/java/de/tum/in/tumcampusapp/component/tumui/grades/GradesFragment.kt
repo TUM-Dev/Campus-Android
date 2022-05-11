@@ -11,6 +11,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.Adapter
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
@@ -137,6 +138,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
     fun addExamToList(exam: Exam) {
         exams.add(exam)
+        binding.gradesListView.adapter = ExamListAdapter(requireContext(), exams, this)
         storeExamListInSharedPreferences()
     }
 
@@ -145,9 +147,11 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      */
     private fun addAllNewItemsToExamList(examsDownloaded: MutableList<Exam>) {
         val examsTitles = exams.map { it.course }
-        exams.clear()
-/*
         examsDownloaded.removeAll { examsTitles.contains(it.course) }
+        //  exams.clear()
+        //  storeExamListInSharedPreferences()
+/*
+
         examsDownloaded.get(0).course = "Esotheric Programming"
         examsDownloaded.get(0).grade = "1,0"
         examsDownloaded.get(0).examiner = "-"
@@ -216,7 +220,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         with(sharedPref.edit()) {
             putString(examSharedPreferences, jsonlist)
             apply()
-
         }
     }
 
@@ -257,6 +260,13 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         val courses = exams.map { it.course }
         gradesStore.store(courses)
     }
+
+    override fun onPause() {
+
+        storeExamListInSharedPreferences()
+        super.onPause()
+    }
+
 
     /**
      * Displays the pie chart and its data set with the provided grade distribution.
@@ -475,7 +485,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
                 val typeConverter1 =
                     de.tum.`in`.tumcampusapp.api.tumonline.converters.DateTimeConverter()
-                val exam: Exam = Exam(
+                val exam = Exam(
                     title,
                     typeConverter1.read(date),
                     examiner,
@@ -600,6 +610,9 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     private fun changeEditMode() {
         with(binding) {
             globalEditOn = !globalEditOn;
+            if (globalEditOn) {      //save values as the edit mode is switched off.
+                storeExamListInSharedPreferences()
+            }
 
             // Refresh all values for the ui
             (gradesListView.adapter as ExamListAdapter).notifyDataSetChanged()
