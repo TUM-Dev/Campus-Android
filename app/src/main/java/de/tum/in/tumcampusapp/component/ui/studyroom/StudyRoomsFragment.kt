@@ -82,7 +82,6 @@ class StudyRoomsFragment : FragmentForAccessingTumCabe<List<StudyRoomGroup>>(
             sectionsPagerAdapter.setStudyRoomGroupId(selectedRoomGroupId)
             pager.adapter = sectionsPagerAdapter
         }
-
     }
 
     private fun loadStudyRooms() {

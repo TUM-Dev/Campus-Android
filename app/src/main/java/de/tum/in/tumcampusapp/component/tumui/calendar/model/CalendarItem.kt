@@ -83,7 +83,7 @@ data class CalendarItem(
     fun getEventLocation(): String {
         return Pattern.compile("\\([A-Z0-9\\.]+\\)")
                 .matcher(location)
-                .replaceAll("")!!
+                .replaceAll("")
                 .trim { it <= ' ' }
     }
 

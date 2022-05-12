@@ -34,10 +34,9 @@ class LectureDetailsActivity : ActivityForAccessingTumOnline<LectureDetailsRespo
 
     private lateinit var binding: ActivityLecturedetailsBinding
 
-
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         binding = ActivityLecturedetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -115,6 +114,5 @@ class LectureDetailsActivity : ActivityForAccessingTumOnline<LectureDetailsRespo
 
             appointmentsButton.isEnabled = true
         }
-
     }
 }

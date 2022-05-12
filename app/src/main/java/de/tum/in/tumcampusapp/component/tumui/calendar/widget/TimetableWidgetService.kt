@@ -21,7 +21,7 @@ class TimetableWidgetService : RemoteViewsService() {
         return TimetableRemoteViewFactory(this.applicationContext, intent)
     }
 
-    private class TimetableRemoteViewFactory internal constructor(
+    private class TimetableRemoteViewFactory(
         private val applicationContext: Context,
         intent: Intent
     ) : RemoteViewsFactory {

@@ -115,7 +115,7 @@ class FeedbackPresenter @Inject constructor(
         var photoFile: File? = null
         try {
             photoFile = ImageUtils.createImageFile(context)
-            currentPhotoPath = photoFile!!.absolutePath
+            currentPhotoPath = photoFile.absolutePath
         } catch (e: IOException) {
             Utils.log(e)
         }

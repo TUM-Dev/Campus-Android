@@ -51,7 +51,7 @@ public class RoomLocationsDaoTest {
         CalendarItem item = new CalendarItem(Integer.toString(nr),
                                              "good",
                                              "dummy url",
-                                             "title " + Integer.toString(nr),
+                                             "title " + nr,
                                              "dummy description",
                                              startDate,
                                              startDate,

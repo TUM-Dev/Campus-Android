@@ -46,10 +46,10 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         binding = ActivityStartupBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+
         injector.downloadComponent().inject(this)
 
         // Only use Crashlytics if we are not compiling debug
