@@ -149,6 +149,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/grade_background"
+                android:backgroundTint="@color/grade_default"
                 android:gravity="center"
                 android:padding="@dimen/material_default_padding"
                 android:src="@drawable/ic_clear"

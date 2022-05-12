@@ -1,11 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.grades
 
 import android.content.Context
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.View
-import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -53,8 +49,8 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
         holder.nameTextView.text = exam.course
         holder.gradeTextView.text = exam.grade
 
-        val gradeColor = exam.getGradeColor(context)
-        holder.gradeTextView.background.setTint(gradeColor)
+
+        adaptUIToCheckboxStatus(holder,exam)
 
         val date: String = if (exam.date == null) {
             context.getString(R.string.not_specified)
@@ -79,6 +75,8 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
         if (localGradesFragment.getGlobalEdit()) {
             holder.editGradesContainer.visibility = View.GONE
             holder.gradeTextViewDeleteCustomGrade.visibility = View.GONE
+
+            //todo init für den chackbox status
         } else {
             holder.editGradesContainer.visibility = View.VISIBLE
 
@@ -96,7 +94,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
     private fun initListenerDeleteCustomGrade(exam: Exam, holder: ViewHolder) {
         if (exam.manuallyAdded) {
             holder.gradeTextViewDeleteCustomGrade.visibility = View.VISIBLE
-            adaptUIToCheckboxStatus(holder, exam)
+           // adaptUIToCheckboxStatus(holder, exam)
 
             holder.gradeTextViewDeleteCustomGrade.setOnClickListener {
                 val dialog = AlertDialog.Builder(localGradesFragment.requireContext())
@@ -138,6 +136,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
                 val helper = holder.editTextGradeWeights.text.toString().toDouble()
                 if (exam.weight != helper) {
                     exam.weight = helper;
+                    localGradesFragment.storeExamListInSharedPreferences()
                 }
             }
         }
@@ -147,6 +146,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
                 val helper = holder.editTextGradeCredits.text.toString().toInt()
                 if (exam.credits_new != helper) {
                     exam.credits_new = helper;
+                    localGradesFragment.storeExamListInSharedPreferences()
                 }
             }
         }
@@ -168,6 +168,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
                 exam.credits_new = 6
                 holder.editTextGradeWeights.setText(exam.weight.toString())
                 holder.editTextGradeCredits.setText(exam.credits_new.toString())
+                localGradesFragment.storeExamListInSharedPreferences()
             }
 
         })
@@ -180,8 +181,9 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
         holder.checkBoxUseGradeForAverage.isChecked = exam.gradeUsedInAverage
         adaptUIToCheckboxStatus(holder, exam)
         holder.checkBoxUseGradeForAverage.setOnCheckedChangeListener { _, isChecked ->
-            exam.gradeUsedInAverage = !isChecked
+            exam.gradeUsedInAverage = isChecked
             adaptUIToCheckboxStatus(holder, exam)
+            localGradesFragment.storeExamListInSharedPreferences()
         }
     }
 
