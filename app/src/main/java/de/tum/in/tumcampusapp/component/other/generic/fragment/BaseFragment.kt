@@ -48,9 +48,6 @@ abstract class BaseFragment<T>(
     private var apiCall: Call<T>? = null
     private var hadSuccessfulRequest = false
 
-    private val toolbar: Toolbar?
-        get() = requireActivity().findViewById<Toolbar?>(R.id.toolbar)
-
     private val contentView: ViewGroup
         get() = requireActivity().findViewById<ViewGroup>(android.R.id.content).getChildAt(0) as ViewGroup
 
@@ -80,7 +77,11 @@ abstract class BaseFragment<T>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupToolbar()
+
+        view.findViewById<Toolbar>(R.id.toolbar)?.let {
+            setupToolbar(it)
+        }
+
         // If content is refreshable setup the SwipeRefreshLayout
         swipeRefreshLayout?.apply {
             setOnRefreshListener(this@BaseFragment)
@@ -92,13 +93,8 @@ abstract class BaseFragment<T>(
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        toolbar?.setTitle(titleResId)
-    }
-
-    private fun setupToolbar() {
-        val toolbar = toolbar ?: return
+    private fun setupToolbar(toolbar: Toolbar) {
+        toolbar.setTitle(titleResId)
         baseActivity.setSupportActionBar(toolbar)
 
         baseActivity.supportActionBar?.let {

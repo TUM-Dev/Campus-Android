@@ -48,7 +48,7 @@ class BaseNavigationActivity : BaseActivity(
 
     private val fragmentCallbacks = object : FragmentManager.FragmentLifecycleCallbacks() {
         override fun onFragmentStarted(fm: FragmentManager, f: Fragment) {
-            initDrawerToggle()
+            initDrawerToggle(f)
             updateDrawer()
         }
     }
@@ -97,9 +97,9 @@ class BaseNavigationActivity : BaseActivity(
         }
     }
 
-    private fun initDrawerToggle() {
+    private fun initDrawerToggle(fragment: Fragment) {
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        val toolbar = fragment.requireView().findViewById<Toolbar>(R.id.toolbar)
 
         drawerToggle?.let { drawerLayout.removeDrawerListener(it) }
 
