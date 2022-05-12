@@ -48,7 +48,7 @@
                 android:hint="1,0"
                 android:text="1,0"
                 android:imeOptions="actionGo"
-                android:inputType="" />
+                android:inputType="numberDecimal" />
 
             <TextView
                 android:layout_width="match_parent"
