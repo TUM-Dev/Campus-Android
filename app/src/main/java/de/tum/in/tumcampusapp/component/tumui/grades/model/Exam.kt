@@ -39,7 +39,7 @@ data class Exam(
     @PropertyElement(name = "weight")
     var weight: Double = 1.0,
     @PropertyElement(name = "gradeUsedInAverage")
-    var gradeUsedInAverage: Boolean = false,
+    var gradeUsedInAverage: Boolean = true,
     @PropertyElement(name = "subjectcredits")               //must not be "credits" -> otherwise naming collision will occur
     var credits_new: Int = 6,
     @PropertyElement(name = "examManuallyAdded")

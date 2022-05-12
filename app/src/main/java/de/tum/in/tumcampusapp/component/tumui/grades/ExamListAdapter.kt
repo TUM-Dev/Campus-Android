@@ -45,15 +45,13 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
 
 
         initUIEditElements(holder, exam)
-        initUIDisplayElements(holder, exam, position)
+        initUIDisplayElements(holder, exam)
         return view
     }
 
-    private fun initUIDisplayElements(holder: ViewHolder, exam: Exam, position: Int) {
+    private fun initUIDisplayElements(holder: ViewHolder, exam: Exam) {
         holder.nameTextView.text = exam.course
         holder.gradeTextView.text = exam.grade
-
-        //   val newPosition=itemList.indexOf(exam)
 
         val gradeColor = exam.getGradeColor(context)
         holder.gradeTextView.background.setTint(gradeColor)
@@ -78,28 +76,29 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
      * Init the ui Elements to change the parameters of the grade
      */
     private fun initUIEditElements(holder: ViewHolder, exam: Exam) {
-
-        holder.checkBoxUseGradeForAverage.isChecked = exam.gradeUsedInAverage
-        adaptUIToCheckboxStatus(exam.gradeUsedInAverage, holder, exam)
-
         if (localGradesFragment.getGlobalEdit()) {
             holder.editGradesContainer.visibility = View.GONE
             holder.gradeTextViewDeleteCustomGrade.visibility = View.GONE
         } else {
             holder.editGradesContainer.visibility = View.VISIBLE
-            if (exam.manuallyAdded) {
-                holder.gradeTextViewDeleteCustomGrade.visibility = View.VISIBLE
-                holder.gradeTextViewDeleteCustomGrade.background.setTint(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.grade_default
-                    )
-                )
-            }
-        }
 
-        holder.gradeTextViewDeleteCustomGrade.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(p0: View?) {
+            initListenerDeleteCustomGrade(exam, holder)
+            initListenerEditTexts(exam, holder)
+            initListenerResetGradeParameters(exam, holder)
+            initCheckBoxUsedInAverage(exam, holder)
+        }
+    }
+
+
+    /**
+     * Adds a Clicklistener which will show confirmation dialog whether the exam should actually be deleted.
+     */
+    private fun initListenerDeleteCustomGrade(exam: Exam, holder: ViewHolder) {
+        if (exam.manuallyAdded) {
+            holder.gradeTextViewDeleteCustomGrade.visibility = View.VISIBLE
+            adaptUIToCheckboxStatus(holder, exam)
+
+            holder.gradeTextViewDeleteCustomGrade.setOnClickListener {
                 val dialog = AlertDialog.Builder(localGradesFragment.requireContext())
                     .setTitle("Delete Exam")
                     .setMessage(
@@ -122,78 +121,84 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
                     localGradesFragment.getResources().getColor(R.color.text_primary)
                 );
             }
+        } else {
+            holder.gradeTextViewDeleteCustomGrade.visibility = View.GONE
+        }
 
-        })
+    }
 
 
-        holder.buttonResetGradeParameters.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(p0: View?) {
-                exam.gradeUsedInAverage = false
-                exam.weight = 1.0
-                exam.credits_new = 6
-                adaptUIToCheckboxStatus(false, holder, exam)
-                holder.editTextGradeWeights.setText(exam.weight.toString())
-                holder.editTextGradeCredits.setText(exam.credits_new.toString())
-                notifyDataSetChanged()
-                // localGradesFragment.storeExamListInSharedPreferences()
-
-            }
-
-        })
-        holder.editTextGradeWeights.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                exam.weight = s.toString().toDouble()
-                notifyDataSetChanged()
-                //  localGradesFragment.storeExamListInSharedPreferences()
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-        })
-
-        /* holder.editTextGradeCredits.addTextChangedListener(object : TextWatcher {
-             override fun afterTextChanged(s: Editable?) {
-                 Log.d("Insert Credits",exam.course+" Store credits: "+s.toString())
-              //  exam.credits_new = s.toString().toInt()
-              //  notifyDataSetChanged()
-                 // localGradesFragment.storeExamListInSharedPreferences()
-             }
-
-             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-             }
-
-             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-             }
-         })*/
-        holder.editTextGradeCredits.setOnFocusChangeListener { v, hasFocus ->
+    /**
+     * Adds on Focus change listeners which store the value to the exam object if and only if the
+     * user finished editing the exam.
+     */
+    private fun initListenerEditTexts(exam: Exam, holder: ViewHolder) {
+        holder.editTextGradeWeights.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
-                val helper = holder.editTextGradeCredits.text.toString().toInt()
-                if (exam.credits_new != helper) {
-                    Log.d("Focus test: ", "stored: " + exam.course)
-                    exam.credits_new = helper;
+                val helper = holder.editTextGradeWeights.text.toString().toDouble()
+                if (exam.weight != helper) {
+                    exam.weight = helper;
                 }
-
             }
         }
 
-        holder.checkBoxUseGradeForAverage.setOnCheckedChangeListener { buttonView, isChecked ->
-            exam.gradeUsedInAverage = !isChecked
-            adaptUIToCheckboxStatus(isChecked, holder, exam)
-            notifyDataSetChanged()
+        holder.editTextGradeCredits.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                val helper = holder.editTextGradeCredits.text.toString().toInt()
+                if (exam.credits_new != helper) {
+                    exam.credits_new = helper;
+                }
+            }
         }
         holder.editTextGradeWeights.setText(exam.weight.toString())
         holder.editTextGradeCredits.setText(exam.credits_new.toString())
     }
 
+
+    /**
+     * Adds a ClickListener to reset one exam to the default values and adapts the UI accordingly
+     */
+    private fun initListenerResetGradeParameters(exam: Exam, holder: ViewHolder) {
+        holder.buttonResetGradeParameters.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(p0: View?) {
+                exam.gradeUsedInAverage = true
+                adaptUIToCheckboxStatus(holder, exam)
+
+                exam.weight = 1.0
+                exam.credits_new = 6
+                holder.editTextGradeWeights.setText(exam.weight.toString())
+                holder.editTextGradeCredits.setText(exam.credits_new.toString())
+            }
+
+        })
+    }
+
+    /**
+     * Initialises the state of the checkbox and adapts the ui accordingly
+     */
+    private fun initCheckBoxUsedInAverage(exam: Exam, holder: ViewHolder) {
+        holder.checkBoxUseGradeForAverage.isChecked = exam.gradeUsedInAverage
+        adaptUIToCheckboxStatus(holder, exam)
+        holder.checkBoxUseGradeForAverage.setOnCheckedChangeListener { _, isChecked ->
+            exam.gradeUsedInAverage = !isChecked
+            adaptUIToCheckboxStatus(holder, exam)
+        }
+    }
+
+    /**
+     * Enables/disables Edittexts, and adapts the color of the grade bar on the right side
+     */
     private fun adaptUIToCheckboxStatus(
-        gradeUsedInAverage: Boolean,
         holder: ViewHolder,
         exam: Exam
     ) {
-        if (gradeUsedInAverage) {
+        if (exam.gradeUsedInAverage) {
+            holder.editTextGradeCredits.isEnabled = true;
+            holder.editTextGradeWeights.isEnabled = true;
+            val gradeColor = exam.getGradeColor(context)
+            holder.gradeTextView.background.setTint(gradeColor)
+            holder.gradeTextView.setTextColor(ContextCompat.getColor(context, R.color.white))
+        } else {
             holder.editTextGradeCredits.isEnabled = false;
             holder.editTextGradeWeights.isEnabled = false;
             holder.gradeTextView.background.setTint(
@@ -208,12 +213,6 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
                     R.color.grade_default
                 )
             )
-        } else {
-            holder.editTextGradeCredits.isEnabled = true;
-            holder.editTextGradeWeights.isEnabled = true;
-            val gradeColor = exam.getGradeColor(context)
-            holder.gradeTextView.background.setTint(gradeColor)
-            holder.gradeTextView.setTextColor(ContextCompat.getColor(context, R.color.white))
         }
     }
 
