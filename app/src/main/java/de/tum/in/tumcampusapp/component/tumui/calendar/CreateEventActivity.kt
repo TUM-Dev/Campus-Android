@@ -48,12 +48,12 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     private var apiCallsFailed = 0
 
     private val repeatHelper = RepeatHelper()
-    
+
     private lateinit var binding: ActivityCreateEventBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         binding = ActivityCreateEventBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -83,7 +83,6 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
             })
         }
 
-
         val extras = intent.extras
         with(binding) {
             if (extras != null) {
@@ -104,7 +103,6 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         initStartEndDates(extras)
         setDateAndTimeListeners()
         initRepeatingSettingsListeners()
-
 
         binding.createEventButton.setOnClickListener {
             if (end.isBefore(start)) {

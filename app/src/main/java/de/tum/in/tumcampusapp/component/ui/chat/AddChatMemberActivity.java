@@ -43,7 +43,7 @@ public class AddChatMemberActivity extends BaseActivity {
 
     // for delayed suggestions
     private Handler delayHandler;
-    private Runnable suggestionRunnable = this::getSuggestions;
+    private final Runnable suggestionRunnable = this::getSuggestions;
 
     private List<ChatMember> suggestions;
 

@@ -107,6 +107,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
 
         loadGrades(CacheControl.USE_CACHE)
+
         // Tracks whether the user has used the calendar module before. This is used in determining when to prompt for a
         // Google Play store review
         Utils.setSetting(requireContext(), Const.HAS_VISITED_GRADES, true)
@@ -243,7 +244,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         gradesStore.store(courses)
     }
 
-
     /**
      * Displays the pie chart and its data set with the provided grade distribution.
      *
@@ -284,7 +284,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
                 invalidate()
             }
-
         }
     }
 

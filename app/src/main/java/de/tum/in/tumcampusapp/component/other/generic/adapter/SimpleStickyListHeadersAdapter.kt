@@ -72,7 +72,7 @@ abstract class SimpleStickyListHeadersAdapter<T : SimpleStickyListHeadersAdapter
 
     // Header view
     private class HeaderViewHolder {
-        internal var text: TextView? = null
+        var text: TextView? = null
     }
 
     interface SimpleStickyListItem {

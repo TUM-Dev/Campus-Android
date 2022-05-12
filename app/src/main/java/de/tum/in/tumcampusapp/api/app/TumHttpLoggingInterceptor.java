@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import java.io.EOFException;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.concurrent.TimeUnit;
 
@@ -26,7 +27,7 @@ import static okhttp3.internal.platform.Platform.INFO;
 
 public final class TumHttpLoggingInterceptor implements Interceptor {
 
-    private static final Charset UTF8 = Charset.forName("UTF-8");
+    private static final Charset UTF8 = StandardCharsets.UTF_8;
     private final Logger logger;
 
     public interface Logger {

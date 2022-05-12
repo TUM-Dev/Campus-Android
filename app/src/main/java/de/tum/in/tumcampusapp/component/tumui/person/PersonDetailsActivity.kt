@@ -28,12 +28,12 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
 
     private lateinit var personId: String
     private var employee: Employee? = null
-    
+
     private lateinit var binding: ActivityPersonDetailsBinding
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         binding = ActivityPersonDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

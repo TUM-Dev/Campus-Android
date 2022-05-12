@@ -27,10 +27,10 @@ public class ChatHistoryAdapter extends BaseAdapter {
 
     private List<ChatMessage> chatHistoryList = new ArrayList<>();
 
-    private Context mContext;
-    private OnRetrySendListener mRetryListener;
+    private final Context mContext;
+    private final OnRetrySendListener mRetryListener;
 
-    private ChatMember currentChatMember;
+    private final ChatMember currentChatMember;
 
     public ChatHistoryAdapter(Context context, ChatMember member) {
         mContext = context;

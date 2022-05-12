@@ -75,7 +75,7 @@ class NewsController @Inject constructor(
 
         // Load all news sources
         try {
-            val sources = api.getNewsSources()
+            val sources = api.newsSources
             if (sources != null) {
                 newsSourcesDao.insert(sources)
             }

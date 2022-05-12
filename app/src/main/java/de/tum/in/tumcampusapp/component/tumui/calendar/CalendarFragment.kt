@@ -88,7 +88,7 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
 
         // The week view adds a horizontal bar below the Toolbar. When refreshing, the refresh
         // spinner covers it. Therefore, we adjust the spinner's end position.
-        swipeRefreshLayout?.let {
+        swipeRefreshLayout.let {
             val startOffset = it.progressViewStartOffset
             val endOffset = it.progressViewEndOffset
             it.setProgressViewOffset(false, startOffset, endOffset)
@@ -166,8 +166,8 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        val menuItemExportGoogle = menu?.findItem(R.id.action_export_calendar)
-        val menuItemDeleteCalendar = menu?.findItem(R.id.action_delete_calendar)
+        val menuItemExportGoogle = menu.findItem(R.id.action_export_calendar)
+        val menuItemDeleteCalendar = menu.findItem(R.id.action_delete_calendar)
 
         menuItemExportGoogle?.isEnabled = isFetched
         menuItemDeleteCalendar?.isEnabled = isFetched
@@ -178,10 +178,10 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater?.inflate(R.menu.menu_sync_calendar, menu)
+        inflater.inflate(R.menu.menu_sync_calendar, menu)
 
-        menuItemSwitchView = menu?.findItem(R.id.action_switch_view_mode)
-        menuItemFilterCanceled = menu?.findItem(R.id.action_calendar_filter_canceled)
+        menuItemSwitchView = menu.findItem(R.id.action_switch_view_mode)
+        menuItemFilterCanceled = menu.findItem(R.id.action_calendar_filter_canceled)
 
         refreshWeekView()
         initFilterCheckboxes()

@@ -18,7 +18,7 @@ public class MemberSuggestionsListAdapter extends BaseAdapter implements Filtera
 
     private List<ChatMember> originalData;
     private List<ChatMember> members;
-    private Context mContext;
+    private final Context mContext;
 
     // constructor
     MemberSuggestionsListAdapter(Context context, List<ChatMember> members) {

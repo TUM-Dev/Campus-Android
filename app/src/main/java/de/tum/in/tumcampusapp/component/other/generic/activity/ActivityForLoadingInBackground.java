@@ -18,7 +18,7 @@ import io.reactivex.schedulers.Schedulers;
 public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActivity<T> {
 
     private Disposable loadingDisposable;
-    private AtomicBoolean isRunning = new AtomicBoolean(false);
+    private final AtomicBoolean isRunning = new AtomicBoolean(false);
     private S[] lastArg;
 
     /**
