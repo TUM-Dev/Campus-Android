@@ -12,6 +12,7 @@ import de.tum.`in`.tumcampusapp.api.tumonline.converters.DateTimeConverter
 import de.tum.`in`.tumcampusapp.component.notifications.model.FutureNotification
 import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
 import de.tum.`in`.tumcampusapp.component.other.locations.model.Geo
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainActivity
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
@@ -60,7 +61,7 @@ data class Event(
         val timestamp = DateTimeUtils.formatFutureTime(startTimeInDeviceTimeZone, context)
         val duration = endTimeInDeviceTimeZone.millis - startTimeInDeviceTimeZone.millis
 
-        val intent = Intent(context, MainActivity::class.java)
+        val intent = Intent(context, CalendarActivity::class.java)
         val pending = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
         val notification = NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
