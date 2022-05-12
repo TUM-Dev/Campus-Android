@@ -34,6 +34,7 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import kotlinx.android.synthetic.main.fragment_grades.*
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.newSingleThreadContext
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
@@ -63,6 +64,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     private val exams = mutableListOf<Exam>()
 
     private val examSharedPreferences: String = "ExamList"
+
     private val scope = CoroutineScope(newSingleThreadContext("storetopreferences"))
 
 
@@ -355,7 +357,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         val numberFormat = NumberFormat.getInstance(Locale.GERMAN)
         val grades = exams
             .filter { it.isPassed && it.gradeUsedInAverage }
-            .map { numberFormat.parse(it.grade).toDouble() * it.credits_new * it.weight }
+            .map { (numberFormat.parse(it.grade.toString())?.toDouble() ?: 1.0) * it.credits_new * it.weight }
         val combinedgradefactors = exams
             .filter { it.isPassed && it.gradeUsedInAverage }
             .map { it.credits_new.toDouble() * it.weight }
@@ -364,7 +366,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         val gradeSum = grades.sum()
         val factorSum = combinedgradefactors.sum()
         if (factorSum<=0){
-            return 0.0;
+            return 0.0
         }
         return gradeSum / factorSum.toDouble()
     }
@@ -415,7 +417,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 visibility = View.VISIBLE
             }
         }
-        binding.floatingButtonAddExamGrade.setOnClickListener({ openAddGradeDialog() })
+        binding.floatingButtonAddExamGrade.setOnClickListener { openAddGradeDialog() }
 
 
         binding.filterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {

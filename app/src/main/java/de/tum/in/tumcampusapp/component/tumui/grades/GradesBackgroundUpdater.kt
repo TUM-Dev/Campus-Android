@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.tumui.grades
 
 import android.content.Context
-import android.util.Log
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
