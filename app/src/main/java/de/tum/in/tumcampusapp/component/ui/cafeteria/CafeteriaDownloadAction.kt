@@ -10,7 +10,6 @@ class CafeteriaDownloadAction @Inject constructor(
 ) : DownloadWorker.Action {
 
     override fun execute(cacheBehaviour: CacheControl) {
-        // TODO this cache behaviour might be bit weird. Set it to force while making changes to the DB.
-        cafeteriaRemoteRepository.fetchCafeterias(true)
+        cafeteriaRemoteRepository.fetchCafeterias(cacheBehaviour == CacheControl.BYPASS_CACHE)
     }
 }
