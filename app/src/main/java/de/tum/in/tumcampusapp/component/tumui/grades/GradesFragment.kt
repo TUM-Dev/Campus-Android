@@ -59,7 +59,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
     private var showBarChartAfterRotate = false
 
-    private var globalEditOn = false
+    private var globalEditOFF = true
     private val exams = mutableListOf<Exam>()
 
     private val examSharedPreferences: String = "ExamList"
@@ -150,11 +150,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     }
 
     private fun changeNumberOfExams() {
-        //(binding.gradesListView.adapter as ExamListAdapter).
-        //(binding.gradesListView.adapter as ExamListAdapter).itemList=exams
-        //(binding.gradesListView.adapter as ExamListAdapter).notifyDataSetChanged()
-
-
         binding.gradesListView.adapter = ExamListAdapter(requireContext(), exams, this)
         storeExamListInSharedPreferences()
     }
@@ -165,8 +160,8 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     private fun addAllNewItemsToExamList(examsDownloaded: MutableList<Exam>) {
         val examsTitles = exams.map { it.course }
         examsDownloaded.removeAll { examsTitles.contains(it.course) }
-        //  exams.clear()
-        //  storeExamListInSharedPreferences()
+       //  exams.clear()
+       //   storeExamListInSharedPreferences()
 
 
         if (!examsDownloaded.isEmpty()) {
@@ -176,7 +171,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         }
     }
 
-    fun loadExamListFromSharedPreferences() {
+    private fun loadExamListFromSharedPreferences() {
         try {
             val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
             val dateTimeConverter = DateTimeConverter()
@@ -195,10 +190,8 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         // Exam list could no be loaded - will always e a list, some error occurred - clear to prevent any intermediate error states
     }
 
-    private fun storeExamListInSharedPreferences() {
-
+    fun storeExamListInSharedPreferences() {
         scope.launch { storeExamListInSharedPreferencesThread() }
-
     }
 
     private fun storeExamListInSharedPreferencesThread() {
@@ -244,16 +237,12 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
     }
 
+
+    //todo replace in the final version - can be done with exisiting data
     fun storeGradedCourses(exams: List<Exam>) {
         val gradesStore = GradesStore(defaultSharedPreferences)
         val courses = exams.map { it.course }
         gradesStore.store(courses)
-    }
-
-    override fun onPause() {
-
-        storeExamListInSharedPreferences()
-        super.onPause()
     }
 
 
@@ -566,7 +555,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                         "",
                         semester,
                         weight,
-                        false,
+                        true,
                         credits,
                         true
                     )
@@ -682,13 +671,13 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      */
     private fun changeEditMode() {
         with(binding) {
-            globalEditOn = !globalEditOn
+            globalEditOFF = !globalEditOFF
             initUIVisibility()
         }
     }
 
     private fun initUIVisibility() {
-        if (!globalEditOn) {
+        if (!globalEditOFF) {
             frameLayoutAverageGrade?.visibility = View.GONE
             floatingbuttonAddExamGrade?.visibility = View.VISIBLE
         } else {
@@ -755,7 +744,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     }
 
     fun getGlobalEdit(): Boolean {
-        return globalEditOn
+        return globalEditOFF
     }
 
 
