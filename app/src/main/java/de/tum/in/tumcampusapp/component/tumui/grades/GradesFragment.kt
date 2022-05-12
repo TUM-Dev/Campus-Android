@@ -59,10 +59,10 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
     private var showBarChartAfterRotate = false
 
-    private var globalEditOn = false;
-    private val exams = mutableListOf<Exam>();
+    private var globalEditOn = false
+    private val exams = mutableListOf<Exam>()
 
-    private val examSharedPreferences: String = "ExamList";
+    private val examSharedPreferences: String = "ExamList"
     private val scope = CoroutineScope(newSingleThreadContext("storetopreferences"))
 
 
@@ -167,40 +167,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         examsDownloaded.removeAll { examsTitles.contains(it.course) }
         //  exams.clear()
         //  storeExamListInSharedPreferences()
-/*
 
-        examsDownloaded.get(0).course = "Esotheric Programming"
-        examsDownloaded.get(0).grade = "1,0"
-        examsDownloaded.get(0).examiner = "-"
-
-        examsDownloaded.get(1).course = "Advanced Singing and Clapping"
-        examsDownloaded.get(1).grade = "3,7"
-        examsDownloaded.get(1).examiner = "-"*/
-
-        /* val title = "title"
-         val grade = "1,0"
-         val examiner = "examiner"
-         val weight = 1.0
-         val credits = 4
-         val date = "11.03.22"
-
-         val typeConverter1 =
-             de.tum.`in`.tumcampusapp.api.tumonline.converters.DateTimeConverter()
-         val exam: Exam = Exam(
-             title,
-             typeConverter1.read(date),
-             examiner,
-             grade,
-             "schriftlich",
-             "31415",
-             "22W",
-             weight,
-             false,
-             credits,
-             true
-         )
-         exams.add(exam)
-         Log.d("new exam", "exam was added")*/
 
         if (!examsDownloaded.isEmpty()) {
             examsDownloaded.forEach { it.credits_new = 6; it.weight = 1.0; }
@@ -216,19 +183,19 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             val gson = GsonBuilder().registerTypeAdapter(DateTime::class.java, dateTimeConverter)
                 .create()
             val listType = object : TypeToken<List<Exam>>() {}.type
-            val jsonString = sharedPref.getString(examSharedPreferences, "");
+            val jsonString = sharedPref.getString(examSharedPreferences, "")
             if (jsonString != null) {
-                exams.clear();
+                exams.clear()
                 exams.addAll(gson.fromJson(jsonString, listType))
                 return
             }
         } catch (e: Exception) {
-            exams.clear();
+            exams.clear()
         }
-        // Exam list could no be loaded - will always e a list, some error occured - clear to prevent any intermediate error states
+        // Exam list could no be loaded - will always e a list, some error occurred - clear to prevent any intermediate error states
     }
 
-    fun storeExamListInSharedPreferences() {
+    private fun storeExamListInSharedPreferences() {
 
         scope.launch { storeExamListInSharedPreferencesThread() }
 
@@ -253,7 +220,9 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      */
     class DateTimeConverter @Inject constructor() : JsonSerializer<DateTime?>,
         JsonDeserializer<DateTime?> {
-        private val dateTimeFormatter: DateTimeFormatter
+        private val dateTimeFormatter: DateTimeFormatter =
+            DateTimeFormat.forPattern("YYYY-MM-dd HH:mm")
+
         override fun serialize(
             src: DateTime?,
             typeOfSrc: Type?,
@@ -273,9 +242,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             } else dateTimeFormatter.parseDateTime(json.asString)
         }
 
-        init {
-            dateTimeFormatter = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm")
-        }
     }
 
     fun storeGradedCourses(exams: List<Exam>) {
@@ -352,7 +318,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
                 // only label grades that are associated with at least one grade
                 data.setValueFormatter(object : ValueFormatter() {
-                    override fun getFormattedValue(value: Float): String? {
+                    override fun getFormattedValue(value: Float): String {
                         if (value > 0.0)
                             return value.toString()
                         return ""
@@ -399,11 +365,19 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     private fun calculateAverageGrade(exams: List<Exam>): Double {
         val numberFormat = NumberFormat.getInstance(Locale.GERMAN)
         val grades = exams
-            .filter { it.isPassed }
-            .map { numberFormat.parse(it.grade).toDouble() }
-//todo multiply by it.weight and credits and theen divide by the combined numerb of used numbers
+            .filter { it.isPassed && !it.gradeUsedInAverage }
+            .map { numberFormat.parse(it.grade).toDouble() * it.credits_new * it.weight }
+        val combinedgradefactors = exams
+            .filter { it.isPassed && !it.gradeUsedInAverage }
+            .map { it.credits_new.toDouble() * it.weight }
+
+
         val gradeSum = grades.sum()
-        return gradeSum / grades.size.toDouble()
+        val factorSum = combinedgradefactors.sum()
+        if (factorSum<=0){
+            return 0.0;
+        }
+        return gradeSum / factorSum.toDouble()
     }
 
     /**
@@ -497,96 +471,86 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             .create()
             .apply {
                 window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-            };
+            }
 
         dialog.setOnShowListener {
             val button: Button =
-                (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
-            button.setOnClickListener(View.OnClickListener { // TODO Do something
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            button.setOnClickListener {
 
-                val titleView =
-                    view.findViewById<EditText>(R.id.editTextaddGradeCourseName)
+                val titleView = view.findViewById<EditText>(R.id.editTextaddGradeCourseName)
                 val gradeView = view.findViewById<EditText>(R.id.editTextAddGrade)
-                val examinerView =
-                    view.findViewById<EditText>(R.id.editTextaddGradeExaminer)
-                val weightView =
-                    view.findViewById<EditText>(R.id.editTextAddGradeWeight)
-                val creditsView =
-                    view.findViewById<EditText>(R.id.editTextaddGradeCredits)
+                val examinerView = view.findViewById<EditText>(R.id.editTextaddGradeExaminer)
+                val weightView = view.findViewById<EditText>(R.id.editTextAddGradeWeight)
+                val creditsView = view.findViewById<EditText>(R.id.editTextaddGradeCredits)
                 val dateView = view.findViewById<EditText>(R.id.editTextAddGradeDate)
                 val semesterView = view.findViewById<EditText>(R.id.editTextSemester)
 
-                val title =
-                    titleView.text.toString()
-                val grade = gradeView.text.toString().toDouble()
-                val examiner =
-                    examinerView.text.toString()
+                val title = titleView.text.toString()
+                val grade = gradeView.text.toString()
+                val examiner = examinerView.text.toString()
+                val credits = Integer.parseInt(creditsView.text.toString())
+                val date = dateView.text.toString()
+                val semester = semesterView.text.toString()
 
-                var weight = 1.0
+                var weight: Double
                 try {
                     weight = (weightView.text.toString()).toDouble()
                 } catch (exception: Exception) {
                     weight = 1.0
                 }
 
-                val credits =
-                    Integer.parseInt(creditsView.text.toString())
-                val date = dateView.text.toString()
-                val semester = semesterView.text.toString()
 
-                /* view.findViewById<EditText>(R.id.editTextSemester).setError("Wrong semester format. Correct two numbers for the year +WS/S")
-                 //todo input sanitization -> highlight wrong fields in red
-                 view.findViewById<EditText>(R.id.editTextSemester).getBackground()
-                     .setTint(getResources().getColor(R.color.grade_3_7))
- */
 
-                //todo allen den error status wieder wegnehmen
-                titleView.setError(null)
-                gradeView.setError(null)
-                examinerView.setError(null)
-                weightView.setError(null)
-                creditsView.setError(null)
-                dateView.setError(null)
-                semesterView.setError(null)
+                titleView.error = null
+                gradeView.error = null
+                examinerView.error = null
+                weightView.error = null
+                creditsView.error = null
+                dateView.error = null
+                semesterView.error = null
 
                 var changesRequired = false
                 if (semester.length < 3) {                                                  //semester sanitization
-                    changesRequired = true;
-                    semesterView.setError("Wrong semester format: Too short. Correct two numbers for the year + W/S")
+                    changesRequired = true
+                    semesterView.error =
+                        "Wrong semester format: Too short. Correct two numbers for the year + W/S"
                 } else if (!(semester.get(2).equals('W') || semester.get(2)
                         .equals('w') || semester.get(2).equals('S') || semester.get(2).equals('s'))
                 ) {
-                    changesRequired = true;
-                    semesterView.setError("Wrong semester format: Term not specified. Correct two numbers for the year + W/S")
+                    changesRequired = true
+                    semesterView.error =
+                        "Wrong semester format: Term not specified. Correct two numbers for the year + W/S"
                 }
 
                 if (weight < 0.0) {             //weight sanitization
-                    changesRequired = true;
-                    weightView.setError("Wrong weight format: Weights can not be negative.")
+                    changesRequired = true
+                    weightView.error = "Wrong weight format: Weights can not be negative."
                 }
 
-
+                val gradedouble = grade.replace(",", ".").toDouble()
                 var gradeString = ""
-                if (grade <= 5.0 && grade >= 1.0 || grade == 0.0) {
-                    if (grade == 0.0) {
+                if (gradedouble <= 5.0 && gradedouble >= 1.0 || gradedouble == 0.0) {
+                    if (gradedouble == 0.0) {
                         gradeString = "B"
                     } else {
-                        gradeString = grade.toString()
+                        gradeString = grade.toString().replace(".",",")
                     }
                 } else {
-                    changesRequired = true;
-                    gradeView.setError("Wrong grade format: Grade must be between 1.0 and 5.0 or equal to 0.")
+                    changesRequired = true
+                    gradeView.error =
+                        "Wrong grade format: Grade must be between 1.0 and 5.0 or equal to 0."
                 }
 
 
                 if (title.length < 1) {             //title sanitization
-                    changesRequired = true;
-                    titleView.setError("Insert a course title.")
+                    changesRequired = true
+                    titleView.error = "Insert a course title."
                 }
 
                 if (credits < 1) {             //title sanitization
-                    changesRequired = true;
-                    creditsView.setError("Invalid amount of credits. Must be greater than 0.")
+                    changesRequired = true
+                    creditsView.error = "Invalid amount of credits. Must be greater than 0."
                 }
 
 
@@ -609,15 +573,15 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                     addExamToList(exam)
                     dialog.dismiss()
                 }
-            })
+            }
         }
 
         dialog.show()
 
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
-            .setTextColor(getResources().getColor(R.color.text_primary));
+            .setTextColor(resources.getColor(R.color.text_primary))
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            .setTextColor(getResources().getColor(R.color.text_primary));
+            .setTextColor(resources.getColor(R.color.text_primary))
 
 
     }
@@ -669,7 +633,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             showListButton?.visibility = if (showChart) View.VISIBLE else View.GONE
             showChartButton?.visibility = if (showChart) View.GONE else View.VISIBLE
 
-            val refreshLayout = swipeRefreshLayout ?: return
+            val refreshLayout = swipeRefreshLayout
 
             if (chartsContainer.visibility == View.GONE) {
                 crossFadeViews(refreshLayout, chartsContainer)
@@ -697,9 +661,9 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater?.inflate(R.menu.menu_activity_grades, menu)
-        barMenuItem = menu?.findItem(R.id.bar_chart_menu)
-        pieMenuItem = menu?.findItem(R.id.pie_chart_menu)
+        inflater.inflate(R.menu.menu_activity_grades, menu)
+        barMenuItem = menu.findItem(R.id.bar_chart_menu)
+        pieMenuItem = menu.findItem(R.id.pie_chart_menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -718,13 +682,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      */
     private fun changeEditMode() {
         with(binding) {
-            globalEditOn = !globalEditOn;
-            if (globalEditOn) {      //save values as the edit mode is switched off.
-                storeExamListInSharedPreferences()
-            }
-
-            // Refresh all values for the ui
-            (gradesListView.adapter as ExamListAdapter).notifyDataSetChanged()
+            globalEditOn = !globalEditOn
             initUIVisibility()
         }
     }
@@ -734,7 +692,8 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             frameLayoutAverageGrade?.visibility = View.GONE
             floatingbuttonAddExamGrade?.visibility = View.VISIBLE
         } else {
-
+            storeExamListInSharedPreferences()
+            showExams(exams)
             frameLayoutAverageGrade?.visibility = View.VISIBLE
             floatingbuttonAddExamGrade?.visibility = View.GONE
         }
@@ -796,7 +755,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     }
 
     fun getGlobalEdit(): Boolean {
-        return globalEditOn;
+        return globalEditOn
     }
 
 
