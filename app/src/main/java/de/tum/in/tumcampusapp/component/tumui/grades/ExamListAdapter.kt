@@ -5,6 +5,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -43,15 +44,16 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
         val exam = itemList[position]
 
 
-
-        initUIDisplayElements(holder, exam,position)
-        initUIEditElements(holder, exam);
+        initUIEditElements(holder, exam)
+        initUIDisplayElements(holder, exam, position)
         return view
     }
 
     private fun initUIDisplayElements(holder: ViewHolder, exam: Exam, position: Int) {
         holder.nameTextView.text = exam.course
         holder.gradeTextView.text = exam.grade
+
+        //   val newPosition=itemList.indexOf(exam)
 
         val gradeColor = exam.getGradeColor(context)
         holder.gradeTextView.background.setTint(gradeColor)
@@ -152,20 +154,30 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
             }
         })
 
-        holder.editTextGradeCredits.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                Log.d("Insert Credits",exam.course+" Store credits: "+s.toString())
-                exam.credits_new = s.toString().toInt()
-                notifyDataSetChanged()
-                // localGradesFragment.storeExamListInSharedPreferences()
-            }
+        /* holder.editTextGradeCredits.addTextChangedListener(object : TextWatcher {
+             override fun afterTextChanged(s: Editable?) {
+                 Log.d("Insert Credits",exam.course+" Store credits: "+s.toString())
+              //  exam.credits_new = s.toString().toInt()
+              //  notifyDataSetChanged()
+                 // localGradesFragment.storeExamListInSharedPreferences()
+             }
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+             }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+             }
+         })*/
+        holder.editTextGradeCredits.setOnFocusChangeListener { v, hasFocus ->
+            if (!hasFocus) {
+                val helper = holder.editTextGradeCredits.text.toString().toInt()
+                if (exam.credits_new != helper) {
+                    Log.d("Focus test: ", "stored: " + exam.course)
+                    exam.credits_new = helper;
+                }
+
             }
-        })
+        }
 
         holder.checkBoxUseGradeForAverage.setOnCheckedChangeListener { buttonView, isChecked ->
             exam.gradeUsedInAverage = !isChecked
