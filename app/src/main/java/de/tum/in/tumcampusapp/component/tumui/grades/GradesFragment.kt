@@ -518,11 +518,11 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
                 val title =
                     titleView.text.toString()
-                var grade = gradeView.text.toString()
+                val grade = gradeView.text.toString().toDouble()
                 val examiner =
                     examinerView.text.toString()
 
-                var weight=1.0
+                var weight = 1.0
                 try {
                     weight = (weightView.text.toString()).toDouble()
                 } catch (exception: Exception) {
@@ -541,10 +541,16 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
  */
 
                 //todo allen den error status wieder wegnehmen
-                semesterView.setError(null)
+                titleView.setError(null)
+                gradeView.setError(null)
+                examinerView.setError(null)
                 weightView.setError(null)
+                creditsView.setError(null)
+                dateView.setError(null)
+                semesterView.setError(null)
+
                 var changesRequired = false
-                if (semester.length < 3) {
+                if (semester.length < 3) {                                                  //semester sanitization
                     changesRequired = true;
                     semesterView.setError("Wrong semester format: Too short. Correct two numbers for the year + W/S")
                 } else if (!(semester.get(2).equals('W') || semester.get(2)
@@ -554,14 +560,35 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                     semesterView.setError("Wrong semester format: Term not specified. Correct two numbers for the year + W/S")
                 }
 
-                if (weight < 0.0) {
+                if (weight < 0.0) {             //weight sanitization
                     changesRequired = true;
                     weightView.setError("Wrong weight format: Weights can not be negative.")
                 }
 
-                if (grade.equals("0") || grade.equals("0,0")) {
-                    grade="B"
+
+                var gradeString = ""
+                if (grade <= 5.0 && grade >= 1.0 || grade == 0.0) {
+                    if (grade == 0.0) {
+                        gradeString = "B"
+                    } else {
+                        gradeString = grade.toString()
+                    }
+                } else {
+                    changesRequired = true;
+                    gradeView.setError("Wrong grade format: Grade must be between 1.0 and 5.0 or equal to 0.")
                 }
+
+
+                if (title.length < 1) {             //title sanitization
+                    changesRequired = true;
+                    titleView.setError("Insert a course title.")
+                }
+
+                if (credits < 1) {             //title sanitization
+                    changesRequired = true;
+                    creditsView.setError("Invalid amount of credits. Must be greater than 0.")
+                }
+
 
                 if (!changesRequired) {
                     val typeConverter1 =
@@ -570,7 +597,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                         title,
                         typeConverter1.read(date),
                         examiner,
-                        grade,
+                        gradeString,
                         null,
                         "",
                         semester,
