@@ -118,7 +118,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="5"
-                        android:text="@string/hide_grade" />
+                        android:text="@string/use_grade_in_average" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonResetGradeParameters"

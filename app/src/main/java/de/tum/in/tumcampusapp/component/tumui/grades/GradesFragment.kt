@@ -365,10 +365,10 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     private fun calculateAverageGrade(exams: List<Exam>): Double {
         val numberFormat = NumberFormat.getInstance(Locale.GERMAN)
         val grades = exams
-            .filter { it.isPassed && !it.gradeUsedInAverage }
+            .filter { it.isPassed && it.gradeUsedInAverage }
             .map { numberFormat.parse(it.grade).toDouble() * it.credits_new * it.weight }
         val combinedgradefactors = exams
-            .filter { it.isPassed && !it.gradeUsedInAverage }
+            .filter { it.isPassed && it.gradeUsedInAverage }
             .map { it.credits_new.toDouble() * it.weight }
 
 

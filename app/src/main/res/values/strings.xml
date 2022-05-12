@@ -85,7 +85,7 @@
     <string name="credits" translatable="false">ECTS</string>
     <string name="no_grades">You don\'t have any grades yet.</string>
     <string name="reset_grade">Reset Grade</string>
-    <string name="hide_grade">Hide Grade</string>
+    <string name="use_grade_in_average">Use Grade</string>
     <string name="grade_weight_label">Grade Weight:</string>
     <string name="credits_grade_label">Credits:</string>
 

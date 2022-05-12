@@ -58,7 +58,7 @@
     <string name="date">Datum</string>
     <string name="no_grades">Du hast noch keine Noten, die angezeigt werden könnten.</string>
     <string name="reset_grade">Note Zurücksetzten</string>
-    <string name="hide_grade">Note ausblenden</string>
+    <string name="use_grade_in_average">Note verwenden</string>
     <string name="grade_weight_label">Gewichtung der Note:</string>
     <string name="credits_grade_label">Credits:</string>
 
