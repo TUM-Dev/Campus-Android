@@ -20,6 +20,7 @@ class LocationImportAction @Inject constructor(
 
     @Throws(IOException::class)
     override fun execute(cacheBehaviour: CacheControl) {
+        // TODO Fix references for cafeterias
         val openingHours = tumCabeClient.fetchOpeningHours(context.getString(R.string.language))
         database.locationDao().removeCache()
         database.locationDao().replaceInto(openingHours)
