@@ -71,7 +71,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
     public static ChatRoom mCurrentOpenChatRoom; // determines whether there will be a notification or not
 
     private ChatMessageViewModel chatMessageViewModel;
-    private CompositeDisposable disposables = new CompositeDisposable();
+    private final CompositeDisposable disposables = new CompositeDisposable();
 
     private ListView messagesListView;
     private ChatHistoryAdapter chatHistoryAdapter;

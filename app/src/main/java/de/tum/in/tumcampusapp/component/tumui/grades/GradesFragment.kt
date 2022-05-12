@@ -152,8 +152,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 legend.textColor = getColor(resources, R.color.text_primary, null)
 
                 invalidate()
-        }
-
+            }
         }
     }
 
@@ -273,13 +272,12 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 requireContext(), R.layout.simple_spinner_item_actionbar, filters)
 
         with(binding) {
-            filterSpinner?.apply {
+            filterSpinner.apply {
                 adapter = spinnerArrayAdapter
                 setSelection(spinnerPosition)
                 visibility = View.VISIBLE
             }
         }
-
 
         binding.filterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
@@ -344,7 +342,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             showListButton?.visibility = if (showChart) View.VISIBLE else View.GONE
             showChartButton?.visibility = if (showChart) View.GONE else View.VISIBLE
 
-            val refreshLayout = swipeRefreshLayout ?: return
+            val refreshLayout = swipeRefreshLayout
 
             if (chartsContainer.visibility == View.GONE) {
                 crossFadeViews(refreshLayout, chartsContainer)
@@ -372,9 +370,9 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater?.inflate(R.menu.menu_activity_grades, menu)
-        barMenuItem = menu?.findItem(R.id.bar_chart_menu)
-        pieMenuItem = menu?.findItem(R.id.pie_chart_menu)
+        inflater.inflate(R.menu.menu_activity_grades, menu)
+        barMenuItem = menu.findItem(R.id.bar_chart_menu)
+        pieMenuItem = menu.findItem(R.id.pie_chart_menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 

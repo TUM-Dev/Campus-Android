@@ -116,7 +116,6 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
                 view.context.startActivity(browserIntent)
             }
         }
-
     }
 
     private fun updateBuyButton() {
@@ -130,7 +129,6 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
             completePurchaseButton.isEnabled = enabled
             completePurchaseButton.alpha = alpha
         }
-
     }
 
     private fun purchaseTicket() {
@@ -264,7 +262,6 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
                 }
             }
         }
-
     }
 
     private fun initPaymentSession() {
@@ -281,7 +278,6 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
                     loadingLayout.isVisible = isCommunicating
                     TransitionManager.beginDelayedTransition(loadingLayout)
                 }
-
             }
 
             override fun onError(errorCode: Int, errorMessage: String?) {

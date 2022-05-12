@@ -19,7 +19,7 @@ class MVVWidgetService : RemoteViewsService() {
         return MVVRemoteViewFactory(this.applicationContext, intent)
     }
 
-    private inner class MVVRemoteViewFactory internal constructor(private val applicationContext: Context, intent: Intent) : RemoteViewsFactory {
+    private inner class MVVRemoteViewFactory(private val applicationContext: Context, intent: Intent) : RemoteViewsFactory {
         private var departures: List<Departure> = ArrayList()
         private val appWidgetID: Int = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
         private val forceLoadDepartures: Boolean = intent.getBooleanExtra(MVVWidget.MVV_WIDGET_FORCE_RELOAD, true)

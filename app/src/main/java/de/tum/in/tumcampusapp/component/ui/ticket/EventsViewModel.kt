@@ -88,7 +88,7 @@ class EventsViewModel @Inject constructor(
 
     private fun showErrorForDuration(duration: Long): Observable<Result> {
         return Observable.timer(duration, TimeUnit.SECONDS, Schedulers.computation())
-                .map { Result.HideError as Result }
+                .map<Result> { Result.HideError }
                 .startWith(Result.ShowError)
     }
 

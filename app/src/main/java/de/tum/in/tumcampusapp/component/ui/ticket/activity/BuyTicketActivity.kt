@@ -69,15 +69,15 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
 
     private val ticketTypeIds: Array<Int>
         get() = ticketTypes?.map { it.id }?.toTypedArray() ?: emptyArray()
-    
+
     private lateinit var binding: ActivityBuyTicketBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         binding = ActivityBuyTicketBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+
         eventId = intent.getIntExtra(Const.KEY_EVENT_ID, 0)
 
         binding.totalPriceTextView.text = Utils.formatPrice(0)
@@ -109,7 +109,6 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
     private fun setupUi() {
         initEventTextViews()
         initTicketAmount()
-
 
         binding.loadingOverlayBinding.loadingLayout.isVisible = false
         binding.paymentButton.setOnClickListener { reserveTicket() }
@@ -231,7 +230,6 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
             TransitionManager.beginDelayedTransition(loadingOverlayBinding.loadingLayout)
             paymentButton.isEnabled = show.not()
         }
-
     }
 
     override fun onDestroy() {

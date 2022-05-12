@@ -63,7 +63,7 @@ public class CalendarDaoTest {
         CalendarItem item = new CalendarItem(Integer.toString(nr),
                                              status,
                                              "dummy url",
-                                             "title " + Integer.toString(nr),
+                                             "title " + nr,
                                              "dummy description",
                                              startDate,
                                              endDate,

@@ -34,7 +34,7 @@ class CafeteriaDetailsSectionsPagerAdapter(fragmentManager: FragmentManager) : F
         CafeteriaDetailsSectionFragment.newInstance(cafeteriaId, dates[position])
 
     override fun getPageTitle(position: Int) =
-        formatter.print(dates[position]).toUpperCase(Locale.getDefault())
+            formatter.print(dates[position]).uppercase(Locale.getDefault())
 
     override fun getItemPosition(`object`: Any): Int = PagerAdapter.POSITION_NONE
 }

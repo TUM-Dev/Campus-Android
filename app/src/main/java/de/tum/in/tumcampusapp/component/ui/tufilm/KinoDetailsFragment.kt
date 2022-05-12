@@ -93,7 +93,6 @@ class KinoDetailsFragment : Fragment() {
             locationTextView.text = event.locality
         }
 
-
         kinoViewModel.fetchTicketCount(event.id)
     }
 
@@ -133,7 +132,6 @@ class KinoDetailsFragment : Fragment() {
                     remainingTicketsTextView,
                     getString(R.string.no_tickets_remaining_tufilm_message))
         }
-
     }
 
     private fun showMovieDetails(kino: Kino) {
@@ -163,7 +161,6 @@ class KinoDetailsFragment : Fragment() {
                 startActivity(intent)
             }
         }
-
     }
 
     private fun loadPoster(kino: Kino) {
