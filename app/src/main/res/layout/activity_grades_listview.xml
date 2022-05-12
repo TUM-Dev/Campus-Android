@@ -1,176 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_marginBottom="@dimen/material_default_padding"
     android:background="@color/default_window_background"
-    android:orientation="vertical"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
     android:paddingStart="@dimen/material_default_padding"
     android:paddingTop="@dimen/material_small_padding"
     android:paddingEnd="@dimen/material_default_padding"
-
     android:paddingBottom="@dimen/material_small_padding">
 
-
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/courseNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_primary"
+            android:textSize="@dimen/large_text_size"
+            android:textStyle="bold"
+            tools:text="@string/course_name" />
+
+        <TextView
+            android:id="@+id/examDateTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            tools:text="@string/text_view_examination_date_label" />
+
+        <TextView
+            android:id="@+id/additionalInfoTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            tools:text="@string/examiner" />
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:id="@+id/editGradesContainer"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:orientation="vertical">
 
-
-            <TextView
-                android:id="@+id/courseNameTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/color_primary"
-                android:textSize="@dimen/large_text_size"
-                android:textStyle="bold"
-                tools:text="Course name" />
-
-            <TextView
-                android:id="@+id/examDateTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="visible"
-                tools:text="Exam date" />
-
-            <TextView
-                android:id="@+id/additionalInfoTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="visible"
-                tools:text="Examiner" />
 
             <LinearLayout
-                android:id="@+id/editGradesContainer"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:weightSum="10">
 
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/textViewCreditsOfSubject"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="10">
+                    android:layout_weight="5"
+                    android:labelFor="@+id/editTextCreditsOfSubject"
+                    android:text="@string/credits" />
 
-                    <TextView
-                        android:id="@+id/textViewCreditsosSubject"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="5"
-                        android:labelFor="@+id/editTextCreditsofSubject"
-                        android:text="@string/credits_grade_label" />
-
-                    <EditText
-                        android:id="@+id/editTextCreditsofSubject"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="5"
-                        android:autofillHints="8"
-                        android:ems="10"
-                        android:inputType="numberSigned" />
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <EditText
+                    android:id="@+id/editTextCreditsOfSubject"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="10">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="5"
-                        android:labelFor="@+id/editTextGradeWeight"
-                        android:text="@string/grade_weight_label" />
-
-                    <EditText
-                        android:id="@+id/editTextGradeWeight"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="5"
-                        android:autofillHints="1.0"
-                        android:ems="10"
-                        android:inputType="numberDecimal" />
+                    android:layout_weight="5"
+                    android:autofillHints="@string/default_credits"
+                    android:ems="10"
+                    android:inputType="numberSigned" />
 
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="10">
-
-                    <CheckBox
-                        android:id="@+id/checkBoxUseGradeForAverage"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="5"
-                        android:text="@string/use_grade_in_average" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/buttonResetGradeParameters"
-                        style="@style/BlueButton"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="5"
-                        android:text="@string/reset_grade"
-                        android:textAllCaps="false"
-                        app:cornerRadius="@dimen/material_corner_radius" />
-
-
-                </LinearLayout>
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:labelFor="@+id/editTextGradeWeight"
+                    android:text="@string/grade_weight_label" />
+
+                <EditText
+                    android:id="@+id/editTextGradeWeight"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:autofillHints="@string/default_grade"
+                    android:ems="10"
+                    android:inputType="numberDecimal" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <CheckBox
+                    android:id="@+id/checkBoxUseGradeForAverage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:text="@string/use_grade_in_average" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonResetGradeParameters"
+                    style="@style/BlueButton"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:text="@string/reset_grade"
+                    android:textAllCaps="false"
+                    app:cornerRadius="@dimen/material_corner_radius" />
+
+
+            </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/gradeTextViewDeleteCustomGrade"
-                android:layout_width="wrap_content"
-                android:layout_height="64dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/grade_background"
-                android:backgroundTint="@color/grade_default"
-                android:gravity="center"
-                android:padding="@dimen/material_default_padding"
-                android:src="@drawable/ic_clear"
-                android:visibility="gone"
-                app:tint="@android:color/white" />
-
-            <TextView
-                android:id="@+id/gradeTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/grade_background"
-                android:gravity="center_horizontal"
-                android:padding="@dimen/material_default_padding"
-                android:textColor="@color/white"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                tools:text="1,0" />
-        </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <ImageView
+            android:id="@+id/gradeTextViewDeleteCustomGrade"
+            android:layout_width="wrap_content"
+            android:layout_height="64dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/grade_background"
+            android:backgroundTint="@color/grade_default"
+            android:gravity="center"
+            android:padding="@dimen/material_default_padding"
+            android:src="@drawable/ic_clear"
+            android:visibility="gone"
+            app:tint="@android:color/white" />
+
+        <TextView
+            android:id="@+id/gradeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/grade_background"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/material_default_padding"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            tools:text="@string/default_grade" />
+    </LinearLayout>
 </LinearLayout>

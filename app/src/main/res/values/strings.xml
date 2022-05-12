@@ -87,7 +87,20 @@
     <string name="reset_grade">Reset Grade</string>
     <string name="use_grade_in_average">Use Grade</string>
     <string name="grade_weight_label">Grade Weight:</string>
-    <string name="credits_grade_label">Credits:</string>
+    <string name="course_name">Course name</string>
+    <string name="thesis">Thesis</string>
+    <string name="text_view_grade_label">Grade (0 for passed)</string>
+    <string name="default_grade">1,0</string>
+    <string name="text_view_examiner_name">Examiner Name</string>
+    <string name="text_view_credits_label">Credits</string>
+    <string name="default_credits">6</string>
+    <string name="text_view_grade_weight">Grade weight</string>
+    <string name="default_grade_weight">1.0</string>
+    <string name="text_view_examination_date_label">Examination Date</string>
+    <string name="grade_date_format">dd.mm.yy</string>
+    <string name="grade_date_default">01.01.22</string>
+    <string name="text_view_semester_label">Year of the start of the semester (e.g. 22WS or 21SuSe)</string>
+    <string name="grade_semester_default">22WS</string>
 
     <!-- Preferences -->
     <string name="lrz_id">TUM Identification</string>
@@ -774,7 +787,5 @@ Signature: %5$s</string>
     // for opening hours
     <string name="language">en</string>
     <string name="use_existing">Use existing</string>
-
-
 
 </resources>

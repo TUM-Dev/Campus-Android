@@ -57,10 +57,23 @@
     <string name="all_programs">Alle Noten</string>
     <string name="date">Datum</string>
     <string name="no_grades">Du hast noch keine Noten, die angezeigt werden könnten.</string>
-    <string name="reset_grade">Note Zurücksetzten</string>
+    <string name="reset_grade">Note zurücksetzten</string>
     <string name="use_grade_in_average">Note verwenden</string>
     <string name="grade_weight_label">Gewichtung der Note:</string>
-    <string name="credits_grade_label">Credits:</string>
+    <string name="course_name">Course name</string>
+    <string name="thesis">Bachelor Arbeit</string>
+    <string name="text_view_grade_label">Grade (0 für bestanden)</string>
+    <string name="default_grade">1,0</string>
+    <string name="text_view_examiner_name">Name des Prüfers</string>
+    <string name="text_view_credits_label">Credits</string>
+    <string name="default_credits">6</string>
+    <string name="text_view_grade_weight">Notengewichtung</string>
+    <string name="default_grade_weight">1.0</string>
+    <string name="text_view_examination_date_label">Datum der Prüfung</string>
+    <string name="grade_date_format">dd.mm.jj</string>
+    <string name="grade_date_default">01.01.22</string>
+    <string name="text_view_semester_label">Jahr in dem das Semester startet (z.B. 22WS or 21SoSe)</string>
+    <string name="grade_semester_default">22WS</string>
 
     <!-- Preferences -->
     <string name="lrz_id">TUM Kennung</string>
@@ -722,4 +735,5 @@ Signatur: %5$s</string>
     // for opening hours
     <string name="language">de</string>
     <string name="use_existing">Bestehendes verwenden</string>
+
 </resources>

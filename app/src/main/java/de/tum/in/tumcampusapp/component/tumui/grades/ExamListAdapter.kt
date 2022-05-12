@@ -75,8 +75,6 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
         if (localGradesFragment.getGlobalEdit()) {
             holder.editGradesContainer.visibility = View.GONE
             holder.gradeTextViewDeleteCustomGrade.visibility = View.GONE
-
-            //todo init für den chackbox status
         } else {
             holder.editGradesContainer.visibility = View.VISIBLE
 
@@ -240,7 +238,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
         var additionalInfoTextView: TextView = itemView.findViewById(R.id.additionalInfoTextView)
 
         var editTextGradeWeights: EditText = itemView.findViewById(R.id.editTextGradeWeight)
-        var editTextGradeCredits: EditText = itemView.findViewById(R.id.editTextCreditsofSubject)
+        var editTextGradeCredits: EditText = itemView.findViewById(R.id.editTextCreditsOfSubject)
         var editGradesContainer: LinearLayout = itemView.findViewById(R.id.editGradesContainer)
         var checkBoxUseGradeForAverage: CheckBox =
             itemView.findViewById(R.id.checkBoxUseGradeForAverage)

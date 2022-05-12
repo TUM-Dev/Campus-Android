@@ -165,7 +165,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
 
         if (!examsDownloaded.isEmpty()) {
-            examsDownloaded.forEach { it.credits_new = 6; it.weight = 1.0; }
+            examsDownloaded.forEach { it.credits_new = 6; it.weight = 1.0; it.gradeUsedInAverage=true}
             exams.addAll(examsDownloaded)
             storeExamListInSharedPreferences()
         }
@@ -415,7 +415,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 visibility = View.VISIBLE
             }
         }
-        binding.floatingbuttonAddExamGrade.setOnClickListener({ openAddGradeDialog() })
+        binding.floatingButtonAddExamGrade.setOnClickListener({ openAddGradeDialog() })
 
 
         binding.filterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -679,12 +679,12 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     private fun initUIVisibility() {
         if (!globalEditOFF) {
             frameLayoutAverageGrade?.visibility = View.GONE
-            floatingbuttonAddExamGrade?.visibility = View.VISIBLE
+            floatingButtonAddExamGrade?.visibility = View.VISIBLE
         } else {
             storeExamListInSharedPreferences()
             showExams(exams)
             frameLayoutAverageGrade?.visibility = View.VISIBLE
-            floatingbuttonAddExamGrade?.visibility = View.GONE
+            floatingButtonAddExamGrade?.visibility = View.GONE
         }
     }
 
