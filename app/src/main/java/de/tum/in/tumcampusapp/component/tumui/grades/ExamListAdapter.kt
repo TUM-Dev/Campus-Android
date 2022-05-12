@@ -108,14 +108,14 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
                     .create()
                     .apply {
                         window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-                    };
+                    }
                 dialog.show()
                 dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(
-                    localGradesFragment.getResources().getColor(R.color.text_primary)
-                );
+                    localGradesFragment.resources.getColor(R.color.text_primary)
+                )
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(
-                    localGradesFragment.getResources().getColor(R.color.text_primary)
-                );
+                    localGradesFragment.resources.getColor(R.color.text_primary)
+                )
             }
         } else {
             holder.gradeTextViewDeleteCustomGrade.visibility = View.GONE
@@ -133,7 +133,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
             if (!hasFocus) {
                 val helper = holder.editTextGradeWeights.text.toString().toDouble()
                 if (exam.weight != helper) {
-                    exam.weight = helper;
+                    exam.weight = helper
                     localGradesFragment.storeExamListInSharedPreferences()
                 }
             }
@@ -143,7 +143,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
             if (!hasFocus) {
                 val helper = holder.editTextGradeCredits.text.toString().toInt()
                 if (exam.credits_new != helper) {
-                    exam.credits_new = helper;
+                    exam.credits_new = helper
                     localGradesFragment.storeExamListInSharedPreferences()
                 }
             }
@@ -193,14 +193,14 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
         exam: Exam
     ) {
         if (exam.gradeUsedInAverage) {
-            holder.editTextGradeCredits.isEnabled = true;
-            holder.editTextGradeWeights.isEnabled = true;
+            holder.editTextGradeCredits.isEnabled = true
+            holder.editTextGradeWeights.isEnabled = true
             val gradeColor = exam.getGradeColor(context)
             holder.gradeTextView.background.setTint(gradeColor)
             holder.gradeTextView.setTextColor(ContextCompat.getColor(context, R.color.white))
         } else {
-            holder.editTextGradeCredits.isEnabled = false;
-            holder.editTextGradeWeights.isEnabled = false;
+            holder.editTextGradeCredits.isEnabled = false
+            holder.editTextGradeWeights.isEnabled = false
             holder.gradeTextView.background.setTint(
                 ContextCompat.getColor(
                     context,
