@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.grades
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -50,7 +51,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
         holder.gradeTextView.text = exam.grade
 
 
-        adaptUIToCheckboxStatus(holder,exam)
+        adaptUIToCheckboxStatus(holder, exam)
 
         val date: String = if (exam.date == null) {
             context.getString(R.string.not_specified)
@@ -92,7 +93,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
     private fun initListenerDeleteCustomGrade(exam: Exam, holder: ViewHolder) {
         if (exam.manuallyAdded) {
             holder.gradeTextViewDeleteCustomGrade.visibility = View.VISIBLE
-           // adaptUIToCheckboxStatus(holder, exam)
+            // adaptUIToCheckboxStatus(holder, exam)
 
             holder.gradeTextViewDeleteCustomGrade.setOnClickListener {
                 val dialog = AlertDialog.Builder(localGradesFragment.requireContext())
@@ -135,6 +136,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
                 if (exam.weight != helper) {
                     exam.weight = helper
                     localGradesFragment.storeExamListInSharedPreferences()
+                    notifyDataSetChanged()
                 }
             }
         }
@@ -145,6 +147,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
                 if (exam.credits_new != helper) {
                     exam.credits_new = helper
                     localGradesFragment.storeExamListInSharedPreferences()
+                    notifyDataSetChanged()
                 }
             }
         }
@@ -161,12 +164,13 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
             override fun onClick(p0: View?) {
                 exam.gradeUsedInAverage = true
                 adaptUIToCheckboxStatus(holder, exam)
-
+                holder.checkBoxUseGradeForAverage.isChecked = true
                 exam.weight = 1.0
                 exam.credits_new = 6
                 holder.editTextGradeWeights.setText(exam.weight.toString())
                 holder.editTextGradeCredits.setText(exam.credits_new.toString())
                 localGradesFragment.storeExamListInSharedPreferences()
+                notifyDataSetChanged()
             }
 
         })
@@ -178,10 +182,11 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
     private fun initCheckBoxUsedInAverage(exam: Exam, holder: ViewHolder) {
         holder.checkBoxUseGradeForAverage.isChecked = exam.gradeUsedInAverage
         adaptUIToCheckboxStatus(holder, exam)
-        holder.checkBoxUseGradeForAverage.setOnCheckedChangeListener { _, isChecked ->
-            exam.gradeUsedInAverage = isChecked
+        holder.checkBoxUseGradeForAverage.setOnClickListener() {
+            exam.gradeUsedInAverage = holder.checkBoxUseGradeForAverage.isChecked
             adaptUIToCheckboxStatus(holder, exam)
             localGradesFragment.storeExamListInSharedPreferences()
+            notifyDataSetChanged()
         }
     }
 

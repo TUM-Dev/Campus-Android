@@ -74,6 +74,7 @@
     <string name="grade_date_default">01.01.22</string>
     <string name="text_view_semester_label">Jahr in dem das Semester startet (z.B. 22WS or 21SoSe)</string>
     <string name="grade_semester_default">22WS</string>
+    <string name="use_weights_in_diagrams">Credits und Gewichte in dem Diagram berücksichtigen</string>
 
     <!-- Preferences -->
     <string name="lrz_id">TUM Kennung</string>
