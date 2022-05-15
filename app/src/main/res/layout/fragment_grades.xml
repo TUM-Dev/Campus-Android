@@ -75,7 +75,7 @@
                 android:layout_height="32dp"
                 android:layout_marginLeft="8dp"
                 android:checked="true"
-                android:text="use weights in diagrams" />
+                android:text="@string/use_weights_in_diagrams" />
             <FrameLayout
                 android:id="@+id/chartsContainer"
                 android:layout_width="match_parent"
@@ -104,7 +104,6 @@
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/swipeRefreshLayout"
                 android:layout_width="match_parent"
-                android:layout_marginTop="256dp"
                 android:layout_height="match_parent">
 
                 <se.emilsjolander.stickylistheaders.StickyListHeadersListView

@@ -15,8 +15,6 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat.getColor
-import androidx.core.view.marginBottom
-import androidx.core.view.marginTop
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.data.*
@@ -32,11 +30,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.grades.model.ExamList
 import de.tum.`in`.tumcampusapp.databinding.FragmentGradesBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
-import kotlinx.android.synthetic.main.dialog_add_grade_input.*
 import kotlinx.android.synthetic.main.fragment_grades.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.newSingleThreadContext
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -61,12 +55,10 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     private var showBarChartAfterRotate = false
 
     private var globalEditOFF = true
-    private var adaptDiagramToWeights = true;
+    private var adaptDiagramToWeights = true
     private val exams = mutableListOf<Exam>()
 
     private val examSharedPreferences: String = "ExamList"
-
-    private val scope = CoroutineScope(newSingleThreadContext("storetopreferences"))
 
 
     private val grades: Array<String> by lazy {
@@ -108,10 +100,13 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             showChartButton?.setOnClickListener { toggleInLandscape() }
             initUIVisibility()
         }
+        binding.floatingButtonAddExamGrade.setOnClickListener { openAddGradeDialog() }
+        checkboxUseDiagrams.setOnCheckedChangeListener { _, isChecked ->
+            adaptDiagramToWeights = isChecked
+        }
 
-        loadExamListFromSharedPreferences();
-        initUIAfterDownloadingExams()
-        //loadGrades(CacheControl.USE_CACHE)
+
+        loadGrades(CacheControl.USE_CACHE)
         // Tracks whether the user has used the calendar module before. This is used in determining when to prompt for a
         // Google Play store review
         Utils.setSetting(requireContext(), Const.HAS_VISITED_GRADES, true)
@@ -172,7 +167,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
         if (examsDownloaded.isNotEmpty()) {
             examsDownloaded.forEach {
-                it.credits_new = 6; it.weight = 1.0; it.gradeUsedInAverage = true
+                it.credits_new = 6;it.weight = 1.0; it.gradeUsedInAverage = true
             }
             exams.addAll(examsDownloaded)
             storeExamListInSharedPreferences()
@@ -195,15 +190,15 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         } catch (e: Exception) {
             exams.clear()
         }
-        storeExamListInSharedPreferences()
+        // storeExamListInSharedPreferences()
         // Exam list could no be loaded - will always e a list, some error occurred - clear to prevent any intermediate error states
     }
 
-   /* fun storeExamListInSharedPreferences() {
-        scope.launch { storeExamListInSharedPreferencesThread() }
-    }
-*/
-    fun storeExamListInSharedPreferences() {
+    /* fun storeExamListInSharedPreferences() {
+         scope.launch { storeExamListInSharedPreferencesThread() }
+     }
+ */
+   fun storeExamListInSharedPreferences() {
         Log.d("Exam Storing", "thread to store exams is successfully started")
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
         val dateTimeConverter = DateTimeConverter()
@@ -214,8 +209,9 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             putString(examSharedPreferences, jsonlist)
             apply()
         }
-        Log.d("Exam Storing", "thread to store exams is successfully finished")
     }
+
+
 
 
     /**
@@ -447,10 +443,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 visibility = View.VISIBLE
             }
         }
-        binding.floatingButtonAddExamGrade.setOnClickListener { openAddGradeDialog() }
-        checkboxUseDiagrams.setOnCheckedChangeListener() { _, isChecked ->
-            adaptDiagramToWeights = isChecked;
-        }
+
 
         binding.filterSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
@@ -697,30 +690,27 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     }
 
     private fun initUIVisibility() {
-        //   checkboxUseDiagrams.isChecked=false
-
+        val scale = resources.displayMetrics.density
+        val param = swipeRefreshLayout.layoutParams as ViewGroup.MarginLayoutParams
         if (!globalEditOFF) {
             frameLayoutAverageGrade?.visibility = View.GONE
             floatingButtonAddExamGrade?.visibility = View.VISIBLE
             chartsContainer.visibility = View.GONE
             checkboxUseDiagrams?.visibility = View.VISIBLE
-            val scale = resources.displayMetrics.density
-            val param = swipeRefreshLayout.layoutParams as ViewGroup.MarginLayoutParams
-            param.setMargins(0,( (32 * scale + 0.5f).toInt()),0,0)
-            swipeRefreshLayout.layoutParams = param
+            param.setMargins(0, ((32 * scale + 0.5f).toInt()), 0, 0)
+            gradesListView.setPadding(0, 0, 0, 0)
+
         } else {
-            storeExamListInSharedPreferences()
+            //storeExamListInSharedPreferences()
             showExams(exams)
             frameLayoutAverageGrade?.visibility = View.VISIBLE
             floatingButtonAddExamGrade?.visibility = View.GONE
             chartsContainer.visibility = View.VISIBLE
             checkboxUseDiagrams?.visibility = View.GONE
-            val scale = resources.displayMetrics.density
-            val param = swipeRefreshLayout.layoutParams as ViewGroup.MarginLayoutParams
-            param.setMargins(0,( (256 * scale + 0.5f).toInt()),0,0)
-            swipeRefreshLayout.layoutParams = param
-
+            param.setMargins(0, 0, 0, 0)
+            gradesListView.setPadding(0, ((256 * scale + 0.5f).toInt()), 0, 0)
         }
+        swipeRefreshLayout.layoutParams = param
     }
 
     /**

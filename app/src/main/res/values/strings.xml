@@ -101,6 +101,7 @@
     <string name="grade_date_default">01.01.22</string>
     <string name="text_view_semester_label">Year of the start of the semester (e.g. 22WS or 21SuSe)</string>
     <string name="grade_semester_default">22WS</string>
+    <string name="use_weights_in_diagrams">Consider credits and weights in the diagram</string>
 
     <!-- Preferences -->
     <string name="lrz_id">TUM Identification</string>
