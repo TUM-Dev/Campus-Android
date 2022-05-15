@@ -142,7 +142,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         storeGradedCourses(exams)
     }
 
-    fun addExamToList(exam: Exam) {
+    private fun addExamToList(exam: Exam) {
         exams.add(exam)
         changeNumberOfExams()
     }
@@ -182,7 +182,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 .create()
             val listType = object : TypeToken<List<Exam>>() {}.type
             val jsonString = sharedPref.getString(examSharedPreferences, "")
-            if (jsonString != null && !jsonString.equals("[]")) {
+            if (jsonString != null && jsonString != "[]") {
                 exams.clear()
                 exams.addAll(gson.fromJson(jsonString, listType))
                 return
@@ -190,16 +190,10 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         } catch (e: Exception) {
             exams.clear()
         }
-        // storeExamListInSharedPreferences()
-        // Exam list could no be loaded - will always e a list, some error occurred - clear to prevent any intermediate error states
     }
 
-    /* fun storeExamListInSharedPreferences() {
-         scope.launch { storeExamListInSharedPreferencesThread() }
-     }
- */
-   fun storeExamListInSharedPreferences() {
-        Log.d("Exam Storing", "thread to store exams is successfully started")
+
+    fun storeExamListInSharedPreferences() {
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
         val dateTimeConverter = DateTimeConverter()
         val gson = GsonBuilder().registerTypeAdapter(DateTime::class.java, dateTimeConverter)
@@ -210,8 +204,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             apply()
         }
     }
-
-
 
 
     /**
@@ -245,8 +237,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     }
 
 
-    //todo replace in the final version - can be done with exisiting data
-    fun storeGradedCourses(exams: List<Exam>) {
+    private fun storeGradedCourses(exams: List<Exam>) {
         val gradesStore = GradesStore(defaultSharedPreferences)
         val courses = exams.map { it.course }
         gradesStore.store(courses)
@@ -376,17 +367,17 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 (numberFormat.parse(it.grade.toString())?.toDouble()
                     ?: 1.0) * it.credits_new * it.weight
             }
-        val combinedgradefactors = exams
+        val factorSum = exams
             .filter { it.isPassed && it.gradeUsedInAverage }
-            .map { it.credits_new.toDouble() * it.weight }
+            .map { it.credits_new.toDouble() * it.weight }.sum()
 
 
         val gradeSum = grades.sum()
-        val factorSum = combinedgradefactors.sum()
+
         if (factorSum <= 0) {
             return 0.0
         }
-        return gradeSum / factorSum.toDouble()
+        return gradeSum / factorSum
     }
 
     /**
@@ -429,43 +420,47 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             .distinct()
             .map { getString(R.string.study_program_format_string, it) }
 
-        val filters = mutableListOf(getString(R.string.all_programs))
-        filters.addAll(programIds)
+        if (programIds.size < 2) {
+            binding.filterSpinner.visibility = View.GONE
+        } else {
+            val filters = mutableListOf(getString(R.string.all_programs))
+            filters.addAll(programIds)
 
-        val spinnerArrayAdapter = ArrayAdapter(
-            requireContext(), R.layout.simple_spinner_item_actionbar, filters
-        )
+            val spinnerArrayAdapter = ArrayAdapter(
+                requireContext(), R.layout.simple_spinner_item_actionbar, filters
+            )
 
-        with(binding) {
-            filterSpinner.apply {
-                adapter = spinnerArrayAdapter
-                setSelection(spinnerPosition)
-                visibility = View.VISIBLE
+            with(binding) {
+                filterSpinner.apply {
+                    adapter = spinnerArrayAdapter
+                    setSelection(spinnerPosition)
+                    visibility = View.VISIBLE
+                }
             }
-        }
 
 
-        binding.filterSpinner.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    val filter = filters[position]
-                    spinnerPosition = position
+            binding.filterSpinner.onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>,
+                        view: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        val filter = filters[position]
+                        spinnerPosition = position
 
-                    val examsToShow = when (position) {
-                        0 -> exams
-                        else -> exams.filter { filter.contains(it.programID) }
+                        val examsToShow = when (position) {
+                            0 -> exams
+                            else -> exams.filter { filter.contains(it.programID) }
+                        }
+
+                        showExams(examsToShow)
                     }
 
-                    showExams(examsToShow)
+                    override fun onNothingSelected(parent: AdapterView<*>) = Unit
                 }
-
-                override fun onNothingSelected(parent: AdapterView<*>) = Unit
-            }
+        }
     }
 
 
@@ -475,10 +470,9 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     private fun openAddGradeDialog() {
         val view = View.inflate(requireContext(), R.layout.dialog_add_grade_input, null)
         val dialog = AlertDialog.Builder(requireContext())
-            .setTitle("Add a New Exam")
+            .setTitle(getString(R.string.add_exam_dialog_title))
             .setMessage(
-                "Grades are normally added automatically. In case special grades should be added, this can be done here. " +
-                        "Manually added Exams can be deleted later on."
+                getString(R.string.add_exam_dialog_message)
             )
             .setView(view)
             .create()
@@ -506,11 +500,10 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             val date = dateView.text.toString()
             val semester = semesterView.text.toString()
 
-            var weight: Double
-            try {
-                weight = (weightView.text.toString()).toDouble()
+            val weight: Double = try {
+                (weightView.text.toString()).toDouble()
             } catch (exception: Exception) {
-                weight = 1.0
+                1.0
             }
 
 
@@ -527,44 +520,45 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             if (semester.length < 3) {                                                  //semester sanitization
                 changesRequired = true
                 semesterView.error =
-                    "Wrong semester format: Too short. Correct two numbers for the year + W/S"
-            } else if (!(semester.get(2).equals('W') || semester.get(2)
-                    .equals('w') || semester.get(2).equals('S') || semester.get(2)
-                    .equals('s'))
+                    getString(R.string.add_grade_error_wrong_semester)
+            } else if (!(semester.get(2) == 'W' || semester[2] == 'w' || semester.get(2) == 'S' || semester.get(
+                    2
+                ) == 's')
             ) {
                 changesRequired = true
                 semesterView.error =
-                    "Wrong semester format: Term not specified. Correct two numbers for the year + W/S"
+                    getString(R.string.add_grade_error_semester_no_ws)
             }
 
             if (weight < 0.0) {             //weight sanitization
                 changesRequired = true
-                weightView.error = "Wrong weight format: Weights can not be negative."
+                weightView.error = getString(R.string.add_grade_error_invalid_weight)
             }
 
             val gradedouble = grade.replace(",", ".").toDouble()
             var gradeString = ""
-            if (gradedouble <= 5.0 && gradedouble >= 1.0 || gradedouble == 0.0) {
-                if (gradedouble == 0.0) {
-                    gradeString = "B"
+            if (gradedouble in 1.0..5.0 || gradedouble == 0.0) {
+                gradeString = if (gradedouble == 0.0) {
+                    "B"
                 } else {
-                    gradeString = grade.toString().replace(".", ",")
+                    grade.replace(".", ",")
                 }
             } else {
                 changesRequired = true
                 gradeView.error =
-                    "Wrong grade format: Grade must be between 1.0 and 5.0 or equal to 0."
+                    getString(R.string.add_grade_error_invalid_grade_format)
             }
 
 
-            if (title.length < 1) {             //title sanitization
+            if (title.isEmpty()) {             //title sanitization
                 changesRequired = true
-                titleView.error = "Insert a course title."
+                titleView.error = getString(R.string.add_grade_missing_course_title)
             }
 
             if (credits < 1) {             //title sanitization
                 changesRequired = true
-                creditsView.error = "Invalid amount of credits. Must be greater than 0."
+                creditsView.error =
+                    getString(R.string.add_grade_error_invalid_weight_less_than_zero)
             }
 
 
@@ -701,7 +695,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             gradesListView.setPadding(0, 0, 0, 0)
 
         } else {
-            //storeExamListInSharedPreferences()
             showExams(exams)
             frameLayoutAverageGrade?.visibility = View.VISIBLE
             floatingButtonAddExamGrade?.visibility = View.GONE
