@@ -6,10 +6,8 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.ArrayMap
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.util.Log
+import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -17,6 +15,8 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat.getColor
+import androidx.core.view.marginBottom
+import androidx.core.view.marginTop
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.data.*
@@ -109,8 +109,9 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             initUIVisibility()
         }
 
-        //loadExamListFromSharedPreferences();
-        loadGrades(CacheControl.USE_CACHE)
+        loadExamListFromSharedPreferences();
+        initUIAfterDownloadingExams()
+        //loadGrades(CacheControl.USE_CACHE)
         // Tracks whether the user has used the calendar module before. This is used in determining when to prompt for a
         // Google Play store review
         Utils.setSetting(requireContext(), Const.HAS_VISITED_GRADES, true)
@@ -127,9 +128,13 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
     override fun onDownloadSuccessful(response: ExamList) {
         val examsDownloaded: MutableList<Exam> = response.exams.orEmpty().toMutableList()
-
         loadExamListFromSharedPreferences()
         addAllNewItemsToExamList(examsDownloaded)
+        initUIAfterDownloadingExams()
+
+    }
+
+    private fun initUIAfterDownloadingExams() {
         initSpinner(exams)
         showExams(exams)
 
@@ -163,11 +168,9 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     private fun addAllNewItemsToExamList(examsDownloaded: MutableList<Exam>) {
         val examsTitles = exams.map { it.course }
         examsDownloaded.removeAll { examsTitles.contains(it.course) }
-        //  exams.clear()
-        //   storeExamListInSharedPreferences()
 
 
-        if (!examsDownloaded.isEmpty()) {
+        if (examsDownloaded.isNotEmpty()) {
             examsDownloaded.forEach {
                 it.credits_new = 6; it.weight = 1.0; it.gradeUsedInAverage = true
             }
@@ -184,7 +187,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 .create()
             val listType = object : TypeToken<List<Exam>>() {}.type
             val jsonString = sharedPref.getString(examSharedPreferences, "")
-            if (jsonString != null) {
+            if (jsonString != null && !jsonString.equals("[]")) {
                 exams.clear()
                 exams.addAll(gson.fromJson(jsonString, listType))
                 return
@@ -192,14 +195,16 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         } catch (e: Exception) {
             exams.clear()
         }
+        storeExamListInSharedPreferences()
         // Exam list could no be loaded - will always e a list, some error occurred - clear to prevent any intermediate error states
     }
 
-    fun storeExamListInSharedPreferences() {
+   /* fun storeExamListInSharedPreferences() {
         scope.launch { storeExamListInSharedPreferencesThread() }
     }
-
-    private fun storeExamListInSharedPreferencesThread() {
+*/
+    fun storeExamListInSharedPreferences() {
+        Log.d("Exam Storing", "thread to store exams is successfully started")
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
         val dateTimeConverter = DateTimeConverter()
         val gson = GsonBuilder().registerTypeAdapter(DateTime::class.java, dateTimeConverter)
@@ -209,6 +214,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             putString(examSharedPreferences, jsonlist)
             apply()
         }
+        Log.d("Exam Storing", "thread to store exams is successfully finished")
     }
 
 
@@ -474,10 +480,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      * Prompt the user to type in a name for the new chat room
      */
     private fun openAddGradeDialog() {
-        // Set an EditText view to get user input
         val view = View.inflate(requireContext(), R.layout.dialog_add_grade_input, null)
-
-
         val dialog = AlertDialog.Builder(requireContext())
             .setTitle("Add a New Exam")
             .setMessage(
@@ -591,7 +594,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 addExamToList(exam)
                 dialog.dismiss()
             }
-            //   }
         }
     }
 
@@ -703,8 +705,9 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             chartsContainer.visibility = View.GONE
             checkboxUseDiagrams?.visibility = View.VISIBLE
             val scale = resources.displayMetrics.density
-            gradesListView.setPadding(0, (32 * scale + 0.5f).toInt(), 0, 0);
-
+            val param = swipeRefreshLayout.layoutParams as ViewGroup.MarginLayoutParams
+            param.setMargins(0,( (32 * scale + 0.5f).toInt()),0,0)
+            swipeRefreshLayout.layoutParams = param
         } else {
             storeExamListInSharedPreferences()
             showExams(exams)
@@ -713,12 +716,10 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             chartsContainer.visibility = View.VISIBLE
             checkboxUseDiagrams?.visibility = View.GONE
             val scale = resources.displayMetrics.density
-            gradesListView.setPadding(0, (256 * scale + 0.5f).toInt(), 0, 0);
-            showExams(exams);
-            /* if(checkboxUseDiagrams.isChecked!=adaptDiagramToWeights){
-                 adaptDiagramToWeights=checkboxUseDiagrams.isChecked;
-                 showExams(exams);
-             }*/
+            val param = swipeRefreshLayout.layoutParams as ViewGroup.MarginLayoutParams
+            param.setMargins(0,( (256 * scale + 0.5f).toInt()),0,0)
+            swipeRefreshLayout.layoutParams = param
+
         }
     }
 

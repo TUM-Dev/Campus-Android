@@ -104,6 +104,7 @@
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/swipeRefreshLayout"
                 android:layout_width="match_parent"
+                android:layout_marginTop="256dp"
                 android:layout_height="match_parent">
 
                 <se.emilsjolander.stickylistheaders.StickyListHeadersListView
@@ -112,7 +113,8 @@
                     android:layout_height="match_parent"
                     android:clipToPadding="false"
                     android:divider="@color/list_divider"
-                    android:paddingTop="256dp"
+
+
                     android:scrollbars="vertical" />
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
