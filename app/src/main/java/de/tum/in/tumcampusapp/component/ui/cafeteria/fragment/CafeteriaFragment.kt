@@ -192,7 +192,7 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
     override fun onNothingSelected(adapterView: AdapterView<*>?) = Unit
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater?.inflate(R.menu.menu_section_fragment_cafeteria_details, menu)
+        inflater.inflate(R.menu.menu_section_fragment_cafeteria_details, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 

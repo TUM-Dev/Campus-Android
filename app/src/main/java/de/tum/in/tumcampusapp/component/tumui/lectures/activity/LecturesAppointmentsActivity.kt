@@ -25,7 +25,6 @@ class LecturesAppointmentsActivity : ActivityForAccessingTumOnline<LectureAppoin
 
     private lateinit var binding: ActivityLecturesappointmentsBinding
 
-
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

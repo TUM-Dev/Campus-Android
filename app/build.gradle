@@ -38,8 +38,8 @@ android {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 26
         targetSdkVersion 32
-        versionCode 584
-        versionName "3.18-dev"
+        versionCode 585
+        versionName "3.19-dev"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -109,9 +109,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'android.arch.lifecycle:reactivestreams:1.1.1'
     implementation 'android.arch.work:work-runtime-ktx:1.0.1'
-    // Note: Appcompat 1.4 breaks sandwich menu injected into toolbar by DrawerLayout
-    // upgrading this and or androidx.fragment:fragment-ktx will break the toolbar
-    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
     kapt 'androidx.lifecycle:lifecycle-compiler:2.4.1'
     kapt "androidx.room:room-compiler:$room_version"
 
@@ -142,8 +140,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.anko:anko:0.10.8"
     implementation 'androidx.core:core-ktx:1.7.0'
-    // Note: upgrading this and or androidx.appcompat:appcompat will break the toolbar
-    implementation 'androidx.fragment:fragment-ktx:1.2.5'
+    implementation 'androidx.fragment:fragment-ktx:1.4.1'
     // Note: fix for internal androidx libraries using outdated WorkManager causing a crash
     implementation "androidx.work:work-runtime-ktx:2.7.1"
 
@@ -166,7 +163,8 @@ dependencies {
     implementation 'com.squareup.okio:okio:2.10.0'
 
     // UI
-    implementation 'com.github.mtotschnig:StickyListHeaders:2.7.1'
+
+    implementation 'com.github.mtotschnig:StickyListHeaders:2.8.0'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'me.dm7.barcodescanner:zxing:1.9.13'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
@@ -187,6 +185,8 @@ dependencies {
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 
     // Testing
+    testImplementation "commons-io:commons-io:2.11.0"
+
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:3.5.11'
     testImplementation 'org.assertj:assertj-core:3.17.1'
@@ -196,7 +196,8 @@ dependencies {
     testImplementation 'com.android.support.test:rules:1.0.2'
     testImplementation 'com.android.support.test:runner:1.0.2'
     testImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    testImplementation "org.robolectric:robolectric:4.5.1"
+    testImplementation "org.robolectric:robolectric:4.8"
+
 
     // TicketSale
     implementation 'com.stripe:stripe-android:8.1.0'

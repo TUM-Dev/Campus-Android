@@ -55,7 +55,6 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
                     .show()
         }
 
-
         displayDebugInfo()
     }
 
@@ -107,7 +106,6 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
             addDebugRow(debugInfos, "Build configuration", BuildConfig.DEBUG.toString())
             debugInfos.visibility = View.VISIBLE
         }
-
     }
 
     private fun addDebugRow(tableLayout: TableLayout, label: String, value: String?) {

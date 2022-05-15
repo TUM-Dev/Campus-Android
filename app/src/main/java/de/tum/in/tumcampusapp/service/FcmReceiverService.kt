@@ -25,7 +25,7 @@ import java.io.IOException
 class FcmReceiverService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
-        val data = message.data ?: return
+        val data = message.data
         Utils.log("Notification received: $data")
 
         // Legacy messages need to be handled - maybe some data is missing?
@@ -54,9 +54,9 @@ class FcmReceiverService : FirebaseMessagingService() {
      * See: https://github.com/TCA-Team/TumCampusApp/wiki/GCM-Message-format
      */
     private fun createPushNotificationOfType(
-            type: Int,
-            notificationId: Int,
-            payload: String
+        type: Int,
+        notificationId: Int,
+        payload: String
     ): PushNotification? {
         // Apparently, using the service context can cause issues here:
         // https://stackoverflow.com/questions/48770750/strange-crash-when-starting-notification
@@ -101,7 +101,7 @@ class FcmReceiverService : FirebaseMessagingService() {
         super.onNewToken(token)
         Utils.log("new FCM token received")
         Utils.setSetting(this, Const.FCM_INSTANCE_ID, FirebaseInstallations.getInstance().id)
-        Utils.setSetting(this, Const.FCM_TOKEN_ID, token ?: "")
+        Utils.setSetting(this, Const.FCM_TOKEN_ID, token)
     }
 
     /**

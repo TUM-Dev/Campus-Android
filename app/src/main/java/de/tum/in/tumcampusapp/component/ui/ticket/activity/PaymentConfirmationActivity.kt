@@ -14,13 +14,13 @@ import kotlin.concurrent.schedule
 class PaymentConfirmationActivity : BaseActivity(R.layout.activity_payment_confirmation) {
 
     private lateinit var binding: ActivityPaymentConfirmationBinding
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityPaymentConfirmationBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+
         val eventId = intent.getIntExtra(Const.KEY_EVENT_ID, -1)
         val ticketAmount = intent.getIntExtra(Const.KEY_TICKET_AMOUNT, 1)
         if (eventId == -1) {

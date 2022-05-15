@@ -41,7 +41,7 @@ class EventsFragment : FragmentForDownloadingExternal(
         super.onViewCreated(view, savedInstanceState)
         setupViewPager(binding.viewPager)
 
-        val eventTab = requireActivity().findViewById<TabLayout>(R.id.event_tab)
+        val eventTab = view.findViewById<TabLayout>(R.id.event_tab)
         eventTab.setupWithViewPager(binding.viewPager)
 
         eventTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {

@@ -95,7 +95,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                         .load(url)
                         .noPlaceholder()
                         .into(posterView) {
-                            posterProgressBar?.visibility = View.GONE
+                            posterProgressBar.visibility = View.GONE
                         }
             } else {
                 posterProgressBar.visibility = View.GONE
@@ -123,7 +123,6 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             linkButton.setOnClickListener { openEventLink(event) }
             linkButton.visibility = if (event.eventUrl.isNotBlank()) View.VISIBLE else View.GONE
         }
-
     }
 
     private fun openEventLink(event: Event) {
@@ -144,7 +143,6 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
             swipeRefreshLayout.isRefreshing = false
         }
-
     }
 
     private fun showTicket(event: Event) {

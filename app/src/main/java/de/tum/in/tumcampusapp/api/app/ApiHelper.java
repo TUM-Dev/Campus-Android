@@ -80,8 +80,7 @@ public final class ApiHelper {
 
         return chain -> {
             Utils.log("Fetching: " + chain.request()
-                                          .url()
-                                          .toString());
+                                          .url());
             Request.Builder newRequest = chain.request()
                                               .newBuilder()
                                               .addHeader("X-DEVICE-ID", AuthenticationManager.getDeviceID(c))

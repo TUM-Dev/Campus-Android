@@ -36,7 +36,7 @@ class EventCard(context: Context) : Card(CardManager.CARD_EVENT, context, "card_
 
         val event = this.event
         if (event != null) {
-            val ticketCount = event.let { localRepo.getTicketCount(it) } ?: 0
+            val ticketCount = event.let { localRepo.getTicketCount(it) }
             eventViewHolder.bind(event, ticketCount)
         }
     }

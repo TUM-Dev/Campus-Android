@@ -73,7 +73,6 @@ class TuitionFeesFragment : FragmentForAccessingTumOnline<TuitionList>(
                 }
             }
         }
-
     }
 
     companion object {
