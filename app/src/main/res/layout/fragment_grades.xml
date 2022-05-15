@@ -25,6 +25,8 @@
         app:srcCompat="@drawable/ic_add"
         app:tint="@android:color/white" />
 
+
+
     <LinearLayout
 
         android:layout_width="match_parent"
@@ -67,11 +69,17 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
-
+            <CheckBox
+                android:id="@+id/checkboxUseDiagrams"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_marginLeft="8dp"
+                android:checked="true"
+                android:text="use weights in diagrams" />
             <FrameLayout
                 android:id="@+id/chartsContainer"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="256dp"
                 android:background="@color/default_window_background"
                 android:padding="@dimen/material_default_padding"
                 android:visibility="invisible">
@@ -90,6 +98,9 @@
 
             </FrameLayout>
 
+
+
+
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/swipeRefreshLayout"
                 android:layout_width="match_parent"
@@ -101,12 +112,13 @@
                     android:layout_height="match_parent"
                     android:clipToPadding="false"
                     android:divider="@color/list_divider"
-                    android:paddingTop="200dp"
+                    android:paddingTop="256dp"
                     android:scrollbars="vertical" />
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         </FrameLayout>
+
 
         <LinearLayout
             android:id="@+id/frameLayoutAverageGrade"

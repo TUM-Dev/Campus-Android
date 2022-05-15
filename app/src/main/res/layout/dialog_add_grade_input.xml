@@ -4,7 +4,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="256dp"
+    android:layout_height="100dp"
     android:padding="@dimen/material_large_padding">
 
 
@@ -139,6 +139,35 @@
             android:importantForAutofill="no"
             android:inputType="text"
             android:text="@string/grade_semester_default" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/cancelDialogAddGrade"
+                style="@style/BlueButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/cancel"
+                android:layout_marginRight="4dp"
+                android:textAllCaps="false"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/positiveDialogAddGrade"
+                style="@style/BlueButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginLeft="8dp"
+                android:text="Übernehmen"
+                android:textAllCaps="false" />
+
+
+        </LinearLayout>
 
 
     </LinearLayout>
