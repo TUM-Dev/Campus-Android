@@ -93,15 +93,14 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
     private fun initListenerDeleteCustomGrade(exam: Exam, holder: ViewHolder) {
         if (exam.manuallyAdded) {
             holder.gradeTextViewDeleteCustomGrade.visibility = View.VISIBLE
-            // adaptUIToCheckboxStatus(holder, exam)
 
             holder.gradeTextViewDeleteCustomGrade.setOnClickListener {
                 val dialog = AlertDialog.Builder(localGradesFragment.requireContext())
-                    .setTitle("Delete Exam")
+                    .setTitle(context.getString(R.string.delete_exam))
                     .setMessage(
-                        "Should this exam be irrevocably deleted"
+                        context.getString(R.string.delete_exam_dialog_message)
                     )
-                    .setPositiveButton("Delete") { dialogInterface, whichButton ->
+                    .setPositiveButton(R.string.delete) { _, _ ->
 
                         localGradesFragment.deleteExamFromList(exam)
                     }

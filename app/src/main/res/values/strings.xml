@@ -102,6 +102,17 @@
     <string name="text_view_semester_label">Year of the start of the semester (e.g. 22WS or 21SuSe)</string>
     <string name="grade_semester_default">22WS</string>
     <string name="use_weights_in_diagrams">Consider credits and weights in the diagram</string>
+    <string name="delete_exam">Delete Exam</string>
+    <string name="delete_exam_dialog_message">Should this exam be irrevocably deleted</string>
+    <string name="add_grade_error_wrong_semester">Wrong semester format: Too short. Correct: two numbers for the year + W/S</string>
+    <string name="add_grade_error_semester_no_ws">Wrong semester format: Term not specified. Correct two numbers for the year + W/S</string>
+    <string name="add_grade_error_invalid_weight">Wrong weight format: Weights can not be negative.</string>
+    <string name="add_grade_error_invalid_grade_format">Wrong grade format: Grade must be between 1.0 and 5.0 or equal to 0.</string>
+    <string name="add_grade_missing_course_title">Insert a course title.</string>
+    <string name="add_grade_error_invalid_weight_less_than_zero">Invalid amount of credits. Must be greater than 0.</string>
+    <string name="add_exam_dialog_title">Add a New Exam</string>
+    <string name="add_exam_dialog_message">Grades are normally added automatically. In case special grades should be added, this can be done here. Manually added Exams can be deleted later on.</string>
+
 
     <!-- Preferences -->
     <string name="lrz_id">TUM Identification</string>
