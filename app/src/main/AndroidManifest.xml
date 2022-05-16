@@ -372,8 +372,8 @@
         </activity>
 
         <activity
-            android:name=".component.tumui.calendar.NavigatumActivity"
-            android:label="Navigatum"
+            android:name=".component.tumui.calendar.NavigaTUMActivity"
+            android:label="NavigaTUM"
             android:exported="false">
         </activity>
 
