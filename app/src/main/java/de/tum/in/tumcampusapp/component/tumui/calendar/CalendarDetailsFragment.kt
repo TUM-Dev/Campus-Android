@@ -187,16 +187,8 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     }
 
     private fun onLocationClicked(location: String) {
-//        val findStudyRoomIntent = Intent()
-//        findStudyRoomIntent.putExtra(SearchManager.QUERY, Utils.extractRoomNumberFromLocation(location))
-//        findStudyRoomIntent.setClass(requireContext(), RoomFinderActivity::class.java)
-//        startActivity(findStudyRoomIntent)
-
-        val encoded_location = java.net.URLEncoder.encode(location, "utf-8")
-        val url = "https://nav.tum.sexy/search?q=${encoded_location}"
-
-        val sendIntent: Intent = Intent().apply {
-            setData(Uri.parse(url))
+        val sendIntent: Intent = Intent(getContext(),NavigatumActivity::class.java).apply {
+            putExtra("location",location)
         }
         startActivity(sendIntent)
     }
