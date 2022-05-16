@@ -98,7 +98,6 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
             privacyPolicyButton.setOnClickListener { browse(getString(R.string.url_privacy_policy)) }
             finishButton.setOnClickListener { startLoading() }
         }
-
     }
 
     override fun onLoadInBackground(): ChatMember? {

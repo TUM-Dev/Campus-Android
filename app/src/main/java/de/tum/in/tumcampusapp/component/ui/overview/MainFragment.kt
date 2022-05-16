@@ -98,7 +98,6 @@ class MainFragment : BaseFragment<Unit>(
             ItemTouchHelper(ItemTouchHelperCallback()).attachToRecyclerView(cardsRecyclerView)
         }
 
-
         // Start silence Service (if already started it will just invoke a check)
         val service = Intent(requireContext(), SilenceService::class.java)
         requireContext().startService(service)
@@ -128,13 +127,13 @@ class MainFragment : BaseFragment<Unit>(
     }
 
     internal fun refreshCards() {
-        swipeRefreshLayout?.isRefreshing = true
+        swipeRefreshLayout.isRefreshing = true
         onRefresh()
         downloadNewsAlert()
     }
 
     private fun onNewCardsAvailable(cards: List<Card>) {
-        swipeRefreshLayout?.isRefreshing = false
+        swipeRefreshLayout.isRefreshing = false
         cardsAdapter.updateItems(cards)
 
         if (!NetUtils.isConnected(requireContext()) && !isConnectivityChangeReceiverRegistered) {
@@ -201,8 +200,8 @@ class MainFragment : BaseFragment<Unit>(
     private inner class ItemTouchHelperCallback : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
         override fun getSwipeDirs(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder
         ): Int {
             val cardViewHolder = viewHolder as CardViewHolder
             val card = cardViewHolder.currentCard
@@ -210,9 +209,9 @@ class MainFragment : BaseFragment<Unit>(
         }
 
         override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
         ): Boolean {
             cardsAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
             return true

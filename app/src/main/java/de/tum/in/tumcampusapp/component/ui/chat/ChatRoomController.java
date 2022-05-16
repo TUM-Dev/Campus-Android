@@ -36,7 +36,7 @@ import retrofit2.Response;
  */
 public class ChatRoomController implements ProvidesCard {
 
-    private Context mContext;
+    private final Context mContext;
     private final ChatRoomDao chatRoomDao;
 
     /**
@@ -188,7 +188,7 @@ public class ChatRoomController implements ProvidesCard {
 
         List<String> list = new ArrayList<>(rooms.size());
         for (ChatRoomDbRow room : rooms) {
-            list.add(String.valueOf(room.getSemesterId() + ':' + room.getName()));
+            list.add(room.getSemesterId() + ':' + room.getName());
         }
         return list;
     }

@@ -48,7 +48,7 @@ class ShowTicketActivity : BaseActivity(R.layout.activity_show_ticket) {
         get() {
 
             val redemptions = ticketInfoList.mapNotNull { it.tickets?.first()?.redemption }
-            val lastRedemption = redemptions.maxOrNull ()
+            val lastRedemption = redemptions.maxOrNull()
 
             val formattedDate = lastRedemption?.let {
                 Ticket.getFormattedRedemptionDate(this, it)
@@ -66,10 +66,10 @@ class ShowTicketActivity : BaseActivity(R.layout.activity_show_ticket) {
         }
 
     private lateinit var binding: ActivityShowTicketBinding
-    
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         binding = ActivityShowTicketBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -110,7 +110,6 @@ class ShowTicketActivity : BaseActivity(R.layout.activity_show_ticket) {
             )
             swipeRefreshLayout.setOnRefreshListener { loadRedemptionStatus() }
         }
-
     }
 
     private fun loadRedemptionStatus() {
@@ -154,7 +153,7 @@ class ShowTicketActivity : BaseActivity(R.layout.activity_show_ticket) {
         binding.eventLocation.text = event.locality
         binding.eventLocation.setOnClickListener { this.showMap(it) }
 
-        binding.ticketList?.adapter = BoughtTicketAdapter(ticketInfoList)
+        binding.ticketList.adapter = BoughtTicketAdapter(ticketInfoList)
     }
 
     private fun showMap(view: View) {

@@ -89,7 +89,6 @@ class OnboardingStartFragment : BaseFragment<Unit>(
 
             nextButton.setOnClickListener { onNextPressed() }
         }
-
     }
 
     private fun setCustomCloseIcon() {
@@ -102,7 +101,6 @@ class OnboardingStartFragment : BaseFragment<Unit>(
             toolbar.navigationIcon = closeIcon
             toolbar.setNavigationOnClickListener { requireActivity().finish() }
         }
-
     }
 
     private fun onNextPressed() {
@@ -145,7 +143,7 @@ class OnboardingStartFragment : BaseFragment<Unit>(
 
         compositeDisposable += tumOnlineClient
             .requestToken(publicKey, tokenName)
-            .map { TokenResponse.Success(it) as TokenResponse }
+            .map<TokenResponse> { TokenResponse.Success(it) }
             .doOnError(Utils::log)
             .onErrorReturn { TokenResponse.Failure(it) }
             .subscribeOn(Schedulers.io())

@@ -18,11 +18,10 @@ import org.joda.time.DateTimeConstants
 class CafeteriaNotificationSettingsActivity : BaseActivity(R.layout.activity_cafeteria_notification_settings) {
 
     private lateinit var binding: ActivityCafeteriaNotificationSettingsBinding
-    
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         binding = ActivityCafeteriaNotificationSettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
