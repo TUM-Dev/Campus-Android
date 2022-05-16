@@ -372,6 +372,12 @@
         </activity>
 
         <activity
+            android:name=".component.tumui.calendar.NavigatumActivity"
+            android:label="Navigatum"
+            android:exported="false">
+        </activity>
+
+        <activity
             android:name=".component.tumui.calendar.CreateEventActivity"
             android:label="@string/activity_create_event_title"
             android:parentActivityName=".component.tumui.calendar.CalendarActivity">
