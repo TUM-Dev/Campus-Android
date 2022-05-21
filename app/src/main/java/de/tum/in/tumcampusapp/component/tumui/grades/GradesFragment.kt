@@ -6,7 +6,6 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.ArrayMap
-import android.util.Log
 import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -284,6 +283,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
                 invalidate()
             }
+
         }
     }
 
@@ -449,13 +449,16 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                         val filter = filters[position]
                         spinnerPosition = position
 
-        with(binding) {
-            filterSpinner.apply {
-                adapter = spinnerArrayAdapter
-                setSelection(spinnerPosition)
-                visibility = View.VISIBLE
-            }
+                        val examsToShow = when (position) {
+                            0 -> exams
+                            else -> exams.filter { filter.contains(it.programID) }
+                        }
 
+                        showExams(examsToShow)
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>) = Unit
+                }
         }
     }
 
@@ -502,10 +505,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 1.0
             }
 
-
-        binding.filterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                val filter = filters[position]
 
 
             titleView.error = null
@@ -669,7 +668,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         return when (item.itemId) {
             R.id.bar_chart_menu,
             R.id.pie_chart_menu -> toggleChart().run { true }
-            R.id.edit_grades_menu -> changeEditMode().run { true }
+            R.id.edit_grades_menu -> changeEditMode(item).run { true };
             else -> super.onOptionsItemSelected(item)
 
         }
@@ -678,8 +677,14 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     /**
      * Toggles between the standard mode and the mode which allows to change grades.
      */
-    private fun changeEditMode() {
+    private fun changeEditMode(item: MenuItem) {
+
         globalEditOFF = !globalEditOFF
+        if(globalEditOFF){
+            item.setIcon(R.drawable.ic_outline_edit_24px);
+        }else{
+            item.setIcon(R.drawable.ic_baseline_save_24);
+        }
         initUIVisibility()
     }
 
@@ -687,6 +692,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         val scale = resources.displayMetrics.density
         val param = swipeRefreshLayout.layoutParams as ViewGroup.MarginLayoutParams
         if (!globalEditOFF) {
+
             frameLayoutAverageGrade?.visibility = View.GONE
             floatingButtonAddExamGrade?.visibility = View.VISIBLE
             chartsContainer.visibility = View.GONE
@@ -792,4 +798,3 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         )
     }
 }
-

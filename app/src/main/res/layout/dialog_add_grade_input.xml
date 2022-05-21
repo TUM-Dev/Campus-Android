@@ -163,7 +163,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_marginLeft="8dp"
-                android:text="Übernehmen"
+                android:text="@string/save"
                 android:textAllCaps="false" />
 
 

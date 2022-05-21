@@ -22,7 +22,7 @@
 
     <item
         android:id="@+id/edit_grades_menu"
-        android:icon="@drawable/ic_outline_settings_24px"
+        android:icon="@drawable/ic_outline_edit_24px"
         android:orderInCategory="100"
         android:title="@string/edit_grades"
         app:iconTint="@color/color_primary"
