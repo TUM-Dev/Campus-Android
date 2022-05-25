@@ -17,8 +17,10 @@ import de.tum.`in`.tumcampusapp.component.other.locations.BuildingToGpsDao
 import de.tum.`in`.tumcampusapp.component.other.locations.RoomLocationsDao
 import de.tum.`in`.tumcampusapp.component.other.locations.model.BuildingToGps
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarDao
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.EventColorDao
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.WidgetsTimetableBlacklistDao
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventColor
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventSeriesMapping
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.WidgetsTimetableBlacklist
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.RoomLocations
@@ -87,7 +89,8 @@ import java.util.concurrent.ExecutionException
     WidgetsTransport::class,
     ChatRoomDbRow::class,
     ScheduledNotification::class,
-    ActiveAlarm::class])
+    ActiveAlarm::class,
+    EventColor::class])
 @TypeConverters(Converters::class)
 abstract class TcaDb : RoomDatabase() {
 
@@ -138,6 +141,8 @@ abstract class TcaDb : RoomDatabase() {
     abstract fun scheduledNotificationsDao(): ScheduledNotificationsDao
 
     abstract fun activeNotificationsDao(): ActiveAlarmsDao
+
+    abstract fun classColorDao(): EventColorDao
 
     companion object {
         private val migrations = arrayOf(

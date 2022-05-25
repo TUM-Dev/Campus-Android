@@ -17,6 +17,7 @@ import de.tum.`in`.tumcampusapp.api.tumonline.exception.RequestLimitReachedExcep
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavDestination
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventColor
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity
 import de.tum.`in`.tumcampusapp.database.TcaDb
@@ -44,6 +45,10 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
                 ?: throw IllegalStateException("Incomplete Bundle when opening calendar details fragment")
     }
 
+    private val calendarController: CalendarController by lazy {
+        CalendarController(requireContext())
+    }
+
     private var deleteApiCall: Call<DeleteEventResponse>? = null
 
     private val binding by viewBinding(FragmentCalendarDetailsBinding::bind)
@@ -66,6 +71,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
 
     private fun updateView(calendarItemList: List<CalendarItem>) {
         val calendarItem = calendarItemList[0]
+        calendarController.changeEventColor(calendarItem, R.color.event_exercise, true)
 
         with(binding) {
             if (calendarItemList.all { it.isCanceled }) {
