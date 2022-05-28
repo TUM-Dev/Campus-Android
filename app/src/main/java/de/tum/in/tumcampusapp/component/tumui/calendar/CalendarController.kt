@@ -203,16 +203,6 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
 
     override fun hasNotificationsEnabled() = Utils.getSettingBool(context, "card_next_lecture_phone", false)
 
-    fun changeEventColor(calendarItem: CalendarItem, color: Int, isSingleEvent: Boolean = false) {
-        eventColorDao.insert(EventColor(
-                eventColorId = null,
-                eventIdentifier = EventColorProvider.getEventIdentifier(calendarItem),
-                eventNr = calendarItem.nr,
-                isSingleEvent = isSingleEvent,
-                color = color
-        ))
-    }
-
     companion object {
 
         private val PROJECTION = arrayOf("_id", "name")

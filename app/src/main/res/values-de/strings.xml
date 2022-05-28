@@ -34,6 +34,20 @@
     <string name="calendar_filter_hour_limit_min_title">Von Uhrzeit</string>
     <string name="calendar_filter_hour_limit_max_title">Bis Uhrzeit</string>
     <string name="calendar_filter_hour_limit_error_message">Die Anfangsstunde muss vor dem Ende liegen!</string>
+    <string name="change_color">Farbe ändern</string>
+    <string name="choose_color">Wähle eine Farbe</string>
+    <string name="custom_color_default">Standardfarbe</string>
+    <string name="custom_color_red">Rot</string>
+    <string name="custom_color_pink">Rosa</string>
+    <string name="custom_color_purple">Purple</string>
+    <string name="custom_color_indigo">Violett</string>
+    <string name="custom_color_blue">Blau</string>
+    <string name="custom_color_teal">Blaugrün</string>
+    <string name="custom_color_green">Grün</string>
+    <string name="custom_color_lime">Limette</string>
+    <string name="custom_color_yellow">Gelb</string>
+    <string name="custom_color_amber">Bernstein</string>
+    <string name="custom_color_orange">Orange</string>
 
 
     <!-- Roomfinder -->
