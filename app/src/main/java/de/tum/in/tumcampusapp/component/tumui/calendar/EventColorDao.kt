@@ -14,4 +14,7 @@ interface EventColorDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(eventColor: EventColor)
+
+    @Query("DELETE FROM event_color_table WHERE event_nr = :eventNr")
+    fun deleteByEventNr(eventNr: String)
 }

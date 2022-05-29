@@ -4,22 +4,22 @@ import android.app.Dialog
 import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.view.View
 import android.view.Window
 import android.widget.RadioButton
 import androidx.core.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
-import de.tum.`in`.tumcampusapp.database.TcaDb
 import kotlinx.android.synthetic.main.change_event_color_dialog.*
 
 class ChangeEventColorDialog(
         context: Context,
         private val calendarItem: CalendarItem,
-        private val onColorChanged: () -> Unit
+        private val onColorChanged: (OnColorChangedData?) -> Unit,
+        private val fromCreateEventActivity: Boolean
 ) : Dialog(context) {
 
-    private val eventColorProvider: EventColorProvider =
-            EventColorProvider(context, TcaDb.getInstance(context).classColorDao())
+    private val eventColorController: EventColorController = EventColorController(context)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,13 +27,17 @@ class ChangeEventColorDialog(
         setCancelable(true)
         setContentView(R.layout.change_event_color_dialog)
 
+        if (fromCreateEventActivity) {
+            this.repeatingSwitch.visibility = View.GONE
+        }
+
         // set default color
-        val standardColor = EventColorProvider.getStandardColor(calendarItem)
+        val standardColor = EventColorController.getStandardColor(calendarItem)
         this.checkBoxDefault.buttonTintList =
                 ColorStateList.valueOf(ContextCompat.getColor(context, standardColor))
 
         // check correct checkbox with the current color
-        val currentColor = eventColorProvider.getResourceColor(calendarItem)
+        val currentColor = eventColorController.getResourceColor(calendarItem)
         val currentColorCheckboxId = getColorCheckboxIdByByColor(currentColor)
         this.findViewById<RadioButton>(currentColorCheckboxId).isChecked = true
 
@@ -44,8 +48,13 @@ class ChangeEventColorDialog(
         val selectedColorBtnId = radioColor.checkedRadioButtonId
         val selectedColorBtn: RadioButton = findViewById(selectedColorBtnId)
         val selectedColor = getCustomColorByText(selectedColorBtn.text, calendarItem)
-        eventColorProvider.changeEventColor(calendarItem, selectedColor, !repeatingSwitch.isChecked)
-        onColorChanged()
+
+        if (fromCreateEventActivity) {
+            onColorChanged(OnColorChangedData(selectedColorBtn.text, selectedColor))
+        } else {
+            eventColorController.changeEventColor(calendarItem, selectedColor, !repeatingSwitch.isChecked)
+            onColorChanged(null)
+        }
         dismiss()
     }
 
@@ -62,7 +71,7 @@ class ChangeEventColorDialog(
             context.getString(R.string.custom_color_yellow) -> R.color.calendar_yellow
             context.getString(R.string.custom_color_amber) -> R.color.calendar_amber
             context.getString(R.string.custom_color_orange) -> R.color.calendar_orange
-            else -> EventColorProvider.getStandardColor(calendarItem)
+            else -> EventColorController.getStandardColor(calendarItem)
         }
     }
 
@@ -82,4 +91,9 @@ class ChangeEventColorDialog(
             else -> R.id.checkBoxDefault
         }
     }
+
+    data class OnColorChangedData(
+            val text: CharSequence,
+            val color: Int
+    )
 }

@@ -5,11 +5,13 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -41,6 +43,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
 
     private lateinit var start: DateTime
     private lateinit var end: DateTime
+    private var selectedColor: Int? = null
 
     private var isEditing: Boolean = false
     private var events: ArrayList<CalendarItem> = ArrayList()
@@ -50,6 +53,8 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     private val repeatHelper = RepeatHelper()
 
     private lateinit var binding: ActivityCreateEventBinding
+
+    private val eventColorController: EventColorController = EventColorController(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,6 +108,12 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         initStartEndDates(extras)
         setDateAndTimeListeners()
         initRepeatingSettingsListeners()
+
+        if(isEditing) {
+            initEventColor(extras)
+        } else {
+            initEventColorOnClickListener()
+        }
 
         binding.createEventButton.setOnClickListener {
             if (end.isBefore(start)) {
@@ -205,6 +216,82 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         updateTimeViews()
     }
 
+    private fun initEventColor(extras: Bundle?) {
+        val eventNr = extras?.getSerializable(Const.EVENT_NR) as String?
+        val eventTitle = extras?.getSerializable(Const.EVENT_TITLE) as String?
+        val startTime = extras?.getSerializable(Const.EVENT_START) as DateTime?
+
+        if (eventNr == null || eventTitle == null || startTime == null)
+            return
+
+        val calendarItem = CalendarItem(
+                nr = eventNr,
+                title = eventTitle,
+                dtstart = startTime,
+                url = "",
+        )
+
+        val currentColor = eventColorController.getResourceColor(calendarItem)
+        val colorText = getTextColorByColor(currentColor)
+        binding.colorChangeBtn.text = getString(colorText)
+        binding.colorChangeBtn.buttonTintList = ColorStateList.valueOf(ContextCompat.getColor(this, currentColor))
+
+        binding.colorChangeBtn.setOnClickListener {
+            val dialog = ChangeEventColorDialog(
+                    context = this,
+                    calendarItem = calendarItem,
+                    onColorChanged = { data ->
+                        updateEventColorInput(data)
+                    },
+                    fromCreateEventActivity = true
+            )
+            dialog.show()
+            dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        }
+    }
+
+    private fun getTextColorByColor(color: Int): Int {
+        return when(color) {
+            R.color.calendar_red -> R.string.custom_color_red
+            R.color.calendar_pink -> R.string.custom_color_pink
+            R.color.calendar_purple -> R.string.custom_color_purple
+            R.color.calendar_indigo -> R.string.custom_color_indigo
+            R.color.calendar_blue -> R.string.custom_color_blue
+            R.color.calendar_teal -> R.string.custom_color_teal
+            R.color.calendar_green -> R.string.custom_color_green
+            R.color.calendar_lime -> R.string.custom_color_lime
+            R.color.calendar_yellow -> R.string.custom_color_yellow
+            R.color.calendar_amber -> R.string.custom_color_amber
+            R.color.calendar_orange -> R.string.custom_color_orange
+            else -> R.string.custom_color_default
+        }
+    }
+
+    private fun initEventColorOnClickListener() {
+        binding.colorChangeBtn.setOnClickListener {
+            val dialog = ChangeEventColorDialog(
+                    context = this,
+                    calendarItem = CalendarItem(),
+                    onColorChanged = { data ->
+                        updateEventColorInput(data)
+                    },
+                    fromCreateEventActivity = true
+            )
+            dialog.show()
+            dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        }
+    }
+
+    private fun updateEventColorInput(onColorChangedData: ChangeEventColorDialog.OnColorChangedData?) {
+        if (onColorChangedData == null) {
+            Utils.showToast(this, R.string.error_unknown)
+            return
+        }
+        binding.colorChangeBtn.text = onColorChangedData.text
+        binding.colorChangeBtn.buttonTintList = ColorStateList.valueOf(ContextCompat.getColor(this, onColorChangedData.color))
+        selectedColor = onColorChangedData.color
+    }
+
     private fun setDateAndTimeListeners() {
         // DATE
 
@@ -287,6 +374,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
                         if (response.isSuccessful) {
                             Utils.log("Event successfully deleted (now creating the edited version)")
                             TcaDb.getInstance(this@CreateEventActivity).calendarDao().delete(eventId)
+                            eventColorController.removeEventColor(eventId)
                             createEvent()
                         } else {
                             Utils.showToast(this@CreateEventActivity, R.string.error_unknown)
@@ -334,6 +422,29 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         for (curEvent in events) {
             val apiCall = apiClient.createEvent(curEvent, null)
             fetch(apiCall)
+        }
+        saveEventColor(event)
+    }
+
+    private fun saveEventColor(event: CalendarItem) {
+        val color = selectedColor ?: getCustomColorByText(binding.colorChangeBtn.text)
+        eventColorController.changeEventColor(event, color, false)
+    }
+
+    private fun getCustomColorByText(text: CharSequence): Int {
+        return when(text) {
+            getString(R.string.custom_color_red) -> R.color.calendar_red
+            getString(R.string.custom_color_pink) -> R.color.calendar_pink
+            getString(R.string.custom_color_purple) -> R.color.calendar_purple
+            getString(R.string.custom_color_indigo) -> R.color.calendar_indigo
+            getString(R.string.custom_color_blue) -> R.color.calendar_blue
+            getString(R.string.custom_color_teal) -> R.color.calendar_teal
+            getString(R.string.custom_color_green) -> R.color.calendar_green
+            getString(R.string.custom_color_lime) -> R.color.calendar_lime
+            getString(R.string.custom_color_yellow) -> R.color.calendar_yellow
+            getString(R.string.custom_color_amber) -> R.color.calendar_amber
+            getString(R.string.custom_color_orange) -> R.color.calendar_orange
+            else -> R.color.event_other
         }
     }
 

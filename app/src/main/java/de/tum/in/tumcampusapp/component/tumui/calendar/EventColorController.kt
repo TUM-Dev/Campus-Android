@@ -6,15 +6,16 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItemType
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventColor
+import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.ColorUtils.getDisplayColorFromColor
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import java.util.*
 
-class EventColorProvider(
+class EventColorController(
         private val context: Context,
-        private val eventColorDao: EventColorDao,
 ) {
+    private val eventColorDao: EventColorDao = TcaDb.getInstance(context).classColorDao()
 
     fun changeEventColor(calendarItem: CalendarItem, color: Int, isSingleEvent: Boolean = false) {
         if (isSingleEvent) {
@@ -87,6 +88,10 @@ class EventColorProvider(
                 .append(calendarItem.url)
                 .append(formatDateToHHmm(calendarItem.eventStart))
                 .toString()
+    }
+
+    fun removeEventColor(eventNr: String) {
+        eventColorDao.deleteByEventNr(eventNr)
     }
 
     companion object {
