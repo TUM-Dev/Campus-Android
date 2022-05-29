@@ -127,7 +127,11 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     }
 
     private fun showChangeEventColorDialog(calendarItem: CalendarItem) {
-        val dialog = ChangeEventColorDialog(requireContext(), calendarItem)
+        val dialog = ChangeEventColorDialog(
+                context = requireContext(),
+                calendarItem = calendarItem,
+                onColorChanged = { (requireParentFragment() as CalendarFragment).refresh() }
+        )
         dialog.show()
         dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
     }

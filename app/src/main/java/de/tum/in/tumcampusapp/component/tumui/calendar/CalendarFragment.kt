@@ -124,6 +124,10 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
     }
 
     override fun onRefresh() {
+        refresh()
+    }
+
+    fun refresh() {
         loadEvents(CacheControl.BYPASS_CACHE)
     }
 
