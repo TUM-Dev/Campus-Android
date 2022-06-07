@@ -80,6 +80,11 @@ interface TUMOnlineAPIService {
         @Query("pSuche") query: String
     ): Call<PersonList>
 
+    @GET("wbservicesbasic.personenSuche")
+    fun searchPerson2(
+            @Query("pSuche") query: String
+    ): Single<PersonList>
+
     @GET("wbservicesbasic.noten")
     fun getGrades(
         @Header("Cache-Control") cacheControl: String

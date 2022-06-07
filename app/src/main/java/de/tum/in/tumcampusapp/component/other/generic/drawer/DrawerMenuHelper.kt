@@ -22,6 +22,7 @@ import de.tum.`in`.tumcampusapp.component.ui.news.NewsFragment
 import de.tum.`in`.tumcampusapp.component.ui.openinghour.OpeningHoursListFragment
 import de.tum.`in`.tumcampusapp.component.ui.overview.InformationActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainFragment
+import de.tum.`in`.tumcampusapp.component.ui.search.SearchFragment
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.StudyRoomsFragment
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.EventsFragment
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -51,7 +52,10 @@ class DrawerMenuHelper(
         allItems.clear()
 
         navigationMenu += HOME
+        navigationMenu += SEARCH
+
         allItems += HOME
+        allItems += SEARCH
 
         val myTumMenu = navigationMenu.addSubMenu(R.string.my_tum)
         if (hasTumOnlineAccess) {
@@ -84,6 +88,10 @@ class DrawerMenuHelper(
     fun findNavItem(menuItem: MenuItem): NavItem {
         if (menuItem.title == activity.getString(HOME.titleRes)) {
             return HOME
+        }
+
+        if (menuItem.title == activity.getString(SEARCH.titleRes)) {
+            return SEARCH
         }
 
         for (item in MY_TUM + GENERAL) {
@@ -122,6 +130,7 @@ class DrawerMenuHelper(
     private companion object {
 
         private val HOME = NavItem.FragmentDestination(R.string.home, R.drawable.ic_outline_home_24px, MainFragment::class.java)
+        private val SEARCH = NavItem.FragmentDestination(R.string.search, R.drawable.ic_action_search, SearchFragment::class.java)
 
         private val MY_TUM = arrayOf(
                 NavItem.FragmentDestination(R.string.calendar, R.drawable.ic_outline_event_24px, CalendarFragment::class.java, true),

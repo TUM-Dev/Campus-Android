@@ -76,6 +76,10 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
         return apiService.searchPerson(query)
     }
 
+    fun searchPerson2(query: String): Single<PersonList> {
+        return apiService.searchPerson2(query)
+    }
+
     fun getGrades(cacheControl: CacheControl): Call<ExamList> {
         return apiService.getGrades(cacheControl.header)
     }
