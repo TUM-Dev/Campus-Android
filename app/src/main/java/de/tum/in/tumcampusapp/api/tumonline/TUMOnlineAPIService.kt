@@ -69,6 +69,11 @@ interface TUMOnlineAPIService {
         @Query("pSuche") query: String
     ): Call<LecturesResponse>
 
+    @GET("wbservicesbasic.veranstaltungenSuche")
+    fun searchLectures2(
+            @Query("pSuche") query: String
+    ): Single<LecturesResponse>
+
     @GET("wbservicesbasic.personenDetails")
     fun getPersonDetails(
         @Query("pIdentNr") id: String,
