@@ -1,6 +1,5 @@
 package de.tum.`in`.tumcampusapp.component.ui.search
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
@@ -10,6 +9,7 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -18,11 +18,16 @@ class SearchViewModel @Inject constructor(
         private val tumCabeClient: TUMCabeClient
 ) : ViewModel() {
 
-    val searchResultList = MutableLiveData<List<SearchResult>>()
+    val state2: MutableStateFlow<SearchResultState> = MutableStateFlow(SearchResultState())
 
     private val compositeDisposable = CompositeDisposable()
 
     fun search(query: String) {
+        state2.value = state2.value.copy(
+                isLoading = true,
+                data = emptyList()
+        )
+
         val persons = tumOnlineClient
                 .searchPerson2(query)
                 .subscribeOn(Schedulers.io())
@@ -52,11 +57,16 @@ class SearchViewModel @Inject constructor(
                     lectures.map { SearchResult.Lecture(it) }
                 }
 
+
         compositeDisposable += Single
-                .merge(persons, rooms, lectures)
+                .concat(persons, rooms, lectures)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { searchResults ->
-                    searchResultList.value = searchResults
+
+                    state2.value = state2.value.copy(
+                            isLoading = true,
+                            data = state2.value.data + searchResults
+                    )
                 }
     }
 

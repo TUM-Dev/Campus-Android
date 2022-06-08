@@ -6,14 +6,15 @@
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
     android:gravity="center"
-    android:padding="@dimen/material_default_padding">
+    android:paddingHorizontal="@dimen/material_default_padding"
+    android:paddingVertical="@dimen/material_tiny_padding">
 
     <ImageView
         android:id="@+id/iconImageView"
-        android:layout_width="@dimen/icon_large"
-        android:layout_height="@dimen/icon_large"
-        android:background="@drawable/circle_background"
-        android:backgroundTint="@color/tum_light_gray"
+        android:layout_width="@dimen/search_result_icon_size"
+        android:layout_height="@dimen/search_result_icon_size"
+        android:background="@drawable/search_result_icon_background"
+        android:backgroundTint="@color/icon_background"
         android:padding="@dimen/material_small_padding"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,16 +22,41 @@
         tools:src="@drawable/ic_person"
         app:tint="@color/tum_400" />
 
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/profilePictureImageView"
+        android:layout_width="@dimen/search_result_icon_size"
+        android:layout_height="@dimen/search_result_icon_size"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:riv_corner_radius="@dimen/icon_large" />
+
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/titleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/material_default_padding"
-        android:fontFamily="sans-serif-medium"
+        android:layout_marginStart="@dimen/material_small_padding"
+        android:fontFamily="sans-serif"
+        android:textColor="@color/text_primary"
         android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/subtitleTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/iconImageView"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Title" />
+
+    <TextView
+        android:id="@+id/subtitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/material_small_padding"
+        android:textColor="@color/text_secondary"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/iconImageView"
+        app:layout_constraintTop_toBottomOf="@id/titleTextView"
+        tools:text="Subtitle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

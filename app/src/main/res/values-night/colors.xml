@@ -21,6 +21,8 @@
     <color name="chat_incoming">#151515</color>
     <color name="chat_outgoing">@color/tum_900</color>
 
+    <color name="icon_background">#A7A7A7</color>
+
     <!-- Navigation drawer -->
 
     <color name="navigation_drawer_header_background">@color/black</color>

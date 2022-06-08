@@ -52,4 +52,6 @@
 
     <dimen name="padding_chat_small">8sp</dimen>
     <dimen name="padding_chat_big">50sp</dimen>
+
+    <dimen name="search_result_icon_size">44sp</dimen>
 </resources>

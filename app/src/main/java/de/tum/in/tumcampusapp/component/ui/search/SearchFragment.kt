@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.BaseFragment
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.activity.LectureDetailsActivity
@@ -14,9 +15,10 @@ import de.tum.`in`.tumcampusapp.component.tumui.person.PersonDetailsActivity
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderDetailsActivity
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
-import de.tum.`in`.tumcampusapp.utils.observeNonNull
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.toolbar_search.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -43,7 +45,11 @@ class SearchFragment: BaseFragment<Unit>(
 
         val searchResultsAdapter = SearchResultsAdapter { onSearchResultClicked(it) }
         searchResultsRecyclerView.adapter = searchResultsAdapter
-        viewModel.searchResultList.observeNonNull(viewLifecycleOwner) { searchResultsAdapter.submitList(it) }
+        lifecycleScope.launch {
+            viewModel.state2.collect { searchResultState ->
+                searchResultsAdapter.submitList(searchResultState.data)
+            }
+        }
 
         searchEditText.setOnEditorActionListener { textView, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
