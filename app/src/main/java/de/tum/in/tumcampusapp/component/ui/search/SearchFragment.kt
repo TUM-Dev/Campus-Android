@@ -7,12 +7,16 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.BaseFragment
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.activity.LectureDetailsActivity
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.Lecture
 import de.tum.`in`.tumcampusapp.component.tumui.person.PersonDetailsActivity
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderDetailsActivity
+import de.tum.`in`.tumcampusapp.component.ui.search.adapter.ResultTypeData
+import de.tum.`in`.tumcampusapp.component.ui.search.adapter.ResultTypesAdapter
+import de.tum.`in`.tumcampusapp.component.ui.search.adapter.SearchResultsAdapter
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import kotlinx.android.synthetic.main.fragment_search.*
@@ -30,6 +34,9 @@ class SearchFragment: BaseFragment<Unit>(
     @Inject
     lateinit var viewModelProvider: Provider<SearchViewModel>
 
+    private lateinit var searchResultsAdapter: SearchResultsAdapter
+    private lateinit var resultTypesAdapter: ResultTypesAdapter
+
     private val viewModel: SearchViewModel by lazy {
         val factory = ViewModelFactory(viewModelProvider)
         ViewModelProvider(this, factory).get(SearchViewModel::class.java)
@@ -43,12 +50,11 @@ class SearchFragment: BaseFragment<Unit>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val searchResultsAdapter = SearchResultsAdapter { onSearchResultClicked(it) }
-        searchResultsRecyclerView.adapter = searchResultsAdapter
+        initSearchResultsAdapter()
+        initSearchResultTypesAdapter()
+
         lifecycleScope.launch {
-            viewModel.state2.collect { searchResultState ->
-                searchResultsAdapter.submitList(searchResultState.data)
-            }
+            handleStateChange()
         }
 
         searchEditText.setOnEditorActionListener { textView, actionId, _ ->
@@ -61,6 +67,37 @@ class SearchFragment: BaseFragment<Unit>(
             }
         }
         searchEditText.requestFocus()
+    }
+
+    private fun initSearchResultsAdapter() {
+        searchResultsAdapter = SearchResultsAdapter { onSearchResultClicked(it) }
+        searchResultsRecyclerView.adapter = searchResultsAdapter
+
+        searchResultsAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onChanged() {
+                searchResultsRecyclerView.scrollToPosition(0)
+            }
+
+            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+                searchResultsRecyclerView.scrollToPosition(0)
+            }
+
+            override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
+                searchResultsRecyclerView.scrollToPosition(0)
+            }
+
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                searchResultsRecyclerView.scrollToPosition(0)
+            }
+
+            override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
+                searchResultsRecyclerView.scrollToPosition(0)
+            }
+
+            override fun onItemRangeChanged(positionStart: Int, itemCount: Int, payload: Any?) {
+                searchResultsRecyclerView.scrollToPosition(0)
+            }
+        })
     }
 
     private fun onSearchResultClicked(searchResult: SearchResult) {
@@ -83,6 +120,42 @@ class SearchFragment: BaseFragment<Unit>(
                 startActivity(intent)
             }
         }
+    }
 
+    private fun initSearchResultTypesAdapter() {
+        resultTypesAdapter = ResultTypesAdapter(
+                onClick = { onResultTypeClicked(it.type) }
+        )
+        searchResultTypesRecyclerView.adapter = resultTypesAdapter
+    }
+
+    private fun onResultTypeClicked(type: SearchResultType) {
+        viewModel.changeResultType(type)
+    }
+
+    private suspend fun handleStateChange() {
+        viewModel.state.collect { searchResultState ->
+            searchResultsAdapter.submitList(searchResultState.data)
+            if (searchResultState.availableResultTypes.isNotEmpty()) {
+                searchResultTypesRecyclerView.visibility = View.VISIBLE
+                resultTypesAdapter.submitList(mapToResultTypeData(viewModel.state.value.availableResultTypes, viewModel.state.value.selectedType))
+            } else {
+                searchResultTypesRecyclerView.visibility = View.GONE
+                resultTypesAdapter.submitList(emptyList())
+            }
+        }
+    }
+
+    private fun mapToResultTypeData(
+            resultTypeList: List<SearchResultType>,
+            selectedType: SearchResultType
+    ): List<ResultTypeData> {
+        val availableTypes = listOf(SearchResultType.ALL) + resultTypeList
+        return availableTypes.map { searchResultType ->
+            ResultTypeData(
+                    type = searchResultType,
+                    selectedType = selectedType
+            )
+        }
     }
 }

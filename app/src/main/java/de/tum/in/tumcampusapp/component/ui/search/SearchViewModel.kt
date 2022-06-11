@@ -10,6 +10,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.flow.MutableStateFlow
+import java.lang.IllegalStateException
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -18,14 +19,33 @@ class SearchViewModel @Inject constructor(
         private val tumCabeClient: TUMCabeClient
 ) : ViewModel() {
 
-    val state2: MutableStateFlow<SearchResultState> = MutableStateFlow(SearchResultState())
+    val state: MutableStateFlow<SearchResultState> = MutableStateFlow(SearchResultState())
+
+    private val persons: MutableStateFlow<List<SearchResult>> = MutableStateFlow(emptyList())
+    private val rooms: MutableStateFlow<List<SearchResult>> = MutableStateFlow(emptyList())
+    private val lectures: MutableStateFlow<List<SearchResult>> = MutableStateFlow(emptyList())
 
     private val compositeDisposable = CompositeDisposable()
 
+    fun changeResultType(type: SearchResultType) {
+        val selectedResult: List<SearchResult> = when (type) {
+            SearchResultType.PERSON -> persons.value
+            SearchResultType.ROOM -> rooms.value
+            SearchResultType.LECTURE -> lectures.value
+            SearchResultType.ALL -> persons.value + rooms.value + lectures.value
+        }
+        state.value = state.value.copy(
+                data = sort(selectedResult),
+                selectedType = type
+        )
+    }
+
     fun search(query: String) {
-        state2.value = state2.value.copy(
+        state.value = state.value.copy(
                 isLoading = true,
-                data = emptyList()
+                data = emptyList(),
+                availableResultTypes = emptyList(),
+                selectedType = SearchResultType.ALL
         )
 
         val persons = tumOnlineClient
@@ -57,17 +77,42 @@ class SearchViewModel @Inject constructor(
                     lectures.map { SearchResult.Lecture(it) }
                 }
 
-
         compositeDisposable += Single
                 .concat(persons, rooms, lectures)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { searchResults ->
+                .subscribe { saveSearchResult(it) }
+    }
 
-                    state2.value = state2.value.copy(
-                            isLoading = true,
-                            data = state2.value.data + searchResults
-                    )
-                }
+    private fun saveSearchResult(result: List<SearchResult>) {
+        if (result.isEmpty()) {
+            saveResult(emptyList(), null)
+            return
+        }
+
+        val type : SearchResultType = when (result[0]) {
+            is SearchResult.Person -> SearchResultType.PERSON
+            is SearchResult.Room -> SearchResultType.ROOM
+            is SearchResult.Lecture -> SearchResultType.LECTURE
+        }
+
+        when (type) {
+            SearchResultType.PERSON -> persons.value = result
+            SearchResultType.ROOM -> rooms.value = result
+            SearchResultType.LECTURE -> lectures.value = result
+            else -> throw IllegalStateException("Not know search result type!")
+        }
+        saveResult(result, type)
+    }
+
+    private fun saveResult(result: List<SearchResult>, type: SearchResultType?) {
+        var availableTypes = state.value.availableResultTypes
+        if (type != null)
+            availableTypes = availableTypes + listOf(type)
+        state.value = state.value.copy(
+                isLoading = false,
+                data = sort(state.value.data + result),
+                availableResultTypes = availableTypes
+        )
     }
 
     /**
@@ -95,4 +140,7 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    private fun sort(result: List<SearchResult>): List<SearchResult> {
+        return result.sortedBy { it.title }
+    }
 }

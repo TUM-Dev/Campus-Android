@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.component.ui.search
+package de.tum.`in`.tumcampusapp.component.ui.search.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.makeramen.roundedimageview.RoundedImageView
 import com.squareup.picasso.Picasso
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.ui.search.SearchResult
 
 class SearchResultsAdapter(
         private val onClick: (SearchResult) -> Unit,
@@ -60,9 +61,9 @@ class SearchResultsAdapter(
                  * Adapter does not remove items from the screen, but reuse them for performance
                  * that is why we need to set this values back to original ones
                  * Example: item is displayed as a Person and we hide the subtitle, then user scroll
-                 * and the same item becomes now Lecture, and if we do not set this values back
+                 * and the same item becomes now Lecture, and if we do not reset these values in 'else'
                  * then subtitle will be still not visible
-                 **/
+                 */
 
                 searchResultSubtitleTextView.visibility = View.VISIBLE
                 searchResultIcon.setBackgroundResource(R.drawable.search_result_icon_background)

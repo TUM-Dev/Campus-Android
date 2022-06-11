@@ -769,4 +769,12 @@ Signature: %5$s</string>
     // for opening hours
     <string name="language">en</string>
     <string name="use_existing">Use existing</string>
+
+
+    // search result types
+    <string name="all_results">All results</string>
+    <string name="people">People</string>
+    <string name="rooms">Rooms</string>
+    <string name="lectures">Lectures</string>
+
 </resources>

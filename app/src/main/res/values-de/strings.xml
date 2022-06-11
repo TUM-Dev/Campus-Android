@@ -717,4 +717,10 @@ Signatur: %5$s</string>
     // for opening hours
     <string name="language">de</string>
     <string name="use_existing">Bestehendes verwenden</string>
+
+    // search result types
+    <string name="all_results">Alle Ergebnisse</string>
+    <string name="people">Personen</string>
+    <string name="rooms">Räume</string>
+    <string name="lectures">Vorlesungen</string>
 </resources>
