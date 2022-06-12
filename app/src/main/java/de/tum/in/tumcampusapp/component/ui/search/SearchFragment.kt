@@ -5,6 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat
+import androidx.core.content.getSystemService
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -19,12 +22,15 @@ import de.tum.`in`.tumcampusapp.component.ui.search.adapter.ResultTypesAdapter
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.SearchResultsAdapter
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
+import de.tum.`in`.tumcampusapp.utils.Utils
 import kotlinx.android.synthetic.main.fragment_search.*
+import kotlinx.android.synthetic.main.fragment_search.view.*
 import kotlinx.android.synthetic.main.toolbar_search.*
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
+
 
 class SearchFragment: BaseFragment<Unit>(
         R.layout.fragment_search,
@@ -50,6 +56,8 @@ class SearchFragment: BaseFragment<Unit>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        showKeyboard()
+
         initSearchResultsAdapter()
         initSearchResultTypesAdapter()
 
@@ -60,13 +68,35 @@ class SearchFragment: BaseFragment<Unit>(
         searchEditText.setOnEditorActionListener { textView, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 val input = textView.text.toString().trim()
-                viewModel.search(input)
+                if (input.length < MIN_QUERY_LENGTH) {
+                    val text = String.format(getString(R.string.min_search_len), MIN_QUERY_LENGTH)
+                    Utils.showToast(requireContext(), text)
+                    showSearchInfo()
+                } else {
+                    viewModel.search(input)
+                    hideKeyboard()
+                }
                 true
             } else {
                 false
             }
         }
-        searchEditText.requestFocus()
+
+        clearButton.setOnClickListener {
+            clearInput()
+        }
+    }
+
+    private fun hideKeyboard() {
+        val imm: InputMethodManager? = requireContext().getSystemService()
+        searchEditText.clearFocus()
+        imm?.hideSoftInputFromWindow(searchEditText.windowToken, 0)
+    }
+
+    private fun clearInput() {
+        searchEditText.setText("")
+        showSearchInfo()
+        viewModel.clearState()
     }
 
     private fun initSearchResultsAdapter() {
@@ -106,7 +136,6 @@ class SearchFragment: BaseFragment<Unit>(
                 val intent = Intent(requireContext(), PersonDetailsActivity::class.java).apply {
                     putExtra("personObject", searchResult.person)
                 }
-                println(searchResult.person)
                 startActivity(intent)
             }
             is SearchResult.Room -> {
@@ -135,6 +164,22 @@ class SearchFragment: BaseFragment<Unit>(
 
     private suspend fun handleStateChange() {
         viewModel.state.collect { searchResultState ->
+
+            if (searchResultState.isLoading) {
+                progressIndicator.show()
+            } else {
+                progressIndicator.hide()
+
+                val input = searchEditText.text.toString().trim()
+                if (input.length < MIN_QUERY_LENGTH)
+                    showSearchInfo()
+                else if (viewModel.state.value.data.isEmpty()){
+                    showNoResultInfo(input)
+                } else {
+                    hideResultInfo()
+                }
+            }
+
             searchResultsAdapter.submitList(searchResultState.data)
             if (searchResultState.availableResultTypes.isNotEmpty()) {
                 searchResultTypesRecyclerView.visibility = View.VISIBLE
@@ -157,5 +202,51 @@ class SearchFragment: BaseFragment<Unit>(
                     selectedType = selectedType
             )
         }
+    }
+
+    private fun showKeyboard() {
+        val imm: InputMethodManager? = requireContext().getSystemService()
+        searchEditText.requestFocus()
+        imm?.showSoftInput(searchEditText, InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    private fun showSearchInfo() {
+        noResultInfo.visibility = View.VISIBLE
+        noResultInfo.infoTitle.setText(R.string.search_info)
+        noResultInfo.infoSubtitle.text = ""
+    }
+
+    private fun showNoResultInfo(input: String) {
+        noResultInfo.visibility = View.VISIBLE
+        noResultInfo.infoTitle.text =
+                String.format(resources.getString(R.string.no_result_info, input))
+        noResultInfo.infoSubtitle.setText(R.string.no_result_sub_info)
+    }
+
+    private fun hideResultInfo() {
+        noResultInfo.visibility = View.GONE
+    }
+
+    override fun onResume() {
+        super.onResume()
+        initBackButton()
+    }
+
+    private fun initBackButton() {
+        val backIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_back)
+        backIcon?.let {
+            val color = ContextCompat.getColor(requireContext(), R.color.tum_500)
+            it.setTint(color)
+        }
+
+        toolbar.navigationIcon = backIcon
+        toolbar.setNavigationOnClickListener {
+            hideKeyboard()
+            requireActivity().onBackPressed()
+        }
+    }
+
+    companion object {
+        private const val MIN_QUERY_LENGTH = 3
     }
 }

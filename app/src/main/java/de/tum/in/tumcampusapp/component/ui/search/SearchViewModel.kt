@@ -14,7 +14,7 @@ import java.lang.IllegalStateException
 import java.util.regex.Pattern
 import javax.inject.Inject
 
-class SearchViewModel @Inject constructor(
+class  SearchViewModel @Inject constructor(
         private val tumOnlineClient: TUMOnlineClient,
         private val tumCabeClient: TUMCabeClient
 ) : ViewModel() {
@@ -142,5 +142,14 @@ class SearchViewModel @Inject constructor(
 
     private fun sort(result: List<SearchResult>): List<SearchResult> {
         return result.sortedBy { it.title }
+    }
+
+    fun clearState() {
+        state.value = state.value.copy(
+                isLoading = false,
+                data = emptyList(),
+                availableResultTypes = emptyList(),
+                selectedType = SearchResultType.ALL
+        )
     }
 }
