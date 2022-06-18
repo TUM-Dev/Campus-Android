@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:paddingHorizontal="@dimen/material_default_padding"
+    android:paddingVertical="@dimen/material_tiny_padding">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/iconImageView"
+            android:layout_width="@dimen/search_result_icon_size"
+            android:layout_height="@dimen/search_result_icon_size"
+            android:background="@drawable/search_result_icon_background"
+            android:backgroundTint="@color/icon_background"
+            android:padding="@dimen/material_small_padding"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/tum_400"
+            tools:src="@drawable/ic_person" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/profilePictureImageView"
+            android:layout_width="@dimen/search_result_icon_size"
+            android:layout_height="@dimen/search_result_icon_size"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:riv_corner_radius="@dimen/icon_large" />
+
+        <TextView
+            android:id="@+id/recentSearchTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/material_small_padding"
+            android:fontFamily="sans-serif"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iconImageView"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Title" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageButton
+        android:id="@+id/clearButton"
+        android:layout_width="@dimen/icon_default"
+        android:layout_height="@dimen/icon_default"
+        android:layout_gravity="center_vertical|end"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_action_cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/text_secondary" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model
 
+import com.google.gson.Gson
+import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
 import java.io.Serializable
@@ -37,12 +39,15 @@ data class RoomFinderRoom(
     companion object {
         private const val serialVersionUID = 6631656320611471476L
 
+        @JvmStatic fun toRecent(room: RoomFinderRoom) : Recent {
+            val gson = Gson()
+            val jsonString = gson.toJson(room)
+            return Recent(name = jsonString, type = RecentsDao.ROOMS)
+        }
+
         fun fromRecent(r: Recent): RoomFinderRoom {
-            val values = r.name.split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-            if (values.size != 6) {
-                throw IllegalArgumentException()
-            }
-            return RoomFinderRoom(values[0], values[1], values[2], values[3], values[4], values[5])
+            val gson = Gson()
+            return gson.fromJson(r.name, RoomFinderRoom::class.java)
         }
     }
 }

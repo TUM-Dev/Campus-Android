@@ -10,11 +10,13 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.FragmentForSearchingTumOnline
+import de.tum.`in`.tumcampusapp.component.tumui.person.PersonDetailsActivity.Companion.PERSON_OBJECT
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.PersonList
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.databinding.FragmentPersonSearchBinding
 
+@Deprecated("Use SearchFragment")
 class PersonSearchFragment : FragmentForSearchingTumOnline<PersonList>(
     R.layout.fragment_person_search,
     R.string.person_search,
@@ -90,7 +92,7 @@ class PersonSearchFragment : FragmentForSearchingTumOnline<PersonList>(
 
     private fun showPersonDetails(person: Person) {
         val intent = Intent(requireContext(), PersonDetailsActivity::class.java).apply {
-            putExtra("personObject", person)
+            putExtra(PERSON_OBJECT, person)
         }
         startActivity(intent)
     }

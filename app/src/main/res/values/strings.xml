@@ -779,5 +779,8 @@ Signature: %5$s</string>
     <string name="search_info">Search for people, rooms, and others.</string>
     <string name="no_result_info">Couldn\'t find “%1$s”</string>
     <string name="no_result_sub_info">Try again, correct spelling or try with different keywords.</string>
+    <string name="recent_searches">Recent searches</string>
+    <string name="clear_recent_searches">Clear history</string>
+    <string name="not_available_search">Not available</string>
 
 </resources>

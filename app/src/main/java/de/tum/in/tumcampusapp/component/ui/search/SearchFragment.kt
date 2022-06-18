@@ -12,14 +12,21 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
+import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.BaseFragment
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.activity.LectureDetailsActivity
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.Lecture
 import de.tum.`in`.tumcampusapp.component.tumui.person.PersonDetailsActivity
+import de.tum.`in`.tumcampusapp.component.tumui.person.PersonDetailsActivity.Companion.PERSON_OBJECT
+import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderDetailsActivity
+import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom
+import de.tum.`in`.tumcampusapp.component.ui.search.adapter.RecentSearchesAdapter
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.ResultTypeData
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.ResultTypesAdapter
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.SearchResultsAdapter
+import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -42,11 +49,15 @@ class SearchFragment: BaseFragment<Unit>(
 
     private lateinit var searchResultsAdapter: SearchResultsAdapter
     private lateinit var resultTypesAdapter: ResultTypesAdapter
+    private lateinit var recentSearchesAdapter: RecentSearchesAdapter
 
     private val viewModel: SearchViewModel by lazy {
         val factory = ViewModelFactory(viewModelProvider)
         ViewModelProvider(this, factory).get(SearchViewModel::class.java)
     }
+
+    private lateinit var recentSearchesDao: RecentsDao
+    private lateinit var recentSearches: List<Recent>
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -56,8 +67,8 @@ class SearchFragment: BaseFragment<Unit>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initRecentSearches()
         showKeyboard()
-
         initSearchResultsAdapter()
         initSearchResultTypesAdapter()
 
@@ -85,6 +96,57 @@ class SearchFragment: BaseFragment<Unit>(
         clearButton.setOnClickListener {
             clearInput()
         }
+    }
+
+    private fun initRecentSearches() {
+        recentSearchesDao = TcaDb.getInstance(requireContext()).recentsDao()
+        recentSearches = recentSearchesDao.allRecentSearches ?: emptyList()
+
+        recentSearchesAdapter = RecentSearchesAdapter(
+                onSelect = { recentSearch -> onRecentSearchSelected(recentSearch) },
+                onRemove = { recentSearch -> removeRecentSearch(recentSearch) }
+        )
+        recentSearchesRecyclerView.adapter = recentSearchesAdapter
+        recentSearchesAdapter.submitList(recentSearches)
+
+        clearRecentSearches.setOnClickListener {
+            recentSearchesDao.removeCache()
+            recentSearches = emptyList()
+            recentSearchesAdapter.submitList(emptyList())
+            showSearchInfo()
+        }
+    }
+
+    private fun onRecentSearchSelected(recent: Recent) {
+        try {
+            when (recent.type) {
+                RecentsDao.PERSONS -> {
+                    val intent = Intent(requireContext(), PersonDetailsActivity::class.java).apply {
+                        putExtra(PERSON_OBJECT, Person.fromRecent(recent))
+                    }
+                    startActivity(intent)
+                }
+                RecentsDao.ROOMS -> {
+                    val intent = Intent(requireContext(), RoomFinderDetailsActivity::class.java)
+                    intent.putExtra(RoomFinderDetailsActivity.EXTRA_ROOM_INFO, RoomFinderRoom.fromRecent(recent))
+                    startActivity(intent)
+                }
+                RecentsDao.LECTURES -> {
+                    val intent = Intent(requireContext(), LectureDetailsActivity::class.java)
+                    intent.putExtra(Lecture.STP_SP_NR, Lecture.fromRecent(recent).stp_sp_nr)
+                    startActivity(intent)
+                }
+            }
+        } catch (exception: Exception) {
+            Utils.showToast(requireContext(), R.string.something_wrong)
+        }
+    }
+
+    private fun removeRecentSearch(recentSearch: Recent) {
+        recentSearchesDao.deleteByName(recentSearch.name)
+        recentSearches = recentSearchesDao.allRecentSearches ?: emptyList()
+        recentSearchesAdapter.submitList(recentSearches)
+        showSearchInfo()
     }
 
     private fun hideKeyboard() {
@@ -133,22 +195,31 @@ class SearchFragment: BaseFragment<Unit>(
     private fun onSearchResultClicked(searchResult: SearchResult) {
         when (searchResult) {
             is SearchResult.Person -> {
+                saveRecentSearch(Person.toRecent(searchResult.person))
                 val intent = Intent(requireContext(), PersonDetailsActivity::class.java).apply {
-                    putExtra("personObject", searchResult.person)
+                    putExtra(PERSON_OBJECT, searchResult.person)
                 }
                 startActivity(intent)
             }
             is SearchResult.Room -> {
+                saveRecentSearch(RoomFinderRoom.toRecent(searchResult.room))
                 val intent = Intent(requireContext(), RoomFinderDetailsActivity::class.java)
                 intent.putExtra(RoomFinderDetailsActivity.EXTRA_ROOM_INFO, searchResult.room)
                 startActivity(intent)
             }
             is SearchResult.Lecture -> {
+                saveRecentSearch(Lecture.toRecent(searchResult.lecture))
                 val intent = Intent(requireContext(), LectureDetailsActivity::class.java)
                 intent.putExtra(Lecture.STP_SP_NR, searchResult.lecture.stp_sp_nr)
                 startActivity(intent)
             }
         }
+    }
+
+    private fun saveRecentSearch(recent: Recent) {
+        recentSearchesDao.insert(recent)
+        recentSearches = recentSearchesDao.allRecentSearches ?: emptyList()
+        recentSearchesAdapter.submitList(recentSearches)
     }
 
     private fun initSearchResultTypesAdapter() {
@@ -211,12 +282,19 @@ class SearchFragment: BaseFragment<Unit>(
     }
 
     private fun showSearchInfo() {
-        noResultInfo.visibility = View.VISIBLE
-        noResultInfo.infoTitle.setText(R.string.search_info)
-        noResultInfo.infoSubtitle.text = ""
+        if (recentSearches.isNotEmpty()) {
+            noResultInfo.visibility = View.GONE
+            recentSearchesLayout.visibility = View.VISIBLE
+        } else {
+            recentSearchesLayout.visibility = View.GONE
+            noResultInfo.visibility = View.VISIBLE
+            noResultInfo.infoTitle.setText(R.string.search_info)
+            noResultInfo.infoSubtitle.text = ""
+        }
     }
 
     private fun showNoResultInfo(input: String) {
+        recentSearchesLayout.visibility = View.GONE
         noResultInfo.visibility = View.VISIBLE
         noResultInfo.infoTitle.text =
                 String.format(resources.getString(R.string.no_result_info, input))
@@ -225,6 +303,7 @@ class SearchFragment: BaseFragment<Unit>(
 
     private fun hideResultInfo() {
         noResultInfo.visibility = View.GONE
+        recentSearchesLayout.visibility = View.GONE
     }
 
     override fun onResume() {

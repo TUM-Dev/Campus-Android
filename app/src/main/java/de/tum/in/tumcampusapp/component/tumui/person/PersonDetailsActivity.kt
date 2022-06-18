@@ -37,7 +37,7 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
         binding = ActivityPersonDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val person = intent.extras?.getSerializable("personObject") as? Person
+        val person = intent.extras?.getSerializable(PERSON_OBJECT) as? Person
         if (person == null) {
             finish()
             return
@@ -225,5 +225,6 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
 
     companion object {
         private val PERMISSIONS_CONTACTS = arrayOf(Manifest.permission.WRITE_CONTACTS)
+        const val PERSON_OBJECT= "personObject"
     }
 }

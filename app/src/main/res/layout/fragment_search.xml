@@ -27,6 +27,7 @@
         android:clipToPadding="false"
         android:layout_weight="1">
 
+        <!-- Search result list  -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/searchResultsRecyclerView"
             android:layout_width="match_parent"
@@ -37,6 +38,49 @@
             android:background="@color/default_window_background"
             />
 
+        <!-- Recent searches view  -->
+        <LinearLayout
+            android:id="@+id/recentSearchesLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:clipToPadding="false">
+
+            <TextView
+                android:id="@+id/recentSearchesTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/recent_searches"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginHorizontal="@dimen/material_default_padding"
+                android:layout_marginVertical="@dimen/material_small_padding" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recentSearchesRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:outlineProvider="bounds"
+                android:background="@color/default_window_background"
+                />
+
+            <TextView
+                android:id="@+id/clearRecentSearches"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/clear_recent_searches"
+                android:textColor="@color/text_secondary"
+                android:textSize="16sp"
+                android:layout_marginHorizontal="@dimen/material_default_padding"
+                android:layout_marginVertical="@dimen/material_small_padding" />
+
+        </LinearLayout>
+
+        <!-- Info if no input/results  -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/noResultInfo"
             android:layout_width="match_parent"
@@ -75,13 +119,15 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.core.widget.ContentLoadingProgressBar
-            android:id="@+id/progressIndicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/material_default_padding"
-            android:visibility="gone" />
     </FrameLayout>
+
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/progressIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/material_default_padding"
+        android:visibility="gone" />
+
 
 </LinearLayout>
