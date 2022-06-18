@@ -10,11 +10,13 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaLocation
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.ProvidesCard
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
+import org.joda.time.DateTime
 import java.util.*
 import javax.inject.Inject
 
@@ -23,10 +25,12 @@ import javax.inject.Inject
  */
 class CafeteriaManager @Inject constructor(private val context: Context) : ProvidesCard, ProvidesNotifications {
     val localRepository: CafeteriaLocalRepository
+    val remoteRepository: CafeteriaRemoteRepository
 
     init {
         val db = TcaDb.getInstance(context)
         localRepository = CafeteriaLocalRepository(db)
+        remoteRepository = CafeteriaRemoteRepository(null, localRepository, db)
     }
 
     /**
@@ -74,6 +78,9 @@ class CafeteriaManager @Inject constructor(private val context: Context) : Provi
             //  the cafeteria the card is attempting to display,
             //  no menus will be available
             //      => Somehow force DL here
+            if(localRepository.hasNoMenusFor(cafeteria, DateTime.now().minusDays(3)))
+                remoteRepository.downloadRemoteMenus(cafeteria, DateTime.now().minusDays(3), context)
+
             val card = CafeteriaMenuCard(context, localRepository.getCafeteriaWithMenus(cafeteria))
             card.getIfShowOnStart()?.let {
                 results.add(it)

@@ -6,6 +6,7 @@ import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.cafeteria.CafeteriaAPIClient
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.EatAPIParser
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaLocation
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization.CafeteriaResponse
 import de.tum.`in`.tumcampusapp.database.TcaDb
@@ -16,7 +17,7 @@ import org.joda.time.DateTime
 import javax.inject.Inject
 
 class CafeteriaRemoteRepository @Inject constructor(
-    private val tumCabeClient: TUMCabeClient,
+    private val tumCabeClient: TUMCabeClient?,
     private val localRepository: CafeteriaLocalRepository,
     private val db: TcaDb
 ) {
@@ -32,13 +33,19 @@ class CafeteriaRemoteRepository @Inject constructor(
      */
     @SuppressLint("CheckResult")
     fun fetchCafeterias(force: Boolean) {
-        Observable.just(1)
-                .filter { localRepository.getLastSync() == null || force }
-                .subscribeOn(Schedulers.io())
-                .doOnNext { localRepository.clear() }
-                .flatMap { tumCabeClient.cafeterias }
-                .doAfterNext { localRepository.updateLastSync() }
-                .subscribe(localRepository::addCafeterias, Utils::log)
+        // TumCabeClient is just a leftover from the old implementation
+        // Cannot be swapped out yet due to the backend not being updated yet for
+        // the fetching of cafeterias
+        //      => Weaken constraint in constructor to allow dynamic fetching of cafeteria menus
+        if(tumCabeClient != null) {
+            Observable.just(1)
+                    .filter { localRepository.getLastSync() == null || force }
+                    .subscribeOn(Schedulers.io())
+                    .doOnNext { localRepository.clear() }
+                    .flatMap { tumCabeClient.cafeterias }
+                    .doAfterNext { localRepository.updateLastSync() }
+                    .subscribe(localRepository::addCafeterias, Utils::log)
+        }
     }
 
     fun downloadRemoteMenus(cafeteriaId: Int, date: DateTime, context: Context) {
@@ -75,5 +82,9 @@ class CafeteriaRemoteRepository @Inject constructor(
 
     companion object {
         val TAG: String = this::class.java.name
+
+        private fun promptMenuDownloadFor(cafeteriaId: Int, date: DateTime, context: Context){
+
+        }
     }
 }
