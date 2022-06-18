@@ -49,7 +49,6 @@ class CafeteriaRemoteRepository @Inject constructor(
 
         // Responses from the cafeteria API are cached for one day. If the download is forced,
         // we add a "no-cache" header to the request.
-        // TODO Verify caching still works
         val response = CafeteriaAPIClient
                 .getInstance(context)
                 .getMenus(cafeteriaLocation, date)
