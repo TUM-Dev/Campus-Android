@@ -82,9 +82,5 @@ class CafeteriaRemoteRepository @Inject constructor(
 
     companion object {
         val TAG: String = this::class.java.name
-
-        private fun promptMenuDownloadFor(cafeteriaId: Int, date: DateTime, context: Context){
-
-        }
     }
 }
