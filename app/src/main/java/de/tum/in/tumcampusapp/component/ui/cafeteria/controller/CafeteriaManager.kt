@@ -69,6 +69,11 @@ class CafeteriaManager @Inject constructor(private val context: Context) : Provi
                 // no cafeteria based on the location could be found
                 continue
             }
+
+            // TODO IF the CafeteriaFragment was not yet opened with
+            //  the cafeteria the card is attempting to display,
+            //  no menus will be available
+            //      => Somehow force DL here
             val card = CafeteriaMenuCard(context, localRepository.getCafeteriaWithMenus(cafeteria))
             card.getIfShowOnStart()?.let {
                 results.add(it)
