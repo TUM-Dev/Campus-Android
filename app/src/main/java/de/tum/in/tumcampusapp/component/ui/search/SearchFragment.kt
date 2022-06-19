@@ -26,7 +26,6 @@ import de.tum.`in`.tumcampusapp.component.ui.search.adapter.RecentSearchesAdapte
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.ResultTypeData
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.ResultTypesAdapter
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.SearchResultsAdapter
-import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -56,9 +55,6 @@ class SearchFragment: BaseFragment<Unit>(
         ViewModelProvider(this, factory).get(SearchViewModel::class.java)
     }
 
-    private lateinit var recentSearchesDao: RecentsDao
-    private lateinit var recentSearches: List<Recent>
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         injector.searchComponent().inject(this)
@@ -67,14 +63,16 @@ class SearchFragment: BaseFragment<Unit>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initRecentSearches()
         showKeyboard()
         initSearchResultsAdapter()
         initSearchResultTypesAdapter()
+        initRecentSearchesAdapter()
 
         lifecycleScope.launch {
             handleStateChange()
         }
+
+        viewModel.fetchRecentSearches(requireContext())
 
         searchEditText.setOnEditorActionListener { textView, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -98,21 +96,15 @@ class SearchFragment: BaseFragment<Unit>(
         }
     }
 
-    private fun initRecentSearches() {
-        recentSearchesDao = TcaDb.getInstance(requireContext()).recentsDao()
-        recentSearches = recentSearchesDao.allRecentSearches ?: emptyList()
-
+    private fun initRecentSearchesAdapter() {
         recentSearchesAdapter = RecentSearchesAdapter(
                 onSelect = { recentSearch -> onRecentSearchSelected(recentSearch) },
                 onRemove = { recentSearch -> removeRecentSearch(recentSearch) }
         )
         recentSearchesRecyclerView.adapter = recentSearchesAdapter
-        recentSearchesAdapter.submitList(recentSearches)
 
         clearRecentSearches.setOnClickListener {
-            recentSearchesDao.removeCache()
-            recentSearches = emptyList()
-            recentSearchesAdapter.submitList(emptyList())
+            viewModel.clearRecentSearchesHistory(requireContext())
             showSearchInfo()
         }
     }
@@ -143,22 +135,20 @@ class SearchFragment: BaseFragment<Unit>(
     }
 
     private fun removeRecentSearch(recentSearch: Recent) {
-        recentSearchesDao.deleteByName(recentSearch.name)
-        recentSearches = recentSearchesDao.allRecentSearches ?: emptyList()
-        recentSearchesAdapter.submitList(recentSearches)
+        viewModel.removeRecentSearch(recentSearch, requireContext())
         showSearchInfo()
     }
 
     private fun hideKeyboard() {
         val imm: InputMethodManager? = requireContext().getSystemService()
-        searchEditText.clearFocus()
+//        searchEditText.clearFocus()
         imm?.hideSoftInputFromWindow(searchEditText.windowToken, 0)
     }
 
     private fun clearInput() {
         searchEditText.setText("")
         showSearchInfo()
-        viewModel.clearState()
+        viewModel.clearSearchState()
     }
 
     private fun initSearchResultsAdapter() {
@@ -217,9 +207,7 @@ class SearchFragment: BaseFragment<Unit>(
     }
 
     private fun saveRecentSearch(recent: Recent) {
-        recentSearchesDao.insert(recent)
-        recentSearches = recentSearchesDao.allRecentSearches ?: emptyList()
-        recentSearchesAdapter.submitList(recentSearches)
+        viewModel.saveRecentSearch(recent, requireContext())
     }
 
     private fun initSearchResultTypesAdapter() {
@@ -236,6 +224,9 @@ class SearchFragment: BaseFragment<Unit>(
     private suspend fun handleStateChange() {
         viewModel.state.collect { searchResultState ->
 
+            recentSearchesAdapter.submitList(searchResultState.recentSearches)
+            searchResultsAdapter.submitList(searchResultState.data)
+
             if (searchResultState.isLoading) {
                 progressIndicator.show()
             } else {
@@ -251,7 +242,6 @@ class SearchFragment: BaseFragment<Unit>(
                 }
             }
 
-            searchResultsAdapter.submitList(searchResultState.data)
             if (searchResultState.availableResultTypes.isNotEmpty()) {
                 searchResultTypesRecyclerView.visibility = View.VISIBLE
                 resultTypesAdapter.submitList(mapToResultTypeData(viewModel.state.value.availableResultTypes, viewModel.state.value.selectedType))
@@ -282,7 +272,7 @@ class SearchFragment: BaseFragment<Unit>(
     }
 
     private fun showSearchInfo() {
-        if (recentSearches.isNotEmpty()) {
+        if (viewModel.state.value.recentSearches.isNotEmpty()) {
             noResultInfo.visibility = View.GONE
             recentSearchesLayout.visibility = View.VISIBLE
         } else {

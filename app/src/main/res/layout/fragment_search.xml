@@ -27,17 +27,6 @@
         android:clipToPadding="false"
         android:layout_weight="1">
 
-        <!-- Search result list  -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/searchResultsRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:outlineProvider="bounds"
-            android:background="@color/default_window_background"
-            />
-
         <!-- Recent searches view  -->
         <LinearLayout
             android:id="@+id/recentSearchesLayout"
@@ -119,15 +108,26 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <!-- Search result list  -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/searchResultsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:outlineProvider="bounds"
+            android:background="@color/default_window_background"
+            />
+
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:id="@+id/progressIndicator"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/loading_progress_bar_top_margin"
+            android:visibility="gone" />
+
     </FrameLayout>
-
-    <androidx.core.widget.ContentLoadingProgressBar
-        android:id="@+id/progressIndicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/material_default_padding"
-        android:visibility="gone" />
-
 
 </LinearLayout>

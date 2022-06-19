@@ -1,8 +1,12 @@
 package de.tum.`in`.tumcampusapp.component.ui.search
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
+import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
+import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
+import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.Single
@@ -27,6 +31,8 @@ class  SearchViewModel @Inject constructor(
 
     private val compositeDisposable = CompositeDisposable()
 
+    private var currentApiCalls = 0
+
     fun changeResultType(type: SearchResultType) {
         val selectedResult: List<SearchResult> = when (type) {
             SearchResultType.PERSON -> persons.value
@@ -41,6 +47,10 @@ class  SearchViewModel @Inject constructor(
     }
 
     fun search(query: String) {
+        currentApiCalls = NUMBER_OF_API_CALLS
+        persons.value = emptyList()
+        rooms.value = emptyList()
+        lectures.value = emptyList()
         state.value = state.value.copy(
                 isLoading = true,
                 data = emptyList(),
@@ -84,6 +94,7 @@ class  SearchViewModel @Inject constructor(
     }
 
     private fun saveSearchResult(result: List<SearchResult>) {
+        currentApiCalls -= 1
         if (result.isEmpty()) {
             saveResult(emptyList(), null)
             return
@@ -109,7 +120,7 @@ class  SearchViewModel @Inject constructor(
         if (type != null)
             availableTypes = availableTypes + listOf(type)
         state.value = state.value.copy(
-                isLoading = false,
+                isLoading = currentApiCalls > 0,
                 data = sort(state.value.data + result),
                 availableResultTypes = availableTypes
         )
@@ -144,12 +155,50 @@ class  SearchViewModel @Inject constructor(
         return result.sortedBy { it.title }
     }
 
-    fun clearState() {
+    fun clearSearchState() {
         state.value = state.value.copy(
                 isLoading = false,
                 data = emptyList(),
                 availableResultTypes = emptyList(),
                 selectedType = SearchResultType.ALL
         )
+    }
+
+    fun fetchRecentSearches(context: Context) {
+        val recentSearchesDao: RecentsDao = TcaDb.getInstance(context).recentsDao()
+        val recentSearches: List<Recent> = recentSearchesDao.allRecentSearches ?: emptyList()
+        state.value = state.value.copy(
+                recentSearches = recentSearches
+        )
+    }
+
+    fun removeRecentSearch(recent: Recent, context: Context) {
+        val recentSearchesDao: RecentsDao = TcaDb.getInstance(context).recentsDao()
+        recentSearchesDao.deleteByName(recent.name)
+        val recentSearches: List<Recent> = recentSearchesDao.allRecentSearches ?: emptyList()
+        state.value = state.value.copy(
+                recentSearches = recentSearches
+        )
+    }
+
+    fun clearRecentSearchesHistory(context: Context) {
+        val recentSearchesDao: RecentsDao = TcaDb.getInstance(context).recentsDao()
+        recentSearchesDao.removeCache()
+        state.value = state.value.copy(
+                recentSearches = emptyList()
+        )
+    }
+
+    fun saveRecentSearch(recent: Recent, context: Context) {
+        val recentSearchesDao: RecentsDao = TcaDb.getInstance(context).recentsDao()
+        recentSearchesDao.insert(recent)
+        val recentSearches: List<Recent> = recentSearchesDao.allRecentSearches ?: emptyList()
+        state.value = state.value.copy(
+                recentSearches = recentSearches
+        )
+    }
+
+    companion object {
+        const val NUMBER_OF_API_CALLS = 3
     }
 }

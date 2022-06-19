@@ -3,8 +3,8 @@ package de.tum.`in`.tumcampusapp.component.ui.search.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -27,7 +27,7 @@ class ResultTypesAdapter(
             private val onClick: (ResultTypeData) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
 
-        private val constraintLayout: ConstraintLayout = this.itemView.findViewById(R.id.typeCtn)
+        private val layout: FrameLayout = this.itemView.findViewById(R.id.typeCtn)
         private val typeTextView: TextView = this.itemView.findViewById(R.id.typeTextView)
 
         private var currentType: ResultTypeData? = null
@@ -52,17 +52,17 @@ class ResultTypesAdapter(
 
             if (typeData.type == typeData.selectedType) {
                 typeTextView.textColorResource = R.color.white
-                constraintLayout.setBackgroundResource(R.drawable.search_result_selected_type_background)
+                layout.setBackgroundResource(R.drawable.search_result_selected_type_background)
             }
             else {
                 typeTextView.textColorResource = R.color.text_primary
-                constraintLayout.setBackgroundResource(R.drawable.search_result_type_background)
+                layout.setBackgroundResource(R.drawable.search_result_type_background)
             }
 
             if (typeData.type == SearchResultType.ALL) {
-                constraintLayout.margin(left = 16F)
+                layout.margin(left = 16F)
             } else {
-                constraintLayout.margin(left = 8F)
+                layout.margin(left = 8F)
             }
         }
     }
