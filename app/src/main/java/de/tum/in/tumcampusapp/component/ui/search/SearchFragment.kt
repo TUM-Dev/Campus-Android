@@ -1,13 +1,18 @@
 package de.tum.`in`.tumcampusapp.component.ui.search
 
+import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -55,21 +60,42 @@ class SearchFragment: BaseFragment<Unit>(
         ViewModelProvider(this, factory).get(SearchViewModel::class.java)
     }
 
+    private val query: String? by lazy {
+        arguments?.getString(SearchManager.QUERY)
+    }
+
+    private lateinit var resultLauncher : ActivityResultLauncher<Intent>
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         injector.searchComponent().inject(this)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == BACK_FROM_PERSON_BY_ROOM_CLICK) {
+                handleBackFromPersonDetailsByRoomClick(result)
+            }
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        showKeyboard()
         initSearchResultsAdapter()
         initSearchResultTypesAdapter()
         initRecentSearchesAdapter()
 
         lifecycleScope.launch {
             handleStateChange()
+        }
+
+        query?.let {
+            viewModel.search(it)
+            searchEditText.setText(query)
+        } ?: run {
+            showKeyboard()
         }
 
         viewModel.fetchRecentSearches(requireContext())
@@ -112,22 +138,9 @@ class SearchFragment: BaseFragment<Unit>(
     private fun onRecentSearchSelected(recent: Recent) {
         try {
             when (recent.type) {
-                RecentsDao.PERSONS -> {
-                    val intent = Intent(requireContext(), PersonDetailsActivity::class.java).apply {
-                        putExtra(PERSON_OBJECT, Person.fromRecent(recent))
-                    }
-                    startActivity(intent)
-                }
-                RecentsDao.ROOMS -> {
-                    val intent = Intent(requireContext(), RoomFinderDetailsActivity::class.java)
-                    intent.putExtra(RoomFinderDetailsActivity.EXTRA_ROOM_INFO, RoomFinderRoom.fromRecent(recent))
-                    startActivity(intent)
-                }
-                RecentsDao.LECTURES -> {
-                    val intent = Intent(requireContext(), LectureDetailsActivity::class.java)
-                    intent.putExtra(Lecture.STP_SP_NR, Lecture.fromRecent(recent).stp_sp_nr)
-                    startActivity(intent)
-                }
+                RecentsDao.PERSONS -> openPersonDetails(Person.fromRecent(recent))
+                RecentsDao.ROOMS -> openRoomDetails(RoomFinderRoom.fromRecent(recent))
+                RecentsDao.LECTURES -> openLectureDetails(Lecture.fromRecent(recent))
             }
         } catch (exception: Exception) {
             Utils.showToast(requireContext(), R.string.something_wrong)
@@ -141,7 +154,6 @@ class SearchFragment: BaseFragment<Unit>(
 
     private fun hideKeyboard() {
         val imm: InputMethodManager? = requireContext().getSystemService()
-//        searchEditText.clearFocus()
         imm?.hideSoftInputFromWindow(searchEditText.windowToken, 0)
     }
 
@@ -186,24 +198,47 @@ class SearchFragment: BaseFragment<Unit>(
         when (searchResult) {
             is SearchResult.Person -> {
                 saveRecentSearch(Person.toRecent(searchResult.person))
-                val intent = Intent(requireContext(), PersonDetailsActivity::class.java).apply {
-                    putExtra(PERSON_OBJECT, searchResult.person)
-                }
-                startActivity(intent)
+                openPersonDetails(searchResult.person)
             }
             is SearchResult.Room -> {
                 saveRecentSearch(RoomFinderRoom.toRecent(searchResult.room))
-                val intent = Intent(requireContext(), RoomFinderDetailsActivity::class.java)
-                intent.putExtra(RoomFinderDetailsActivity.EXTRA_ROOM_INFO, searchResult.room)
-                startActivity(intent)
+                openRoomDetails(searchResult.room)
             }
             is SearchResult.Lecture -> {
                 saveRecentSearch(Lecture.toRecent(searchResult.lecture))
-                val intent = Intent(requireContext(), LectureDetailsActivity::class.java)
-                intent.putExtra(Lecture.STP_SP_NR, searchResult.lecture.stp_sp_nr)
-                startActivity(intent)
+                openLectureDetails(searchResult.lecture)
             }
         }
+    }
+
+    private fun openPersonDetails(person: Person) {
+        val intent = Intent(requireContext(), PersonDetailsActivity::class.java).apply {
+            putExtra(PERSON_OBJECT, person)
+        }
+        resultLauncher.launch(intent)
+    }
+
+    private fun handleBackFromPersonDetailsByRoomClick(result: ActivityResult) {
+        result.data?.let {
+            val queryString = it.getStringExtra(SearchManager.QUERY)
+            queryString?.let { query ->
+                hideKeyboard()
+                viewModel.search(query)
+                searchEditText.setText(query)
+            }
+        }
+    }
+
+    private fun openRoomDetails(room: RoomFinderRoom) {
+        val intent = Intent(requireContext(), RoomFinderDetailsActivity::class.java)
+        intent.putExtra(RoomFinderDetailsActivity.EXTRA_ROOM_INFO, room)
+        startActivity(intent)
+    }
+
+    private fun openLectureDetails(lecture: Lecture) {
+        val intent = Intent(requireContext(), LectureDetailsActivity::class.java)
+        intent.putExtra(Lecture.STP_SP_NR, lecture.stp_sp_nr)
+        startActivity(intent)
     }
 
     private fun saveRecentSearch(recent: Recent) {
@@ -317,5 +352,10 @@ class SearchFragment: BaseFragment<Unit>(
 
     companion object {
         private const val MIN_QUERY_LENGTH = 3
+        const val BACK_FROM_PERSON_BY_ROOM_CLICK = 123
+
+        fun newInstance(query: String) = SearchFragment().apply {
+            arguments = bundleOf(SearchManager.QUERY to query)
+        }
     }
 }

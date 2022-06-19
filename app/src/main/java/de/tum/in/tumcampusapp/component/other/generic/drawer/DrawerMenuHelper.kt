@@ -12,8 +12,6 @@ import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarFragment
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackActivity
 import de.tum.`in`.tumcampusapp.component.tumui.grades.GradesFragment
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.fragment.LecturesFragment
-import de.tum.`in`.tumcampusapp.component.tumui.person.PersonSearchFragment
-import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderFragment
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeesFragment
 import de.tum.`in`.tumcampusapp.component.ui.barrierfree.BarrierFreeInfoFragment
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.fragment.CafeteriaFragment
@@ -143,8 +141,6 @@ class DrawerMenuHelper(
         private val GENERAL = arrayOf(
                 NavItem.FragmentDestination(R.string.menues, R.drawable.ic_cutlery, CafeteriaFragment::class.java),
                 NavItem.FragmentDestination(R.string.study_rooms, R.drawable.ic_outline_group_work_24px, StudyRoomsFragment::class.java),
-                NavItem.FragmentDestination(R.string.roomfinder, R.drawable.ic_outline_location_on_24px, RoomFinderFragment::class.java),
-                NavItem.FragmentDestination(R.string.person_search, R.drawable.ic_outline_people_outline_24px, PersonSearchFragment::class.java, true),
                 NavItem.FragmentDestination(R.string.news, R.drawable.ic_rss, NewsFragment::class.java),
                 NavItem.FragmentDestination(R.string.events_tickets, R.drawable.tickets, EventsFragment::class.java),
                 NavItem.FragmentDestination(R.string.barrier_free, R.drawable.ic_outline_accessible_24px, BarrierFreeInfoFragment::class.java),
