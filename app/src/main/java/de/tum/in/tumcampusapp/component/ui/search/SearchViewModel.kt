@@ -18,9 +18,9 @@ import java.lang.IllegalStateException
 import java.util.regex.Pattern
 import javax.inject.Inject
 
-class  SearchViewModel @Inject constructor(
-        private val tumOnlineClient: TUMOnlineClient,
-        private val tumCabeClient: TUMCabeClient
+class SearchViewModel @Inject constructor(
+    private val tumOnlineClient: TUMOnlineClient,
+    private val tumCabeClient: TUMCabeClient
 ) : ViewModel() {
 
     val state: MutableStateFlow<SearchResultState> = MutableStateFlow(SearchResultState())
@@ -41,8 +41,8 @@ class  SearchViewModel @Inject constructor(
             SearchResultType.ALL -> persons.value + rooms.value + lectures.value
         }
         state.value = state.value.copy(
-                data = sort(selectedResult),
-                selectedType = type
+            data = sort(selectedResult),
+            selectedType = type
         )
     }
 
@@ -52,45 +52,45 @@ class  SearchViewModel @Inject constructor(
         rooms.value = emptyList()
         lectures.value = emptyList()
         state.value = state.value.copy(
-                isLoading = true,
-                data = emptyList(),
-                availableResultTypes = emptyList(),
-                selectedType = SearchResultType.ALL
+            isLoading = true,
+            data = emptyList(),
+            availableResultTypes = emptyList(),
+            selectedType = SearchResultType.ALL
         )
 
         val persons = tumOnlineClient
-                .searchPerson2(query)
-                .subscribeOn(Schedulers.io())
-                .map { it.persons }
-                .doOnError(Utils::log)
-                .onErrorReturn { emptyList() }
-                .map { persons ->
-                    persons.map { SearchResult.Person(it) }
-                }
+            .searchPerson(query)
+            .subscribeOn(Schedulers.io())
+            .map { it.persons }
+            .doOnError(Utils::log)
+            .onErrorReturn { emptyList() }
+            .map { persons ->
+                persons.map { SearchResult.Person(it) }
+            }
 
         val rooms = tumCabeClient
-                .fetchRooms2(userRoomSearchMatching(query))
-                .subscribeOn(Schedulers.io())
-                .doOnError(Utils::log)
-                .onErrorReturn { emptyList() }
-                .map { rooms ->
-                    rooms.map { SearchResult.Room(it) }
-                }
+            .fetchRoomsSingle(userRoomSearchMatching(query))
+            .subscribeOn(Schedulers.io())
+            .doOnError(Utils::log)
+            .onErrorReturn { emptyList() }
+            .map { rooms ->
+                rooms.map { SearchResult.Room(it) }
+            }
 
         val lectures = tumOnlineClient
-                .searchLectures2(query)
-                .subscribeOn(Schedulers.io())
-                .map {it.lectures }
-                .doOnError(Utils::log)
-                .onErrorReturn { emptyList() }
-                .map { lectures ->
-                    lectures.map { SearchResult.Lecture(it) }
-                }
+            .searchLecturesSingle(query)
+            .subscribeOn(Schedulers.io())
+            .map { it.lectures }
+            .doOnError(Utils::log)
+            .onErrorReturn { emptyList() }
+            .map { lectures ->
+                lectures.map { SearchResult.Lecture(it) }
+            }
 
         compositeDisposable += Single
-                .concat(persons, rooms, lectures)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { saveSearchResult(it) }
+            .concat(persons, rooms, lectures)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { saveSearchResult(it) }
     }
 
     private fun saveSearchResult(result: List<SearchResult>) {
@@ -100,7 +100,7 @@ class  SearchViewModel @Inject constructor(
             return
         }
 
-        val type : SearchResultType = when (result[0]) {
+        val type: SearchResultType = when (result[0]) {
             is SearchResult.Person -> SearchResultType.PERSON
             is SearchResult.Room -> SearchResultType.ROOM
             is SearchResult.Lecture -> SearchResultType.LECTURE
@@ -120,9 +120,9 @@ class  SearchViewModel @Inject constructor(
         if (type != null)
             availableTypes = availableTypes + listOf(type)
         state.value = state.value.copy(
-                isLoading = currentApiCalls > 0,
-                data = sort(state.value.data + result),
-                availableResultTypes = availableTypes
+            isLoading = currentApiCalls > 0,
+            data = sort(state.value.data + result),
+            availableResultTypes = availableTypes
         )
     }
 
@@ -157,10 +157,10 @@ class  SearchViewModel @Inject constructor(
 
     fun clearSearchState() {
         state.value = state.value.copy(
-                isLoading = false,
-                data = emptyList(),
-                availableResultTypes = emptyList(),
-                selectedType = SearchResultType.ALL
+            isLoading = false,
+            data = emptyList(),
+            availableResultTypes = emptyList(),
+            selectedType = SearchResultType.ALL
         )
     }
 
@@ -168,7 +168,7 @@ class  SearchViewModel @Inject constructor(
         val recentSearchesDao: RecentsDao = TcaDb.getInstance(context).recentsDao()
         val recentSearches: List<Recent> = recentSearchesDao.allRecentSearches ?: emptyList()
         state.value = state.value.copy(
-                recentSearches = recentSearches
+            recentSearches = recentSearches
         )
     }
 
@@ -177,7 +177,7 @@ class  SearchViewModel @Inject constructor(
         recentSearchesDao.deleteByName(recent.name)
         val recentSearches: List<Recent> = recentSearchesDao.allRecentSearches ?: emptyList()
         state.value = state.value.copy(
-                recentSearches = recentSearches
+            recentSearches = recentSearches
         )
     }
 
@@ -185,7 +185,7 @@ class  SearchViewModel @Inject constructor(
         val recentSearchesDao: RecentsDao = TcaDb.getInstance(context).recentsDao()
         recentSearchesDao.removeCache()
         state.value = state.value.copy(
-                recentSearches = emptyList()
+            recentSearches = emptyList()
         )
     }
 
@@ -194,7 +194,7 @@ class  SearchViewModel @Inject constructor(
         recentSearchesDao.insert(recent)
         val recentSearches: List<Recent> = recentSearchesDao.allRecentSearches ?: emptyList()
         state.value = state.value.copy(
-                recentSearches = recentSearches
+            recentSearches = recentSearches
         )
     }
 

@@ -15,16 +15,16 @@ import org.jetbrains.anko.textColorResource
 
 data class ResultTypeData(
     val type: SearchResultType,
-    val selectedType: SearchResultType,
+    val selectedType: SearchResultType
 )
 
 class ResultTypesAdapter(
-        private val onClick: (ResultTypeData) -> Unit
-) : ListAdapter<ResultTypeData, ResultTypesAdapter.ResultTypeViewHolder>(ResultTypeCallback){
+    private val onClick: (ResultTypeData) -> Unit
+) : ListAdapter<ResultTypeData, ResultTypesAdapter.ResultTypeViewHolder>(ResultTypeCallback) {
 
     class ResultTypeViewHolder(
-            itemView: View,
-            private val onClick: (ResultTypeData) -> Unit
+        itemView: View,
+        private val onClick: (ResultTypeData) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
 
         private val layout: FrameLayout = this.itemView.findViewById(R.id.typeCtn)
@@ -53,8 +53,7 @@ class ResultTypesAdapter(
             if (typeData.type == typeData.selectedType) {
                 typeTextView.textColorResource = R.color.white
                 layout.setBackgroundResource(R.drawable.search_result_selected_type_background)
-            }
-            else {
+            } else {
                 typeTextView.textColorResource = R.color.text_primary
                 layout.setBackgroundResource(R.drawable.search_result_type_background)
             }
@@ -69,7 +68,7 @@ class ResultTypesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ResultTypeViewHolder {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.search_result_type, parent, false)
+            .inflate(R.layout.search_result_type, parent, false)
         return ResultTypeViewHolder(view, onClick)
     }
 
@@ -88,4 +87,3 @@ object ResultTypeCallback : DiffUtil.ItemCallback<ResultTypeData>() {
         return oldItem.selectedType == newItem.selectedType && oldItem.type == newItem.type
     }
 }
-

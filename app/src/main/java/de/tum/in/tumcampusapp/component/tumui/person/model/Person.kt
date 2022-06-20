@@ -25,13 +25,13 @@ data class Person(
     @PropertyElement(name = "familienname")
     var surname: String = "",
     @PropertyElement(name = "bild_url")
-    var imageUrl: String = "",
+    var imageUrl: String = ""
 ) : Serializable {
 
     fun getFullName() = "$name $surname"
 
     fun getFullImageUrl() =
-            "https://campus.tum.de/tumonline/$imageUrl".replace("&amp;", "&")
+        "https://campus.tum.de/tumonline/$imageUrl".replace("&amp;", "&")
 
     companion object {
 
@@ -40,7 +40,7 @@ data class Person(
         const val FEMALE = "W"
         const val MALE = "M"
 
-        @JvmStatic fun toRecent(person: Person) : Recent {
+        @JvmStatic fun toRecent(person: Person): Recent {
             val gson = Gson()
             val jsonString = gson.toJson(person)
             return Recent(name = jsonString, type = RecentsDao.PERSONS)

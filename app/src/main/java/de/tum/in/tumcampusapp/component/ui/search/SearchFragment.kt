@@ -42,10 +42,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
 
-
-class SearchFragment: BaseFragment<Unit>(
-        R.layout.fragment_search,
-        R.string.search
+class SearchFragment : BaseFragment<Unit>(
+    R.layout.fragment_search,
+    R.string.search
 ) {
 
     @Inject
@@ -64,7 +63,7 @@ class SearchFragment: BaseFragment<Unit>(
         arguments?.getString(SearchManager.QUERY)
     }
 
-    private lateinit var resultLauncher : ActivityResultLauncher<Intent>
+    private lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -124,8 +123,8 @@ class SearchFragment: BaseFragment<Unit>(
 
     private fun initRecentSearchesAdapter() {
         recentSearchesAdapter = RecentSearchesAdapter(
-                onSelect = { recentSearch -> onRecentSearchSelected(recentSearch) },
-                onRemove = { recentSearch -> removeRecentSearch(recentSearch) }
+            onSelect = { recentSearch -> onRecentSearchSelected(recentSearch) },
+            onRemove = { recentSearch -> removeRecentSearch(recentSearch) }
         )
         recentSearchesRecyclerView.adapter = recentSearchesAdapter
 
@@ -247,7 +246,7 @@ class SearchFragment: BaseFragment<Unit>(
 
     private fun initSearchResultTypesAdapter() {
         resultTypesAdapter = ResultTypesAdapter(
-                onClick = { onResultTypeClicked(it.type) }
+            onClick = { onResultTypeClicked(it.type) }
         )
         searchResultTypesRecyclerView.adapter = resultTypesAdapter
     }
@@ -270,7 +269,7 @@ class SearchFragment: BaseFragment<Unit>(
                 val input = searchEditText.text.toString().trim()
                 if (input.length < MIN_QUERY_LENGTH)
                     showSearchInfo()
-                else if (viewModel.state.value.data.isEmpty()){
+                else if (viewModel.state.value.data.isEmpty()) {
                     showNoResultInfo(input)
                 } else {
                     hideResultInfo()
@@ -288,14 +287,14 @@ class SearchFragment: BaseFragment<Unit>(
     }
 
     private fun mapToResultTypeData(
-            resultTypeList: List<SearchResultType>,
-            selectedType: SearchResultType
+        resultTypeList: List<SearchResultType>,
+        selectedType: SearchResultType
     ): List<ResultTypeData> {
         val availableTypes = listOf(SearchResultType.ALL) + resultTypeList
         return availableTypes.map { searchResultType ->
             ResultTypeData(
-                    type = searchResultType,
-                    selectedType = selectedType
+                type = searchResultType,
+                selectedType = selectedType
             )
         }
     }
@@ -322,7 +321,7 @@ class SearchFragment: BaseFragment<Unit>(
         recentSearchesLayout.visibility = View.GONE
         noResultInfo.visibility = View.VISIBLE
         noResultInfo.infoTitle.text =
-                String.format(resources.getString(R.string.no_result_info, input))
+            String.format(resources.getString(R.string.no_result_info, input))
         noResultInfo.infoSubtitle.setText(R.string.no_result_sub_info)
     }
 

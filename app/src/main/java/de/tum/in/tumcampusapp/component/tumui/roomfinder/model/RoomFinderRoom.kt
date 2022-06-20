@@ -29,8 +29,8 @@ data class RoomFinderRoom(
 
     val formattedAddress: String
         get() = address.trim()
-                .replace("(", " (")
-                .replace("\\s+".toRegex(), " ")
+            .replace("(", " (")
+            .replace("\\s+".toRegex(), " ")
 
     override fun getHeadName() = formattedName
 
@@ -39,7 +39,7 @@ data class RoomFinderRoom(
     companion object {
         private const val serialVersionUID = 6631656320611471476L
 
-        @JvmStatic fun toRecent(room: RoomFinderRoom) : Recent {
+        @JvmStatic fun toRecent(room: RoomFinderRoom): Recent {
             val gson = Gson()
             val jsonString = gson.toJson(room)
             return Recent(name = jsonString, type = RecentsDao.ROOMS)

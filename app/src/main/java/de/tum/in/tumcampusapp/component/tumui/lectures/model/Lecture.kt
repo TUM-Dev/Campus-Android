@@ -41,7 +41,7 @@ data class Lecture(
     companion object {
         @JvmField val STP_SP_NR = "stp_sp_nr"
 
-        @JvmStatic fun toRecent(lecture: Lecture) : Recent {
+        @JvmStatic fun toRecent(lecture: Lecture): Recent {
             val gson = Gson()
             val jsonString = gson.toJson(lecture)
             return Recent(name = jsonString, type = RecentsDao.LECTURES)

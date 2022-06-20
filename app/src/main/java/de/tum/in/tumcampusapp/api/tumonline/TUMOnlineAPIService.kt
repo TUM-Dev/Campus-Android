@@ -70,8 +70,8 @@ interface TUMOnlineAPIService {
     ): Call<LecturesResponse>
 
     @GET("wbservicesbasic.veranstaltungenSuche")
-    fun searchLectures2(
-            @Query("pSuche") query: String
+    fun searchLecturesSingle(
+        @Query("pSuche") query: String
     ): Single<LecturesResponse>
 
     @GET("wbservicesbasic.personenDetails")
@@ -83,11 +83,6 @@ interface TUMOnlineAPIService {
     @GET("wbservicesbasic.personenSuche")
     fun searchPerson(
         @Query("pSuche") query: String
-    ): Call<PersonList>
-
-    @GET("wbservicesbasic.personenSuche")
-    fun searchPerson2(
-            @Query("pSuche") query: String
     ): Single<PersonList>
 
     @GET("wbservicesbasic.noten")

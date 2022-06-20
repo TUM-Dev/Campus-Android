@@ -13,7 +13,6 @@ import de.tum.`in`.tumcampusapp.component.notifications.model.FutureNotification
 import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
 import de.tum.`in`.tumcampusapp.component.other.locations.model.Geo
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarActivity
-import de.tum.`in`.tumcampusapp.component.ui.overview.MainActivity
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -43,9 +42,9 @@ data class Event(
      */
     fun toCalendarItem(): CalendarItem {
         return CalendarItem(
-                id ?: "", status ?: "", url ?: "", title,
-                description ?: "", getStartTimeInDeviceTimezone() ?: DateTime(),
-                getEndTimeInDeviceTimezone() ?: DateTime(), Utils.stripHtml(location ?: ""), false
+            id ?: "", status ?: "", url ?: "", title,
+            description ?: "", getStartTimeInDeviceTimezone() ?: DateTime(),
+            getEndTimeInDeviceTimezone() ?: DateTime(), Utils.stripHtml(location ?: ""), false
         )
     }
 
@@ -64,15 +63,15 @@ data class Event(
         val pending = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
         val notification = NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
-                .setContentTitle(title)
-                .setContentText(timestamp)
-                .setContentIntent(pending)
-                .setAutoCancel(true)
-                .setSmallIcon(R.drawable.ic_outline_event_24px)
-                .setShowWhen(false)
-                .setColor(ContextCompat.getColor(context, R.color.color_primary))
-                .setTimeoutAfter(duration)
-                .build()
+            .setContentTitle(title)
+            .setContentText(timestamp)
+            .setContentIntent(pending)
+            .setAutoCancel(true)
+            .setSmallIcon(R.drawable.ic_outline_event_24px)
+            .setShowWhen(false)
+            .setColor(ContextCompat.getColor(context, R.color.color_primary))
+            .setTimeoutAfter(duration)
+            .build()
 
         val notificationTime = startTimeInDeviceTimeZone.minusMinutes(15)
         return FutureNotification(NotificationType.CALENDAR, id.toInt(), notification, notificationTime)

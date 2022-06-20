@@ -5,8 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.makeramen.roundedimageview.RoundedImageView
 import com.squareup.picasso.Picasso
@@ -14,7 +14,7 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.search.SearchResult
 
 class SearchResultsAdapter(
-        private val onClick: (SearchResult) -> Unit,
+    private val onClick: (SearchResult) -> Unit
 ) : ListAdapter<SearchResult, SearchResultsAdapter.SearchResultViewHolder>(SearchResultCallback) {
 
     class SearchResultViewHolder(
@@ -53,8 +53,8 @@ class SearchResultsAdapter(
                 searchResultSubtitleTextView.visibility = View.GONE
                 searchResultIcon.setBackgroundResource(R.drawable.circle_background)
                 Picasso.get()
-                        .load(searchResult.person.getFullImageUrl())
-                        .into(profilePicture)
+                    .load(searchResult.person.getFullImageUrl())
+                    .into(profilePicture)
             } else {
 
                 /**
@@ -74,7 +74,7 @@ class SearchResultsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.search_result_row_item, parent, false)
+            .inflate(R.layout.search_result_row_item, parent, false)
         return SearchResultViewHolder(view, onClick)
     }
 

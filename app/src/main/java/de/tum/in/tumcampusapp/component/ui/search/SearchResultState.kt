@@ -9,4 +9,3 @@ data class SearchResultState(
     val selectedType: SearchResultType = SearchResultType.ALL,
     val recentSearches: List<Recent> = emptyList()
 )
-
