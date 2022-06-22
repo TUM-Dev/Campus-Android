@@ -1,6 +1,8 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar.model
 
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.tickaroo.tikxml.annotation.PropertyElement
@@ -10,6 +12,8 @@ import de.tum.`in`.tumcampusapp.api.tumonline.converters.DateTimeConverter
 import de.tum.`in`.tumcampusapp.component.notifications.model.FutureNotification
 import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
 import de.tum.`in`.tumcampusapp.component.other.locations.model.Geo
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarActivity
+import de.tum.`in`.tumcampusapp.component.ui.overview.MainActivity
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -56,9 +60,13 @@ data class Event(
         val timestamp = DateTimeUtils.formatFutureTime(startTimeInDeviceTimeZone, context)
         val duration = endTimeInDeviceTimeZone.millis - startTimeInDeviceTimeZone.millis
 
+        val intent = Intent(context, CalendarActivity::class.java)
+        val pending = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+
         val notification = NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
                 .setContentTitle(title)
                 .setContentText(timestamp)
+                .setContentIntent(pending)
                 .setAutoCancel(true)
                 .setSmallIcon(R.drawable.ic_outline_event_24px)
                 .setShowWhen(false)

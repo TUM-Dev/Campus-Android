@@ -48,8 +48,6 @@ import javax.inject.Inject
 class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener,
         SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private val themeProvider by lazy { ThemeProvider(requireContext()) }
-
     private val compositeDisposable = CompositeDisposable()
 
     @Inject
@@ -198,7 +196,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 
         // Change design theme
         if (key == Const.DESIGN_THEME) {
-            val theme = themeProvider.getTheme(sharedPrefs.getString(key, "system")!!)
+            val theme = ThemeProvider.getTheme(sharedPrefs.getString(key, "system")!!)
             AppCompatDelegate.setDefaultNightMode(theme)
         }
 
