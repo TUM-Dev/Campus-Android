@@ -129,9 +129,22 @@ class SearchFragment : BaseFragment<Unit>(
         recentSearchesRecyclerView.adapter = recentSearchesAdapter
 
         clearRecentSearches.setOnClickListener {
-            viewModel.clearRecentSearchesHistory(requireContext())
-            showSearchInfo()
+
+            showClearHistoryDialog()
         }
+    }
+
+    private fun showClearHistoryDialog() {
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle(R.string.clear_search_history_request)
+            .setPositiveButton(R.string.ok) { _, _ ->
+                viewModel.clearRecentSearchesHistory(requireContext())
+                showSearchInfo()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .create()
+        dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
+        dialog.show()
     }
 
     private fun onRecentSearchSelected(recent: Recent) {
