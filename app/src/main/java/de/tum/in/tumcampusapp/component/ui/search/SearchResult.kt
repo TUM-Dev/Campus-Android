@@ -1,5 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.search
 
+import de.tum.`in`.tumcampusapp.api.navigatum.domain.NavigationEntity
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.Lecture
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom
@@ -33,5 +34,21 @@ sealed class SearchResult {
 
         override val subtitle: String
             get() = lecture.chairName ?: "Lecture"
+    }
+
+    data class NavigaRoom(val room: NavigationEntity) : SearchResult() {
+        override val title: String
+            get() = room.name
+
+        override val subtitle: String
+            get() = room.subtext
+    }
+
+    data class Building(val building: NavigationEntity) : SearchResult() {
+        override val title: String
+            get() = building.name
+
+        override val subtitle: String
+            get() = building.subtext
     }
 }

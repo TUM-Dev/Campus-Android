@@ -15,6 +15,8 @@ public interface RecentsDao {
     int ROOMS = 2;
     int PERSONS = 3;
     int LECTURES = 4;
+    int NAVIGA_TUM_ROOMS = 5;
+    int NAVIGA_TUM_BUILDINGS = 6;
 
     @Nullable
     @Query("SELECT * FROM recent WHERE type=:type")

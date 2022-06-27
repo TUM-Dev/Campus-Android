@@ -774,7 +774,7 @@ Signature: %5$s</string>
     // search
     <string name="all_results">All results</string>
     <string name="people">People</string>
-    <string name="rooms">Rooms</string>
+    <string name="rooms">Legacy Rooms</string>
     <string name="lectures">Lectures</string>
     <string name="search_info">Search for people, rooms, and others.</string>
     <string name="no_result_info">Couldn\'t find “%1$s”</string>
@@ -782,5 +782,7 @@ Signature: %5$s</string>
     <string name="recent_searches">Recent searches</string>
     <string name="clear_recent_searches">Clear history</string>
     <string name="not_available_search">Not available</string>
+    <string name="n_rooms">Rooms</string>
+    <string name="buildings">Buildings</string>
 
 </resources>

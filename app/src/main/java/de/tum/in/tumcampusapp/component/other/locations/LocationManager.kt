@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
+import de.tum.`in`.tumcampusapp.api.navigatum.NavigaTumAPIClient
 import de.tum.`in`.tumcampusapp.component.other.locations.model.BuildingToGps
 import de.tum.`in`.tumcampusapp.component.other.locations.model.Geo
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
@@ -273,7 +274,7 @@ class LocationManager @Inject constructor(c: Context) {
      */
     private fun servicesConnected(): Boolean {
         val resultCode = GoogleApiAvailability.getInstance()
-                .isGooglePlayServicesAvailable(mContext) == ConnectionResult.SUCCESS
+            .isGooglePlayServicesAvailable(mContext) == ConnectionResult.SUCCESS
 
         Utils.log("Google Play services is $resultCode")
         return resultCode
@@ -310,13 +311,15 @@ class LocationManager @Inject constructor(c: Context) {
         var loc = roomTitle
         if (loc.contains("(")) {
             loc = loc.substring(0, loc.indexOf('('))
-                    .trim { it <= ' ' }
+                .trim { it <= ' ' }
         }
 
         try {
             val rooms = TUMCabeClient.getInstance(mContext).fetchRooms(loc)
+            val newRooms = NavigaTumAPIClient.getInstance(mContext).fetchRooms(loc)
 
             if (rooms != null && !rooms.isEmpty()) {
+                println(newRooms)
                 val room = rooms[0].arch_id
                 return fetchRoomGeo(room)
             }

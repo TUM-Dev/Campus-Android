@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.api.navigatum.domain.NavigationEntity
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.BaseFragment
@@ -25,6 +26,8 @@ import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.Lecture
 import de.tum.`in`.tumcampusapp.component.tumui.person.PersonDetailsActivity
 import de.tum.`in`.tumcampusapp.component.tumui.person.PersonDetailsActivity.Companion.PERSON_OBJECT
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
+import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.NavigationDetailsFragment
+import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.NavigationDetailsFragment.Companion.NAVIGATION_ENTITY
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderDetailsActivity
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.RecentSearchesAdapter
@@ -140,6 +143,8 @@ class SearchFragment : BaseFragment<Unit>(
                 RecentsDao.PERSONS -> openPersonDetails(Person.fromRecent(recent))
                 RecentsDao.ROOMS -> openRoomDetails(RoomFinderRoom.fromRecent(recent))
                 RecentsDao.LECTURES -> openLectureDetails(Lecture.fromRecent(recent))
+                RecentsDao.NAVIGA_TUM_BUILDINGS -> openNavigationDetails(NavigationEntity.fromRecent(recent))
+                RecentsDao.NAVIGA_TUM_ROOMS -> openNavigationDetails(NavigationEntity.fromRecent(recent))
             }
         } catch (exception: Exception) {
             Utils.showToast(requireContext(), R.string.something_wrong)
@@ -207,7 +212,26 @@ class SearchFragment : BaseFragment<Unit>(
                 saveRecentSearch(Lecture.toRecent(searchResult.lecture))
                 openLectureDetails(searchResult.lecture)
             }
+            is SearchResult.Building -> {
+                saveRecentSearch(NavigationEntity.toRecent(searchResult.building, RecentsDao.NAVIGA_TUM_BUILDINGS))
+                openNavigationDetails(searchResult.building)
+            }
+            is SearchResult.NavigaRoom -> {
+                saveRecentSearch(NavigationEntity.toRecent(searchResult.room, RecentsDao.NAVIGA_TUM_ROOMS))
+                openNavigationDetails(searchResult.room)
+            }
         }
+    }
+
+    private fun openNavigationDetails(navigationEntity: NavigationEntity) {
+        val navigationFragment = NavigationDetailsFragment()
+        val bundle = Bundle()
+        bundle.putSerializable(NAVIGATION_ENTITY, navigationEntity)
+        navigationFragment.arguments = bundle
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.contentFrame, navigationFragment)
+            .commitNow()
     }
 
     private fun openPersonDetails(person: Person) {

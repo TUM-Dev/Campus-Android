@@ -3,6 +3,9 @@ package de.tum.`in`.tumcampusapp.component.ui.search
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
+import de.tum.`in`.tumcampusapp.api.navigatum.NavigaTumAPIClient
+import de.tum.`in`.tumcampusapp.api.navigatum.model.search.NavigaTumSearchResponseDto
+import de.tum.`in`.tumcampusapp.api.navigatum.model.search.NavigaTumSearchSectionDto
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
@@ -20,7 +23,8 @@ import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
     private val tumOnlineClient: TUMOnlineClient,
-    private val tumCabeClient: TUMCabeClient
+    private val tumCabeClient: TUMCabeClient,
+    private val navigaTumAPIClient: NavigaTumAPIClient
 ) : ViewModel() {
 
     val state: MutableStateFlow<SearchResultState> = MutableStateFlow(SearchResultState())
@@ -28,6 +32,8 @@ class SearchViewModel @Inject constructor(
     private val persons: MutableStateFlow<List<SearchResult>> = MutableStateFlow(emptyList())
     private val rooms: MutableStateFlow<List<SearchResult>> = MutableStateFlow(emptyList())
     private val lectures: MutableStateFlow<List<SearchResult>> = MutableStateFlow(emptyList())
+    private val navigaRooms: MutableStateFlow<List<SearchResult>> = MutableStateFlow(emptyList())
+    private val buildings: MutableStateFlow<List<SearchResult>> = MutableStateFlow(emptyList())
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -38,25 +44,64 @@ class SearchViewModel @Inject constructor(
             SearchResultType.PERSON -> persons.value
             SearchResultType.ROOM -> rooms.value
             SearchResultType.LECTURE -> lectures.value
-            SearchResultType.ALL -> persons.value + rooms.value + lectures.value
+            SearchResultType.NAVIGA_ROOM -> navigaRooms.value
+            SearchResultType.BUILDING -> buildings.value
+            SearchResultType.ALL -> sort(
+                persons.value + rooms.value + lectures.value + buildings.value + navigaRooms.value
+            )
         }
         state.value = state.value.copy(
-            data = sort(selectedResult),
+            data = selectedResult,
             selectedType = type
         )
     }
 
+    private fun testNaviga(query: String) {
+        val result = navigaTumAPIClient
+            .search(query)
+            .subscribeOn(Schedulers.io())
+            .doOnError(Utils::log)
+            .onErrorReturn { NavigaTumSearchResponseDto() }
+            .observeOn(AndroidSchedulers.mainThread())
+            .map { it.sections }
+            .subscribe { result ->
+                if (result.isNotEmpty()) {
+                    result.forEach { navigationDto ->
+                        when (navigationDto.type) {
+                            NavigaTumSearchSectionDto.BUILDINGS_TYPE -> {
+                                val buildingSearchResultList = navigationDto.entries
+                                    .map { SearchResult.Building(it) }
+                                    .toList()
+                                saveSearchResult(buildingSearchResultList)
+                            }
+                            NavigaTumSearchSectionDto.ROOMS -> {
+                                val roomSearchResultList = navigationDto.entries
+                                    .map { SearchResult.NavigaRoom(it) }
+                                    .toList()
+                                saveSearchResult(roomSearchResultList)
+                            }
+                        }
+                    }
+                } else currentApiCalls -= 2
+            }
+    }
+
     fun search(query: String) {
+
         currentApiCalls = NUMBER_OF_API_CALLS
         persons.value = emptyList()
         rooms.value = emptyList()
         lectures.value = emptyList()
+        buildings.value = emptyList()
+        navigaRooms.value = emptyList()
         state.value = state.value.copy(
             isLoading = true,
             data = emptyList(),
             availableResultTypes = emptyList(),
             selectedType = SearchResultType.ALL
         )
+
+        testNaviga(query)
 
         val persons = tumOnlineClient
             .searchPerson(query)
@@ -104,12 +149,16 @@ class SearchViewModel @Inject constructor(
             is SearchResult.Person -> SearchResultType.PERSON
             is SearchResult.Room -> SearchResultType.ROOM
             is SearchResult.Lecture -> SearchResultType.LECTURE
+            is SearchResult.Building -> SearchResultType.BUILDING
+            is SearchResult.NavigaRoom -> SearchResultType.NAVIGA_ROOM
         }
 
         when (type) {
             SearchResultType.PERSON -> persons.value = result
             SearchResultType.ROOM -> rooms.value = result
             SearchResultType.LECTURE -> lectures.value = result
+            SearchResultType.BUILDING -> buildings.value = result
+            SearchResultType.NAVIGA_ROOM -> navigaRooms.value = result
             else -> throw IllegalStateException("Not know search result type!")
         }
         saveResult(result, type)
@@ -199,6 +248,6 @@ class SearchViewModel @Inject constructor(
     }
 
     companion object {
-        const val NUMBER_OF_API_CALLS = 3
+        const val NUMBER_OF_API_CALLS = 5
     }
 }

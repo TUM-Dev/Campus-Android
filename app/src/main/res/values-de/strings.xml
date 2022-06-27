@@ -729,5 +729,7 @@ Signatur: %5$s</string>
     <string name="recent_searches">Letzte Suchen</string>
     <string name="clear_recent_searches">Verlauf löschen</string>
     <string name="not_available_search">Nicht verfügbar</string>
+    <string name="n_rooms">N Rooms</string>
+    <string name="buildings">Buildings</string>
 
 </resources>

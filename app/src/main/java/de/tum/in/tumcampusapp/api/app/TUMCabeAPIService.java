@@ -172,9 +172,11 @@ public interface TUMCabeAPIService {
     Call<List<RoomFinderMap>> fetchAvailableMaps(@Path("archId") String archId);
 
     //RoomFinder maps
+    @Deprecated
     @GET(API_ROOM_FINDER + API_ROOM_FINDER_SEARCH + "{searchStrings}")
     Call<List<RoomFinderRoom>> fetchRooms(@Path("searchStrings") String searchStrings);
 
+    @Deprecated
     @GET(API_ROOM_FINDER + API_ROOM_FINDER_SEARCH + "{searchStrings}")
     Single<List<RoomFinderRoom>> fetchRoomsSingle(@Path("searchStrings") String searchStrings);
 
