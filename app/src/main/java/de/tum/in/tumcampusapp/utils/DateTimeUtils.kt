@@ -2,6 +2,7 @@ package de.tum.`in`.tumcampusapp.utils
 
 import android.content.Context
 import android.text.format.DateUtils.*
+import android.util.Log
 import de.tum.`in`.tumcampusapp.R
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -41,26 +42,27 @@ object DateTimeUtils {
 
         // Catch future dates: current clock might be running behind
         if (timeInMillis < now || timeInMillis <= 0) {
+            Log.v("formatFutureTime", "if (timeInMillis < now || timeInMillis <= 0)")
             return DateTimeUtils.formatTimeOrDay(time, context)
         }
 
         val diff = timeInMillis - now
         return when {
             diff < 60 * MINUTE_IN_MILLIS -> {
+                Log.v("formatFutureTime", "diff < 60 * HOUR_IN_MILLIS runs, diff is: " + diff)
                 val formatter = DateTimeFormat.forPattern("m")
                         .withLocale(Locale.ENGLISH)
                 "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff))} " +
                         context.getString(R.string.MINUTES)
             }
-        // Be more precise by telling the user the exact time if below 3 hours
-            diff < 3 * HOUR_IN_MILLIS -> {
-                val formatter = DateTimeFormat.forPattern("HH:mm")
-                        .withLocale(Locale.ENGLISH)
-                "${context.getString(R.string.AT)} ${formatter.print(time)}"
-            }
-            else -> getRelativeTimeSpanString(timeInMillis, now, MINUTE_IN_MILLIS,
+            else -> {
+                Log.v("formatFutureTime", "else is running, diff is: "+diff)
+                getRelativeTimeSpanString(timeInMillis, now, MINUTE_IN_MILLIS,
                     FORMAT_ABBREV_RELATIVE).toString()
+            }
+
         }
+
     }
 
     /**

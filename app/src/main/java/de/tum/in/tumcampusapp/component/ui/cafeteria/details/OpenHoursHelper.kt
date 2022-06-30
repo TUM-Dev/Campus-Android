@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria.details
 
 import android.content.Context
+import android.util.Log
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.openinghour.LocationDao
 import de.tum.`in`.tumcampusapp.database.TcaDb
@@ -40,6 +41,7 @@ class OpenHoursHelper(private val context: Context) {
             Pattern.compile("([a-z]{3}?)[-]?([a-z]{3}?)? ([0-9]{1,2}(?:[\\:][0-9]{2}?)?)-([0-9]{1,2}(?:[\\:][0-9]{2}?)?)", Pattern.CASE_INSENSITIVE)
                     .matcher(result)
         }
+
 
         // Capture groups for: Mo-Do 9-21.30
         // #0	Mo-Do 9-21.30
@@ -81,22 +83,35 @@ class OpenHoursHelper(private val context: Context) {
             // Check the relativity
             val relativeTo: DateTime
             val relation: Int
+
+            val res: String
+            val relativeTime: String
+
             if (opens.isAfter(now)) {
                 relation = R.string.opens
                 relativeTo = opens
+                relativeTime = DateTimeUtils.formatFutureTime(relativeTo, context)
+                res = context.getString(relation) + " " + relativeTime.substring(0, 1)
+                        .lowercase(Locale.getDefault()) + relativeTime.substring(1) +
+                        " (" + DateTimeUtils.getTimeString(opens) + " - " +
+                        DateTimeUtils.getTimeString(closes) + ") "
+                return res
             } else if (closes.isAfter(now)) {
                 relation = R.string.closes
                 relativeTo = closes
+                relativeTime = DateTimeUtils.formatFutureTime(relativeTo, context)
+                res = context.getString(relation) + " " + relativeTime.substring(0, 1)
+                        .lowercase(Locale.getDefault()) + relativeTime.substring(1) +
+                        " (on " + DateTimeUtils.getTimeString(closes) + ") "
+                return res
             } else {
                 relation = R.string.closed
                 relativeTo = closes
+                relativeTime = DateTimeUtils.formatFutureTime(relativeTo, context)
+                res = context.getString(relation) + " on " + relativeTime.substring(0, 1)
+                        .lowercase(Locale.getDefault()) + relativeTime.substring(1)
+                return res
             }
-
-            // Get the relative string
-            val relativeTime = DateTimeUtils.formatFutureTime(relativeTo, context)
-            // Return an assembly
-            return context.getString(relation) + " " + relativeTime.substring(0, 1)
-                    .lowercase(Locale.getDefault()) + relativeTime.substring(1)
         } else {
             // future --> show non-relative opening hours
             return context.getString(R.string.opening_hours) + ": " +
