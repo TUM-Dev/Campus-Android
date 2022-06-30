@@ -40,26 +40,25 @@ object DateTimeUtils {
         val now = DateTime.now().millis
 
         // Catch future dates: current clock might be running behind
-        if (timeInMillis < now || timeInMillis <= 0) {
-            return DateTimeUtils.formatTimeOrDay(time, context)
-        }
+        if (timeInMillis < now || timeInMillis <= 0) return DateTimeUtils.formatTimeOrDay(time, context)
 
         val diff = timeInMillis - now
         return when {
             diff < 60 * MINUTE_IN_MILLIS -> {
+                Log.v("formatFutureTime", "diff < 60 * HOUR_IN_MILLIS runs, diff is: " + diff)
                 val formatter = DateTimeFormat.forPattern("m")
                         .withLocale(Locale.ENGLISH)
-                "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff))} " + context.getString(R.string.MINUTES)
+                "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff))} " +
+                        context.getString(R.string.MINUTES)
             }
-            // Below 5 hours, we tell the user also in how much time a datetime is going to be
-            diff < 5 * HOUR_IN_MILLIS -> {
-                val formatter = DateTimeFormat.forPattern("H 'hrs' mm 'mins'")
-                        .withLocale(Locale.ENGLISH)
-                "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff))} "
-            }
-            else -> getRelativeTimeSpanString(timeInMillis, now, MINUTE_IN_MILLIS,
+            else -> {
+                Log.v("formatFutureTime", "else is running, diff is: "+diff)
+                getRelativeTimeSpanString(timeInMillis, now, MINUTE_IN_MILLIS,
                     FORMAT_ABBREV_RELATIVE).toString()
+            }
+
         }
+
     }
 
     /**
