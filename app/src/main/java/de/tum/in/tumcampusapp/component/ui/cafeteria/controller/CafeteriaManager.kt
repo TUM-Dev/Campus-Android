@@ -78,8 +78,8 @@ class CafeteriaManager @Inject constructor(private val context: Context) : Provi
             //  the cafeteria the card is attempting to display,
             //  no menus will be available
             //      => Somehow force DL here
-            if(localRepository.hasNoMenusFor(cafeteria, DateTime.now().minusDays(3)))
-                remoteRepository.downloadRemoteMenus(cafeteria, DateTime.now().minusDays(3), context)
+            if(localRepository.hasNoMenusFor(cafeteria, DateTime.now()))
+                remoteRepository.downloadRemoteMenus(cafeteria, DateTime.now(), context)
 
             val card = CafeteriaMenuCard(context, localRepository.getCafeteriaWithMenus(cafeteria))
             card.getIfShowOnStart()?.let {
