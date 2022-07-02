@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.os.bundleOf
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -99,22 +100,7 @@ class SearchFragment : BaseFragment<Unit>(
 
         viewModel.fetchRecentSearches(requireContext())
 
-        searchEditText.setOnEditorActionListener { textView, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                val input = textView.text.toString().trim()
-                if (input.length < MIN_QUERY_LENGTH) {
-                    val text = String.format(getString(R.string.min_search_len), MIN_QUERY_LENGTH)
-                    Utils.showToast(requireContext(), text)
-                    showSearchInfo()
-                } else {
-                    viewModel.search(input)
-                    hideKeyboard()
-                }
-                true
-            } else {
-                false
-            }
-        }
+        addQueryHandlers()
 
         clearButton.setOnClickListener {
             clearInput()
@@ -204,6 +190,35 @@ class SearchFragment : BaseFragment<Unit>(
                 searchResultsRecyclerView.scrollToPosition(0)
             }
         })
+    }
+
+    private fun addQueryHandlers() {
+        searchEditText.doOnTextChanged { text, _, _, _ ->
+            val input: String = text?.toString() ?: ""
+            if (input.length >= MIN_QUERY_LENGTH) {
+                viewModel.search(input)
+            } else {
+                showSearchInfo()
+                viewModel.clearSearchState()
+            }
+        }
+
+        searchEditText.setOnEditorActionListener { textView, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                val input = textView.text.toString().trim()
+                if (input.length < MIN_QUERY_LENGTH) {
+                    val text = String.format(getString(R.string.min_search_len), MIN_QUERY_LENGTH)
+                    Utils.showToast(requireContext(), text)
+                    showSearchInfo()
+                } else {
+                    viewModel.search(input)
+                    hideKeyboard()
+                }
+                true
+            } else {
+                false
+            }
+        }
     }
 
     private fun onSearchResultClicked(searchResult: SearchResult) {
@@ -300,7 +315,7 @@ class SearchFragment : BaseFragment<Unit>(
     }
 
     private fun mapToResultTypeData(
-        resultTypeList: List<SearchResultType>,
+        resultTypeList: Set<SearchResultType>,
         selectedType: SearchResultType
     ): List<ResultTypeData> {
         val availableTypes = listOf(SearchResultType.ALL) + resultTypeList
