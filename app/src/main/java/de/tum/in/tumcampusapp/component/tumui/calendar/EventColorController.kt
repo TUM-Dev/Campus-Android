@@ -13,7 +13,7 @@ import org.joda.time.format.DateTimeFormat
 import java.util.*
 
 class EventColorController(
-        private val context: Context,
+    private val context: Context,
 ) {
     private val eventColorDao: EventColorDao = TcaDb.getInstance(context).classColorDao()
 
@@ -37,30 +37,33 @@ class EventColorController(
     }
 
     private fun addNewEventColor(calendarItem: CalendarItem, isSingleEvent: Boolean, color: Int) {
-        eventColorDao.insert(EventColor(
+        eventColorDao.insert(
+            EventColor(
                 eventColorId = null,
                 eventIdentifier = getEventIdentifier(calendarItem),
                 eventNr = calendarItem.nr,
                 isSingleEvent = isSingleEvent,
                 color = color
-        ))
+            )
+        )
     }
 
     private fun updateEventColor(eventColor: EventColor, color: Int) {
-        eventColorDao.insert(EventColor(
+        eventColorDao.insert(
+            EventColor(
                 eventColorId = eventColor.eventColorId,
                 eventIdentifier = eventColor.eventIdentifier,
                 eventNr = eventColor.eventNr,
                 isSingleEvent = eventColor.isSingleEvent,
                 color = color
-        ))
+            )
+        )
     }
-
 
     fun getColor(calendarItem: CalendarItem): Int {
         val customEventColor = getCustomEventColor(calendarItem)
         val colorResId =
-                customEventColor?.color ?: getStandardColor(calendarItem)
+            customEventColor?.color ?: getStandardColor(calendarItem)
         return getDisplayColorFromColor(ContextCompat.getColor(context, colorResId))
     }
 
@@ -84,10 +87,10 @@ class EventColorController(
 
     private fun getEventIdentifier(calendarItem: CalendarItem): String {
         return StringBuilder(calendarItem.title)
-                .append(calendarItem.type.name)
-                .append(calendarItem.url)
-                .append(formatDateToHHmm(calendarItem.eventStart))
-                .toString()
+            .append(calendarItem.type.name)
+            .append(calendarItem.url)
+            .append(formatDateToHHmm(calendarItem.eventStart))
+            .toString()
     }
 
     fun removeEventColor(eventNr: String) {

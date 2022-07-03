@@ -56,41 +56,49 @@ import de.tum.`in`.tumcampusapp.component.ui.transportation.model.TransportFavor
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.WidgetsTransport
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoDao
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.model.Kino
-import de.tum.`in`.tumcampusapp.database.migrations.*
+import de.tum.`in`.tumcampusapp.database.migrations.Migration1to2
+import de.tum.`in`.tumcampusapp.database.migrations.Migration2to3
+import de.tum.`in`.tumcampusapp.database.migrations.Migration3to4
+import de.tum.`in`.tumcampusapp.database.migrations.Migration4to5
+import de.tum.`in`.tumcampusapp.database.migrations.Migration5to6
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.sync.SyncDao
 import de.tum.`in`.tumcampusapp.utils.sync.model.Sync
 import java.util.concurrent.ExecutionException
 
-@Database(version = 6, entities = [
-    Cafeteria::class,
-    CafeteriaMenu::class,
-    FavoriteDish::class,
-    Sync::class,
-    BuildingToGps::class,
-    Kino::class,
-    Event::class,
-    Ticket::class,
-    TicketType::class,
-    ChatMessage::class,
-    Location::class,
-    News::class,
-    NewsSources::class,
-    CalendarItem::class,
-    EventSeriesMapping::class,
-    RoomLocations::class,
-    WidgetsTimetableBlacklist::class,
-    Recent::class,
-    StudyRoomGroup::class,
-    StudyRoom::class,
-    FcmNotification::class,
-    TransportFavorites::class,
-    WidgetsTransport::class,
-    ChatRoomDbRow::class,
-    ScheduledNotification::class,
-    ActiveAlarm::class,
-    EventColor::class])
+@Database(
+    version = 6,
+    entities = [
+        Cafeteria::class,
+        CafeteriaMenu::class,
+        FavoriteDish::class,
+        Sync::class,
+        BuildingToGps::class,
+        Kino::class,
+        Event::class,
+        Ticket::class,
+        TicketType::class,
+        ChatMessage::class,
+        Location::class,
+        News::class,
+        NewsSources::class,
+        CalendarItem::class,
+        EventSeriesMapping::class,
+        RoomLocations::class,
+        WidgetsTimetableBlacklist::class,
+        Recent::class,
+        StudyRoomGroup::class,
+        StudyRoom::class,
+        FcmNotification::class,
+        TransportFavorites::class,
+        WidgetsTransport::class,
+        ChatRoomDbRow::class,
+        ScheduledNotification::class,
+        ActiveAlarm::class,
+        EventColor::class
+    ]
+)
 @TypeConverters(Converters::class)
 abstract class TcaDb : RoomDatabase() {
 
@@ -146,11 +154,11 @@ abstract class TcaDb : RoomDatabase() {
 
     companion object {
         private val migrations = arrayOf(
-                Migration1to2(),
-                Migration2to3(),
-                Migration3to4(),
-                Migration4to5(),
-                Migration5to6()
+            Migration1to2(),
+            Migration2to3(),
+            Migration3to4(),
+            Migration4to5(),
+            Migration5to6()
         )
 
         private var instance: TcaDb? = null
@@ -160,9 +168,9 @@ abstract class TcaDb : RoomDatabase() {
             var instance = this.instance
             if (instance == null) {
                 instance = Room.databaseBuilder(context.applicationContext, TcaDb::class.java, Const.DATABASE_NAME)
-                        .allowMainThreadQueries()
-                        .addMigrations(*migrations)
-                        .build()
+                    .allowMainThreadQueries()
+                    .addMigrations(*migrations)
+                    .build()
                 this.instance = instance
             }
             return instance

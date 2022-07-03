@@ -13,10 +13,10 @@ import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
 import kotlinx.android.synthetic.main.change_event_color_dialog.*
 
 class ChangeEventColorDialog(
-        context: Context,
-        private val calendarItem: CalendarItem,
-        private val onColorChanged: (OnColorChangedData?) -> Unit,
-        private val fromCreateEventActivity: Boolean
+    context: Context,
+    private val calendarItem: CalendarItem,
+    private val onColorChanged: (OnColorChangedData?) -> Unit,
+    private val fromCreateEventActivity: Boolean
 ) : Dialog(context) {
 
     private val eventColorController: EventColorController = EventColorController(context)
@@ -34,7 +34,7 @@ class ChangeEventColorDialog(
         // set default color
         val standardColor = EventColorController.getStandardColor(calendarItem)
         this.checkBoxDefault.buttonTintList =
-                ColorStateList.valueOf(ContextCompat.getColor(context, standardColor))
+            ColorStateList.valueOf(ContextCompat.getColor(context, standardColor))
 
         // check correct checkbox with the current color
         val currentColor = eventColorController.getResourceColor(calendarItem)
@@ -59,7 +59,7 @@ class ChangeEventColorDialog(
     }
 
     private fun getCustomColorByText(text: CharSequence, calendarItem: CalendarItem): Int {
-        return when(text) {
+        return when (text) {
             context.getString(R.string.custom_color_red) -> R.color.calendar_red
             context.getString(R.string.custom_color_pink) -> R.color.calendar_pink
             context.getString(R.string.custom_color_purple) -> R.color.calendar_purple
@@ -76,7 +76,7 @@ class ChangeEventColorDialog(
     }
 
     private fun getColorCheckboxIdByByColor(color: Int): Int {
-        return when(color) {
+        return when (color) {
             R.color.calendar_red -> R.id.checkBoxRed
             R.color.calendar_pink -> R.id.checkBoxPink
             R.color.calendar_purple -> R.id.checkBoxPurple
@@ -93,7 +93,7 @@ class ChangeEventColorDialog(
     }
 
     data class OnColorChangedData(
-            val text: CharSequence,
-            val color: Int
+        val text: CharSequence,
+        val color: Int
     )
 }

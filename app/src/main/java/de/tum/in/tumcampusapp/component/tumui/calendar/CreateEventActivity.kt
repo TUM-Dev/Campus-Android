@@ -20,7 +20,11 @@ import androidx.core.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.RequestLimitReachedException
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.*
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CreateEventResponse
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventSeriesMapping
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.RepeatHelper
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.databinding.ActivityCreateEventBinding
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -109,7 +113,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         setDateAndTimeListeners()
         initRepeatingSettingsListeners()
 
-        if(isEditing) {
+        if (isEditing) {
             initEventColor(extras)
         } else {
             initEventColorOnClickListener()
@@ -142,50 +146,50 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     }
 
     private fun initRepeatingSettingsListeners() {
-            with(binding) {
-                repeatingSwitch.setOnCheckedChangeListener { _, isChecked ->
-                    if (isChecked) {
-                        repeatHelper.setRepeatingNTimes()
-                        endAfterRadioBtn.isChecked = true
-                        repeatingSettings.layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
-                        repeatingSettings.requestLayout()
-                    } else {
-                        repeatHelper.setNotRepeating()
-                        repeatingSettings.layoutParams.height = 0
-                        repeatingSettings.requestLayout()
-                    }
-                }
-            }
-
-            binding.endOnRadioBtn.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    repeatHelper.setRepeatingUntil()
-                }
-            }
-
-            binding.endAfterRadioBtn.setOnCheckedChangeListener { _, isChecked ->
+        with(binding) {
+            repeatingSwitch.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     repeatHelper.setRepeatingNTimes()
+                    endAfterRadioBtn.isChecked = true
+                    repeatingSettings.layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
+                    repeatingSettings.requestLayout()
+                } else {
+                    repeatHelper.setNotRepeating()
+                    repeatingSettings.layoutParams.height = 0
+                    repeatingSettings.requestLayout()
                 }
             }
+        }
 
-            binding.eventRepeatsTimes.textChangedListener {
-                afterTextChanged {
-                    if (it.toString() != "") {
-                        repeatHelper.times = it.toString().toInt()
-                    } else {
-                        repeatHelper.times = 0
-                    }
+        binding.endOnRadioBtn.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                repeatHelper.setRepeatingUntil()
+            }
+        }
+
+        binding.endAfterRadioBtn.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                repeatHelper.setRepeatingNTimes()
+            }
+        }
+
+        binding.eventRepeatsTimes.textChangedListener {
+            afterTextChanged {
+                if (it.toString() != "") {
+                    repeatHelper.times = it.toString().toInt()
+                } else {
+                    repeatHelper.times = 0
                 }
             }
+        }
 
-            binding.eventLastDateView.setOnClickListener {
-                hideKeyboard()
-                DatePickerDialog(this, { _, year, month, dayOfMonth ->
-                    repeatHelper.end = repeatHelper.end?.withDate(year, month + 1, dayOfMonth)
-                    updateDateViews()
-                }, repeatHelper.end?.year!!, repeatHelper.end?.monthOfYear!! - 1, repeatHelper.end?.dayOfMonth!!).show()
-            }
+        binding.eventLastDateView.setOnClickListener {
+            hideKeyboard()
+            DatePickerDialog(this, { _, year, month, dayOfMonth ->
+                repeatHelper.end = repeatHelper.end?.withDate(year, month + 1, dayOfMonth)
+                updateDateViews()
+            }, repeatHelper.end?.year!!, repeatHelper.end?.monthOfYear!! - 1, repeatHelper.end?.dayOfMonth!!).show()
+        }
     }
 
     private fun initStartEndDates(extras: Bundle?) {
@@ -200,10 +204,10 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
 
             // We’re creating a new event, so we set the start and end time to the next full hour
             start = initialDate.toDateTimeAtCurrentTime()
-                    .plusHours(1)
-                    .withMinuteOfHour(0)
-                    .withSecondOfMinute(0)
-                    .withMillisOfSecond(0)
+                .plusHours(1)
+                .withMinuteOfHour(0)
+                .withSecondOfMinute(0)
+                .withMillisOfSecond(0)
             end = start.plusHours(1)
             repeatHelper.end = end.plusWeeks(1)
         } else {
@@ -225,10 +229,10 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
             return
 
         val calendarItem = CalendarItem(
-                nr = eventNr,
-                title = eventTitle,
-                dtstart = startTime,
-                url = "",
+            nr = eventNr,
+            title = eventTitle,
+            dtstart = startTime,
+            url = "",
         )
 
         val currentColor = eventColorController.getResourceColor(calendarItem)
@@ -238,12 +242,12 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
 
         binding.colorChangeBtn.setOnClickListener {
             val dialog = ChangeEventColorDialog(
-                    context = this,
-                    calendarItem = calendarItem,
-                    onColorChanged = { data ->
-                        updateEventColorInput(data)
-                    },
-                    fromCreateEventActivity = true
+                context = this,
+                calendarItem = calendarItem,
+                onColorChanged = { data ->
+                    updateEventColorInput(data)
+                },
+                fromCreateEventActivity = true
             )
             dialog.show()
             dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -251,7 +255,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     }
 
     private fun getTextColorByColor(color: Int): Int {
-        return when(color) {
+        return when (color) {
             R.color.calendar_red -> R.string.custom_color_red
             R.color.calendar_pink -> R.string.custom_color_pink
             R.color.calendar_purple -> R.string.custom_color_purple
@@ -270,12 +274,12 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     private fun initEventColorOnClickListener() {
         binding.colorChangeBtn.setOnClickListener {
             val dialog = ChangeEventColorDialog(
-                    context = this,
-                    calendarItem = CalendarItem(),
-                    onColorChanged = { data ->
-                        updateEventColorInput(data)
-                    },
-                    fromCreateEventActivity = true
+                context = this,
+                calendarItem = CalendarItem(),
+                onColorChanged = { data ->
+                    updateEventColorInput(data)
+                },
+                fromCreateEventActivity = true
             )
             dialog.show()
             dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -321,7 +325,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
             TimePickerDialog(this, { timePicker, hour, minute ->
                 val eventLength = end.millis - start.millis
                 start = start.withHourOfDay(hour)
-                        .withMinuteOfHour(minute)
+                    .withMinuteOfHour(minute)
                 end = end.withMillis(start.millis + eventLength)
                 updateTimeViews()
             }, start.hourOfDay, start.minuteOfHour, true).show()
@@ -331,7 +335,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
             hideKeyboard()
             TimePickerDialog(this, { timePicker, hour, minute ->
                 end = end.withHourOfDay(hour)
-                        .withMinuteOfHour(minute)
+                    .withMinuteOfHour(minute)
                 updateTimeViews()
             }, end.hourOfDay, end.minuteOfHour, true).show()
         }
@@ -339,7 +343,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
 
     private fun updateTimeViews() {
         val format = DateTimeFormat.forPattern("HH:mm")
-                .withLocale(Locale.getDefault())
+            .withLocale(Locale.getDefault())
         with(binding) {
             eventStartTimeView.text = format.print(start)
             eventEndTimeView.text = format.print(end)
@@ -348,7 +352,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
 
     private fun updateDateViews() {
         val format = DateTimeFormat.forPattern("EEE, dd.MM.yyyy")
-                .withLocale(Locale.getDefault())
+            .withLocale(Locale.getDefault())
         with(binding) {
             eventStartDateView.text = format.print(start)
             eventEndDateView.text = format.print(end)
@@ -365,30 +369,30 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         Toast.makeText(this, R.string.updating_event, Toast.LENGTH_SHORT).show()
 
         apiClient
-                .deleteEvent(eventId)
-                .enqueue(object : Callback<DeleteEventResponse> {
-                    override fun onResponse(
-                        call: Call<DeleteEventResponse>,
-                        response: Response<DeleteEventResponse>
-                    ) {
-                        if (response.isSuccessful) {
-                            Utils.log("Event successfully deleted (now creating the edited version)")
-                            TcaDb.getInstance(this@CreateEventActivity).calendarDao().delete(eventId)
-                            eventColorController.removeEventColor(eventId)
-                            createEvent()
-                        } else {
-                            Utils.showToast(this@CreateEventActivity, R.string.error_unknown)
-                        }
+            .deleteEvent(eventId)
+            .enqueue(object : Callback<DeleteEventResponse> {
+                override fun onResponse(
+                    call: Call<DeleteEventResponse>,
+                    response: Response<DeleteEventResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        Utils.log("Event successfully deleted (now creating the edited version)")
+                        TcaDb.getInstance(this@CreateEventActivity).calendarDao().delete(eventId)
+                        eventColorController.removeEventColor(eventId)
+                        createEvent()
+                    } else {
+                        Utils.showToast(this@CreateEventActivity, R.string.error_unknown)
                     }
+                }
 
-                    override fun onFailure(
-                        call: Call<DeleteEventResponse>,
-                        t: Throwable
-                    ) {
-                        Utils.log(t)
-                        displayErrorMessage(t)
-                    }
-                })
+                override fun onFailure(
+                    call: Call<DeleteEventResponse>,
+                    t: Throwable
+                ) {
+                    Utils.log(t)
+                    displayErrorMessage(t)
+                }
+            })
     }
 
     private fun displayErrorMessage(throwable: Throwable) {
@@ -432,7 +436,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     }
 
     private fun getCustomColorByText(text: CharSequence): Int {
-        return when(text) {
+        return when (text) {
             getString(R.string.custom_color_red) -> R.color.calendar_red
             getString(R.string.custom_color_pink) -> R.color.calendar_pink
             getString(R.string.custom_color_purple) -> R.color.calendar_purple
@@ -550,10 +554,10 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
 
     private fun displayCloseDialog() {
         val dialog = AlertDialog.Builder(this)
-                .setMessage(R.string.discard_changes_question)
-                .setNegativeButton(R.string.discard) { dialogInterface, which -> finish() }
-                .setPositiveButton(R.string.keep_editing, null)
-                .create()
+            .setMessage(R.string.discard_changes_question)
+            .setNegativeButton(R.string.discard) { dialogInterface, which -> finish() }
+            .setPositiveButton(R.string.keep_editing, null)
+            .create()
         dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
         dialog.show()
     }
@@ -568,11 +572,11 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
 
     private fun showErrorDialog(message: String) {
         val dialog = AlertDialog.Builder(this)
-                .setTitle(R.string.error)
-                .setMessage(message)
-                .setIcon(R.drawable.ic_error_outline)
-                .setPositiveButton(R.string.ok, null)
-                .create()
+            .setTitle(R.string.error)
+            .setMessage(message)
+            .setIcon(R.drawable.ic_error_outline)
+            .setPositiveButton(R.string.ok, null)
+            .create()
         dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
         dialog.show()
     }

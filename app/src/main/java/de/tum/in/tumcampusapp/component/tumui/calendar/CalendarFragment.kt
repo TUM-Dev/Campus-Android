@@ -39,10 +39,12 @@ import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import java.util.*
 
-class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
+class CalendarFragment :
+    FragmentForAccessingTumOnline<EventsResponse>(
         R.layout.fragment_calendar,
         R.string.calendar
-), CalendarDetailsFragment.OnEventInteractionListener {
+    ),
+    CalendarDetailsFragment.OnEventInteractionListener {
 
     private val calendarController: CalendarController by lazy {
         CalendarController(requireContext())
@@ -143,10 +145,10 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
         scheduleNotifications(events)
 
         compositeDisposable += Completable
-                .fromAction { calendarController.importCalendar(events) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onCalendarImportedIntoDatabase)
+            .fromAction { calendarController.importCalendar(events) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(this::onCalendarImportedIntoDatabase)
     }
 
     private fun onCalendarImportedIntoDatabase() {
@@ -237,7 +239,7 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
 
     private fun initFilterCheckboxes() {
         val showCancelledEvents =
-                Utils.getSettingBool(requireContext(), Const.CALENDAR_FILTER_CANCELED, true)
+            Utils.getSettingBool(requireContext(), Const.CALENDAR_FILTER_CANCELED, true)
         Utils.log(if (showCancelledEvents) "Show cancelled events" else "Hide cancelled events")
 
         menuItemFilterCanceled?.isChecked = showCancelledEvents
@@ -276,32 +278,34 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
         }
 
         compositeDisposable += Completable
-                .fromAction { CalendarController.syncCalendar(requireContext()) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    if (isAdded) {
-                        displayCalendarSyncSuccessDialog()
-                    }
-                }, { throwable ->
-                    Utils.log(throwable)
-                    Utils.showToast(requireContext(), R.string.export_to_google_error)
-                })
+            .fromAction { CalendarController.syncCalendar(requireContext()) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                if (isAdded) {
+                    displayCalendarSyncSuccessDialog()
+                }
+            }, { throwable ->
+                Utils.log(throwable)
+                Utils.showToast(requireContext(), R.string.export_to_google_error)
+            })
     }
 
     private fun isPermissionGranted(id: Int): Boolean {
         if (checkSelfPermission(requireContext(), Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED &&
-                checkSelfPermission(requireContext(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+            checkSelfPermission(requireContext(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED
+        ) {
             return true
         } else {
             if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CALENDAR) ||
-                    shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CALENDAR)) {
+                shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CALENDAR)
+            ) {
                 AlertDialog.Builder(requireContext())
-                        .setMessage(getString(R.string.permission_calendar_explanation))
-                        .setPositiveButton(R.string.ok) { _, _ ->
-                            requestPermissions(PERMISSIONS_CALENDAR, id)
-                        }
-                        .show()
+                    .setMessage(getString(R.string.permission_calendar_explanation))
+                    .setPositiveButton(R.string.ok) { _, _ ->
+                        requestPermissions(PERMISSIONS_CALENDAR, id)
+                    }
+                    .show()
             } else {
                 requestPermissions(PERMISSIONS_CALENDAR, id)
             }
@@ -312,10 +316,10 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
 
     private fun displayCalendarSyncSuccessDialog() {
         AlertDialog.Builder(requireContext())
-                .setMessage(getString(R.string.dialog_show_calendar))
-                .setNegativeButton(R.string.no, null)
-                .setPositiveButton(R.string.yes) { _, _ -> displayCalendarOnGoogleCalendar() }
-                .show()
+            .setMessage(getString(R.string.dialog_show_calendar))
+            .setNegativeButton(R.string.no, null)
+            .setPositiveButton(R.string.yes) { _, _ -> displayCalendarOnGoogleCalendar() }
+            .show()
     }
 
     private fun displayCalendarOnGoogleCalendar() {
@@ -332,7 +336,7 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
         end: DateTime
     ): List<WeekViewDisplayable<CalendarItem>> {
         val showCancelledEvents =
-                Utils.getSettingBool(requireContext(), Const.CALENDAR_FILTER_CANCELED, true)
+            Utils.getSettingBool(requireContext(), Const.CALENDAR_FILTER_CANCELED, true)
 
         val calendarItems = if (showCancelledEvents) {
             calendarController.getFromDbBetweenDates(begin, end)
@@ -408,10 +412,10 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
             val failed = data?.getStringExtra("failed")
             val sum = data?.getStringExtra("sum")
             AlertDialog.Builder(requireContext())
-                    .setTitle(R.string.error_something_wrong)
-                    .setMessage(getString(R.string.create_event_some_failed, failed, sum))
-                    .setPositiveButton(R.string.ok, null)
-                    .show()
+                .setTitle(R.string.error_something_wrong)
+                .setMessage(getString(R.string.create_event_some_failed, failed, sum))
+                .setPositiveButton(R.string.ok, null)
+                .show()
         }
     }
 
@@ -455,12 +459,13 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
             override fun interpretDate(date: Calendar): String {
                 val weekDayFormat = if (shortDate) "E" else "EEEE"
                 val weekDay = DateTimeFormat.forPattern(weekDayFormat)
-                        .withLocale(Locale.getDefault())
-                        .print(DateTime(date.timeInMillis))
+                    .withLocale(Locale.getDefault())
+                    .print(DateTime(date.timeInMillis))
 
                 val dateString = DateUtils.formatDateTime(
-                        requireContext(), date.timeInMillis,
-                        DateUtils.FORMAT_NUMERIC_DATE or DateUtils.FORMAT_NO_YEAR)
+                    requireContext(), date.timeInMillis,
+                    DateUtils.FORMAT_NUMERIC_DATE or DateUtils.FORMAT_NO_YEAR
+                )
 
                 return weekDay.uppercase(Locale.getDefault()) + ' '.toString() + dateString
             }
@@ -478,20 +483,20 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
         }
 
         AlertDialog.Builder(requireContext())
-                .setMessage(getString(R.string.dialog_delete_calendar))
-                .setPositiveButton(getString(R.string.yes)) { _, _ ->
-                    val deleted = CalendarController.deleteLocalCalendar(requireContext())
-                    Utils.setSetting(requireContext(), Const.SYNC_CALENDAR, false)
-                    requireActivity().invalidateOptionsMenu()
+            .setMessage(getString(R.string.dialog_delete_calendar))
+            .setPositiveButton(getString(R.string.yes)) { _, _ ->
+                val deleted = CalendarController.deleteLocalCalendar(requireContext())
+                Utils.setSetting(requireContext(), Const.SYNC_CALENDAR, false)
+                requireActivity().invalidateOptionsMenu()
 
-                    if (deleted > 0) {
-                        Utils.showToast(requireContext(), R.string.calendar_deleted_toast)
-                    } else {
-                        Utils.showToast(requireContext(), R.string.calendar_not_existing_toast)
-                    }
+                if (deleted > 0) {
+                    Utils.showToast(requireContext(), R.string.calendar_deleted_toast)
+                } else {
+                    Utils.showToast(requireContext(), R.string.calendar_not_existing_toast)
                 }
-                .setNegativeButton(getString(R.string.no), null)
-                .show()
+            }
+            .setNegativeButton(getString(R.string.no), null)
+            .show()
     }
 
     override fun onDestroyView() {
@@ -508,8 +513,8 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
         const val RESULT_ERROR = 4
 
         private val PERMISSIONS_CALENDAR = arrayOf(
-                Manifest.permission.READ_CALENDAR,
-                Manifest.permission.WRITE_CALENDAR
+            Manifest.permission.READ_CALENDAR,
+            Manifest.permission.WRITE_CALENDAR
         )
 
         @JvmStatic

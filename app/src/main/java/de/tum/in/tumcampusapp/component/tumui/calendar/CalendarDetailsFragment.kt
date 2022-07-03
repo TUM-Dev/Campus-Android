@@ -41,7 +41,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
 
     private val isShownInCalendarActivity: Boolean by lazy {
         arguments?.getBoolean(CALENDAR_SHOWN_IN_CALENDAR_ACTIVITY_PARAM)
-                ?: throw IllegalStateException("Incomplete Bundle when opening calendar details fragment")
+            ?: throw IllegalStateException("Incomplete Bundle when opening calendar details fragment")
     }
 
     private var deleteApiCall: Call<DeleteEventResponse>? = null
@@ -90,7 +90,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
                         continue
                     }
                     val locationText: TextView = layoutInflater
-                            .inflate(R.layout.calendar_location_text, locationLinearLayout, false) as TextView
+                        .inflate(R.layout.calendar_location_text, locationLinearLayout, false) as TextView
                     if (item.isCanceled) {
                         locationText.setTextColor(ContextCompat.getColor(requireContext(), R.color.event_canceled))
                         val textForCancelledEvent = "${item.location} (${R.string.event_canceled})"
@@ -129,7 +129,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
 
             if (!calendarItem.isEditable && isShownInCalendarActivity) {
                 changeColorButton.setOnClickListener { showChangeEventColorDialog(calendarItem) }
-            }  else {
+            } else {
                 changeColorButton.visibility = View.GONE
             }
         }
@@ -137,10 +137,10 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
 
     private fun showChangeEventColorDialog(calendarItem: CalendarItem) {
         val dialog = ChangeEventColorDialog(
-                context = requireContext(),
-                calendarItem = calendarItem,
-                onColorChanged = { (requireParentFragment() as CalendarFragment).refresh() },
-                fromCreateEventActivity = false
+            context = requireContext(),
+            calendarItem = calendarItem,
+            onColorChanged = { (requireParentFragment() as CalendarFragment).refresh() },
+            fromCreateEventActivity = false
         )
         dialog.show()
         dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -159,10 +159,10 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     private fun displayDeleteDialog(eventId: String) {
         val s = TcaDb.getInstance(requireContext()).calendarDao().getSeriesIdForEvent(eventId)
         val alertDialog = AlertDialog.Builder(requireContext())
-                .setTitle(R.string.event_delete_title)
-                .setMessage(R.string.delete_event_info)
-                .setPositiveButton(R.string.delete) { _, _ -> deleteEvent(eventId) }
-                .setNeutralButton(R.string.cancel, null)
+            .setTitle(R.string.event_delete_title)
+            .setMessage(R.string.delete_event_info)
+            .setPositiveButton(R.string.delete) { _, _ -> deleteEvent(eventId) }
+            .setNeutralButton(R.string.cancel, null)
         if (s != null) { // a event series
             alertDialog.setNegativeButton(R.string.delete_series) { _, _ -> deleteEventSeries(s) }
         }
