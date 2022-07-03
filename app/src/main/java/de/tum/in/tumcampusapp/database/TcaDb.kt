@@ -61,6 +61,7 @@ import de.tum.`in`.tumcampusapp.database.migrations.Migration2to3
 import de.tum.`in`.tumcampusapp.database.migrations.Migration3to4
 import de.tum.`in`.tumcampusapp.database.migrations.Migration4to5
 import de.tum.`in`.tumcampusapp.database.migrations.Migration5to6
+import de.tum.`in`.tumcampusapp.database.migrations.Migration6to7
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.sync.SyncDao
@@ -68,7 +69,7 @@ import de.tum.`in`.tumcampusapp.utils.sync.model.Sync
 import java.util.concurrent.ExecutionException
 
 @Database(
-    version = 6,
+    version = 7,
     entities = [
         Cafeteria::class,
         CafeteriaMenu::class,
@@ -158,7 +159,8 @@ abstract class TcaDb : RoomDatabase() {
             Migration2to3(),
             Migration3to4(),
             Migration4to5(),
-            Migration5to6()
+            Migration5to6(),
+            Migration6to7()
         )
 
         private var instance: TcaDb? = null

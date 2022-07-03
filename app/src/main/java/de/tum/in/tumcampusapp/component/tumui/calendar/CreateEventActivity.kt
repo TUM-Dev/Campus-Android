@@ -232,15 +232,15 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
             nr = eventNr,
             title = eventTitle,
             dtstart = startTime,
-            url = "",
+            url = ""
         )
 
         val currentColor = eventColorController.getResourceColor(calendarItem)
         val colorText = getTextColorByColor(currentColor)
-        binding.colorChangeBtn.text = getString(colorText)
-        binding.colorChangeBtn.buttonTintList = ColorStateList.valueOf(ContextCompat.getColor(this, currentColor))
+        binding.colorChangeBtn?.text = getString(colorText)
+        binding.colorChangeBtn?.buttonTintList = ColorStateList.valueOf(ContextCompat.getColor(this, currentColor))
 
-        binding.colorChangeBtn.setOnClickListener {
+        binding.colorChangeBtn?.setOnClickListener {
             val dialog = ChangeEventColorDialog(
                 context = this,
                 calendarItem = calendarItem,
@@ -272,7 +272,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     }
 
     private fun initEventColorOnClickListener() {
-        binding.colorChangeBtn.setOnClickListener {
+        binding.colorChangeBtn?.setOnClickListener {
             val dialog = ChangeEventColorDialog(
                 context = this,
                 calendarItem = CalendarItem(),
@@ -291,8 +291,8 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
             Utils.showToast(this, R.string.error_unknown)
             return
         }
-        binding.colorChangeBtn.text = onColorChangedData.text
-        binding.colorChangeBtn.buttonTintList = ColorStateList.valueOf(ContextCompat.getColor(this, onColorChangedData.color))
+        binding.colorChangeBtn?.text = onColorChangedData.text
+        binding.colorChangeBtn?.buttonTintList = ColorStateList.valueOf(ContextCompat.getColor(this, onColorChangedData.color))
         selectedColor = onColorChangedData.color
     }
 
@@ -431,7 +431,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     }
 
     private fun saveEventColor(event: CalendarItem) {
-        val color = selectedColor ?: getCustomColorByText(binding.colorChangeBtn.text)
+        val color = selectedColor ?: getCustomColorByText(binding.colorChangeBtn?.text ?: "")
         eventColorController.changeEventColor(event, color, false)
     }
 

@@ -13,7 +13,7 @@ import org.joda.time.format.DateTimeFormat
 import java.util.*
 
 class EventColorController(
-    private val context: Context,
+    private val context: Context
 ) {
     private val eventColorDao: EventColorDao = TcaDb.getInstance(context).classColorDao()
 
