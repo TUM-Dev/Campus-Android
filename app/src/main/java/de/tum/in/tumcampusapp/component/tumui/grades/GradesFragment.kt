@@ -2,6 +2,7 @@ package de.tum.`in`.tumcampusapp.component.tumui.grades
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.util.ArrayMap
@@ -11,6 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.app.ActivityCompat.recreate
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat.getColor
 import com.github.mikephil.charting.components.Legend
@@ -43,6 +45,8 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
     private var showBarChartAfterRotate = false
 
+    private var currentOrientation: Int? = null
+
     private val grades: Array<String> by lazy {
         resources.getStringArray(R.array.grades)
     }
@@ -64,6 +68,8 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             showBarChartAfterRotate = !state.getBoolean(KEY_SHOW_BAR_CHART, true)
             spinnerPosition = state.getInt(KEY_SPINNER_POSITION, 0)
         }
+
+        currentOrientation = resources.configuration.orientation
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -382,6 +388,12 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             R.id.pie_chart_menu -> toggleChart().run { true }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (currentOrientation != newConfig.orientation)
+            recreate(requireActivity())
     }
 
     /**

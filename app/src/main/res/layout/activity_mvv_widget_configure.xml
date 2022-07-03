@@ -5,9 +5,7 @@
     android:layout_height="match_parent">
 
     <!-- The toolbar aka SupportActionBar -->
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
+    <include layout="@layout/toolbar" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -35,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/card_pressed"
+        android:background="@color/secondary_window_background"
         android:elevation="10dp"
         android:paddingStart="20dp"
         android:paddingLeft="20dp"
@@ -68,7 +66,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true" />
+            android:layout_centerVertical="true"
+            android:minHeight="48dp"
+            android:minWidth="48dp" />
 
     </RelativeLayout>
 

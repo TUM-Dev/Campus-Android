@@ -1,6 +1,5 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
-import android.app.SearchManager
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -18,7 +17,6 @@ import de.tum.`in`.tumcampusapp.component.other.navigation.NavDestination
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse
-import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.databinding.FragmentCalendarDetailsBinding
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -212,10 +210,10 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     }
 
     private fun onLocationClicked(location: String) {
-        val findStudyRoomIntent = Intent()
-        findStudyRoomIntent.putExtra(SearchManager.QUERY, Utils.extractRoomNumberFromLocation(location))
-        findStudyRoomIntent.setClass(requireContext(), RoomFinderActivity::class.java)
-        startActivity(findStudyRoomIntent)
+        val sendIntent: Intent = Intent(getContext(),NavigaTUMActivity::class.java).apply {
+            putExtra("location",location)
+        }
+        startActivity(sendIntent)
     }
 
     companion object {
