@@ -25,13 +25,11 @@ object DateTimeUtils {
     }
 
     /**
-     * TODO this uses inconsistent capitalization: "Just now" and "in 30 minutes"
      * Format an upcoming string nicely by being more precise as time comes closer
      * E.g.:
-     *      Just now
      *      in 30 minutes
-     *      at 15:20
-     *      in 5 hours
+     *      in 2 h 4 min
+     *      in 6 hours
      *      tomorrow
      * @see getRelativeTimeSpanString()
      */
@@ -45,18 +43,18 @@ object DateTimeUtils {
         val diff = timeInMillis - now
         return when {
             diff < 60 * MINUTE_IN_MILLIS -> {
-                Log.v("formatFutureTime", "diff < 60 * HOUR_IN_MILLIS runs, diff is: " + diff)
                 val formatter = DateTimeFormat.forPattern("m")
                         .withLocale(Locale.ENGLISH)
-                "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff))} " +
+                "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff))}" +
                         context.getString(R.string.MINUTES)
             }
-            else -> {
-                Log.v("formatFutureTime", "else is running, diff is: "+diff)
-                getRelativeTimeSpanString(timeInMillis, now, MINUTE_IN_MILLIS,
-                    FORMAT_ABBREV_RELATIVE).toString()
+            diff < 5 * HOUR_IN_MILLIS -> {
+                val formatter = DateTimeFormat.forPattern("H 'hrs' mm 'mins'")
+                        .withLocale(Locale.ENGLISH)
+                "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff))}"
             }
-
+            else -> getRelativeTimeSpanString(timeInMillis, now, MINUTE_IN_MILLIS,
+                    FORMAT_ABBREV_RELATIVE).toString()
         }
 
     }
