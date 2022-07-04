@@ -59,11 +59,7 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
         value ?: ""
     }
 
-    // 내가 만든
-    // isWeekMode 원래 false
     private var isWeekMode = false
-
-//    private var isMonthMode = false
 
     private var isFetched: Boolean = false
     private var menuItemSwitchView: MenuItem? = null
@@ -109,10 +105,6 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
         }
 
         showDate?.let { openEvent(eventId) }
-
-
-        //내가 만든 (여기 주석처리해버림)
-        //isWeekMode = Utils.getSettingBool(requireContext(), Const.CALENDAR_WEEK_MODE, false)
 
         disableRefresh()
 
@@ -198,7 +190,6 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
         when (item.itemId) {
             R.id.action_switch_view_mode -> {
                 isWeekMode = !isWeekMode
-//                Log.v("isWeekMode 값 확인", isWeekMode.toString())
                 Utils.setSetting(requireContext(), Const.CALENDAR_WEEK_MODE, isWeekMode)
                 refreshWeekView()
                 return true
@@ -446,9 +437,7 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
         showDate?.let {
             binding.weekView.goToDate(it.toGregorianCalendar())
             binding.weekView.goToHour(it.hourOfDay)
-        } ?: run{binding.weekView.goToCurrentTime()
-            Log.v("Calendar test", "goToCurrentTime() is executed")
-        }
+        } ?: binding.weekView.goToCurrentTime()
 
         menuItemSwitchView?.setIcon(icon)
     }
