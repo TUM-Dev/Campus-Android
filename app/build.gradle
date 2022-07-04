@@ -128,7 +128,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx:20.1.2'
 
     // Helpers
-    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'net.danlew:android.joda:2.10.14'
 
     // XML Parsing
