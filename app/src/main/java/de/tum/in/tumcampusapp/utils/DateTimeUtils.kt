@@ -54,12 +54,13 @@ object DateTimeUtils {
                 "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff))}" +
                         context.getString(R.string.MINUTES)
             }
-            else -> {
+            diff < 5 * HOUR_IN_MILLIS -> {
                 val formatter = DateTimeFormat.forPattern("H 'hrs' mm 'mins'")
                         .withLocale(Locale.ENGLISH)
                 "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff))}"
             }
-
+            else -> getRelativeTimeSpanString(timeInMillis, now, MINUTE_IN_MILLIS,
+                    FORMAT_ABBREV_RELATIVE).toString()
         }
 
     }
