@@ -52,13 +52,14 @@ object DateTimeUtils {
                 Log.v("formatFutureTime", "diff < 60 * HOUR_IN_MILLIS runs, diff is: " + diff)
                 val formatter = DateTimeFormat.forPattern("m")
                         .withLocale(Locale.ENGLISH)
-                "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff))} " +
+                "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff))}" +
                         context.getString(R.string.MINUTES)
             }
             else -> {
-                Log.v("formatFutureTime", "else is running, diff is: "+diff)
-                getRelativeTimeSpanString(timeInMillis, now, MINUTE_IN_MILLIS,
-                    FORMAT_ABBREV_RELATIVE).toString()
+                Log.v("formatFutureTime", "MINUTE_IN_MILLIS is running, diff is: "+diff)
+                val formatter = DateTimeFormat.forPattern("H 'hrs' mm 'mins'")
+                        .withLocale(Locale.ENGLISH)
+                "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff))}"
             }
 
         }
