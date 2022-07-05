@@ -38,14 +38,11 @@ class EventHelper {
             val isLoggedIn = AccessTokenManager.hasValidAccessToken(context)
 
             if (!isLoggedIn || lrzId.isEmpty() || chatRoomName.isEmpty()) {
-                val dialog = AlertDialog.Builder(context)
-                        .setTitle(R.string.error)
-                        .setMessage(R.string.not_logged_in_error)
-                        .setPositiveButton(R.string.ok, null)
-                        .create()
-
-                dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-                dialog.show()
+                AlertDialog.Builder(context)
+                    .setTitle(R.string.error)
+                    .setMessage(R.string.not_logged_in_error)
+                    .setPositiveButton(R.string.ok, null)
+                    .show()
                 return
             }
 
@@ -56,13 +53,11 @@ class EventHelper {
         }
 
         private fun showEventImminentDialog(context: Context) {
-            val dialog = AlertDialog.Builder(context)
-                    .setTitle(R.string.error)
-                    .setMessage(R.string.event_imminent_error)
-                    .setPositiveButton(R.string.ok, null)
-                    .create()
-            dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-            dialog.show()
+            AlertDialog.Builder(context)
+                .setTitle(R.string.error)
+                .setMessage(R.string.event_imminent_error)
+                .setPositiveButton(R.string.ok, null)
+                .show()
         }
 
         /**

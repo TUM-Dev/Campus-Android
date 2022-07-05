@@ -117,16 +117,8 @@ class OnboardingStartFragment : BaseFragment<Unit>(
         if (AccessTokenManager.hasValidAccessToken(requireContext())) {
             AlertDialog.Builder(requireContext())
                 .setMessage(getString(R.string.error_access_token_already_set_generate_new))
-                .setPositiveButton(getString(R.string.generate_new_token)) { _, _ ->
-                    generateNewToken(enteredId)
-                }
-                .setNegativeButton(getString(R.string.use_existing)) { _, _ ->
-                    openNextOnboardingStep()
-                }
-                .create()
-                .apply {
-                    window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-                }
+                .setPositiveButton(getString(R.string.generate_new_token)) { _, _ -> generateNewToken(enteredId) }
+                .setNegativeButton(getString(R.string.use_existing)) { _, _ -> openNextOnboardingStep() }
                 .show()
         } else {
             requestNewToken(enteredId)
@@ -202,10 +194,6 @@ class OnboardingStartFragment : BaseFragment<Unit>(
             .setMessage(messageResId)
             .setPositiveButton(R.string.ok, null)
             .setCancelable(true)
-            .create()
-            .apply {
-                window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-            }
             .show()
     }
 

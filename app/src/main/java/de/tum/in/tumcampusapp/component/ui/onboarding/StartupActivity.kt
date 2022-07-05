@@ -156,10 +156,6 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
                 .setPositiveButton(R.string.ok) { _, _ ->
                     requestPermissions(this, PERMISSIONS_LOCATION, REQUEST_LOCATION)
                 }
-                .create()
-                .apply {
-                    window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-                }
                 .show()
     }
 

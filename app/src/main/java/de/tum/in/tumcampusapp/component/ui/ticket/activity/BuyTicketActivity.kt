@@ -130,13 +130,11 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
     }
 
     private fun showError(title: Int, message: Int) {
-        val dialog = AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setNeutralButton(R.string.ok, null)
-                .create()
-        dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-        dialog.show()
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setMessage(message)
+            .setNeutralButton(R.string.ok, null)
+            .show()
     }
 
     private fun initEventTextViews() {
@@ -208,15 +206,11 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
     }
 
     private fun handleTicketNotReserved() {
-        val dialog = AlertDialog.Builder(this)
+        AlertDialog.Builder(this)
                 .setTitle(getString(R.string.error))
                 .setMessage(getString(R.string.ticket_not_fetched))
-                .setPositiveButton(R.string.ok) { _, _ ->
-                    showLoadingLayout(false)
-                }
-                .create()
-        dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-        dialog.show()
+                .setPositiveButton(R.string.ok) { _, _ -> showLoadingLayout(false) }
+                .show()
     }
 
     private fun handleTicketReservationFailure(messageResId: Int) {

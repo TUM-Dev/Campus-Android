@@ -281,15 +281,11 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 
     private fun showLogoutDialog(title: Int, message: Int) {
         AlertDialog.Builder(requireContext())
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(R.string.logout) { _, _ -> logout() }
-                .setNegativeButton(R.string.cancel, null)
-                .create()
-                .apply {
-                    window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-                }
-                .show()
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(R.string.logout) { _, _ -> logout() }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
     private fun logout() {

@@ -224,10 +224,6 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
             .setTitle(R.string.action_ingredients)
             .setMessage(message)
             .setPositiveButton(R.string.ok, null)
-            .create()
-            .apply {
-                window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-            }
             .show()
     }
 

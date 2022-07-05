@@ -193,13 +193,11 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
     }
 
     private fun showError(message: String) {
-        val dialog = AlertDialog.Builder(this)
+        AlertDialog.Builder(this)
                 .setTitle(getString(R.string.error))
                 .setMessage(message)
                 .setPositiveButton(R.string.ok, null)
-                .create()
-        dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-        dialog.show()
+                .show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

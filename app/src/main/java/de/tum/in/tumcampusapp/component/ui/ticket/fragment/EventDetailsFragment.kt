@@ -200,18 +200,13 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 getString(R.string.tum_calendar)
         )
 
-        val dialog = AlertDialog.Builder(context)
-                .setTitle(R.string.add_to_calendar_info)
-                .setSingleChoiceItems(calendars, 0, null)
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.add) { _, which ->
-                    handleCalendarExportSelection(which)
-                }
-                .setCancelable(true)
-                .create()
-
-        dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-        dialog.show()
+        AlertDialog.Builder(context)
+            .setTitle(R.string.add_to_calendar_info)
+            .setSingleChoiceItems(calendars, 0, null)
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.add) { _, which -> handleCalendarExportSelection(which) }
+            .setCancelable(true)
+            .show()
     }
 
     private fun handleCalendarExportSelection(which: Int) {

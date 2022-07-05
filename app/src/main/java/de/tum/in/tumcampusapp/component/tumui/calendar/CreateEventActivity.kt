@@ -438,13 +438,11 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     }
 
     private fun displayCloseDialog() {
-        val dialog = AlertDialog.Builder(this)
-                .setMessage(R.string.discard_changes_question)
-                .setNegativeButton(R.string.discard) { dialogInterface, which -> finish() }
-                .setPositiveButton(R.string.keep_editing, null)
-                .create()
-        dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-        dialog.show()
+        AlertDialog.Builder(this)
+            .setMessage(R.string.discard_changes_question)
+            .setNegativeButton(R.string.discard) { dialogInterface, which -> finish() }
+            .setPositiveButton(R.string.keep_editing, null)
+            .show()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -456,13 +454,11 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     }
 
     private fun showErrorDialog(message: String) {
-        val dialog = AlertDialog.Builder(this)
-                .setTitle(R.string.error)
-                .setMessage(message)
-                .setIcon(R.drawable.ic_error_outline)
-                .setPositiveButton(R.string.ok, null)
-                .create()
-        dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-        dialog.show()
+        AlertDialog.Builder(this)
+            .setTitle(R.string.error)
+            .setMessage(message)
+            .setIcon(R.drawable.ic_error_outline)
+            .setPositiveButton(R.string.ok, null)
+            .show()
     }
 }
