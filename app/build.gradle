@@ -73,9 +73,6 @@ android {
     sourceSets {
         androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
-    androidExtensions {
-        experimental = true
-    }
     lint {
         abortOnError false
         checkAllWarnings true
