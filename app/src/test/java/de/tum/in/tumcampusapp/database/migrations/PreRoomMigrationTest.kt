@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.Build
 import androidx.room.util.TableInfo
+import androidx.test.core.app.ApplicationProvider
 import de.tum.`in`.tumcampusapp.TestApp
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -13,7 +14,6 @@ import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.util.ReflectionHelpers
 import java.io.File
@@ -56,7 +56,7 @@ class PreRoomMigrationTest {
 
     @Before
     fun setUp() {
-        val openHelper = object : SQLiteOpenHelper(RuntimeEnvironment.application, Const.DATABASE_NAME, null, 1) {
+        val openHelper = object : SQLiteOpenHelper(ApplicationProvider.getApplicationContext(), Const.DATABASE_NAME, null, 1) {
             override fun onCreate(db: SQLiteDatabase?) {
                 preRoomSchema.splitToSequence('\n').forEach {
                     db!!.execSQL(it)
@@ -77,14 +77,14 @@ class PreRoomMigrationTest {
          *  Roboelectric is such a custom deployment, so work around that
          */
         ReflectionHelpers.setStaticField(Build.VERSION::class.java, "SDK_INT", 19)
-        val tcadb = TcaDb.getInstance(RuntimeEnvironment.application)
+        val tcadb = TcaDb.getInstance(ApplicationProvider.getApplicationContext())
         assert(tcadb.newsSourcesDao().getNewsSources("test").isEmpty())
     }
 
     @After
     fun tearDown() {
         db.close()
-        TcaDb.getInstance(RuntimeEnvironment.application).close()
+        TcaDb.getInstance(ApplicationProvider.getApplicationContext()).close()
         File(db.path).delete()
     }
 }
