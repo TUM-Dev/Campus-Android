@@ -32,8 +32,8 @@ class SilenceService : JobIntentService() {
     private val isDoNotDisturbActive: Boolean
         get() {
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
-                notificationManager.currentInterruptionFilter != android.app.NotificationManager.INTERRUPTION_FILTER_ALL
+                val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.currentInterruptionFilter != NotificationManager.INTERRUPTION_FILTER_ALL
             } else {
                 try {
                     val mode = Settings.Global.getInt(contentResolver, "zen_mode")
