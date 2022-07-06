@@ -185,7 +185,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
                 // only label grades that are associated with at least one grade
                 data.setValueFormatter(object : ValueFormatter() {
-                    override fun getFormattedValue(value: Float): String? {
+                    override fun getFormattedValue(value: Float): String {
                         if (value > 0.0)
                             return value.toString()
                         return ""

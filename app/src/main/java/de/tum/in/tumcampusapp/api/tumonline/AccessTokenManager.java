@@ -17,7 +17,7 @@ public class AccessTokenManager {
      */
     public static boolean hasValidAccessToken(Context context) {
         final String oldAccessToken = Utils.getSetting(context, Const.ACCESS_TOKEN, "");
-        return oldAccessToken != null && oldAccessToken.length() > 2;
+        return oldAccessToken.length() > 2;
     }
 
 }

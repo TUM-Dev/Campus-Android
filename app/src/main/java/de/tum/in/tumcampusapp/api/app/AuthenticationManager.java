@@ -15,6 +15,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Objects;
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -141,7 +142,7 @@ public class AuthenticationManager {
      * @throws NoPrivateKey
      */
     public String sign(String data) throws NoPrivateKey {
-        RSASigner signer = new RSASigner(this.getPrivateKey());
+        RSASigner signer = new RSASigner(Objects.requireNonNull(this.getPrivateKey()));
         return signer.sign(data);
     }
 
