@@ -28,6 +28,8 @@ import static okhttp3.internal.platform.Platform.INFO;
 public final class TumHttpLoggingInterceptor implements Interceptor {
 
     private static final Charset UTF8 = StandardCharsets.UTF_8;
+    private static final boolean LOG_BODY = true;
+    private static final boolean LOG_HEADERS = true;
     private final Logger logger;
 
     public interface Logger {
@@ -48,21 +50,18 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
     public Response intercept(@NonNull Chain chain) throws IOException {
         Request request = chain.request();
 
-        boolean logBody = true;
-        boolean logHeaders = true;
-
         RequestBody requestBody = request.body();
         boolean hasRequestBody = requestBody != null;
 
         Connection connection = chain.connection();
         Protocol protocol = connection == null ? Protocol.HTTP_1_1 : connection.protocol();
         String requestStartMessage = "--> " + request.method() + ' ' + request.url() + ' ' + protocol;
-        if (!logHeaders && hasRequestBody) {
+        if (!LOG_HEADERS && hasRequestBody) {
             requestStartMessage += " (" + requestBody.contentLength() + "-byte body)";
         }
         logger.log(requestStartMessage);
 
-        if (logHeaders) {
+        if (LOG_HEADERS) {
             if (hasRequestBody) {
                 // Request body headers are only present when installed as a network interceptor. Force
                 // them to be included (when available) so there values are known.
@@ -83,7 +82,7 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
                 }
             }
 
-            if (logBody && hasRequestBody) {
+            if (LOG_BODY && hasRequestBody) {
                 if (bodyEncoded(request.headers())) {
                     logger.log("--> END " + request.method() + " (encoded body omitted)");
                 } else {
@@ -125,15 +124,15 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
         long contentLength = responseBody.contentLength();
         String bodySize = contentLength == -1 ? "unknown-length" : contentLength + "-byte";
         logger.log(String.format("<-- %d %s %s (%dms%s)", response.code(), response.message(), response.request().url(), tookMs,
-                                 logHeaders ? "" : ", " + bodySize + " body"));
+                                 LOG_HEADERS ? "" : ", " + bodySize + " body"));
 
-        if (logHeaders) {
+        if (LOG_HEADERS) {
             Headers headers = response.headers();
             for (int i = 0, count = headers.size(); i < count; i++) {
                 logger.log(headers.name(i) + ": " + headers.value(i));
             }
 
-            if (logBody && HttpHeaders.hasBody(response)) {
+            if (LOG_BODY && HttpHeaders.hasBody(response)) {
                 if (bodyEncoded(response.headers())) {
                     logger.log("<-- END HTTP (encoded body omitted)");
                 } else {
