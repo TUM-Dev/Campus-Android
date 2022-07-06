@@ -9,7 +9,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: "testDebugUnitTest") {
     description = "Generate Jacoco coverage reports for Debug build"
 
     reports {
-        xml.enabled = true
-        html.enabled = true
+        xml.required = true
+        html.required = true
     }
 }
