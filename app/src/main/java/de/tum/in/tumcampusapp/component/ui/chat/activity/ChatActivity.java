@@ -88,6 +88,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
             handleBroadcastReceive(intent);
         }
     };
+    private Context context;
 
     public ChatActivity() {
         super(R.layout.activity_chat);
@@ -107,6 +108,8 @@ public class ChatActivity extends ActivityForDownloadingExternal
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        context = getApplicationContext();
         setupToolbarTitle();
         initChatMessageViewModel();
         bindUIElements();
@@ -358,7 +361,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
         chatHistoryAdapter.add(message);
         chatMessageViewModel.addToUnsent(message);
 
-        WorkManager.getInstance()
+        WorkManager.getInstance(context)
                    .enqueue(SendMessageWorker.getWorkRequest());
     }
 
