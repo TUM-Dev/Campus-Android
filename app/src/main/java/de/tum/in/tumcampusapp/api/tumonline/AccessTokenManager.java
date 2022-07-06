@@ -8,7 +8,9 @@ import de.tum.in.tumcampusapp.utils.Utils;
 /**
  * Easy accessible class for token management.
  */
-public class AccessTokenManager {
+public final class AccessTokenManager {
+    private AccessTokenManager() {
+    }
 
     /**
      * Returns whether a valid access token already exists.

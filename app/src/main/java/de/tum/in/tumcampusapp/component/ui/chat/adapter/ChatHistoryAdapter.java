@@ -105,10 +105,10 @@ public class ChatHistoryAdapter extends BaseAdapter {
     // Layout of the list row
     private static class ViewHolder {
 
-        LinearLayout containerLayout;
+        final LinearLayout containerLayout;
         TextView userTextView;
-        TextView messageTextView;
-        TextView timestampTextView;
+        final TextView messageTextView;
+        final TextView timestampTextView;
         ProgressBar sendingProgressBar;
         ImageView statusImageView;
 
