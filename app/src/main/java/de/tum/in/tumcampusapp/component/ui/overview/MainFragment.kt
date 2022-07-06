@@ -182,7 +182,7 @@ class MainFragment : BaseFragment<Unit>(
                 val reviewInfo = task.result
 
                 val flow = reviewManager.launchReviewFlow(requireActivity(), reviewInfo)
-                flow.addOnCompleteListener { _ ->
+                flow.addOnCompleteListener {
                     Utils.setSetting(requireContext(), Const.LAST_REVIEW_PROMPT, Date().time.toString())
                 }
             } else {

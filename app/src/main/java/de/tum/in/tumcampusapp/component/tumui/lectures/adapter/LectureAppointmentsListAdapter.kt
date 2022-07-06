@@ -63,7 +63,7 @@ class LectureAppointmentsListAdapter(
 
     // to get current setting language
     private fun getLocale(): String? {
-        return Locale.getDefault().getLanguage()
+        return Locale.getDefault().language
     }
 
     private fun getAppointmentTime(lvItem: LectureAppointment): String {

@@ -186,7 +186,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     }
 
     private fun onLocationClicked(location: String) {
-        val sendIntent: Intent = Intent(getContext(), NavigaTUMActivity::class.java).apply {
+        val sendIntent: Intent = Intent(context, NavigaTUMActivity::class.java).apply {
             putExtra("location", location)
         }
         startActivity(sendIntent)

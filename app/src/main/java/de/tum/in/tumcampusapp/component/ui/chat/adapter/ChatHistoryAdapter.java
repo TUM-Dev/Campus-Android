@@ -153,9 +153,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
             if (message.getSendingStatus() == ChatMessage.STATUS_ERROR) {
                 AlertDialog dialog = new AlertDialog.Builder(context)
                         .setMessage(R.string.chat_message_try_again)
-                        .setPositiveButton(R.string.retry, (dialogInterface, i) -> {
-                            retryListener.onRetrySending(message);
-                        })
+                        .setPositiveButton(R.string.retry, (dialogInterface, i) -> retryListener.onRetrySending(message))
                         .setNegativeButton(R.string.cancel, null)
                         .create();
 
