@@ -97,7 +97,7 @@ class SilenceService : JobIntentService() {
 
                 // Check if we have a "next" item in the database and
                 // update the refresh interval until then. Otherwise use default interval.
-                if (!nextCalendarItems.isEmpty()) {
+                if (nextCalendarItems.isNotEmpty()) {
                     // refresh when next event has started
                     waitDuration = getWaitDuration(nextCalendarItems[0].dtstart)
                 }

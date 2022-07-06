@@ -87,9 +87,8 @@ class ContactsHelper {
 
             // saveToContacts all rooms
             val rooms = employee.rooms
-            if (rooms != null && !rooms.isEmpty()) {
-                if (!notes.toString()
-                                .isEmpty()) {
+            if (rooms != null && rooms.isNotEmpty()) {
+                if (notes.toString().isNotEmpty()) {
                     notes.append('\n')
                 }
                 notes.append(context.getString(R.string.room))
@@ -103,8 +102,7 @@ class ContactsHelper {
             }
 
             // Finally saveToContacts notes
-            if (!notes.toString()
-                            .isEmpty()) {
+            if (notes.toString().isNotEmpty()) {
                 ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                         .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactID)
                         .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Note.CONTENT_ITEM_TYPE)

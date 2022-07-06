@@ -124,10 +124,8 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
         ResponseBody responseBody = response.body();
         long contentLength = responseBody.contentLength();
         String bodySize = contentLength == -1 ? "unknown-length" : contentLength + "-byte";
-        logger.log("<-- " + response.code() + ' ' + response.message() + ' '
-                   + response.request()
-                             .url() + " (" + tookMs + "ms" + (logHeaders ? "" : ", "
-                                                                                + bodySize + " body") + ')');
+        logger.log(String.format("<-- %d %s %s (%dms%s)", response.code(), response.message(), response.request().url(), tookMs,
+                                 logHeaders ? "" : ", " + bodySize + " body"));
 
         if (logHeaders) {
             Headers headers = response.headers();
