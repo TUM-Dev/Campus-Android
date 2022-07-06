@@ -340,7 +340,7 @@ public class CalendarDaoTest {
 
         List<CalendarItem> results = dao.getNextCalendarItems();
         assertThat(results).hasSize(1);
-        assertThat(results.get(0)).isEqualToComparingFieldByField(expected);
+        assertThat(results.get(0)).usingRecursiveComparison().isEqualTo(expected);
     }
 
     /**

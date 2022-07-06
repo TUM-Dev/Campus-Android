@@ -79,6 +79,6 @@ public class RoomLocationsDaoTest {
         dao.insert(new RoomLocations("some other location", "456", "654"));
         dao.insert(new RoomLocations("yet another location", "789", "987"));
 
-        assertThat(dao.getNextLectureCoordinates()).isEqualToComparingFieldByField(expected);
+        assertThat(dao.getNextLectureCoordinates()).usingRecursiveComparison().isEqualTo(expected);
     }
 }
