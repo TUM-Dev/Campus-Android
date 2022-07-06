@@ -97,6 +97,7 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
 
                     logger.log("");
                     if (isPlaintext(buffer)) {
+                        assert charset != null;
                         logger.log(buffer.readString(charset));
                         logger.log("--> END " + request.method()
                                    + " (" + requestBody.contentLength() + "-byte body)");
@@ -121,6 +122,7 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
         long tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs);
 
         ResponseBody responseBody = response.body();
+        assert responseBody != null;
         long contentLength = responseBody.contentLength();
         String bodySize = contentLength == -1 ? "unknown-length" : contentLength + "-byte";
         logger.log(String.format("<-- %d %s %s (%dms%s)", response.code(), response.message(), response.request().url(), tookMs,
