@@ -17,15 +17,15 @@ class BackendHelper {
         }
 
         fun getBackendConnection() {
-            var managedChannel = ManagedChannelBuilder.forAddress("api.tum.app", 50052).usePlaintext().build()
+            val managedChannel = ManagedChannelBuilder.forAddress("api.tum.app", 50052).usePlaintext().build()
             var blockingStub = CampusGrpc.newBlockingStub(managedChannel)
             blockingStub = io.grpc.stub.MetadataUtils.attachHeaders(blockingStub, getHeaderMetaData())
 
-            var topNews = blockingStub.getTopNews(Empty.getDefaultInstance())
-            var link = topNews.link
+            val topNews = blockingStub.getTopNews(Empty.getDefaultInstance())
+            val link = topNews.link
             println(link)
 
-            var newsSources = blockingStub.getNewsSources(Empty.getDefaultInstance())
+            val newsSources = blockingStub.getNewsSources(Empty.getDefaultInstance())
             println(newsSources.getSources(0))
         }
     }
