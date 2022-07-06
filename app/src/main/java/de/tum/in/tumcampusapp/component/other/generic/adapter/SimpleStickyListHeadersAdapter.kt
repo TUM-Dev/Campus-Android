@@ -23,12 +23,8 @@ abstract class SimpleStickyListHeadersAdapter<T : SimpleStickyListHeadersAdapter
     var itemList: MutableList<T>
 ) : BaseAdapter(), StickyListHeadersAdapter {
 
-    private val filters: MutableList<String>
+    private val filters: MutableList<String> = itemList.map { it.getHeaderId() }.distinct().toMutableList()
     val inflater: LayoutInflater = LayoutInflater.from(context)
-
-    init {
-        filters = itemList.map { it.getHeaderId() }.distinct().toMutableList()
-    }
 
     // needs to be implemented by subclass
     abstract override fun getView(position: Int, convertView: View?, parent: ViewGroup): View

@@ -148,10 +148,8 @@ public class AuthenticationManager {
 
     /**
      * Gets private key from preferences or generates one.
-     *
-     * @return true if a private key is present
      */
-    public boolean generatePrivateKey(ChatMember member) {
+    public void generatePrivateKey(ChatMember member) {
         // Try to retrieve private key
         try {
             //Try to get the private key
@@ -161,7 +159,7 @@ public class AuthenticationManager {
             this.uploadKey(this.getPublicKeyString(), member);
 
             // If we already have one don't create a new one
-            return true;
+            return;
         } catch (NoPrivateKey | NoPublicKey e) { //NOPMD
             //Otherwise catch a not existing private key exception and proceed generation
         }
@@ -181,7 +179,6 @@ public class AuthenticationManager {
 
         //New keys, need to re-upload
         this.uploadKey(publicKeyString, member);
-        return true;
     }
 
     /**
