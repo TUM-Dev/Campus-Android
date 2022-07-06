@@ -467,11 +467,8 @@ Signatur: %5$s</string>
     <string name="location_services_off_title">Standortfreigabe ist ausgeschaltet</string>
     <string name="location_services_off_message">Schalte deinen Standort in den Einstellungen an um deinen Standort mitzusenden</string>
     <string name="study_cards_title">Cards</string>
-    <string name="card_title">Titel</string>
     <string name="create_card">Karte hinzufügen</string>
     <string name="title_activity_cards">Karteikarten</string>
-    <string name="card_front_text">Vorderseite</string>
-    <string name="card_back_text">Hinterseite</string>
     <string name="title_activity_cards_detail">Karte hinzufügen</string>
     <string name="card_question">Frage</string>
     <string name="card_answer">Antwort</string>
