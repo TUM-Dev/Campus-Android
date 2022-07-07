@@ -717,4 +717,5 @@ Signatur: %5$s</string>
     // for opening hours
     <string name="language">de</string>
     <string name="use_existing">Bestehendes verwenden</string>
+    <string name="error_access_token_insufficient_permissions">Deinem TUMonline-Token fehlen die aktiven Rechte!</string>
 </resources>

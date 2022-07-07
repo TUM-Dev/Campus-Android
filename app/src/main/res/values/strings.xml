@@ -769,4 +769,5 @@ Signature: %5$s</string>
     // for opening hours
     <string name="language">en</string>
     <string name="use_existing">Use existing</string>
+    <string name="error_access_token_insufficient_permissions">Your TUMonline access token is missing the specific rights!</string>
 </resources>
