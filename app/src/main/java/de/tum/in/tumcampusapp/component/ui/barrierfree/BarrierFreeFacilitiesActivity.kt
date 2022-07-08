@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.api.navigatum.domain.NavigationEntity
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
+import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumCabe
 import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderDetailsActivity
@@ -15,9 +17,11 @@ import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.databinding.ActivityBarrierFreeFacilitiesBinding
 import retrofit2.Call
 
-class BarrierFreeFacilitiesActivity : ActivityForAccessingTumCabe<List<RoomFinderRoom>>(
+class BarrierFreeFacilitiesActivity :
+    ActivityForAccessingTumCabe<List<RoomFinderRoom>>(
         R.layout.activity_barrier_free_facilities
-), AdapterView.OnItemSelectedListener {
+    ),
+    AdapterView.OnItemSelectedListener {
 
     private val recents: RecentsDao by lazy {
         TcaDb.getInstance(this).recentsDao()
@@ -61,9 +65,19 @@ class BarrierFreeFacilitiesActivity : ActivityForAccessingTumCabe<List<RoomFinde
         binding.barrierFreeFacilitiesListView.adapter = RoomFinderListAdapter(this, response)
         binding.barrierFreeFacilitiesListView.setOnItemClickListener { _, _, index, _ ->
             val facility = response[index]
-            recents.insert(RoomFinderRoom.toRecent(facility))
+            recents.insert(toNavigationEntityRecent(facility))
             openRoomFinderDetails(facility)
         }
+    }
+
+    private fun toNavigationEntityRecent(room: RoomFinderRoom): Recent {
+        val navigation = NavigationEntity(
+            id = room.room_id,
+            type = "room",
+            name = room.formattedAddress,
+            subtext = room.info
+        )
+        return NavigationEntity.toRecent(navigation, RecentsDao.NAVIGA_TUM_ROOMS)
     }
 
     private fun openRoomFinderDetails(facility: RoomFinderRoom) {

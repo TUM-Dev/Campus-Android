@@ -28,8 +28,6 @@ import de.tum.`in`.tumcampusapp.component.tumui.person.PersonDetailsActivity.Com
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.NavigationDetailsFragment
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.NavigationDetailsFragment.Companion.NAVIGATION_ENTITY
-import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderDetailsActivity
-import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.RecentSearchesAdapter
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.ResultTypeData
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.ResultTypesAdapter
@@ -141,7 +139,6 @@ class SearchFragment : BaseFragment<Unit>(
         try {
             when (recent.type) {
                 RecentsDao.PERSONS -> openPersonDetails(Person.fromRecent(recent))
-                RecentsDao.ROOMS -> openRoomDetails(RoomFinderRoom.fromRecent(recent))
                 RecentsDao.LECTURES -> openLectureDetails(Lecture.fromRecent(recent))
                 RecentsDao.NAVIGA_TUM_BUILDINGS -> openNavigationDetails(NavigationEntity.fromRecent(recent))
                 RecentsDao.NAVIGA_TUM_ROOMS -> openNavigationDetails(NavigationEntity.fromRecent(recent))
@@ -204,10 +201,6 @@ class SearchFragment : BaseFragment<Unit>(
                 saveRecentSearch(Person.toRecent(searchResult.person))
                 openPersonDetails(searchResult.person)
             }
-            is SearchResult.Room -> {
-                saveRecentSearch(RoomFinderRoom.toRecent(searchResult.room))
-                openRoomDetails(searchResult.room)
-            }
             is SearchResult.Lecture -> {
                 saveRecentSearch(Lecture.toRecent(searchResult.lecture))
                 openLectureDetails(searchResult.lecture)
@@ -250,12 +243,6 @@ class SearchFragment : BaseFragment<Unit>(
                 searchEditText.setText(query)
             }
         }
-    }
-
-    private fun openRoomDetails(room: RoomFinderRoom) {
-        val intent = Intent(requireContext(), RoomFinderDetailsActivity::class.java)
-        intent.putExtra(RoomFinderDetailsActivity.EXTRA_ROOM_INFO, room)
-        startActivity(intent)
     }
 
     private fun openLectureDetails(lecture: Lecture) {

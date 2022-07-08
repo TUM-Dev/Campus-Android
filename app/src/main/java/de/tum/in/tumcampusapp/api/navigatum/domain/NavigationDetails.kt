@@ -7,8 +7,8 @@ data class NavigationDetails(
     val id: String,
     val name: String,
     val type: String,
-    val cordsLat: Float,
-    val cordsLon: Float,
+    val cordsLat: Double,
+    val cordsLon: Double,
     val mapId: String?,
     val mapName: String?,
     val mapImgUrl: String?
@@ -46,6 +46,6 @@ fun NavigationDetailsDto.toNavigationDetails(): NavigationDetails {
         cordsLon = this.cords.lon,
         mapId = map?.id,
         mapName = map?.name,
-        mapImgUrl = map?.imgUrl,
+        mapImgUrl = map?.imgUrl
     )
 }

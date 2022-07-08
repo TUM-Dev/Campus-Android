@@ -13,7 +13,7 @@ data class NavigationEntity(
     @SerializedName("name")
     var name: String = "",
     @SerializedName("subtext")
-    var subtext: String = "",
+    var subtext: String = ""
 ) : Serializable {
 
     companion object {

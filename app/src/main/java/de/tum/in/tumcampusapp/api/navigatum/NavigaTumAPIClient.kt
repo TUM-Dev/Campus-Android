@@ -2,7 +2,8 @@ package de.tum.`in`.tumcampusapp.api.navigatum
 
 import android.content.Context
 import de.tum.`in`.tumcampusapp.api.app.ApiHelper
-import de.tum.`in`.tumcampusapp.api.navigatum.domain.NavigationEntity
+import de.tum.`in`.tumcampusapp.api.navigatum.domain.NavigationDetails
+import de.tum.`in`.tumcampusapp.api.navigatum.domain.toNavigationDetails
 import de.tum.`in`.tumcampusapp.api.navigatum.model.details.NavigationDetailsDto
 import de.tum.`in`.tumcampusapp.api.navigatum.model.search.NavigaTumSearchResponseDto
 import de.tum.`in`.tumcampusapp.api.tumonline.interceptors.CacheResponseInterceptor
@@ -14,18 +15,25 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class NavigaTumAPIClient(private val apiService: NavigaTumAPIService) {
 
-    fun search(query: String): Single<NavigaTumSearchResponseDto> {
-        return apiService.searchNavigation(query)
-    }
-
-    fun getNavigationDetails(id: String): Single<NavigationDetailsDto> {
-        return apiService.getNavigationDetails(id)
-    }
-
-    fun fetchRooms(query: String): List<NavigationEntity>? {
-        return apiService.fetchRooms(query)
+    fun search(query: String): NavigaTumSearchResponseDto? {
+        return apiService.search(query)
             .execute()
             .body()
+    }
+
+    fun getNavigationDetails(id: String): NavigationDetails? {
+        return apiService.getNavigationDetails(id)
+            .execute()
+            .body()
+            ?.toNavigationDetails()
+    }
+
+    fun searchSingle(query: String): Single<NavigaTumSearchResponseDto> {
+        return apiService.searchSingle(query)
+    }
+
+    fun getNavigationDetailsSingle(id: String): Single<NavigationDetailsDto> {
+        return apiService.getNavigationDetailsSingle(id)
     }
 
     companion object {

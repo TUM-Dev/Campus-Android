@@ -4,7 +4,6 @@ enum class SearchResultType {
     ALL,
     PERSON,
     LECTURE,
-    ROOM,
     NAVIGA_ROOM,
     BUILDING
 }

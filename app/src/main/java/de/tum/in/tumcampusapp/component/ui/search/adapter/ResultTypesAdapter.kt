@@ -46,7 +46,6 @@ class ResultTypesAdapter(
                 SearchResultType.ALL -> R.string.all_results
                 SearchResultType.PERSON -> R.string.people
                 SearchResultType.LECTURE -> R.string.lectures
-                SearchResultType.ROOM -> R.string.rooms
                 SearchResultType.NAVIGA_ROOM -> R.string.n_rooms
                 SearchResultType.BUILDING -> R.string.buildings
             }

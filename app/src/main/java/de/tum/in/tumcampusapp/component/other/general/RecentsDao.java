@@ -12,7 +12,6 @@ import de.tum.in.tumcampusapp.component.other.general.model.Recent;
 @Dao
 public interface RecentsDao {
     int STATIONS = 1;
-    int ROOMS = 2;
     int PERSONS = 3;
     int LECTURES = 4;
     int NAVIGA_TUM_ROOMS = 5;

@@ -280,28 +280,35 @@ public final class TUMCabeClient {
                 .body();
     }
 
+    @Deprecated
     public Call<List<RoomFinderMap>> fetchAvailableMaps(final String archId) {
         return service.fetchAvailableMaps(ApiHelper.encodeUrl(archId));
     }
 
+    @Deprecated
     public List<RoomFinderRoom> fetchRooms(String searchStrings) throws IOException {
         return service.fetchRooms(ApiHelper.encodeUrl(searchStrings))
                 .execute()
                 .body();
     }
 
+    @Deprecated
     public Single<List<RoomFinderRoom>> fetchRoomsSingle(String searchStrings) throws IOException {
         return service.fetchRoomsSingle(ApiHelper.encodeUrl(searchStrings));
     }
 
+    @Deprecated
     public RoomFinderCoordinate fetchCoordinates(String archId) throws IOException {
         return fetchRoomFinderCoordinates(archId).execute().body();
     }
 
+    @Deprecated
     public Call<RoomFinderCoordinate> fetchRoomFinderCoordinates(String archId) {
         return service.fetchCoordinates(archId);
     }
 
+    // TODO: 08.07.2022 ask if some1 knows if it was working
+    @Deprecated
     @Nullable
     public List<RoomFinderSchedule> fetchSchedule(String roomId, String start, String end) throws IOException {
         return service.fetchSchedule(ApiHelper.encodeUrl(roomId),

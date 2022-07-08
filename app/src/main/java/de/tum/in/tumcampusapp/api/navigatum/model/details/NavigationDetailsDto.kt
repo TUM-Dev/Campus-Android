@@ -10,6 +10,7 @@ data class NavigationDetailsDto(
     var type: String = "",
     @SerializedName("type_common_name")
     var typeCommonName: String = "",
+    @SerializedName("coords")
     val cords: NavigationCordsDto = NavigationCordsDto(),
-    var maps: NavigationMapsDto = NavigationMapsDto(),
+    var maps: NavigationMapsDto = NavigationMapsDto()
 )

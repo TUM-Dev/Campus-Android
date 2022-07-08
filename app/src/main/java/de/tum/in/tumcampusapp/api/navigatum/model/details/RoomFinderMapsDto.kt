@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName
 data class RoomFinderMapsDto(
     var available: List<RoomFinderMapDto> = listOf(),
     @SerializedName("default")
-    var defaultMapId: String = "",
+    var defaultMapId: String = ""
 )

@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationListener
 import android.preference.PreferenceManager
 import androidx.core.content.ContextCompat
 import com.google.android.gms.common.ConnectionResult
@@ -22,7 +21,6 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.tryOrNull
 import org.jetbrains.anko.doAsync
-import java.io.IOException
 import java.lang.Double.parseDouble
 import java.util.*
 import javax.inject.Inject
@@ -34,7 +32,6 @@ import javax.inject.Inject
 class LocationManager @Inject constructor(c: Context) {
     private val mContext: Context = c.applicationContext
     private val buildingToGpsDao: BuildingToGpsDao
-    private var manager: android.location.LocationManager? = null
 
     init {
         val db = TcaDb.getInstance(c)
@@ -111,7 +108,7 @@ class LocationManager @Inject constructor(c: Context) {
      *
      * @return The last location
      */
-    fun getLastLocation(): Location? {
+    private fun getLastLocation(): Location? {
         // Check Location permission for Android 6.0
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return null
@@ -243,33 +240,6 @@ class LocationManager @Inject constructor(c: Context) {
     }
 
     /**
-     * This might be battery draining
-     *
-     * @return false if permission check fails
-     */
-    fun getLocationUpdates(locationListener: LocationListener): Boolean {
-        // Check Location permission for Android 6.0
-        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return false
-        }
-
-        // Acquire a reference to the system Location Manager
-        if (manager == null) {
-            manager = mContext.getSystemService(Context.LOCATION_SERVICE) as android.location.LocationManager
-        }
-        // Register the listener with the Location Manager to receive location updates
-        manager!!.requestLocationUpdates(android.location.LocationManager.GPS_PROVIDER, 1000, 1f, locationListener)
-        manager!!.requestLocationUpdates(android.location.LocationManager.NETWORK_PROVIDER, 1000, 1f, locationListener)
-        return true
-    }
-
-    fun stopReceivingUpdates(locationListener: LocationListener) {
-        if (manager != null) {
-            manager!!.removeUpdates(locationListener)
-        }
-    }
-
-    /**
      * Checks that Google Play services are available
      */
     private fun servicesConnected(): Boolean {
@@ -278,26 +248,6 @@ class LocationManager @Inject constructor(c: Context) {
 
         Utils.log("Google Play services is $resultCode")
         return resultCode
-    }
-
-    /**
-     * Get the geo information for a room
-     *
-     * @param archId arch_id of the room
-     * @return Location or null on failure
-     */
-    private fun fetchRoomGeo(archId: String): Geo? {
-        return try {
-            val coordinate = TUMCabeClient.getInstance(mContext).fetchCoordinates(archId)
-            if (coordinate.error.isNotEmpty()) {
-                Utils.log("Coordinate api error: " + coordinate.error)
-                return null
-            }
-            coordinate?.let { convertRoomFinderCoordinateToGeo(it) }
-        } catch (e: IOException) {
-            Utils.log(e)
-            null
-        }
     }
 
     /**
@@ -315,14 +265,16 @@ class LocationManager @Inject constructor(c: Context) {
         }
 
         try {
-            val rooms = TUMCabeClient.getInstance(mContext).fetchRooms(loc)
-            val newRooms = NavigaTumAPIClient.getInstance(mContext).fetchRooms(loc)
-
-            if (rooms != null && !rooms.isEmpty()) {
-                println(newRooms)
-                val room = rooms[0].arch_id
-                return fetchRoomGeo(room)
+            val searchResult = NavigaTumAPIClient.getInstance(mContext).search(loc)
+            var geo: Geo? = null
+            if (searchResult != null && searchResult.sections.isNotEmpty() && searchResult.sections[0].entries.isNotEmpty()) {
+                val location = searchResult.sections[0].entries[0].id
+                val locationDetails = NavigaTumAPIClient.getInstance(mContext).getNavigationDetails(location)
+                locationDetails?.let {
+                    geo = Geo(locationDetails.cordsLat, locationDetails.cordsLon)
+                }
             }
+            return geo
         } catch (e: Exception) {
             Utils.log(e)
         }

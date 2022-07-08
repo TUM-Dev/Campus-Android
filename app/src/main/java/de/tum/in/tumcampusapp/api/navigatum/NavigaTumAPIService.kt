@@ -1,6 +1,5 @@
 package de.tum.`in`.tumcampusapp.api.navigatum
 
-import de.tum.`in`.tumcampusapp.api.navigatum.domain.NavigationEntity
 import de.tum.`in`.tumcampusapp.api.navigatum.model.details.NavigationDetailsDto
 import de.tum.`in`.tumcampusapp.api.navigatum.model.search.NavigaTumSearchResponseDto
 import io.reactivex.Single
@@ -12,17 +11,22 @@ import retrofit2.http.Query
 interface NavigaTumAPIService {
 
     @GET(API_SEARCH)
-    fun searchNavigation(
+    fun search(
         @Query(QUERY_PARAM) query: String
-    ): Single<NavigaTumSearchResponseDto>
-
-    @GET(API_SEARCH)
-    fun fetchRooms(
-        @Query(QUERY_PARAM) query: String
-    ): Call<List<NavigationEntity>>
+    ): Call<NavigaTumSearchResponseDto>
 
     @GET(API_GET)
     fun getNavigationDetails(
+        @Path(ID_PARAM) id: String
+    ): Call<NavigationDetailsDto>
+
+    @GET(API_SEARCH)
+    fun searchSingle(
+        @Query(QUERY_PARAM) query: String
+    ): Single<NavigaTumSearchResponseDto>
+
+    @GET(API_GET)
+    fun getNavigationDetailsSingle(
         @Path(ID_PARAM) id: String
     ): Single<NavigationDetailsDto>
 

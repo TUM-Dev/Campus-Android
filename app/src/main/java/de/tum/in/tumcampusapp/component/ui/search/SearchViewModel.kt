@@ -2,7 +2,6 @@ package de.tum.`in`.tumcampusapp.component.ui.search
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.navigatum.NavigaTumAPIClient
 import de.tum.`in`.tumcampusapp.api.navigatum.model.search.NavigaTumSearchResponseDto
 import de.tum.`in`.tumcampusapp.api.navigatum.model.search.NavigaTumSearchSectionDto
@@ -18,19 +17,16 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.lang.IllegalStateException
-import java.util.regex.Pattern
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
     private val tumOnlineClient: TUMOnlineClient,
-    private val tumCabeClient: TUMCabeClient,
     private val navigaTumAPIClient: NavigaTumAPIClient
 ) : ViewModel() {
 
     val state: MutableStateFlow<SearchResultState> = MutableStateFlow(SearchResultState())
 
     private val persons: MutableStateFlow<List<SearchResult>> = MutableStateFlow(emptyList())
-    private val rooms: MutableStateFlow<List<SearchResult>> = MutableStateFlow(emptyList())
     private val lectures: MutableStateFlow<List<SearchResult>> = MutableStateFlow(emptyList())
     private val navigaRooms: MutableStateFlow<List<SearchResult>> = MutableStateFlow(emptyList())
     private val buildings: MutableStateFlow<List<SearchResult>> = MutableStateFlow(emptyList())
@@ -42,12 +38,11 @@ class SearchViewModel @Inject constructor(
     fun changeResultType(type: SearchResultType) {
         val selectedResult: List<SearchResult> = when (type) {
             SearchResultType.PERSON -> persons.value
-            SearchResultType.ROOM -> rooms.value
             SearchResultType.LECTURE -> lectures.value
             SearchResultType.NAVIGA_ROOM -> navigaRooms.value
             SearchResultType.BUILDING -> buildings.value
             SearchResultType.ALL -> sort(
-                persons.value + rooms.value + lectures.value + buildings.value + navigaRooms.value
+                persons.value + lectures.value + buildings.value + navigaRooms.value
             )
         }
         state.value = state.value.copy(
@@ -56,9 +51,9 @@ class SearchViewModel @Inject constructor(
         )
     }
 
-    private fun testNaviga(query: String) {
+    private fun searchForBuildingAndRooms(query: String) {
         val result = navigaTumAPIClient
-            .search(query)
+            .searchSingle(query)
             .subscribeOn(Schedulers.io())
             .doOnError(Utils::log)
             .onErrorReturn { NavigaTumSearchResponseDto() }
@@ -87,10 +82,8 @@ class SearchViewModel @Inject constructor(
     }
 
     fun search(query: String) {
-
         currentApiCalls = NUMBER_OF_API_CALLS
         persons.value = emptyList()
-        rooms.value = emptyList()
         lectures.value = emptyList()
         buildings.value = emptyList()
         navigaRooms.value = emptyList()
@@ -101,7 +94,7 @@ class SearchViewModel @Inject constructor(
             selectedType = SearchResultType.ALL
         )
 
-        testNaviga(query)
+        searchForBuildingAndRooms(query)
 
         val persons = tumOnlineClient
             .searchPerson(query)
@@ -111,15 +104,6 @@ class SearchViewModel @Inject constructor(
             .onErrorReturn { emptyList() }
             .map { persons ->
                 persons.map { SearchResult.Person(it) }
-            }
-
-        val rooms = tumCabeClient
-            .fetchRoomsSingle(userRoomSearchMatching(query))
-            .subscribeOn(Schedulers.io())
-            .doOnError(Utils::log)
-            .onErrorReturn { emptyList() }
-            .map { rooms ->
-                rooms.map { SearchResult.Room(it) }
             }
 
         val lectures = tumOnlineClient
@@ -133,7 +117,7 @@ class SearchViewModel @Inject constructor(
             }
 
         compositeDisposable += Single
-            .concat(persons, rooms, lectures)
+            .concat(persons, lectures)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { saveSearchResult(it) }
     }
@@ -147,7 +131,6 @@ class SearchViewModel @Inject constructor(
 
         val type: SearchResultType = when (result[0]) {
             is SearchResult.Person -> SearchResultType.PERSON
-            is SearchResult.Room -> SearchResultType.ROOM
             is SearchResult.Lecture -> SearchResultType.LECTURE
             is SearchResult.Building -> SearchResultType.BUILDING
             is SearchResult.NavigaRoom -> SearchResultType.NAVIGA_ROOM
@@ -155,7 +138,6 @@ class SearchViewModel @Inject constructor(
 
         when (type) {
             SearchResultType.PERSON -> persons.value = result
-            SearchResultType.ROOM -> rooms.value = result
             SearchResultType.LECTURE -> lectures.value = result
             SearchResultType.BUILDING -> buildings.value = result
             SearchResultType.NAVIGA_ROOM -> navigaRooms.value = result
@@ -173,31 +155,6 @@ class SearchViewModel @Inject constructor(
             data = sort(state.value.data + result),
             availableResultTypes = availableTypes
         )
-    }
-
-    /**
-     * Distinguishes between some room searches, eg. MW 2001 or MI 01.15.069 and takes the
-     * number part so that the search can return (somewhat) meaningful results
-     * (Temporary and non-optimal)
-     *
-     * @return a new query or the original one if nothing was matched
-     */
-    private fun userRoomSearchMatching(roomSearchQuery: String): String {
-        // Matches the number part if the String is composed of two words, probably wrong:
-
-        // First group captures numbers with dots, like the 01.15.069 part from 'MI 01.15.069'
-        // (This is the best search format for MI room numbers)
-        // The second group captures numbers and mixed formats with letters, like 'MW2001'
-        // Only the first match will be returned
-        val pattern = Pattern.compile("(\\w+(?:\\.\\w+)+)|(\\w+\\d+)")
-
-        val matcher = pattern.matcher(roomSearchQuery)
-
-        return if (matcher.find()) {
-            matcher.group()
-        } else {
-            roomSearchQuery
-        }
     }
 
     private fun sort(result: List<SearchResult>): List<SearchResult> {
@@ -248,6 +205,6 @@ class SearchViewModel @Inject constructor(
     }
 
     companion object {
-        const val NUMBER_OF_API_CALLS = 5
+        const val NUMBER_OF_API_CALLS = 4
     }
 }

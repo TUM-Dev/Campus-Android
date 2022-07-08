@@ -4,5 +4,5 @@ import com.google.gson.annotations.SerializedName
 
 data class NavigaTumSearchResponseDto(
     @SerializedName("sections")
-    val sections: List<NavigaTumSearchSectionDto> = listOf(),
+    val sections: List<NavigaTumSearchSectionDto> = listOf()
 )
