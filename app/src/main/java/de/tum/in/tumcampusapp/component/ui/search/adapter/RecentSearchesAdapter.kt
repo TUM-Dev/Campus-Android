@@ -74,7 +74,7 @@ class RecentSearchesAdapter(
                 RecentsDao.NAVIGA_TUM_BUILDINGS -> {
                     try {
                         val navigationEntity = NavigationEntity.fromRecent(recentSearch)
-                        titleText.text = navigationEntity.name
+                        titleText.text = navigationEntity.getFormattedName()
                     } catch (exception: Exception) {
                         titleText.setText(R.string.not_available_search)
                     }
@@ -85,7 +85,7 @@ class RecentSearchesAdapter(
                 RecentsDao.NAVIGA_TUM_ROOMS -> {
                     try {
                         val navigationEntity = NavigationEntity.fromRecent(recentSearch)
-                        titleText.text = navigationEntity.name
+                        titleText.text = navigationEntity.getFormattedName()
                     } catch (exception: Exception) {
                         titleText.setText(R.string.not_available_search)
                     }

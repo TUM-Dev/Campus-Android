@@ -9,21 +9,8 @@ data class NavigationDetails(
     val type: String,
     val cordsLat: Double,
     val cordsLon: Double,
-    val mapId: String?,
-    val mapName: String?,
-    val mapImgUrl: String?
-) {
-    companion object {
-        const val BASIC_MAP_URL = "https://nav.tum.sexy/cdn/maps/roomfinder/"
-    }
-
-    fun getFullMapImgUrl(): String? {
-        if (mapImgUrl == null) {
-            return null
-        }
-        return "$BASIC_MAP_URL$mapImgUrl"
-    }
-}
+    val map: NavigationMap?
+)
 
 fun NavigationDetailsDto.toNavigationDetails(): NavigationDetails {
 
@@ -44,8 +31,6 @@ fun NavigationDetailsDto.toNavigationDetails(): NavigationDetails {
         type = this.type,
         cordsLat = this.cords.lat,
         cordsLon = this.cords.lon,
-        mapId = map?.id,
-        mapName = map?.name,
-        mapImgUrl = map?.imgUrl
+        map = map?.toNavigationMap()
     )
 }

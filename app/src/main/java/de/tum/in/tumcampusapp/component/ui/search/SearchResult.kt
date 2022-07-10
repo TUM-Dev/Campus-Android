@@ -29,17 +29,17 @@ sealed class SearchResult {
 
     data class NavigaRoom(val room: NavigationEntity) : SearchResult() {
         override val title: String
-            get() = room.name
+            get() = room.getFormattedName()
 
         override val subtitle: String
-            get() = room.subtext
+            get() = room.getFormattedSubtext()
     }
 
     data class Building(val building: NavigationEntity) : SearchResult() {
         override val title: String
-            get() = building.name
+            get() = building.getFormattedName()
 
         override val subtitle: String
-            get() = building.subtext
+            get() = building.getFormattedSubtext()
     }
 }

@@ -3,6 +3,7 @@ package de.tum.`in`.tumcampusapp.component.tumui.roomfinder
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.squareup.picasso.Picasso
@@ -51,8 +52,8 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbar.title = navigationEntity.name
-        toolbar.subtitle = navigationEntity.subtext
+        toolbar.title = navigationEntity.getFormattedName()
+        toolbar.subtitle = navigationEntity.getFormattedSubtext()
 
         lifecycleScope.launch {
             handleDetailsLoading()
@@ -69,9 +70,20 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
                 progressIndicator.hide()
 
             if (state.navigationDetails != null) {
-                Picasso.get()
-                    .load(state.navigationDetails.getFullMapImgUrl())
-                    .into(photoView)
+                val map = state.navigationDetails.map
+                if (map != null) {
+                    val pinDrawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_place, null)
+                        ?: throw IllegalStateException("Pin icon not loaded")
+                    val pointerDrawer = DrawCordsPointerTransformation(
+                        cordX = map.pointerXCord,
+                        cordY = map.pointerYCord,
+                        pinDrawable = pinDrawable
+                    )
+                    Picasso.get()
+                        .load(map.getFullMapImgUrl())
+                        .transform(pointerDrawer)
+                        .into(photoView)
+                }
             }
         }
     }
