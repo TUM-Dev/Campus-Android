@@ -64,6 +64,7 @@
     <string name="error_no_rights_to_access_function">Your TUMonline access token doesn’t have the rights to access this function.</string>
     <string name="error_request_limit_reached">You reached the request limit for TUMonline. Try again later.</string>
     <string name="error_access_token_limit_reached">Token limit reached. You have delete an access token in TUMonline before you can continue.</string>
+    <string name="error_access_token_insufficient_permissions">Your TUMonline access token is missing the specific rights!</string>
     <string name="error_unknown">Unknown error.</string>
     <string name="error_tum_online_unavailable">TUMonline is currently unavailable.</string>
 
@@ -769,5 +770,4 @@ Signature: %5$s</string>
     // for opening hours
     <string name="language">en</string>
     <string name="use_existing">Use existing</string>
-    <string name="error_access_token_insufficient_permissions">Your TUMonline access token is missing the specific rights!</string>
 </resources>
