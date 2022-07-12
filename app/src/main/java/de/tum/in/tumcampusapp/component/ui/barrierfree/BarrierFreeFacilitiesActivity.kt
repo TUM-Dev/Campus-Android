@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
+import androidx.appcompat.widget.Toolbar
+import androidx.core.app.NavUtils
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
@@ -36,6 +38,16 @@ class BarrierFreeFacilitiesActivity : ActivityForAccessingTumCabe<List<RoomFinde
         binding = ActivityBarrierFreeFacilitiesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.let {
+            val parent = NavUtils.getParentActivityName(this)
+            if (parent != null) {
+                it.setDisplayHomeAsUpEnabled(true)
+                it.setHomeButtonEnabled(true)
+            }
+        }
+
         binding.spinnerToolbar.onItemSelectedListener = this
     }
 
@@ -55,7 +67,9 @@ class BarrierFreeFacilitiesActivity : ActivityForAccessingTumCabe<List<RoomFinde
     }
 
     private fun executeApiCall(apiCall: Call<List<RoomFinderRoom>>?) {
-        apiCall?.let { fetch(it) } ?: showError(R.string.error_something_wrong)
+        this@BarrierFreeFacilitiesActivity.runOnUiThread {
+            apiCall?.let { fetch(it) } ?: showError(R.string.error_something_wrong)
+        }
     }
 
     override fun onDownloadSuccessful(response: List<RoomFinderRoom>) {
