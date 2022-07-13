@@ -163,7 +163,8 @@ dependencies {
     implementation 'com.squareup.okio:okio:2.10.0'
 
     // UI
-    implementation 'com.github.mtotschnig:StickyListHeaders:2.8.0'
+
+    implementation 'com.github.mtotschnig:StickyListHeaders:2.7.1'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'me.dm7.barcodescanner:zxing:1.9.13'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
