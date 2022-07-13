@@ -34,7 +34,7 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
     private final boolean showDateAndNumber;
     private final List<String> filters;
     private List<ChatRoomAndLastMessage> rooms;
-    private Context mContext;
+    private final Context mContext;
 
     // constructor
     public ChatRoomListAdapter(Context context, List<ChatRoomAndLastMessage> results, int mode) {

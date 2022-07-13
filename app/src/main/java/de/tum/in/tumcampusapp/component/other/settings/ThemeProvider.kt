@@ -18,10 +18,12 @@ class ThemeProvider(private val context: Context) {
         } ?: AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
     }
 
-    fun getTheme(selectedTheme: String): Int = when (selectedTheme) {
-        "system" -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-        "light" -> UiModeManager.MODE_NIGHT_NO
-        "dark" -> UiModeManager.MODE_NIGHT_YES
-        else -> throw InvalidParameterException("Theme not defined for $selectedTheme")
+    companion object {
+        fun getTheme(selectedTheme: String): Int = when (selectedTheme) {
+            "system" -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            "light" -> UiModeManager.MODE_NIGHT_NO
+            "dark" -> UiModeManager.MODE_NIGHT_YES
+            else -> throw InvalidParameterException("Theme not defined for $selectedTheme")
+        }
     }
 }

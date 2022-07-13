@@ -3,11 +3,12 @@ package de.tum.`in`.tumcampusapp.component.tumui.calendar
 import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.utils.addCompoundDrawablesWithIntrinsicBounds
-import kotlinx.android.synthetic.main.card_next_lecture_item.view.*
 
 class NextLectureCardViewHolder(
     itemView: View,
@@ -16,6 +17,11 @@ class NextLectureCardViewHolder(
 
     private var isExpanded = false
     private var didBind = false
+
+    private val divider = itemView.findViewById<View>(R.id.divider)
+    private val moreTextView = itemView.findViewById<TextView>(R.id.moreTextView)
+    private val additionalLecturesLayout = itemView.findViewById<LinearLayout>(R.id.additionalLecturesLayout)
+    private val lectureContainer1 = itemView.findViewById<NextLectureView>(R.id.lectureContainer1)
 
     fun bind(items: List<NextLectureCard.CardCalendarItem>) = with(itemView) {
         showLecture(items.first())

@@ -4,22 +4,22 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline
 import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.*
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Employee
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
+import de.tum.`in`.tumcampusapp.databinding.ActivityPersonDetailsBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.ContactsHelper
-import kotlinx.android.synthetic.main.activity_person_details.*
 
 /**
  * Activity to show information about a person at TUM.
@@ -29,10 +29,15 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
     private lateinit var personId: String
     private var employee: Employee? = null
 
+    private lateinit var binding: ActivityPersonDetailsBinding
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val person = intent.extras?.getSerializable("personObject") as? Person
+        binding = ActivityPersonDetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        val person = intent.extras?.getSerializable(PERSON_OBJECT) as? Person
         if (person == null) {
             finish()
             return
@@ -83,10 +88,10 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
         }
 
         AlertDialog.Builder(this)
-                .setMessage(R.string.dialog_add_to_contacts)
-                .setPositiveButton(R.string.add) { _, _ -> addContact(employee) }
-                .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
-                .show()
+            .setMessage(R.string.dialog_add_to_contacts)
+            .setPositiveButton(R.string.add) { _, _ -> addContact(employee) }
+            .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+            .show()
     }
 
     /**
@@ -96,23 +101,24 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
      * @param employee The employee whose information should be displayed.
      */
     private fun displayResult(employee: Employee) {
-        scrollView.visibility = View.VISIBLE
+        binding.scrollView.visibility = View.VISIBLE
 
         val image = employee.image ?: BitmapFactory.decodeResource(
-                resources, R.drawable.photo_not_available)
+            resources, R.drawable.photo_not_available
+        )
 
-        pictureImageView.setImageBitmap(image)
-        nameTextView.text = employee.getNameWithTitle(this)
+        binding.pictureImageView.setImageBitmap(image)
+        binding.nameTextView.text = employee.getNameWithTitle(this)
 
         // Set up employee groups
         val groups = employee.groups
         if (groups?.isNotEmpty() == true) {
-            groupsRecyclerView.setHasFixedSize(true)
-            groupsRecyclerView.layoutManager = LinearLayoutManager(this)
-            groupsRecyclerView.adapter = PersonGroupsAdapter(groups)
+            binding.groupsRecyclerView.setHasFixedSize(true)
+            binding.groupsRecyclerView.layoutManager = LinearLayoutManager(this)
+            binding.groupsRecyclerView.adapter = PersonGroupsAdapter(groups)
         } else {
-            dividerNameGroups.visibility = View.GONE
-            groupsRecyclerView.visibility = View.GONE
+            binding.dividerNameGroups.visibility = View.GONE
+            binding.groupsRecyclerView.visibility = View.GONE
         }
 
         // Setup contact items
@@ -157,12 +163,12 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
         }
 
         if (contactItems.isNotEmpty()) {
-            contactItemsRecyclerView.setHasFixedSize(true)
-            contactItemsRecyclerView.layoutManager = LinearLayoutManager(this)
-            contactItemsRecyclerView.adapter = PersonContactItemsAdapter(contactItems)
+            binding.contactItemsRecyclerView.setHasFixedSize(true)
+            binding.contactItemsRecyclerView.layoutManager = LinearLayoutManager(this)
+            binding.contactItemsRecyclerView.adapter = PersonContactItemsAdapter(contactItems)
         } else {
-            dividerGroupsContactItems.visibility = View.GONE
-            contactItemsRecyclerView.visibility = View.GONE
+            binding.dividerGroupsContactItems.visibility = View.GONE
+            binding.contactItemsRecyclerView.visibility = View.GONE
         }
     }
 
@@ -198,12 +204,12 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_CONTACTS)) {
             // Display an AlertDialog with an explanation and a button to trigger the request.
             AlertDialog.Builder(this)
-                    .setMessage(R.string.permission_contacts_explanation)
-                    .setPositiveButton(R.string.grant_permission) { _, _ ->
-                        ActivityCompat.requestPermissions(this@PersonDetailsActivity, PERMISSIONS_CONTACTS, id)
-                    }
-                    .setNegativeButton(R.string.cancel, null)
-                    .show()
+                .setMessage(R.string.permission_contacts_explanation)
+                .setPositiveButton(R.string.grant_permission) { _, _ ->
+                    ActivityCompat.requestPermissions(this@PersonDetailsActivity, PERMISSIONS_CONTACTS, id)
+                }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
         } else {
             ActivityCompat.requestPermissions(this, PERMISSIONS_CONTACTS, id)
         }
@@ -220,5 +226,6 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
 
     companion object {
         private val PERMISSIONS_CONTACTS = arrayOf(Manifest.permission.WRITE_CONTACTS)
+        const val PERSON_OBJECT = "personObject"
     }
 }

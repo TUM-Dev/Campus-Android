@@ -29,6 +29,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <include
+        android:id="@+id/layout_all_errors"
         layout="@layout/layout_all_errors"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />

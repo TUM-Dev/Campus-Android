@@ -10,16 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.InactiveTokenException
@@ -33,6 +28,7 @@ import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.ErrorViewStat
 import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.FailedTokenViewState
 import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.NoInternetViewState
 import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.UnknownErrorViewState
+import de.tum.`in`.tumcampusapp.databinding.LayoutAllErrorsBinding
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.setImageResourceOrHide
@@ -52,44 +48,13 @@ abstract class BaseFragment<T>(
     private var apiCall: Call<T>? = null
     private var hadSuccessfulRequest = false
 
-    private val toolbar: Toolbar?
-        get() = requireActivity().findViewById<Toolbar?>(R.id.toolbar)
+    private val contentView: ViewGroup
+        get() = requireActivity().findViewById<ViewGroup>(android.R.id.content).getChildAt(0) as ViewGroup
 
-    private val contentView: ViewGroup by lazy {
-        requireActivity().findViewById<ViewGroup>(android.R.id.content).getChildAt(0) as ViewGroup
-    }
-
-    protected val swipeRefreshLayout: SwipeRefreshLayout? by lazy {
-        requireActivity().findViewById<SwipeRefreshLayout?>(R.id.swipeRefreshLayout)
-    }
-
-    private val errorLayoutsContainer: FrameLayout by lazy {
-        requireActivity().findViewById<FrameLayout>(R.id.errors_layout)
-    }
-
-    private val errorLayout: LinearLayout by lazy {
-        requireActivity().findViewById<LinearLayout>(R.id.error_layout)
-    }
-
-    private val errorIconImageView: ImageView by lazy {
-        requireActivity().findViewById<ImageView>(R.id.iconImageView)
-    }
-
-    private val errorHeaderTextView: TextView by lazy {
-        errorLayout.findViewById<TextView>(R.id.headerTextView)
-    }
-
-    private val errorMessageTextView: TextView by lazy {
-        errorLayout.findViewById<TextView>(R.id.messageTextView)
-    }
-
-    private val errorButton: MaterialButton by lazy {
-        errorLayout.findViewById<MaterialButton>(R.id.button)
-    }
-
-    private val progressLayout: FrameLayout by lazy {
-        requireActivity().findViewById<FrameLayout>(R.id.progress_layout)
-    }
+    // Override in subclasses to access ViewBindings when applicable
+    protected open val swipeRefreshLayout: SwipeRefreshLayout? = null
+    protected open val layoutAllErrorsBinding: LayoutAllErrorsBinding
+        get() = throw NotImplementedError()
 
     private val baseActivity: BaseActivity
         get() = requireActivity() as BaseActivity
@@ -112,7 +77,11 @@ abstract class BaseFragment<T>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupToolbar()
+
+        view.findViewById<Toolbar>(R.id.toolbar)?.let {
+            setupToolbar(it)
+        }
+
         // If content is refreshable setup the SwipeRefreshLayout
         swipeRefreshLayout?.apply {
             setOnRefreshListener(this@BaseFragment)
@@ -124,13 +93,8 @@ abstract class BaseFragment<T>(
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        toolbar?.setTitle(titleResId)
-    }
-
-    private fun setupToolbar() {
-        val toolbar = toolbar ?: return
+    private fun setupToolbar(toolbar: Toolbar) {
+        toolbar.setTitle(titleResId)
         baseActivity.setSupportActionBar(toolbar)
 
         baseActivity.supportActionBar?.let {
@@ -292,28 +256,30 @@ abstract class BaseFragment<T>(
 
     protected fun showContentLayout() {
         runOnUiThread {
-            errorLayout.visibility = View.GONE
+            layoutAllErrorsBinding.layoutError.errorLayout.visibility = View.GONE
         }
     }
 
     protected fun showErrorLayout() {
         runOnUiThread {
-            errorLayout.visibility = View.VISIBLE
+            layoutAllErrorsBinding.layoutError.errorLayout.visibility = View.VISIBLE
         }
     }
 
     private fun showError(viewState: ErrorViewState) {
         showLoadingEnded()
 
-        errorIconImageView.setImageResourceOrHide(viewState.iconResId)
-        errorHeaderTextView.setTextOrHide(viewState.headerResId)
-        errorMessageTextView.setTextOrHide(viewState.messageResId)
+        with(layoutAllErrorsBinding.layoutError) {
+            iconImageView.setImageResourceOrHide(viewState.iconResId)
+            headerTextView.setTextOrHide(viewState.headerResId)
+            messageTextView.setTextOrHide(viewState.messageResId)
 
-        errorButton.setTextOrHide(viewState.buttonTextResId)
-        errorButton.setOnClickListener { retryRequest() }
+            button.setTextOrHide(viewState.buttonTextResId)
+            button.setOnClickListener { retryRequest() }
 
-        errorLayoutsContainer.visibility = View.VISIBLE
-        errorLayout.visibility = View.VISIBLE
+            errorLayout.visibility = View.VISIBLE
+        }
+        layoutAllErrorsBinding.errorsLayout.visibility = View.VISIBLE
     }
 
     /**
@@ -356,9 +322,11 @@ abstract class BaseFragment<T>(
             return
         }
 
-        errorLayoutsContainer.visibility = View.VISIBLE
-        errorLayout.visibility = View.GONE
-        progressLayout.visibility = View.VISIBLE
+        with(layoutAllErrorsBinding) {
+            errorsLayout.visibility = View.VISIBLE
+            layoutError.errorLayout.visibility = View.GONE
+            layoutProgress.progressLayout.visibility = View.VISIBLE
+        }
     }
 
     /**
@@ -366,9 +334,11 @@ abstract class BaseFragment<T>(
      * and stopping the refreshing of [SwipeRefreshLayout]
      */
     protected fun showLoadingEnded() {
-        errorLayoutsContainer.visibility = View.GONE
-        progressLayout.visibility = View.GONE
-        errorLayout.visibility = View.GONE
+        with(layoutAllErrorsBinding) {
+            errorsLayout.visibility = View.GONE
+            layoutProgress.progressLayout.visibility = View.GONE
+            layoutError.errorLayout.visibility = View.GONE
+        }
         swipeRefreshLayout?.isRefreshing = false
     }
 

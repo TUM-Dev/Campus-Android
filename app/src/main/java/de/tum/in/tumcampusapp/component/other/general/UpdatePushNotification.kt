@@ -55,7 +55,7 @@ class UpdatePushNotification(
 
             val sound = Uri.parse("android.resource://${appContext.packageName}/${R.raw.message}")
             val alarm = Intent(appContext, MainActivity::class.java)
-            val pending = PendingIntent.getActivity(appContext, 0, alarm, PendingIntent.FLAG_UPDATE_CURRENT)
+            val pending = PendingIntent.getActivity(appContext, 0, alarm, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
             val description = if (info.description.isNotEmpty()) {
                 info.description

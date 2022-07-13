@@ -14,10 +14,17 @@ public interface RecentsDao {
     int STATIONS = 1;
     int ROOMS = 2;
     int PERSONS = 3;
+    int LECTURES = 4;
 
     @Nullable
     @Query("SELECT * FROM recent WHERE type=:type")
     List<Recent> getAll(Integer type);
+
+    @Query("SELECT * FROM recent")
+    List<Recent> getAllRecentSearches();
+
+    @Query("DELETE FROM recent WHERE name=:name")
+    void deleteByName(String name);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Recent recent);

@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.AdapterView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
-import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumCabe
 import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderDetailsActivity
@@ -62,7 +61,7 @@ class BarrierFreeFacilitiesActivity : ActivityForAccessingTumCabe<List<RoomFinde
         binding.barrierFreeFacilitiesListView.adapter = RoomFinderListAdapter(this, response)
         binding.barrierFreeFacilitiesListView.setOnItemClickListener { _, _, index, _ ->
             val facility = response[index]
-            recents.insert(Recent(facility.toString(), RecentsDao.ROOMS))
+            recents.insert(RoomFinderRoom.toRecent(facility))
             openRoomFinderDetails(facility)
         }
     }

@@ -7,9 +7,7 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkRequest
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -62,6 +60,8 @@ class MainFragment : BaseFragment<Unit>(
 
     private val binding by viewBinding(FragmentMainBinding::bind)
 
+    override val swipeRefreshLayout get() = binding.swipeRefreshLayout
+
     @Inject
     lateinit var viewModelProvider: Provider<MainActivityViewModel>
     private val viewModel: MainActivityViewModel by lazy {
@@ -77,15 +77,14 @@ class MainFragment : BaseFragment<Unit>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        swipeRefreshLayout?.setOnRefreshListener(this)
-        swipeRefreshLayout?.isRefreshing = true
-        swipeRefreshLayout?.setColorSchemeResources(
-                R.color.color_primary,
-                R.color.tum_A100,
-                R.color.tum_A200)
-
-
         with(binding) {
+            swipeRefreshLayout.setOnRefreshListener(this@MainFragment)
+            swipeRefreshLayout.isRefreshing = true
+            swipeRefreshLayout.setColorSchemeResources(
+                    R.color.color_primary,
+                    R.color.tum_A100,
+                    R.color.tum_A200)
+
             registerForContextMenu(cardsRecyclerView)
 
             cardsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -98,7 +97,6 @@ class MainFragment : BaseFragment<Unit>(
             // Swipe gestures
             ItemTouchHelper(ItemTouchHelperCallback()).attachToRecyclerView(cardsRecyclerView)
         }
-
 
         // Start silence Service (if already started it will just invoke a check)
         val service = Intent(requireContext(), SilenceService::class.java)
@@ -129,13 +127,13 @@ class MainFragment : BaseFragment<Unit>(
     }
 
     internal fun refreshCards() {
-        swipeRefreshLayout?.isRefreshing = true
+        swipeRefreshLayout.isRefreshing = true
         onRefresh()
         downloadNewsAlert()
     }
 
     private fun onNewCardsAvailable(cards: List<Card>) {
-        swipeRefreshLayout?.isRefreshing = false
+        swipeRefreshLayout.isRefreshing = false
         cardsAdapter.updateItems(cards)
 
         if (!NetUtils.isConnected(requireContext()) && !isConnectivityChangeReceiverRegistered) {
@@ -202,8 +200,8 @@ class MainFragment : BaseFragment<Unit>(
     private inner class ItemTouchHelperCallback : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
         override fun getSwipeDirs(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder
         ): Int {
             val cardViewHolder = viewHolder as CardViewHolder
             val card = cardViewHolder.currentCard
@@ -211,9 +209,9 @@ class MainFragment : BaseFragment<Unit>(
         }
 
         override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
         ): Boolean {
             cardsAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
             return true

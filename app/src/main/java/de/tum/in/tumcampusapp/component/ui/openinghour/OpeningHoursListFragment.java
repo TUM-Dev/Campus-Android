@@ -83,7 +83,7 @@ public class OpeningHoursListFragment extends BaseFragment<Unit>
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        listView = requireActivity().findViewById(R.id.listView);
+        listView = view.findViewById(R.id.listView);
         listView.setOnItemClickListener(this);
         listView.setAdapter(adapter);
 

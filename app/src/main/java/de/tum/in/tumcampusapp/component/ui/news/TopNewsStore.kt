@@ -73,7 +73,7 @@ class RealTopNewsStore @Inject constructor(
     }
 
     override fun store(newsAlert: NewsAlert) {
-        if (newsAlert.displayUntil.isBlank()) {
+        if (newsAlert.displayUntil.isBlank() || newsAlert.url.isBlank()) {
             setEnabled(false)
             return
         }

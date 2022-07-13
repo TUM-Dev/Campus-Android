@@ -14,8 +14,8 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat.checkSelfPermission
 import com.alamkanak.weekview.DateTimeInterpreter
-import com.alamkanak.weekview.WeekView
 import com.alamkanak.weekview.WeekViewDisplayable
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
@@ -25,6 +25,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.Event
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventsResponse
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
 import de.tum.`in`.tumcampusapp.database.TcaDb
+import de.tum.`in`.tumcampusapp.databinding.FragmentCalendarBinding
 import de.tum.`in`.tumcampusapp.service.QueryLocationsService
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -33,7 +34,6 @@ import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_calendar.todayButton
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
@@ -46,10 +46,6 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
 
     private val calendarController: CalendarController by lazy {
         CalendarController(requireContext())
-    }
-
-    private val weekView: WeekView<CalendarItem> by lazy {
-        requireActivity().findViewById<WeekView<CalendarItem>>(R.id.weekView)
     }
 
     private val showDate: DateTime? by lazy {
@@ -72,6 +68,11 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
 
     private var detailsFragment: CalendarDetailsFragment? = null
 
+    private val binding by viewBinding(FragmentCalendarBinding::bind)
+
+    override val swipeRefreshLayout get() = binding.swipeRefreshLayout
+    override val layoutAllErrorsBinding get() = binding.layoutAllErrors
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -80,25 +81,28 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // The week view adds a horizontal bar below the Toolbar. When refreshing, the refresh
-        // spinner covers it. Therefore, we adjust the spinner's end position.
-        swipeRefreshLayout?.let {
-            val startOffset = it.progressViewStartOffset
-            val endOffset = it.progressViewEndOffset
-            it.setProgressViewOffset(false, startOffset, endOffset)
+        with(binding) {
+            // The week view adds a horizontal bar below the Toolbar. When refreshing, the refresh
+            // spinner covers it. Therefore, we adjust the spinner's end position.
+            swipeRefreshLayout.let {
+                val startOffset = it.progressViewStartOffset
+                val endOffset = it.progressViewEndOffset
+                it.setProgressViewOffset(false, startOffset, endOffset)
+            }
+
+            weekView.setOnMonthChangeListener { startDate, endDate ->
+                val begin = DateTime(startDate)
+                val end = DateTime(endDate)
+                prepareCalendarItems(begin, end)
+            }
+
+            weekView.setOnEventClickListener { data, _ ->
+                openEvent(data as CalendarItem)
+            }
+
+            todayButton.setOnClickListener { weekView.goToToday() }
         }
 
-        weekView.setOnMonthChangeListener { startDate, endDate ->
-            val begin = DateTime(startDate)
-            val end = DateTime(endDate)
-            prepareCalendarItems(begin, end)
-        }
-
-        weekView.setOnEventClickListener { data, _ ->
-            openEvent(data)
-        }
-
-        todayButton.setOnClickListener { weekView.goToToday() }
         showDate?.let { openEvent(eventId) }
 
         isWeekMode = Utils.getSettingBool(requireContext(), Const.CALENDAR_WEEK_MODE, false)
@@ -160,8 +164,8 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        val menuItemExportGoogle = menu?.findItem(R.id.action_export_calendar)
-        val menuItemDeleteCalendar = menu?.findItem(R.id.action_delete_calendar)
+        val menuItemExportGoogle = menu.findItem(R.id.action_export_calendar)
+        val menuItemDeleteCalendar = menu.findItem(R.id.action_delete_calendar)
 
         menuItemExportGoogle?.isEnabled = isFetched
         menuItemDeleteCalendar?.isEnabled = isFetched
@@ -172,10 +176,10 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater?.inflate(R.menu.menu_sync_calendar, menu)
+        inflater.inflate(R.menu.menu_sync_calendar, menu)
 
-        menuItemSwitchView = menu?.findItem(R.id.action_switch_view_mode)
-        menuItemFilterCanceled = menu?.findItem(R.id.action_calendar_filter_canceled)
+        menuItemSwitchView = menu.findItem(R.id.action_switch_view_mode)
+        menuItemFilterCanceled = menu.findItem(R.id.action_calendar_filter_canceled)
 
         refreshWeekView()
         initFilterCheckboxes()
@@ -204,7 +208,7 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
                 return true
             }
             R.id.action_create_event -> {
-                val currentDate = LocalDate(weekView.firstVisibleDate)
+                val currentDate = LocalDate(binding.weekView.firstVisibleDate)
                 val intent = Intent(requireContext(), CreateEventActivity::class.java)
                 intent.putExtra(Const.DATE, currentDate)
                 startActivityForResult(intent, REQUEST_CREATE)
@@ -373,7 +377,7 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
 
     private fun openEvent(event: CalendarItem) {
         detailsFragment = CalendarDetailsFragment.newInstance(event.nr, true, this)
-        detailsFragment?.show(requireFragmentManager(), null)
+        detailsFragment?.show(childFragmentManager, null)
     }
 
     override fun onEditEvent(calendarItem: CalendarItem) {
@@ -424,23 +428,29 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
 
         if (isWeekMode) {
             icon = R.drawable.ic_outline_calendar_view_day_24px
-            weekView.numberOfVisibleDays = 5
+            binding.weekView.numberOfVisibleDays = 5
         } else {
             icon = R.drawable.ic_outline_view_column_24px
-            weekView.numberOfVisibleDays = 1
+            binding.weekView.numberOfVisibleDays = 1
         }
 
         // Go to current date or the one given in the intent
         showDate?.let {
-            weekView.goToDate(it.toGregorianCalendar())
-            weekView.goToHour(it.hourOfDay)
-        } ?: weekView.goToCurrentTime()
+            binding.weekView.goToDate(it.toGregorianCalendar())
+            binding.weekView.goToHour(it.hourOfDay)
+        } ?: run {
+            binding.weekView.firstVisibleDate?.let{
+                binding.weekView.goToDate(it)
+            } ?: run {
+                binding.weekView.goToCurrentTime()
+                }
+            }
 
         menuItemSwitchView?.setIcon(icon)
     }
 
     private fun setupDateTimeInterpreter(shortDate: Boolean) {
-        weekView.dateTimeInterpreter = object : DateTimeInterpreter {
+        binding.weekView.dateTimeInterpreter = object : DateTimeInterpreter {
 
             private val timeFormat = DateTimeFormat.forPattern("HH:mm").withLocale(Locale.getDefault())
 
@@ -454,7 +464,7 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
                         requireContext(), date.timeInMillis,
                         DateUtils.FORMAT_NUMERIC_DATE or DateUtils.FORMAT_NO_YEAR)
 
-                return weekDay.toUpperCase(Locale.getDefault()) + ' '.toString() + dateString
+                return weekDay.uppercase(Locale.getDefault()) + ' '.toString() + dateString
             }
 
             override fun interpretTime(hour: Int): String {
@@ -484,6 +494,12 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
                 }
                 .setNegativeButton(getString(R.string.no), null)
                 .show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        menuItemSwitchView = null
+        menuItemFilterCanceled = null
     }
 
     companion object {

@@ -8,6 +8,7 @@ import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.InactiveTokenException
+import de.tum.`in`.tumcampusapp.api.tumonline.exception.MissingPermissionException
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.BaseFragment
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.IdentitySet
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponent
@@ -47,6 +48,9 @@ class CheckTokenFragment : BaseFragment<Unit>(
 
     private val binding by viewBinding(FragmentCheckTokenBinding::bind)
 
+    override val swipeRefreshLayout get() = binding.swipeRefreshLayout
+    override val layoutAllErrorsBinding get() = binding.layoutAllErrors
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         onboardingComponent.inject(this)
@@ -59,7 +63,6 @@ class CheckTokenFragment : BaseFragment<Unit>(
             openTumOnlineButton.setOnClickListener { browse(Const.TUM_CAMPUS_URL) }
             nextButton.setOnClickListener { loadIdentitySet() }
         }
-
     }
 
     private fun loadIdentitySet() {
@@ -67,7 +70,7 @@ class CheckTokenFragment : BaseFragment<Unit>(
         toast.show()
 
         compositeDisposable += tumOnlineClient.getIdentity()
-            .map { IdentityResponse.Success(it) as IdentityResponse }
+            .map<IdentityResponse> { IdentityResponse.Success(it) }
             .doOnError(Utils::log)
             .onErrorReturn { IdentityResponse.Failure(it) }
             .subscribeOn(Schedulers.io())
@@ -110,6 +113,7 @@ class CheckTokenFragment : BaseFragment<Unit>(
         val messageResId = when (t) {
             is UnknownHostException -> R.string.no_internet_connection
             is InactiveTokenException -> R.string.error_access_token_inactive
+            is MissingPermissionException -> R.string.error_access_token_insufficient_permissions
             else -> R.string.error_unknown
         }
 

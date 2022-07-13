@@ -11,6 +11,7 @@ import de.tum.`in`.tumcampusapp.component.ui.news.di.NewsComponent
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponent
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainFragment
+import de.tum.`in`.tumcampusapp.component.ui.search.di.SearchComponent
 import de.tum.`in`.tumcampusapp.component.ui.ticket.di.EventsComponent
 import de.tum.`in`.tumcampusapp.component.ui.ticket.di.TicketsComponent
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.di.KinoComponent
@@ -30,6 +31,7 @@ interface AppComponent {
     fun onboardingComponent(): OnboardingComponent.Factory
     fun ticketsComponent(): TicketsComponent.Builder
     fun roomFinderComponent(): RoomFinderComponent
+    fun searchComponent(): SearchComponent
 
     fun inject(mainActivity: MainActivity)
     fun inject(mainFragment: MainFragment)

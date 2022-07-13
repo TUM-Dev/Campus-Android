@@ -64,6 +64,7 @@
     <string name="error_no_rights_to_access_function">Your TUMonline access token doesn’t have the rights to access this function.</string>
     <string name="error_request_limit_reached">You reached the request limit for TUMonline. Try again later.</string>
     <string name="error_access_token_limit_reached">Token limit reached. You have delete an access token in TUMonline before you can continue.</string>
+    <string name="error_access_token_insufficient_permissions">Your TUMonline access token is missing the specific rights!</string>
     <string name="error_unknown">Unknown error.</string>
     <string name="error_tum_online_unavailable">TUMonline is currently unavailable.</string>
 
@@ -769,4 +770,19 @@ Signature: %5$s</string>
     // for opening hours
     <string name="language">en</string>
     <string name="use_existing">Use existing</string>
+
+
+    // search
+    <string name="all_results">All results</string>
+    <string name="people">People</string>
+    <string name="rooms">Rooms</string>
+    <string name="lectures">Lectures</string>
+    <string name="search_info">Search for people, rooms, and others.</string>
+    <string name="no_result_info">Couldn\'t find “%1$s”</string>
+    <string name="no_result_sub_info">Try again, correct spelling or try with different keywords.</string>
+    <string name="recent_searches">Recent searches</string>
+    <string name="clear_recent_searches">Clear history</string>
+    <string name="not_available_search">Not available</string>
+    <string name="clear_search_history_request">Do you want to clear search history?</string>
+
 </resources>

@@ -6,7 +6,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.protobuf'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: "com.github.ben-manes.versions"
 apply plugin: 'com.google.firebase.crashlytics'
@@ -17,7 +17,7 @@ apply from: '../gradle/scripts/checkstyle.gradle'
 apply from: '../gradle/scripts/testLogging.gradle'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
     buildTypes {
         all {
             proguardFiles(file('../proguard').listFiles())
@@ -36,10 +36,10 @@ android {
     }
     defaultConfig {
         applicationId "de.tum.in.tumcampus"
-        minSdkVersion 21
-        targetSdkVersion 30
-        versionCode 580
-        versionName "3.14-dev"
+        minSdkVersion 26
+        targetSdkVersion 32
+        versionCode 585
+        versionName "3.19-dev"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -47,24 +47,13 @@ android {
             arg("room.schemaLocation", "$projectDir/schemas".toString())
         }
     }
-    lintOptions {
-        checkAllWarnings true
-        htmlReport false
-        abortOnError false
-        lintConfig new File("gradle/config/lint.xml")
-        disable 'GoogleAppIndexingWarning',
-                'TrulyRandom',
-                'ContentDescription',
-                'UnusedIds',
-                'UnusedResources',    // unused resources get purged by shrinkResources
-                'SelectableText'      // disabled by default
-    }
     buildFeatures {
         viewBinding true
     }
     packagingOptions {
-        exclude 'META-INF/maven/com.google.guava/guava/pom.properties'
-        exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
+        resources {
+            excludes += ['META-INF/maven/com.google.guava/guava/pom.properties', 'META-INF/maven/com.google.guava/guava/pom.xml']
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -84,8 +73,12 @@ android {
     sourceSets {
         androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
-    androidExtensions {
-        experimental = true
+    lint {
+        abortOnError false
+        checkAllWarnings true
+        disable 'GoogleAppIndexingWarning', 'TrulyRandom', 'ContentDescription', 'UnusedIds', 'UnusedResources', 'SelectableText'
+        htmlReport false
+        lintConfig file('gradle/config/lint.xml')
     }
 }
 
@@ -102,40 +95,38 @@ dependencies {
 
     // Support Libraries
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     // Android arch components
     implementation "androidx.room:room-rxjava2:$room_version"
     implementation "androidx.room:room-runtime:$room_version"
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'android.arch.lifecycle:reactivestreams:1.1.1'
     implementation 'android.arch.work:work-runtime-ktx:1.0.1'
-    // Note: Appcompat 1.4 breaks sandwich menu injected into toolbar by DrawerLayout
-    // upgrading this and or androidx.fragment:fragment-ktx will break the toolbar
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    kapt 'androidx.lifecycle:lifecycle-compiler:2.4.0'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.lifecycle:lifecycle-common-java8:2.5.0'
     kapt "androidx.room:room-compiler:$room_version"
 
     // Play services
-    implementation 'com.google.android.gms:play-services-base:17.6.0'
-    implementation 'com.google.android.gms:play-services-location:18.0.0'
+    implementation 'com.google.android.gms:play-services-base:18.0.1'
+    implementation 'com.google.android.gms:play-services-location:19.0.1'
 
     // Used for in-app reviews
     implementation "com.google.android.play:core:$play_core_services"
     implementation "com.google.android.play:core-ktx:$play_core_services_kotlin_extension"
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:20.0.0'
-    implementation 'com.google.firebase:firebase-messaging:23.0.0'
-    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.2.4'
-    implementation 'com.google.firebase:firebase-analytics-ktx:20.0.0'
+    implementation 'com.google.firebase:firebase-core:20.1.2'
+    implementation 'com.google.firebase:firebase-messaging:23.0.6'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.2.9'
+    implementation 'com.google.firebase:firebase-analytics-ktx:20.1.2'
 
     // Helpers
-    implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'net.danlew:android.joda:2.10.6.1'
+    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'net.danlew:android.joda:2.10.14'
 
     // XML Parsing
     implementation "com.tickaroo.tikxml:annotation:$tikXmlVersion"
@@ -143,11 +134,12 @@ dependencies {
     kapt "com.tickaroo.tikxml:processor:$tikXmlVersion"
 
     // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "org.jetbrains.anko:anko:0.10.8"
-    implementation 'androidx.core:core-ktx:1.7.0'
-    // Note: upgrading this and or androidx.appcompat:appcompat will break the toolbar
-    implementation 'androidx.fragment:fragment-ktx:1.2.5'
+    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.fragment:fragment-ktx:1.4.1'
+    // Note: fix for internal androidx libraries using outdated WorkManager causing a crash
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
 
     // RxJava
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
@@ -165,10 +157,10 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.8'
     implementation "com.tickaroo.tikxml:retrofit-converter:$tikXmlVersion"
     implementation 'com.github.franmontiel:PersistentCookieJar:1.0.1'
-    implementation 'com.squareup.okio:okio:2.8.0'
+    implementation 'com.squareup.okio:okio:2.10.0'
 
     // UI
-    implementation 'se.emilsjolander:stickylistheaders:2.7.0'
+    implementation 'com.github.mtotschnig:StickyListHeaders:2.8.0'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'me.dm7.barcodescanner:zxing:1.9.13'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
@@ -183,13 +175,15 @@ dependencies {
     kapt 'com.google.dagger:dagger-compiler:2.28.3'
 
     // LeakCanary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
 
     // DebugDatabase
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 
     // Testing
-    testImplementation 'junit:junit:4.13'
+    testImplementation "commons-io:commons-io:2.11.0"
+
+    testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:3.5.11'
     testImplementation 'org.assertj:assertj-core:3.17.1'
     testImplementation "androidx.room:room-testing:$room_version"
@@ -198,7 +192,8 @@ dependencies {
     testImplementation 'com.android.support.test:rules:1.0.2'
     testImplementation 'com.android.support.test:runner:1.0.2'
     testImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    testImplementation "org.robolectric:robolectric:4.5.1"
+    testImplementation 'org.robolectric:robolectric:4.8.1'
+
 
     // TicketSale
     implementation 'com.stripe:stripe-android:8.1.0'

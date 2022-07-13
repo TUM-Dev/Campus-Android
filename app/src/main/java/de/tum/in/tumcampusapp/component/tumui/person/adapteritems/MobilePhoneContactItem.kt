@@ -7,8 +7,9 @@ import de.tum.`in`.tumcampusapp.R
 
 class MobilePhoneContactItem(text: String) : AbstractContactItem(R.string.mobile_phone, text, R.drawable.ic_outline_phone_24px) {
 
-    override fun getIntent(context: Context): Intent {
+    override fun onClick(context: Context) {
         val uri = Uri.parse("tel:$value")
-        return Intent(Intent.ACTION_DIAL, uri)
+        val intent = Intent(Intent.ACTION_DIAL, uri)
+        context.startActivity(intent)
     }
 }

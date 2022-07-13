@@ -15,6 +15,8 @@ class BarrierFreeInfoFragment : BaseFragment<Unit>(
 
     private val binding by viewBinding(FragmentBarrierfreeInfoBinding::bind)
 
+    override val layoutAllErrorsBinding get() = binding.layoutAllErrors
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.barrierFreeListView.setOnItemClickListener { _, _, position, _ ->

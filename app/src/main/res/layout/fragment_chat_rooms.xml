@@ -37,6 +37,7 @@
         android:orientation="vertical">
 
         <include
+            android:id="@+id/layout_all_errors"
             layout="@layout/layout_all_errors"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

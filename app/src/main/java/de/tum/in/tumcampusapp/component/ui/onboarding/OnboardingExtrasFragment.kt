@@ -55,6 +55,9 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
 
     private val binding by viewBinding(FragmentOnboardingExtrasBinding::bind)
 
+    override val swipeRefreshLayout get() = binding.swipeRefreshLayout
+    override val layoutAllErrorsBinding get() = binding.layoutAllErrors
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         onboardingComponent.inject(this)
@@ -95,7 +98,6 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
             privacyPolicyButton.setOnClickListener { browse(getString(R.string.url_privacy_policy)) }
             finishButton.setOnClickListener { startLoading() }
         }
-
     }
 
     override fun onLoadInBackground(): ChatMember? {

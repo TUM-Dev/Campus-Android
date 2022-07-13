@@ -60,6 +60,9 @@ class OnboardingStartFragment : BaseFragment<Unit>(
 
     private val binding by viewBinding(FragmentOnboardingStartBinding::bind)
 
+    override val swipeRefreshLayout get() = binding.swipeRefreshLayout
+    override val layoutAllErrorsBinding get() = binding.layoutAllErrors
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         onboardingComponent.inject(this)
@@ -86,7 +89,6 @@ class OnboardingStartFragment : BaseFragment<Unit>(
 
             nextButton.setOnClickListener { onNextPressed() }
         }
-
     }
 
     private fun setCustomCloseIcon() {
@@ -99,7 +101,6 @@ class OnboardingStartFragment : BaseFragment<Unit>(
             toolbar.navigationIcon = closeIcon
             toolbar.setNavigationOnClickListener { requireActivity().finish() }
         }
-
     }
 
     private fun onNextPressed() {
@@ -142,7 +143,7 @@ class OnboardingStartFragment : BaseFragment<Unit>(
 
         compositeDisposable += tumOnlineClient
             .requestToken(publicKey, tokenName)
-            .map { TokenResponse.Success(it) as TokenResponse }
+            .map<TokenResponse> { TokenResponse.Success(it) }
             .doOnError(Utils::log)
             .onErrorReturn { TokenResponse.Failure(it) }
             .subscribeOn(Schedulers.io())

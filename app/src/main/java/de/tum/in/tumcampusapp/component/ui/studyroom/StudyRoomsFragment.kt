@@ -27,6 +27,9 @@ class StudyRoomsFragment : FragmentForAccessingTumCabe<List<StudyRoomGroup>>(
 
     private val binding by viewBinding(FragmentStudyRoomsBinding::bind)
 
+    override val swipeRefreshLayout get() = binding.swipeRefreshLayout
+    override val layoutAllErrorsBinding get() = binding.layoutAllErrors
+
     // Drop-down navigation
     private val studyRoomGroupsSpinner: Spinner
         get() {
@@ -79,7 +82,6 @@ class StudyRoomsFragment : FragmentForAccessingTumCabe<List<StudyRoomGroup>>(
             sectionsPagerAdapter.setStudyRoomGroupId(selectedRoomGroupId)
             pager.adapter = sectionsPagerAdapter
         }
-
     }
 
     private fun loadStudyRooms() {

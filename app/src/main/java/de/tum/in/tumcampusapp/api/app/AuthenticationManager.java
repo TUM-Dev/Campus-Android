@@ -305,7 +305,7 @@ public class AuthenticationManager {
         }
 
         if (doUpload) {
-            Utils.log("uploading obfuscated ids: " + upload.toString());
+            Utils.log("uploading obfuscated ids: " + upload);
             TUMCabeClient.getInstance(mContext)
                          .uploadObfuscatedIds(lrzId, upload)
                          .subscribeOn(Schedulers.io())

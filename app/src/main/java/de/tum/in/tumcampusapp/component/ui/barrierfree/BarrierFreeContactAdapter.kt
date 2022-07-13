@@ -11,6 +11,7 @@ import android.widget.TextView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
 import de.tum.`in`.tumcampusapp.component.tumui.person.PersonDetailsActivity
+import de.tum.`in`.tumcampusapp.component.tumui.person.PersonDetailsActivity.Companion.PERSON_OBJECT
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
 import de.tum.`in`.tumcampusapp.component.ui.barrierfree.model.BarrierFreeContact
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter
@@ -71,7 +72,7 @@ class BarrierFreeContactAdapter(context: Context, infos: List<BarrierFreeContact
                 more.setOnClickListener {
                     val person = Person(name = contact.name, id = contact.tumID)
                     val bundle = Bundle().apply {
-                        putSerializable("personObject", person)
+                        putSerializable(PERSON_OBJECT, person)
                     }
                     val intent = Intent(context, PersonDetailsActivity::class.java).apply {
                         putExtras(bundle)
