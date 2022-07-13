@@ -49,14 +49,13 @@ object DateTimeUtils {
             diff < 60 * MINUTE_IN_MILLIS -> {
                 val formatter = DateTimeFormat.forPattern("m")
                         .withLocale(Locale.ENGLISH)
-                "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff))} " +
-                        context.getString(R.string.MINUTES)
+                "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff))} " + context.getString(R.string.MINUTES)
             }
-        // Be more precise by telling the user the exact time if below 3 hours
-            diff < 3 * HOUR_IN_MILLIS -> {
-                val formatter = DateTimeFormat.forPattern("HH:mm")
+            // Below 5 hours, we tell the user also in how much time a datetime is going to be
+            diff < 5 * HOUR_IN_MILLIS -> {
+                val formatter = DateTimeFormat.forPattern("H 'hrs' mm 'mins'")
                         .withLocale(Locale.ENGLISH)
-                "${context.getString(R.string.AT)} ${formatter.print(time)}"
+                "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff))} "
             }
             else -> getRelativeTimeSpanString(timeInMillis, now, MINUTE_IN_MILLIS,
                     FORMAT_ABBREV_RELATIVE).toString()
