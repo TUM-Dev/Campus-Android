@@ -38,7 +38,6 @@
 
     <color name="input_layout_border">@color/color_primary</color>
 
-
     <!-- Default colors -->
     <color name="text_primary">#F2000000</color> <!--F2 for 95% opacity-->
     <color name="text_secondary">#8A000000</color> <!--8A for 54% opacity-->
@@ -52,6 +51,7 @@
     <color name="default_button_text">@color/color_primary</color>
     <color name="default_button_background">@color/color_primary</color>
 
+    <color name="icon_background">#E6E6E6</color>
 
     <!-- Navigation drawer -->
 

@@ -1,9 +1,12 @@
 package de.tum.`in`.tumcampusapp.component.tumui.lectures.model
 
+import com.google.gson.Gson
 import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 import de.tum.`in`.tumcampusapp.api.tumonline.converters.EscapedStringConverter
 import de.tum.`in`.tumcampusapp.api.tumonline.converters.NullableEscapedStringConverter
+import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
+import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
 
 /**
@@ -37,5 +40,17 @@ data class Lecture(
 
     companion object {
         @JvmField val STP_SP_NR = "stp_sp_nr"
+
+        @JvmStatic fun toRecent(lecture: Lecture): Recent {
+            val gson = Gson()
+            val jsonString = gson.toJson(lecture)
+            return Recent(name = jsonString, type = RecentsDao.LECTURES)
+        }
+
+        @JvmStatic
+        fun fromRecent(recent: Recent): Lecture {
+            val gson = Gson()
+            return gson.fromJson(recent.name, Lecture::class.java)
+        }
     }
 }

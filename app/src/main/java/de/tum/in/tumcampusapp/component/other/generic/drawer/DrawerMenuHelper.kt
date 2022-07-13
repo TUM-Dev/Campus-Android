@@ -12,8 +12,6 @@ import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarFragment
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackActivity
 import de.tum.`in`.tumcampusapp.component.tumui.grades.GradesFragment
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.fragment.LecturesFragment
-import de.tum.`in`.tumcampusapp.component.tumui.person.PersonSearchFragment
-import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderFragment
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeesFragment
 import de.tum.`in`.tumcampusapp.component.ui.barrierfree.BarrierFreeInfoFragment
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.fragment.CafeteriaFragment
@@ -22,6 +20,7 @@ import de.tum.`in`.tumcampusapp.component.ui.news.NewsFragment
 import de.tum.`in`.tumcampusapp.component.ui.openinghour.OpeningHoursListFragment
 import de.tum.`in`.tumcampusapp.component.ui.overview.InformationActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainFragment
+import de.tum.`in`.tumcampusapp.component.ui.search.SearchFragment
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.StudyRoomsFragment
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.EventsFragment
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -51,7 +50,10 @@ class DrawerMenuHelper(
         allItems.clear()
 
         navigationMenu += HOME
+        navigationMenu += SEARCH
+
         allItems += HOME
+        allItems += SEARCH
 
         val myTumMenu = navigationMenu.addSubMenu(R.string.my_tum)
         if (hasTumOnlineAccess) {
@@ -84,6 +86,10 @@ class DrawerMenuHelper(
     fun findNavItem(menuItem: MenuItem): NavItem {
         if (menuItem.title == activity.getString(HOME.titleRes)) {
             return HOME
+        }
+
+        if (menuItem.title == activity.getString(SEARCH.titleRes)) {
+            return SEARCH
         }
 
         for (item in MY_TUM + GENERAL) {
@@ -122,6 +128,7 @@ class DrawerMenuHelper(
     private companion object {
 
         private val HOME = NavItem.FragmentDestination(R.string.home, R.drawable.ic_outline_home_24px, MainFragment::class.java)
+        private val SEARCH = NavItem.FragmentDestination(R.string.search, R.drawable.ic_action_search, SearchFragment::class.java, true)
 
         private val MY_TUM = arrayOf(
                 NavItem.FragmentDestination(R.string.calendar, R.drawable.ic_outline_event_24px, CalendarFragment::class.java, true),
@@ -134,8 +141,6 @@ class DrawerMenuHelper(
         private val GENERAL = arrayOf(
                 NavItem.FragmentDestination(R.string.menues, R.drawable.ic_cutlery, CafeteriaFragment::class.java),
                 NavItem.FragmentDestination(R.string.study_rooms, R.drawable.ic_outline_group_work_24px, StudyRoomsFragment::class.java),
-                NavItem.FragmentDestination(R.string.roomfinder, R.drawable.ic_outline_location_on_24px, RoomFinderFragment::class.java),
-                NavItem.FragmentDestination(R.string.person_search, R.drawable.ic_outline_people_outline_24px, PersonSearchFragment::class.java, true),
                 NavItem.FragmentDestination(R.string.news, R.drawable.ic_rss, NewsFragment::class.java),
                 NavItem.FragmentDestination(R.string.events_tickets, R.drawable.tickets, EventsFragment::class.java),
                 NavItem.FragmentDestination(R.string.barrier_free, R.drawable.ic_outline_accessible_24px, BarrierFreeInfoFragment::class.java),
