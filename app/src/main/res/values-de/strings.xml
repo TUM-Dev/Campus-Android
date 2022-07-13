@@ -285,6 +285,8 @@
     <string name="closes">Schließt</string>
     <string name="closed">Geschlossen</string>
 
+    <string name="on">um</string>
+
     <!-- Eduroam card -->
     <string name="setup">Einrichten</string>
     <string name="setup_eduroam">Eduroam einrichten</string>

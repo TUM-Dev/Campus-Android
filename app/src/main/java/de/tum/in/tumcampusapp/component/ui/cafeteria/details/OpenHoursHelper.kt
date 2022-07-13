@@ -81,22 +81,27 @@ class OpenHoursHelper(private val context: Context) {
             // Check the relativity
             val relativeTo: DateTime
             val relation: Int
+            // To show more informations regarding time
+            var info = ""
+
             if (opens.isAfter(now)) {
                 relation = R.string.opens
                 relativeTo = opens
+                info = " (" + DateTimeUtils.getTimeString(opens) + " - " + DateTimeUtils.getTimeString(closes) + ")"
             } else if (closes.isAfter(now)) {
                 relation = R.string.closes
                 relativeTo = closes
+                info = " (" + context.getString(R.string.on) + " " + DateTimeUtils.getTimeString(closes) + ")"
             } else {
                 relation = R.string.closed
                 relativeTo = closes
             }
-
             // Get the relative string
             val relativeTime = DateTimeUtils.formatFutureTime(relativeTo, context)
             // Return an assembly
-            return context.getString(relation) + " " + relativeTime.substring(0, 1)
-                    .lowercase(Locale.getDefault()) + relativeTime.substring(1)
+            return context.getString(relation) + " " + relativeTime.substring(0, 1).lowercase(Locale.getDefault()) +
+                    relativeTime.substring(1) + info
+
         } else {
             // future --> show non-relative opening hours
             return context.getString(R.string.opening_hours) + ": " +
