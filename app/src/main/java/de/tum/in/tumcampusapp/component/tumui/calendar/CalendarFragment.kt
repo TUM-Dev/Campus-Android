@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.CalendarContract
 import android.text.format.DateUtils
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -104,8 +105,6 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
         }
 
         showDate?.let { openEvent(eventId) }
-
-        isWeekMode = Utils.getSettingBool(requireContext(), Const.CALENDAR_WEEK_MODE, false)
 
         disableRefresh()
 

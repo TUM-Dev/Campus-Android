@@ -74,11 +74,12 @@ class LectureAppointmentsListAdapter(
         val output = StringBuilder()
         if (DateTimeUtils.isSameDay(start, end)) {
             // english time format
-            if (getLocale().equals("en")) {
+            if (getLocale().equals("en")){
                 output.append(start.toString("EEE MMM dd YYYY, hh:mm a"))
                         .append("–")
                         .append(end.toString("hh:mm a"))
-            } else {
+            }
+            else{
                 output.append(start.toString("EEE MMM dd YYYY, kk:mm"))
                         .append("–")
                         .append(end.toString("kk:mm"))
