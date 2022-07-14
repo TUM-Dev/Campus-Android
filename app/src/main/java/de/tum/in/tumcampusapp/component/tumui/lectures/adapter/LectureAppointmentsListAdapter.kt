@@ -12,6 +12,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.LectureAppointmen
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import org.joda.time.format.DateTimeFormat
+import java.util.*
 
 /**
  * Generates the output of the ListView on the [LecturesAppointmentsActivity] activity.
@@ -60,6 +61,11 @@ class LectureAppointmentsListAdapter(
         return view
     }
 
+    // to get current setting language
+    private fun getLocale(): String? {
+        return Locale.getDefault().getLanguage()
+    }
+
     private fun getAppointmentTime(lvItem: LectureAppointment): String {
         val start = lvItem.startTime
         val end = lvItem.endTime
@@ -67,9 +73,16 @@ class LectureAppointmentsListAdapter(
         // output if same day: we only show the date once
         val output = StringBuilder()
         if (DateTimeUtils.isSameDay(start, end)) {
-            output.append(startDateOutput.print(start))
-                    .append("–")
-                    .append(endHoursOutput.print(end))
+            // english time format
+            if (getLocale().equals("en")) {
+                output.append(start.toString("EEE MMM dd YYYY, hh:mm a"))
+                        .append("–")
+                        .append(end.toString("hh:mm a"))
+            } else {
+                output.append(start.toString("EEE MMM dd YYYY, kk:mm"))
+                        .append("–")
+                        .append(end.toString("kk:mm"))
+            }
         } else {
             // show it normally
             output.append(startDateOutput.print(start))

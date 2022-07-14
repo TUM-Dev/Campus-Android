@@ -1,9 +1,12 @@
 package de.tum.`in`.tumcampusapp.utils
 
+import android.content.Context
 import android.graphics.drawable.Drawable
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.drawerlayout.widget.DrawerLayout
@@ -31,15 +34,18 @@ inline fun <T> tryOrNull(block: () -> T): T? {
 }
 
 fun RequestCreator.into(target: ImageView, completion: () -> Unit) {
-    into(target, object : Callback {
-        override fun onSuccess() {
-            completion()
-        }
+    into(
+        target,
+        object : Callback {
+            override fun onSuccess() {
+                completion()
+            }
 
-        override fun onError(e: java.lang.Exception?) {
-            completion()
+            override fun onError(e: java.lang.Exception?) {
+                completion()
+            }
         }
-    })
+    )
 }
 
 val Menu.items: List<MenuItem>
@@ -108,11 +114,14 @@ fun <T> LiveData<T>.observe(owner: LifecycleOwner, callback: (T?) -> Unit) {
 }
 
 fun <T> LiveData<T>.observeNonNull(owner: LifecycleOwner, callback: (T) -> Unit) {
-    observe(owner, Observer<T> { value ->
-        value?.let {
-            callback(it)
+    observe(
+        owner,
+        Observer<T> { value ->
+            value?.let {
+                callback(it)
+            }
         }
-    })
+    )
 }
 
 fun TextView.addCompoundDrawablesWithIntrinsicBounds(
@@ -155,3 +164,19 @@ fun <T1, T2> List<T1>.splitOnChanged(transform: (T1) -> T2): List<List<T1>> {
     }
     return results.toList()
 }
+
+fun View.margin(left: Float? = null, top: Float? = null, right: Float? = null, bottom: Float? = null) {
+    layoutParams<ViewGroup.MarginLayoutParams> {
+        left?.run { leftMargin = dpToPx(this) }
+        top?.run { topMargin = dpToPx(this) }
+        right?.run { rightMargin = dpToPx(this) }
+        bottom?.run { bottomMargin = dpToPx(this) }
+    }
+}
+
+inline fun <reified T : ViewGroup.LayoutParams> View.layoutParams(block: T.() -> Unit) {
+    if (layoutParams is T) block(layoutParams as T)
+}
+
+fun View.dpToPx(dp: Float): Int = context.dpToPx(dp)
+fun Context.dpToPx(dp: Float): Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics).toInt()

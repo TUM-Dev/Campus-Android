@@ -3,6 +3,7 @@ package de.tum.`in`.tumcampusapp.component.tumui.grades
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.util.ArrayMap
@@ -12,6 +13,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat.recreate
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat.getColor
 import com.github.mikephil.charting.components.Legend
@@ -53,11 +55,14 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
     private var showBarChartAfterRotate = false
 
+
     private var globalEditOFF = true
     private var adaptDiagramToWeights = true
     private val exams = mutableListOf<Exam>()
 
     private val examSharedPreferences: String = "ExamList"
+
+    private var currentOrientation: Int? = null
 
 
     private val grades: Array<String> by lazy {
@@ -81,6 +86,8 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             showBarChartAfterRotate = !state.getBoolean(KEY_SHOW_BAR_CHART, true)
             spinnerPosition = state.getInt(KEY_SPINNER_POSITION, 0)
         }
+
+        currentOrientation = resources.configuration.orientation
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -710,6 +717,12 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             gradesListView.setPadding(0, ((256 * scale + 0.5f).toInt()), 0, 0)
         }
         swipeRefreshLayout.layoutParams = param
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (currentOrientation != newConfig.orientation)
+            recreate(requireActivity())
     }
 
     /**

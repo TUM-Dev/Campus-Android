@@ -684,6 +684,7 @@ Signatur: %5$s</string>
     <string name="error_no_rights_to_access_function">Dein TUMonline-Access-Token hat nicht die nötigte Berechtigung, um diese Funktion zu nutzen.</string>
     <string name="error_request_limit_reached">Du hast das Anfragelimit für TUMonline erreicht. Versuche es später erneut.</string>
     <string name="error_access_token_limit_reached">Limit an Access-Tokens erreicht. Du musst einen Access-Token in TUMonline löschen, bevor du fortfahren kannst.</string>
+    <string name="error_access_token_insufficient_permissions">Deinem TUMonline-Token fehlen die aktiven Rechte!</string>
     <string name="error_unknown">Unbekannter Fehler.</string>
     <string name="export_to_google_error">Ein Fehler ist während des Kalender-Exports zu Google Kalender aufgetreten.</string>
     <string name="checking_if_token_enabled">Überprüfung, ob Token aktiviert ist …</string>
@@ -748,4 +749,16 @@ Signatur: %5$s</string>
     <string name="language">de</string>
     <string name="use_existing">Bestehendes verwenden</string>
 
+    // search
+    <string name="all_results">Alle Ergebnisse</string>
+    <string name="people">Personen</string>
+    <string name="rooms">Räume</string>
+    <string name="lectures">Vorlesungen</string>
+    <string name="search_info">Suchen Sie nach Personen, Räumen und anderen.</string>
+    <string name="no_result_info">Konnte nicht finden “%1$s”</string>
+    <string name="no_result_sub_info">Versuchen Sie es erneut, korrigieren Sie die Schreibweise oder versuchen Sie es mit anderen Schlüsselwörtern.</string>
+    <string name="recent_searches">Letzte Suchen</string>
+    <string name="clear_recent_searches">Verlauf löschen</string>
+    <string name="not_available_search">Nicht verfügbar</string>
+    <string name="clear_search_history_request">Möchten Sie den Suchverlauf löschen?</string>
 </resources>

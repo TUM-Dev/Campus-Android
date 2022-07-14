@@ -1,7 +1,5 @@
 package de.tum.`in`.tumcampusapp.component.tumui.person
 
-import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +10,6 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.AbstractContactItem
 import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.MobilePhoneContactItem
 import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.PhoneContactItem
-import de.tum.`in`.tumcampusapp.utils.Utils
 
 class PersonContactItemsAdapter(
     private val items: List<AbstractContactItem>
@@ -57,16 +54,7 @@ class PersonContactItemsAdapter(
             valueTextView.text = item.value
 
             setOnClickListener {
-                item.getIntent(context)?.let { intent -> handleItemClick(context, intent) }
-            }
-        }
-
-        private fun handleItemClick(context: Context, intent: Intent) {
-            val canHandleIntent = intent.resolveActivity(context.packageManager) != null
-            if (canHandleIntent) {
-                context.startActivity(intent)
-            } else {
-                Utils.showToast(context, R.string.action_cant_be_performed)
+                item.onClick(context)
             }
         }
     }

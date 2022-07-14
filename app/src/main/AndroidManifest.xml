@@ -63,14 +63,6 @@
         </receiver>
 
         <provider
-            android:name=".component.tumui.roomfinder.RoomFinderSuggestionProvider"
-            android:authorities="de.tum.in.tumcampusapp.component.tumui.roomfinder.RoomFinderSuggestionProvider"
-            android:exported="false" />
-        <provider
-            android:name=".component.tumui.person.PersonSearchSuggestionProvider"
-            android:authorities="de.tum.in.tumcampusapp.component.tumui.person.PersonSearchSuggestionProvider"
-            android:exported="false" />
-        <provider
             android:name=".component.ui.transportation.MVVStationSuggestionProvider"
             android:authorities="de.tum.in.tumcampusapp.component.ui.transportation.MVVStationSuggestionProvider"
             android:exported="false" />
@@ -256,6 +248,7 @@
                 android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
+
             android:name=".component.tumui.person.PersonSearchActivity"
             android:configChanges="orientation|screenSize"
             android:exported="true"
@@ -300,16 +293,15 @@
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable_rooms" />
+            android:name=".component.tumui.person.PersonDetailsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/person_information">
         </activity>
         <activity
             android:name=".component.tumui.roomfinder.RoomFinderDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/roomfinder"
-            android:parentActivityName=".component.tumui.roomfinder.RoomFinderActivity"
             android:theme="@style/AppTheme.NoDrawerLayout">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity" />
         </activity>
         <activity
             android:name=".component.ui.studyroom.StudyRoomsActivity"
@@ -371,6 +363,12 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.overview.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".component.tumui.calendar.NavigaTUMActivity"
+            android:label="NavigaTUM"
+            android:exported="false">
         </activity>
 
         <activity

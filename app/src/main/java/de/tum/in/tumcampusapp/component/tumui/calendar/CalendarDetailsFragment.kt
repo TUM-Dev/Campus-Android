@@ -1,6 +1,5 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
-import android.app.SearchManager
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -18,7 +17,6 @@ import de.tum.`in`.tumcampusapp.component.other.navigation.NavDestination
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavigationManager
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse
-import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderActivity
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.databinding.FragmentCalendarDetailsBinding
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -41,7 +39,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
 
     private val isShownInCalendarActivity: Boolean by lazy {
         arguments?.getBoolean(CALENDAR_SHOWN_IN_CALENDAR_ACTIVITY_PARAM)
-                ?: throw IllegalStateException("Incomplete Bundle when opening calendar details fragment")
+            ?: throw IllegalStateException("Incomplete Bundle when opening calendar details fragment")
     }
 
     private var deleteApiCall: Call<DeleteEventResponse>? = null
@@ -86,7 +84,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
                         continue
                     }
                     val locationText: TextView = layoutInflater
-                            .inflate(R.layout.calendar_location_text, locationLinearLayout, false) as TextView
+                        .inflate(R.layout.calendar_location_text, locationLinearLayout, false) as TextView
                     if (item.isCanceled) {
                         locationText.setTextColor(ContextCompat.getColor(requireContext(), R.color.event_canceled))
                         val textForCancelledEvent = "${item.location} (${R.string.event_canceled})"
@@ -136,10 +134,10 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     private fun displayDeleteDialog(eventId: String) {
         val s = TcaDb.getInstance(requireContext()).calendarDao().getSeriesIdForEvent(eventId)
         val alertDialog = AlertDialog.Builder(requireContext())
-                .setTitle(R.string.event_delete_title)
-                .setMessage(R.string.delete_event_info)
-                .setPositiveButton(R.string.delete) { _, _ -> deleteEvent(eventId) }
-                .setNeutralButton(R.string.cancel, null)
+            .setTitle(R.string.event_delete_title)
+            .setMessage(R.string.delete_event_info)
+            .setPositiveButton(R.string.delete) { _, _ -> deleteEvent(eventId) }
+            .setNeutralButton(R.string.cancel, null)
         if (s != null) { // a event series
             alertDialog.setNegativeButton(R.string.delete_series) { _, _ -> deleteEventSeries(s) }
         }
@@ -188,10 +186,10 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     }
 
     private fun onLocationClicked(location: String) {
-        val findStudyRoomIntent = Intent()
-        findStudyRoomIntent.putExtra(SearchManager.QUERY, Utils.extractRoomNumberFromLocation(location))
-        findStudyRoomIntent.setClass(requireContext(), RoomFinderActivity::class.java)
-        startActivity(findStudyRoomIntent)
+        val sendIntent: Intent = Intent(getContext(), NavigaTUMActivity::class.java).apply {
+            putExtra("location", location)
+        }
+        startActivity(sendIntent)
     }
 
     companion object {
