@@ -1,7 +1,9 @@
 package de.tum.`in`.tumcampusapp.component.tumui.person.model
 
+import com.google.gson.Gson
 import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
+import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
 import java.io.Serializable
 
@@ -21,10 +23,15 @@ data class Person(
     @PropertyElement(name = "vorname")
     var name: String = "",
     @PropertyElement(name = "familienname")
-    var surname: String = ""
+    var surname: String = "",
+    @PropertyElement(name = "bild_url")
+    var imageUrl: String = ""
 ) : Serializable {
 
     fun getFullName() = "$name $surname"
+
+    fun getFullImageUrl() =
+        "https://campus.tum.de/tumonline/$imageUrl".replace("&amp;", "&")
 
     companion object {
 
@@ -33,12 +40,15 @@ data class Person(
         const val FEMALE = "W"
         const val MALE = "M"
 
+        @JvmStatic fun toRecent(person: Person): Recent {
+            val gson = Gson()
+            val jsonString = gson.toJson(person)
+            return Recent(name = jsonString, type = RecentsDao.PERSONS)
+        }
+
         @JvmStatic fun fromRecent(r: Recent): Person {
-            val split = r.name.split("\\$".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-            val p = Person()
-            p.id = split[0]
-            p.name = split[1]
-            return p
+            val gson = Gson()
+            return gson.fromJson(r.name, Person::class.java)
         }
     }
 }

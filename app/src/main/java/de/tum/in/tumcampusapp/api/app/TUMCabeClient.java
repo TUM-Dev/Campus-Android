@@ -290,6 +290,10 @@ public final class TUMCabeClient {
                 .body();
     }
 
+    public Single<List<RoomFinderRoom>> fetchRoomsSingle(String searchStrings) throws IOException {
+        return service.fetchRoomsSingle(ApiHelper.encodeUrl(searchStrings));
+    }
+
     public RoomFinderCoordinate fetchCoordinates(String archId) throws IOException {
         return fetchRoomFinderCoordinates(archId).execute().body();
     }
