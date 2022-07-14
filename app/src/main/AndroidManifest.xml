@@ -54,8 +54,7 @@
 
         <uses-library android:name="android.test.runner" />
 
-        <receiver
-            android:name=".service.ScanResultsAvailableReceiver"
+        <receiver android:name=".service.ScanResultsAvailableReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.net.wifi.SCAN_RESULTS" />
@@ -83,8 +82,8 @@
         <activity
             android:name=".component.ui.onboarding.StartupActivity"
             android:configChanges="orientation|screenSize"
-            android:exported="true"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -103,8 +102,8 @@
         <activity
             android:name=".component.other.generic.activity.BaseNavigationActivity"
             android:configChanges="orientation|screenSize"
-            android:exported="true"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -123,8 +122,7 @@
             android:name=".component.tumui.grades.GradesActivity"
             android:label="@string/empty_string"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity"
-            android:windowSoftInputMode="stateHidden|adjustNothing">
+            android:parentActivityName=".component.ui.overview.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.overview.MainActivity" />
@@ -160,10 +158,10 @@
         <activity
             android:name=".component.ui.transportation.TransportationActivity"
             android:configChanges="orientation|screenSize"
-            android:exported="true"
             android:label="@string/mvv"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
+            android:parentActivityName=".component.ui.overview.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -202,10 +200,10 @@
         <activity
             android:name=".component.tumui.lectures.activity.LecturesPersonalActivity"
             android:configChanges="orientation|screenSize"
-            android:exported="true"
             android:label="@string/my_lectures"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
+            android:parentActivityName=".component.ui.overview.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -248,51 +246,6 @@
                 android:value=".component.ui.overview.MainActivity" />
         </activity>
         <activity
-
-            android:name=".component.tumui.person.PersonSearchActivity"
-            android:configChanges="orientation|screenSize"
-            android:exported="true"
-            android:label="@string/person_search"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable_persons" />
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
-        </activity>
-        <activity
-            android:name=".component.tumui.person.PersonDetailsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/person_information"
-            android:parentActivityName=".component.tumui.person.PersonSearchActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.tumui.person.PersonSearchActivity" />
-        </activity>
-        <activity
-            android:name=".component.tumui.roomfinder.RoomFinderActivity"
-            android:configChanges="orientation|screenSize"
-            android:exported="true"
-            android:label="@string/roomfinder"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
-
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable_rooms" />
             android:name=".component.tumui.person.PersonDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/person_information">
@@ -374,7 +327,8 @@
         <activity
             android:name=".component.tumui.calendar.CreateEventActivity"
             android:label="@string/activity_create_event_title"
-            android:parentActivityName=".component.tumui.calendar.CalendarActivity"></activity>
+            android:parentActivityName=".component.tumui.calendar.CalendarActivity">
+        </activity>
 
         <activity
             android:name=".component.ui.chat.activity.ChatRoomsActivity"
@@ -460,8 +414,8 @@
         </activity> <!-- receiver for the mensaWidget -->
         <receiver
             android:name=".component.ui.cafeteria.widget.MensaWidget"
-            android:exported="true"
-            android:label="@string/mensa_widget">
+            android:label="@string/mensa_widget"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -476,8 +430,8 @@
             android:permission="android.permission.BIND_REMOTEVIEWS" /> <!-- receiver for the MVVWidget -->
         <receiver
             android:name=".component.ui.transportation.widget.MVVWidget"
-            android:exported="true"
-            android:label="@string/mvv_widget">
+            android:label="@string/mvv_widget"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="de.tum.in.newtumcampus.intent.action.MVV_WIDGET_FORCE_RELOAD" />
@@ -497,10 +451,10 @@
             android:allowTaskReparenting="false"
             android:configChanges="orientation|screenSize"
             android:excludeFromRecents="true"
-            android:exported="true"
             android:label="@string/mvv_widget_select_station"
             android:launchMode="singleTop"
-            android:taskAffinity="">
+            android:taskAffinity=""
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -515,8 +469,8 @@
         </activity> <!-- receiver for the TimetableWidget -->
         <receiver
             android:name=".component.tumui.calendar.widget.TimetableWidget"
-            android:exported="true"
-            android:label="@string/timetable_widget">
+            android:label="@string/timetable_widget"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -535,17 +489,15 @@
             android:allowTaskReparenting="false"
             android:configChanges="orientation|screenSize"
             android:excludeFromRecents="true"
-            android:exported="true"
             android:label="@string/timetable_widget_select_lectures"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoDrawerLayout">
+            android:theme="@style/AppTheme.NoDrawerLayout"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity> <!-- Used to restart alarm when device has been restarted -->
-        <receiver
-            android:name=".service.StartSyncReceiver"
-            android:exported="true">
+        <receiver android:name=".service.StartSyncReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -578,8 +530,7 @@
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver android:name=".service.GeofencingUpdateReceiver" />
-        <receiver
-            android:name=".service.GeofencingStartupReceiver"
+        <receiver android:name=".service.GeofencingStartupReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

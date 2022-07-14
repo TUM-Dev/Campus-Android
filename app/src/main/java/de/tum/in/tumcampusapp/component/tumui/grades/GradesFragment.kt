@@ -3,7 +3,6 @@ package de.tum.`in`.tumcampusapp.component.tumui.grades
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.util.ArrayMap
@@ -13,7 +12,6 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat.recreate
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat.getColor
 import com.github.mikephil.charting.components.Legend
@@ -31,7 +29,6 @@ import de.tum.`in`.tumcampusapp.component.tumui.grades.model.ExamList
 import de.tum.`in`.tumcampusapp.databinding.FragmentGradesBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
-import kotlinx.android.synthetic.main.fragment_grades.*
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -55,14 +52,11 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
     private var showBarChartAfterRotate = false
 
-
     private var globalEditOFF = true
     private var adaptDiagramToWeights = true
     private val exams = mutableListOf<Exam>()
 
     private val examSharedPreferences: String = "ExamList"
-
-    private var currentOrientation: Int? = null
 
 
     private val grades: Array<String> by lazy {
@@ -86,8 +80,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             showBarChartAfterRotate = !state.getBoolean(KEY_SHOW_BAR_CHART, true)
             spinnerPosition = state.getInt(KEY_SPINNER_POSITION, 0)
         }
-
-        currentOrientation = resources.configuration.orientation
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -107,7 +99,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             initUIVisibility()
         }
         binding.floatingButtonAddExamGrade.setOnClickListener { openAddGradeDialog() }
-        checkboxUseDiagrams.setOnCheckedChangeListener { _, isChecked ->
+        binding.checkboxUseDiagrams.setOnCheckedChangeListener { _, isChecked ->
             adaptDiagramToWeights = isChecked
         }
 
@@ -700,29 +692,23 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         val param = swipeRefreshLayout.layoutParams as ViewGroup.MarginLayoutParams
         if (!globalEditOFF) {
 
-            frameLayoutAverageGrade?.visibility = View.GONE
-            floatingButtonAddExamGrade?.visibility = View.VISIBLE
-            chartsContainer.visibility = View.GONE
-            checkboxUseDiagrams?.visibility = View.VISIBLE
+            binding.frameLayoutAverageGrade?.visibility = View.GONE
+            binding.floatingButtonAddExamGrade.visibility = View.VISIBLE
+            binding.chartsContainer.visibility = View.GONE
+            binding.checkboxUseDiagrams.visibility = View.VISIBLE
             param.setMargins(0, ((32 * scale + 0.5f).toInt()), 0, 0)
-            gradesListView.setPadding(0, 0, 0, 0)
+            binding.gradesListView.setPadding(0, 0, 0, 0)
 
         } else {
             showExams(exams)
-            frameLayoutAverageGrade?.visibility = View.VISIBLE
-            floatingButtonAddExamGrade?.visibility = View.GONE
-            chartsContainer.visibility = View.VISIBLE
-            checkboxUseDiagrams?.visibility = View.GONE
+            binding.frameLayoutAverageGrade?.visibility = View.VISIBLE
+            binding.floatingButtonAddExamGrade.visibility = View.GONE
+            binding.chartsContainer.visibility = View.VISIBLE
+            binding.checkboxUseDiagrams.visibility = View.GONE
             param.setMargins(0, 0, 0, 0)
-            gradesListView.setPadding(0, ((256 * scale + 0.5f).toInt()), 0, 0)
+            binding.gradesListView.setPadding(0, ((256 * scale + 0.5f).toInt()), 0, 0)
         }
         swipeRefreshLayout.layoutParams = param
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        if (currentOrientation != newConfig.orientation)
-            recreate(requireActivity())
     }
 
     /**
@@ -811,3 +797,5 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         )
     }
 }
+
+
