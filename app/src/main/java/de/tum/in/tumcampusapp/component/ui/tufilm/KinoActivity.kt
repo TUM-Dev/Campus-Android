@@ -21,7 +21,7 @@ class KinoActivity : ProgressActivity<Void>(R.layout.activity_kino) {
 
     @Inject
     internal lateinit var viewModelProvider: Provider<KinoViewModel>
-    private lateinit var binding: ActivityKinoBinding;
+    private lateinit var binding: ActivityKinoBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
