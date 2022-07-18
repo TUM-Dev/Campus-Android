@@ -785,4 +785,22 @@ Signature: %5$s</string>
     <string name="n_rooms">Rooms</string>
     <string name="buildings">Buildings</string>
 
+
+    // Navigation details
+    <string name="location_details">Location details</string>
+    <string name="loading_details">loading</string>
+    <string name="site_plans">Site plans</string>
+    <string name="interactive_map">Interactive map</string>
+    <string name="open_location_in_other_app">Open location in other app</string>
+    <string name="available_maps">Available site plans:</string>
+    <string name="map">Map</string>
+    <string name="room_id">Room ID</string>
+    <string name="address">Address</string>
+    <string name="architect_name">Architect name</string>
+    <string name="seats">Available seats</string>
+    <string name="number_of_rooms">Number of rooms</string>
+    <string name="not_implemented">Feature not implemented yet</string>
+    <string name="not_implemented_interactive_map">Interactive map is not yet implemented. You can access it on NavigaTum website.</string>
+    <string name="redirect">Redirect</string>
+
 </resources>

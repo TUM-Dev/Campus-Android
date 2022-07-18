@@ -26,7 +26,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.Lecture
 import de.tum.`in`.tumcampusapp.component.tumui.person.PersonDetailsActivity
 import de.tum.`in`.tumcampusapp.component.tumui.person.PersonDetailsActivity.Companion.PERSON_OBJECT
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
-import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.NavigationDetailsFragment
+import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.NavigationDetailsActivity
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.NavigationDetailsFragment.Companion.NAVIGATION_ENTITY
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.RecentSearchesAdapter
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.ResultTypeData
@@ -217,14 +217,9 @@ class SearchFragment : BaseFragment<Unit>(
     }
 
     private fun openNavigationDetails(navigationEntity: NavigationEntity) {
-        val navigationFragment = NavigationDetailsFragment()
-        val bundle = Bundle()
-        bundle.putSerializable(NAVIGATION_ENTITY, navigationEntity)
-        navigationFragment.arguments = bundle
-        requireActivity().supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.contentFrame, navigationFragment)
-            .commitNow()
+        val intent = Intent(requireContext(), NavigationDetailsActivity::class.java)
+        intent.putExtra(NAVIGATION_ENTITY, navigationEntity)
+        startActivity(intent)
     }
 
     private fun openPersonDetails(person: Person) {

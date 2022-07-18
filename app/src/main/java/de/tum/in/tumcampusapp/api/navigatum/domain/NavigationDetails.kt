@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.api.navigatum.domain
 
 import de.tum.`in`.tumcampusapp.api.navigatum.model.details.NavigationDetailsDto
-import de.tum.`in`.tumcampusapp.api.navigatum.model.details.RoomFinderMapDto
 
 data class NavigationDetails(
     val id: String,
@@ -9,21 +8,16 @@ data class NavigationDetails(
     val type: String,
     val cordsLat: Double,
     val cordsLon: Double,
-    val map: NavigationMap?
-)
+    val parentsList: List<String> = listOf(),
+    val properties: List<NavigationProperty> = listOf(),
+    val availableMaps: List<NavigationMap> = listOf()
+) {
+    fun getFormattedParentNames(): String {
+        return parentsList.reduce { acc, parentName -> "$acc \\ $parentName" }
+    }
+}
 
 fun NavigationDetailsDto.toNavigationDetails(): NavigationDetails {
-
-    val defaultMapId = this.maps.roomFinder.defaultMapId
-    val matchingMaps = this.maps.roomFinder.available
-        .filter { defaultMapId == it.id }
-        .toList()
-    var map: RoomFinderMapDto? = null
-    if (matchingMaps.isNotEmpty()) {
-        map = matchingMaps[0]
-    } else if (this.maps.roomFinder.available.isNotEmpty()) {
-        map = this.maps.roomFinder.available[0]
-    }
 
     return NavigationDetails(
         id = this.id,
@@ -31,6 +25,10 @@ fun NavigationDetailsDto.toNavigationDetails(): NavigationDetails {
         type = this.type,
         cordsLat = this.cords.lat,
         cordsLon = this.cords.lon,
-        map = map?.toNavigationMap()
+        parentsList = this.parentNames,
+        properties = this.additionalProperties.propsList
+            .map { it.toNavigationProperty() },
+        availableMaps = this.maps.roomFinder.available
+            .map { it.toNavigationMap() }
     )
 }

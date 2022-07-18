@@ -18,7 +18,7 @@ class DrawCordsPointerTransformation(
             }
             val resultBitmap = source.copy(source.config, true)
             val canvas = Canvas(resultBitmap)
-            pinDrawable.setBounds(cordX - ICON_SIZE, cordY - ICON_SIZE, cordX, cordY)
+            pinDrawable.setBounds(cordX - ICON_SIZE / 2, cordY - ICON_SIZE, cordX + ICON_SIZE / 2, cordY)
             pinDrawable.draw(canvas)
             source.recycle()
             return resultBitmap
