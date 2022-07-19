@@ -44,7 +44,6 @@ class KinoActivity : ProgressActivity<Void>(R.layout.activity_kino) {
 
         val margin = resources.getDimensionPixelSize(R.dimen.material_default_padding)
         viewPager = findViewById(R.id.kinoViewPager)
-
         viewPager.pageMargin = margin
 
         kinoViewModel.kinos.observe(this, Observer<List<Kino>> { this.showMoviesOrPlaceholder(it) })
