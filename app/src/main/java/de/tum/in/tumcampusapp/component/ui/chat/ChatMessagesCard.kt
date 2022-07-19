@@ -70,7 +70,7 @@ class ChatMessagesCard(
         mRoomId = roomId
     }
 
-    override fun getNavigationDestination(): NavDestination? {
+    override fun getNavigationDestination(): NavDestination {
         val bundle = Bundle().apply {
             val chatRoom = ChatRoom(mRoomIdString).apply { id = mRoomId }
             val value = Gson().toJson(chatRoom)

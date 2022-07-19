@@ -4,6 +4,6 @@ import java.io.InterruptedIOException
 
 class InactiveTokenException : InterruptedIOException() {
 
-    override val message: String?
+    override val message: String
         get() = "The user’s access token is inactive"
 }

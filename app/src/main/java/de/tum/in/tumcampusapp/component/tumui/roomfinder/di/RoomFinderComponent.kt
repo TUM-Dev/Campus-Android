@@ -4,7 +4,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderDetailsActi
 
 import dagger.Subcomponent
 
-@Subcomponent()
+@Subcomponent
 interface RoomFinderComponent {
     fun inject(roomFinderDetailsActivity: RoomFinderDetailsActivity)
 }

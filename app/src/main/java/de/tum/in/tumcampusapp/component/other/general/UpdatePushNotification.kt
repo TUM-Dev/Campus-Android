@@ -57,17 +57,11 @@ class UpdatePushNotification(
             val alarm = Intent(appContext, MainActivity::class.java)
             val pending = PendingIntent.getActivity(appContext, 0, alarm, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
-            val description = if (info.description.isNotEmpty()) {
-                info.description
-            } else {
+            val description = info.description.ifEmpty {
                 String.format(appContext.getString(R.string.update_notification_description), data.releaseDate)
             }
 
-            val title = if (info.title.isNotEmpty()) {
-                info.title
-            } else {
-                appContext.getString(R.string.update)
-            }
+            val title = info.title.ifEmpty { appContext.getString(R.string.update) }
 
             return NotificationCompat.Builder(appContext, Const.NOTIFICATION_CHANNEL_DEFAULT)
                     .setSmallIcon(defaultIcon)

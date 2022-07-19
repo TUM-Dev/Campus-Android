@@ -44,7 +44,7 @@ class GradesBackgroundUpdater @Inject constructor(
 
     private fun showGradesNotification(newGrades: List<String>) {
         val provider = GradesNotificationProvider(context, newGrades)
-        val notification = provider.buildNotification() ?: return
+        val notification = provider.buildNotification()
         notificationScheduler.schedule(notification)
     }
 

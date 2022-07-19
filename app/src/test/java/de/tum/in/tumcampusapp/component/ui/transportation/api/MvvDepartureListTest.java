@@ -34,7 +34,7 @@ public class MvvDepartureListTest {
         String emptyResultExample = loadJsonResource("mvv/emptyResult.json");
         MvvDepartureList stationList = gson.fromJson(emptyResultExample, MvvDepartureList.class);
         List<MvvDeparture> departureList = stationList.getDepartureList();
-        Assert.assertEquals(null, departureList);
+        Assert.assertNull(departureList);
     }
 
     @Test

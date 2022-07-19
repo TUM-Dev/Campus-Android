@@ -26,6 +26,7 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.observeNonNull
 import javax.inject.Inject
 import javax.inject.Provider
+import kotlin.math.roundToInt
 
 class EventsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
@@ -65,7 +66,7 @@ class EventsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         binding.eventsRecyclerView.itemAnimator = DefaultItemAnimator()
         binding.eventsRecyclerView.adapter = EventsAdapter(context)
 
-        val spacing = Math.round(resources.getDimension(R.dimen.material_card_view_padding))
+        val spacing = resources.getDimension(R.dimen.material_card_view_padding).roundToInt()
         binding.eventsRecyclerView.addItemDecoration(EqualSpacingItemDecoration(spacing))
 
         binding.eventsRefreshLayout.setOnRefreshListener(this@EventsListFragment)

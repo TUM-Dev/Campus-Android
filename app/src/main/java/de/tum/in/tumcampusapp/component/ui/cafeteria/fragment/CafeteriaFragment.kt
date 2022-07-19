@@ -59,7 +59,7 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
         CafeteriaDetailsSectionsPagerAdapter(childFragmentManager)
     }
 
-    override val method: DownloadWorker.Action?
+    override val method: DownloadWorker.Action
         get() = cafeteriaDownloadAction
 
     private val binding by viewBinding(FragmentCafeteriaBinding::bind)
