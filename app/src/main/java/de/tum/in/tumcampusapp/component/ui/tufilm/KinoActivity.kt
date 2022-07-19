@@ -3,6 +3,7 @@ package de.tum.`in`.tumcampusapp.component.ui.tufilm
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.viewpager.widget.ViewPager
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ProgressActivity
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.model.Kino
@@ -21,7 +22,7 @@ class KinoActivity : ProgressActivity<Void>(R.layout.activity_kino) {
 
     @Inject
     internal lateinit var viewModelProvider: Provider<KinoViewModel>
-    private lateinit var binding: ActivityKinoBinding;
+    private lateinit var viewPager: ViewPager;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,10 +42,10 @@ class KinoActivity : ProgressActivity<Void>(R.layout.activity_kino) {
             else -> 0
         }
 
-        binding = ActivityKinoBinding.inflate(layoutInflater)
-
         val margin = resources.getDimensionPixelSize(R.dimen.material_default_padding)
-        binding.kinoViewPager.pageMargin = margin
+        viewPager = findViewById(R.id.kinoViewPager)
+
+        viewPager.pageMargin = margin
 
         kinoViewModel.kinos.observe(this, Observer<List<Kino>> { this.showMoviesOrPlaceholder(it) })
         kinoViewModel.error.observe(this, Observer<Int> { this.showError(it) })
@@ -56,7 +57,11 @@ class KinoActivity : ProgressActivity<Void>(R.layout.activity_kino) {
             return
         }
 
-        binding.kinoViewPager.adapter = KinoAdapter(supportFragmentManager, kinos)
-        binding.kinoViewPager.currentItem = startPosition
+        // Disable clip to padding
+        viewPager.clipToPadding = false;
+        viewPager.setPadding(60, 0, 60, 0);
+        viewPager.pageMargin = 20;
+        viewPager.adapter = KinoAdapter(supportFragmentManager, kinos)
+        viewPager.currentItem = startPosition
     }
 }
