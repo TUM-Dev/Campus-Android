@@ -21,6 +21,7 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -63,9 +64,14 @@ class CafeteriaDetailsSectionFragment : Fragment() {
         with(binding) {
             menuDateTextView.text = menuDateString
 
-            val hours = OpenHoursHelper(requireContext()).getHoursByIdAsString(cafeteriaId, menuDate)
-            menuOpeningHours.text = hours
-            menuOpeningHours.isVisible = hours.isNotEmpty()
+            // Update the left time for opening/closing every one minute
+            timer.schedule(object : TimerTask(){
+                override fun run(){
+                    val hours = OpenHoursHelper(requireContext()).getHoursByIdAsString(cafeteriaId, menuDate)
+                    menuOpeningHours.text = hours
+                    menuOpeningHours.isVisible = hours.isNotEmpty()
+                }
+            }, 0, 60000);
 
             menusRecyclerView.layoutManager = LinearLayoutManager(requireContext())
             menusRecyclerView.itemAnimator = DefaultItemAnimator()
@@ -88,5 +94,7 @@ class CafeteriaDetailsSectionFragment : Fragment() {
             }
             return fragment
         }
+
+        private var timer = Timer()
     }
 }
