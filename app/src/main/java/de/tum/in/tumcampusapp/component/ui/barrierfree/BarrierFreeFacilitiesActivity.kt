@@ -4,11 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
-import android.widget.ListView
 import android.widget.Spinner
-import android.widget.SpinnerAdapter
-import androidx.appcompat.widget.Toolbar
-import androidx.core.app.NavUtils
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumCabe
@@ -17,7 +13,6 @@ import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderDetailsActi
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderListAdapter
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom
 import de.tum.`in`.tumcampusapp.database.TcaDb
-import de.tum.`in`.tumcampusapp.databinding.ActivityBarrierFreeFacilitiesBinding
 import retrofit2.Call
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView
 
