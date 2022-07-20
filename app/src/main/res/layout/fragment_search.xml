@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:clipToPadding="false">
 
-    <include layout="@layout/toolbar_search" />
+    <include layout="@layout/toolbar_search" android:id="@+id/toolbar_search" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchResultTypesRecyclerView"
