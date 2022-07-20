@@ -181,6 +181,8 @@
     <string name="tuition_fees">Rückmeldung</string>
     <string name="common_info">Allgemeine Informationen</string>
     <string name="menues">Mensen</string>
+    <string name="cafeteria_rating">Mensa Bewertung</string>
+    <string name="view_cafeteria_rating">View Mensa Bewertung</string>
     <string name="person_search">Personensuche</string>
     <string name="roomfinder">Roomfinder</string>
     <string name="opening_hours">Öffnungszeiten</string>
@@ -300,7 +302,7 @@
 		\n11 mit einer Zuckerart und Süßungsmitteln</string>
     <string name="action_ingredients">Inhaltsstoffe</string>
     <string name="cafeteria_notification_settings">Mensa Benachrichtigungen</string>
-
+    <string name="create_cafeteria_rating">Neue Bewertung</string>
     <!-- Cafeteria Notification Settings -->
     <string name="invalid_notification_time_format_string">Ungültige Zeit ausgewählt. Wähle eine Uhrzeit im folgenden Intervall %1$d – %2$d.</string>
 

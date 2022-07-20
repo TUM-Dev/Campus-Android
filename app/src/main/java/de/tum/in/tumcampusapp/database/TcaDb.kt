@@ -68,38 +68,34 @@ import de.tum.`in`.tumcampusapp.utils.sync.SyncDao
 import de.tum.`in`.tumcampusapp.utils.sync.model.Sync
 import java.util.concurrent.ExecutionException
 
-@Database(
-    version = 7,
-    entities = [
-        Cafeteria::class,
-        CafeteriaMenu::class,
-        FavoriteDish::class,
-        Sync::class,
-        BuildingToGps::class,
-        Kino::class,
-        Event::class,
-        Ticket::class,
-        TicketType::class,
-        ChatMessage::class,
-        Location::class,
-        News::class,
-        NewsSources::class,
-        CalendarItem::class,
-        EventSeriesMapping::class,
-        RoomLocations::class,
-        WidgetsTimetableBlacklist::class,
-        Recent::class,
-        StudyRoomGroup::class,
-        StudyRoom::class,
-        FcmNotification::class,
-        TransportFavorites::class,
-        WidgetsTransport::class,
-        ChatRoomDbRow::class,
-        ScheduledNotification::class,
-        ActiveAlarm::class,
-        EventColor::class
-    ]
-)
+@Database(version = 7, entities = [
+    Cafeteria::class,
+    CafeteriaMenu::class,
+    FavoriteDish::class,
+    Sync::class,
+    BuildingToGps::class,
+    Kino::class,
+    Event::class,
+    Ticket::class,
+    TicketType::class,
+    ChatMessage::class,
+    Location::class,
+    News::class,
+    NewsSources::class,
+    CalendarItem::class,
+    EventSeriesMapping::class,
+    RoomLocations::class,
+    WidgetsTimetableBlacklist::class,
+    Recent::class,
+    StudyRoomGroup::class,
+    StudyRoom::class,
+    FcmNotification::class,
+    TransportFavorites::class,
+    WidgetsTransport::class,
+    ChatRoomDbRow::class,
+    ScheduledNotification::class,
+    ActiveAlarm::class,
+    EventColor::class])
 @TypeConverters(Converters::class)
 abstract class TcaDb : RoomDatabase() {
 

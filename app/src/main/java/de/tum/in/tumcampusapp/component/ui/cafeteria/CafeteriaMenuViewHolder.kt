@@ -2,6 +2,8 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria
 
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -9,6 +11,7 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaMenusAdapter
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.OpenHoursHelper
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.rating.CreateCafeteriaRatingFragment
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import org.joda.time.format.DateTimeFormat
@@ -49,7 +52,20 @@ class CafeteriaMenuViewHolder(
             menusRecyclerView.layoutManager = LinearLayoutManager(context)
             menusRecyclerView.itemAnimator = DefaultItemAnimator()
 
-            adapter = CafeteriaMenusAdapter(context, false) { performClick() }
+            val lambda= { /*performClick()*/
+                // val intent = Intent(requireContext, CreateCafeteriaRatingActivity::class.java)
+                // context.startActivity(intent)
+                val nextFrag = CreateCafeteriaRatingFragment()
+                val help= itemView.context
+
+                (context as Fragment).requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.contentFrame, nextFrag, "cafeteriaRating")
+                    .addToBackStack(null)
+                    .commit()
+            }
+
+           adapter = CafeteriaMenusAdapter(context, false)//,lambda)
+
             menusRecyclerView.adapter = adapter
         }
 

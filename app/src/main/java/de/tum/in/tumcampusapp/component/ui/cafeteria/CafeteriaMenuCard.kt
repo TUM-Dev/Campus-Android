@@ -73,7 +73,7 @@ class CafeteriaMenuCard(context: Context, private val cafeteria: CafeteriaWithMe
         @JvmStatic
         fun inflateViewHolder(parent: ViewGroup, interactionListener: CardInteractionListener): CardViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.card_cafeteria_menu, parent, false)
-            return CafeteriaMenuViewHolder(view, interactionListener)
+            return CafeteriaMenuViewHolder(view, interactionListener)//,requireA)
         }
     }
 }

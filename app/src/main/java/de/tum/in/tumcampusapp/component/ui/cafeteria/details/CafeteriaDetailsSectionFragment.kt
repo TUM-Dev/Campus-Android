@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.rating.CreateCafeteriaRatingFragment
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.rating.ShowCafeteriaRatingsFragment
 import de.tum.`in`.tumcampusapp.databinding.FragmentCafeteriadetailsSectionBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
@@ -85,7 +87,15 @@ class CafeteriaDetailsSectionFragment : Fragment() {
             menusRecyclerView.layoutManager = LinearLayoutManager(requireContext())
             menusRecyclerView.itemAnimator = DefaultItemAnimator()
 
-            val adapter = CafeteriaMenusAdapter(requireContext(), true, null)
+            val adapter = CafeteriaMenusAdapter(requireContext(), true
+            ) {
+                val nextFrag = ShowCafeteriaRatingsFragment()
+
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.contentFrame, nextFrag, "cafeteriaRating")
+                    .addToBackStack(null)
+                    .commit()
+            }
             menusRecyclerView.adapter = adapter
 
             cafeteriaViewModel.cafeteriaMenus.observe(

@@ -3,11 +3,13 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria.details
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaMenuFormatter
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.FavoriteDishDao
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.FavoriteDish
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.rating.CreateCafeteriaRatingFragment
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
@@ -32,7 +34,16 @@ sealed class CafeteriaMenuAdapterItem {
             val headerTextView = findViewById<TextView>(R.id.headerTextView)
 
             headerTextView.text = menu.typeLong.replace("[0-9]", "").trim()
-            setOnClickListener { listener?.invoke() }
+            setOnClickListener {
+                listener?.invoke()
+/*                val nextFrag = CreateCafeteriaRatingFragment()
+                val help= it.context
+
+                (context as Fragment).requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.contentFrame, nextFrag, "cafeteriaRating")
+                    .addToBackStack(null)
+                    .commit()*/
+            }
         }
     }
 

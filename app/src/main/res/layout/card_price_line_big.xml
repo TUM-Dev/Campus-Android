@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -7,38 +9,57 @@
     android:paddingTop="@dimen/material_tiny_padding"
     android:paddingBottom="@dimen/material_tiny_padding">
 
-    <TextView
-        android:id="@+id/nameTextView"
-        style="@style/CardBody"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1"
-        android:ellipsize="none"
-        android:maxLines="5"
-        android:scrollHorizontally="false"
-        tools:text="Line name" />
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/textView2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/nameTextView"
+            style="@style/CardBody"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@color/tum_blue"
+            android:ellipsize="none"
+            android:maxLines="5"
+            android:scrollHorizontally="false"
+            tools:text="Line name" />
+
+        <TextView
+            android:id="@+id/priceTextView"
+            style="@style/CardBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/material_small_padding"
+            android:gravity="end"
+            android:minWidth="50dp"
+            android:textColor="@color/sections_green"
+            tools:text="Price" />
+
+        <ImageView
+            android:id="@+id/favoriteDish"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/material_small_padding"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:padding="@dimen/material_tiny_padding"
+            android:src="@drawable/star_toggle" />
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/priceTextView"
-        style="@style/CardBody"
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="@dimen/material_small_padding"
-        android:gravity="end"
-        android:minWidth="50dp"
-        android:textColor="@color/sections_green"
-        tools:text="Price" />
-
-    <ImageView
-        android:id="@+id/favoriteDish"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="@dimen/material_small_padding"
-        android:background="?android:selectableItemBackgroundBorderless"
-        android:padding="@dimen/material_tiny_padding"
-        android:src="@drawable/star_toggle" />
-
-</LinearLayout>
+        android:text="hello"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

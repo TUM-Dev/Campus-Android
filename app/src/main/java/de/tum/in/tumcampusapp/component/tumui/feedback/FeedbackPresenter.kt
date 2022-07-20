@@ -274,6 +274,7 @@ class FeedbackPresenter @Inject constructor(
         return true
     }
 
+
     override fun onImageOptionSelected(option: Int) {
         if (option == 0) {
             if (SDK_INT < M || checkPermission(CAMERA)) {

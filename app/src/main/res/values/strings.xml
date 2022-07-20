@@ -219,6 +219,8 @@
     <string name="tuition_fees">Tuition Fees</string>
     <string name="common_info">General Information</string>
     <string name="menues">Cafeterias</string>
+    <string name="cafeteria_rating">Cafeteria Rating</string>
+    <string name="view_cafeteria_rating">View Cafeteria Rating</string>
     <string name="person_search">Person Search</string>
     <string name="roomfinder">Roomfinder</string>
     <string name="study_rooms">Study Rooms</string>
@@ -347,7 +349,7 @@
         \n11 with sugar and sweeteners</string>
     <string name="action_ingredients">Ingredients</string>
     <string name="cafeteria_notification_settings">Cafeteria Notification Settings</string>
-
+    <string name="create_cafeteria_rating">Create Rating</string>
     <!-- Cafeteria Notification Settings -->
     <string name="invalid_notification_time_format_string">Invalid time. Pick a time ranging from %1$d to %2$d.</string>
 

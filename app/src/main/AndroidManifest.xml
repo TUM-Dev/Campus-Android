@@ -4,38 +4,39 @@
     package="de.tum.in.tumcampusapp"
     android:installLocation="auto"
     tools:ignore="UnusedAttribute">
-    <!-- Standard access rights -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- For google calendar synchronisation -->
-    <uses-permission android:name="android.permission.READ_CALENDAR" />
-    <uses-permission android:name="android.permission.WRITE_CALENDAR" /> <!-- To add searched person to contact list -->
-    <uses-permission android:name="android.permission.WRITE_CONTACTS" /> <!-- For location services -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- For automatically setting up eduroam -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- FCM requires a Google account. -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" /> <!-- Allow vibration for chat messages -->
-    <uses-permission android:name="android.permission.VIBRATE" /> <!-- As AndroidLint suggests: We do not necessarily need camera access -->
+
+    <meta-data
+        android:name="firebase_crashlytics_collection_enabled"
+        android:value="false" />
+
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false" />
+        android:required="false" /> <!-- For google calendar synchronisation -->
     <uses-feature
         android:name="android.hardware.camera.autofocus"
         android:required="false" />
     <uses-feature
         android:name="android.hardware.location.network"
-        android:required="false" />
+        android:required="false" /> <!-- To add searched person to contact list -->
     <uses-feature
         android:name="android.hardware.location.gps"
-        android:required="false" /> <!-- For QR code scanner -->
-    <uses-permission android:name="android.permission.CAMERA" /> <!-- To start the Silence and Background service on Boot -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- To potentially change the Do Not Disturb mode -->
-    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" /> <!-- Do not collect crashes by default -->
-    <meta-data
-        android:name="firebase_crashlytics_collection_enabled"
-        android:value="false" />
+        android:required="false" /> <!-- For location services -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" /> <!-- For automatically setting up eduroam -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" /> <!-- FCM requires a Google account. -->
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" /> <!-- Allow vibration for chat messages -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- As AndroidLint suggests: We do not necessarily need camera access -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- For QR code scanner -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" /> <!-- To start the Silence and Background service on Boot -->
+    <uses-permission android:name="android.permission.VIBRATE" /> <!-- To potentially change the Do Not Disturb mode -->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- Do not collect crashes by default -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
     <application
         android:name=".App"
@@ -47,43 +48,17 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="false"
         android:theme="@style/AppTheme">
-
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
-        <uses-library android:name="android.test.runner" />
-
-        <receiver android:name=".service.ScanResultsAvailableReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.net.wifi.SCAN_RESULTS" />
-            </intent-filter>
-        </receiver>
-
-        <provider
-            android:name=".component.ui.transportation.MVVStationSuggestionProvider"
-            android:authorities="de.tum.in.tumcampusapp.component.ui.transportation.MVVStationSuggestionProvider"
+        <activity
+            android:name=".ShowCafeteriaRatingsActivity"
             android:exported="false" />
-        <provider
-            android:name=".component.tumui.lectures.LectureSearchSuggestionProvider"
-            android:authorities="de.tum.in.tumcampusapp.component.tumui.lectures.LectureSearchSuggestionProvider"
+        <activity
+            android:name=".CafeteriaRating"
             android:exported="false" />
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="de.tum.in.tumcampusapp.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/fileprovider" />
-        </provider>
-
         <activity
             android:name=".component.ui.onboarding.StartupActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/app_name"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -102,8 +77,8 @@
         <activity
             android:name=".component.other.generic.activity.BaseNavigationActivity"
             android:configChanges="orientation|screenSize"
-            android:launchMode="singleTop"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -158,10 +133,10 @@
         <activity
             android:name=".component.ui.transportation.TransportationActivity"
             android:configChanges="orientation|screenSize"
+            android:exported="true"
             android:label="@string/mvv"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity"
-            android:exported="true">
+            android:parentActivityName=".component.ui.overview.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -200,10 +175,10 @@
         <activity
             android:name=".component.tumui.lectures.activity.LecturesPersonalActivity"
             android:configChanges="orientation|screenSize"
+            android:exported="true"
             android:label="@string/my_lectures"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity"
-            android:exported="true">
+            android:parentActivityName=".component.ui.overview.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -248,14 +223,12 @@
         <activity
             android:name=".component.tumui.person.PersonDetailsActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/person_information">
-        </activity>
+            android:label="@string/person_information" />
         <activity
             android:name=".component.tumui.roomfinder.RoomFinderDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/roomfinder"
-            android:theme="@style/AppTheme.NoDrawerLayout">
-        </activity>
+            android:theme="@style/AppTheme.NoDrawerLayout" />
         <activity
             android:name=".component.ui.search.SearchActivity"
             android:configChanges="orientation|screenSize"
@@ -327,19 +300,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.overview.MainActivity" />
         </activity>
-
         <activity
             android:name=".component.tumui.calendar.NavigaTUMActivity"
-            android:label="NavigaTUM"
-            android:exported="false">
-        </activity>
-
+            android:exported="false"
+            android:label="NavigaTUM" />
         <activity
             android:name=".component.tumui.calendar.CreateEventActivity"
             android:label="@string/activity_create_event_title"
-            android:parentActivityName=".component.tumui.calendar.CalendarActivity">
-        </activity>
-
+            android:parentActivityName=".component.tumui.calendar.CalendarActivity" />
         <activity
             android:name=".component.ui.chat.activity.JoinRoomScanActivity"
             android:configChanges="orientation|screenSize"
@@ -401,135 +369,40 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.chat.activity.ChatActivity" />
-        </activity> <!-- receiver for the mensaWidget -->
-        <receiver
-            android:name=".component.ui.cafeteria.widget.MensaWidget"
-            android:label="@string/mensa_widget"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/mensa_widget_info" />
-        </receiver>
-
-        <service
-            android:name=".service.MensaWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS" /> <!-- receiver for the MVVWidget -->
-        <receiver
-            android:name=".component.ui.transportation.widget.MVVWidget"
-            android:label="@string/mvv_widget"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="de.tum.in.newtumcampus.intent.action.MVV_WIDGET_FORCE_RELOAD" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/mvv_widget_info" />
-        </receiver>
-
-        <service
-            android:name=".component.ui.transportation.widget.MVVWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS" />
-
+        </activity>
         <activity
             android:name=".component.ui.transportation.widget.MVVWidgetConfigureActivity"
             android:allowTaskReparenting="false"
             android:configChanges="orientation|screenSize"
             android:excludeFromRecents="true"
+            android:exported="true"
             android:label="@string/mvv_widget_select_station"
             android:launchMode="singleTop"
-            android:taskAffinity=""
-            android:exported="true">
+            android:taskAffinity="">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
 
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable_mvv" />
-
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity> <!-- receiver for the TimetableWidget -->
-        <receiver
-            android:name=".component.tumui.calendar.widget.TimetableWidget"
-            android:label="@string/timetable_widget"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/timetable_widget_info" />
-        </receiver>
-
-        <service
-            android:name=".component.tumui.calendar.widget.TimetableWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS" />
-
+        </activity>
         <activity
             android:name=".component.tumui.calendar.widget.TimetableWidgetConfigureActivity"
             android:allowTaskReparenting="false"
             android:configChanges="orientation|screenSize"
             android:excludeFromRecents="true"
+            android:exported="true"
             android:label="@string/timetable_widget_select_lectures"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoDrawerLayout"
-            android:exported="true">
+            android:theme="@style/AppTheme.NoDrawerLayout">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
-        </activity> <!-- Used to restart alarm when device has been restarted -->
-        <receiver android:name=".service.StartSyncReceiver" android:exported="true">
-            <intent-filter>
-                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name=".service.SilenceService"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service
-            android:name=".service.ScanResultsAvailableReceiver$NeverShowAgainService"
-            android:exported="false" />
-        <service
-            android:name=".service.QueryLocationsService"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service
-            android:name=".service.FcmReceiverService"
-            android:enabled="true"
-            android:exported="true"
-            android:stopWithTask="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-        <service
-            android:name=".service.GeofencingRegistrationService"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-
-        <receiver android:name=".service.GeofencingUpdateReceiver" />
-        <receiver android:name=".service.GeofencingStartupReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.location.MODE_CHANGED" />
-                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-                <action android:name="android.location.PROVIDERS_CHANGED" />
-            </intent-filter>
-        </receiver>
-
+        </activity>
         <activity
             android:name=".component.ui.ticket.activity.ShowTicketActivity"
             android:configChanges="keyboardHidden|screenSize"
@@ -569,7 +442,7 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.ticket.activity.EventsActivity" />
-        </activity>
+        </activity> <!-- receiver for the mensaWidget -->
         <activity
             android:name=".component.ui.ticket.activity.StripePaymentActivity"
             android:configChanges="orientation|screenSize"
@@ -590,11 +463,131 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".component.ui.ticket.activity.StripePaymentActivity" />
-        </activity>
+        </activity> <!-- receiver for the MVVWidget -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
+        <provider
+            android:name=".component.ui.transportation.MVVStationSuggestionProvider"
+            android:authorities="de.tum.in.tumcampusapp.component.ui.transportation.MVVStationSuggestionProvider"
+            android:exported="false" />
+        <provider
+            android:name=".component.tumui.lectures.LectureSearchSuggestionProvider"
+            android:authorities="de.tum.in.tumcampusapp.component.tumui.lectures.LectureSearchSuggestionProvider"
+            android:exported="false" /> <!-- receiver for the TimetableWidget -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="de.tum.in.tumcampusapp.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/fileprovider" />
+        </provider>
+
+        <receiver
+            android:name=".service.ScanResultsAvailableReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.wifi.SCAN_RESULTS" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".component.ui.cafeteria.widget.MensaWidget"
+            android:exported="true"
+            android:label="@string/mensa_widget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/mensa_widget_info" />
+        </receiver> <!-- Used to restart alarm when device has been restarted -->
+        <receiver
+            android:name=".component.ui.transportation.widget.MVVWidget"
+            android:exported="true"
+            android:label="@string/mvv_widget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="de.tum.in.newtumcampus.intent.action.MVV_WIDGET_FORCE_RELOAD" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/mvv_widget_info" />
+        </receiver>
+        <receiver
+            android:name=".component.tumui.calendar.widget.TimetableWidget"
+            android:exported="true"
+            android:label="@string/timetable_widget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/timetable_widget_info" />
+        </receiver>
+        <receiver
+            android:name=".service.StartSyncReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".service.GeofencingUpdateReceiver" />
+        <receiver
+            android:name=".service.GeofencingStartupReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.location.MODE_CHANGED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="android.location.PROVIDERS_CHANGED" />
+            </intent-filter>
+        </receiver>
         <receiver android:name=".component.notifications.receivers.NotificationReceiver" />
         <receiver android:name=".component.notifications.receivers.NotificationAlarmReceiver" />
         <receiver android:name=".component.tumui.grades.GradeNotificationDeleteReceiver" />
+
+        <service
+            android:name=".service.MensaWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service
+            android:name=".component.ui.transportation.widget.MVVWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service
+            android:name=".component.tumui.calendar.widget.TimetableWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service
+            android:name=".service.SilenceService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".service.ScanResultsAvailableReceiver$NeverShowAgainService"
+            android:exported="false" />
+        <service
+            android:name=".service.QueryLocationsService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".service.FcmReceiverService"
+            android:enabled="true"
+            android:exported="true"
+            android:stopWithTask="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".service.GeofencingRegistrationService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <uses-library android:name="android.test.runner" />
     </application>
 
 </manifest>

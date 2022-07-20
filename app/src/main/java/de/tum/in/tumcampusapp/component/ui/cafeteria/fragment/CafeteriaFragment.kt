@@ -19,6 +19,7 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManag
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaDetailsSectionsPagerAdapter
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.details.CafeteriaViewModel
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.rating.CreateCafeteriaRatingFragment
 import de.tum.`in`.tumcampusapp.databinding.FragmentCafeteriaBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
@@ -26,6 +27,7 @@ import de.tum.`in`.tumcampusapp.service.DownloadWorker
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.observeNonNull
+import org.jetbrains.anko.sdk27.coroutines.onClick
 import org.joda.time.DateTime
 import javax.inject.Inject
 import javax.inject.Provider
@@ -83,6 +85,14 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
 
         binding.spinnerToolbar.adapter = adapter
         binding.spinnerToolbar.onItemSelectedListener = this
+
+        binding.floatingActionButton.onClick {
+            val nextFrag = CreateCafeteriaRatingFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.contentFrame, nextFrag, "cafeteriaRating")
+                .addToBackStack(null)
+                .commit()
+        }
 
         cafeteriaViewModel.cafeterias.observeNonNull(this) { updateCafeterias(it) }
         cafeteriaViewModel.selectedCafeteria.observeNonNull(this) { onNewCafeteriaSelected(it) }

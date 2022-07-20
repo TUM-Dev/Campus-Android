@@ -1,9 +1,12 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria.details
 
 import android.content.Context
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
@@ -48,10 +51,10 @@ class CafeteriaMenusAdapter(
 
     fun update(menus: List<CafeteriaMenu>) {
         val newItems = menus
-                .filter(this::shouldShowMenu)
-                .splitOnChanged { it.typeLong }
-                .map(this::createAdapterItemsForSection)
-                .flatten()
+            .filter(this::shouldShowMenu)
+            .splitOnChanged { it.typeLong }
+            .map(this::createAdapterItemsForSection)
+            .flatten()
 
         val diffResult = DiffUtil.calculateDiff(DiffUtilCallback(adapterItems, newItems))
 
@@ -63,9 +66,9 @@ class CafeteriaMenusAdapter(
 
     private fun shouldShowMenu(menu: CafeteriaMenu): Boolean {
         val shouldShowMenuType = Utils.getSettingBool(
-                context,
-                "card_cafeteria_${menu.typeShort}",
-                "tg" == menu.typeShort || "ae" == menu.typeShort
+            context,
+            "card_cafeteria_${menu.typeShort}",
+            "tg" == menu.typeShort || "ae" == menu.typeShort
         )
         return shouldShowMenuType || isBigLayout
     }
@@ -90,7 +93,15 @@ class CafeteriaMenusAdapter(
         }
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        init {
+            itemView.setBackgroundColor(0x80808)
+            itemView.setOnClickListener({
+              //  itemView.findViewById<TextView>(R.id.nameTextView).text = "clicked"
+                Log.d("help", "test: ")
+            })
+        }
+    }
 
     private class DiffUtilCallback(
         private val oldItems: List<CafeteriaMenuAdapterItem>,

@@ -101,6 +101,22 @@
     <color name="error">#FFFF0000</color>
     <color name="valid">#7cbc49</color>
 
+    <color name="rating_1">#1FD50000</color>
+    <color name="rating_2">#1FD96B0C</color>
+    <color name="rating_3">#1FDCD618</color>
+    <color name="rating_4">#1F87B315</color>
+    <color name="rating_5">#1F318F11</color>
+
+    <color name="rating_1_0">#D50000</color>
+    <color name="rating_1_5">#d73606</color>
+    <color name="rating_2_0">#d96b0c</color>
+    <color name="rating_2_5">#daa112</color>
+    <color name="rating_3_0">#dcd618</color>
+    <color name="rating_3_5">#b1c416</color>
+    <color name="rating_4_0">#87b315</color>
+    <color name="rating_4_5">#5ca113</color>
+    <color name="rating_5_0">#318f11</color>
+
     <color name="grade_1.0">#318F11</color>
     <color name="grade_1.1">#3F9711</color>
     <color name="grade_1.2">#4EA012</color>

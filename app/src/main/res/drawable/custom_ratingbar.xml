@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <bitmap
+            android:src="@drawable/rating_circle"
+            android:tint="?attr/colorControlNormal"
+            android:state_pressed="true"
+            android:state_window_focused="true"
+            />
+    </item>
+    <item android:id="@android:id/secondaryProgress">
+        <bitmap
+            android:src="@drawable/rating_circle"
+            android:tint="?attr/colorControlHighlight"
+            android:state_focused="true"
+            android:state_window_focused="true"/>
+    </item>
+    <item android:id="@android:id/progress">
+        <bitmap
+            android:src="@drawable/rating_circle"
+            android:tint="?attr/colorControlActivated"
+            android:state_selected="true"
+            android:state_window_focused="true"/>
+    </item>
+</layer-list>
