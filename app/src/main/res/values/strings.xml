@@ -104,7 +104,7 @@
     <string name="grade_semester_default">22WS</string>
     <string name="use_weights_in_diagrams">Consider credits and weights in the diagram</string>
     <string name="delete_exam">Delete Exam</string>
-    <string name="delete_exam_dialog_message">Should this exam be irrevocably deleted</string>
+    <string name="delete_exam_dialog_message">Should this exam be irrevocably deleted?</string>
     <string name="add_grade_error_wrong_semester">Wrong semester format: Too short. Correct: two numbers for the year + W/S</string>
     <string name="add_grade_error_semester_no_ws">Wrong semester format: Term not specified. Correct two numbers for the year + W/S</string>
     <string name="add_grade_error_invalid_weight">Wrong weight format: Weights can not be negative.</string>
