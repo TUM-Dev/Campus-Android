@@ -37,7 +37,6 @@ import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.databinding.FragmentSearchBinding
-import de.tum.`in`.tumcampusapp.databinding.ToolbarSearchBinding
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
