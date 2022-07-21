@@ -49,7 +49,7 @@ object DateTimeUtils {
                         context.getString(R.string.MINUTES)
             }
             diff < 5 * HOUR_IN_MILLIS -> {
-                val formatter = DateTimeFormat.forPattern("H 'hrs' mm 'mins'")
+                val formatter = DateTimeFormat.forPattern("h 'h' m 'min'")
                         .withLocale(Locale.ENGLISH)
                 "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff))}"
             }
