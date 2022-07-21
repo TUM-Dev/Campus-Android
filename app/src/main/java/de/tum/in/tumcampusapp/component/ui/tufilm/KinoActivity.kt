@@ -57,9 +57,9 @@ class KinoActivity : ProgressActivity<Void>(R.layout.activity_kino) {
         }
 
         // Disable clip to padding
-        viewPager.clipToPadding = false;
-        viewPager.setPadding(60, 0, 60, 0);
-        viewPager.pageMargin = 20;
+        viewPager.clipToPadding = false
+        viewPager.setPadding(60, 0, 60, 0)
+        viewPager.pageMargin = 20
         viewPager.adapter = KinoAdapter(supportFragmentManager, kinos)
         viewPager.currentItem = startPosition
     }
