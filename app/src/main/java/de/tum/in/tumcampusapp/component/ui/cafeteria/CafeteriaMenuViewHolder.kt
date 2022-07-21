@@ -36,13 +36,13 @@ class CafeteriaMenuViewHolder(
         } else {
             // update textview every 1 minute
             var timer = Timer()
-            timer.schedule(object : TimerTask(){
-                override fun run(){
+            timer.schedule(object : TimerTask() {
+                override fun run() {
                     openingHours = openHoursHelper.getHoursByIdAsString(cafeteria.id, cafeteria.nextMenuDate)
                     openingHoursTextView.visibility = View.VISIBLE
                     openingHoursTextView.text = openingHours
                 }
-            }, 0, 60000);
+            }, 0, 60000)
         }
 
         if (this@CafeteriaMenuViewHolder::adapter.isInitialized.not()) {

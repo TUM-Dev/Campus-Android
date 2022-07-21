@@ -56,7 +56,6 @@ object DateTimeUtils {
             else -> getRelativeTimeSpanString(timeInMillis, now, MINUTE_IN_MILLIS,
                     FORMAT_ABBREV_RELATIVE).toString()
         }
-
     }
 
     /**

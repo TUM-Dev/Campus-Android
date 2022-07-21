@@ -87,11 +87,11 @@ class OpenHoursHelper(private val context: Context) {
             if (opens.isAfter(now)) {
                 relation = R.string.opens
                 relativeTo = opens
-                info = " (" + DateTimeUtils.getTimeString(opens) + " - " + DateTimeUtils.getTimeString(closes) + ")"
+                info = " (${DateTimeUtils.getTimeString(opens)} - ${DateTimeUtils.getTimeString(closes)})"
             } else if (closes.isAfter(now)) {
                 relation = R.string.closes
                 relativeTo = closes
-                info = " (" + context.getString(R.string.on) + " " + DateTimeUtils.getTimeString(closes) + ")"
+                info = " (${context.getString(R.string.on)} ${DateTimeUtils.getTimeString(closes)})"
             } else {
                 relation = R.string.closed
                 relativeTo = closes
@@ -101,12 +101,9 @@ class OpenHoursHelper(private val context: Context) {
             // Return an assembly
             return context.getString(relation) + " " + relativeTime.substring(0, 1).lowercase(Locale.getDefault()) +
                     relativeTime.substring(1) + info
-
         } else {
             // future --> show non-relative opening hours
-            return context.getString(R.string.opening_hours) + ": " +
-                    DateTimeUtils.getTimeString(opens) + " - " +
-                    DateTimeUtils.getTimeString(closes)
+            return "${context.getString(R.string.opening_hours)}: ${DateTimeUtils.getTimeString(opens)} - ${DateTimeUtils.getTimeString(closes)}"
         }
     }
 
