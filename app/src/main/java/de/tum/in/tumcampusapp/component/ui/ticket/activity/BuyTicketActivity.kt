@@ -54,7 +54,7 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
         get() {
             currentTicketAmounts?.let {
                 val types = ticketTypes ?: arrayListOf()
-                return it.zip(types).fold(0, { acc, amount -> acc + amount.first * amount.second.price })
+                return it.zip(types).fold(0) { acc, amount -> acc + amount.first * amount.second.price }
             } ?: return 0
         }
 

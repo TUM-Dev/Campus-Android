@@ -23,7 +23,7 @@ class DateTimeConverter : TypeConverter<DateTime?> {
         return parseString(value)
     }
 
-    private fun parseString(value: String): DateTime? {
+    private fun parseString(value: String): DateTime {
         formats.forEach { format ->
             val dateTime = tryOrNull { DateTimeFormat.forPattern(format).parseDateTime(value) }
             dateTime?.let {

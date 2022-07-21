@@ -23,7 +23,7 @@ import com.google.gson.Gson;
 
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -459,8 +459,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
         List<ChatMessage> unsent = chatMessageViewModel.getUnsentInChatRoom(currentChatRoom);
         messages.addAll(unsent);
 
-        Collections.sort(messages, (lhs, rhs) -> lhs.getTimestamp()
-                                                    .compareTo(rhs.getTimestamp()));
+        messages.sort(Comparator.comparing(ChatMessage::getTimestamp));
         chatHistoryAdapter.updateHistory(messages);
 
         if (messages.isEmpty()) {

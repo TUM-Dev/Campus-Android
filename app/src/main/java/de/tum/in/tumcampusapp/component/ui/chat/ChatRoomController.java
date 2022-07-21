@@ -131,13 +131,11 @@ public class ChatRoomController implements ProvidesCard {
                     .getPersonalLectures(cacheControl)
                     .execute();
 
-            if (response != null) {
-                LecturesResponse lecturesResponse = response.body();
+            LecturesResponse lecturesResponse = response.body();
 
-                if (lecturesResponse != null) {
-                    List<Lecture> lectures = lecturesResponse.getLectures();
-                    createLectureRooms(lectures);
-                }
+            if (lecturesResponse != null) {
+                List<Lecture> lectures = lecturesResponse.getLectures();
+                createLectureRooms(lectures);
             }
 
             // Join all new chat rooms

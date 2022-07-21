@@ -13,7 +13,6 @@ import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
-import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Const.ADD_GEOFENCE_EXTRA
 import de.tum.`in`.tumcampusapp.utils.Const.GEOFENCING_SERVICE_JOB_ID
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -42,7 +41,7 @@ class GeofencingRegistrationService : JobIntentService() {
             return
         }
 
-        val request = intent.getParcelableExtra<GeofencingRequest>(Const.ADD_GEOFENCE_EXTRA) ?: return
+        val request = intent.getParcelableExtra<GeofencingRequest>(ADD_GEOFENCE_EXTRA) ?: return
         val geofenceIntent = Intent(this, GeofencingUpdateReceiver::class.java)
         val geofencePendingIntent = PendingIntent.getBroadcast(
                 this, 0, geofenceIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)

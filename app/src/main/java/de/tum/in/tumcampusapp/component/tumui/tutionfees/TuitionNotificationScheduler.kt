@@ -38,8 +38,7 @@ object TuitionNotificationScheduler {
         // Get the next occurring notification time
         val daysBeforeDeadline = notificationTimes
                 .filter { it <= remainingDays }
-                .sortedDescending()
-                .first()
+                .maxOrNull()!!
                 .days
 
         // Setting the notification time at 10am seems like a good trade-off between making sure

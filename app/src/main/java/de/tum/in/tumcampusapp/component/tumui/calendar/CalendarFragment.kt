@@ -439,7 +439,7 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
             binding.weekView.goToDate(it.toGregorianCalendar())
             binding.weekView.goToHour(it.hourOfDay)
         } ?: run {
-            binding.weekView.firstVisibleDate?.let{
+            binding.weekView.firstVisibleDate?.let {
                 binding.weekView.goToDate(it)
             } ?: run {
                 binding.weekView.goToCurrentTime()

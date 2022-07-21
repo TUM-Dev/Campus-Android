@@ -35,7 +35,7 @@ class MVVWidgetService : RemoteViewsService() {
 
         override fun getCount() = departures.size
 
-        override fun getViewAt(position: Int): RemoteViews? {
+        override fun getViewAt(position: Int): RemoteViews {
             // Get the departure for this view
             val currentItem = this.departures[position]
             val mvvSymbol = MVVSymbol(currentItem.symbol, applicationContext)

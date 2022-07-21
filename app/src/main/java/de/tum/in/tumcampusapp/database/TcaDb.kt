@@ -179,7 +179,7 @@ abstract class TcaDb : RoomDatabase() {
             val cacheManager = CacheManager(c)
             cacheManager.clearCache()
 
-            TcaDb.getInstance(c).clearAllTables()
+            getInstance(c).clearAllTables()
         }
     }
 }

@@ -53,7 +53,7 @@ data class WidgetCalendarItem(
 
         @JvmStatic
         fun create(schedule: RoomFinderSchedule): WidgetCalendarItem {
-            val id = java.lang.Long.toString(schedule.event_id)
+            val id = schedule.event_id.toString()
             val start = DateTimeUtils.getDateTime(schedule.start)
             val end = DateTimeUtils.getDateTime(schedule.end)
             return WidgetCalendarItem(id, schedule.title, start, end, "")

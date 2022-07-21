@@ -37,7 +37,6 @@ import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.databinding.FragmentSearchBinding
-import de.tum.`in`.tumcampusapp.databinding.ToolbarSearchBinding
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
@@ -51,7 +50,6 @@ class SearchFragment : BaseFragment<Unit>(
     lateinit var viewModelProvider: Provider<SearchViewModel>
 
     private val binding by viewBinding(FragmentSearchBinding::bind)
-    private val bindingToolbar by viewBinding(ToolbarSearchBinding::bind)
 
     private lateinit var searchResultsAdapter: SearchResultsAdapter
     private lateinit var resultTypesAdapter: ResultTypesAdapter
@@ -95,7 +93,7 @@ class SearchFragment : BaseFragment<Unit>(
 
         query?.let {
             viewModel.search(it)
-            bindingToolbar.searchEditText.setText(query)
+            binding.toolbarSearch.searchEditText.setText(query)
         } ?: run {
             showKeyboard()
         }
@@ -104,7 +102,7 @@ class SearchFragment : BaseFragment<Unit>(
 
         addQueryHandlers()
 
-        bindingToolbar.clearButton.setOnClickListener {
+        binding.toolbarSearch.clearButton.setOnClickListener {
             clearInput()
         }
     }
@@ -152,11 +150,11 @@ class SearchFragment : BaseFragment<Unit>(
 
     private fun hideKeyboard() {
         val imm: InputMethodManager? = requireContext().getSystemService()
-        imm?.hideSoftInputFromWindow(bindingToolbar.searchEditText.windowToken, 0)
+        imm?.hideSoftInputFromWindow(binding.toolbarSearch.searchEditText.windowToken, 0)
     }
 
     private fun clearInput() {
-        bindingToolbar.searchEditText.setText("")
+        binding.toolbarSearch.searchEditText.setText("")
         showSearchInfo()
         viewModel.clearSearchState()
     }
@@ -193,7 +191,7 @@ class SearchFragment : BaseFragment<Unit>(
     }
 
     private fun addQueryHandlers() {
-        bindingToolbar.searchEditText.doOnTextChanged { text, _, _, _ ->
+        binding.toolbarSearch.searchEditText.doOnTextChanged { text, _, _, _ ->
             val input: String = text?.toString() ?: ""
             if (input.length >= MIN_QUERY_LENGTH) {
                 viewModel.search(input)
@@ -203,7 +201,7 @@ class SearchFragment : BaseFragment<Unit>(
             }
         }
 
-        bindingToolbar.searchEditText.setOnEditorActionListener { textView, actionId, _ ->
+        binding.toolbarSearch.searchEditText.setOnEditorActionListener { textView, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 val input = textView.text.toString().trim()
                 if (input.length < MIN_QUERY_LENGTH) {
@@ -251,7 +249,7 @@ class SearchFragment : BaseFragment<Unit>(
             queryString?.let { query ->
                 hideKeyboard()
                 viewModel.search(query)
-                bindingToolbar.searchEditText.setText(query)
+                binding.toolbarSearch.searchEditText.setText(query)
             }
         }
     }
@@ -294,7 +292,7 @@ class SearchFragment : BaseFragment<Unit>(
             } else {
                 binding.progressIndicator.hide()
 
-                val input = bindingToolbar.searchEditText.text.toString().trim()
+                val input = binding.toolbarSearch.searchEditText.text.toString().trim()
                 if (input.length < MIN_QUERY_LENGTH)
                     showSearchInfo()
                 else if (viewModel.state.value.data.isEmpty()) {
@@ -334,8 +332,8 @@ class SearchFragment : BaseFragment<Unit>(
 
     private fun showKeyboard() {
         val imm: InputMethodManager? = requireContext().getSystemService()
-        bindingToolbar.searchEditText.requestFocus()
-        imm?.showSoftInput(bindingToolbar.searchEditText, InputMethodManager.SHOW_IMPLICIT)
+        binding.toolbarSearch.searchEditText.requestFocus()
+        imm?.showSoftInput(binding.toolbarSearch.searchEditText, InputMethodManager.SHOW_IMPLICIT)
     }
 
     private fun showSearchInfo() {
@@ -375,7 +373,7 @@ class SearchFragment : BaseFragment<Unit>(
             it.setTint(color)
         }
 
-        with(bindingToolbar.toolbar) {
+        with(binding.toolbarSearch.toolbar) {
             navigationIcon = backIcon
             setNavigationOnClickListener {
                 hideKeyboard()

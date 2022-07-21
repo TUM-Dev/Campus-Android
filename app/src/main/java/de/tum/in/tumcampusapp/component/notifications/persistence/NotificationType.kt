@@ -10,7 +10,7 @@ enum class NotificationType(val id: Int) {
     GRADES(5);
 
     companion object {
-        private val map = NotificationType.values().associateBy(NotificationType::id)
+        private val map = values().associateBy(NotificationType::id)
         fun fromId(id: Long) = map[id.toInt()]
     }
 }

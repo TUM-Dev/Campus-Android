@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.GridEqualSpacingDecoration
 import de.tum.`in`.tumcampusapp.utils.Const
+import kotlin.math.roundToInt
 
 /**
  * Fragment for each study room group. Shows study room details in a list.
@@ -40,7 +41,7 @@ class StudyRoomGroupDetailsFragment : Fragment() {
             layoutManager = GridLayoutManager(context, spanCount)
             adapter = StudyRoomAdapter(this@StudyRoomGroupDetailsFragment, studyRooms)
 
-            val spacing = Math.round(resources.getDimension(R.dimen.material_card_view_padding))
+            val spacing = resources.getDimension(R.dimen.material_card_view_padding).roundToInt()
             addItemDecoration(GridEqualSpacingDecoration(spacing, spanCount))
         }
         return rootView

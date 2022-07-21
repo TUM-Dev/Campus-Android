@@ -8,7 +8,9 @@ import de.tum.in.tumcampusapp.utils.Utils;
 /**
  * Easy accessible class for token management.
  */
-public class AccessTokenManager {
+public final class AccessTokenManager {
+    private AccessTokenManager() {
+    }
 
     /**
      * Returns whether a valid access token already exists.
@@ -17,7 +19,7 @@ public class AccessTokenManager {
      */
     public static boolean hasValidAccessToken(Context context) {
         final String oldAccessToken = Utils.getSetting(context, Const.ACCESS_TOKEN, "");
-        return oldAccessToken != null && oldAccessToken.length() > 2;
+        return oldAccessToken.length() > 2;
     }
 
 }
