@@ -337,8 +337,6 @@
     <string name="closes">Closes</string>
     <string name="closed">Closed</string>
 
-    <string name="on">on</string>
-
     <!-- Kino -->
     <string name="kino" translatable="false">der tu film</string>
     <string name="imdb_rating">IMDb-Rating</string>
@@ -466,7 +464,7 @@ Signature: %5$s</string>
     <string name="accept_chat_terms">Terms must be accepted to use group chat!</string>
     <string name="IN">in</string>
     <string name="MINUTES">minutes</string>
-    <string name="AT">at</string>
+    <string name="on">on</string>
     <string name="fix_eduroam">Fix eduroam</string>
     <string name="eduroam_fix">Fix it now</string>
     <string name="eduroam_insecure_configuration">We have detected an insecure eduroam wifi configuration. You are subject to leaking information about you and your account.</string>

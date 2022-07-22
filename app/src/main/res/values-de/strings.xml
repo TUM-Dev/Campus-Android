@@ -285,8 +285,6 @@
     <string name="closes">Schließt</string>
     <string name="closed">Geschlossen</string>
 
-    <string name="on">um</string>
-
     <!-- Eduroam card -->
     <string name="setup">Einrichten</string>
     <string name="setup_eduroam">Eduroam einrichten</string>
@@ -397,7 +395,7 @@ Signatur: %5$s</string>
     <string name="please_connect_to_internet">Bitte verbinden Sie sich mit dem Internet, um den ersten App-Start fortzusetzen</string>
     <string name="IN">in</string>
     <string name="MINUTES">minuten</string>
-    <string name="AT">um</string>
+    <string name="on">um</string>
     <string name="eduroam_fix">Jetzt reparieren</string>
     <string name="eduroam_insecure_configuration">Wir haben eine unsichere WLAN-eduroam Konfiguration erkannt. Sie könnten möglicherweise Informationen über Sie und Ihr Konto in dritte Hände geben.</string>
     <string name="fix_eduroam">eduroam reparieren</string>
