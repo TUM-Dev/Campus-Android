@@ -78,8 +78,8 @@ class KinoDetailsFragment : Fragment() {
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         val position = arguments?.getInt(Const.POSITION) ?: 0
         kinoViewModel.fetchKinoByPosition(position)
     }

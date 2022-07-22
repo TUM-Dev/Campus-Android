@@ -19,7 +19,7 @@ class StartSyncReceiver : BroadcastReceiver() {
         // Check intent if called from StartupActivity
         startBackground(context)
 
-        startSendMessage()
+        startSendMessage(context)
 
         // Also start the SilenceService. It checks if it is enabled, so we don't need to
         // SilenceService also needs accurate timings, so we can't use WorkManager
@@ -30,8 +30,8 @@ class StartSyncReceiver : BroadcastReceiver() {
         private const val UNIQUE_BACKGROUND = "START_SYNC_BACKGROUND"
         private const val UNIQUE_SEND_MESSAGE = "START_SYNC_SEND_MESSAGE"
 
-        fun startSendMessage() {
-            WorkManager.getInstance()
+        fun startSendMessage(context: Context) {
+            WorkManager.getInstance(context)
                     .enqueueUniquePeriodicWork(
                             UNIQUE_SEND_MESSAGE, KEEP, SendMessageWorker.getPeriodicWorkRequest())
         }
@@ -44,7 +44,7 @@ class StartSyncReceiver : BroadcastReceiver() {
             if (!Utils.isBackgroundServicePermitted(context)) {
                 return
             }
-            WorkManager.getInstance()
+            WorkManager.getInstance(context)
                     .enqueueUniquePeriodicWork(UNIQUE_BACKGROUND, KEEP,
                             BackgroundWorker.getWorkRequest())
         }
@@ -53,9 +53,8 @@ class StartSyncReceiver : BroadcastReceiver() {
          * Cancels the periodic BackgroundWorker
          */
         @JvmStatic
-        fun cancelBackground() {
-            WorkManager.getInstance()
-                    .cancelUniqueWork(UNIQUE_BACKGROUND)
+        fun cancelBackground(context: Context) {
+            WorkManager.getInstance(context).cancelUniqueWork(UNIQUE_BACKGROUND)
         }
     }
 }

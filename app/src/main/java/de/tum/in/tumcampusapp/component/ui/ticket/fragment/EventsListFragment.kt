@@ -77,8 +77,8 @@ class EventsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         )
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         viewModel.viewState.observeNonNull(viewLifecycleOwner, this::render)
     }
 

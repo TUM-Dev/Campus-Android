@@ -146,7 +146,7 @@ class MainFragment : BaseFragment<Unit>(
     }
 
     private fun downloadNewsAlert() {
-        WorkManager.getInstance().enqueue(DownloadWorker.getWorkRequest())
+        WorkManager.getInstance(requireContext()).enqueue(DownloadWorker.getWorkRequest())
     }
 
     override fun onRefresh() {

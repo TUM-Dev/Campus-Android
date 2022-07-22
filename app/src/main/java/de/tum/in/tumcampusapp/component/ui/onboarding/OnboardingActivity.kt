@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.fragment.app.transaction
+import androidx.fragment.app.commit
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponent
@@ -25,7 +25,7 @@ class OnboardingActivity : BaseActivity(R.layout.activity_onboarding), Onboardin
         onboardingComponent.inject(this)
 
         if (savedInstanceState == null) {
-            supportFragmentManager.transaction {
+            supportFragmentManager.commit {
                 replace(R.id.contentFrame, OnboardingStartFragment.newInstance())
             }
         }
