@@ -48,6 +48,7 @@
     <string name="custom_color_yellow">Gelb</string>
     <string name="custom_color_amber">Bernstein</string>
     <string name="custom_color_orange">Orange</string>
+    <string name="apply_to_all_occurrences">Auf alle Vorkommen anwenden</string>
 
 
     <!-- Roomfinder -->

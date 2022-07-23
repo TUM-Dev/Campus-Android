@@ -54,6 +54,7 @@
     <string name="custom_color_yellow">Yellow</string>
     <string name="custom_color_amber">Amber</string>
     <string name="custom_color_orange">Orange</string>
+    <string name="apply_to_all_occurrences">Apply to all occurrences</string>
 
     <!-- Roomfinder -->
     <string name="no_map_available">No map available</string>

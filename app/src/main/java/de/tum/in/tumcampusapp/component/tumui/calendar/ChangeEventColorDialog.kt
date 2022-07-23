@@ -10,7 +10,7 @@ import android.widget.RadioButton
 import androidx.core.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
-import kotlinx.android.synthetic.main.change_event_color_dialog.*
+import de.tum.`in`.tumcampusapp.databinding.ChangeEventColorDialogBinding
 
 class ChangeEventColorDialog(
     context: Context,
@@ -21,19 +21,24 @@ class ChangeEventColorDialog(
 
     private val eventColorController: EventColorController = EventColorController(context)
 
+    private lateinit var binding: ChangeEventColorDialogBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setCancelable(true)
-        setContentView(R.layout.change_event_color_dialog)
+
+        binding = ChangeEventColorDialogBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
         if (fromCreateEventActivity) {
-            this.repeatingSwitch.visibility = View.GONE
+            binding.repeatingSwitch.visibility = View.GONE
         }
 
         // set default color
         val standardColor = EventColorController.getStandardColor(calendarItem)
-        this.checkBoxDefault.buttonTintList =
+        binding.checkBoxDefault.buttonTintList =
             ColorStateList.valueOf(ContextCompat.getColor(context, standardColor))
 
         // check correct checkbox with the current color
@@ -41,18 +46,18 @@ class ChangeEventColorDialog(
         val currentColorCheckboxId = getColorCheckboxIdByByColor(currentColor)
         this.findViewById<RadioButton>(currentColorCheckboxId).isChecked = true
 
-        this.changeColorButton.setOnClickListener { changeEventColor() }
+        binding.changeColorButton.setOnClickListener { changeEventColor() }
     }
 
     private fun changeEventColor() {
-        val selectedColorBtnId = radioColor.checkedRadioButtonId
+        val selectedColorBtnId = binding.radioColor.checkedRadioButtonId
         val selectedColorBtn: RadioButton = findViewById(selectedColorBtnId)
         val selectedColor = getCustomColorByText(selectedColorBtn.text, calendarItem)
 
         if (fromCreateEventActivity) {
             onColorChanged(OnColorChangedData(selectedColorBtn.text, selectedColor))
         } else {
-            eventColorController.changeEventColor(calendarItem, selectedColor, !repeatingSwitch.isChecked)
+            eventColorController.changeEventColor(calendarItem, selectedColor, !binding.repeatingSwitch.isChecked)
             onColorChanged(null)
         }
         dismiss()
