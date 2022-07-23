@@ -64,14 +64,14 @@ class CafeteriaDetailsSectionFragment : Fragment() {
         with(binding) {
             menuDateTextView.text = menuDateString
 
-            // Update the left time for opening/closing every one minute
+            // Update the left time for opening/closing every 10s (this interval is chosen to make our clock closer to realtime)
             timer.schedule(object : TimerTask() {
                 override fun run() {
                     val hours = OpenHoursHelper(requireContext()).getHoursByIdAsString(cafeteriaId, menuDate)
                     menuOpeningHours.text = hours
                     menuOpeningHours.isVisible = hours.isNotEmpty()
                 }
-            }, 0, 60000)
+            }, 0, 10000)
 
             menusRecyclerView.layoutManager = LinearLayoutManager(requireContext())
             menusRecyclerView.itemAnimator = DefaultItemAnimator()
