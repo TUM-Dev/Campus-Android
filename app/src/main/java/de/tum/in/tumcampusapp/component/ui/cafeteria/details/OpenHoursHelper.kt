@@ -99,8 +99,7 @@ class OpenHoursHelper(private val context: Context) {
             // Get the relative string
             val relativeTime = DateTimeUtils.formatFutureTime(relativeTo, context)
             // Return an assembly
-            return context.getString(relation) + " " + relativeTime.substring(0, 1).lowercase(Locale.getDefault()) +
-                    relativeTime.substring(1) + info
+            return "${context.getString(relation)} $relativeTime$info"
         } else {
             // future --> show non-relative opening hours
             return "${context.getString(R.string.opening_hours)}: ${DateTimeUtils.getTimeString(opens)} - ${DateTimeUtils.getTimeString(closes)}"
