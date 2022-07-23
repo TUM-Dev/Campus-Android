@@ -29,5 +29,5 @@ data class Cafeteria(
 
     override fun toString(): String = name
 
-    override fun compareTo(other: Cafeteria): Int = java.lang.Float.compare(distance, other.distance)
+    override fun compareTo(other: Cafeteria): Int = distance.compareTo(other.distance)
 }

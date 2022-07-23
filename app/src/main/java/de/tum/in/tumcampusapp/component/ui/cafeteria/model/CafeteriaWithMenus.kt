@@ -30,7 +30,7 @@ data class CafeteriaWithMenus(val id: Int) {
             return nextDate
         }
 
-    fun getIntent(context: Context): Intent? =
+    fun getIntent(context: Context): Intent =
             Intent(context, CafeteriaActivity::class.java).apply {
                 putExtra(Const.CAFETERIA_ID, id)
             }

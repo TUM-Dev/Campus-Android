@@ -7,9 +7,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import androidx.test.core.app.ApplicationProvider;
 import de.tum.in.tumcampusapp.TestApp;
 import de.tum.in.tumcampusapp.database.TcaDb;
 import de.tum.in.tumcampusapp.utils.sync.SyncDao;
@@ -27,15 +27,15 @@ public class SyncManagerTest {
 
     @Before
     public void setUp() {
-        dao = TcaDb.Companion.getInstance(RuntimeEnvironment.application)
+        dao = TcaDb.Companion.getInstance(ApplicationProvider.getApplicationContext())
                              .syncDao();
         dao.removeCache();
-        syncManager = new SyncManager(RuntimeEnvironment.application);
+        syncManager = new SyncManager(ApplicationProvider.getApplicationContext());
     }
 
     @After
     public void tearDown() {
-        TcaDb.Companion.getInstance(RuntimeEnvironment.application)
+        TcaDb.Companion.getInstance(ApplicationProvider.getApplicationContext())
                        .close();
     }
 

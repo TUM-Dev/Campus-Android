@@ -37,7 +37,7 @@ class CafeteriaMenuCard(context: Context, private val cafeteria: CafeteriaWithMe
         }
     }
 
-    override fun getNavigationDestination(): NavDestination? {
+    override fun getNavigationDestination(): NavDestination {
         val bundle = Bundle()
         bundle.putInt(Const.CAFETERIA_ID, cafeteria.id)
         return NavDestination.Fragment(CafeteriaFragment::class.java, bundle)

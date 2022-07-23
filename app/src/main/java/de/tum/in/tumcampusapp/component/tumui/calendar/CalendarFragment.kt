@@ -446,7 +446,13 @@ class CalendarFragment :
         showDate?.let {
             binding.weekView.goToDate(it.toGregorianCalendar())
             binding.weekView.goToHour(it.hourOfDay)
-        } ?: binding.weekView.goToCurrentTime()
+        } ?: run {
+            binding.weekView.firstVisibleDate?.let {
+                binding.weekView.goToDate(it)
+            } ?: run {
+                binding.weekView.goToCurrentTime()
+                }
+            }
 
         menuItemSwitchView?.setIcon(icon)
     }

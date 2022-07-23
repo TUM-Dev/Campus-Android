@@ -69,6 +69,11 @@ interface TUMOnlineAPIService {
         @Query("pSuche") query: String
     ): Call<LecturesResponse>
 
+    @GET("wbservicesbasic.veranstaltungenSuche")
+    fun searchLecturesSingle(
+        @Query("pSuche") query: String
+    ): Single<LecturesResponse>
+
     @GET("wbservicesbasic.personenDetails")
     fun getPersonDetails(
         @Query("pIdentNr") id: String,
@@ -78,7 +83,7 @@ interface TUMOnlineAPIService {
     @GET("wbservicesbasic.personenSuche")
     fun searchPerson(
         @Query("pSuche") query: String
-    ): Call<PersonList>
+    ): Single<PersonList>
 
     @GET("wbservicesbasic.noten")
     fun getGrades(

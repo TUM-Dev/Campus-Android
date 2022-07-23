@@ -80,27 +80,32 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         }
 
         // Only do these things if we are in the root of the preferences
-        if (rootKey == null) {
-            // Click listener for preference list entries. Used to simulate a button
-            // (since it is not possible to add a button to the preferences screen)
-            findPreference(BUTTON_LOGOUT).onPreferenceClickListener = this
-            setSummary("language_preference")
-            setSummary(Const.DESIGN_THEME)
-            setSummary("card_default_campus")
-            setSummary("silent_mode_set_to")
-            setSummary("background_mode_set_to")
-        } else if (rootKey == "card_cafeteria") {
-            setSummary("card_cafeteria_default_G")
-            setSummary("card_cafeteria_default_K")
-            setSummary("card_cafeteria_default_W")
-            setSummary("card_role")
-            initCafeteriaCardSelections()
-        } else if (rootKey == "card_mvv") {
-            setSummary("card_stations_default_G")
-            setSummary("card_stations_default_C")
-            setSummary("card_stations_default_K")
-        } else if (rootKey == "card_eduroam") {
-            findPreference(SETUP_EDUROAM).onPreferenceClickListener = this
+        when (rootKey) {
+            null -> {
+                // Click listener for preference list entries. Used to simulate a button
+                // (since it is not possible to add a button to the preferences screen)
+                findPreference(BUTTON_LOGOUT).onPreferenceClickListener = this
+                setSummary("language_preference")
+                setSummary(Const.DESIGN_THEME)
+                setSummary("card_default_campus")
+                setSummary("silent_mode_set_to")
+                setSummary("background_mode_set_to")
+            }
+            "card_cafeteria" -> {
+                setSummary("card_cafeteria_default_G")
+                setSummary("card_cafeteria_default_K")
+                setSummary("card_cafeteria_default_W")
+                setSummary("card_role")
+                initCafeteriaCardSelections()
+            }
+            "card_mvv" -> {
+                setSummary("card_stations_default_G")
+                setSummary("card_stations_default_C")
+                setSummary("card_stations_default_K")
+            }
+            "card_eduroam" -> {
+                findPreference(SETUP_EDUROAM).onPreferenceClickListener = this
+            }
         }
 
         requireContext().defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this)
@@ -206,7 +211,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
             if (sharedPrefs.getBoolean(key, false)) {
                 StartSyncReceiver.startBackground(requireContext())
             } else {
-                StartSyncReceiver.cancelBackground()
+                StartSyncReceiver.cancelBackground(requireContext())
             }
         }
 

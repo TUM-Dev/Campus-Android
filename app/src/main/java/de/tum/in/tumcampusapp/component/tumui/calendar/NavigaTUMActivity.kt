@@ -9,7 +9,7 @@ class NavigaTUMActivity : AppCompatActivity() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val intent = getIntent()
+        val intent = intent
         val location = intent.getStringExtra("location")
         val encoded_location = java.net.URLEncoder.encode(location, "utf-8")
         val url = "https://nav.tum.sexy/search?q=$encoded_location"

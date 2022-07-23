@@ -27,7 +27,7 @@ class EventsFragment : FragmentForDownloadingExternal(
     @Inject
     lateinit var eventsDownloadAction: EventsDownloadAction
 
-    override val method: DownloadWorker.Action?
+    override val method: DownloadWorker.Action
         get() = eventsDownloadAction
 
     private val binding by viewBinding(FragmentEventsBinding::bind)
@@ -83,7 +83,7 @@ class EventsFragment : FragmentForDownloadingExternal(
             return titles.size
         }
 
-        override fun getPageTitle(position: Int): CharSequence? {
+        override fun getPageTitle(position: Int): CharSequence {
             return titles[position]
         }
     }

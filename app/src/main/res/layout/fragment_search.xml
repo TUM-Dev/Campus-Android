@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:clipToPadding="false">
+
+    <include layout="@layout/toolbar_search" android:id="@+id/toolbar_search" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/searchResultTypesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/material_small_padding"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:outlineProvider="bounds"
+        android:visibility="gone"
+        android:background="@color/default_window_background"
+        />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:clipToPadding="false"
+        android:layout_weight="1">
+
+        <!-- Recent searches view  -->
+        <LinearLayout
+            android:id="@+id/recentSearchesLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:clipToPadding="false">
+
+            <TextView
+                android:id="@+id/recentSearchesTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/recent_searches"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginHorizontal="@dimen/material_default_padding"
+                android:layout_marginVertical="@dimen/material_small_padding" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recentSearchesRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:outlineProvider="bounds"
+                android:background="@color/default_window_background"
+                />
+
+            <TextView
+                android:id="@+id/clearRecentSearches"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/clear_recent_searches"
+                android:textColor="@color/text_secondary"
+                android:textSize="16sp"
+                android:layout_marginHorizontal="@dimen/material_default_padding"
+                android:layout_marginVertical="@dimen/material_small_padding" />
+
+        </LinearLayout>
+
+        <!-- Info if no input/results  -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/noResultInfo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            android:layout_margin="@dimen/material_default_padding"
+            android:background="@color/default_window_background"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/infoTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search_info"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginHorizontal="@dimen/material_large_padding"
+                android:layout_marginVertical="@dimen/material_small_padding"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/infoSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:layout_marginHorizontal="@dimen/material_large_padding"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/infoTitle" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Search result list  -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/searchResultsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:outlineProvider="bounds"
+            android:background="@color/default_window_background"
+            />
+
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:id="@+id/progressIndicator"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/loading_progress_bar_top_margin"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+</LinearLayout>
