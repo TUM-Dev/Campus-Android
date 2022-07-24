@@ -53,7 +53,7 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun searchForBuildingAndRooms(query: String) {
-        val result = navigaTumAPIClient
+        compositeDisposable += navigaTumAPIClient
             .searchSingle(query)
             .subscribeOn(Schedulers.io())
             .doOnError(Utils::log)
@@ -68,13 +68,13 @@ class SearchViewModel @Inject constructor(
                                 val buildingSearchResultList = navigationDto.entries
                                     .map { SearchResult.Building(it) }
                                     .toList()
-                                saveSearchResult(buildingSearchResultList)
+                                saveSearchResult(buildingSearchResultList, query)
                             }
                             NavigaTumSearchSectionDto.ROOMS -> {
                                 val roomSearchResultList = navigationDto.entries
                                     .map { SearchResult.NavigaRoom(it) }
                                     .toList()
-                                saveSearchResult(roomSearchResultList)
+                                saveSearchResult(roomSearchResultList, query)
                             }
                         }
                     }
@@ -97,7 +97,6 @@ class SearchViewModel @Inject constructor(
             selectedType = SearchResultType.ALL
         )
 
-        // todo handle compositeDisposable
         searchForBuildingAndRooms(query)
 
         val persons = tumOnlineClient

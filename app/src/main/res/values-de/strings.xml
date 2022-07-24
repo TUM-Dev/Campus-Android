@@ -719,7 +719,6 @@ Signatur: %5$s</string>
     // search
     <string name="all_results">Alle Ergebnisse</string>
     <string name="people">Personen</string>
-    <string name="rooms">Räume</string>
     <string name="lectures">Vorlesungen</string>
     <string name="search_info">Suchen Sie nach Personen, Räumen und anderen.</string>
     <string name="no_result_info">Konnte nicht finden “%1$s”</string>
@@ -727,9 +726,8 @@ Signatur: %5$s</string>
     <string name="recent_searches">Letzte Suchen</string>
     <string name="clear_recent_searches">Verlauf löschen</string>
     <string name="not_available_search">Nicht verfügbar</string>
-    // todo
-    <string name="n_rooms">N Rooms</string>
-    <string name="buildings">Buildings</string>
+    <string name="n_rooms">Räume</string>
+    <string name="buildings">Gebäude</string>
     <string name="clear_search_history_request">Möchten Sie den Suchverlauf löschen?</string>
 
     // Navigation details

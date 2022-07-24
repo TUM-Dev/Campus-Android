@@ -104,25 +104,7 @@ class SearchFragment : BaseFragment<Unit>(
 
         viewModel.fetchRecentSearches(requireContext())
 
-        // todo
         addQueryHandlers()
-
-        bindingToolbar.searchEditText.setOnEditorActionListener { textView, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                val input = textView.text.toString().trim()
-                if (input.length < MIN_QUERY_LENGTH) {
-                    val text = String.format(getString(R.string.min_search_len), MIN_QUERY_LENGTH)
-                    Utils.showToast(requireContext(), text)
-                    showSearchInfo()
-                } else {
-                    viewModel.search(input)
-                    hideKeyboard()
-                }
-                true
-            } else {
-                false
-            }
-        }
 
         bindingToolbar.clearButton.setOnClickListener {
             clearInput()
@@ -143,13 +125,13 @@ class SearchFragment : BaseFragment<Unit>(
 
     private fun showClearHistoryDialog() {
         val dialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle(R.string.clear_search_history_request)
-                .setPositiveButton(R.string.ok) { _, _ ->
-                    viewModel.clearRecentSearchesHistory(requireContext())
-                    showSearchInfo()
-                }
-                .setNegativeButton(R.string.cancel, null)
-                .create()
+            .setTitle(R.string.clear_search_history_request)
+            .setPositiveButton(R.string.ok) { _, _ ->
+                viewModel.clearRecentSearchesHistory(requireContext())
+                showSearchInfo()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .create()
         dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
         dialog.show()
     }
@@ -214,7 +196,6 @@ class SearchFragment : BaseFragment<Unit>(
         })
     }
 
-    // todo
     private fun addQueryHandlers() {
         binding.toolbarSearch.searchEditText.doOnTextChanged { text, _, _, _ ->
             val input: String = text?.toString() ?: ""
@@ -402,15 +383,6 @@ class SearchFragment : BaseFragment<Unit>(
             val color = ContextCompat.getColor(requireContext(), R.color.tum_500)
             it.setTint(color)
         }
-
-        //todo
-//        with(binding.toolbarSearch.toolbar) {
-//            navigationIcon = backIcon
-//            setNavigationOnClickListener {
-//                hideKeyboard()
-//                requireActivity().onBackPressed()
-//            }
-//        }
 
         bindingToolbar.toolbar.navigationIcon = backIcon
         bindingToolbar.toolbar.setNavigationOnClickListener {

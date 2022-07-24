@@ -774,7 +774,6 @@ Signature: %5$s</string>
     // search
     <string name="all_results">All results</string>
     <string name="people">People</string>
-    <string name="rooms">Legacy Rooms</string>
     <string name="lectures">Lectures</string>
     <string name="search_info">Search for people, rooms, and others.</string>
     <string name="no_result_info">Couldn\'t find “%1$s”</string>
