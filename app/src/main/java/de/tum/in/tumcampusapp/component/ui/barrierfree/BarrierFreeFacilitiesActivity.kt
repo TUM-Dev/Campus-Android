@@ -1,18 +1,16 @@
 package de.tum.`in`.tumcampusapp.component.ui.barrierfree
 
-import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumCabe
 import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
+import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.NavigationDetailsActivity
+import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.NavigationDetailsFragment
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderListAdapter
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom
-import de.tum.`in`.tumcampusapp.component.ui.search.SearchActivity
-import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.databinding.ActivityBarrierFreeFacilitiesBinding
 import retrofit2.Call
 
@@ -21,10 +19,6 @@ class BarrierFreeFacilitiesActivity :
         R.layout.activity_barrier_free_facilities
     ),
     AdapterView.OnItemSelectedListener {
-
-    private val recents: RecentsDao by lazy {
-        TcaDb.getInstance(this).recentsDao()
-    }
 
     private val locationManager: LocationManager by lazy {
         LocationManager(this)
@@ -64,15 +58,13 @@ class BarrierFreeFacilitiesActivity :
         binding.barrierFreeFacilitiesListView.adapter = RoomFinderListAdapter(this, response)
         binding.barrierFreeFacilitiesListView.setOnItemClickListener { _, _, index, _ ->
             val facility = response[index]
-            // we cannot open LocationDetails, because
-            // NavigaTum does not recognize id from BarrierFree Api
-            openSearch(facility)
+            openNavigationDetails(facility)
         }
     }
 
-    private fun openSearch(facility: RoomFinderRoom) {
-        val intent = Intent(this, SearchActivity::class.java)
-        intent.putExtra(SearchManager.QUERY, facility.address)
+    private fun openNavigationDetails(facility: RoomFinderRoom) {
+        val intent = Intent(this, NavigationDetailsActivity::class.java)
+        intent.putExtra(NavigationDetailsFragment.NAVIGATION_ENTITY_ID, facility.room_code)
         startActivity(intent)
     }
 

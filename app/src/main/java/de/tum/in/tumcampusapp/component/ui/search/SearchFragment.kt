@@ -16,6 +16,7 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.navigatum.domain.NavigationEntity
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
@@ -27,17 +28,16 @@ import de.tum.`in`.tumcampusapp.component.tumui.person.PersonDetailsActivity
 import de.tum.`in`.tumcampusapp.component.tumui.person.PersonDetailsActivity.Companion.PERSON_OBJECT
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.NavigationDetailsActivity
-import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.NavigationDetailsFragment.Companion.NAVIGATION_ENTITY
+import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.NavigationDetailsFragment.Companion.NAVIGATION_ENTITY_ID
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.RecentSearchesAdapter
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.ResultTypeData
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.ResultTypesAdapter
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.SearchResultsAdapter
+import de.tum.`in`.tumcampusapp.databinding.FragmentSearchBinding
+import de.tum.`in`.tumcampusapp.databinding.ToolbarSearchBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.utils.Utils
-import kotlinx.android.synthetic.main.fragment_search.*
-import kotlinx.android.synthetic.main.fragment_search.view.*
-import kotlinx.android.synthetic.main.toolbar_search.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -66,6 +66,9 @@ class SearchFragment : BaseFragment<Unit>(
 
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
+    private val binding by viewBinding(FragmentSearchBinding::bind)
+    private val bindingToolbar by viewBinding(ToolbarSearchBinding::bind)
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         injector.searchComponent().inject(this)
@@ -93,14 +96,14 @@ class SearchFragment : BaseFragment<Unit>(
 
         query?.let {
             viewModel.search(it)
-            searchEditText.setText(query)
+            bindingToolbar.searchEditText.setText(query)
         } ?: run {
             showKeyboard()
         }
 
         viewModel.fetchRecentSearches(requireContext())
 
-        searchEditText.setOnEditorActionListener { textView, actionId, _ ->
+        bindingToolbar.searchEditText.setOnEditorActionListener { textView, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 val input = textView.text.toString().trim()
                 if (input.length < MIN_QUERY_LENGTH) {
@@ -117,7 +120,7 @@ class SearchFragment : BaseFragment<Unit>(
             }
         }
 
-        clearButton.setOnClickListener {
+        bindingToolbar.clearButton.setOnClickListener {
             clearInput()
         }
     }
@@ -127,9 +130,9 @@ class SearchFragment : BaseFragment<Unit>(
             onSelect = { recentSearch -> onRecentSearchSelected(recentSearch) },
             onRemove = { recentSearch -> removeRecentSearch(recentSearch) }
         )
-        recentSearchesRecyclerView.adapter = recentSearchesAdapter
+        binding.recentSearchesRecyclerView.adapter = recentSearchesAdapter
 
-        clearRecentSearches.setOnClickListener {
+        binding.clearRecentSearches.setOnClickListener {
             viewModel.clearRecentSearchesHistory(requireContext())
             showSearchInfo()
         }
@@ -155,42 +158,42 @@ class SearchFragment : BaseFragment<Unit>(
 
     private fun hideKeyboard() {
         val imm: InputMethodManager? = requireContext().getSystemService()
-        imm?.hideSoftInputFromWindow(searchEditText.windowToken, 0)
+        imm?.hideSoftInputFromWindow(bindingToolbar.searchEditText.windowToken, 0)
     }
 
     private fun clearInput() {
-        searchEditText.setText("")
+        bindingToolbar.searchEditText.setText("")
         showSearchInfo()
         viewModel.clearSearchState()
     }
 
     private fun initSearchResultsAdapter() {
         searchResultsAdapter = SearchResultsAdapter { onSearchResultClicked(it) }
-        searchResultsRecyclerView.adapter = searchResultsAdapter
+        binding.searchResultsRecyclerView.adapter = searchResultsAdapter
 
         searchResultsAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onChanged() {
-                searchResultsRecyclerView.scrollToPosition(0)
+                binding.searchResultsRecyclerView.scrollToPosition(0)
             }
 
             override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
-                searchResultsRecyclerView.scrollToPosition(0)
+                binding.searchResultsRecyclerView.scrollToPosition(0)
             }
 
             override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
-                searchResultsRecyclerView.scrollToPosition(0)
+                binding.searchResultsRecyclerView.scrollToPosition(0)
             }
 
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                searchResultsRecyclerView.scrollToPosition(0)
+                binding.searchResultsRecyclerView.scrollToPosition(0)
             }
 
             override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
-                searchResultsRecyclerView.scrollToPosition(0)
+                binding.searchResultsRecyclerView.scrollToPosition(0)
             }
 
             override fun onItemRangeChanged(positionStart: Int, itemCount: Int, payload: Any?) {
-                searchResultsRecyclerView.scrollToPosition(0)
+                binding.searchResultsRecyclerView.scrollToPosition(0)
             }
         })
     }
@@ -218,7 +221,7 @@ class SearchFragment : BaseFragment<Unit>(
 
     private fun openNavigationDetails(navigationEntity: NavigationEntity) {
         val intent = Intent(requireContext(), NavigationDetailsActivity::class.java)
-        intent.putExtra(NAVIGATION_ENTITY, navigationEntity)
+        intent.putExtra(NAVIGATION_ENTITY_ID, navigationEntity.id)
         startActivity(intent)
     }
 
@@ -235,7 +238,7 @@ class SearchFragment : BaseFragment<Unit>(
             queryString?.let { query ->
                 hideKeyboard()
                 viewModel.search(query)
-                searchEditText.setText(query)
+                bindingToolbar.searchEditText.setText(query)
             }
         }
     }
@@ -254,7 +257,7 @@ class SearchFragment : BaseFragment<Unit>(
         resultTypesAdapter = ResultTypesAdapter(
             onClick = { onResultTypeClicked(it.type) }
         )
-        searchResultTypesRecyclerView.adapter = resultTypesAdapter
+        binding.searchResultTypesRecyclerView.adapter = resultTypesAdapter
     }
 
     private fun onResultTypeClicked(type: SearchResultType) {
@@ -268,11 +271,11 @@ class SearchFragment : BaseFragment<Unit>(
             searchResultsAdapter.submitList(searchResultState.data)
 
             if (searchResultState.isLoading) {
-                progressIndicator.show()
+                binding.progressIndicator.show()
             } else {
-                progressIndicator.hide()
+                binding.progressIndicator.hide()
 
-                val input = searchEditText.text.toString().trim()
+                val input = bindingToolbar.searchEditText.text.toString().trim()
                 if (input.length < MIN_QUERY_LENGTH)
                     showSearchInfo()
                 else if (viewModel.state.value.data.isEmpty()) {
@@ -283,10 +286,10 @@ class SearchFragment : BaseFragment<Unit>(
             }
 
             if (searchResultState.availableResultTypes.isNotEmpty()) {
-                searchResultTypesRecyclerView.visibility = View.VISIBLE
+                binding.searchResultTypesRecyclerView.visibility = View.VISIBLE
                 resultTypesAdapter.submitList(mapToResultTypeData(viewModel.state.value.availableResultTypes, viewModel.state.value.selectedType))
             } else {
-                searchResultTypesRecyclerView.visibility = View.GONE
+                binding.searchResultTypesRecyclerView.visibility = View.GONE
                 resultTypesAdapter.submitList(emptyList())
             }
         }
@@ -307,33 +310,33 @@ class SearchFragment : BaseFragment<Unit>(
 
     private fun showKeyboard() {
         val imm: InputMethodManager? = requireContext().getSystemService()
-        searchEditText.requestFocus()
-        imm?.showSoftInput(searchEditText, InputMethodManager.SHOW_IMPLICIT)
+        bindingToolbar.searchEditText.requestFocus()
+        imm?.showSoftInput(bindingToolbar.searchEditText, InputMethodManager.SHOW_IMPLICIT)
     }
 
     private fun showSearchInfo() {
         if (viewModel.state.value.recentSearches.isNotEmpty()) {
-            noResultInfo.visibility = View.GONE
-            recentSearchesLayout.visibility = View.VISIBLE
+            binding.noResultInfo.visibility = View.GONE
+            binding.recentSearchesLayout.visibility = View.VISIBLE
         } else {
-            recentSearchesLayout.visibility = View.GONE
-            noResultInfo.visibility = View.VISIBLE
-            noResultInfo.infoTitle.setText(R.string.search_info)
-            noResultInfo.infoSubtitle.text = ""
+            binding.recentSearchesLayout.visibility = View.GONE
+            binding.noResultInfo.visibility = View.VISIBLE
+            binding.infoTitle.setText(R.string.search_info)
+            binding.infoSubtitle.text = ""
         }
     }
 
     private fun showNoResultInfo(input: String) {
-        recentSearchesLayout.visibility = View.GONE
-        noResultInfo.visibility = View.VISIBLE
-        noResultInfo.infoTitle.text =
+        binding.recentSearchesLayout.visibility = View.GONE
+        binding.noResultInfo.visibility = View.VISIBLE
+        binding.infoTitle.text =
             String.format(resources.getString(R.string.no_result_info, input))
-        noResultInfo.infoSubtitle.setText(R.string.no_result_sub_info)
+        binding.infoSubtitle.setText(R.string.no_result_sub_info)
     }
 
     private fun hideResultInfo() {
-        noResultInfo.visibility = View.GONE
-        recentSearchesLayout.visibility = View.GONE
+        binding.noResultInfo.visibility = View.GONE
+        binding.recentSearchesLayout.visibility = View.GONE
     }
 
     override fun onResume() {
@@ -348,8 +351,8 @@ class SearchFragment : BaseFragment<Unit>(
             it.setTint(color)
         }
 
-        toolbar.navigationIcon = backIcon
-        toolbar.setNavigationOnClickListener {
+        bindingToolbar.toolbar.navigationIcon = backIcon
+        bindingToolbar.toolbar.setNavigationOnClickListener {
             hideKeyboard()
             requireActivity().onBackPressed()
         }

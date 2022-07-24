@@ -13,6 +13,7 @@ data class RoomFinderRoom(
     var info: String = "",
     var arch_id: String = "",
     var room_id: String = "",
+    var room_code: String = "",
     private val name: String = ""
 ) : SimpleStickyListHeadersAdapter.SimpleStickyListItem, Serializable {
 

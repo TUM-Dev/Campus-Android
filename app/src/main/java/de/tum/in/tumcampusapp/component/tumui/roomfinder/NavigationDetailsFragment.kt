@@ -13,16 +13,16 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.squareup.picasso.Picasso
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.navigatum.domain.NavigationDetails
-import de.tum.`in`.tumcampusapp.api.navigatum.domain.NavigationEntity
 import de.tum.`in`.tumcampusapp.api.navigatum.domain.NavigationMap
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.BaseFragment
+import de.tum.`in`.tumcampusapp.databinding.FragmentNavigationDetailsBinding
+import de.tum.`in`.tumcampusapp.databinding.NavigationPropertyRowBinding
+import de.tum.`in`.tumcampusapp.databinding.ToolbarNavigationBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
-import kotlinx.android.synthetic.main.fragment_navigation_details.*
-import kotlinx.android.synthetic.main.navigation_property_row.view.*
-import kotlinx.android.synthetic.main.toolbar_search.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.sdk27.coroutines.onItemSelectedListener
@@ -34,12 +34,15 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
     titleResId = R.string.roomfinder
 ) {
 
-    private val navigationEntity: NavigationEntity? by lazy {
-        arguments?.getSerializable(NAVIGATION_ENTITY) as NavigationEntity
+    private val navigationEntityId: String? by lazy {
+        arguments?.getSerializable(NAVIGATION_ENTITY_ID) as String
     }
 
     @Inject
     lateinit var viewModelProvider: Provider<NavigationDetailsViewModel>
+
+    private val binding by viewBinding(FragmentNavigationDetailsBinding::bind)
+    private val bindingToolbar by viewBinding(ToolbarNavigationBinding::bind)
 
     private val viewModel: NavigationDetailsViewModel by lazy {
         val factory = ViewModelFactory(viewModelProvider)
@@ -53,14 +56,14 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbar.setTitle(R.string.location_details)
+        bindingToolbar.toolbar.setTitle(R.string.location_details)
 
         lifecycleScope.launch {
             handleDetailsLoading()
         }
 
-        navigationEntity?.let {
-            viewModel.loadNavigationDetails(navigationEntity!!.id)
+        navigationEntityId?.let {
+            viewModel.loadNavigationDetails(navigationEntityId!!)
         } ?: run {
             showLoadingError()
         }
@@ -70,9 +73,9 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
         viewModel.state.collect { state ->
 
             if (state.isLoading)
-                progressIndicator.show()
+                binding.progressIndicator.show()
             else
-                progressIndicator.hide()
+                binding.progressIndicator.hide()
 
             if (state.navigationDetails != null) {
                 showLocationDetails(state.navigationDetails)
@@ -81,9 +84,9 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
     }
 
     private fun showLocationDetails(navigationDetails: NavigationDetails) {
-        parentLocations.text = navigationDetails.getFormattedParentNames()
-        locationName.text = navigationDetails.name
-        locationType.text = getCapitalizeType(navigationDetails.type)
+        binding.parentLocations.text = navigationDetails.getFormattedParentNames()
+        binding.locationName.text = navigationDetails.name
+        binding.locationType.text = getCapitalizeType(navigationDetails.type)
 
         setOpenInOtherAppBtnListener(navigationDetails)
 
@@ -93,7 +96,7 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
     }
 
     private fun setOpenInOtherAppBtnListener(navigationDetails: NavigationDetails) {
-        openLocationBtn.setOnClickListener {
+        binding.openLocationBtn.setOnClickListener {
             val coordinates = "${navigationDetails.cordsLat},${navigationDetails.cordsLon}"
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("geo:$coordinates"))
             startActivity(intent)
@@ -102,10 +105,9 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
 
     private fun showNavigationDetailsProperties(navigationDetails: NavigationDetails) {
         navigationDetails.properties.forEach { property ->
-            val propertyRow = layoutInflater.inflate(R.layout.navigation_property_row, propsList, false)
+            val propertyRow = NavigationPropertyRowBinding.inflate(layoutInflater, binding.propsList, true)
             propertyRow.propertyName.text = getTranslationForPropertyTitle(property.title)
             propertyRow.propertyValue.text = property.value
-            propsList.addView(propertyRow)
         }
     }
 
@@ -117,11 +119,11 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
 
             val adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            availableMapSpinner.adapter = adapter
+            binding.availableMapSpinner.adapter = adapter
             availableMaps.forEach {
                 adapter.add(it.mapName)
             }
-            availableMapSpinner.onItemSelectedListener {
+            binding.availableMapSpinner.onItemSelectedListener {
                 this.onItemSelected { adapterView, _, position, _ ->
                     val selectedMapName = adapterView?.getItemAtPosition(position).toString()
                     val selectedMap = availableMaps.find { it.mapName == selectedMapName }
@@ -134,10 +136,10 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
         } else {
             Picasso.get()
                 .load(R.drawable.site_plans_not_available)
-                .into(photoView)
+                .into(binding.photoView)
         }
 
-        interactiveMapBtn.setOnClickListener {
+        binding.interactiveMapBtn.setOnClickListener {
             showInteractiveMapDialog()
         }
     }
@@ -153,7 +155,7 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
         Picasso.get()
             .load(map.getFullMapImgUrl())
             .transform(pointerDrawer)
-            .into(photoView)
+            .into(binding.photoView)
     }
 
     private fun getTranslationForPropertyTitle(title: String): String {
@@ -195,10 +197,10 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
     }
 
     companion object {
-        const val NAVIGATION_ENTITY = "navigationEntity"
+        const val NAVIGATION_ENTITY_ID = "navigationEntityID"
 
-        fun newInstance(navigationEntity: NavigationEntity) = NavigationDetailsFragment().apply {
-            arguments = bundleOf(NAVIGATION_ENTITY to navigationEntity)
+        fun newInstance(navigationEntityID: String) = NavigationDetailsFragment().apply {
+            arguments = bundleOf(NAVIGATION_ENTITY_ID to navigationEntityID)
         }
     }
 }
