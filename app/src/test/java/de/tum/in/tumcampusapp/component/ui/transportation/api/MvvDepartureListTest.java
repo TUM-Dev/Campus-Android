@@ -3,7 +3,7 @@ package de.tum.in.tumcampusapp.component.ui.transportation.api;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.commons.io.IOUtils;
 import org.joda.time.DateTime;
@@ -34,7 +34,7 @@ public class MvvDepartureListTest {
         String emptyResultExample = loadJsonResource("mvv/emptyResult.json");
         MvvDepartureList stationList = gson.fromJson(emptyResultExample, MvvDepartureList.class);
         List<MvvDeparture> departureList = stationList.getDepartureList();
-        Assert.assertEquals(null, departureList);
+        Assert.assertNull(departureList);
     }
 
     @Test

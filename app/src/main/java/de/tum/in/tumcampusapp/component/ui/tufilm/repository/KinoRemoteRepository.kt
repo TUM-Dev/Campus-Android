@@ -23,7 +23,7 @@ class KinoRemoteRepository @Inject constructor(
      */
     @SuppressLint("CheckResult")
     fun fetchKinos(force: Boolean) {
-        val latestId = localRepository.getLatestId() ?: "0"
+        val latestId = localRepository.getLatestId()
         tumCabeClient.getKinos(latestId)
                 .filter { localRepository.getLastSync() == null || force }
                 .subscribeOn(Schedulers.io())

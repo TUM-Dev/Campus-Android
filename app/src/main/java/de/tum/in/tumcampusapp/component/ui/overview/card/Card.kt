@@ -115,7 +115,7 @@ abstract class Card(
     }
 
     override fun compareTo(other: Card): Int {
-        return Integer.compare(position, other.position)
+        return position.compareTo(other.position)
     }
 
     /**

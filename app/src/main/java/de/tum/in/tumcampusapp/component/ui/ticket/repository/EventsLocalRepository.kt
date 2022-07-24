@@ -23,7 +23,7 @@ class EventsLocalRepository @Inject constructor(
 
     fun getEventById(id: Int): Event? = database.eventDao().getEventById(id)
 
-    fun getNextEventWithoutMovie(): Event? = database.eventDao().nextEventWithoutMovie
+    fun getNextEventWithoutMovie(): Event = database.eventDao().nextEventWithoutMovie
 
     fun removePastEventsWithoutTicket() {
         database.eventDao().removePastEventsWithoutTicket()

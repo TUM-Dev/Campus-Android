@@ -8,7 +8,7 @@
         tools:targetApi="n_mr1">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="de.tum.in.tumcampus"
+            android:targetPackage="de.tum.in.tumcampusapp"
             android:targetClass="de.tum.in.tumcampusapp.component.ui.cafeteria.activity.CafeteriaActivity"/>
     </shortcut>
     <shortcut
@@ -19,7 +19,7 @@
         tools:targetApi="n_mr1">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="de.tum.in.tumcampus"
+            android:targetPackage="de.tum.in.tumcampusapp"
             android:targetClass="de.tum.in.tumcampusapp.component.ui.studyroom.StudyRoomsActivity"/>
     </shortcut>
     <shortcut
@@ -30,7 +30,7 @@
         tools:targetApi="n_mr1">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="de.tum.in.tumcampus"
+            android:targetPackage="de.tum.in.tumcampusapp"
             android:targetClass="de.tum.in.tumcampusapp.component.tumui.calendar.CalendarActivity"/>
     </shortcut>
 </shortcuts>

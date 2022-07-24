@@ -64,6 +64,7 @@
     <string name="error_no_rights_to_access_function">Your TUMonline access token doesn’t have the rights to access this function.</string>
     <string name="error_request_limit_reached">You reached the request limit for TUMonline. Try again later.</string>
     <string name="error_access_token_limit_reached">Token limit reached. You have delete an access token in TUMonline before you can continue.</string>
+    <string name="error_access_token_insufficient_permissions">Your TUMonline access token is missing the specific rights!</string>
     <string name="error_unknown">Unknown error.</string>
     <string name="error_tum_online_unavailable">TUMonline is currently unavailable.</string>
 
@@ -302,7 +303,7 @@
     <string name="cafeteria_notification_settings">Cafeteria Notification Settings</string>
 
     <!-- Cafeteria Notification Settings -->
-    <string name="invalid_notification_time_format_string">Invalid time. Pick a time ranging from %d to %d.</string>
+    <string name="invalid_notification_time_format_string">Invalid time. Pick a time ranging from %1$d to %2$d.</string>
 
     <!-- Information -->
     <string name="version">Version: %1$s</string>
@@ -522,7 +523,7 @@ Signature: %5$s</string>
     <string name="grades_without_weight">Grades without weights</string>
     <string name="study_program_format_string">Program %s</string>
     <string name="summer_semester">Summer term %d</string>
-    <string name="winter_semester">Winter term %d/%d</string>
+    <string name="winter_semester">Winter term %1$d/%2$d</string>
     <string name="show_list">Show List</string>
     <string name="show_chart">Show Chart</string>
 
@@ -602,7 +603,7 @@ Signature: %5$s</string>
     <string name="user_search_hint">Search Name or TUM Identification</string>
     <string name="error_invalid_tum_id_format">Invalid TUM-ID format</string>
     <string name="error_user_not_found">No user found</string>
-    <string name="add_user_to_chat_message">Add <b>%s</b> to chat room <b>%s</b>?</string>
+    <string name="add_user_to_chat_message">Add <b>%1$s</b> to chat room <b>%2$s</b>?</string>
     <string name="chat_member_added">Added user to chat room</string>
 
     <string name="enter_your_tum_id">Enter your TUM ID …</string>
@@ -695,7 +696,7 @@ Signature: %5$s</string>
 
     <string name="choose_ticket_type">Choose your ticket type</string>
     <string name="ticket_amount_error_title">Purchase restrictions</string>
-    <string name="ticket_amount_information">You can buy a minimum of %1d and a maximum of %2d of ticket type \“%s\”</string>
+    <string name="ticket_amount_information">You can buy a maximum of %1$d of ticket type \“%2$s\”</string>
     <string name="price_per_ticket">%s per ticket</string>
     <string name="ticket_amount_label">Amount</string>
 
@@ -746,7 +747,7 @@ Signature: %5$s</string>
     <string name="update_note_version">Version %s</string>
     <string name="action_cant_be_performed">Action can’t be performed</string>
     <string name="not_redeemed_yet">Not redeemed yet</string>
-    <string name="partially_redeemed">%d of %d redeemed (%s)</string>
+    <string name="partially_redeemed">%1$d of %2$d redeemed (%3$s)</string>
     <string name="redeemed_at">Redeemed at %s</string>
     <string name="no_tickets_remaining">No tickets remaining</string>
     <string name="no_tickets_remaining_message">Unfortunately there are no more online tickets available for this event.\nFor many events you can still purchase tickets on site.</string>
@@ -770,7 +771,6 @@ Signature: %5$s</string>
     <string name="language">en</string>
     <string name="use_existing">Use existing</string>
 
-
     // search
     <string name="all_results">All results</string>
     <string name="people">People</string>
@@ -784,7 +784,7 @@ Signature: %5$s</string>
     <string name="not_available_search">Not available</string>
     <string name="n_rooms">Rooms</string>
     <string name="buildings">Buildings</string>
-
+    <string name="clear_search_history_request">Do you want to clear search history?</string>
 
     // Navigation details
     <string name="location_details">Location details</string>

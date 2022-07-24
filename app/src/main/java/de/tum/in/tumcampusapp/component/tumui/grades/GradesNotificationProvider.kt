@@ -23,7 +23,7 @@ class GradesNotificationProvider(
                 .setColor(notificationColorAccent)
     }
 
-    override fun buildNotification(): AppNotification? {
+    override fun buildNotification(): AppNotification {
         val title = context.getString(R.string.my_grades)
         val size = newGrades.size
         val formattedNewGrades = newGrades.joinToString()

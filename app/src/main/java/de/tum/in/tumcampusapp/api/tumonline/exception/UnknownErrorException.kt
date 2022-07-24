@@ -4,6 +4,6 @@ import java.io.InterruptedIOException
 
 class UnknownErrorException : InterruptedIOException() {
 
-    override val message: String?
+    override val message: String
         get() = "Unknown Exception..."
 }

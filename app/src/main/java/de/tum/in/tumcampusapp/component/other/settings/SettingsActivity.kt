@@ -3,7 +3,7 @@ package de.tum.`in`.tumcampusapp.component.other.settings
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.transaction
+import androidx.fragment.app.commit
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceFragmentCompat.OnPreferenceStartScreenCallback
 import androidx.preference.PreferenceScreen
@@ -19,7 +19,7 @@ class SettingsActivity : BaseActivity(R.layout.activity_user_preferences),
 
         if (savedInstanceState == null) {
             val rootKey = intent.getStringExtra(Const.PREFERENCE_SCREEN)
-            supportFragmentManager.transaction {
+            supportFragmentManager.commit {
                 replace(R.id.settings_frame, SettingsFragment.newInstance(rootKey))
             }
         }
@@ -29,7 +29,7 @@ class SettingsActivity : BaseActivity(R.layout.activity_user_preferences),
         preferenceFragment: PreferenceFragmentCompat,
         preferenceScreen: PreferenceScreen
     ): Boolean {
-        supportFragmentManager.transaction {
+        supportFragmentManager.commit {
             replace(R.id.settings_frame, SettingsFragment.newInstance(preferenceScreen.key))
             addToBackStack(null)
         }

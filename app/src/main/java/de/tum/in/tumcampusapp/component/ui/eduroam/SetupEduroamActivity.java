@@ -51,9 +51,7 @@ public class SetupEduroamActivity extends BaseActivity {
             password.requestFocus();
         }
 
-        findViewById(R.id.eduroam_config_error).setOnClickListener(view -> {
-            showDeleteProfileDialog();
-        });
+        findViewById(R.id.eduroam_config_error).setOnClickListener(view -> showDeleteProfileDialog());
     }
 
     private void showDeleteProfileDialog() {

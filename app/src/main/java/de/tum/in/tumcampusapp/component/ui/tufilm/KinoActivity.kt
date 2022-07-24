@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModelProviders
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ProgressActivity
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.model.Kino
+import de.tum.`in`.tumcampusapp.databinding.ActivityKinoBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.utils.Const
-import kotlinx.android.synthetic.main.activity_kino.*
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -21,6 +21,7 @@ class KinoActivity : ProgressActivity<Void>(R.layout.activity_kino) {
 
     @Inject
     internal lateinit var viewModelProvider: Provider<KinoViewModel>
+    private lateinit var binding: ActivityKinoBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,8 +41,10 @@ class KinoActivity : ProgressActivity<Void>(R.layout.activity_kino) {
             else -> 0
         }
 
+        binding = ActivityKinoBinding.inflate(layoutInflater)
+
         val margin = resources.getDimensionPixelSize(R.dimen.material_default_padding)
-        kinoViewPager.pageMargin = margin
+        binding.kinoViewPager.pageMargin = margin
 
         kinoViewModel.kinos.observe(this, Observer<List<Kino>> { this.showMoviesOrPlaceholder(it) })
         kinoViewModel.error.observe(this, Observer<Int> { this.showError(it) })
@@ -53,7 +56,7 @@ class KinoActivity : ProgressActivity<Void>(R.layout.activity_kino) {
             return
         }
 
-        kinoViewPager.adapter = KinoAdapter(supportFragmentManager, kinos)
-        kinoViewPager.currentItem = startPosition
+        binding.kinoViewPager.adapter = KinoAdapter(supportFragmentManager, kinos)
+        binding.kinoViewPager.currentItem = startPosition
     }
 }

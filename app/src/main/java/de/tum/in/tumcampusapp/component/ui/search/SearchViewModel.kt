@@ -34,6 +34,7 @@ class SearchViewModel @Inject constructor(
     private val compositeDisposable = CompositeDisposable()
 
     private var currentApiCalls = 0
+    private var currentQueryText = ""
 
     fun changeResultType(type: SearchResultType) {
         val selectedResult: List<SearchResult> = when (type) {
@@ -82,7 +83,9 @@ class SearchViewModel @Inject constructor(
     }
 
     fun search(query: String) {
+        compositeDisposable.clear()
         currentApiCalls = NUMBER_OF_API_CALLS
+        currentQueryText = query
         persons.value = emptyList()
         lectures.value = emptyList()
         buildings.value = emptyList()
@@ -90,10 +93,11 @@ class SearchViewModel @Inject constructor(
         state.value = state.value.copy(
             isLoading = true,
             data = emptyList(),
-            availableResultTypes = emptyList(),
+            availableResultTypes = emptySet(),
             selectedType = SearchResultType.ALL
         )
 
+        // todo handle compositeDisposable
         searchForBuildingAndRooms(query)
 
         val persons = tumOnlineClient
@@ -119,11 +123,14 @@ class SearchViewModel @Inject constructor(
         compositeDisposable += Single
             .concat(persons, lectures)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { saveSearchResult(it) }
+            .subscribe { saveSearchResult(it, query) }
     }
 
-    private fun saveSearchResult(result: List<SearchResult>) {
+    private fun saveSearchResult(result: List<SearchResult>, query: String) {
         currentApiCalls -= 1
+        if (query != currentQueryText) // don't save result if query already changed
+            return
+
         if (result.isEmpty()) {
             saveResult(emptyList(), null)
             return
@@ -162,10 +169,11 @@ class SearchViewModel @Inject constructor(
     }
 
     fun clearSearchState() {
+        compositeDisposable.clear()
         state.value = state.value.copy(
             isLoading = false,
             data = emptyList(),
-            availableResultTypes = emptyList(),
+            availableResultTypes = emptySet(),
             selectedType = SearchResultType.ALL
         )
     }

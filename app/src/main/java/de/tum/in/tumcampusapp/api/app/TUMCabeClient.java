@@ -307,8 +307,6 @@ public final class TUMCabeClient {
         return service.fetchCoordinates(archId);
     }
 
-    // TODO: 08.07.2022 ask if some1 knows if it was working
-    @Deprecated
     @Nullable
     public List<RoomFinderSchedule> fetchSchedule(String roomId, String start, String end) throws IOException {
         return service.fetchSchedule(ApiHelper.encodeUrl(roomId),
@@ -325,7 +323,7 @@ public final class TUMCabeClient {
         List<Call<FeedbackResult>> calls = new ArrayList<>();
         for (int i = 0; i < imagePaths.length; i++) {
             File file = new File(imagePaths[i]);
-            RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
+            RequestBody reqFile = RequestBody.create(file, MediaType.parse("image/*"));
             MultipartBody.Part body = MultipartBody.Part.createFormData("feedback_image", i + ".png", reqFile);
 
             Call<FeedbackResult> call = service.sendFeedbackImage(body, i + 1, feedback.getId());
