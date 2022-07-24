@@ -75,7 +75,6 @@ public final class TUMCabeClient {
     static final String API_NOTIFICATIONS = "notifications/";
     static final String API_LOCATIONS = "locations/";
     static final String API_DEVICE = "device/";
-    static final String API_WIFI_HEATMAP = "wifimap/";
     static final String API_BARRIER_FREE = "barrierfree/";
     static final String API_BARRIER_FREE_CONTACT = "contacts/";
     static final String API_BARRIER_FREE_BUILDINGS_TO_GPS = "getBuilding2Gps/";
@@ -280,29 +279,12 @@ public final class TUMCabeClient {
                 .body();
     }
 
-    @Deprecated
+    @Deprecated // use NavigaTUM api instead
     public Call<List<RoomFinderMap>> fetchAvailableMaps(final String archId) {
         return service.fetchAvailableMaps(ApiHelper.encodeUrl(archId));
     }
 
-    @Deprecated
-    public List<RoomFinderRoom> fetchRooms(String searchStrings) throws IOException {
-        return service.fetchRooms(ApiHelper.encodeUrl(searchStrings))
-                .execute()
-                .body();
-    }
-
-    @Deprecated
-    public Single<List<RoomFinderRoom>> fetchRoomsSingle(String searchStrings) throws IOException {
-        return service.fetchRoomsSingle(ApiHelper.encodeUrl(searchStrings));
-    }
-
-    @Deprecated
-    public RoomFinderCoordinate fetchCoordinates(String archId) throws IOException {
-        return fetchRoomFinderCoordinates(archId).execute().body();
-    }
-
-    @Deprecated
+    @Deprecated // use NavigaTUM api instead
     public Call<RoomFinderCoordinate> fetchRoomFinderCoordinates(String archId) {
         return service.fetchCoordinates(archId);
     }
