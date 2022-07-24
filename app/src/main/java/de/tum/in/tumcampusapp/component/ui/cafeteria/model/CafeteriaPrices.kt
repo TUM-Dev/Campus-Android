@@ -128,8 +128,7 @@ object CafeteriaPrices {
      */
     @JvmStatic
     fun getRolePrices(context: Context): Map<String, String> {
-        val type = Utils.getSetting(context, Const.ROLE, "")
-        return when (type) {
+        return when (Utils.getSetting(context, Const.ROLE, "")) {
             "0" -> STUDENT_PRICES
             "1" -> EMPLOYEE_PRICES
             "2" -> GUEST_PRICES

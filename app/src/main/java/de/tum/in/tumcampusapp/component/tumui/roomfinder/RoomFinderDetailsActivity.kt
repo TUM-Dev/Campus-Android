@@ -144,7 +144,7 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
         startLoading()
     }
 
-    override fun onLoadInBackground(vararg arg: Void): String? {
+    override fun onLoadInBackground(vararg arg: Void): String {
         val encodedArchId = ApiHelper.encodeUrl(room.arch_id)
 
         return if (mapId.isEmpty()) {

@@ -9,11 +9,11 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.util.List;
 
+import androidx.test.core.app.ApplicationProvider;
 import de.tum.in.tumcampusapp.TestApp;
 import de.tum.in.tumcampusapp.component.ui.news.NewsDao;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
@@ -30,15 +30,15 @@ public class NewsDaoTest {
 
     @Before
     public void setUp() {
-        dao = TcaDb.Companion.getInstance(RuntimeEnvironment.application).newsDao();
+        dao = TcaDb.Companion.getInstance(ApplicationProvider.getApplicationContext()).newsDao();
         newsIdx = 0;
-        JodaTimeAndroid.init(RuntimeEnvironment.application);
+        JodaTimeAndroid.init(ApplicationProvider.getApplicationContext());
     }
 
     @After
     public void tearDown() {
         dao.flush();
-        TcaDb.Companion.getInstance(RuntimeEnvironment.application).close();
+        TcaDb.Companion.getInstance(ApplicationProvider.getApplicationContext()).close();
     }
 
     private News createNewsItem(String source, DateTime date) {

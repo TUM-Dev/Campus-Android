@@ -36,7 +36,7 @@ data class Ticket(
 ) {
 
     companion object {
-        fun getFormattedRedemptionDate(context: Context, redemptionDate: DateTime): String? {
+        fun getFormattedRedemptionDate(context: Context, redemptionDate: DateTime): String {
             val date = DateTimeFormat.shortDate().print(redemptionDate)
             val pattern = if (DateFormat.is24HourFormat(context)) "H:mm" else "h:mm aa"
             val time = DateTimeFormat.forPattern(pattern).print(redemptionDate)

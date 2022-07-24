@@ -34,6 +34,4 @@
 
     </FrameLayout>
 
-    <include layout="@layout/navigation_drawer" />
-
 </androidx.drawerlayout.widget.DrawerLayout>

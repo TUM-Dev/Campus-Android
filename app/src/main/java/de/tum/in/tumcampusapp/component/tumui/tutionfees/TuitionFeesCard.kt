@@ -66,18 +66,18 @@ class TuitionFeesCard(
 
     override fun shouldShow(prefs: SharedPreferences): Boolean {
         val prevDeadline = prefs.getString(LAST_FEE_FRIST, "")!!
-        val prevAmount = prefs.getString(LAST_FEE_SOLL, java.lang.Float.toString(tuition.amount))!!
+        val prevAmount = prefs.getString(LAST_FEE_SOLL, tuition.amount.toString())!!
 
         // If app gets started for the first time and fee is already paid don't annoy user
         // by showing him that he has been re-registered successfully
         val deadline = DateTimeUtils.getDateString(tuition.deadline)
-        val amount = java.lang.Float.toString(tuition.amount)
+        val amount = tuition.amount.toString()
         return !(prevDeadline.isEmpty() && tuition.isPaid) && (prevDeadline < deadline || prevAmount > amount)
     }
 
     public override fun discard(editor: Editor) {
         val deadline = DateTimeUtils.getDateString(tuition.deadline)
-        val amount = java.lang.Float.toString(tuition.amount)
+        val amount = tuition.amount.toString()
         editor.putString(LAST_FEE_FRIST, deadline)
         editor.putString(LAST_FEE_SOLL, amount)
     }
