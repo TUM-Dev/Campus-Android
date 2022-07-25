@@ -279,7 +279,7 @@ public final class TUMCabeClient {
                 .body();
     }
 
-    @Deprecated // use NavigaTUM api instead
+    @Deprecated // This API has been deprecated. Use the equivalent NavigaTUM API instead
     public Call<List<RoomFinderMap>> fetchAvailableMaps(final String archId) {
         return service.fetchAvailableMaps(ApiHelper.encodeUrl(archId));
     }
