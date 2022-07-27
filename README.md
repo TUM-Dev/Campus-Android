@@ -1,4 +1,5 @@
-![Build Status](https://img.shields.io/github/workflow/status/TUM-Dev/Campus-Android/CI?color=%23a2ad00&label=Build%20Status)
+![Build Status](https://img.shields.io/github/workflow/status/TUM-Dev/Campus-Android/CI?color=brightgreen&label=Build%20Status)
+[![Discord Channel](https://img.shields.io/badge/Chat-on%20Discord-brightgreen)](https://discord.gg/k558T6ktuh)
 <a href="https://play.google.com/store/apps/details?id=de.tum.in.tumcampus">
 <img src="https://play.google.com/intl/en_us/badges/images/badge_new.png" align="right">
 </a>
