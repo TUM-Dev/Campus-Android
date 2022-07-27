@@ -54,8 +54,7 @@ class RecentSearchesAdapter(
                             .load(person.getFullImageUrl())
                             .into(profilePicture)
                     } catch (exception: Exception) {
-                        titleText.setText(R.string.not_available_search)
-                        profilePicture.setImageDrawable(null)
+                        onRemove(recentSearch)
                     }
                     icon.setImageResource(R.drawable.ic_person)
                     icon.setBackgroundResource(R.drawable.circle_background)
@@ -65,7 +64,7 @@ class RecentSearchesAdapter(
                         val room = RoomFinderRoom.fromRecent(recentSearch)
                         titleText.text = room.formattedAddress
                     } catch (exception: Exception) {
-                        titleText.setText(R.string.not_available_search)
+                        onRemove(recentSearch)
                     }
                     icon.setImageResource(R.drawable.ic_room)
                     icon.setBackgroundResource(R.drawable.search_result_icon_background)
@@ -76,7 +75,7 @@ class RecentSearchesAdapter(
                         val lecture = Lecture.fromRecent(recentSearch)
                         titleText.text = lecture.title
                     } catch (exception: Exception) {
-                        titleText.setText(R.string.not_available_search)
+                        onRemove(recentSearch)
                     }
                     icon.setImageResource(R.drawable.ic_lecture)
                     icon.setBackgroundResource(R.drawable.search_result_icon_background)
