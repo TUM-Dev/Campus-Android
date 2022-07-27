@@ -37,7 +37,7 @@ This is not an official app of the Technische Universität München. There's no 
 [Privacy policy](https://www.tum.app/privacy/)
 
 ## Support:
-You can reach us on [Github](https://github.com/TUM-Dev/Campus-Android) or via E-Mail [app@tum.de](mailto:app@tum.de)
+You can reach us on [Github](https://github.com/TUM-Dev/Campus-Android) or via E-Mail [app@tum.de](mailto:app@tum.de).
 
 ## License:
 [GNU GPL v3](http://www.gnu.org/licenses/gpl.html)  
