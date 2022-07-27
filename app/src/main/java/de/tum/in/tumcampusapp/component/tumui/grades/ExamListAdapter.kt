@@ -73,7 +73,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
      * Init the ui Elements to change the parameters of the grade
      */
     private fun initUIEditElements(holder: ViewHolder, exam: Exam) {
-        if (localGradesFragment.getGlobalEdit()) {
+        if (localGradesFragment.isEditModeEnabled()) {
             holder.editGradesContainer.visibility = View.GONE
             holder.gradeTextViewDeleteCustomGrade.visibility = View.GONE
         } else {
@@ -131,9 +131,9 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
     private fun initListenerEditTexts(exam: Exam, holder: ViewHolder) {
         holder.editTextGradeWeights.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
-                val helper = holder.editTextGradeWeights.text.toString().toDouble()
-                if (exam.weight != helper) {
-                    exam.weight = helper
+                val oldWeight = holder.editTextGradeWeights.text.toString().toDouble()
+                if (exam.weight != oldWeight) {
+                    exam.weight = oldWeight
                     localGradesFragment.storeExamListInSharedPreferences()
                     notifyDataSetChanged()
                 }
@@ -142,9 +142,9 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
 
         holder.editTextGradeCredits.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
-                val helper = holder.editTextGradeCredits.text.toString().toInt()
-                if (exam.credits_new != helper) {
-                    exam.credits_new = helper
+                val oldCredits = holder.editTextGradeCredits.text.toString().toInt()
+                if (exam.credits_new != oldCredits) {
+                    exam.credits_new = oldCredits
                     localGradesFragment.storeExamListInSharedPreferences()
                     notifyDataSetChanged()
                 }
@@ -156,7 +156,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
 
 
     /**
-     * Adds a ClickListener to reset one exam to the default values and adapts the UI accordingly
+     * Adds a ClickListener to reset one exam to the default values and adapts the UI accordingly.
      */
     private fun initListenerResetGradeParameters(exam: Exam, holder: ViewHolder) {
         holder.buttonResetGradeParameters.setOnClickListener(object : View.OnClickListener {
@@ -176,7 +176,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
     }
 
     /**
-     * Initialises the state of the checkbox and adapts the ui accordingly
+     * Initializes the state of the checkbox and adapts the UI accordingly.
      */
     private fun initCheckBoxUsedInAverage(exam: Exam, holder: ViewHolder) {
         holder.checkBoxUseGradeForAverage.isChecked = exam.gradeUsedInAverage
@@ -190,7 +190,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
     }
 
     /**
-     * Enables/disables Edittexts, and adapts the color of the grade bar on the right side
+     * Enables/disables Edittexts, and adapts the color of the grade bar on the right side.
      */
     private fun adaptUIToCheckboxStatus(
         holder: ViewHolder,

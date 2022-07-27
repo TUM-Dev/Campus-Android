@@ -18,8 +18,6 @@
         android:title="@string/show_column_chart"
         app:iconTint="@color/color_primary"
         app:showAsAction="ifRoom" />
-
-
     <item
         android:id="@+id/edit_grades_menu"
         android:icon="@drawable/ic_outline_edit_24px"
