@@ -88,7 +88,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
 
 
     /**
-     * Adds a Clicklistener which will show confirmation dialog whether the exam should actually be deleted.
+     * Adds a ClickListener which will show a confirmation dialog whether the exam should actually be deleted.
      */
     private fun initListenerDeleteCustomGrade(exam: Exam, holder: ViewHolder) {
         if (exam.manuallyAdded) {
