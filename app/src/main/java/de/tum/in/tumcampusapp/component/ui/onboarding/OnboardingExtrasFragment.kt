@@ -94,10 +94,7 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<Boolean>(
         }
 
         // By now, we should have generated the RSA key and uploaded it to our server and TUMonline
-
-        val lrzId = Utils.getSetting(requireContext(), Const.LRZ_ID, "") // TODO is this needed?
-
-        val status = tumCabeClient.verifyKey() // TODO is this needed?
+        val status = tumCabeClient.verifyKey()
         if (status?.status != UploadStatus.VERIFIED) {
             Utils.showToastOnUIThread(requireActivity(), getString(R.string.error_pk_verification))
             return false
@@ -105,8 +102,9 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<Boolean>(
 
         // Try to restore already joined chat rooms from server
         try {
-            val verification = TUMCabeVerification.create(requireContext(), null) // TODO is this needed?
+            TUMCabeVerification.create(requireContext(), null) // TODO is this needed?
 
+            val lrzId = Utils.getSetting(requireContext(), Const.LRZ_ID, "") // TODO is this needed?
             // upload obfuscated ids now that we have a member
             val uploadStatus = tumCabeClient.getUploadStatus(lrzId)
             if (uploadStatus != null) {
@@ -130,11 +128,9 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<Boolean>(
         requireContext()
             .defaultSharedPreferences
             .edit {
-                with(binding) {
-                    putBoolean(Const.SILENCE_SERVICE, silentModeCheckBox.isChecked)
+                    putBoolean(Const.SILENCE_SERVICE, binding.silentModeCheckBox.isChecked)
                     putBoolean(Const.BACKGROUND_MODE, true) // Enable by default
-                    putBoolean(Const.BUG_REPORTS, bugReportsCheckBox.isChecked)
-                }
+                    putBoolean(Const.BUG_REPORTS, binding.bugReportsCheckBox.isChecked)
             }
 
         navigator.finish()
