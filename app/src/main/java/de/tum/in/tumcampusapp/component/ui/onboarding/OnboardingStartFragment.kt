@@ -104,7 +104,7 @@ class OnboardingStartFragment : BaseFragment<Unit>(
     }
 
     private fun onNextPressed() {
-        val enteredId = binding.lrzIdTextView.text.toString().lowercase(Locale.GERMANY)
+        val enteredId: String = binding.lrzIdTextView.text.toString().lowercase(Locale.GERMANY)
 
         if (!enteredId.matches(Const.TUM_ID_PATTERN.toRegex())) {
             Utils.showToast(requireContext(), R.string.error_invalid_tum_id)

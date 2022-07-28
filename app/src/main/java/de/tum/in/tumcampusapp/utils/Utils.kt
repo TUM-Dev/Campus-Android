@@ -272,8 +272,8 @@ object Utils {
     fun setSetting(c: Context, key: String, value: Any) {
         val sp = PreferenceManager.getDefaultSharedPreferences(c)
         sp.edit()
-                .putString(key, Gson().toJson(value))
-                .apply()
+            .putString(key, Gson().toJson(value))
+            .apply()
     }
 
     /**
