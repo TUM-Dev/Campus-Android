@@ -49,7 +49,6 @@ data class Exam(
 
     ) : Comparable<Exam>, SimpleStickyListHeadersAdapter.SimpleStickyListItem {
 
-
     override fun getHeadName() = semester
 
     override fun getHeaderId() = semester

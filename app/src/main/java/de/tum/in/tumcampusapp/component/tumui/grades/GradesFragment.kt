@@ -263,7 +263,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             setDrawValues(false)
         }
 
-
         with(binding) {
             pieChartView.apply {
                 data = PieData(set)
@@ -282,7 +281,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
                 invalidate()
             }
-
         }
     }
 
@@ -372,9 +370,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
         val gradeSum = grades.sum()
 
-        if (factorSum <= 0) {
-            return 0.0
-        }
+        factorSum = max(factorSum , 0.0)
         return gradeSum / factorSum
     }
 
@@ -401,7 +397,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                     gradeDistribution[cleanGrade] = count + 1
                 }
             }
-
         }
         return gradeDistribution
     }
@@ -436,7 +431,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 }
             }
 
-
             binding.filterSpinner.onItemSelectedListener =
                 object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(
@@ -463,7 +457,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
 
     /**
-     * Prompt the user to type in a name for the new chat room
+     * Prompt the user to type in a custom exam grade.
      */
     private fun openAddGradeDialog() {
         val view = View.inflate(requireContext(), R.layout.dialog_add_grade_input, null)
@@ -503,9 +497,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             } catch (exception: Exception) {
                 1.0
             }
-
-
-
             titleView.error = null
             gradeView.error = null
             examinerView.error = null
@@ -528,7 +519,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                     getString(R.string.add_grade_error_semester_no_ws)
             }
 
-            if (weight < 0.0) {             //weight sanitization
+            if (weight < 0.0) { // weight sanitization
                 changesRequired = true
                 weightView.error = getString(R.string.add_grade_error_invalid_weight)
             }
@@ -548,12 +539,12 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             }
 
 
-            if (title.isEmpty()) {             //title sanitization
+            if (title.isEmpty()) { // title sanitization
                 changesRequired = true
                 titleView.error = getString(R.string.add_grade_missing_course_title)
             }
 
-            if (credits < 1) {             //title sanitization
+            if (credits < 1) { // title sanitization
                 changesRequired = true
                 creditsView.error =
                     getString(R.string.add_grade_error_invalid_weight_less_than_zero)
@@ -677,7 +668,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      * Toggles between the standard mode and the mode which allows to change grades.
      */
     private fun changeEditMode(item: MenuItem) {
-
         globalEditOFF = !globalEditOFF
         if(globalEditOFF){
             item.setIcon(R.drawable.ic_outline_edit_24px);
@@ -688,17 +678,15 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     }
 
     private fun initUIVisibility() {
-        val scale = resources.displayMetrics.density
+        val density = resources.displayMetrics.density
         val param = swipeRefreshLayout.layoutParams as ViewGroup.MarginLayoutParams
         if (!globalEditOFF) {
-
             binding.frameLayoutAverageGrade?.visibility = View.GONE
             binding.floatingButtonAddExamGrade.visibility = View.VISIBLE
             binding.chartsContainer.visibility = View.GONE
             binding.checkboxUseDiagrams.visibility = View.VISIBLE
-            param.setMargins(0, ((32 * scale + 0.5f).toInt()), 0, 0)
+            param.setMargins(0, ((32 * density + 0.5f).toInt()), 0, 0)
             binding.gradesListView.setPadding(0, 0, 0, 0)
-
         } else {
             showExams(exams)
             binding.frameLayoutAverageGrade?.visibility = View.VISIBLE
@@ -706,7 +694,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             binding.chartsContainer.visibility = View.VISIBLE
             binding.checkboxUseDiagrams.visibility = View.GONE
             param.setMargins(0, 0, 0, 0)
-            binding.gradesListView.setPadding(0, ((256 * scale + 0.5f).toInt()), 0, 0)
+            binding.gradesListView.setPadding(0, ((256 * density + 0.5f).toInt()), 0, 0)
         }
         swipeRefreshLayout.layoutParams = param
     }
@@ -797,5 +785,3 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         )
     }
 }
-
-
