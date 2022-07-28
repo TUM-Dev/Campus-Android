@@ -21,6 +21,7 @@
         app:layout_constraintVertical_bias="0.8"
         app:srcCompat="@drawable/ic_add"
         app:tint="@android:color/white" />
+
     <CheckBox
         android:id="@+id/checkboxUseDiagrams"
         android:layout_width="match_parent"
@@ -61,7 +62,6 @@
                     android:layout_height="wrap_content" />
 
             </androidx.appcompat.widget.Toolbar>
-
         </com.google.android.material.appbar.AppBarLayout>
 
         <include
@@ -108,7 +108,6 @@
                     android:scrollbars="vertical" />
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
         </FrameLayout>
 
         <LinearLayout
@@ -159,6 +158,5 @@
                 app:cornerRadius="@dimen/material_corner_radius" />
 
         </LinearLayout>
-
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

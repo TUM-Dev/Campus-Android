@@ -118,7 +118,6 @@
                     app:cornerRadius="@dimen/material_corner_radius" />
             </LinearLayout>
         </LinearLayout>
-
     </LinearLayout>
 
     <LinearLayout

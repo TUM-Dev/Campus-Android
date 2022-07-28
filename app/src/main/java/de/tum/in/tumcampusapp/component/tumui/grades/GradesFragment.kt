@@ -6,6 +6,8 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.ArrayMap
+import android.util.Log
+import android.util.Log.INFO
 import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -36,6 +38,7 @@ import org.joda.time.format.DateTimeFormatter
 import java.lang.reflect.Type
 import java.text.NumberFormat
 import java.util.*
+import java.util.logging.Level.INFO
 import javax.inject.Inject
 
 
@@ -157,7 +160,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     }
 
     /**
-     * Adds all exams which are part f the new list to the existing exams list
+     * Adds all exams which are part of the new list to the existing exams list.
      */
     private fun addAllNewItemsToExamList(examsDownloaded: MutableList<Exam>) {
         val examsTitles = exams.map { it.course }
@@ -166,7 +169,9 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
         if (examsDownloaded.isNotEmpty()) {
             examsDownloaded.forEach {
-                it.credits_new = 6;it.weight = 1.0; it.gradeUsedInAverage = true
+                it.credits_new = 5
+                it.weight = 1.0
+                it.gradeUsedInAverage = true
             }
             exams.addAll(examsDownloaded)
             storeExamListInSharedPreferences()
@@ -187,6 +192,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 return
             }
         } catch (e: Exception) {
+            Log.v("Adding Exams", "Error while loading exams. Exam list was cleared.")
             exams.clear()
         }
     }
@@ -363,14 +369,14 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 (numberFormat.parse(it.grade.toString())?.toDouble()
                     ?: 1.0) * it.credits_new * it.weight
             }
-        val factorSum = exams
+        var factorSum = exams
             .filter { it.isPassed && it.gradeUsedInAverage }
             .map { it.credits_new.toDouble() * it.weight }.sum()
 
 
         val gradeSum = grades.sum()
 
-        factorSum = max(factorSum , 0.0)
+        factorSum = Math.max(factorSum, 0.0)
         return gradeSum / factorSum
     }
 
@@ -506,14 +512,13 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             semesterView.error = null
 
             var changesRequired = false
+
+
             if (semester.length < 3) {                                                  //semester sanitization
                 changesRequired = true
                 semesterView.error =
                     getString(R.string.add_grade_error_wrong_semester)
-            } else if (!(semester.get(2) == 'W' || semester[2] == 'w' || semester.get(2) == 'S' || semester.get(
-                    2
-                ) == 's')
-            ) {
+            } else if (!("d{0,2}[ws]".toRegex().containsMatchIn(semester.lowercase()))) {
                 changesRequired = true
                 semesterView.error =
                     getString(R.string.add_grade_error_semester_no_ws)
@@ -669,9 +674,9 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      */
     private fun changeEditMode(item: MenuItem) {
         globalEditOFF = !globalEditOFF
-        if(globalEditOFF){
+        if (globalEditOFF) {
             item.setIcon(R.drawable.ic_outline_edit_24px);
-        }else{
+        } else {
             item.setIcon(R.drawable.ic_baseline_save_24);
         }
         initUIVisibility()
@@ -754,7 +759,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             })
     }
 
-    fun getGlobalEdit(): Boolean {
+    fun isEditModeEnabled(): Boolean {
         return globalEditOFF
     }
 

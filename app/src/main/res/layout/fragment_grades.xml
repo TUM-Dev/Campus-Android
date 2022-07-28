@@ -65,6 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
+
             <CheckBox
                 android:id="@+id/checkboxUseDiagrams"
                 android:layout_width="match_parent"
@@ -72,6 +73,7 @@
                 android:layout_marginLeft="8dp"
                 android:checked="true"
                 android:text="@string/use_weights_in_diagrams" />
+
             <FrameLayout
                 android:id="@+id/chartsContainer"
                 android:layout_width="match_parent"
@@ -91,7 +93,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="gone" />
-
             </FrameLayout>
 
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -105,12 +106,9 @@
                     android:layout_height="match_parent"
                     android:clipToPadding="false"
                     android:divider="@color/list_divider"
-
-
                     android:scrollbars="vertical" />
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
         </FrameLayout>
 
 
@@ -119,27 +117,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/pop_up_background"
+            android:orientation="vertical"
             android:padding="@dimen/material_default_padding"
-            android:visibility="gone"
-            android:orientation="vertical">
+            android:visibility="gone">
 
-                <TextView
-                    android:id="@+id/averageGradeTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/text_light_blue"
-                    android:textSize="@dimen/semilarge_text_size"
-                    android:textStyle="bold"
-                    android:visibility="visible"
-                    tools:text="Average grade: 1.0" />
+            <TextView
+                android:id="@+id/averageGradeTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_light_blue"
+                android:textSize="@dimen/semilarge_text_size"
+                android:textStyle="bold"
+                android:visibility="visible"
+                tools:text="Average grade: 1.0" />
 
-                <TextView
-                    android:id="@+id/averageGradeHintTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/average_grade_hint"
-                    android:textColor="@color/text_light_blue"
-                    android:visibility="visible" />
+            <TextView
+                android:id="@+id/averageGradeHintTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/average_grade_hint"
+                android:textColor="@color/text_light_blue"
+                android:visibility="visible" />
 
 
         </LinearLayout>
