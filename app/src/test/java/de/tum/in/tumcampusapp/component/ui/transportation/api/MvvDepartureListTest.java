@@ -3,10 +3,9 @@ package de.tum.in.tumcampusapp.component.ui.transportation.api;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.junit.Assert;
-
 import org.apache.commons.io.IOUtils;
 import org.joda.time.DateTime;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
