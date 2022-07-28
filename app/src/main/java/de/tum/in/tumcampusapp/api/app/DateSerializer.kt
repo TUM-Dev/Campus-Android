@@ -40,7 +40,6 @@ class DateSerializer : JsonDeserializer<DateTime>, JsonSerializer<DateTime> {
             }
         }
         throw JsonParseException("Unparseable date: \"${json?.asString.orEmpty()}\". Supported formats: ${formatStrings.contentToString()}")
-
     }
 
     override fun serialize(

@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.tumui.grades.model
 
 import android.content.Context
-import android.util.Log
 import androidx.core.content.ContextCompat
 import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
@@ -44,10 +43,8 @@ data class Exam(
     @PropertyElement(name = "subjectcredits")
     var credits_new: Int = 6,
     @PropertyElement(name = "examManuallyAdded")
-    var manuallyAdded: Boolean = false,
-
-
-    ) : Comparable<Exam>, SimpleStickyListHeadersAdapter.SimpleStickyListItem {
+    var manuallyAdded: Boolean = false
+) : Comparable<Exam>, SimpleStickyListHeadersAdapter.SimpleStickyListItem {
 
     override fun getHeadName() = semester
 

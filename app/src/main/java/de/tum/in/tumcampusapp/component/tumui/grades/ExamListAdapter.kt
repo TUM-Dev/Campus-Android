@@ -16,7 +16,6 @@ import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyList
 import de.tum.`in`.tumcampusapp.component.tumui.grades.model.Exam
 import org.joda.time.format.DateTimeFormat
 
-
 /**
  * Custom UI adapter for a list of exams.
  */
@@ -44,7 +43,6 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
 
         val exam = itemList[position]
 
-
         initUIEditElements(holder, exam)
         initUIDisplayElements(holder, exam)
         return view
@@ -53,10 +51,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
     private fun initUIDisplayElements(holder: ViewHolder, exam: Exam) {
         holder.nameTextView.text = exam.course
         holder.gradeTextView.text = exam.grade
-
-
         adaptUIToCheckboxStatus(holder, exam)
-
         val date: String = if (exam.date == null) {
             context.getString(R.string.not_specified)
         } else {
@@ -71,7 +66,6 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
             context.getString(R.string.mode), exam.modus
         )
     }
-
 
     /**
      * Init the ui Elements to change the parameters of the grade
@@ -89,7 +83,6 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
             initCheckBoxUsedInAverage(exam, holder)
         }
     }
-
 
     /**
      * Adds a ClickListener which will show a confirmation dialog whether the exam should actually be deleted.
@@ -124,9 +117,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
         } else {
             holder.gradeTextViewDeleteCustomGrade.visibility = View.GONE
         }
-
     }
-
 
     /**
      * Adds on Focus change listeners which store the value to the exam object if and only if the
@@ -158,7 +149,6 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
         holder.editTextGradeCredits.setText(exam.credits_new.toString())
     }
 
-
     /**
      * Adds a ClickListener to reset one exam to the default values and adapts the UI accordingly.
      */
@@ -175,7 +165,6 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
                 localGradesFragment.storeExamListInSharedPreferences()
                 notifyDataSetChanged()
             }
-
         })
     }
 
@@ -223,7 +212,6 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
             )
         }
     }
-
 
     override fun generateHeaderName(item: Exam): String {
         val headerText = super.generateHeaderName(item)

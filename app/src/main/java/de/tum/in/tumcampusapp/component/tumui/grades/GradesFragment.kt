@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.ArrayMap
 import android.util.Log
-import android.util.Log.INFO
 import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -37,10 +36,8 @@ import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import java.lang.reflect.Type
 import java.text.NumberFormat
-import java.util.*
-import java.util.logging.Level.INFO
+import java.util.Locale
 import javax.inject.Inject
-
 
 class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     R.layout.fragment_grades,
@@ -60,7 +57,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     private val exams = mutableListOf<Exam>()
 
     private val examSharedPreferences: String = "ExamList"
-
 
     private val grades: Array<String> by lazy {
         resources.getStringArray(R.array.grades)
@@ -106,7 +102,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             adaptDiagramToWeights = isChecked
         }
 
-
         loadGrades(CacheControl.USE_CACHE)
 
         // Tracks whether the user has used the calendar module before. This is used in determining when to prompt for a
@@ -128,7 +123,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         loadExamListFromSharedPreferences()
         addAllNewItemsToExamList(examsDownloaded)
         initUIAfterDownloadingExams()
-
     }
 
     private fun initUIAfterDownloadingExams() {
@@ -166,7 +160,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         val examsTitles = exams.map { it.course }
         examsDownloaded.removeAll { examsTitles.contains(it.course) }
 
-
         if (examsDownloaded.isNotEmpty()) {
             examsDownloaded.forEach {
                 it.credits_new = 5
@@ -197,7 +190,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         }
     }
 
-
     fun storeExamListInSharedPreferences() {
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
         val dateTimeConverter = DateTimeConverter()
@@ -209,7 +201,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             apply()
         }
     }
-
 
     /**
      * Gson serialiser/deserialiser for converting Joda [DateTime] objects.
@@ -238,9 +229,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 null
             } else dateTimeFormatter.parseDateTime(json.asString)
         }
-
     }
-
 
     private fun storeGradedCourses(exams: List<Exam>) {
         val gradesStore = GradesStore(defaultSharedPreferences)
@@ -258,7 +247,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             val count = gradeDistribution[grade] ?: 0
             PieEntry(count.toFloat(), grade)
         }
-
 
         var annotation = ""
         if (!adaptDiagramToWeights) {
@@ -373,7 +361,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             .filter { it.isPassed && it.gradeUsedInAverage }
             .map { it.credits_new.toDouble() * it.weight }.sum()
 
-
         val gradeSum = grades.sum()
 
         factorSum = Math.max(factorSum, 0.0)
@@ -461,7 +448,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         }
     }
 
-
     /**
      * Prompt the user to type in a custom exam grade.
      */
@@ -513,8 +499,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
             var changesRequired = false
 
-
-            if (semester.length < 3) {                                                  //semester sanitization
+            if (semester.length < 3) { // semester sanitization
                 changesRequired = true
                 semesterView.error =
                     getString(R.string.add_grade_error_wrong_semester)
@@ -543,7 +528,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                     getString(R.string.add_grade_error_invalid_grade_format)
             }
 
-
             if (title.isEmpty()) { // title sanitization
                 changesRequired = true
                 titleView.error = getString(R.string.add_grade_missing_course_title)
@@ -554,7 +538,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 creditsView.error =
                     getString(R.string.add_grade_error_invalid_weight_less_than_zero)
             }
-
 
             if (!changesRequired) {
                 val typeConverter1 =
@@ -663,9 +646,8 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         return when (item.itemId) {
             R.id.bar_chart_menu,
             R.id.pie_chart_menu -> toggleChart().run { true }
-            R.id.edit_grades_menu -> changeEditMode(item).run { true };
+            R.id.edit_grades_menu -> changeEditMode(item).run { true }
             else -> super.onOptionsItemSelected(item)
-
         }
     }
 
@@ -675,9 +657,9 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     private fun changeEditMode(item: MenuItem) {
         globalEditOFF = !globalEditOFF
         if (globalEditOFF) {
-            item.setIcon(R.drawable.ic_outline_edit_24px);
+            item.setIcon(R.drawable.ic_outline_edit_24px)
         } else {
-            item.setIcon(R.drawable.ic_baseline_save_24);
+            item.setIcon(R.drawable.ic_baseline_save_24)
         }
         initUIVisibility()
     }
@@ -762,7 +744,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     fun isEditModeEnabled(): Boolean {
         return globalEditOFF
     }
-
 
     companion object {
         private const val KEY_SHOW_BAR_CHART = "showPieChart"
