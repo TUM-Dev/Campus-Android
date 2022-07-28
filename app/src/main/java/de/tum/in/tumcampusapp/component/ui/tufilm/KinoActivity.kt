@@ -7,7 +7,6 @@ import androidx.viewpager.widget.ViewPager
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ProgressActivity
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.model.Kino
-import de.tum.`in`.tumcampusapp.databinding.ActivityKinoBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.utils.Const
 import javax.inject.Inject
@@ -22,7 +21,7 @@ class KinoActivity : ProgressActivity<Void>(R.layout.activity_kino) {
 
     @Inject
     internal lateinit var viewModelProvider: Provider<KinoViewModel>
-    
+
     private lateinit var viewPager: ViewPager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,10 +56,10 @@ class KinoActivity : ProgressActivity<Void>(R.layout.activity_kino) {
             return
         }
 
-        // Disable clip to padding
+        // Disable clip to padding so preview can be drawn into next and previous item
         viewPager.clipToPadding = false
-        viewPager.setPadding(60, 0, 60, 0)
-        viewPager.pageMargin = 20
+        // Define padding (how much of the card should be shown as a preview)
+        viewPager.setPadding(80, 0, 80, 0)
         viewPager.adapter = KinoAdapter(supportFragmentManager, kinos)
         viewPager.currentItem = startPosition
     }
