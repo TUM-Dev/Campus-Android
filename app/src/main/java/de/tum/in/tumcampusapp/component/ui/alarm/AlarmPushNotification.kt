@@ -137,7 +137,7 @@ class AlarmPushNotification(
          */
         private val cabePublicKey: PublicKey?
             get() {
-                val keyFactory = AuthenticationManager.getKeyFactoryInstance()
+                val keyFactory = AuthenticationManager.keyFactoryInstance
 
                 val keyBytes = Base64.decode(PUB_KEY, Base64.NO_WRAP)
                 return tryOrNull {
