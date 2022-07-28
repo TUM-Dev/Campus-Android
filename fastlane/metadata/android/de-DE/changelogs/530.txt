@@ -1,0 +1,4 @@
+v3.1
+
+- Mehrere Bugfixes und Design Tweaks
+- Neue Noten produzieren nun eine Notification

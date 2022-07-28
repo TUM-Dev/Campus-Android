@@ -1,0 +1,4 @@
+v3.7
+
+- Meherere Bugfixes
+- Wir haben einen Teil unseres Backends zu Firebase umgezogen um bspw Chats und Notifications besser darstellen zu können

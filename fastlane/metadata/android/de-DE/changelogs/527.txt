@@ -1,0 +1,4 @@
+v2.4
+
+- The Event Details now consistently shows the buy button
+- Added the ability to dismiss the beta info

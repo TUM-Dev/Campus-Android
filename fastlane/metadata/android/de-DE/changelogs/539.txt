@@ -1,0 +1,5 @@
+v3.10
+
+* Mehrere Bugfixes:
+  * Die Notenansicht enthält nun den Hinweis, dass der Angezeige Durchschnitt nicht der akkurate Durchschnitt ist
+  * Die Screenshots zum Tumonline Token wurden verbessert und sind nun sprachabhängig.
