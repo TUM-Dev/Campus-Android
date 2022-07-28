@@ -318,7 +318,7 @@ public final class TUMCabeClient {
         List<Call<FeedbackResult>> calls = new ArrayList<>();
         for (int i = 0; i < imagePaths.length; i++) {
             File file = new File(imagePaths[i]);
-            RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
+            RequestBody reqFile = RequestBody.create(file, MediaType.parse("image/*"));
             MultipartBody.Part body = MultipartBody.Part.createFormData("feedback_image", i + ".png", reqFile);
 
             Call<FeedbackResult> call = service.sendFeedbackImage(body, i + 1, feedback.getId());

@@ -19,8 +19,8 @@ import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.service.DownloadWorker
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
-import java.lang.Math.round
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 class NewsFragment : FragmentForDownloadingExternal(
     R.layout.fragment_news,
@@ -60,7 +60,7 @@ class NewsFragment : FragmentForDownloadingExternal(
     }
 
     private fun initRecyclerView() {
-        val spacing = round(resources.getDimension(R.dimen.material_card_view_padding))
+        val spacing = resources.getDimension(R.dimen.material_card_view_padding).roundToInt()
         binding.newsRecyclerView.addItemDecoration(EqualSpacingItemDecoration(spacing))
     }
 

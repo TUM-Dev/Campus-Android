@@ -20,7 +20,7 @@ class KinoLocalRepository @Inject constructor(
 
     fun getAllKinos(): Flowable<List<Kino>> = database.kinoDao().all
 
-    fun getLatestId(): String? = database.kinoDao().latestId
+    fun getLatestId(): String = database.kinoDao().latestId
 
     fun getKinoByPosition(position: Int): Flowable<Kino> = database.kinoDao().getByPosition(position)
 

@@ -9,9 +9,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import androidx.test.core.app.ApplicationProvider;
 import de.tum.in.tumcampusapp.TestApp;
 import de.tum.in.tumcampusapp.component.other.locations.RoomLocationsDao;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarDao;
@@ -31,19 +31,19 @@ public class RoomLocationsDaoTest {
 
     @Before
     public void setUp() {
-        dao = TcaDb.Companion.getInstance(RuntimeEnvironment.application)
+        dao = TcaDb.Companion.getInstance(ApplicationProvider.getApplicationContext())
                              .roomLocationsDao();
-        calendarDao = TcaDb.Companion.getInstance(RuntimeEnvironment.application)
+        calendarDao = TcaDb.Companion.getInstance(ApplicationProvider.getApplicationContext())
                                      .calendarDao();
         nr = 0;
-        JodaTimeAndroid.init(RuntimeEnvironment.application);
+        JodaTimeAndroid.init(ApplicationProvider.getApplicationContext());
     }
 
     @After
     public void tearDown() {
         dao.flush();
         calendarDao.flush();
-        TcaDb.Companion.getInstance(RuntimeEnvironment.application)
+        TcaDb.Companion.getInstance(ApplicationProvider.getApplicationContext())
                        .close();
     }
 
@@ -79,6 +79,6 @@ public class RoomLocationsDaoTest {
         dao.insert(new RoomLocations("some other location", "456", "654"));
         dao.insert(new RoomLocations("yet another location", "789", "987"));
 
-        assertThat(dao.getNextLectureCoordinates()).isEqualToComparingFieldByField(expected);
+        assertThat(dao.getNextLectureCoordinates()).usingRecursiveComparison().isEqualTo(expected);
     }
 }

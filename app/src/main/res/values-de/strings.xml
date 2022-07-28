@@ -256,7 +256,7 @@
     <string name="cafeteria_notification_settings">Mensa Benachrichtigungen</string>
 
     <!-- Cafeteria Notification Settings -->
-    <string name="invalid_notification_time_format_string">Ungültige Zeit ausgewählt. Wähle eine Uhrzeit im folgenden Intervall %d – %d.</string>
+    <string name="invalid_notification_time_format_string">Ungültige Zeit ausgewählt. Wähle eine Uhrzeit im folgenden Intervall %1$d – %2$d.</string>
 
     <!-- Information -->
     <string name="version">Version: %1$s</string>
@@ -455,7 +455,7 @@ Signatur: %5$s</string>
     <string name="show_chart">Diagramm anzeigen</string>
     <string name="study_program_format_string">Studiengang %s</string>
     <string name="summer_semester">Sommersemester %d</string>
-    <string name="winter_semester">Wintersemester %d/%d</string>
+    <string name="winter_semester">Wintersemester %1$d/%2$d</string>
 
     <string name="channel_general">Allgemein</string>
     <string name="channel_cafeteria">Mensa</string>
@@ -467,11 +467,8 @@ Signatur: %5$s</string>
     <string name="location_services_off_title">Standortfreigabe ist ausgeschaltet</string>
     <string name="location_services_off_message">Schalte deinen Standort in den Einstellungen an um deinen Standort mitzusenden</string>
     <string name="study_cards_title">Cards</string>
-    <string name="card_title">Titel</string>
     <string name="create_card">Karte hinzufügen</string>
     <string name="title_activity_cards">Karteikarten</string>
-    <string name="card_front_text">Vorderseite</string>
-    <string name="card_back_text">Hinterseite</string>
     <string name="title_activity_cards_detail">Karte hinzufügen</string>
     <string name="card_question">Frage</string>
     <string name="card_answer">Antwort</string>
@@ -518,13 +515,13 @@ Signatur: %5$s</string>
     <string name="ticket_amount_error_title">Kaufeinschränkungen</string>
     <string name="unknown">Unbekannt</string>
     <string name="not_redeemed_yet">Noch nicht eingelöst</string>
-    <string name="partially_redeemed">%d von %d eingelöst (%s)</string>
+    <string name="partially_redeemed">%1$d von %2$d eingelöst (%3$s)</string>
     <string name="redeemed_at">Eingelöst um %s</string>
     <string name="no_tickets_remaining">Keine Tickets mehr vorhanden</string>
     <string name="no_tickets_remaining_message">Leider stehen für diese Veranstaltung keine weiteren Online Tickets zur Verfügung.\nBei vielen Veranstaltungen kannst du aber vor Ort noch Tickets erwerben.</string>
     <string name="error_message_select_at_least_one_ticket">Bitte wähle mindestens ein Ticket aus einer der Kategorien aus.</string>
     <string name="error_no_ticket_selected">Keine Tickets ausgewählt</string>
-    <string name="ticket_amount_information">Es können maximal %d Tickets pro Person vom Typ \“%s\” gekauft werden.</string>
+    <string name="ticket_amount_information">Es können maximal %1$d Tickets pro Person vom Typ \“%2$s\” gekauft werden.</string>
     <string name="ticket_amount_label">Betrag</string>
     <string name="tickets_saved_in_app">Das Ticket wurde in der App gespeichert.</string>
 
@@ -604,7 +601,7 @@ Signatur: %5$s</string>
     <string name="user_search_hint">Suche Name oder TUM Kennung</string>
     <string name="error_invalid_tum_id_format">Inkorrekte TUM Kennung</string>
     <string name="error_user_not_found">Niemand gefunden</string>
-    <string name="add_user_to_chat_message"><b>%s</b> zum Chatroom <b>%s</b> hinzufügen?</string>
+    <string name="add_user_to_chat_message"><b>%1$s</b> zum Chatroom <b>%2$s</b> hinzufügen?</string>
     <string name="chat_member_added">Nutzer*in hinzugefügt</string>
 
     <string name="or">oder</string>

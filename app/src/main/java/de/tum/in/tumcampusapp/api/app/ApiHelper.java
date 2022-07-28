@@ -32,6 +32,8 @@ public final class ApiHelper {
     private static final int HTTP_TIMEOUT = 25000;
     private static OkHttpClient client;
 
+    private ApiHelper() {}
+
     public static OkHttpClient getOkHttpClient(Context c) {
         if (client != null) {
             return client;

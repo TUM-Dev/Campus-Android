@@ -41,7 +41,7 @@ class EventCard(context: Context) : Card(CardManager.CARD_EVENT, context, "card_
         }
     }
 
-    override fun getNavigationDestination(): NavDestination? {
+    override fun getNavigationDestination(): NavDestination {
         val event = this.event
         if (event != null && event.kino != -1) {
             val args = Bundle().apply { putInt(Const.KINO_ID, event.kino) }

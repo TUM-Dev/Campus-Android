@@ -129,7 +129,7 @@ public class OpeningHoursDetailFragment extends Fragment {
         Linkify.addLinks(infoView, Pattern.compile("[0-9-]{6,}"), "tel:");
     }
 
-    private class OpeningHoursDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static class OpeningHoursDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         final List<Location> locations;
 
         OpeningHoursDetailAdapter(List<Location> locations) {

@@ -173,13 +173,13 @@ abstract class TcaDb : RoomDatabase() {
         @Throws(ExecutionException::class, InterruptedException::class)
         fun resetDb(c: Context) {
             // Stop all work tasks in WorkManager, since they might access the DB
-            WorkManager.getInstance().cancelAllWork().result.get()
+            WorkManager.getInstance(c).cancelAllWork().result.get()
 
             // Clear our cache table
             val cacheManager = CacheManager(c)
             cacheManager.clearCache()
 
-            TcaDb.getInstance(c).clearAllTables()
+            getInstance(c).clearAllTables()
         }
     }
 }

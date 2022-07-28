@@ -6,9 +6,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import androidx.test.core.app.ApplicationProvider;
 import de.tum.in.tumcampusapp.TestApp;
 import de.tum.in.tumcampusapp.component.ui.news.NewsSourcesDao;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
@@ -24,13 +24,13 @@ public class NewsSourcesDaoTest {
 
     @Before
     public void setUp() {
-        dao = TcaDb.Companion.getInstance(RuntimeEnvironment.application).newsSourcesDao();
+        dao = TcaDb.Companion.getInstance(ApplicationProvider.getApplicationContext()).newsSourcesDao();
     }
 
     @After
     public void tearDown() {
         dao.flush();
-        TcaDb.Companion.getInstance(RuntimeEnvironment.application).close();
+        TcaDb.Companion.getInstance(ApplicationProvider.getApplicationContext()).close();
     }
 
     /**

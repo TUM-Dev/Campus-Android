@@ -23,7 +23,7 @@ import com.google.gson.Gson;
 
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -88,6 +88,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
             handleBroadcastReceive(intent);
         }
     };
+    private Context context;
 
     public ChatActivity() {
         super(R.layout.activity_chat);
@@ -107,6 +108,8 @@ public class ChatActivity extends ActivityForDownloadingExternal
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        context = getApplicationContext();
         setupToolbarTitle();
         initChatMessageViewModel();
         bindUIElements();
@@ -358,7 +361,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
         chatHistoryAdapter.add(message);
         chatMessageViewModel.addToUnsent(message);
 
-        WorkManager.getInstance()
+        WorkManager.getInstance(context)
                    .enqueue(SendMessageWorker.getWorkRequest());
     }
 
@@ -459,8 +462,7 @@ public class ChatActivity extends ActivityForDownloadingExternal
         List<ChatMessage> unsent = chatMessageViewModel.getUnsentInChatRoom(currentChatRoom);
         messages.addAll(unsent);
 
-        Collections.sort(messages, (lhs, rhs) -> lhs.getTimestamp()
-                                                    .compareTo(rhs.getTimestamp()));
+        messages.sort(Comparator.comparing(ChatMessage::getTimestamp));
         chatHistoryAdapter.updateHistory(messages);
 
         if (messages.isEmpty()) {
