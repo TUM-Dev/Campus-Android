@@ -43,7 +43,6 @@ public class CalendarDaoTest {
         rlDao = TcaDb.Companion.getInstance(ApplicationProvider.getApplicationContext())
                                .roomLocationsDao();
         nr = 0;
-        JodaTimeAndroid.init(ApplicationProvider.getApplicationContext());
     }
 
     @After
