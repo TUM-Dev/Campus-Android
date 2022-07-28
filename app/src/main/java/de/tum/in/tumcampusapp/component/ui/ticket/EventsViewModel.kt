@@ -19,6 +19,7 @@ import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+// TODO: is this class nessesary?
 sealed class Action {
     data class Refresh(val isLoggedIn: Boolean) : Action()
 }
@@ -125,8 +126,8 @@ class EventsViewModel @Inject constructor(
                 .subscribe()
     }
 
-    fun refreshEventsAndTickets(isLoggedIn: Boolean) {
-        refreshRelay.accept(Action.Refresh(isLoggedIn))
+    fun refreshEventsAndTickets() {
+        refreshRelay.accept(Action.Refresh(true))
     }
 
     private fun render(viewState: EventsViewState) {

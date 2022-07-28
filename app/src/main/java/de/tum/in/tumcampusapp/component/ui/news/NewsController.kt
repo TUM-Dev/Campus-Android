@@ -33,7 +33,7 @@ class NewsController @Inject constructor(
      */
     val todayIndex: Int
         get() {
-            val selectedNewspread = Utils.getSetting(context, "news_newspread", "7").toInt()
+            val selectedNewspread = Utils.getSettingInt(context, "news_newspread", 7)
             val news = newsDao.getNewer(selectedNewspread)
             return if (news.isEmpty()) 0 else news.size - 1
         }
@@ -126,7 +126,7 @@ class NewsController @Inject constructor(
      * @return List of News
      */
     fun getAllFromDb(context: Context): List<News> {
-        val selectedNewspread = Utils.getSetting(this.context, "news_newspread", "7").toInt()
+        val selectedNewspread = Utils.getSettingInt(this.context, "news_newspread", 7)
 
         val ids = newsSources
             .map { it.id }

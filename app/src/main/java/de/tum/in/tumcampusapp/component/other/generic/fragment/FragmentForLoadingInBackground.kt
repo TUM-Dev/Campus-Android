@@ -56,7 +56,7 @@ abstract class FragmentForLoadingInBackground<T>(
      *
      * @param result Result returned by [onLoadInBackground]
      */
-    protected abstract fun onLoadFinished(result: T?)
+    protected abstract fun onLoadFinished(result: T)
 
     override fun onRefresh() {
         startLoading()

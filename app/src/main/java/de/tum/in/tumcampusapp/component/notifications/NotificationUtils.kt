@@ -46,12 +46,6 @@ object NotificationUtils {
                 NotificationManager.IMPORTANCE_DEFAULT
         )
 
-        val chat = createChannel(
-                context, Const.NOTIFICATION_CHANNEL_CHAT,
-                R.string.channel_chat, R.string.channel_description_chat,
-                NotificationManager.IMPORTANCE_DEFAULT
-        )
-
         val eduroam = createChannel(
                 context, Const.NOTIFICATION_CHANNEL_EDUROAM,
                 R.string.eduroam, R.string.channel_description_eduroam,
@@ -80,7 +74,7 @@ object NotificationUtils {
         }
 
         val notificationManager = context.notificationManager
-        val channels = listOf(default, chat, eduroam, cafeteria, mvv, emergency)
+        val channels = listOf(default, eduroam, cafeteria, mvv, emergency)
 
         channels.forEach { notificationManager.createNotificationChannel(it) }
     }

@@ -199,7 +199,7 @@ class OnboardingStartFragment : BaseFragment<Unit>(
 
     private fun generateNewToken(enteredId: String) {
         authManager.clearKeys()
-        authManager.generatePrivateKey(null)
+        authManager.generatePrivateKey()
         requestNewToken(enteredId)
     }
 

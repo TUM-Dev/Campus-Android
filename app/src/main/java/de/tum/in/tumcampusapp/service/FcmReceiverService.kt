@@ -1,6 +1,5 @@
 package de.tum.`in`.tumcampusapp.service
 
-import android.os.Bundle
 import androidx.annotation.IntDef
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -29,7 +28,7 @@ class FcmReceiverService : FirebaseMessagingService() {
 
         // Legacy messages need to be handled - maybe some data is missing?
         if (!data.containsKey(PAYLOAD) || !data.containsKey("type")) {
-            handleLegacyNotification(data)
+            // TODO: is this path nessesary?????
             return
         }
 
@@ -75,20 +74,6 @@ class FcmReceiverService : FirebaseMessagingService() {
                 }
                 null
             }
-        }
-    }
-
-    /**
-     * Try to support old notifications by matching it as a legacy chat notificationId
-     * TODO(kordianbruck): do we still need this?
-     */
-    private fun handleLegacyNotification(data: Map<String, String>) {
-        try {
-            val bundle = Bundle().apply {
-                data.entries.forEach { entry -> putString(entry.key, entry.value) }
-            }
-        } catch (e: Exception) {
-            Utils.log(e)
         }
     }
 

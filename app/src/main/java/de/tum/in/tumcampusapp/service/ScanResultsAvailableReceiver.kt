@@ -56,7 +56,7 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
                 NetUtils.isConnected(context)
 
         context.wifiManager.scanResults.forEach { network ->
-            if (network.SSID != Const.EDUROAM_SSID && network.SSID != Const.LRZ) {
+            if (network.SSID != Const.EDUROAM_SSID && network.SSID != Const.LRZ_SSID) {
                 return@forEach
             }
 

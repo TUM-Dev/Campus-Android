@@ -101,7 +101,7 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
         Utils.migrateSharedPreferences(this)
 
         // Check that we have a private key setup in order to authenticate this device
-        authManager.generatePrivateKey(null)
+        authManager.generatePrivateKey()
 
         // On first setup show remark that loading could last longer than normally
         runOnUiThread {

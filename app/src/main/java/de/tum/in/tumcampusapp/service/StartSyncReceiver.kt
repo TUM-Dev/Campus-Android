@@ -9,8 +9,7 @@ import androidx.work.WorkManager
 import de.tum.`in`.tumcampusapp.utils.Utils
 
 /**
- * Receives on boot completed broadcast, sets alarm for next sync-try
- * and start BackgroundService if enabled in settingsPrefix
+ * Receives on boot completed broadcast, and start BackgroundService if enabled in settingsPrefix
  */
 class StartSyncReceiver : BroadcastReceiver() {
 
@@ -19,9 +18,7 @@ class StartSyncReceiver : BroadcastReceiver() {
         // Check intent if called from StartupActivity
         startBackground(context)
 
-        startSendMessage(context)
-
-        // Also start the SilenceService. It checks if it is enabled, so we don't need to
+        // start the SilenceService. It checks if it is enabled, so we don't need to
         // SilenceService also needs accurate timings, so we can't use WorkManager
         SilenceService.enqueueWork(context, Intent())
     }
@@ -29,12 +26,6 @@ class StartSyncReceiver : BroadcastReceiver() {
     companion object {
         private const val UNIQUE_BACKGROUND = "START_SYNC_BACKGROUND"
         private const val UNIQUE_SEND_MESSAGE = "START_SYNC_SEND_MESSAGE"
-
-        fun startSendMessage(context: Context) {
-            WorkManager.getInstance(context)
-                    .enqueueUniquePeriodicWork(
-                            UNIQUE_SEND_MESSAGE, KEEP, SendMessageWorker.getPeriodicWorkRequest())
-        }
 
         /**
          * Start the periodic BackgroundWorker, ensuring only one task is ever running
@@ -45,8 +36,7 @@ class StartSyncReceiver : BroadcastReceiver() {
                 return
             }
             WorkManager.getInstance(context)
-                    .enqueueUniquePeriodicWork(UNIQUE_BACKGROUND, KEEP,
-                            BackgroundWorker.getWorkRequest())
+                    .enqueueUniquePeriodicWork(UNIQUE_BACKGROUND, KEEP, BackgroundWorker.getWorkRequest())
         }
 
         /**

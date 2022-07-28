@@ -218,7 +218,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     override fun showSendConfirmationDialog() {
         ThemedAlertDialogBuilder(this)
                 .setMessage(R.string.send_feedback_question)
-                .setPositiveButton(R.string.send) { _, _ -> presenter.onConfirmSend() }
+                .setPositiveButton(R.string.feedback_send) { _, _ -> presenter.onConfirmSend() }
                 .setNegativeButton(R.string.cancel, null)
                 .show()
     }

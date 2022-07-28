@@ -278,29 +278,6 @@
 
         </androidx.preference.PreferenceScreen>
 
-        <!-- Chat card -->
-        <androidx.preference.PreferenceScreen
-            android:icon="@drawable/ic_outline_chat_bubble_outline_24px"
-            android:key="card_chat"
-            android:summary="@string/card_chat_summary"
-            android:title="@string/chat">
-
-            <androidx.preference.PreferenceCategory android:title="@string/display">
-
-                <androidx.preference.CheckBoxPreference
-                    android:defaultValue="true"
-                    android:key="card_chat_start"
-                    android:title="@string/startpage" />
-
-                <androidx.preference.CheckBoxPreference
-                    android:defaultValue="true"
-                    android:key="card_chat_phone"
-                    android:title="@string/notification" />
-
-            </androidx.preference.PreferenceCategory>
-
-        </androidx.preference.PreferenceScreen>
-
         <!-- Eduroam card -->
         <androidx.preference.PreferenceScreen
             android:icon="@drawable/ic_action_network_wifi"
@@ -364,11 +341,6 @@
             android:key="background_mode_set_to"
             android:title="@string/mode_background_mode" />
 
-        <androidx.preference.SwitchPreferenceCompat
-            android:icon="@drawable/ic_outline_group_add_24px"
-            android:key="auto_join_new_rooms"
-            android:summary="@string/set_auto_join_chat"
-            android:title="@string/auto_join_chat" />
 
     </androidx.preference.PreferenceCategory>
 

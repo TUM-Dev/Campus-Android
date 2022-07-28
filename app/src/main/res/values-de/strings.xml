@@ -176,7 +176,6 @@
     <string name="my_tum">Mein TUM</string>
     <string name="calendar">Kalender</string>
     <string name="my_lectures">Meine Vorlesungen</string>
-    <string name="chat_rooms">Chatrooms</string>
     <string name="tuition_fees">Rückmeldung</string>
     <string name="common_info">Allgemeine Informationen</string>
     <string name="menues">Mensen</string>
@@ -261,12 +260,6 @@
     <string name="campus_main_adress">Arcisstraße 21, 80333 München</string>
     <string name="campus_weihenstephan_adress">Liesel-Beckmann-Straße 6, 85354 Freising</string>
 
-    <!-- Chat rooms -->
-    <string name="my_chat_rooms">Meine Chatrooms</string>
-    <string name="send">Senden</string>
-    <string name="leave_chat_room">Chatroom verlassen</string>
-    <string name="leave_chat_room_body">Bist du sicher, dass du den Chatroom verlassen willst?</string>
-
     <!-- Cards -->
     <string name="last_updated">Der Inhalt wurde zuletzt %s aktualisiert.</string>
     <string name="next_lecture">Nächste Vorlesung</string>
@@ -320,7 +313,6 @@
     <string name="card_next_lecture_summary">Zeigt Informationen zur nächsten Vorlesung an</string>
     <string name="card_tuition_fee_summary">Erinnert dich, wenn du die Studiengebühren zahlen musst</string>
     <string name="card_news_summary">Schlägt ausgewählte News vor</string>
-    <string name="card_chat_summary">Benachrichtigt dich über neue Nachrichten</string>
     <string name="open_card_settings">Karte anpassen</string>
     <string name="always_hide_card">Karte immer ausblenden</string>
     <string name="phone_summary">Um Benachrichtigungen auf dem Telefon zu erhalten muss Wearable aktiviert sein</string>
@@ -363,17 +355,10 @@
     <string name="news_sources">News Quellen</string>
     <string name="only_latest_article">Nur neusten Artikel</string>
     <string name="only_latest_article_summary">Zeigt jeweils nur den neusten Artikel. Ansonsten werden alle Artikel der ausgewählten Quellen angezeigt.</string>
-    <string name="lecture_chat">Vorlesungs-Chat</string>
-    <string name="set_lecture_chat">Wenn es aktiviert ist, kannst du Vorlesungs-Chatrooms beitreten und mit deinen Kommilitonen diskutieren.</string>
-    <string name="open_chat_terms">Chatbedingungen</string>
-    <string name="have_to_accept_terms">Chatbedingungen müssen akzeptiert werden, damit du den Vorlesungs-Chat verwenden kannst!</string>
-    <string name="activate_key">Bitte aktiviere zuerst deinen Public Key</string>
-    <string name="joined_chat_room">Du bist dem Chatroom beigetreten!</string>
     <string name="view_mode">Ansicht wechseln</string>
     <string name="Refresh">Aktualisieren</string>
     <string name="bug_reports">Anonyme Fehlerberichte</string>
     <string name="set_bug_reports">Unterstütze das uns mit anonymen Fehlerberichten. Diese beinhalten: Stacktrace, Logdateien, Android-Version, App-Version und Bildschirmauflösung</string>
-    <string name="error_setup_chat_member">Etwas stimmt nicht mit deiner Chat Registrierung!</string>
     <string name="error_pk_verification">Es ist ein Problem bei der Authentifizierung aufgetreten</string>
     <string name="room_timetable">Belegungsplan</string>
     <string name="newspread_summary">Wähle aus welches newspread angezeigt werden soll. Das sind die Folien die auf den Info Monitoren in deiner Fakultät angezeigt werden.</string>
@@ -398,19 +383,7 @@ Signatur: %5$s</string>
     <string name="not_joined">Alle</string>
     <string name="default_campus">Standardcampus</string>
     <string name="no_default_campus">Kein Standardcampus</string>
-    <string name="public_key_mail">Public Key Aktivierungs-E-Mail wurde an %s@mytum.de gesendet!\n\n<b>Bitte aktiviere ihn jetzt!</b></string>
-    <string name="failure_uploading_public_key">Fehler beim Hochladen des Public Key</string>
-    <string name="key_not_activated">Du hast deinen Key noch nicht aktiviert!</string>
-    <string name="no_rights_to_access_lectures">Vorlesungen konnten nicht abgerufen werden. Bitte überprüfe die Rechte deines TUMonline Tokens!</string>
     <string name="edit">Bearbeiten</string>
-    <string name="auto_join_chat">Neuen Vorlesungs-Chats beitreten</string>
-    <string name="set_auto_join_chat">Wenn du dich für eine neue Vorlesung einschreibst, wirst du automatisch zum Chatroom der Vorlesung hinzugefügt.</string>
-    <string name="add_chat_member">Jemanden zum Chatroom hinzufügen</string>
-    <string name="add_chat_room">Neuer Chatroom</string>
-    <string name="join_chat_room">Chatroom betreten</string>
-    <string name="invalid_chat_room">Ungültiger Chatroom</string>
-    <string name="new_chat_room">Neuer Chatroom</string>
-    <string name="new_chat_room_desc">Wähle einen Namen für den Chatroom. Der Name kann später nicht mehr geändert werden!\n\n</string>
     <string name="reply_label">Antworten</string>
     <string name="privacy_policy">Datenschutzerklärung</string>
     <string name="just_now">Gerade eben</string>
@@ -435,8 +408,6 @@ Signatur: %5$s</string>
     <string name="add_widget">Widget hinzufügen</string>
     <string name="my_grades">Meine Noten</string>
     <string name="widget_configure_description">Anzeige der Karten einstellen</string>
-    <string name="accept_chat_terms">Chatbedingungen müssen akzeptiert werden, damit du den Vorlesungs-Chat verwenden kannst!</string>
-    <string name="chat_not_setup">Chat ist nicht richtig eingerichtet, bitte den Assistenten über die Einstellungen neu starten!</string>
     <string name="please_connect_to_internet">Bitte verbinden Sie sich mit dem Internet, um den ersten App-Start fortzusetzen</string>
     <string name="IN">in</string>
     <string name="MINUTES">minuten</string>
@@ -492,6 +463,8 @@ Signatur: %5$s</string>
     <string name="feedback_remove_image">Bild löschen</string>
     <string name="feedback_sending_error">Es ist ein Fehler aufgetreten</string>
     <string name="try_again">Erneut versuchen</string>
+
+    <string name="feedback_send">Feedback absenden</string>
     <string name="feedback_sending">Feedback wird gesendet…</string>
     <string name="feedback_send_success">Feedback erfolgreich versandt!</string>
 
@@ -504,7 +477,6 @@ Signatur: %5$s</string>
 
     <string name="channel_general">Allgemein</string>
     <string name="channel_cafeteria">Mensa</string>
-    <string name="channel_chat">Chat</string>
     <string name="channel_mvv">MVV</string>
     <string name="channel_tum_alarmierung">TUM Alarmierung (für Katastrophen)</string>
 
@@ -620,8 +592,7 @@ Signatur: %5$s</string>
                                         &#8226; auf deinen Kalender zugreifen\n
                                         &#8226; Details zu deinen Vorlesungen erfahren\n
                                         &#8226; deine Noten ansehen\n
-                                        &#8226; deinen Studienbeitragsstatus prüfen\n
-                                        &#8226; mit Komilitonen aus deinen Vorlesungen chatten</string>
+                                        &#8226; deinen Studienbeitragsstatus prüfen</string>
     <string name="tumonline_login">Mit TUMonline verbinden</string>
     <string name="card_login_title">Willkommen zur TUM Campus App</string>
     <string name="card_login_body">Verbinde die App mit TUMonline, um auf deinen Kalendar, deine Vorlesungen und deine Noten zugreifen zu können.</string>
@@ -629,8 +600,6 @@ Signatur: %5$s</string>
     <string name="watch_trailer">Trailer anschauen</string>
     <string name="show_trailer_error">Trailer kann nicht gezeigt werden</string>
     <string name="kino_cover_description">Cover</string>
-
-    <string name="pdf_viewer_title">PDF Viewer</string>
 
     <string name="app_info_text">
         Die TUM Campus App wird von Freiwilligen, Studierenden des Android Praktikums und Lehrstuhlmitarbeiter*innen des Informatik Fachgebiet 13 unter
@@ -641,16 +610,6 @@ Signatur: %5$s</string>
     <string name="recents">Zuletzt</string>
     <string name="e_mail">E-Mail</string>
     <string name="additional_info">Zusätzliche Infos</string>
-
-    <!-- Add user to chat via search -->
-    <string name="user_search_hint">Suche Name oder TUM Kennung</string>
-    <string name="error_invalid_tum_id_format">Inkorrekte TUM Kennung</string>
-    <string name="error_user_not_found">Niemand gefunden</string>
-    <string name="add_user_to_chat_message"><b>%1$s</b> zum Chatroom <b>%2$s</b> hinzufügen?</string>
-    <string name="chat_member_added">Nutzer*in hinzugefügt</string>
-
-    <string name="or">oder</string>
-    <string name="join_chat_via_qr_code">via QR-code beitreten</string>
 
     <string name="topic">Über</string>
     <string name="generate_new_token">Neues Token generieren</string>
@@ -671,7 +630,6 @@ Signatur: %5$s</string>
 
     <string name="channel_description_general">Nächste Vorlesung, News und Erinnerungen über Studienbeiträge</string>
     <string name="channel_description_cafeteria">Aktuelles Tagesmenü</string>
-    <string name="channel_description_chat">Neue Chat-Nachrichten</string>
     <string name="channel_description_mvv">Abfahrten an nahegelegenen Haltestellen</string>
     <string name="channel_description_tum_alarmierung">Alarmierung bei Notfällen an der TUM</string>
     <string name="channel_description_eduroam">Untersützung beim Einrichten von eduroam</string>
@@ -724,9 +682,6 @@ Signatur: %5$s</string>
     <string name="logout_title">Verbindung zu TUMonline löschen</string>
     <string name="logout_error_title">Logout ist fehlgeschlagen</string>
     <string name="logout_try_again">Erneut versuchen?</string>
-    <string name="chat_message_send_error">Nachricht konnte nicht gesendet werden</string>
-    <string name="chat_message_try_again">Die Nachricht konnte nicht gesendet werden. Erneut versuchen?</string>
-    <string name="leave">Verlassen</string>
     <string name="today">Heute</string>
     <string name="ticket_sale_beta">Der Ticketverkauf befindet sich momentan im Testbetrieb und es können Fehler auftreten. Solltet ihr Probleme haben, könnt ihr uns unter app@tum.de erreichen. Es gibt weiterhin Karten an der Abendkasse, selbst wenn digital das Kontigent erschöpft ist.</string>
     <string name="next_lecture_show_more">Zeige %d weitere …</string>

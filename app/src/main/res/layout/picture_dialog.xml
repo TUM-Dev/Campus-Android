@@ -17,6 +17,6 @@
         android:layout_gravity="center"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        tools:src="@drawable/chat_background" />
+        tools:src="@drawable/legacy_faculties_background" />
 
 </LinearLayout>

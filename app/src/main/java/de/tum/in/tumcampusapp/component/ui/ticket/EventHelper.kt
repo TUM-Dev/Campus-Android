@@ -34,10 +34,10 @@ class EventHelper {
             }
 
             val lrzId = Utils.getSetting(context, Const.LRZ_ID, "")
-            val chatRoomName = Utils.getSetting(context, Const.CHAT_ROOM_DISPLAY_NAME, "")
+
             val isLoggedIn = AccessTokenManager.hasValidAccessToken(context)
 
-            if (!isLoggedIn || lrzId.isEmpty() || chatRoomName.isEmpty()) {
+            if (!isLoggedIn || lrzId.isEmpty()) {
                 ThemedAlertDialogBuilder(context)
                     .setTitle(R.string.error)
                     .setMessage(R.string.not_logged_in_error)

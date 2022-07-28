@@ -14,7 +14,6 @@ import de.tum.`in`.tumcampusapp.api.app.model.TUMCabeVerification
 import de.tum.`in`.tumcampusapp.api.app.model.UploadStatus
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.FragmentForLoadingInBackground
-import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMember
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponent
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponentProvider
 import de.tum.`in`.tumcampusapp.databinding.FragmentOnboardingExtrasBinding
@@ -28,7 +27,7 @@ import org.jetbrains.anko.support.v4.browse
 import java.io.IOException
 import javax.inject.Inject
 
-class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
+class OnboardingExtrasFragment : FragmentForLoadingInBackground<Boolean>(
     R.layout.fragment_onboarding_extras,
     R.string.connect_to_tum_online
 ) {
@@ -49,7 +48,7 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
     @Inject
     lateinit var navigator: OnboardingNavigator
 
-    private val binding by viewBinding(FragmentOnboardingExtrasBinding::bind)
+    private val binding: FragmentOnboardingExtrasBinding by viewBinding(FragmentOnboardingExtrasBinding::bind)
 
     override val swipeRefreshLayout get() = binding.swipeRefreshLayout
     override val layoutAllErrorsBinding get() = binding.layoutAllErrors
@@ -80,14 +79,6 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
             }
 
             if (AccessTokenManager.hasValidAccessToken(requireContext())) {
-                groupChatCheckBox.isChecked =
-                    Utils.getSettingBool(requireContext(), Const.GROUP_CHAT_ENABLED, true)
-            } else {
-                groupChatCheckBox.isChecked = false
-                groupChatCheckBox.isEnabled = false
-            }
-
-            if (AccessTokenManager.hasValidAccessToken(requireContext())) {
                 cacheManager.fillCache()
             }
 
@@ -96,67 +87,40 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
         }
     }
 
-    override fun onLoadInBackground(): ChatMember? {
+    override fun onLoadInBackground(): Boolean {
         if (!NetUtils.isConnected(requireContext())) {
             showNoInternetLayout()
-            return null
+            return false
         }
 
         // By now, we should have generated the RSA key and uploaded it to our server and TUMonline
 
-        val lrzId = Utils.getSetting(requireContext(), Const.LRZ_ID, "")
-        val name = Utils.getSetting(requireContext(),
-            Const.CHAT_ROOM_DISPLAY_NAME, getString(R.string.not_connected_to_tumonline))
+        val lrzId = Utils.getSetting(requireContext(), Const.LRZ_ID, "") // TODO is this needed?
 
-        val currentChatMember = ChatMember(lrzId)
-        currentChatMember.displayName = name
-
-        if (currentChatMember.lrzId.isNullOrEmpty()) {
-            return currentChatMember
-        }
-
-        // Tell the server the new member
-        val member: ChatMember?
-        try {
-            // After the user has entered their display name, create the new member on the server
-            member = tumCabeClient.createMember(currentChatMember)
-        } catch (e: IOException) {
-            Utils.log(e)
-            Utils.showToastOnUIThread(requireActivity(), R.string.error_setup_chat_member)
-            return null
-        }
-
-        // Catch a possible error, when we didn't get something returned
-        if (member?.lrzId == null) {
-            Utils.showToastOnUIThread(requireActivity(), R.string.error_setup_chat_member)
-            return null
-        }
-
-        val status = tumCabeClient.verifyKey()
+        val status = tumCabeClient.verifyKey() // TODO is this needed?
         if (status?.status != UploadStatus.VERIFIED) {
             Utils.showToastOnUIThread(requireActivity(), getString(R.string.error_pk_verification))
-            return null
+            return false
         }
 
         // Try to restore already joined chat rooms from server
-        return try {
-            TUMCabeVerification.create(requireContext(), null)
+        try {
+            val verification = TUMCabeVerification.create(requireContext(), null) // TODO is this needed?
 
             // upload obfuscated ids now that we have a member
             val uploadStatus = tumCabeClient.getUploadStatus(lrzId)
             if (uploadStatus != null) {
                 authManager.uploadObfuscatedIds(uploadStatus)
             }
-
-            member
+            return true
         } catch (e: IOException) {
             Utils.log(e)
-            null
+            return false
         }
     }
 
-    override fun onLoadFinished(result: ChatMember?) {
-        if (result == null) {
+    override fun onLoadFinished(result: Boolean) {
+        if (!result) {
             showLoadingEnded()
             return
         }
@@ -170,19 +134,9 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
                     putBoolean(Const.SILENCE_SERVICE, silentModeCheckBox.isChecked)
                     putBoolean(Const.BACKGROUND_MODE, true) // Enable by default
                     putBoolean(Const.BUG_REPORTS, bugReportsCheckBox.isChecked)
-
-                    if (!result.lrzId.isNullOrEmpty()) {
-                        putBoolean(Const.GROUP_CHAT_ENABLED, groupChatCheckBox.isChecked)
-                        putBoolean(Const.AUTO_JOIN_NEW_ROOMS, groupChatCheckBox.isChecked)
-                        put(Const.CHAT_MEMBER, result)
-                    }
                 }
             }
 
-        finishOnboarding()
-    }
-
-    private fun finishOnboarding() {
         navigator.finish()
     }
 

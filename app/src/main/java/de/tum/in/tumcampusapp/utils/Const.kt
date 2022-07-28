@@ -32,9 +32,8 @@ object Const {
     const val API_HOSTNAME_NEW = "app.tum.de"
     const val STUDY_ROOMS_HOSTNAME = "www.devapp.it.tum.de"
 
-    const val CURRENT_CHAT_ROOM = "current_chat_room"
+    // TODO Remove or rename
     const val CHAT_ROOM_DISPLAY_NAME = "chat_room_display_name"
-    const val CHAT_ROOM_NAME = "chat_room_name"
 
     const val PRIVATE_KEY = "chat_member_private_key"
     const val PUBLIC_KEY = "chat_member_public_key"
@@ -57,11 +56,8 @@ object Const {
     const val P_TOKEN = "pToken"
 
     const val SYNC_CALENDAR_IMPORT = "calendar_import"
-    const val GROUP_CHAT_ENABLED = "group_chat_enabled"
     const val BUG_REPORTS = "bug_reports"
     const val DEFAULT_CAMPUS = "card_default_campus"
-    const val AUTO_JOIN_NEW_ROOMS = "auto_join_new_rooms"
-    const val CHAT_MEMBER = "chat_member"
     const val POSITION = "position"
 
     const val PREF_UNIQUE_ID = "PREF_UNIQUE_ID"
@@ -75,7 +71,6 @@ object Const {
     const val KEY_NOTIFICATION = "notification"
 
     const val NOTIFICATION_CHANNEL_DEFAULT = "general"
-    const val NOTIFICATION_CHANNEL_CHAT = "chat"
     const val NOTIFICATION_CHANNEL_EDUROAM = "eduroam"
     const val NOTIFICATION_CHANNEL_CAFETERIA = "cafeteria"
     const val NOTIFICATION_CHANNEL_MVV = "mvv"
@@ -109,11 +104,7 @@ object Const {
     const val RAINBOW_MODE = "rainbow_enabled"
     const val REFRESH_CARDS = "refresh_cards"
     const val EDUROAM_SSID = "eduroam"
-    const val LRZ = "lrz"
-
-    const val FCM_CHAT = "fcmChat"
-    const val CHAT_MESSAGE = "chatMessage"
-    const val CHAT_BROADCAST_NAME = "chat-message-received"
+    const val LRZ_SSID = "lrz"
 
     const val EVENT_EDIT = "pEdit"
     const val EVENT_TITLE = "pTitel"

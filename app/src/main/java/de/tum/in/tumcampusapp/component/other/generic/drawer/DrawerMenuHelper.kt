@@ -42,7 +42,6 @@ class DrawerMenuHelper(
 
     fun populateMenu() {
         val hasTumOnlineAccess = AccessTokenManager.hasValidAccessToken(activity)
-        val isChatEnabled = Utils.getSettingBool(activity, Const.GROUP_CHAT_ENABLED, false)
         val isEmployeeMode = Utils.getSettingBool(activity, Const.EMPLOYEE_MODE, false)
 
         navigationMenu.clear()
@@ -57,7 +56,6 @@ class DrawerMenuHelper(
         val myTumMenu = navigationMenu.addSubMenu(R.string.my_tum)
         if (hasTumOnlineAccess) {
             val candidates = MY_TUM
-                .filterNot { !isChatEnabled && it.needsChatAccess }
                 .filterNot { isEmployeeMode && it.hideForEmployees }
 
             for (candidate in candidates) {

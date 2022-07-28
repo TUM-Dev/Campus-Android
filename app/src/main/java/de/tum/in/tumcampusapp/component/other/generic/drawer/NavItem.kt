@@ -7,7 +7,6 @@ sealed class NavItem(
     val titleRes: Int,
     val iconRes: Int,
     val needsTUMOAccess: Boolean,
-    val needsChatAccess: Boolean,
     val hideForEmployees: Boolean
 ) {
 
@@ -16,16 +15,14 @@ sealed class NavItem(
         iconRes: Int,
         val fragment: Class<out Fragment>,
         needsTUMOAccess: Boolean = false,
-        needsChatAccess: Boolean = false,
         hideForEmployees: Boolean = false
-    ) : NavItem(titleRes, iconRes, needsTUMOAccess, needsChatAccess, hideForEmployees)
+    ) : NavItem(titleRes, iconRes, needsTUMOAccess, hideForEmployees)
 
     class ActivityDestination(
         titleRes: Int,
         iconRes: Int,
         val activity: Class<out BaseActivity>,
         needsTUMOAccess: Boolean = false,
-        needsChatAccess: Boolean = false,
         hideForEmployees: Boolean = false
-    ) : NavItem(titleRes, iconRes, needsTUMOAccess, needsChatAccess, hideForEmployees)
+    ) : NavItem(titleRes, iconRes, needsTUMOAccess, hideForEmployees)
 }

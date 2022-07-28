@@ -214,7 +214,6 @@
     <string name="calendar">Calendar</string>
     <string name="my_lectures">My Lectures</string>
     <string name="my_grades">My Grades</string>
-    <string name="chat_rooms">Chat rooms</string>
     <string name="tuition_fees">Tuition Fees</string>
     <string name="common_info">General Information</string>
     <string name="menues">Cafeterias</string>
@@ -307,13 +306,6 @@
     <string name="campus_main_adress">Arcisstraße 21, 80333 Munich</string>
     <string name="campus_weihenstephan_adress">Liesel-Beckmann-Straße 6, 85354 Freising</string>
 
-    <!-- Chat rooms -->
-    <string name="my_chat_rooms">My Chat Rooms</string>
-    <string name="send">Send</string>
-    <string name="leave">Leave</string>
-    <string name="leave_chat_room">Leave chat room</string>
-    <string name="leave_chat_room_body">Are you sure you want to leave this chat room?</string>
-
     <!-- Cards -->
     <string name="last_updated">The Content was last updated %s.</string>
     <string name="next_lecture">Next lecture</string>
@@ -371,8 +363,6 @@
     <string name="card_next_lecture_summary">Shows information about your next lecture</string>
     <string name="card_tuition_fee_summary">Reminds you when you have to pay your fees</string>
     <string name="card_news_summary">Advertises selected news</string>
-    <string name="card_chat_summary">Notifies you about new messages</string>
-    <string name="chat" translatable="false">Chat</string>
     <string name="open_card_settings">Open card settings</string>
     <string name="always_hide_card">Always hide card</string>
     <string name="phone_summary">To receive notifications on your phone you have to enable Wearable</string>
@@ -425,16 +415,9 @@
     <string name="news_sources">News sources</string>
     <string name="only_latest_article">Only latest article</string>
     <string name="only_latest_article_summary">Shows only the latest article. Otherwise all articles of the selected sources are shown.</string>
-    <string name="lecture_chat">Lecture Chat</string>
-    <string name="set_lecture_chat">If activated, you will be able to join lecture chat rooms, where you and your fellow students can discuss.</string>
-    <string name="open_chat_terms">Chat terms</string>
-    <string name="have_to_accept_terms">Terms must be accepted to use group chat!</string>
-    <string name="activate_key">Please activate your public key first</string>
-    <string name="joined_chat_room">You joined the chat room!</string>
     <string name="view_mode">Change view mode</string>
     <string name="bug_reports">Anonymous Bug Reports</string>
     <string name="set_bug_reports">Support the TCA team by sending anonymous bug reports which include: stack trace, logfile, Android version, app version and screen resolution.</string>
-    <string name="error_setup_chat_member">Something is wrong with your chat registration!</string>
     <string name="error_pk_verification">Verification error occurred</string>
     <string name="room_timetable">Room timetable</string>
     <string name="newspread" translatable="false" translateable="false">Newspread</string>
@@ -467,19 +450,7 @@ Signature: %5$s</string>
     <string name="campus_geschwister_scholl" translatable="false">Campus Geschwister Scholl-Platz</string>
     <string name="no_default_campus">No default campus</string>
     <string name="reply_label">Reply</string>
-    <string name="public_key_mail">Public key activation mail sent to %s@mytum.de.\n\n<b>Please activate it now!</b></string>
-    <string name="failure_uploading_public_key">Failure uploading public key</string>
-    <string name="key_not_activated">You have not activated your key!</string>
-    <string name="no_rights_to_access_lectures">Lectures could not be accessed. Please check the rights of your TUMonline token!</string>
     <string name="edit">Edit</string>
-    <string name="auto_join_chat">Auto-join new lecture rooms</string>
-    <string name="set_auto_join_chat">If you subscribe to a new lecture, the app will automatically add you to the lecture’s chat room.</string>
-    <string name="add_chat_member">Add person to chat room</string>
-    <string name="add_chat_room">New chat room</string>
-    <string name="join_chat_room">Join chat room</string>
-    <string name="invalid_chat_room">Invalid chat room</string>
-    <string name="new_chat_room">New chat room</string>
-    <string name="new_chat_room_desc">Select a name for your chat room. The name can not be changed afterwards!\n\n</string>
     <string name="just_now">Just now</string>
     <string name="yesterday">Yesterday</string>
 
@@ -499,14 +470,11 @@ Signature: %5$s</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="alarm_date_published_on">Published on:</string>
-    <string name="chat_not_setup">Chat is not setup properly, please rerun the wizard via the settings!</string>
-    <string name="www" translatable="false">der tu film</string>
     <string name="more_info">More Information</string>
     <string name="event_plan">Event plan</string>
     <string name="please_connect_to_internet">Please connect to internet in order to proceed the first app start</string>
     <string name="transition_card" translatable="false">card_transition</string>
     <string name="tumonline_link" translatable="false"><a href="http://campus.tum.de">TUMonline</a></string>
-    <string name="accept_chat_terms">Terms must be accepted to use group chat!</string>
     <string name="IN">in</string>
     <string name="MINUTES">minutes</string>
     <string name="on">on</string>
@@ -559,6 +527,7 @@ Signature: %5$s</string>
     <string name="feedback_remove_image">Remove Image</string>
     <string name="feedback_sending_error">There was an error sending your feedback</string>
     <string name="try_again">Try Again</string>
+    <string name="feedback_send">Send</string>
     <string name="feedback_sending">Sending…</string>
     <string name="feedback_send_success">Your feedback was successfully sent!</string>
     <string-array name="feedback_options">
@@ -577,9 +546,6 @@ Signature: %5$s</string>
 
     <string name="channel_cafeteria">Cafeteria</string>
     <string name="channel_description_cafeteria">The day’s menu</string>
-
-    <string name="channel_chat">Chat</string>
-    <string name="channel_description_chat">New chat room messages</string>
 
     <string name="channel_description_eduroam">Setup assistance for eduroam</string>
 
@@ -631,8 +597,7 @@ Signature: %5$s</string>
                                         &#8226; View your TUMonline calendar\n
                                         &#8226; See details about your lectures\n
                                         &#8226; Get an overview over your grades\n
-                                        &#8226; Check if you have outstanding tuition fees\n
-                                        &#8226; Chat with other students from your lectures</string>
+                                        &#8226; Check if you have outstanding tuition fees</string>
     <string name="tumonline_login">Connect to TUMonline</string>
     <string name="card_login_title">Welcome to the TUM Campus App</string>
     <string name="card_login_body">Connect the app to TUMonline now to access your calendar, lectures and grades.</string>
@@ -641,15 +606,7 @@ Signature: %5$s</string>
     <string name="show_trailer_error">Trailer can\'t be shown</string>
     <string name="watch_trailer">Watch trailer</string>
 
-    <string name="pdf_viewer_title">PDF Viewer</string>
     <string name="dialog_add_to_contacts">Add to Contacts?</string>
-
-    <!-- Add user to chat via search -->
-    <string name="user_search_hint">Search Name or TUM Identification</string>
-    <string name="error_invalid_tum_id_format">Invalid TUM-ID format</string>
-    <string name="error_user_not_found">No user found</string>
-    <string name="add_user_to_chat_message">Add <b>%1$s</b> to chat room <b>%2$s</b>?</string>
-    <string name="chat_member_added">Added user to chat room</string>
 
     <string name="enter_your_tum_id">Enter your TUM ID …</string>
     <string name="generate_new_token">Generate new token</string>
@@ -661,9 +618,6 @@ Signature: %5$s</string>
     <string name="recents">Recents</string>
     <string name="e_mail">E-mail</string>
     <string name="additional_info">Additional Info</string>
-
-    <string name="or">or</string>
-    <string name="join_chat_via_qr_code">let others join via QR-code</string>
 
     <string name="Refresh">Refresh</string>
 
@@ -777,8 +731,6 @@ Signature: %5$s</string>
 
     <string name="including_format_string">including %s</string>
     <string name="new_items_format_string">%d new items</string>
-    <string name="chat_message_send_error">Message couldn’t be sent</string>
-    <string name="chat_message_try_again">The message couldn’t be send. Try again?</string>
     <string name="today">Today</string>
     <string name="ticket_sale_beta">The ticket sale is still in beta and might have some side effects and errors. In case you experience any troubles, please contact us at app@tum.de. You can still buy tickets at the box office just before the event, even if there are no more tickets here in the app.</string>
     <string name="next_lecture_hide">Hide</string>

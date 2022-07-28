@@ -17,7 +17,6 @@
     <dimen name="card_options_icon">40dp</dimen>
     <dimen name="divider_height">1dp</dimen>
 
-    <dimen name="padding_chat">2dp</dimen>
     <dimen name="padding_default">8dp</dimen>
     <dimen name="padding_small">4dp</dimen>
     <dimen name="mid_text_size">14sp</dimen>
@@ -49,9 +48,6 @@
     <dimen name="add_thumbnail_button_size">60dp</dimen>
     <dimen name="thumbnail_size">75dp</dimen>
     <dimen name="feedback_img_big">300dp</dimen>
-
-    <dimen name="padding_chat_small">8sp</dimen>
-    <dimen name="padding_chat_big">50sp</dimen>
 
     <dimen name="search_result_icon_size">44sp</dimen>
     <dimen name="loading_progress_bar_top_margin">64sp</dimen>

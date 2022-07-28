@@ -30,7 +30,6 @@ import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.api.tumonline.TUMOnlineClient;
 import de.tum.in.tumcampusapp.api.tumonline.model.TokenConfirmation;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.service.FcmTokenHandler;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.RSASigner;
@@ -51,7 +50,7 @@ public class AuthenticationManager {
     private final Context mContext;
 
     @Inject
-    public AuthenticationManager(Context c) {
+    public AuthenticationManager(@NonNull Context c) {
         mContext = c;
     }
 
@@ -61,7 +60,8 @@ public class AuthenticationManager {
      *
      * @return Unique device id
      */
-    public static synchronized String getDeviceID(Context context) {
+    @NonNull
+    public static synchronized String getDeviceID(@NonNull Context context) {
         if (uniqueID == null) {
             uniqueID = Utils.getSetting(context, Const.PREF_UNIQUE_ID, "");
             if ("".equals(uniqueID)) {
@@ -73,15 +73,7 @@ public class AuthenticationManager {
         return uniqueID;
     }
 
-    private static KeyPairGenerator getKeyPairGeneratorInstance() {
-        try {
-            return KeyPairGenerator.getInstance(ALGORITHM);
-        } catch (NoSuchAlgorithmException e) {
-            // We don't support platforms without RSA
-            throw new AssertionError(e);
-        }
-    }
-
+    @NonNull
     public static KeyFactory getKeyFactoryInstance() {
         try {
             return KeyFactory.getInstance(ALGORITHM);
@@ -111,7 +103,7 @@ public class AuthenticationManager {
      * @return
      * @throws NoPublicKey
      */
-    public String getPublicKeyString() throws NoPublicKey {
+    private String getPublicKeyString() throws NoPublicKey {
         String key = Utils.getSetting(mContext, Const.PUBLIC_KEY, "");
         if (key.isEmpty()) {
             throw new NoPublicKey();
@@ -149,14 +141,14 @@ public class AuthenticationManager {
     /**
      * Gets private key from preferences or generates one.
      */
-    public void generatePrivateKey(ChatMember member) {
+    public void generatePrivateKey() {
         // Try to retrieve private key
         try {
             //Try to get the private key
             this.getPrivateKeyString();
 
             //Reupload it in the case it was not yet transmitted to the server
-            this.uploadKey(this.getPublicKeyString(), member);
+            this.uploadKey(this.getPublicKeyString());
 
             // If we already have one don't create a new one
             return;
@@ -178,7 +170,7 @@ public class AuthenticationManager {
         this.saveKeys(privateKeyString, publicKeyString);
 
         //New keys, need to re-upload
-        this.uploadKey(publicKeyString, member);
+        this.uploadKey(publicKeyString);
     }
 
     /**
@@ -186,7 +178,7 @@ public class AuthenticationManager {
      *
      * @param publicKey
      */
-    private void uploadKey(String publicKey, final ChatMember member) {
+    private void uploadKey(String publicKey) {
         //If we already uploaded it we don't need to redo that
         if (Utils.getSettingBool(mContext, Const.PUBLIC_KEY_UPLOADED, false)) {
             this.tryToUploadFcmToken();
@@ -194,7 +186,7 @@ public class AuthenticationManager {
         }
 
         try {
-            DeviceRegister dr = DeviceRegister.Companion.getDeviceRegister(mContext, publicKey, member);
+            DeviceRegister dr = DeviceRegister.Companion.getDeviceRegister(mContext, publicKey);
 
             // Upload public key to the server
             TUMCabeClient.getInstance(mContext)
@@ -325,9 +317,14 @@ public class AuthenticationManager {
      * Generates a keypair with the given ALGORITHM & size
      */
     private static KeyPair generateKeyPair() {
-        KeyPairGenerator keyGen = getKeyPairGeneratorInstance();
-        keyGen.initialize(AuthenticationManager.RSA_KEY_SIZE);
-        return keyGen.generateKeyPair();
+        try {
+            KeyPairGenerator keyGen = KeyPairGenerator.getInstance(ALGORITHM);
+            keyGen.initialize(AuthenticationManager.RSA_KEY_SIZE);
+            return keyGen.generateKeyPair();
+        } catch (NoSuchAlgorithmException e) {
+            // We don't support platforms without RSA
+            throw new AssertionError(e);
+        }
     }
 
     /**

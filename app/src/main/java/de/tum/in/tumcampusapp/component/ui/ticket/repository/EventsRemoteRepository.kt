@@ -3,11 +3,9 @@ package de.tum.`in`.tumcampusapp.component.ui.ticket.repository
 import android.annotation.SuppressLint
 import android.content.Context
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
-import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMember
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Ticket
 import de.tum.`in`.tumcampusapp.component.ui.ticket.payload.TicketStatus
-import de.tum.`in`.tumcampusapp.utils.Const.CHAT_MEMBER
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -26,10 +24,7 @@ class EventsRemoteRepository @Inject constructor(
     fun fetchEventsAndTickets() {
         fetchAndStoreEvents()
 
-        val isLoggedIn = Utils.getSetting(context, CHAT_MEMBER, ChatMember::class.java) != null
-        if (isLoggedIn) {
-            fetchAndStoreTickets()
-        }
+        fetchAndStoreTickets()
     }
 
     @SuppressLint("CheckResult")

@@ -34,9 +34,6 @@ import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotificationLocation;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierFreeContact;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierFreeMoreInfo;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
@@ -97,9 +94,6 @@ public final class TUMCabeClient {
     static final String API_STUDY_ROOMS = "studyroom/list";
     private static final String API_HOSTNAME = Const.API_HOSTNAME;
     private static final String API_BASEURL = "/Api/";
-    private static final String API_CHAT = "chat/";
-    static final String API_CHAT_ROOMS = API_CHAT + "rooms/";
-    static final String API_CHAT_MEMBERS = API_CHAT + "members/";
     static final String API_OPENING_HOURS = "openingtimes/";
 
     private static TUMCabeClient instance;
@@ -134,68 +128,6 @@ public final class TUMCabeClient {
         }
 
         return verification;
-    }
-
-    public void createRoom(ChatRoom chatRoom, TUMCabeVerification verification, Callback<ChatRoom> cb) {
-        verification.setData(chatRoom);
-        service.createRoom(verification)
-                .enqueue(cb);
-    }
-
-    public ChatRoom createRoom(ChatRoom chatRoom, TUMCabeVerification verification) throws IOException {
-        verification.setData(chatRoom);
-        return service.createRoom(verification)
-                .execute()
-                .body();
-    }
-
-    public ChatRoom getChatRoom(int id) throws IOException {
-        return service.getChatRoom(id)
-                .execute()
-                .body();
-    }
-
-    public ChatMember createMember(ChatMember chatMember) throws IOException {
-        return service.createMember(chatMember)
-                .execute()
-                .body();
-    }
-
-    public void leaveChatRoom(ChatRoom chatRoom, TUMCabeVerification verification, Callback<ChatRoom> cb) {
-        service.leaveChatRoom(chatRoom.getId(), verification)
-                .enqueue(cb);
-    }
-
-    public void addUserToChat(ChatRoom chatRoom, ChatMember member, TUMCabeVerification verification, Callback<ChatRoom> cb) {
-        service.addUserToChat(chatRoom.getId(), member.getId(), verification)
-                .enqueue(cb);
-    }
-
-    public Observable<ChatMessage> sendMessage(int roomId, TUMCabeVerification verification) {
-        ChatMessage message = (ChatMessage) verification.getData();
-        if (message == null) {
-            throw new IllegalStateException("TUMCabeVerification data is not a ChatMessage");
-        }
-
-        if (message.isNewMessage()) {
-            return service.sendMessage(roomId, verification);
-        }
-
-        return service.updateMessage(roomId, message.getId(), verification);
-    }
-
-    public Observable<List<ChatMessage>> getMessages(int roomId, long messageId, @Body TUMCabeVerification verification) {
-        return service.getMessages(roomId, messageId, verification);
-    }
-
-    public Observable<List<ChatMessage>> getNewMessages(int roomId, @Body TUMCabeVerification verification) {
-        return service.getNewMessages(roomId, verification);
-    }
-
-    public List<ChatRoom> getMemberRooms(int memberId, TUMCabeVerification verification) throws IOException {
-        return service.getMemberRooms(memberId, verification)
-                .execute()
-                .body();
     }
 
     Observable<TUMCabeStatus> uploadObfuscatedIds(String lrzId, ObfuscatedIdsUpload ids) {
@@ -312,16 +244,6 @@ public final class TUMCabeClient {
             calls.add(call);
         }
         return calls;
-    }
-
-    public void searchChatMember(String query, Callback<List<ChatMember>> callback) {
-        service.searchMemberByName(query)
-                .enqueue(callback);
-    }
-
-    public void getChatMemberByLrzId(String lrzId, Callback<ChatMember> callback) {
-        service.getMember(lrzId)
-                .enqueue(callback);
     }
 
     public Observable<List<Cafeteria>> getCafeterias() {

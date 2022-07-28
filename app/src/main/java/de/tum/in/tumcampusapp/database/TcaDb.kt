@@ -31,10 +31,6 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.FavoriteDishDao
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.FavoriteDish
-import de.tum.`in`.tumcampusapp.component.ui.chat.ChatMessageDao
-import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomDao
-import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMessage
-import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatRoomDbRow
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsDao
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsSourcesDao
 import de.tum.`in`.tumcampusapp.component.ui.news.model.News
@@ -62,6 +58,7 @@ import de.tum.`in`.tumcampusapp.database.migrations.Migration3to4
 import de.tum.`in`.tumcampusapp.database.migrations.Migration4to5
 import de.tum.`in`.tumcampusapp.database.migrations.Migration5to6
 import de.tum.`in`.tumcampusapp.database.migrations.Migration6to7
+import de.tum.`in`.tumcampusapp.database.migrations.Migration7to8
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.sync.SyncDao
@@ -69,7 +66,7 @@ import de.tum.`in`.tumcampusapp.utils.sync.model.Sync
 import java.util.concurrent.ExecutionException
 
 @Database(
-    version = 7,
+    version = 8,
     entities = [
         Cafeteria::class,
         CafeteriaMenu::class,
@@ -80,7 +77,6 @@ import java.util.concurrent.ExecutionException
         Event::class,
         Ticket::class,
         TicketType::class,
-        ChatMessage::class,
         Location::class,
         News::class,
         NewsSources::class,
@@ -94,7 +90,6 @@ import java.util.concurrent.ExecutionException
         FcmNotification::class,
         TransportFavorites::class,
         WidgetsTransport::class,
-        ChatRoomDbRow::class,
         ScheduledNotification::class,
         ActiveAlarm::class,
         EventColor::class
@@ -123,8 +118,6 @@ abstract class TcaDb : RoomDatabase() {
 
     abstract fun locationDao(): LocationDao
 
-    abstract fun chatMessageDao(): ChatMessageDao
-
     abstract fun newsDao(): NewsDao
 
     abstract fun newsSourcesDao(): NewsSourcesDao
@@ -145,8 +138,6 @@ abstract class TcaDb : RoomDatabase() {
 
     abstract fun transportDao(): TransportDao
 
-    abstract fun chatRoomDao(): ChatRoomDao
-
     abstract fun scheduledNotificationsDao(): ScheduledNotificationsDao
 
     abstract fun activeNotificationsDao(): ActiveAlarmsDao
@@ -160,7 +151,8 @@ abstract class TcaDb : RoomDatabase() {
             Migration3to4(),
             Migration4to5(),
             Migration5to6(),
-            Migration6to7()
+            Migration6to7(),
+            Migration7to8()
         )
 
         private var instance: TcaDb? = null

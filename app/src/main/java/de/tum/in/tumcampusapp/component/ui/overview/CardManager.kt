@@ -29,7 +29,6 @@ object CardManager {
     const val CARD_NEWS = R.layout.card_news_item
     const val CARD_NEWS_FILM = R.layout.card_news_film_item
     const val CARD_EDUROAM = R.layout.card_eduroam
-    const val CARD_CHAT = R.layout.card_chat_messages
     const val CARD_SUPPORT = R.layout.card_support
     const val CARD_LOGIN = R.layout.card_login_prompt
     const val CARD_EDUROAM_FIX = R.layout.card_eduroam_fix

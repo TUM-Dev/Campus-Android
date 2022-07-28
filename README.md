@@ -24,14 +24,18 @@ Special thanks to everybody that has contributed to this project. If you also wa
 Just don't forget: Be excellent to each other :heart:
 
 ## Used Permissions:
-+ Location services: So we can show you the nearest Cafeteria / MVV departures
-+ Access calendar: To sync your lecture calendar with your local calendar
-+ Access contacts: So you can add people from the person search to your addressbook
-+ Detailed WiFi information: So we can help you set up eduroam access
-+ Camera: So you can join chat rooms by scanning a QR code
+- Location services: So we can show you the nearest Cafeteria / MVV departures
+- Access contacts: So you can add people from the person search to your addressbook
+- Detailed WiFi information: So we can help you set up eduroam access
+- Access calendar: To sync your lecture calendar with your local calendar
+- Camera: So you can add images to the feedback form and for rating food
+- Search accounts on the device: To send you push notifications like emergency allerts a Google Account is required
+- Vibration/Notification Policy/Background Service: To potentially change the Do Not Disturb mode
+- Internet: To show any information (news, mensa, rommfinder, roomstatus, ...)
+- Change or delete SD card contents: To allow the app to cache data and thus speed up loading.
 
 ## Disclaimer:
-This is not an official app of the Technische Universität München. There's no support or warranty (you can however send us an email [app@tum.de](mailto:app@tum.de) or open an issue here on Github). The app is developed by students and for students, so use it at your own risk. We try to keep your data safe with only using TUMonline tokens and not saving your password. For further information, please take a look at our privacy policy and the terms and conditions of the lecture chat.
+This is not an official app of the Technische Universität München. There's no support or warranty (you can however send us an email [app@tum.de](mailto:app@tum.de) or open an issue here on Github). The app is developed by students and for students, so use it at your own risk. We try to keep your data safe with only using TUMonline tokens and not saving your password. For further information, please take a look at our privacy policy.
 
 ## Policies:
 [Privacy policy](https://www.tum.app/privacy/)

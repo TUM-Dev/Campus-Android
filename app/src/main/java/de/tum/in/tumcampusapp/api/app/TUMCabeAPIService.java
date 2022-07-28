@@ -22,9 +22,6 @@ import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierFreeContact;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierFreeMoreInfo;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.component.ui.openinghour.model.Location;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
@@ -57,8 +54,6 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE_LIST
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE_MORE_INFO;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE_NERBY_FACILITIES;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CAFETERIAS;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CHAT_MEMBERS;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CHAT_ROOMS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_DEVICE;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_EVENTS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_FEEDBACK;
@@ -78,45 +73,6 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_TICKET;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_UPDATE_NOTE;
 
 public interface TUMCabeAPIService {
-
-    //Group chat
-    @POST(API_CHAT_ROOMS)
-    Call<ChatRoom> createRoom(@Body TUMCabeVerification verification);
-
-    @GET(API_CHAT_ROOMS + "{room}")
-    Call<ChatRoom> getChatRoom(@Path("room") int id);
-
-    @POST(API_CHAT_ROOMS + "{room}/leave/")
-    Call<ChatRoom> leaveChatRoom(@Path("room") int roomId, @Body TUMCabeVerification verification);
-
-    @POST(API_CHAT_ROOMS + "{room}/add/{member}")
-    Call<ChatRoom> addUserToChat(@Path("room") int roomId, @Path("member") int userId, @Body TUMCabeVerification verification);
-
-    //Get/Update single message
-    @PUT(API_CHAT_ROOMS + "{room}/message/")
-    Observable<ChatMessage> sendMessage(@Path("room") int roomId, @Body TUMCabeVerification message);
-
-    @PUT(API_CHAT_ROOMS + "{room}/message/{message}/")
-    Observable<ChatMessage> updateMessage(@Path("room") int roomId, @Path("message") int messageId, @Body TUMCabeVerification message);
-
-    //Get all recent messages or older ones
-    @POST(API_CHAT_ROOMS + "{room}/messages/{page}/")
-    Observable<List<ChatMessage>> getMessages(@Path("room") int roomId, @Path("page") long messageId, @Body TUMCabeVerification verification);
-
-    @POST(API_CHAT_ROOMS + "{room}/messages/")
-    Observable<List<ChatMessage>> getNewMessages(@Path("room") int roomId, @Body TUMCabeVerification verification);
-
-    @POST(API_CHAT_MEMBERS)
-    Call<ChatMember> createMember(@Body ChatMember chatMember);
-
-    @GET(API_CHAT_MEMBERS + "{lrz_id}/")
-    Call<ChatMember> getMember(@Path("lrz_id") String lrzId);
-
-    @GET(API_CHAT_MEMBERS + "search/{query}/")
-    Call<List<ChatMember>> searchMemberByName(@Path("query") String nameQuery);
-
-    @POST(API_CHAT_MEMBERS + "{memberId}/rooms/")
-    Call<List<ChatRoom>> getMemberRooms(@Path("memberId") int memberId, @Body TUMCabeVerification verification);
 
     @POST(API_MEMBERS + "uploadIds/{lrzId}/")
     Observable<TUMCabeStatus> uploadObfuscatedIds(@Path("lrzId") String lrzId, @Body ObfuscatedIdsUpload ids);

@@ -12,8 +12,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.Lecture
 
 /**
  * This class handles the view output of the results for finding lectures via
- * TUMOnline used in [LecturesPersonalActivity]
- * and [ChatRoomsActivity].
+ * TUMOnline used in [LecturesPersonalActivity].
  * It implements [se.emilsjolander.stickylistheaders.StickyListHeadersAdapter] to
  * show semester info as sticky header.
  */
