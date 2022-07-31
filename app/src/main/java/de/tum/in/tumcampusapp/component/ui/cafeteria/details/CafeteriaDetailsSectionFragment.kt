@@ -68,7 +68,7 @@ class CafeteriaDetailsSectionFragment : Fragment() {
         with(binding) {
             menuDateTextView.text = menuDateString
 
-            // Update the left time for opening/closing every 10s (this interval is chosen to make our clock closer to realtime)
+            // Update the remaining time for opening/closing every 10s (this interval is chosen to make our clock closer to realtime)
             timer.schedule(object : TimerTask() {
                 override fun run() {
                     if (view.context != null) {
