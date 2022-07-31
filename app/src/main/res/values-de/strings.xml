@@ -85,7 +85,7 @@
     <string name="add_grade_error_invalid_weight_less_than_zero">Ungültige Anzahl an ECTS. Die ECTS-Zahl muss größer als 0 sein.</string>
     <string name="add_exam_dialog_title">Eine neue Prüfung hinzufügen</string>
     <string name="add_exam_dialog_message">Die Noten werden normalerweise automatisch hinzugefügt. Falls spezielle Noten hinzugefügt werden sollen, kann dies hier geschehen. Manuell hinzugefügte Prüfungen können später wieder gelöscht werden.</string>
-
+    <string name="grade_passed_annotation">Ohne Note Bestanden.</string>
 
     <!-- Preferences -->
     <string name="lrz_id">TUM Kennung</string>

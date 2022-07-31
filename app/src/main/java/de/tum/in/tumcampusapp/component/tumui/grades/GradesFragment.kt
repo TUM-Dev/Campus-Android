@@ -17,8 +17,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat.getColor
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
-import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
@@ -36,7 +37,7 @@ import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import java.lang.reflect.Type
 import java.text.NumberFormat
-import java.util.Locale
+import java.util.*
 import javax.inject.Inject
 
 class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
@@ -289,18 +290,11 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             BarEntry(index.toFloat(), value.toFloat())
         }
 
-        var annotation = "Weighed Grades" //todo in das i21n
-        if (!adaptDiagramToWeights) {
-            annotation = getString(R.string.grades_without_weight)
-        }
         val set = BarDataSet(entries, "").apply {
             setColors(GRADE_COLORS, requireContext())
             valueTextColor = resources.getColor(R.color.text_primary)
         }
-
-        set.setDrawValues(false);
-
-        //todo remove "passed" remove labels/ alter them to useful information
+        set.setDrawValues(false)
 
         with(binding) {
             barChartView.apply {
@@ -308,27 +302,15 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 data = BarData(set)
                 setFitBars(true)
 
-                // only label grades that are associated with at least one grade
-                data.setValueFormatter(object : ValueFormatter() {
-                    override fun getFormattedValue(value: Float): String {
-                        if (value > 0.0)
-                            return value.toString()
-                        return ""
-                    }
-                })
-
-                //  description = null
-                setTouchEnabled(false)
-
-                axisLeft.granularity = 1f
-                axisRight.granularity = 1f
+                xAxis.granularity = 1f
+                legend.isEnabled = true
 
                 // description = null
                 setTouchEnabled(false)
                 legend.setCustom(
                     arrayOf(
                         LegendEntry(
-                            annotation,
+                            context.getString(R.string.grade_passed_annotation),
                             Legend.LegendForm.SQUARE,
                             10f,
                             0f,
@@ -339,16 +321,26 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 )
 
                 legend.textColor = getColor(resources, R.color.text_primary, null)
-                //   xAxis.textColor = getColor(resources, R.color.text_primary, null)
-                //   axisLeft.textColor = getColor(resources, R.color.text_primary, null)
-                //   axisRight.textColor = getColor(resources, R.color.text_primary, null )
+                xAxis.textColor = getColor(resources, R.color.text_primary, null)
+                description.isEnabled = false
+
                 if (adaptDiagramToWeights) {
                     axisLeft.isEnabled = false
                     axisRight.isEnabled = false
+                    axisRight.disableGridDashedLine()
+                    axisLeft.disableGridDashedLine()
+                } else {
+                    axisLeft.granularity = 1f
+                    axisRight.granularity = 1f
+                    axisLeft.isEnabled = true
+                    axisRight.isEnabled = true
                 }
-                //todo disable y if weights are displayd, general a custom x axis
-                //axisLeft.la
+                val labels = (10..51).map { i -> "" + (i / 10.0) }.toList()
 
+                xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+                xAxis.position = XAxis.XAxisPosition.BOTTOM
+                xAxis.disableGridDashedLine()
+                xAxis.disableAxisLineDashedLine()
                 invalidate()
             }
         }
@@ -656,7 +648,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.bar_chart_menu,
-            R.id.pie_chart_menu -> toggleChart(item).run { true }
+            R.id.pie_chart_menu -> toggleChart().run { true }
             R.id.edit_grades_menu -> changeEditMode(item).run { true }
             else -> super.onOptionsItemSelected(item)
         }
@@ -705,7 +697,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     /**
      * Toggles between the pie chart and the bar chart.
      */
-    private fun toggleChart(item: MenuItem) {
+    private fun toggleChart() {
         with(binding) {
             val showBarChart = barChartView.visibility == View.GONE
 
