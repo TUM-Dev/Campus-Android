@@ -289,17 +289,22 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             BarEntry(index.toFloat(), value.toFloat())
         }
 
-        var annotation = ""
+        var annotation = "Weighed Grades" //todo in das i21n
         if (!adaptDiagramToWeights) {
             annotation = getString(R.string.grades_without_weight)
         }
-        val set = BarDataSet(entries, annotation).apply {
+        val set = BarDataSet(entries, "").apply {
             setColors(GRADE_COLORS, requireContext())
             valueTextColor = resources.getColor(R.color.text_primary)
         }
 
+        set.setDrawValues(false);
+
+        //todo remove "passed" remove labels/ alter them to useful information
+
         with(binding) {
             barChartView.apply {
+
                 data = BarData(set)
                 setFitBars(true)
 
@@ -312,18 +317,18 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                     }
                 })
 
-                description = null
+                //  description = null
                 setTouchEnabled(false)
 
                 axisLeft.granularity = 1f
                 axisRight.granularity = 1f
 
-                description = null
+                // description = null
                 setTouchEnabled(false)
                 legend.setCustom(
                     arrayOf(
                         LegendEntry(
-                            getString(R.string.grades_without_weight),
+                            annotation,
                             Legend.LegendForm.SQUARE,
                             10f,
                             0f,
@@ -334,9 +339,15 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 )
 
                 legend.textColor = getColor(resources, R.color.text_primary, null)
-                xAxis.textColor = getColor(resources, R.color.text_primary, null)
-                axisLeft.textColor = getColor(resources, R.color.text_primary, null)
-                axisRight.textColor = getColor(resources, R.color.text_primary, null)
+                //   xAxis.textColor = getColor(resources, R.color.text_primary, null)
+                //   axisLeft.textColor = getColor(resources, R.color.text_primary, null)
+                //   axisRight.textColor = getColor(resources, R.color.text_primary, null )
+                if (adaptDiagramToWeights) {
+                    axisLeft.isEnabled = false
+                    axisRight.isEnabled = false
+                }
+                //todo disable y if weights are displayd, general a custom x axis
+                //axisLeft.la
 
                 invalidate()
             }
@@ -645,7 +656,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.bar_chart_menu,
-            R.id.pie_chart_menu -> toggleChart().run { true }
+            R.id.pie_chart_menu -> toggleChart(item).run { true }
             R.id.edit_grades_menu -> changeEditMode(item).run { true }
             else -> super.onOptionsItemSelected(item)
         }
@@ -672,13 +683,18 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             binding.floatingButtonAddExamGrade.visibility = View.VISIBLE
             binding.chartsContainer.visibility = View.GONE
             binding.checkboxUseDiagrams.visibility = View.VISIBLE
+            barMenuItem?.isVisible = false
+            pieMenuItem?.isVisible = false
             param.setMargins(0, ((32 * density + 0.5f).toInt()), 0, 0)
             binding.gradesListView.setPadding(0, 0, 0, 0)
         } else {
             showExams(exams)
+
             binding.frameLayoutAverageGrade?.visibility = View.VISIBLE
             binding.floatingButtonAddExamGrade.visibility = View.GONE
             binding.chartsContainer.visibility = View.VISIBLE
+            pieMenuItem?.isVisible = !(binding.barChartView.visibility == View.GONE)
+            barMenuItem?.isVisible = binding.barChartView.visibility == View.GONE
             binding.checkboxUseDiagrams.visibility = View.GONE
             param.setMargins(0, 0, 0, 0)
             binding.gradesListView.setPadding(0, ((256 * density + 0.5f).toInt()), 0, 0)
@@ -689,7 +705,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     /**
      * Toggles between the pie chart and the bar chart.
      */
-    private fun toggleChart() {
+    private fun toggleChart(item: MenuItem) {
         with(binding) {
             val showBarChart = barChartView.visibility == View.GONE
 
