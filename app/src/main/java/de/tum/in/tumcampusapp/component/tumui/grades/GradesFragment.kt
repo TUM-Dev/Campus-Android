@@ -37,7 +37,7 @@ import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import java.lang.reflect.Type
 import java.text.NumberFormat
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
@@ -305,7 +305,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 xAxis.granularity = 1f
                 legend.isEnabled = true
 
-                // description = null
                 setTouchEnabled(false)
                 legend.setCustom(
                     arrayOf(
