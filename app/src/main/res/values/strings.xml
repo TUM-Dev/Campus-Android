@@ -113,7 +113,7 @@
     <string name="add_grade_error_invalid_weight_less_than_zero">Invalid amount of credits. Must be greater than 0.</string>
     <string name="add_exam_dialog_title">Add a New Exam</string>
     <string name="add_exam_dialog_message">Grades are normally added automatically. In case special grades should be added, this can be done here. Manually added Exams can be deleted later on.</string>
-    <string name="grade_passed_annotation">Exam Passed Without a Grade</string>
+    <string name="grade_passed_annotation">Exam passed without a grade</string>
 
     <!-- Preferences -->
     <string name="lrz_id">TUM Identification</string>

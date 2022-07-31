@@ -681,11 +681,10 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             binding.gradesListView.setPadding(0, 0, 0, 0)
         } else {
             showExams(exams)
-
             binding.frameLayoutAverageGrade?.visibility = View.VISIBLE
             binding.floatingButtonAddExamGrade.visibility = View.GONE
             binding.chartsContainer.visibility = View.VISIBLE
-            pieMenuItem?.isVisible = !(binding.barChartView.visibility == View.GONE)
+            pieMenuItem?.isVisible = binding.barChartView.visibility != View.GONE
             barMenuItem?.isVisible = binding.barChartView.visibility == View.GONE
             binding.checkboxUseDiagrams.visibility = View.GONE
             param.setMargins(0, 0, 0, 0)
