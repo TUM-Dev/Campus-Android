@@ -21,6 +21,7 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -33,7 +34,10 @@ class CafeteriaDetailsSectionFragment : Fragment() {
     internal lateinit var viewModelProvider: Provider<CafeteriaViewModel>
 
     private val cafeteriaViewModel by lazy {
-        ViewModelProvider(this, ViewModelFactory(viewModelProvider)).get(CafeteriaViewModel::class.java)
+        ViewModelProvider(
+            this,
+            ViewModelFactory(viewModelProvider)
+        ).get(CafeteriaViewModel::class.java)
     }
 
     private val binding by viewBinding(FragmentCafeteriadetailsSectionBinding::bind)
@@ -41,7 +45,7 @@ class CafeteriaDetailsSectionFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         injector.cafeteriaComponent()
-                .inject(this)
+            .inject(this)
     }
 
     override fun onCreateView(
@@ -52,6 +56,7 @@ class CafeteriaDetailsSectionFragment : Fragment() {
         inflater.inflate(R.layout.fragment_cafeteriadetails_section, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val menuDate = arguments?.getSerializable(Const.DATE) as DateTime
         val menuDateString = DateTimeFormat.fullDate().print(menuDate)
         val cafeteriaId = arguments?.getInt(Const.CAFETERIA_ID)
@@ -63,9 +68,19 @@ class CafeteriaDetailsSectionFragment : Fragment() {
         with(binding) {
             menuDateTextView.text = menuDateString
 
-            val hours = OpenHoursHelper(requireContext()).getHoursByIdAsString(cafeteriaId, menuDate)
-            menuOpeningHours.text = hours
-            menuOpeningHours.isVisible = hours.isNotEmpty()
+            // Update the remaining time for opening/closing every 10s (this interval is chosen to make our clock closer to realtime)
+            timer.schedule(object : TimerTask() {
+                override fun run() {
+                    if (view.context != null) {
+                        val hours = OpenHoursHelper(view.context).getHoursByIdAsString(
+                            cafeteriaId,
+                            menuDate
+                        )
+                        menuOpeningHours.text = hours
+                        menuOpeningHours.isVisible = hours.isNotEmpty()
+                    }
+                }
+            }, 0, 10000)
 
             menusRecyclerView.layoutManager = LinearLayoutManager(requireContext())
             menusRecyclerView.itemAnimator = DefaultItemAnimator()
@@ -73,7 +88,9 @@ class CafeteriaDetailsSectionFragment : Fragment() {
             val adapter = CafeteriaMenusAdapter(requireContext(), true, null)
             menusRecyclerView.adapter = adapter
 
-            cafeteriaViewModel.cafeteriaMenus.observe(viewLifecycleOwner, Observer<List<CafeteriaMenu>> { adapter.update(it) })
+            cafeteriaViewModel.cafeteriaMenus.observe(
+                viewLifecycleOwner,
+                Observer<List<CafeteriaMenu>> { adapter.update(it) })
             cafeteriaViewModel.fetchCafeteriaMenus(cafeteriaId, menuDate)
         }
     }
@@ -88,5 +105,7 @@ class CafeteriaDetailsSectionFragment : Fragment() {
             }
             return fragment
         }
+
+        private var timer = Timer()
     }
 }

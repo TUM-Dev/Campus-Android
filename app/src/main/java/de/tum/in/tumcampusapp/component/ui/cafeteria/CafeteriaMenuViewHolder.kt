@@ -12,6 +12,7 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaWithMenus
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import org.joda.time.format.DateTimeFormat
+import java.util.*
 
 class CafeteriaMenuViewHolder(
     itemView: View,
@@ -29,12 +30,19 @@ class CafeteriaMenuViewHolder(
         menuDateTextView.text = DateTimeFormat.mediumDate().print(cafeteria.nextMenuDate)
 
         val openHoursHelper = OpenHoursHelper(context)
-        val openingHours = openHoursHelper.getHoursByIdAsString(cafeteria.id, cafeteria.nextMenuDate)
+        var openingHours = openHoursHelper.getHoursByIdAsString(cafeteria.id, cafeteria.nextMenuDate)
         if (openingHours.isEmpty()) {
             openingHoursTextView.visibility = View.GONE
         } else {
-            openingHoursTextView.visibility = View.VISIBLE
-            openingHoursTextView.text = openingHours
+            // update textview every 10s (this interval is chosen to make our clock closer to realtime)
+            var timer = Timer()
+            timer.schedule(object : TimerTask() {
+                override fun run() {
+                    openingHours = openHoursHelper.getHoursByIdAsString(cafeteria.id, cafeteria.nextMenuDate)
+                    openingHoursTextView.visibility = View.VISIBLE
+                    openingHoursTextView.text = openingHours
+                }
+            }, 0, 10000)
         }
 
         if (this@CafeteriaMenuViewHolder::adapter.isInitialized.not()) {
