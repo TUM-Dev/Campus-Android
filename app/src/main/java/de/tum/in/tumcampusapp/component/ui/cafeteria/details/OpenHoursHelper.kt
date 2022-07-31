@@ -81,7 +81,7 @@ class OpenHoursHelper(private val context: Context) {
             // Check the relativity
             val relativeTo: DateTime
             val relation: Int
-            // To show more informations regarding time
+            // To show more information regarding opening hours
             var info = ""
 
             if (opens.isAfter(now)) {
