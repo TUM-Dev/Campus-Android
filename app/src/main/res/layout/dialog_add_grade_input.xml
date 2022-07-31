@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:padding="@dimen/material_large_padding">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:labelFor="@+id/editTextaddGradeCourseName"
+            android:text="@string/course_name" />
+
+        <EditText
+            android:id="@+id/editTextaddGradeCourseName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/course_name"
+            android:imeOptions="actionGo"
+            android:importantForAutofill="no"
+            android:inputType="textCapWords|textAutoComplete"
+            android:text="@string/thesis"
+            android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:labelFor="@+id/editTextAddGrade"
+            android:text="@string/text_view_grade_label" />
+
+        <EditText
+            android:id="@+id/editTextAddGrade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="1.0"
+            android:ems="10"
+            android:hint="@string/default_grade"
+            android:imeOptions="actionGo"
+            android:importantForAutofill="no"
+            android:inputType="numberDecimal"
+            android:text="@string/default_grade" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:labelFor="@+id/editTextaddGradeExaminer"
+            android:text="@string/text_view_examiner_name" />
+
+        <EditText
+            android:id="@+id/editTextaddGradeExaminer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/text_view_examiner_name"
+            android:imeOptions="actionGo"
+            android:importantForAutofill="no"
+            android:inputType="textCapWords|textAutoComplete"
+            android:text="@string/unknown"
+            android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:labelFor="@+id/editTextaddGradeCredits"
+            android:text="@string/text_view_credits_label" />
+
+        <EditText
+            android:id="@+id/editTextaddGradeCredits"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/text_view_credits_label"
+            android:imeOptions="actionGo"
+            android:importantForAutofill="no"
+            android:inputType="numberSigned"
+            android:text="@string/default_credits"
+            android:textCursorDrawable="@drawable/cursor_text_field_colorful" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:labelFor="@+id/editTextAddGradeWeight"
+            android:text="@string/text_view_grade_weight" />
+
+        <EditText
+            android:id="@+id/editTextAddGradeWeight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="1.0"
+            android:ems="10"
+            android:hint="@string/text_view_grade_weight"
+            android:imeOptions="actionGo"
+            android:importantForAutofill="no"
+            android:inputType="numberDecimal"
+            android:text="@string/default_grade_weight" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:labelFor="@+id/editTextAddGradeDate"
+            android:text="@string/text_view_examination_date_label" />
+
+        <EditText
+            android:id="@+id/editTextAddGradeDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/grade_date_format"
+            android:importantForAutofill="no"
+            android:inputType="date"
+            android:text="@string/grade_date_default" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/material_default_padding"
+            android:labelFor="@+id/editTextSemester"
+            android:text="@string/text_view_semester_label" />
+
+        <EditText
+            android:id="@+id/editTextSemester"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/grade_semester_default"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:text="@string/grade_semester_default" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/cancelDialogAddGrade"
+                style="@style/BlueButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/cancel"
+                android:layout_marginRight="4dp"
+                android:textAllCaps="false"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/positiveDialogAddGrade"
+                style="@style/BlueButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginLeft="8dp"
+                android:text="@string/save"
+                android:textAllCaps="false" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

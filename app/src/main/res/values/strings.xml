@@ -74,6 +74,7 @@
     <!-- Exam/Grades -->
     <string name="average_grade">Average grade</string>
     <string name="average_grade_hint">Estimated average. Please refer to TUMOnline for the precise one.</string>
+    <string name="edit_grades">Edit Grades</string>
     <string name="show_column_chart">Show Column Chart</string>
     <string name="show_pie_chart">Show Pie Chart</string>
     <string name="result_extra">Result:&#160;</string>
@@ -84,6 +85,35 @@
     <string name="date">Date</string>
     <string name="credits" translatable="false">ECTS</string>
     <string name="no_grades">You don\'t have any grades yet.</string>
+    <string name="reset_grade">Reset Grade</string>
+    <string name="use_grade_in_average">Use Grade</string>
+    <string name="grade_weight_label">Grade Weight:</string>
+    <string name="course_name">Course name</string>
+    <string name="thesis">Thesis</string>
+    <string name="text_view_grade_label">Grade (0 for passed)</string>
+    <string name="default_grade">1,0</string>
+    <string name="text_view_examiner_name">Examiner Name</string>
+    <string name="text_view_credits_label">Credits</string>
+    <string name="default_credits">6</string>
+    <string name="text_view_grade_weight">Grade weight</string>
+    <string name="default_grade_weight">1.0</string>
+    <string name="text_view_examination_date_label">Examination Date</string>
+    <string name="grade_date_format">dd.mm.yy</string>
+    <string name="grade_date_default">01.01.22</string>
+    <string name="text_view_semester_label">Year of the start of the semester (e.g. 22WS or 21SuSe)</string>
+    <string name="grade_semester_default">22WS</string>
+    <string name="use_weights_in_diagrams">Consider credits and weights in the diagram</string>
+    <string name="delete_exam">Delete Exam</string>
+    <string name="delete_exam_dialog_message">Should this exam be irrevocably deleted?</string>
+    <string name="add_grade_error_wrong_semester">Wrong semester format: Too short. Correct: two numbers for the year + W/S</string>
+    <string name="add_grade_error_semester_no_ws">Wrong semester format: Term not specified. Correct two numbers for the year + W/S</string>
+    <string name="add_grade_error_invalid_weight">Wrong weight format: Weights can not be negative.</string>
+    <string name="add_grade_error_invalid_grade_format">Wrong grade format: Grade must be between 1.0 and 5.0 or equal to 0.</string>
+    <string name="add_grade_missing_course_title">Insert a course title.</string>
+    <string name="add_grade_error_invalid_weight_less_than_zero">Invalid amount of credits. Must be greater than 0.</string>
+    <string name="add_exam_dialog_title">Add a New Exam</string>
+    <string name="add_exam_dialog_message">Grades are normally added automatically. In case special grades should be added, this can be done here. Manually added Exams can be deleted later on.</string>
+
 
     <!-- Preferences -->
     <string name="lrz_id">TUM Identification</string>
@@ -784,5 +814,4 @@ Signature: %5$s</string>
     <string name="clear_recent_searches">Clear history</string>
     <string name="not_available_search">Not available</string>
     <string name="clear_search_history_request">Do you want to clear search history?</string>
-
 </resources>

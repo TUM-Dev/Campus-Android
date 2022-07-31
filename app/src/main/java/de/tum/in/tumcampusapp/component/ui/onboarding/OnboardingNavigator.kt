@@ -2,7 +2,7 @@ package de.tum.`in`.tumcampusapp.component.ui.onboarding
 
 import android.content.Intent
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.transaction
+import androidx.fragment.app.commit
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingScope
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -26,7 +26,7 @@ class OnboardingNavigator @Inject constructor(
             else -> throw IllegalStateException("Invalid fragment ${current?.javaClass?.simpleName}")
         }
 
-        fragmentManager.transaction {
+        fragmentManager.commit {
             replace(R.id.contentFrame, destination)
             addToBackStack(null)
         }

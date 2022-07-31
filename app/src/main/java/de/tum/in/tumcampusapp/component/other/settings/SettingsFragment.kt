@@ -211,7 +211,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
             if (sharedPrefs.getBoolean(key, false)) {
                 StartSyncReceiver.startBackground(requireContext())
             } else {
-                StartSyncReceiver.cancelBackground()
+                StartSyncReceiver.cancelBackground(requireContext())
             }
         }
 

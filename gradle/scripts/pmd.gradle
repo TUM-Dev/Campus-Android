@@ -11,8 +11,8 @@ task pmd(type: Pmd) {
     exclude '**/gen/**'
 
     reports {
-        xml.enabled = true
-        html.enabled = false
+        xml.required = true
+        html.required = false
     }
 
     ignoreFailures = true
@@ -32,8 +32,8 @@ afterEvaluate {
             exclude '**/gen/**'
 
             reports {
-                xml.enabled = false
-                html.enabled = true
+                xml.required = false
+                html.required = true
             }
 
             ignoreFailures = true
@@ -51,8 +51,8 @@ cpd {
 
 cpdCheck {
     reports {
-        text.enabled = false
-        xml.enabled = true
+        text.required = false
+        xml.required = true
         xml.destination file("${buildDir}/reports/pmd/duplicates.xml")
     }
     source = 'src/main/java'

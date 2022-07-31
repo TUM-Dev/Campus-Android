@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/TUM-Dev/Campus-Android.svg?branch=master)](https://travis-ci.org/TUM-Dev/Campus-Android)
+![Build Status](https://img.shields.io/github/workflow/status/TUM-Dev/Campus-Android/CI?color=brightgreen&label=Build%20Status)
+[![Discord Channel](https://img.shields.io/badge/Chat-on%20Discord-brightgreen)](https://discord.gg/k558T6ktuh)
 <a href="https://play.google.com/store/apps/details?id=de.tum.in.tumcampus">
 <img src="https://play.google.com/intl/en_us/badges/images/badge_new.png" align="right">
 </a>
@@ -11,7 +12,7 @@ The TUM Campus App (TCA) is an open source project, which is mainly developed by
 - Lecture calendar (with in-app view and a syncing service to the device's calendar)
 - Meal plans of various cafeterias (Studentenwerk München)
 - View all your grades
-- Find empty study rooms (currently MI only)
+- Find empty study rooms
 - MVV departure times
 - TUM and related News (mostly in German)
 - Roomfinder
@@ -36,9 +37,7 @@ This is not an official app of the Technische Universität München. There's no 
 [Privacy policy](https://www.tum.app/privacy/)
 
 ## Support:
-You can reach us on [Facebook](https://www.facebook.com/TUMCampus), [Github](https://github.com/TUM-Dev/Campus-Android) or via E-Mail [app@tum.de](mailto:app@tum.de)
+You can reach us on [Github](https://github.com/TUM-Dev/Campus-Android) or via E-Mail [app@tum.de](mailto:app@tum.de).
 
 ## License:
 [GNU GPL v3](http://www.gnu.org/licenses/gpl.html)  
-
-## [Follow us on Facebook](https://www.facebook.com/TUMCampus)
