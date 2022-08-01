@@ -39,10 +39,10 @@
     <color name="input_layout_border">@color/color_primary</color>
 
     <!-- Default colors -->
-    <color name="text_primary">#F2000000</color> <!--F2 for 95% opacity-->
-    <color name="text_secondary">#8A000000</color> <!--8A for 54% opacity-->
-    <color name="text_primary_dark">#F2FFFFFF</color>
-    <color name="text_secondary_dark">#8AFFFFFF</color>
+    <color name="text_primary">#030303</color>
+    <color name="text_secondary">#1D1D1D</color>
+    <color name="text_primary_dark">#F3F3F3</color>
+    <color name="text_secondary_dark">#A6A6A6</color>
 
     <color name="default_window_background">@color/white</color>
     <color name="secondary_window_background">#F2F2F2</color>

@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.content.ContextCompat
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
@@ -133,7 +133,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
 
     private fun displayDeleteDialog(eventId: String) {
         val s = TcaDb.getInstance(requireContext()).calendarDao().getSeriesIdForEvent(eventId)
-        val alertDialog = AlertDialog.Builder(requireContext())
+        val alertDialog = ThemedAlertDialogBuilder(requireContext())
             .setTitle(R.string.event_delete_title)
             .setMessage(R.string.delete_event_info)
             .setPositiveButton(R.string.delete) { _, _ -> deleteEvent(eventId) }

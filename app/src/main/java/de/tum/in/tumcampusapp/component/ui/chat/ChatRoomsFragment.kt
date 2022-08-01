@@ -14,7 +14,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.app.ActivityCompat
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
@@ -285,7 +285,7 @@ class ChatRoomsFragment : FragmentForAccessingTumOnline<LecturesResponse>(
         val view = View.inflate(requireContext(), R.layout.dialog_input, null)
         val input = view.findViewById<EditText>(R.id.inputEditText)
 
-        AlertDialog.Builder(requireContext())
+        ThemedAlertDialogBuilder(requireContext())
             .setTitle(R.string.new_chat_room)
             .setMessage(R.string.new_chat_room_desc)
             .setView(view)
@@ -296,10 +296,6 @@ class ChatRoomsFragment : FragmentForAccessingTumOnline<LecturesResponse>(
                 createOrJoinChatRoom("$randId:$value")
             }
             .setNegativeButton(android.R.string.cancel, null)
-            .create()
-            .apply {
-                window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-            }
             .show()
     }
 

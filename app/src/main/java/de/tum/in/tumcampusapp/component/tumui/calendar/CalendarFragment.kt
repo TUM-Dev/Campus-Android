@@ -5,13 +5,13 @@ import android.content.ContentUris
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import android.provider.CalendarContract
 import android.text.format.DateUtils
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat.checkSelfPermission
 import com.alamkanak.weekview.DateTimeInterpreter
 import com.alamkanak.weekview.WeekViewDisplayable
@@ -27,9 +27,7 @@ import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.databinding.FragmentCalendarBinding
 import de.tum.`in`.tumcampusapp.service.QueryLocationsService
-import de.tum.`in`.tumcampusapp.utils.Const
-import de.tum.`in`.tumcampusapp.utils.Utils
-import de.tum.`in`.tumcampusapp.utils.plusAssign
+import de.tum.`in`.tumcampusapp.utils.*
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -292,7 +290,7 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
         } else {
             if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CALENDAR) ||
                     shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CALENDAR)) {
-                AlertDialog.Builder(requireContext())
+                ThemedAlertDialogBuilder(requireContext())
                         .setMessage(getString(R.string.permission_calendar_explanation))
                         .setPositiveButton(R.string.ok) { _, _ ->
                             requestPermissions(PERMISSIONS_CALENDAR, id)
@@ -307,7 +305,7 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
     }
 
     private fun displayCalendarSyncSuccessDialog() {
-        AlertDialog.Builder(requireContext())
+        ThemedAlertDialogBuilder(requireContext())
                 .setMessage(getString(R.string.dialog_show_calendar))
                 .setNegativeButton(R.string.no, null)
                 .setPositiveButton(R.string.yes) { _, _ -> displayCalendarOnGoogleCalendar() }
@@ -403,7 +401,7 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
         if (requestCode == REQUEST_CREATE && resultCode == RESULT_ERROR) {
             val failed = data?.getStringExtra("failed")
             val sum = data?.getStringExtra("sum")
-            AlertDialog.Builder(requireContext())
+            ThemedAlertDialogBuilder(requireContext())
                     .setTitle(R.string.error_something_wrong)
                     .setMessage(getString(R.string.create_event_some_failed, failed, sum))
                     .setPositiveButton(R.string.ok, null)
@@ -479,7 +477,7 @@ class CalendarFragment : FragmentForAccessingTumOnline<EventsResponse>(
             return
         }
 
-        AlertDialog.Builder(requireContext())
+        ThemedAlertDialogBuilder(requireContext())
                 .setMessage(getString(R.string.dialog_delete_calendar))
                 .setPositiveButton(getString(R.string.yes)) { _, _ ->
                     val deleted = CalendarController.deleteLocalCalendar(requireContext())

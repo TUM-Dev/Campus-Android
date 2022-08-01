@@ -6,7 +6,7 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.app.ActivityCompat.checkSelfPermission
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
@@ -151,7 +151,7 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
      * Displays a dialog to the user explaining why we need the location permissions
      */
     private fun showLocationPermissionRationaleDialog() {
-        AlertDialog.Builder(this, R.style.Theme_MaterialComponents_Light_Dialog)
+        ThemedAlertDialogBuilder(this)
                 .setMessage(R.string.permission_location_explanation)
                 .setPositiveButton(R.string.ok) { _, _ ->
                     requestPermissions(this, PERMISSIONS_LOCATION, REQUEST_LOCATION)

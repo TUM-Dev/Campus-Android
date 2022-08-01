@@ -37,6 +37,7 @@ import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.databinding.FragmentSearchBinding
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
@@ -119,16 +120,14 @@ class SearchFragment : BaseFragment<Unit>(
     }
 
     private fun showClearHistoryDialog() {
-        val dialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+        ThemedAlertDialogBuilder(requireContext())
             .setTitle(R.string.clear_search_history_request)
             .setPositiveButton(R.string.ok) { _, _ ->
                 viewModel.clearRecentSearchesHistory(requireContext())
                 showSearchInfo()
             }
             .setNegativeButton(R.string.cancel, null)
-            .create()
-        dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-        dialog.show()
+            .show()
     }
 
     private fun onRecentSearchSelected(recent: Recent) {

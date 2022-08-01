@@ -11,7 +11,7 @@ import android.view.View
 import android.view.autofill.AutofillManager
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.view.isVisible
 import com.stripe.android.*
 import com.stripe.android.model.Source
@@ -193,7 +193,7 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
     }
 
     private fun showError(message: String) {
-        AlertDialog.Builder(this)
+        ThemedAlertDialogBuilder(this)
                 .setTitle(getString(R.string.error))
                 .setMessage(message)
                 .setPositiveButton(R.string.ok, null)

@@ -15,6 +15,7 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
@@ -95,7 +96,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
         val imageView = view.findViewById<ImageView>(R.id.feedback_big_image)
         imageView.setImageURI(Uri.fromFile(File(path)))
 
-        AlertDialog.Builder(this)
+        ThemedAlertDialogBuilder(this)
             .setView(view)
             .setNegativeButton(R.string.cancel, null)
             .setPositiveButton(R.string.feedback_remove_image) { _, _ -> removeThumbnail(path) }
@@ -108,7 +109,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
 
     private fun showImageOptionsDialog() {
         val options = arrayOf(getString(R.string.feedback_take_picture), getString(R.string.gallery))
-        AlertDialog.Builder(this)
+        ThemedAlertDialogBuilder(this)
                 .setTitle(R.string.feedback_add_picture)
                 .setItems(options) { _, index -> presenter.onImageOptionSelected(index) }
                 .setNegativeButton(R.string.cancel, null)
@@ -181,7 +182,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     }
 
     override fun showDialog(title: String, message: String) {
-        AlertDialog.Builder(this)
+        ThemedAlertDialogBuilder(this)
                 .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton(R.string.ok, null)
@@ -189,20 +190,18 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     }
 
     override fun showProgressDialog() {
-        progressDialog = AlertDialog.Builder(this)
+        progressDialog = ThemedAlertDialogBuilder(this)
                 .setTitle(R.string.feedback_sending)
                 .setView(ProgressBar(this))
                 .setCancelable(false)
                 .setNeutralButton(R.string.cancel, null)
-                .create()
-        progressDialog?.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-        progressDialog?.show()
+                .show()
     }
 
     override fun showSendErrorDialog() {
         progressDialog?.dismiss()
 
-        AlertDialog.Builder(this)
+        ThemedAlertDialogBuilder(this)
                 .setMessage(R.string.feedback_sending_error)
                 .setIcon(R.drawable.ic_error_outline)
                 .setPositiveButton(R.string.try_again) { _, _ -> presenter.feedback }
@@ -217,7 +216,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     }
 
     override fun showSendConfirmationDialog() {
-        AlertDialog.Builder(this)
+        ThemedAlertDialogBuilder(this)
                 .setMessage(R.string.send_feedback_question)
                 .setPositiveButton(R.string.send) { _, _ -> presenter.onConfirmSend() }
                 .setNegativeButton(R.string.cancel, null)

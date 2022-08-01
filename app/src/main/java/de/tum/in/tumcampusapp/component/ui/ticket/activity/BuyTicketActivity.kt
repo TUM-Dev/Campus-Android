@@ -3,7 +3,7 @@ package de.tum.`in`.tumcampusapp.component.ui.ticket.activity
 import android.content.Intent
 import android.os.Bundle
 import android.transition.TransitionManager
-import androidx.appcompat.app.AlertDialog
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -130,7 +130,7 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
     }
 
     private fun showError(title: Int, message: Int) {
-        AlertDialog.Builder(this)
+        ThemedAlertDialogBuilder(this)
             .setTitle(title)
             .setMessage(message)
             .setNeutralButton(R.string.ok, null)
@@ -206,7 +206,7 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
     }
 
     private fun handleTicketNotReserved() {
-        AlertDialog.Builder(this)
+        ThemedAlertDialogBuilder(this)
                 .setTitle(getString(R.string.error))
                 .setMessage(getString(R.string.ticket_not_fetched))
                 .setPositiveButton(R.string.ok) { _, _ -> showLoadingLayout(false) }

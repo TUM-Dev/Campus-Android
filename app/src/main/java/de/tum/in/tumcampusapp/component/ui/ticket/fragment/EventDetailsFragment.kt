@@ -8,7 +8,7 @@ import android.provider.CalendarContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -200,7 +200,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 getString(R.string.tum_calendar)
         )
 
-        AlertDialog.Builder(context)
+        ThemedAlertDialogBuilder(context)
             .setTitle(R.string.add_to_calendar_info)
             .setSingleChoiceItems(calendars, 0, null)
             .setNegativeButton(R.string.cancel, null)

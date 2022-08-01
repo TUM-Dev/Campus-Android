@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.view.isVisible
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
@@ -38,7 +38,7 @@ class EventHelper {
             val isLoggedIn = AccessTokenManager.hasValidAccessToken(context)
 
             if (!isLoggedIn || lrzId.isEmpty() || chatRoomName.isEmpty()) {
-                AlertDialog.Builder(context)
+                ThemedAlertDialogBuilder(context)
                     .setTitle(R.string.error)
                     .setMessage(R.string.not_logged_in_error)
                     .setPositiveButton(R.string.ok, null)
@@ -53,7 +53,7 @@ class EventHelper {
         }
 
         private fun showEventImminentDialog(context: Context) {
-            AlertDialog.Builder(context)
+            ThemedAlertDialogBuilder(context)
                 .setTitle(R.string.error)
                 .setMessage(R.string.event_imminent_error)
                 .setPositiveButton(R.string.ok, null)

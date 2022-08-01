@@ -9,7 +9,7 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.content.edit
@@ -280,10 +280,10 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
     }
 
     private fun showLogoutDialog(title: Int, message: Int) {
-        AlertDialog.Builder(requireContext())
+        ThemedAlertDialogBuilder(requireContext())
             .setTitle(title)
             .setMessage(message)
-            .setPositiveButton(R.string.logout) { _, _ -> logout() }
+            .setPositiveButton(R.string.logout, { _, _ -> logout() })
             .setNegativeButton(R.string.cancel, null)
             .show()
     }

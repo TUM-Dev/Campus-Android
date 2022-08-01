@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AlertDialog
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.content.ContextCompat
 import com.jakewharton.rxbinding3.widget.textChanges
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
@@ -115,7 +115,7 @@ class OnboardingStartFragment : BaseFragment<Unit>(
         hideKeyboard()
 
         if (AccessTokenManager.hasValidAccessToken(requireContext())) {
-            AlertDialog.Builder(requireContext())
+            ThemedAlertDialogBuilder(requireContext())
                 .setMessage(getString(R.string.error_access_token_already_set_generate_new))
                 .setPositiveButton(getString(R.string.generate_new_token)) { _, _ -> generateNewToken(enteredId) }
                 .setNegativeButton(getString(R.string.use_existing)) { _, _ -> openNextOnboardingStep() }
@@ -190,7 +190,7 @@ class OnboardingStartFragment : BaseFragment<Unit>(
             else -> R.string.error_access_token_could_not_be_generated
         }
 
-        AlertDialog.Builder(requireContext())
+        ThemedAlertDialogBuilder(requireContext())
             .setMessage(messageResId)
             .setPositiveButton(R.string.ok, null)
             .setCancelable(true)

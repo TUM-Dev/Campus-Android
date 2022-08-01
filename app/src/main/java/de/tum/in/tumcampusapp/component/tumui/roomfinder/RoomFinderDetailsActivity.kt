@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.fragment.app.Fragment
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.ApiHelper
@@ -132,7 +133,7 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
         val descriptions = mapsList.map { it.description }
         val currentPosition = mapsList.indexOfFirst { it.map_id == mapId }
 
-        AlertDialog.Builder(this)
+        ThemedAlertDialogBuilder(this)
                 .setSingleChoiceItems(descriptions.toTypedArray(), currentPosition, this)
                 .show()
     }

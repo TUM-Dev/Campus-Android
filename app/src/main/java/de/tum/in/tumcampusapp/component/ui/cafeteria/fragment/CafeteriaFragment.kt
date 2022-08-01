@@ -7,7 +7,7 @@ import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.lifecycle.ViewModelProvider
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
@@ -220,7 +220,7 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
         val formatter = CafeteriaMenuFormatter(requireContext())
         val message = formatter.format(R.string.cafeteria_ingredients, true)
 
-        AlertDialog.Builder(requireContext())
+        ThemedAlertDialogBuilder(requireContext())
             .setTitle(R.string.action_ingredients)
             .setMessage(message)
             .setPositiveButton(R.string.ok, null)
