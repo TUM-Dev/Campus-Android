@@ -114,6 +114,7 @@
     <string name="add_exam_dialog_title">Add a New Exam</string>
     <string name="add_exam_dialog_message">Grades are normally added automatically. In case special grades should be added, this can be done here. Manually added Exams can be deleted later on.</string>
     <string name="grade_passed_annotation">Exam passed without a grade</string>
+    <string name="grade_percentages">Percentage of each grade</string>
 
     <!-- Preferences -->
     <string name="lrz_id">TUM Identification</string>
@@ -814,4 +815,5 @@ Signature: %5$s</string>
     <string name="clear_recent_searches">Clear history</string>
     <string name="not_available_search">Not available</string>
     <string name="clear_search_history_request">Do you want to clear search history?</string>
+
 </resources>

@@ -15,6 +15,7 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat.getColor
+import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
@@ -37,7 +38,7 @@ import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import java.lang.reflect.Type
 import java.text.NumberFormat
-import java.util.Locale
+import java.util.*
 import javax.inject.Inject
 
 class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
@@ -243,7 +244,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      *
      * @param gradeDistribution An [ArrayMap] mapping grades to number of occurrences
      */
-    private fun displayPieChart(gradeDistribution: ArrayMap<String, Int>) {
+    private fun displayPieChart(gradeDistribution: ArrayMap<String, Double>) {
         val entries = grades.map { grade ->
             val count = gradeDistribution[grade] ?: 0
             PieEntry(count.toFloat(), grade)
@@ -284,10 +285,19 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      *
      * @param gradeDistribution An [ArrayMap] mapping grades to number of occurrence
      */
-    private fun displayBarChart(gradeDistribution: ArrayMap<String, Int>) {
-        val entries = grades.mapIndexed { index, grade ->
-            val value = gradeDistribution[grade] ?: 0
-            BarEntry(index.toFloat(), value.toFloat())
+    private fun displayBarChart(gradeDistribution: ArrayMap<String, Double>) {
+        val sum = gradeDistribution.values.sum()
+        val entries: List<BarEntry>
+        if (adaptDiagramToWeights) {
+            entries = grades.mapIndexed { index, grade ->
+                val value: Double = gradeDistribution[grade] ?: 0.0
+                BarEntry(index.toFloat(), ((value*100) / sum).toFloat())
+            }
+        } else {
+            entries = grades.mapIndexed { index, grade ->
+                val value = gradeDistribution[grade] ?: 0
+                BarEntry(index.toFloat(), value.toFloat())
+            }
         }
 
         val set = BarDataSet(entries, "").apply {
@@ -321,18 +331,23 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
                 legend.textColor = getColor(resources, R.color.text_primary, null)
                 xAxis.textColor = getColor(resources, R.color.text_primary, null)
-                description.isEnabled = false
+
+                axisLeft.isEnabled = true
 
                 if (adaptDiagramToWeights) {
-                    axisLeft.isEnabled = false
-                    axisRight.isEnabled = false
+                    description.isEnabled = true
+                    val desc = Description()
+                    desc.text = context.getString(R.string.grade_percentages)
+
+                    desc.setTextSize(11f)
+                    desc.setPosition(540F, 50F)
+                    description = desc
                     axisRight.disableGridDashedLine()
                     axisLeft.disableGridDashedLine()
                 } else {
+                    description.isEnabled = false
                     axisLeft.granularity = 1f
                     axisRight.granularity = 1f
-                    axisLeft.isEnabled = true
-                    axisRight.isEnabled = true
                 }
                 val labels = (10..51).map { i -> "" + (i / 10.0) }.toList()
 
@@ -375,8 +390,8 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      * @param exams List of [Exam] objects
      * @return An [ArrayMap] mapping grades to number of occurrence
      */
-    private fun calculateGradeDistribution(exams: List<Exam>): ArrayMap<String, Int> {
-        val gradeDistribution = ArrayMap<String, Int>()
+    private fun calculateGradeDistribution(exams: List<Exam>): ArrayMap<String, Double> {
+        val gradeDistribution = ArrayMap<String, Double>()
         exams.forEach { exam ->
             // The grade distribution now takes grades with more than one decimal place into account as well
             if (exam.gradeUsedInAverage) {
@@ -384,15 +399,17 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 if (cleanGrade.contains(longGradeRe)) {
                     cleanGrade = cleanGrade.subSequence(0, 3) as String
                 }
-                val count = gradeDistribution[cleanGrade] ?: 0
+                val count = gradeDistribution[cleanGrade] ?: 0.0
 
                 if (adaptDiagramToWeights) {
-                    gradeDistribution[cleanGrade] = count + (exam.credits_new * exam.weight).toInt()
+                    gradeDistribution[cleanGrade] =
+                        count + (exam.credits_new * exam.weight).toInt()
                 } else {
-                    gradeDistribution[cleanGrade] = count + 1
+                    gradeDistribution[cleanGrade] = count + 1.0
                 }
             }
         }
+
         return gradeDistribution
     }
 
