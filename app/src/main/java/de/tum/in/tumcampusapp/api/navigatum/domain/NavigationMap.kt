@@ -10,21 +10,14 @@ data class NavigationMap(
     val pointerYCord: Int,
     val mapImgWidth: Int,
     val mapImgHeight: Int
-) {
-    companion object {
-        const val BASIC_MAP_URL = "https://nav.tum.sexy/cdn/maps/roomfinder/"
-    }
-
-    fun getFullMapImgUrl(): String {
-        return "$BASIC_MAP_URL$mapImgUrl"
-    }
-}
+)
 
 fun RoomFinderMapDto.toNavigationMap(): NavigationMap {
+    val BASIC_MAP_URL = "https://nav.tum.sexy/cdn/maps/roomfinder/"
     return NavigationMap(
         mapId = this.id,
         mapName = this.name,
-        mapImgUrl = this.imgUrl,
+        mapImgUrl = "$BASIC_MAP_URL${this.imgUrl}",
         pointerXCord = this.x,
         pointerYCord = this.y,
         mapImgWidth = this.width,
