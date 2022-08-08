@@ -141,8 +141,7 @@ class SearchFragment : BaseFragment<Unit>(
             when (recent.type) {
                 RecentsDao.PERSONS -> openPersonDetails(Person.fromRecent(recent))
                 RecentsDao.LECTURES -> openLectureDetails(Lecture.fromRecent(recent))
-                RecentsDao.NAVIGA_TUM_BUILDINGS -> openNavigationDetails(NavigationEntity.fromRecent(recent))
-                RecentsDao.NAVIGA_TUM_ROOMS -> openNavigationDetails(NavigationEntity.fromRecent(recent))
+                RecentsDao.NAVIGA_TUM_BUILDINGS, RecentsDao.NAVIGA_TUM_ROOMS -> openNavigationDetails(NavigationEntity.fromRecent(recent))
             }
         } catch (exception: Exception) {
             Utils.showToast(requireContext(), R.string.something_wrong)
