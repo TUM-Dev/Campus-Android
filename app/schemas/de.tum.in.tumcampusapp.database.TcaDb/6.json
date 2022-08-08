@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 6,
-    "identityHash": "ab613eb6b9b16c59efafa1df26b1bfee",
+    "identityHash": "f743f786b0866afd26a4cc1c1fafc8d1",
     "entities": [
       {
         "tableName": "Cafeteria",
