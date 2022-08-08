@@ -35,7 +35,6 @@ import de.tum.`in`.tumcampusapp.component.ui.search.adapter.ResultTypeData
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.ResultTypesAdapter
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.SearchResultsAdapter
 import de.tum.`in`.tumcampusapp.databinding.FragmentSearchBinding
-import de.tum.`in`.tumcampusapp.databinding.ToolbarSearchBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -68,7 +67,6 @@ class SearchFragment : BaseFragment<Unit>(
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
     private val binding by viewBinding(FragmentSearchBinding::bind)
-    private val bindingToolbar by viewBinding(ToolbarSearchBinding::bind)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -97,7 +95,7 @@ class SearchFragment : BaseFragment<Unit>(
 
         query?.let {
             viewModel.search(it)
-            bindingToolbar.searchEditText.setText(query)
+            binding.toolbarSearch.searchEditText.setText(query)
         } ?: run {
             showKeyboard()
         }
@@ -106,7 +104,7 @@ class SearchFragment : BaseFragment<Unit>(
 
         addQueryHandlers()
 
-        bindingToolbar.clearButton.setOnClickListener {
+        binding.toolbarSearch.clearButton.setOnClickListener {
             clearInput()
         }
     }
@@ -141,7 +139,7 @@ class SearchFragment : BaseFragment<Unit>(
             when (recent.type) {
                 RecentsDao.PERSONS -> openPersonDetails(Person.fromRecent(recent))
                 RecentsDao.LECTURES -> openLectureDetails(Lecture.fromRecent(recent))
-                RecentsDao.NAVIGA_TUM_BUILDINGS, RecentsDao.NAVIGA_TUM_ROOMS -> openNavigationDetails(NavigationEntity.fromRecent(recent))
+                RecentsDao.NAVIGATUM_BUILDINGS, RecentsDao.NAVIGATUM_ROOMS -> openNavigationDetails(NavigationEntity.fromRecent(recent))
             }
         } catch (exception: Exception) {
             Utils.showToast(requireContext(), R.string.something_wrong)
@@ -155,11 +153,11 @@ class SearchFragment : BaseFragment<Unit>(
 
     private fun hideKeyboard() {
         val imm: InputMethodManager? = requireContext().getSystemService()
-        imm?.hideSoftInputFromWindow(bindingToolbar.searchEditText.windowToken, 0)
+        imm?.hideSoftInputFromWindow(binding.toolbarSearch.searchEditText.windowToken, 0)
     }
 
     private fun clearInput() {
-        bindingToolbar.searchEditText.setText("")
+        binding.toolbarSearch.searchEditText.setText("")
         showSearchInfo()
         viewModel.clearSearchState()
     }
@@ -235,11 +233,11 @@ class SearchFragment : BaseFragment<Unit>(
                 openLectureDetails(searchResult.lecture)
             }
             is SearchResult.Building -> {
-                saveRecentSearch(NavigationEntity.toRecent(searchResult.building, RecentsDao.NAVIGA_TUM_BUILDINGS))
+                saveRecentSearch(NavigationEntity.toRecent(searchResult.building, RecentsDao.NAVIGATUM_BUILDINGS))
                 openNavigationDetails(searchResult.building)
             }
             is SearchResult.NavigaRoom -> {
-                saveRecentSearch(NavigationEntity.toRecent(searchResult.room, RecentsDao.NAVIGA_TUM_ROOMS))
+                saveRecentSearch(NavigationEntity.toRecent(searchResult.room, RecentsDao.NAVIGATUM_ROOMS))
                 openNavigationDetails(searchResult.room)
             }
         }
@@ -264,7 +262,7 @@ class SearchFragment : BaseFragment<Unit>(
             queryString?.let { query ->
                 hideKeyboard()
                 viewModel.search(query)
-                bindingToolbar.searchEditText.setText(query)
+                binding.toolbarSearch.searchEditText.setText(query)
             }
         }
     }
@@ -301,7 +299,7 @@ class SearchFragment : BaseFragment<Unit>(
             } else {
                 binding.progressIndicator.hide()
 
-                val input = bindingToolbar.searchEditText.text.toString().trim()
+                val input = binding.toolbarSearch.searchEditText.text.toString().trim()
                 if (input.length < MIN_QUERY_LENGTH)
                     showSearchInfo()
                 else if (viewModel.state.value.data.isEmpty()) {
@@ -342,8 +340,8 @@ class SearchFragment : BaseFragment<Unit>(
 
     private fun showKeyboard() {
         val imm: InputMethodManager? = requireContext().getSystemService()
-        bindingToolbar.searchEditText.requestFocus()
-        imm?.showSoftInput(bindingToolbar.searchEditText, InputMethodManager.SHOW_IMPLICIT)
+        binding.toolbarSearch.searchEditText.requestFocus()
+        imm?.showSoftInput(binding.toolbarSearch.searchEditText, InputMethodManager.SHOW_IMPLICIT)
     }
 
     private fun showSearchInfo() {
@@ -383,8 +381,8 @@ class SearchFragment : BaseFragment<Unit>(
             it.setTint(color)
         }
 
-        bindingToolbar.toolbar.navigationIcon = backIcon
-        bindingToolbar.toolbar.setNavigationOnClickListener {
+        binding.toolbarSearch.toolbar.navigationIcon = backIcon
+        binding.toolbarSearch.toolbar.setNavigationOnClickListener {
             hideKeyboard()
             requireActivity().onBackPressed()
         }

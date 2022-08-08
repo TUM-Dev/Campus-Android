@@ -71,29 +71,21 @@ class RecentSearchesAdapter(
                     icon.setBackgroundResource(R.drawable.search_result_icon_background)
                     profilePicture.setImageDrawable(null)
                 }
-                RecentsDao.NAVIGA_TUM_BUILDINGS -> {
-                    try {
-                        val navigationEntity = NavigationEntity.fromRecent(recentSearch)
-                        titleText.text = navigationEntity.getFormattedName()
-                    } catch (exception: Exception) {
-                        titleText.setText(R.string.not_available_search)
-                    }
-                    icon.setImageResource(R.drawable.ic_building)
-                    icon.setBackgroundResource(R.drawable.search_result_icon_background)
-                    profilePicture.setImageDrawable(null)
-                }
-                RecentsDao.NAVIGA_TUM_ROOMS -> {
-                    try {
-                        val navigationEntity = NavigationEntity.fromRecent(recentSearch)
-                        titleText.text = navigationEntity.getFormattedName()
-                    } catch (exception: Exception) {
-                        titleText.setText(R.string.not_available_search)
-                    }
-                    icon.setImageResource(R.drawable.ic_room)
-                    icon.setBackgroundResource(R.drawable.search_result_icon_background)
-                    profilePicture.setImageDrawable(null)
-                }
+                RecentsDao.NAVIGATUM_BUILDINGS -> drawRecentNavigationSearch(recentSearch, R.drawable.ic_building)
+                RecentsDao.NAVIGATUM_ROOMS -> drawRecentNavigationSearch(recentSearch, R.drawable.ic_room)
             }
+        }
+
+        private fun drawRecentNavigationSearch(recentSearch: Recent, iconResource: Int) {
+            try {
+                val navigationEntity = NavigationEntity.fromRecent(recentSearch)
+                titleText.text = navigationEntity.getFormattedName()
+            } catch (exception: Exception) {
+                titleText.setText(R.string.not_available_search)
+            }
+            icon.setImageResource(iconResource)
+            icon.setBackgroundResource(R.drawable.search_result_icon_background)
+            profilePicture.setImageDrawable(null)
         }
     }
 

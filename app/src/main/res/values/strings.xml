@@ -781,7 +781,7 @@ Signature: %5$s</string>
     <string name="recent_searches">Recent searches</string>
     <string name="clear_recent_searches">Clear history</string>
     <string name="not_available_search">Not available</string>
-    <string name="n_rooms">Rooms</string>
+    <string name="rooms_id">Rooms</string>
     <string name="buildings">Buildings</string>
     <string name="clear_search_history_request">Do you want to clear search history?</string>
 

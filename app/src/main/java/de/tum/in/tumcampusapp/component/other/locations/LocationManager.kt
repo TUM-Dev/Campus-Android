@@ -24,7 +24,11 @@ import org.jetbrains.anko.doAsync
 import java.lang.Double.parseDouble
 import java.util.*
 import javax.inject.Inject
-import kotlin.math.*
+import kotlin.math.sqrt
+import kotlin.math.tan
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.pow
 
 /**
  * Location manager, manages intelligent location services, provides methods to easily access
@@ -272,7 +276,7 @@ class LocationManager @Inject constructor(c: Context) {
                 val location = searchResult.sections[0].entries[0].id
                 val locationDetails = NavigaTumAPIClient.getInstance(mContext).getNavigationDetails(location)
                 locationDetails?.let {
-                    geo = Geo(locationDetails.cordsLat, locationDetails.cordsLon)
+                    geo = locationDetails.geo
                 }
             }
             return geo

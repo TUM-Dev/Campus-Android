@@ -726,7 +726,7 @@ Signatur: %5$s</string>
     <string name="recent_searches">Letzte Suchen</string>
     <string name="clear_recent_searches">Verlauf löschen</string>
     <string name="not_available_search">Nicht verfügbar</string>
-    <string name="n_rooms">Räume</string>
+    <string name="rooms_id">Räume</string>
     <string name="buildings">Gebäude</string>
     <string name="clear_search_history_request">Möchten Sie den Suchverlauf löschen?</string>
 

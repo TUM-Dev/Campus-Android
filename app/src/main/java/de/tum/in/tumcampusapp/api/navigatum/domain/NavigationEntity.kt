@@ -13,11 +13,14 @@ data class NavigationEntity(
     @SerializedName("name")
     var name: String = "",
     @SerializedName("subtext")
-    var subtext: String = ""
+    var subtext: String = "",
+    @SerializedName("parsed_id")
+    var parsedId: String? = null,
 ) : Serializable {
 
     fun getFormattedName(): String {
-        return removeHighlight(name)
+        return if (parsedId == null) removeHighlight(name)
+        else removeHighlight(parsedId!!) + " ➤ " + removeHighlight(name)
     }
 
     fun getFormattedSubtext(): String {

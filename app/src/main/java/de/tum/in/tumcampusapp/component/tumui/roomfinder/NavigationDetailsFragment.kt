@@ -16,14 +16,13 @@ import com.squareup.picasso.Picasso
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.navigatum.domain.NavigationDetails
-import de.tum.`in`.tumcampusapp.api.navigatum.domain.NavigationMap
+import de.tum.`in`.tumcampusapp.api.navigatum.domain.RoomfinderMap
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.BaseFragment
 import de.tum.`in`.tumcampusapp.databinding.FragmentNavigationDetailsBinding
 import de.tum.`in`.tumcampusapp.databinding.NavigationPropertyRowBinding
 import de.tum.`in`.tumcampusapp.databinding.ToolbarNavigationBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.sdk27.coroutines.onItemSelectedListener
 import javax.inject.Inject
@@ -86,7 +85,7 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
     private fun showLocationDetails(navigationDetails: NavigationDetails) {
         binding.parentLocations.text = navigationDetails.getFormattedParentNames()
         binding.locationName.text = navigationDetails.name
-        binding.locationType.text = getCapitalizeType(navigationDetails.type)
+        binding.locationType.text = getCapitalizeType(navigationDetails.typeCommonName)
 
         setOpenInOtherAppBtnListener(navigationDetails)
 
@@ -99,7 +98,8 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
         binding.openLocationBtn.setOnClickListener {
             // having to specify the location is a google maps workaround... sigh..
             // As of 25.7.22 this is absolutely needed to make Google Maps display a pin with custom name
-            val coordinates = "${navigationDetails.cordsLat},${navigationDetails.cordsLon}?q=${navigationDetails.cordsLat},${navigationDetails.cordsLon}(${navigationDetails.name})"
+            val geo = navigationDetails.geo
+            val coordinates = "${geo.latitude},${geo.longitude}?q=${geo.latitude},${geo.longitude}(${navigationDetails.name})"
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("geo:$coordinates"))
             startActivity(intent)
         }
@@ -146,7 +146,7 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
         }
     }
 
-    private fun loadMapImage(map: NavigationMap) {
+    private fun loadMapImage(map: RoomfinderMap) {
         val pinDrawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_place, null)
             ?: throw IllegalStateException("Pin icon not loaded")
         val pointerDrawer = DrawCordsPointerTransformation(
@@ -155,7 +155,7 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
             pinDrawable = pinDrawable
         )
         Picasso.get()
-            .load(map.getFullMapImgUrl())
+            .load(map.mapImgUrl)
             .transform(pointerDrawer)
             .into(binding.photoView)
     }

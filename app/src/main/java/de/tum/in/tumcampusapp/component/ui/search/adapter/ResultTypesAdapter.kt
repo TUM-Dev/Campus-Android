@@ -46,7 +46,7 @@ class ResultTypesAdapter(
                 SearchResultType.ALL -> R.string.all_results
                 SearchResultType.PERSON -> R.string.people
                 SearchResultType.LECTURE -> R.string.lectures
-                SearchResultType.NAVIGA_ROOM -> R.string.n_rooms
+                SearchResultType.NAVIGA_ROOM -> R.string.rooms_id
                 SearchResultType.BUILDING -> R.string.buildings
             }
             typeTextView.setText(text)
