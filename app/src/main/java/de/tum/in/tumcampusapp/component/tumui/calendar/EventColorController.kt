@@ -39,7 +39,7 @@ class EventColorController(
     private fun addNewEventColor(calendarItem: CalendarItem, isSingleEvent: Boolean, color: Int) {
         eventColorDao.insert(
             EventColor(
-                eventColorId = null,
+                eventColorId = null, // Let SQLITE generate an ID
                 eventIdentifier = getEventIdentifier(calendarItem),
                 eventNr = calendarItem.nr,
                 isSingleEvent = isSingleEvent,
