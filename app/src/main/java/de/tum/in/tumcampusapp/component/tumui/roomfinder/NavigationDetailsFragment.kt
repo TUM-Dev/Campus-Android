@@ -180,7 +180,7 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
             .setTitle(R.string.not_implemented)
             .setMessage(R.string.not_implemented_interactive_map)
             .setPositiveButton(R.string.redirect) { _, _ ->
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://nav.tum.sexy/room/${viewModel.state.value.navigationDetails?.id}"))
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://nav.tum.sexy/view/${viewModel.state.value.navigationDetails?.id}"))
                 startActivity(intent)
             }
             .setNegativeButton(R.string.cancel, null)
