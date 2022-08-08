@@ -731,13 +731,13 @@ Signatur: %5$s</string>
     <string name="clear_search_history_request">Möchten Sie den Suchverlauf löschen?</string>
 
     // Navigation details
-    <string name="location_details">Location details</string>
-    <string name="loading_details">loading</string>
-    <string name="site_plans">Site plans</string>
-    <string name="interactive_map">Interactive map</string>
-    <string name="open_location_in_other_app">Open location in other app</string>
-    <string name="available_maps">Available maps:</string>
-    <string name="map">Map</string>
+    <string name="location_details">Details zum Ort</string>
+    <string name="loading_details">lädt</string>
+    <string name="site_plans">Lagepläne</string>
+    <string name="interactive_map">Interaktive Karte</string>
+    <string name="open_location_in_other_app">Ort in anderer Anwendung öffnen</string>
+    <string name="available_maps">Verfügbare Karten:</string>
+    <string name="map">Karte</string>
     <string name="room_id">Raumkennung</string>
     <string name="address">Adresse</string>
     <string name="architect_name">Architekten-Name</string>
