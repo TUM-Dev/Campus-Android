@@ -97,7 +97,9 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
 
     private fun setOpenInOtherAppBtnListener(navigationDetails: NavigationDetails) {
         binding.openLocationBtn.setOnClickListener {
-            val coordinates = "${navigationDetails.cordsLat},${navigationDetails.cordsLon}"
+            // having to specify the location is a google maps workaround... sigh..
+            // As of 25.7.22 this is absolutely needed to make Google Maps display a pin with custom name
+            val coordinates = "${navigationDetails.cordsLat},${navigationDetails.cordsLon}?q=${navigationDetails.cordsLat},${navigationDetails.cordsLon}(${navigationDetails.name})"
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("geo:$coordinates"))
             startActivity(intent)
         }
