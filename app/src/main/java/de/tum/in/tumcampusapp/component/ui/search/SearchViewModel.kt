@@ -42,9 +42,7 @@ class SearchViewModel @Inject constructor(
             SearchResultType.LECTURE -> lectures.value
             SearchResultType.NAVIGA_ROOM -> navigaRooms.value
             SearchResultType.BUILDING -> buildings.value
-            SearchResultType.ALL -> sort(
-                persons.value + lectures.value + buildings.value + navigaRooms.value
-            )
+            SearchResultType.ALL -> persons.value + buildings.value + navigaRooms.value + lectures.value
         }
         state.value = state.value.copy(
             data = selectedResult,
@@ -97,8 +95,6 @@ class SearchViewModel @Inject constructor(
             selectedType = SearchResultType.ALL
         )
 
-        searchForBuildingAndRooms(query)
-
         val persons = tumOnlineClient
             .searchPerson(query)
             .subscribeOn(Schedulers.io())
@@ -108,6 +104,8 @@ class SearchViewModel @Inject constructor(
             .map { persons ->
                 persons.map { SearchResult.Person(it) }
             }
+
+        searchForBuildingAndRooms(query)
 
         val lectures = tumOnlineClient
             .searchLecturesSingle(query)
@@ -131,7 +129,7 @@ class SearchViewModel @Inject constructor(
             return
 
         if (result.isEmpty()) {
-            saveResult(emptyList(), null)
+            saveResult(null)
             return
         }
 
@@ -149,22 +147,18 @@ class SearchViewModel @Inject constructor(
             SearchResultType.NAVIGA_ROOM -> navigaRooms.value = result
             else -> throw IllegalStateException("Not know search result type!")
         }
-        saveResult(result, type)
+        saveResult(type)
     }
 
-    private fun saveResult(result: List<SearchResult>, type: SearchResultType?) {
+    private fun saveResult(type: SearchResultType?) {
         var availableTypes = state.value.availableResultTypes
         if (type != null)
             availableTypes = availableTypes + listOf(type)
         state.value = state.value.copy(
             isLoading = currentApiCalls > 0,
-            data = sort(state.value.data + result),
+            data = persons.value + buildings.value + navigaRooms.value + lectures.value,
             availableResultTypes = availableTypes
         )
-    }
-
-    private fun sort(result: List<SearchResult>): List<SearchResult> {
-        return result.sortedBy { it.title }
     }
 
     fun clearSearchState() {

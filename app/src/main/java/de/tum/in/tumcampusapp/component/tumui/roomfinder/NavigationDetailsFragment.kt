@@ -20,7 +20,6 @@ import de.tum.`in`.tumcampusapp.api.navigatum.domain.RoomfinderMap
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.BaseFragment
 import de.tum.`in`.tumcampusapp.databinding.FragmentNavigationDetailsBinding
 import de.tum.`in`.tumcampusapp.databinding.NavigationPropertyRowBinding
-import de.tum.`in`.tumcampusapp.databinding.ToolbarNavigationBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import kotlinx.coroutines.launch
@@ -41,7 +40,6 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
     lateinit var viewModelProvider: Provider<NavigationDetailsViewModel>
 
     private val binding by viewBinding(FragmentNavigationDetailsBinding::bind)
-    private val bindingToolbar by viewBinding(ToolbarNavigationBinding::bind)
 
     private val viewModel: NavigationDetailsViewModel by lazy {
         val factory = ViewModelFactory(viewModelProvider)
@@ -55,7 +53,7 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        bindingToolbar.toolbar.setTitle(R.string.location_details)
+        binding.toolbarNav.toolbar.setTitle(R.string.location_details)
 
         lifecycleScope.launch {
             handleDetailsLoading()
