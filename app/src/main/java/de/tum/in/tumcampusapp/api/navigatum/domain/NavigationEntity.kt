@@ -15,7 +15,7 @@ data class NavigationEntity(
     @SerializedName("subtext")
     var subtext: String = "",
     @SerializedName("parsed_id")
-    var parsedId: String? = null,
+    var parsedId: String? = null
 ) : Serializable {
 
     fun getFormattedName(): String {
