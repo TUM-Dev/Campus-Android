@@ -11,7 +11,6 @@ import de.tum.`in`.tumcampusapp.component.other.settings.ThemeProvider
 import de.tum.`in`.tumcampusapp.di.AppComponent
 import de.tum.`in`.tumcampusapp.di.DaggerAppComponent
 import io.reactivex.plugins.RxJavaPlugins
-import net.danlew.android.joda.JodaTimeAndroid
 
 open class App : Application() {
 
@@ -26,7 +25,6 @@ open class App : Application() {
         buildAppComponent()
         setupPicasso()
         setupNotificationChannels(this)
-        JodaTimeAndroid.init(this)
         if (!testing) {
             initRxJavaErrorHandler()
         }

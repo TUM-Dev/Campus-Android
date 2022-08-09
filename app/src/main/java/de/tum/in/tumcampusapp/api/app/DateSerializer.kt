@@ -14,9 +14,14 @@ import java.util.*
  */
 class DateSerializer : JsonDeserializer<DateTime>, JsonSerializer<DateTime> {
     private val formatStrings = arrayOf(
-            "yyyy-MM-dd",
-            "yyyy-MM-dd HH:mm:ss",
-            "yyyy-MM-dd'T'HH:mm:ss'Z'"
+        "dd.MM.yy",
+        "dd.MM.yyyy",
+        "yyyy.MM.dd",
+        "dd-MM-yy",
+        "dd-MM-yyyy",
+        "yyyy-MM-dd",
+        "yyyy-MM-dd HH:mm:ss",
+        "yyyy-MM-dd'T'HH:mm:ss'Z'"
     )
 
     private val dateFormats = formatStrings.map {
@@ -37,7 +42,11 @@ class DateSerializer : JsonDeserializer<DateTime>, JsonSerializer<DateTime> {
         throw JsonParseException("Unparseable date: \"${json?.asString.orEmpty()}\". Supported formats: ${formatStrings.contentToString()}")
     }
 
-    override fun serialize(time: DateTime, typeOfT: Type, context: JsonSerializationContext): JsonElement {
+    override fun serialize(
+        time: DateTime,
+        typeOfT: Type,
+        context: JsonSerializationContext
+    ): JsonElement {
         return JsonPrimitive(DateTimeUtils.getDateString(time))
     }
 }
