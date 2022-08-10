@@ -257,6 +257,16 @@
             android:theme="@style/AppTheme.NoDrawerLayout">
         </activity>
         <activity
+            android:name=".component.ui.search.SearchActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/search">
+        </activity>
+        <activity
+            android:name=".component.tumui.roomfinder.NavigationDetailsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/location_details">
+        </activity>
+        <activity
             android:name=".component.ui.studyroom.StudyRoomsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/study_rooms"
