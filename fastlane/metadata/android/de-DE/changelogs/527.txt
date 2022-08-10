@@ -1,4 +1,4 @@
 v2.4
 
-- The Event Details now consistently shows the buy button
-- Added the ability to dismiss the beta info
+- In den Veranstaltungsdetails wird nun die Schaltfläche "Kaufen" permanent angezeigt.
+- Es wurde die Möglichkeit hinzugefügt, die Beta-Informationen ignorieren zu können.

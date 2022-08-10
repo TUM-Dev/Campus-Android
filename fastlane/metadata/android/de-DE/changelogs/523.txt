@@ -3,6 +3,6 @@ v2.0
 - Neues Design im freshen look - lasst uns wissen wie es euch gefällt => app@tum.de
 - Verbessertes Benachrichtigungskonzept. Eventuell zeigen wir euch jetzt zu besseren Uhrzeiten den Speiseplan für die Mensa an.
 - Featuring Uhrenturm im Menü, weil der einfach besser ist
-- Logout ist nun über die Einstellungen Möglich
+- Logout ist nun über die Einstellungen möglich.
 - Vorbereitung für den Ticket Vorverkauf für den TU Film
 - Viele Kleine Fehlerbehebungen
