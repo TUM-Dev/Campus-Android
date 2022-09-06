@@ -749,7 +749,6 @@ Signatur: %5$s</string>
     // search
     <string name="all_results">Alle Ergebnisse</string>
     <string name="people">Personen</string>
-    <string name="rooms">Räume</string>
     <string name="lectures">Vorlesungen</string>
     <string name="search_info">Suchen Sie nach Personen, Räumen und anderen.</string>
     <string name="no_result_info">Konnte nicht finden “%1$s”</string>
@@ -757,5 +756,25 @@ Signatur: %5$s</string>
     <string name="recent_searches">Letzte Suchen</string>
     <string name="clear_recent_searches">Verlauf löschen</string>
     <string name="not_available_search">Nicht verfügbar</string>
+    <string name="rooms_id">Räume</string>
+    <string name="buildings">Gebäude</string>
     <string name="clear_search_history_request">Möchten Sie den Suchverlauf löschen?</string>
+
+    // Navigation details
+    <string name="location_details">Details zum Ort</string>
+    <string name="loading_details">lädt</string>
+    <string name="site_plans">Lagepläne</string>
+    <string name="interactive_map">Interaktive Karte</string>
+    <string name="open_location_in_other_app">Ort in anderer Anwendung öffnen</string>
+    <string name="available_maps">Verfügbare Karten:</string>
+    <string name="map">Karte</string>
+    <string name="room_id">Raumkennung</string>
+    <string name="address">Adresse</string>
+    <string name="architect_name">Architekten-Name</string>
+    <string name="seats">Sitzplätze</string>
+    <string name="number_of_rooms">Anzahl Räume</string>
+    <string name="not_implemented">Funktion noch nicht implementiert</string>
+    <string name="not_implemented_interactive_map">Interaktive Karte ist noch nicht implementiert. Sie können auf der NavigaTum-Website darauf zugreifen.</string>
+    <string name="redirect">Umleiten</string>
+
 </resources>
