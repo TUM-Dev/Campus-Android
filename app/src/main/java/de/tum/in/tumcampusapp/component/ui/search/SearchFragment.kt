@@ -19,6 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.api.navigatum.domain.NavigationEntity
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.BaseFragment
@@ -27,16 +28,17 @@ import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.Lecture
 import de.tum.`in`.tumcampusapp.component.tumui.person.PersonDetailsActivity
 import de.tum.`in`.tumcampusapp.component.tumui.person.PersonDetailsActivity.Companion.PERSON_OBJECT
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
-import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderDetailsActivity
-import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom
+import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.NavigationDetailsActivity
+import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.NavigationDetailsFragment.Companion.NAVIGATION_ENTITY_ID
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.RecentSearchesAdapter
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.ResultTypeData
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.ResultTypesAdapter
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.SearchResultsAdapter
+import de.tum.`in`.tumcampusapp.databinding.FragmentSearchBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.utils.Utils
-import de.tum.`in`.tumcampusapp.databinding.FragmentSearchBinding
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
@@ -48,8 +50,6 @@ class SearchFragment : BaseFragment<Unit>(
 
     @Inject
     lateinit var viewModelProvider: Provider<SearchViewModel>
-
-    private val binding by viewBinding(FragmentSearchBinding::bind)
 
     private lateinit var searchResultsAdapter: SearchResultsAdapter
     private lateinit var resultTypesAdapter: ResultTypesAdapter
@@ -65,6 +65,8 @@ class SearchFragment : BaseFragment<Unit>(
     }
 
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
+
+    private val binding by viewBinding(FragmentSearchBinding::bind)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -113,6 +115,7 @@ class SearchFragment : BaseFragment<Unit>(
             onRemove = { recentSearch -> removeRecentSearch(recentSearch) }
         )
         binding.recentSearchesRecyclerView.adapter = recentSearchesAdapter
+
         binding.clearRecentSearches.setOnClickListener {
             showClearHistoryDialog()
         }
@@ -135,8 +138,8 @@ class SearchFragment : BaseFragment<Unit>(
         try {
             when (recent.type) {
                 RecentsDao.PERSONS -> openPersonDetails(Person.fromRecent(recent))
-                RecentsDao.ROOMS -> openRoomDetails(RoomFinderRoom.fromRecent(recent))
                 RecentsDao.LECTURES -> openLectureDetails(Lecture.fromRecent(recent))
+                RecentsDao.NAVIGATUM_BUILDINGS, RecentsDao.NAVIGATUM_ROOMS -> openNavigationDetails(NavigationEntity.fromRecent(recent))
             }
         } catch (exception: Exception) {
             Utils.showToast(requireContext(), R.string.something_wrong)
@@ -225,15 +228,25 @@ class SearchFragment : BaseFragment<Unit>(
                 saveRecentSearch(Person.toRecent(searchResult.person))
                 openPersonDetails(searchResult.person)
             }
-            is SearchResult.Room -> {
-                saveRecentSearch(RoomFinderRoom.toRecent(searchResult.room))
-                openRoomDetails(searchResult.room)
-            }
             is SearchResult.Lecture -> {
                 saveRecentSearch(Lecture.toRecent(searchResult.lecture))
                 openLectureDetails(searchResult.lecture)
             }
+            is SearchResult.Building -> {
+                saveRecentSearch(NavigationEntity.toRecent(searchResult.building, RecentsDao.NAVIGATUM_BUILDINGS))
+                openNavigationDetails(searchResult.building)
+            }
+            is SearchResult.NavigaRoom -> {
+                saveRecentSearch(NavigationEntity.toRecent(searchResult.room, RecentsDao.NAVIGATUM_ROOMS))
+                openNavigationDetails(searchResult.room)
+            }
         }
+    }
+
+    private fun openNavigationDetails(navigationEntity: NavigationEntity) {
+        val intent = Intent(requireContext(), NavigationDetailsActivity::class.java)
+        intent.putExtra(NAVIGATION_ENTITY_ID, navigationEntity.id)
+        startActivity(intent)
     }
 
     private fun openPersonDetails(person: Person) {
@@ -252,12 +265,6 @@ class SearchFragment : BaseFragment<Unit>(
                 binding.toolbarSearch.searchEditText.setText(query)
             }
         }
-    }
-
-    private fun openRoomDetails(room: RoomFinderRoom) {
-        val intent = Intent(requireContext(), RoomFinderDetailsActivity::class.java)
-        intent.putExtra(RoomFinderDetailsActivity.EXTRA_ROOM_INFO, room)
-        startActivity(intent)
     }
 
     private fun openLectureDetails(lecture: Lecture) {
@@ -304,6 +311,7 @@ class SearchFragment : BaseFragment<Unit>(
 
             if (searchResultState.availableResultTypes.isNotEmpty()) {
                 binding.searchResultTypesRecyclerView.visibility = View.VISIBLE
+                resultTypesAdapter.submitList(mapToResultTypeData(viewModel.state.value.availableResultTypes, viewModel.state.value.selectedType))
                 resultTypesAdapter.submitList(
                     mapToResultTypeData(
                         viewModel.state.value.availableResultTypes,
@@ -373,12 +381,10 @@ class SearchFragment : BaseFragment<Unit>(
             it.setTint(color)
         }
 
-        with(binding.toolbarSearch.toolbar) {
-            navigationIcon = backIcon
-            setNavigationOnClickListener {
-                hideKeyboard()
-                requireActivity().onBackPressed()
-            }
+        binding.toolbarSearch.toolbar.navigationIcon = backIcon
+        binding.toolbarSearch.toolbar.setNavigationOnClickListener {
+            hideKeyboard()
+            requireActivity().onBackPressed()
         }
     }
 

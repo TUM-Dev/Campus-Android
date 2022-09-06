@@ -8,6 +8,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
+import de.tum.`in`.tumcampusapp.api.navigatum.NavigaTumAPIClient
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.component.ui.news.RealTopNewsStore
 import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsStore
@@ -62,5 +63,12 @@ abstract class AppModule {
         fun provideLocalBroadcastManager(
             context: Context
         ): LocalBroadcastManager = LocalBroadcastManager.getInstance(context)
+
+        @JvmStatic
+        @Singleton
+        @Provides
+        fun provideNavigaTumAPIClient(
+            context: Context
+        ): NavigaTumAPIClient = NavigaTumAPIClient.getInstance(context)
     }
 }

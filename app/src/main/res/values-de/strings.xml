@@ -62,6 +62,7 @@
     <!-- Exam/Grades -->
     <string name="average_grade">Durchschnittsnote</string>
     <string name="average_grade_hint">Deinen offiziellen Schnitt findest Du in TUMOnline.</string>
+    <string name="edit_grades">Noten Bearbeiten</string>
     <string name="show_column_chart">Zeige als Balkendiagramm</string>
     <string name="show_pie_chart">Zeige als Tortendiagramm</string>
     <string name="result_extra">Ergebnis:&#160;</string>
@@ -71,6 +72,35 @@
     <string name="all_programs">Alle Noten</string>
     <string name="date">Datum</string>
     <string name="no_grades">Du hast noch keine Noten, die angezeigt werden könnten.</string>
+    <string name="reset_grade">zurücksetzten</string>
+    <string name="use_grade_in_average">Note verwenden</string>
+    <string name="grade_weight_label">Gewichtung der Note:</string>
+    <string name="course_name">Course name</string>
+    <string name="thesis">Bachelor Arbeit</string>
+    <string name="text_view_grade_label">Grade (0 für bestanden)</string>
+    <string name="default_grade">1,0</string>
+    <string name="text_view_examiner_name">Name des Prüfers</string>
+    <string name="text_view_credits_label">Credits</string>
+    <string name="default_credits">6</string>
+    <string name="text_view_grade_weight">Notengewichtung</string>
+    <string name="default_grade_weight">1.0</string>
+    <string name="text_view_examination_date_label">Datum der Prüfung</string>
+    <string name="grade_date_format">dd.mm.jj</string>
+    <string name="grade_date_default">01.01.22</string>
+    <string name="text_view_semester_label">Jahr in dem das Semester startet (z.B. 22WS or 21SoSe)</string>
+    <string name="grade_semester_default">22WS</string>
+    <string name="use_weights_in_diagrams">Credits und Gewichte in dem Diagram berücksichtigen</string>
+    <string name="delete_exam">Prüfung löschen</string>
+    <string name="delete_exam_dialog_message">Soll diese Prüfung unwiderruflich gelöscht werden?</string>
+    <string name="add_grade_error_wrong_semester">Falsches Semesterformat: Zu kurz. Zwei Zahlen für das Jahr + W/S</string>
+    <string name="add_grade_error_semester_no_ws">Falsches Semesterformat: Semester nicht angegeben. Zwei Zahlen für das Jahr + W/S</string>
+    <string name="add_grade_error_invalid_weight">Falsches Gewichtsformat: Gewichte können nicht negativ sein.</string>
+    <string name="add_grade_error_invalid_grade_format">Falsches Notenformat: Die Note muss zwischen 1,0 und 5,0 liegen oder gleich 0 (bestanden) sein.</string>
+    <string name="add_grade_missing_course_title">Ein Kursname muss eingefügt werden.</string>
+    <string name="add_grade_error_invalid_weight_less_than_zero">Ungültige Anzahl an ECTS. Die ECTS-Zahl muss größer als 0 sein.</string>
+    <string name="add_exam_dialog_title">Eine neue Prüfung hinzufügen</string>
+    <string name="add_exam_dialog_message">Die Noten werden normalerweise automatisch hinzugefügt. Falls spezielle Noten hinzugefügt werden sollen, kann dies hier geschehen. Manuell hinzugefügte Prüfungen können später wieder gelöscht werden.</string>
+
 
     <!-- Preferences -->
     <string name="lrz_id">TUM Kennung</string>
@@ -410,7 +440,7 @@ Signatur: %5$s</string>
     <string name="please_connect_to_internet">Bitte verbinden Sie sich mit dem Internet, um den ersten App-Start fortzusetzen</string>
     <string name="IN">in</string>
     <string name="MINUTES">minuten</string>
-    <string name="AT">um</string>
+    <string name="on">um</string>
     <string name="eduroam_fix">Jetzt reparieren</string>
     <string name="eduroam_insecure_configuration">Wir haben eine unsichere WLAN-eduroam Konfiguration erkannt. Sie könnten möglicherweise Informationen über Sie und Ihr Konto in dritte Hände geben.</string>
     <string name="fix_eduroam">eduroam reparieren</string>
@@ -734,7 +764,6 @@ Signatur: %5$s</string>
     // search
     <string name="all_results">Alle Ergebnisse</string>
     <string name="people">Personen</string>
-    <string name="rooms">Räume</string>
     <string name="lectures">Vorlesungen</string>
     <string name="search_info">Suchen Sie nach Personen, Räumen und anderen.</string>
     <string name="no_result_info">Konnte nicht finden “%1$s”</string>
@@ -742,6 +771,25 @@ Signatur: %5$s</string>
     <string name="recent_searches">Letzte Suchen</string>
     <string name="clear_recent_searches">Verlauf löschen</string>
     <string name="not_available_search">Nicht verfügbar</string>
+    <string name="rooms_id">Räume</string>
+    <string name="buildings">Gebäude</string>
     <string name="clear_search_history_request">Möchten Sie den Suchverlauf löschen?</string>
+
+    // Navigation details
+    <string name="location_details">Details zum Ort</string>
+    <string name="loading_details">lädt</string>
+    <string name="site_plans">Lagepläne</string>
+    <string name="interactive_map">Interaktive Karte</string>
+    <string name="open_location_in_other_app">Ort in anderer Anwendung öffnen</string>
+    <string name="available_maps">Verfügbare Karten:</string>
+    <string name="map">Karte</string>
+    <string name="room_id">Raumkennung</string>
+    <string name="address">Adresse</string>
+    <string name="architect_name">Architekten-Name</string>
+    <string name="seats">Sitzplätze</string>
+    <string name="number_of_rooms">Anzahl Räume</string>
+    <string name="not_implemented">Funktion noch nicht implementiert</string>
+    <string name="not_implemented_interactive_map">Interaktive Karte ist noch nicht implementiert. Sie können auf der NavigaTum-Website darauf zugreifen.</string>
+    <string name="redirect">Umleiten</string>
 
 </resources>

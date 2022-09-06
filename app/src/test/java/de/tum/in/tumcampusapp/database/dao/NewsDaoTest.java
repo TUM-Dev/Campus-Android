@@ -32,7 +32,6 @@ public class NewsDaoTest {
     public void setUp() {
         dao = TcaDb.Companion.getInstance(ApplicationProvider.getApplicationContext()).newsDao();
         newsIdx = 0;
-        JodaTimeAndroid.init(ApplicationProvider.getApplicationContext());
     }
 
     @After
