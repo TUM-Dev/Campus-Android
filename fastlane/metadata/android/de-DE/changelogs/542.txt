@@ -1,0 +1,5 @@
+v3.14
+
+* Mehrere Bugfixes:
+  - Wenn die bevorzugte Haltestelle für einen Campus-Standort geändert wird, wird die Änderung nun auch in der MVVCard, die auf dem Startbildschirm der App angezeigt wird, berücksichtigt.
+  - Der Kalendar reagiert nun auf Zeitzonenwechsel so wie man es erwarten würde.

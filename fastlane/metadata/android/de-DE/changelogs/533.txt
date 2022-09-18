@@ -1,0 +1,4 @@
+v3.4
+
+- Bugfixes
+- Die Öffnungszeiten werden nun nicht mehr in die App geschrieben, sondern kommen vom Server

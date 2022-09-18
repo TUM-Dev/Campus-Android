@@ -1,0 +1,4 @@
+v3.18
+
+* 3.17 wurde übersprungen
+* Mehrere interne Code-Upgrades

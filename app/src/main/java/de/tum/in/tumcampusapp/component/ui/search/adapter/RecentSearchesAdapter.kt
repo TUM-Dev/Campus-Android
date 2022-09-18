@@ -13,11 +13,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.makeramen.roundedimageview.RoundedImageView
 import com.squareup.picasso.Picasso
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.api.navigatum.domain.NavigationEntity
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.Lecture
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
-import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom
 
 class RecentSearchesAdapter(
     private val onSelect: (Recent) -> Unit,
@@ -60,17 +60,6 @@ class RecentSearchesAdapter(
                     icon.setImageResource(R.drawable.ic_person)
                     icon.setBackgroundResource(R.drawable.circle_background)
                 }
-                RecentsDao.ROOMS -> {
-                    try {
-                        val room = RoomFinderRoom.fromRecent(recentSearch)
-                        titleText.text = room.formattedAddress
-                    } catch (exception: Exception) {
-                        titleText.setText(R.string.not_available_search)
-                    }
-                    icon.setImageResource(R.drawable.ic_room)
-                    icon.setBackgroundResource(R.drawable.search_result_icon_background)
-                    profilePicture.setImageDrawable(null)
-                }
                 RecentsDao.LECTURES -> {
                     try {
                         val lecture = Lecture.fromRecent(recentSearch)
@@ -82,7 +71,21 @@ class RecentSearchesAdapter(
                     icon.setBackgroundResource(R.drawable.search_result_icon_background)
                     profilePicture.setImageDrawable(null)
                 }
+                RecentsDao.NAVIGATUM_BUILDINGS -> drawRecentNavigationSearch(recentSearch, R.drawable.ic_building)
+                RecentsDao.NAVIGATUM_ROOMS -> drawRecentNavigationSearch(recentSearch, R.drawable.ic_room)
             }
+        }
+
+        private fun drawRecentNavigationSearch(recentSearch: Recent, iconResource: Int) {
+            try {
+                val navigationEntity = NavigationEntity.fromRecent(recentSearch)
+                titleText.text = navigationEntity.getFormattedName()
+            } catch (exception: Exception) {
+                titleText.setText(R.string.not_available_search)
+            }
+            icon.setImageResource(iconResource)
+            icon.setBackgroundResource(R.drawable.search_result_icon_background)
+            profilePicture.setImageDrawable(null)
         }
     }
 

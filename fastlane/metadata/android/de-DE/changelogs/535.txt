@@ -1,0 +1,4 @@
+v3.6
+
+- Meherere Bugfixes
+- Die Notenfarben wurden verändert
