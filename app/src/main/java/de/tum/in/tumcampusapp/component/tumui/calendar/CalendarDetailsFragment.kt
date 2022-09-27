@@ -46,6 +46,10 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
 
     private val binding by viewBinding(FragmentCalendarDetailsBinding::bind)
 
+    private val eventColorController: EventColorController by lazy {
+        EventColorController(requireContext())
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -120,7 +124,24 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
             } else {
                 buttonsContainer.visibility = View.GONE
             }
+
+            if (!calendarItem.isEditable && isShownInCalendarActivity) {
+                changeColorButton.setOnClickListener { showChangeEventColorDialog(calendarItem) }
+            } else {
+                changeColorButton.visibility = View.GONE
+            }
         }
+    }
+
+    private fun showChangeEventColorDialog(calendarItem: CalendarItem) {
+        val dialog = ChangeEventColorDialog(
+            context = requireContext(),
+            calendarItem = calendarItem,
+            onColorChanged = { (requireParentFragment() as CalendarFragment).refresh() },
+            fromCreateEventActivity = false
+        )
+        dialog.show()
+        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
     private fun openEventInCalendarActivity(calendarItem: CalendarItem) {
@@ -128,6 +149,8 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
             putLong(Const.EVENT_TIME, calendarItem.eventStart.millis)
         }
         val destination = NavDestination.Fragment(CalendarFragment::class.java, args)
+        NavigationManager.open(requireContext(), destination)
+        NavigationManager.open(requireContext(), destination)
         NavigationManager.open(requireContext(), destination)
     }
 
@@ -160,6 +183,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
                 call: Call<DeleteEventResponse>,
                 response: Response<DeleteEventResponse>
             ) {
+                eventColorController.removeEventColor(eventId)
                 dismiss()
                 listener?.onEventDeleted(eventId)
                 deleteApiCall = null

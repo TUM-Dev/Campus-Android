@@ -155,6 +155,19 @@
     <color name="location_color">#00A7DE</color>
     <color name="calendar_color">#0066CC</color>
 
+    <!--Custom calendar colors-->
+    <color name="calendar_red">#F44336</color>
+    <color name="calendar_pink">#E91E63</color>
+    <color name="calendar_purple">#9C27B0</color>
+    <color name="calendar_indigo">#3F51B5</color>
+    <color name="calendar_blue">#2196F3</color>
+    <color name="calendar_teal">#009688</color>
+    <color name="calendar_green">#4CAF50</color>
+    <color name="calendar_lime">#CDDC39</color>
+    <color name="calendar_yellow">#FFEB3B</color>
+    <color name="calendar_amber">#FFC107</color>
+    <color name="calendar_orange">#FF9800</color>
+
     <!--- MVV colors -->
     <color name="s_1">#41C0FF</color>
     <color name="s_2">#71BF44</color>

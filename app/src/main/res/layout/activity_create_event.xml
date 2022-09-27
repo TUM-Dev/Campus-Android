@@ -111,11 +111,20 @@
 
                 </LinearLayout>
 
+                <RadioButton
+                    android:id="@+id/colorChangeBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/material_default_padding"
+                    android:checked="true"
+                    android:text="@string/custom_color_default"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/repeatingSwitch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/material_default_padding"
+                    android:layout_marginHorizontal="@dimen/material_default_padding"
                     android:text="@string/repeats"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 

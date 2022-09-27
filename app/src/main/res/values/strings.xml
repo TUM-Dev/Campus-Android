@@ -40,6 +40,21 @@
     <string name="calendar_filter_hour_limit_min_title">From Hour</string>
     <string name="calendar_filter_hour_limit_max_title">To Hour</string>
     <string name="calendar_filter_hour_limit_error_message">Minimum hour must be below maximum hour!</string>
+    <string name="change_color">Change color</string>
+    <string name="choose_color">Choose color</string>
+    <string name="custom_color_default">Default color</string>
+    <string name="custom_color_red">Red</string>
+    <string name="custom_color_pink">Pink</string>
+    <string name="custom_color_purple">Purple</string>
+    <string name="custom_color_indigo">Indigo</string>
+    <string name="custom_color_blue">Blue</string>
+    <string name="custom_color_teal">Teal</string>
+    <string name="custom_color_green">Green</string>
+    <string name="custom_color_lime">Lime</string>
+    <string name="custom_color_yellow">Yellow</string>
+    <string name="custom_color_amber">Amber</string>
+    <string name="custom_color_orange">Orange</string>
+    <string name="apply_to_all_occurrences">Apply to all occurrences</string>
 
     <!-- Roomfinder -->
     <string name="no_map_available">No map available</string>
