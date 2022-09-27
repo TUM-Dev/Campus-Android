@@ -28,7 +28,7 @@ class DrawerHeaderInflater(
         val isLoggedIn = AccessTokenManager.hasValidAccessToken(context)
 
         if (isLoggedIn) {
-            val name = Utils.getSetting(context, Const.CHAT_ROOM_DISPLAY_NAME, "")
+            val name = Utils.getSetting(context, Const.DISPLAY_NAME, "")
             if (name.isNotEmpty()) {
                 nameTextView.text = name
             } else {

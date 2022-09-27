@@ -32,8 +32,8 @@ object Const {
     const val API_HOSTNAME_NEW = "app.tum.de"
     const val STUDY_ROOMS_HOSTNAME = "www.devapp.it.tum.de"
 
-    // TODO Remove or rename
-    const val CHAT_ROOM_DISPLAY_NAME = "chat_room_display_name"
+    // these are originally from the chat, this is why the key is this way
+    const val DISPLAY_NAME = "chat_room_display_name"
 
     const val PRIVATE_KEY = "chat_member_private_key"
     const val PUBLIC_KEY = "chat_member_public_key"

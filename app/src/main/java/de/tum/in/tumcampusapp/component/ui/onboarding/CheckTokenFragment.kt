@@ -86,7 +86,7 @@ class CheckTokenFragment : BaseFragment<Unit>(
 
     private fun handleDownloadSuccess(identitySet: IdentitySet) {
         val identity = identitySet.ids.first()
-        Utils.setSetting(requireContext(), Const.CHAT_ROOM_DISPLAY_NAME, identity.toString())
+        Utils.setSetting(requireContext(), Const.DISPLAY_NAME, identity.toString())
 
         val ids = identity.obfuscated_ids
 
