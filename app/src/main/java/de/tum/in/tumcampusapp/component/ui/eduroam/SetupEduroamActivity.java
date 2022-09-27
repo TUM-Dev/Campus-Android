@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import com.google.android.material.textfield.TextInputEditText;
+
 import androidx.appcompat.app.AlertDialog;
+import de.tum.in.tumcampusapp.utils.ThemedAlertDialogBuilder;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.TextView;
@@ -55,7 +57,7 @@ public class SetupEduroamActivity extends BaseActivity {
     }
 
     private void showDeleteProfileDialog() {
-        AlertDialog dialog = new AlertDialog.Builder(this)
+        AlertDialog dialog = new ThemedAlertDialogBuilder(this)
                 .setTitle(R.string.eduroam_dialog_title)
                 .setMessage(R.string.eduroam_dialog_info_text)
                 .setNegativeButton(R.string.cancel, null)
@@ -63,13 +65,7 @@ public class SetupEduroamActivity extends BaseActivity {
                     Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
                     startActivity(intent);
                 })
-                .create();
-
-        if (dialog.getWindow() != null) {
-            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
-        }
-
-        dialog.show();
+                .show();
     }
 
     /**

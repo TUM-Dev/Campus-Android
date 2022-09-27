@@ -28,6 +28,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import de.tum.in.tumcampusapp.utils.ThemedAlertDialogBuilder;
 import androidx.appcompat.widget.Toolbar;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.work.WorkManager;
@@ -303,19 +304,12 @@ public class ChatActivity extends ActivityForDownloadingExternal
     }
 
     private void showLeaveChatRoomDialog() {
-        AlertDialog dialog = new AlertDialog.Builder(this)
+        AlertDialog dialog = new ThemedAlertDialogBuilder(this)
                 .setTitle(R.string.leave_chat_room)
                 .setMessage(getResources().getString(R.string.leave_chat_room_body))
                 .setPositiveButton(R.string.leave, (dialogInterface, i) -> leaveChatRoom())
                 .setNegativeButton(android.R.string.cancel, null)
-                .create();
-
-        if (dialog.getWindow() != null) {
-            dialog.getWindow()
-                  .setBackgroundDrawableResource(R.drawable.rounded_corners_background);
-        }
-
-        dialog.show();
+                .show();
     }
 
     private void leaveChatRoom() {

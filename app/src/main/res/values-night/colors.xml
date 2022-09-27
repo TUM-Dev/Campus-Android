@@ -12,8 +12,10 @@
 
     <!-- Default colors -->
 
-    <color name="text_primary">@color/text_primary_dark</color>
-    <color name="text_secondary">@color/text_secondary_dark</color>
+    <color name="text_primary_dark">#030303</color>
+    <color name="text_secondary_dark">#1D1D1D</color>
+    <color name="text_primary">#F3F3F3</color>
+    <color name="text_secondary">#A6A6A6</color>
 
     <color name="default_window_background">@android:color/black</color>
     <color name="secondary_window_background">@android:color/black</color>

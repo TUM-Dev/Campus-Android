@@ -15,7 +15,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.RequestLimitReachedException
@@ -553,13 +553,11 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     }
 
     private fun displayCloseDialog() {
-        val dialog = AlertDialog.Builder(this)
+        ThemedAlertDialogBuilder(this)
             .setMessage(R.string.discard_changes_question)
             .setNegativeButton(R.string.discard) { dialogInterface, which -> finish() }
             .setPositiveButton(R.string.keep_editing, null)
-            .create()
-        dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-        dialog.show()
+            .show()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -571,13 +569,11 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     }
 
     private fun showErrorDialog(message: String) {
-        val dialog = AlertDialog.Builder(this)
+        ThemedAlertDialogBuilder(this)
             .setTitle(R.string.error)
             .setMessage(message)
             .setIcon(R.drawable.ic_error_outline)
             .setPositiveButton(R.string.ok, null)
-            .create()
-        dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-        dialog.show()
+            .show()
     }
 }

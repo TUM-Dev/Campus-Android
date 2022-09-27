@@ -1,0 +1,9 @@
+v3.5
+
+- Meherere Bugfixes
+- Viele Änderungen, die sich über des letzten Jahres angestaut haben. Wir haben das irgendwie vernachlässigt diese änderungen zu veröffentlichen.
+  - Es wurde eine Sprachenauswahl hinzugefügt
+  - Standort werden nun als html übermittelt
+  - Jede Menge Konvertierungen nach Kotlin
+  - Viele andere Änderungen, die man im Git-Log nachlesen kann ;)
+
