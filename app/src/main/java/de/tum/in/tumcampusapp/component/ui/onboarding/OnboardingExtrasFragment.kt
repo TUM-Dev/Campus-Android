@@ -102,9 +102,9 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<Boolean>(
 
         // Try to restore already joined chat rooms from server
         try {
-            TUMCabeVerification.create(requireContext(), null) // TODO is this needed?
+            TUMCabeVerification.create(requireContext(), null)
 
-            val lrzId = Utils.getSetting(requireContext(), Const.LRZ_ID, "") // TODO is this needed?
+            val lrzId = Utils.getSetting(requireContext(), Const.LRZ_ID, "")
             // upload obfuscated ids now that we have a member
             val uploadStatus = tumCabeClient.getUploadStatus(lrzId)
             if (uploadStatus != null) {

@@ -154,7 +154,7 @@ class MainFragment : BaseFragment<Unit>(
     }
 
     override fun onAlwaysHideCard(position: Int) {
-        cardsAdapter.remove(position) // TODO
+        cardsAdapter.remove(position)
     }
 
     override fun onDestroy() {
