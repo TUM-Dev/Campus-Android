@@ -34,7 +34,6 @@ import de.tum.`in`.tumcampusapp.component.ui.search.adapter.RecentSearchesAdapte
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.ResultTypeData
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.ResultTypesAdapter
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.SearchResultsAdapter
-import de.tum.`in`.tumcampusapp.databinding.FragmentSearchBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.utils.Utils
