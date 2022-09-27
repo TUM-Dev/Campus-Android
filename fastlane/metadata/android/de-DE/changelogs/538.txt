@@ -1,0 +1,8 @@
+v3.9
+
+* Mehrere Bugfixes
+* Mehrere Fehlerkorrekturen:
+  * Wir verwenden jetzt TUMs language guide (umgangssprachlich "Gendersensible Sprache")
+* Die Lernräume öffnen nun direkt den Raumfinder
+* Wir haben jetzt einen Darkmode eingebaut
+* Es ist nun möglich, wiederkehrende Veranstaltungen in den Kalender einzutragen

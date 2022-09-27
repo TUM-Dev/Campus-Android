@@ -1,95 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/gradesLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingButtonAddExamGrade"
+        style="@style/BlueButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/ic_add"
+        app:tint="@android:color/white" />
+
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:elevation="12dp"
-            android:theme="@style/TumToolbar"
-            app:popupTheme="@style/TumToolbarPopUp">
+            android:layout_height="wrap_content">
 
-            <Spinner
-                android:id="@+id/filterSpinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:elevation="12dp"
+                android:theme="@style/TumToolbar"
+                app:popupTheme="@style/TumToolbarPopUp">
 
-        </androidx.appcompat.widget.Toolbar>
+                <Spinner
+                    android:id="@+id/filterSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+            </androidx.appcompat.widget.Toolbar>
 
-    <include
-        android:id="@+id/layout_all_errors"
-        layout="@layout/layout_all_errors"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        </com.google.android.material.appbar.AppBarLayout>
 
-    <FrameLayout
-        android:id="@+id/contentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        <include
+            android:id="@+id/layout_all_errors"
+            layout="@layout/layout_all_errors"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <FrameLayout
-            android:id="@+id/chartsContainer"
+            android:id="@+id/contentContainer"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:padding="@dimen/material_default_padding"
-            android:background="@color/default_window_background"
-            android:visibility="invisible">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/pieChartView"
+            <CheckBox
+                android:id="@+id/checkboxUseDiagrams"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="visible" />
+                android:layout_height="32dp"
+                android:layout_marginLeft="8dp"
+                android:checked="true"
+                android:text="@string/use_weights_in_diagrams" />
 
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/barChartView"
+            <FrameLayout
+                android:id="@+id/chartsContainer"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone" />
+                android:layout_height="256dp"
+                android:background="@color/default_window_background"
+                android:padding="@dimen/material_default_padding"
+                android:visibility="invisible">
 
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/pieChartView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible" />
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/barChartView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipeRefreshLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+                    android:id="@+id/gradesListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:divider="@color/list_divider"
+                    android:scrollbars="vertical" />
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
         </FrameLayout>
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipeRefreshLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <se.emilsjolander.stickylistheaders.StickyListHeadersListView
-                android:id="@+id/gradesListView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:divider="@color/list_divider"
-                android:paddingTop="200dp"
-                android:scrollbars="vertical" />
-
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/pop_up_background"
-        android:padding="@dimen/material_default_padding">
 
         <LinearLayout
+            android:id="@+id/frameLayoutAverageGrade"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:background="@color/pop_up_background"
+            android:orientation="vertical"
+            android:padding="@dimen/material_default_padding"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/averageGradeTextView"
@@ -105,11 +135,13 @@
                 android:id="@+id/averageGradeHintTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@string/average_grade_hint"
                 android:textColor="@color/text_light_blue"
-                android:visibility="visible"
-                android:text="@string/average_grade_hint"/>
+                android:visibility="visible" />
+
+
         </LinearLayout>
 
-    </FrameLayout>
 
-</LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

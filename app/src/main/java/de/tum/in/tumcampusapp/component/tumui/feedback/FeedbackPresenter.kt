@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.feedback
 
 import android.Manifest.permission.*
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -107,9 +108,6 @@ class FeedbackPresenter @Inject constructor(
 
     override fun takePicture() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (takePictureIntent.resolveActivity(context.packageManager) == null) {
-            return
-        }
 
         // Create the file where the photo should go
         var photoFile: File? = null
@@ -127,8 +125,11 @@ class FeedbackPresenter @Inject constructor(
         val authority = "de.tum.in.tumcampusapp.fileprovider"
         val photoURI = FileProvider.getUriForFile(context, authority, photoFile)
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-
-        view?.openCamera(takePictureIntent)
+        try {
+            view?.openCamera(takePictureIntent)
+        } catch (e: ActivityNotFoundException) {
+            photoFile.delete()
+        }
     }
 
     override fun openGallery() {

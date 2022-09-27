@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.appcompat.app.AlertDialog;
+import de.tum.in.tumcampusapp.utils.ThemedAlertDialogBuilder;
 import androidx.core.content.ContextCompat;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
@@ -151,18 +152,11 @@ public class ChatHistoryAdapter extends BaseAdapter {
         private void resendIfError(Context context,
                                    ChatMessage message, OnRetrySendListener retryListener) {
             if (message.getSendingStatus() == ChatMessage.STATUS_ERROR) {
-                AlertDialog dialog = new AlertDialog.Builder(context)
+                AlertDialog dialog = new ThemedAlertDialogBuilder(context)
                         .setMessage(R.string.chat_message_try_again)
                         .setPositiveButton(R.string.retry, (dialogInterface, i) -> retryListener.onRetrySending(message))
                         .setNegativeButton(R.string.cancel, null)
-                        .create();
-
-                if (dialog.getWindow() != null) {
-                    dialog.getWindow()
-                            .setBackgroundDrawableResource(R.drawable.rounded_corners_background);
-                }
-
-                dialog.show();
+                        .show();
             }
         }
 

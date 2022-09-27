@@ -33,6 +33,7 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
     private val calendarDao: CalendarDao = TcaDb.getInstance(context).calendarDao()
     private val roomLocationsDao: RoomLocationsDao = TcaDb.getInstance(context).roomLocationsDao()
     private val widgetsTimetableBlacklistDao: WidgetsTimetableBlacklistDao = TcaDb.getInstance(context).widgetsTimetableBlacklistDao()
+    private val eventColorProvider: EventColorController = EventColorController(context)
 
     /**
      * Get current lecture from the database
@@ -60,9 +61,8 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
             applyEventColors(calendarDao.getAllNotCancelledBetweenDates(begin, end))
 
     private fun applyEventColors(calendarItems: List<CalendarItem>): List<CalendarItem> {
-        val provider = EventColorProvider(context)
         calendarItems.forEach {
-            it.color = provider.getColor(it)
+            it.color = eventColorProvider.getColor(it)
         }
         return calendarItems
     }
@@ -79,12 +79,11 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
         val fromDate = DateTime.now()
         val toDate = fromDate.plusDays(dayCount)
 
-        val provider = EventColorProvider(context)
         // query already filters out blacklisted events
         val calendarItems = calendarDao.getNextDays(fromDate, toDate, widgetId.toString())
 
         return calendarItems.map {
-            WidgetCalendarItem.create(it).apply { color = provider.getColor(it) }
+            WidgetCalendarItem.create(it).apply { color = eventColorProvider.getColor(it) }
         }
     }
 

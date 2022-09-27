@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import de.tum.in.tumcampusapp.utils.ThemedAlertDialogBuilder;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.api.app.ApiHelper;
 import de.tum.in.tumcampusapp.api.app.TUMCabeClient;
@@ -179,20 +180,14 @@ public class AddChatMemberActivity extends BaseActivity {
     private void showConfirmDialog(ChatMember member) {
         String message = getString(R.string.add_user_to_chat_message,
                 member.getDisplayName(), room.getTitle());
-        AlertDialog dialog = new AlertDialog.Builder(this)
+        AlertDialog dialog = new ThemedAlertDialogBuilder(this)
                 .setMessage(message)
                 .setPositiveButton(R.string.add, (dialogInterface, i) -> {
                     joinRoom(member);
                     reset();
                 })
                 .setNegativeButton(android.R.string.cancel, null)
-                .create();
-
-        if (dialog.getWindow() != null) {
-            dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corners_background);
-        }
-
-        dialog.show();
+                .show();
     }
 
     /**
