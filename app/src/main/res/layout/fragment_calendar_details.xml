@@ -105,6 +105,27 @@
             app:drawableStartCompat="@drawable/ic_action_info" />
 
         <LinearLayout
+            android:id="@+id/changeColorContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/material_small_padding"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:layout_marginStart="@dimen/material_default_padding"
+            android:gravity="start"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/changeColorButton"
+                style="@style/BlueButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/change_color"
+                android:textAllCaps="false"
+                app:cornerRadius="@dimen/material_corner_radius" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/buttonsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

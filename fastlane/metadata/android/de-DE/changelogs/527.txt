@@ -1,0 +1,4 @@
+v2.4
+
+- In den Veranstaltungsdetails wird nun die Schaltfläche "Kaufen" permanent angezeigt.
+- Es wurde die Möglichkeit hinzugefügt, die Beta-Informationen ignorieren zu können.

@@ -1,0 +1,7 @@
+v3.0
+
+- Mehrere Bugfixes
+- Die Lernräume wurden überarbetet und sehen nun viel besser aus
+- Wir unterstützen nun auch TUM-Mitarbeiter:
+  - Blendet Vorlesungen, Noten und Studiengebühren für alle Personen aus, die nur Angestellte sind
+  - Eine Einstellung zum Aktivieren/Deaktivieren des Mitarbeitermodus für Mitarbeiter und Mitarbeiter, die auch Studenten sind, wurde hinzugefügt
