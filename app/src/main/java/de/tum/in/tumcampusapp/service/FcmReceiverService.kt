@@ -26,12 +26,6 @@ class FcmReceiverService : FirebaseMessagingService() {
         val data = message.data
         Utils.log("Notification received: $data")
 
-        // Legacy messages need to be handled - maybe some data is missing?
-        if (!data.containsKey(PAYLOAD) || !data.containsKey("type")) {
-            // TODO: is this path nessesary?????
-            return
-        }
-
         val notificationId = data["notificationId"]?.toInt() ?: return
         val type = data["type"]?.toInt() ?: return
         val payload = data[PAYLOAD] ?: return
