@@ -75,22 +75,6 @@ object Utils {
     /**
      * Get a value from the default shared preferences.
      *
-     * TODO: This method is unused. Should we keep it?
-     * @param c Context
-     * @param key setting name
-     * @param classInst e.g. ChatMember.class
-     * @return setting value
-     */
-    @JvmStatic
-    fun <T> getSetting(c: Context, key: String, classInst: Class<T>): T? {
-        val sp = PreferenceManager.getDefaultSharedPreferences(c)
-        val value = sp.getString(key, null) ?: return null
-        return Gson().fromJson(value, classInst)
-    }
-
-    /**
-     * Get a value from the default shared preferences.
-     *
      * @param c Context
      * @param key setting name
      * @param defaultVal default value
