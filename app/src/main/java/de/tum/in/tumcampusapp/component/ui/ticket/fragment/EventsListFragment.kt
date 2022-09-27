@@ -75,11 +75,8 @@ class EventsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 R.color.tum_A100,
                 R.color.tum_A200
         )
-    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.viewState.observeNonNull(viewLifecycleOwner, this::render)
+        viewModel.viewState.observeNonNull(viewLifecycleOwner, this@EventsListFragment::render)
     }
 
     private fun render(viewState: EventsViewState) {
