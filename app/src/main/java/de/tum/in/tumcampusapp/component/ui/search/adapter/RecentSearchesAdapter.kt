@@ -47,25 +47,17 @@ class RecentSearchesAdapter(
 
             when (recentSearch.type) {
                 RecentsDao.PERSONS -> {
-                    try {
-                        val person = Person.fromRecent(recentSearch)
-                        titleText.text = person.getFullName()
-                        Picasso.get()
-                            .load(person.getFullImageUrl())
-                            .into(profilePicture)
-                    } catch (exception: Exception) {
-                        onRemove(recentSearch)
-                    }
+                    val person = Person.fromRecent(recentSearch)
+                    titleText.text = person.getFullName()
+                    Picasso.get()
+                        .load(person.getFullImageUrl())
+                        .into(profilePicture)
                     icon.setImageResource(R.drawable.ic_person)
                     icon.setBackgroundResource(R.drawable.circle_background)
                 }
                 RecentsDao.LECTURES -> {
-                    try {
-                        val lecture = Lecture.fromRecent(recentSearch)
-                        titleText.text = lecture.title
-                    } catch (exception: Exception) {
-                        onRemove(recentSearch)
-                    }
+                    val lecture = Lecture.fromRecent(recentSearch)
+                    titleText.text = lecture.title
                     icon.setImageResource(R.drawable.ic_lecture)
                     icon.setBackgroundResource(R.drawable.search_result_icon_background)
                     profilePicture.setImageDrawable(null)
