@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.NextLectureCard
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeesCard
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaMenuCard
-import de.tum.`in`.tumcampusapp.component.ui.chat.ChatMessagesCard
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.EduroamCard
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.EduroamFixCard
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsCard
@@ -37,7 +36,6 @@ class CardAdapter(private val interactionListener: CardInteractionListener) : Re
             CardManager.CARD_NEWS, CardManager.CARD_NEWS_FILM -> return NewsCard.inflateViewHolder(viewGroup, viewType, interactionListener)
             CardManager.CARD_EDUROAM -> return EduroamCard.inflateViewHolder(viewGroup, interactionListener)
             CardManager.CARD_EDUROAM_FIX -> return EduroamFixCard.inflateViewHolder(viewGroup, interactionListener)
-            CardManager.CARD_CHAT -> return ChatMessagesCard.inflateViewHolder(viewGroup, interactionListener)
             CardManager.CARD_SUPPORT -> return SupportCard.inflateViewHolder(viewGroup, interactionListener)
             CardManager.CARD_LOGIN -> return LoginPromptCard.inflateViewHolder(viewGroup, interactionListener)
             CardManager.CARD_TOP_NEWS -> return TopNewsCard.inflateViewHolder(viewGroup, interactionListener)

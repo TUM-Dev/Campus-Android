@@ -15,7 +15,6 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.lectures.activity.LecturesPersonalActivity;
-import de.tum.in.tumcampusapp.component.ui.chat.activity.ChatRoomsActivity;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomAndLastMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
