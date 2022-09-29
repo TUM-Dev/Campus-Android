@@ -10,11 +10,6 @@
     android:layout_weight=".80"
     android:padding="@dimen/material_default_padding">
 
-    <LinearLayout
-        android:orientation="vertical">
-
-    </LinearLayout>
-
     <TextView
         android:id="@+id/professorTextView"
         android:layout_width="match_parent"
