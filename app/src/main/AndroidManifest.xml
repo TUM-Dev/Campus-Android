@@ -341,26 +341,6 @@
         </activity>
 
         <activity
-            android:name=".component.ui.chat.activity.ChatRoomsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/my_chat_rooms"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
-        </activity>
-        <activity
-            android:name=".component.ui.chat.activity.ChatActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/my_chat_rooms"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.chat.activity.ChatRoomsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.ui.chat.activity.ChatRoomsActivity" />
-        </activity>
-        <activity
             android:name=".component.ui.chat.activity.JoinRoomScanActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"

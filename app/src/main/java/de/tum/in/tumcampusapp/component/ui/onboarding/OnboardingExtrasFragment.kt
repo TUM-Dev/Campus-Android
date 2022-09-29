@@ -14,7 +14,6 @@ import de.tum.`in`.tumcampusapp.api.app.model.TUMCabeVerification
 import de.tum.`in`.tumcampusapp.api.app.model.UploadStatus
 import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.FragmentForLoadingInBackground
-import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomController
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMember
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponent
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponentProvider
@@ -43,9 +42,6 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
 
     @Inject
     lateinit var tumCabeClient: TUMCabeClient
-
-    @Inject
-    lateinit var chatRoomController: ChatRoomController
 
     @Inject
     lateinit var authManager: AuthenticationManager
@@ -144,9 +140,7 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
 
         // Try to restore already joined chat rooms from server
         return try {
-            val verification = TUMCabeVerification.create(requireContext(), null)
-            val rooms = tumCabeClient.getMemberRooms(member.id, verification)
-            chatRoomController.replaceIntoRooms(rooms)
+            TUMCabeVerification.create(requireContext(), null)
 
             // upload obfuscated ids now that we have a member
             val uploadStatus = tumCabeClient.getUploadStatus(lrzId)
