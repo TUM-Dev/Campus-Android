@@ -31,13 +31,13 @@ Just don't forget: Be excellent to each other :heart:
 + Camera: So you can join chat rooms by scanning a QR code
 
 ## Disclaimer:
-This is not an official app of the Technische Universität München. There's no support or warranty (you can however send us an email [app@tum.de](mailto:app@tum.de) or open an issue here on Github). The app is developed by students and for students, so use it at your own risk. We try to keep your data safe with only using TUMonline tokens and not saving your password. For further information, please take a look at our privacy policy and the terms and conditions of the lecture chat.
+This is not an official app of the Technische Universität München. There's no support or warranty (you can however send us an email [app@tum.de](mailto:app@tum.de) or open an issue here on GitHub). The app is developed by students and for students, so use it at your own risk. We try to keep your data safe with only using TUMonline tokens and not saving your password. For further information, please take a look at our privacy policy and the terms and conditions of the lecture chat.
 
 ## Policies:
 [Privacy policy](https://www.tum.app/privacy/)
 
 ## Support:
-You can reach us on [Github](https://github.com/TUM-Dev/Campus-Android) or via E-Mail [app@tum.de](mailto:app@tum.de).
+You can reach us on [GitHub](https://github.com/TUM-Dev/Campus-Android) or via E-Mail [app@tum.de](mailto:app@tum.de).
 
 ## License:
 [GNU GPL v3](http://www.gnu.org/licenses/gpl.html)  
