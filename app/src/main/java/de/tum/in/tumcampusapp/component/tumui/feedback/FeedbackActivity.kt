@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.feedback
 
 import android.annotation.SuppressLint
-import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.location.Location
@@ -13,9 +13,9 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
@@ -28,14 +28,14 @@ import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackPresenter.Companion.PERMISSION_CAMERA
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackPresenter.Companion.PERMISSION_FILES
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackPresenter.Companion.PERMISSION_LOCATION
-import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackPresenter.Companion.REQUEST_GALLERY
-import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackPresenter.Companion.REQUEST_TAKE_PHOTO
 import de.tum.`in`.tumcampusapp.databinding.ActivityFeedbackBinding
 import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.Observable
 import java.io.File
 import javax.inject.Inject
+
 
 class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContract.View {
 
@@ -46,6 +46,17 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     lateinit var presenter: FeedbackContract.Presenter
 
     private lateinit var binding: ActivityFeedbackBinding
+
+    private val cameraLauncher = registerForActivityResult(StartActivityForResult()){
+        presenter.onNewImageTaken()
+
+    }
+    private val galleryLauncher = registerForActivityResult(StartActivityForResult()){result ->
+        val filePath = result.data?.data
+        presenter.onNewImageSelected(filePath)
+
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -134,11 +145,22 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     }
 
     override fun openCamera(intent: Intent) {
-        startActivityForResult(intent, REQUEST_TAKE_PHOTO)
+        try {
+            cameraLauncher.launch(intent)
+        }catch (e: ActivityNotFoundException){
+            Toast.makeText(this, R.string.error_unknown, LENGTH_SHORT).show()
+
+        }
+
     }
 
     override fun openGallery(intent: Intent) {
-        startActivityForResult(intent, REQUEST_GALLERY)
+        try {
+            galleryLauncher.launch(intent)
+        }catch (e: ActivityNotFoundException){
+            Toast.makeText(this, R.string.error_unknown, LENGTH_SHORT).show()
+        }
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -221,22 +243,6 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
                 .setPositiveButton(R.string.send) { _, _ -> presenter.onConfirmSend() }
                 .setNegativeButton(R.string.cancel, null)
                 .show()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode != Activity.RESULT_OK) {
-            return
-        }
-
-        when (requestCode) {
-            REQUEST_TAKE_PHOTO -> presenter.onNewImageTaken()
-            REQUEST_GALLERY -> {
-                val filePath = data?.data
-                presenter.onNewImageSelected(filePath)
-            }
-        }
     }
 
     override fun onImageAdded(path: String) {
