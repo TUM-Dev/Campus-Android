@@ -49,12 +49,11 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
 
     private val cameraLauncher = registerForActivityResult(StartActivityForResult()){
         presenter.onNewImageTaken()
-
     }
+
     private val galleryLauncher = registerForActivityResult(StartActivityForResult()){result ->
         val filePath = result.data?.data
         presenter.onNewImageSelected(filePath)
-
     }
 
 
