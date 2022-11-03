@@ -9,7 +9,6 @@ import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.component.other.general.UpdatePushNotification
 import de.tum.`in`.tumcampusapp.component.other.generic.PushNotification
 import de.tum.`in`.tumcampusapp.component.ui.alarm.AlarmPushNotification
-import de.tum.`in`.tumcampusapp.component.ui.chat.ChatPushNotification
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import org.jetbrains.anko.notificationManager
@@ -63,7 +62,6 @@ class FcmReceiverService : FirebaseMessagingService() {
         val appContext = applicationContext
 
         return when (type) {
-            CHAT_NOTIFICATION -> ChatPushNotification.fromJson(payload, appContext, notificationId)
             UPDATE -> UpdatePushNotification(payload, appContext, notificationId)
             ALERT -> AlarmPushNotification(payload, appContext, notificationId)
             else -> {
@@ -88,9 +86,6 @@ class FcmReceiverService : FirebaseMessagingService() {
         try {
             val bundle = Bundle().apply {
                 data.entries.forEach { entry -> putString(entry.key, entry.value) }
-            }
-            ChatPushNotification.fromBundle(bundle, this, -1)?.also {
-                postNotification(it)
             }
         } catch (e: Exception) {
             Utils.log(e)

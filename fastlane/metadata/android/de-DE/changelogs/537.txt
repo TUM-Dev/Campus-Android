@@ -1,0 +1,5 @@
+v3.8
+
+- Meherere Bugfixes
+- Farbkorrekturen für das neuere Material Design
+- Behebung von Logout-Problemen

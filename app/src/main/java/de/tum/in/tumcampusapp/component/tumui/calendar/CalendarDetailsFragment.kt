@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.content.ContextCompat
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
@@ -45,6 +45,10 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
     private var deleteApiCall: Call<DeleteEventResponse>? = null
 
     private val binding by viewBinding(FragmentCalendarDetailsBinding::bind)
+
+    private val eventColorController: EventColorController by lazy {
+        EventColorController(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -120,7 +124,24 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
             } else {
                 buttonsContainer.visibility = View.GONE
             }
+
+            if (!calendarItem.isEditable && isShownInCalendarActivity) {
+                changeColorButton.setOnClickListener { showChangeEventColorDialog(calendarItem) }
+            } else {
+                changeColorButton.visibility = View.GONE
+            }
         }
+    }
+
+    private fun showChangeEventColorDialog(calendarItem: CalendarItem) {
+        val dialog = ChangeEventColorDialog(
+            context = requireContext(),
+            calendarItem = calendarItem,
+            onColorChanged = { (requireParentFragment() as CalendarFragment).refresh() },
+            fromCreateEventActivity = false
+        )
+        dialog.show()
+        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
     private fun openEventInCalendarActivity(calendarItem: CalendarItem) {
@@ -129,11 +150,13 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
         }
         val destination = NavDestination.Fragment(CalendarFragment::class.java, args)
         NavigationManager.open(requireContext(), destination)
+        NavigationManager.open(requireContext(), destination)
+        NavigationManager.open(requireContext(), destination)
     }
 
     private fun displayDeleteDialog(eventId: String) {
         val s = TcaDb.getInstance(requireContext()).calendarDao().getSeriesIdForEvent(eventId)
-        val alertDialog = AlertDialog.Builder(requireContext())
+        val alertDialog = ThemedAlertDialogBuilder(requireContext())
             .setTitle(R.string.event_delete_title)
             .setMessage(R.string.delete_event_info)
             .setPositiveButton(R.string.delete) { _, _ -> deleteEvent(eventId) }
@@ -160,6 +183,7 @@ class CalendarDetailsFragment : RoundedBottomSheetDialogFragment() {
                 call: Call<DeleteEventResponse>,
                 response: Response<DeleteEventResponse>
             ) {
+                eventColorController.removeEventColor(eventId)
                 dismiss()
                 listener?.onEventDeleted(eventId)
                 deleteApiCall = null

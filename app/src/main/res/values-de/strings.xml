@@ -34,6 +34,21 @@
     <string name="calendar_filter_hour_limit_min_title">Von Uhrzeit</string>
     <string name="calendar_filter_hour_limit_max_title">Bis Uhrzeit</string>
     <string name="calendar_filter_hour_limit_error_message">Die Anfangsstunde muss vor dem Ende liegen!</string>
+    <string name="change_color">Farbe ändern</string>
+    <string name="choose_color">Wähle eine Farbe</string>
+    <string name="custom_color_default">Standardfarbe</string>
+    <string name="custom_color_red">Rot</string>
+    <string name="custom_color_pink">Rosa</string>
+    <string name="custom_color_purple">Purple</string>
+    <string name="custom_color_indigo">Violett</string>
+    <string name="custom_color_blue">Blau</string>
+    <string name="custom_color_teal">Blaugrün</string>
+    <string name="custom_color_green">Grün</string>
+    <string name="custom_color_lime">Limette</string>
+    <string name="custom_color_yellow">Gelb</string>
+    <string name="custom_color_amber">Bernstein</string>
+    <string name="custom_color_orange">Orange</string>
+    <string name="apply_to_all_occurrences">Auf alle Vorkommen anwenden</string>
 
 
     <!-- Roomfinder -->
@@ -426,7 +441,7 @@ Signatur: %5$s</string>
     <string name="please_connect_to_internet">Bitte verbinden Sie sich mit dem Internet, um den ersten App-Start fortzusetzen</string>
     <string name="IN">in</string>
     <string name="MINUTES">minuten</string>
-    <string name="AT">um</string>
+    <string name="on">um</string>
     <string name="eduroam_fix">Jetzt reparieren</string>
     <string name="eduroam_insecure_configuration">Wir haben eine unsichere WLAN-eduroam Konfiguration erkannt. Sie könnten möglicherweise Informationen über Sie und Ihr Konto in dritte Hände geben.</string>
     <string name="fix_eduroam">eduroam reparieren</string>
@@ -750,7 +765,6 @@ Signatur: %5$s</string>
     // search
     <string name="all_results">Alle Ergebnisse</string>
     <string name="people">Personen</string>
-    <string name="rooms">Räume</string>
     <string name="lectures">Vorlesungen</string>
     <string name="search_info">Suchen Sie nach Personen, Räumen und anderen.</string>
     <string name="no_result_info">Konnte nicht finden “%1$s”</string>
@@ -758,5 +772,25 @@ Signatur: %5$s</string>
     <string name="recent_searches">Letzte Suchen</string>
     <string name="clear_recent_searches">Verlauf löschen</string>
     <string name="not_available_search">Nicht verfügbar</string>
+    <string name="rooms_id">Räume</string>
+    <string name="buildings">Gebäude</string>
     <string name="clear_search_history_request">Möchten Sie den Suchverlauf löschen?</string>
+
+    // Navigation details
+    <string name="location_details">Details zum Ort</string>
+    <string name="loading_details">lädt</string>
+    <string name="site_plans">Lagepläne</string>
+    <string name="interactive_map">Interaktive Karte</string>
+    <string name="open_location_in_other_app">Ort in anderer Anwendung öffnen</string>
+    <string name="available_maps">Verfügbare Karten:</string>
+    <string name="map">Karte</string>
+    <string name="room_id">Raumkennung</string>
+    <string name="address">Adresse</string>
+    <string name="architect_name">Architekten-Name</string>
+    <string name="seats">Sitzplätze</string>
+    <string name="number_of_rooms">Anzahl Räume</string>
+    <string name="not_implemented">Funktion noch nicht implementiert</string>
+    <string name="not_implemented_interactive_map">Interaktive Karte ist noch nicht implementiert. Sie können auf der NavigaTum-Website darauf zugreifen.</string>
+    <string name="redirect">Umleiten</string>
+
 </resources>

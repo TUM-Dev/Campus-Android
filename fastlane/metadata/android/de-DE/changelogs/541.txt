@@ -1,0 +1,3 @@
+v3.13
+
+* Kleinerer Bugfix: Das Zertifikatspinning wurde gelöscht

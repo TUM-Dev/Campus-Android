@@ -44,8 +44,9 @@ class SearchResultsAdapter(
 
             val imageResource = when (searchResult) {
                 is SearchResult.Person -> R.drawable.ic_person
-                is SearchResult.Room -> R.drawable.ic_room
                 is SearchResult.Lecture -> R.drawable.ic_lecture
+                is SearchResult.Building -> R.drawable.ic_building
+                is SearchResult.NavigaRoom -> R.drawable.ic_room
             }
             searchResultIcon.setImageResource(imageResource)
 

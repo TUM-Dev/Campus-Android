@@ -1,0 +1,6 @@
+v3.2
+
+- Du kannst jetzt mehrere Tickets für das tu-Filmticket kaufen
+- Bessere Synchronisierung der Hintergrunddaten
+- Feedback-Bildschirm verbessert
+- Bugs wurden hinzugefügt
