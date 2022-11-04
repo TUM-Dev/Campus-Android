@@ -15,10 +15,12 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat.getColor
+import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
-import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
@@ -36,7 +38,7 @@ import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import java.lang.reflect.Type
 import java.text.NumberFormat
-import java.util.Locale
+import java.util.*
 import javax.inject.Inject
 
 class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
@@ -242,7 +244,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      *
      * @param gradeDistribution An [ArrayMap] mapping grades to number of occurrences
      */
-    private fun displayPieChart(gradeDistribution: ArrayMap<String, Int>) {
+    private fun displayPieChart(gradeDistribution: ArrayMap<String, Double>) {
         val entries = grades.map { grade ->
             val count = gradeDistribution[grade] ?: 0
             PieEntry(count.toFloat(), grade)
@@ -283,47 +285,41 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      *
      * @param gradeDistribution An [ArrayMap] mapping grades to number of occurrence
      */
-    private fun displayBarChart(gradeDistribution: ArrayMap<String, Int>) {
-        val entries = grades.mapIndexed { index, grade ->
-            val value = gradeDistribution[grade] ?: 0
-            BarEntry(index.toFloat(), value.toFloat())
+    private fun displayBarChart(gradeDistribution: ArrayMap<String, Double>) {
+        val sum = gradeDistribution.values.sum()
+        val entries: List<BarEntry>
+        if (adaptDiagramToWeights) {
+            entries = grades.mapIndexed { index, grade ->
+                val value: Double = gradeDistribution[grade] ?: 0.0
+                BarEntry(index.toFloat(), ((value*100) / sum).toFloat())
+            }
+        } else {
+            entries = grades.mapIndexed { index, grade ->
+                val value = gradeDistribution[grade] ?: 0
+                BarEntry(index.toFloat(), value.toFloat())
+            }
         }
 
-        var annotation = ""
-        if (!adaptDiagramToWeights) {
-            annotation = getString(R.string.grades_without_weight)
-        }
-        val set = BarDataSet(entries, annotation).apply {
+        val set = BarDataSet(entries, "").apply {
             setColors(GRADE_COLORS, requireContext())
             valueTextColor = resources.getColor(R.color.text_primary)
         }
+        set.setDrawValues(false)
 
         with(binding) {
             barChartView.apply {
+
                 data = BarData(set)
                 setFitBars(true)
 
-                // only label grades that are associated with at least one grade
-                data.setValueFormatter(object : ValueFormatter() {
-                    override fun getFormattedValue(value: Float): String {
-                        if (value > 0.0)
-                            return value.toString()
-                        return ""
-                    }
-                })
+                xAxis.granularity = 1f
+                legend.isEnabled = true
 
-                description = null
-                setTouchEnabled(false)
-
-                axisLeft.granularity = 1f
-                axisRight.granularity = 1f
-
-                description = null
                 setTouchEnabled(false)
                 legend.setCustom(
                     arrayOf(
                         LegendEntry(
-                            getString(R.string.grades_without_weight),
+                            context.getString(R.string.grade_passed_annotation),
                             Legend.LegendForm.SQUARE,
                             10f,
                             0f,
@@ -335,9 +331,30 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
                 legend.textColor = getColor(resources, R.color.text_primary, null)
                 xAxis.textColor = getColor(resources, R.color.text_primary, null)
-                axisLeft.textColor = getColor(resources, R.color.text_primary, null)
-                axisRight.textColor = getColor(resources, R.color.text_primary, null)
 
+                axisLeft.isEnabled = true
+
+                if (adaptDiagramToWeights) {
+                    description.isEnabled = true
+                    val desc = Description()
+                    desc.text = context.getString(R.string.grade_percentages)
+
+                    desc.setTextSize(11f)
+                    desc.setPosition(540F, 50F)
+                    description = desc
+                    axisRight.disableGridDashedLine()
+                    axisLeft.disableGridDashedLine()
+                } else {
+                    description.isEnabled = false
+                    axisLeft.granularity = 1f
+                    axisRight.granularity = 1f
+                }
+                val labels = (10..51).map { i -> "" + (i / 10.0) }.toList()
+
+                xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+                xAxis.position = XAxis.XAxisPosition.BOTTOM
+                xAxis.disableGridDashedLine()
+                xAxis.disableAxisLineDashedLine()
                 invalidate()
             }
         }
@@ -373,8 +390,8 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      * @param exams List of [Exam] objects
      * @return An [ArrayMap] mapping grades to number of occurrence
      */
-    private fun calculateGradeDistribution(exams: List<Exam>): ArrayMap<String, Int> {
-        val gradeDistribution = ArrayMap<String, Int>()
+    private fun calculateGradeDistribution(exams: List<Exam>): ArrayMap<String, Double> {
+        val gradeDistribution = ArrayMap<String, Double>()
         exams.forEach { exam ->
             // The grade distribution now takes grades with more than one decimal place into account as well
             if (exam.gradeUsedInAverage) {
@@ -382,15 +399,17 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 if (cleanGrade.contains(longGradeRe)) {
                     cleanGrade = cleanGrade.subSequence(0, 3) as String
                 }
-                val count = gradeDistribution[cleanGrade] ?: 0
+                val count = gradeDistribution[cleanGrade] ?: 0.0
 
                 if (adaptDiagramToWeights) {
-                    gradeDistribution[cleanGrade] = count + (exam.credits_new * exam.weight).toInt()
+                    gradeDistribution[cleanGrade] =
+                        count + (exam.credits_new * exam.weight).toInt()
                 } else {
-                    gradeDistribution[cleanGrade] = count + 1
+                    gradeDistribution[cleanGrade] = count + 1.0
                 }
             }
         }
+
         return gradeDistribution
     }
 
@@ -672,6 +691,8 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             binding.floatingButtonAddExamGrade.visibility = View.VISIBLE
             binding.chartsContainer.visibility = View.GONE
             binding.checkboxUseDiagrams.visibility = View.VISIBLE
+            barMenuItem?.isVisible = false
+            pieMenuItem?.isVisible = false
             param.setMargins(0, ((32 * density + 0.5f).toInt()), 0, 0)
             binding.gradesListView.setPadding(0, 0, 0, 0)
         } else {
@@ -679,6 +700,8 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             binding.frameLayoutAverageGrade?.visibility = View.VISIBLE
             binding.floatingButtonAddExamGrade.visibility = View.GONE
             binding.chartsContainer.visibility = View.VISIBLE
+            pieMenuItem?.isVisible = binding.barChartView.visibility != View.GONE
+            barMenuItem?.isVisible = binding.barChartView.visibility == View.GONE
             binding.checkboxUseDiagrams.visibility = View.GONE
             param.setMargins(0, 0, 0, 0)
             binding.gradesListView.setPadding(0, ((256 * density + 0.5f).toInt()), 0, 0)

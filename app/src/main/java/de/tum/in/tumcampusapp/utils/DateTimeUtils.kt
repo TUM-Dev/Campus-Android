@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.format.DateUtils.*
 import de.tum.`in`.tumcampusapp.R
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import java.text.ParseException
@@ -45,13 +46,13 @@ object DateTimeUtils {
             diff < 60 * MINUTE_IN_MILLIS -> {
                 val formatter = DateTimeFormat.forPattern("m")
                         .withLocale(Locale.ENGLISH)
-                "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff))}" +
+                "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff, DateTimeZone.UTC))} " +
                         context.getString(R.string.MINUTES)
             }
             diff < 5 * HOUR_IN_MILLIS -> {
                 val formatter = DateTimeFormat.forPattern("h 'h' m 'min'")
                         .withLocale(Locale.ENGLISH)
-                "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff))}"
+                "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff, DateTimeZone.UTC))}"
             }
             else -> getRelativeTimeSpanString(timeInMillis, now, MINUTE_IN_MILLIS,
                     FORMAT_ABBREV_RELATIVE).toString()
