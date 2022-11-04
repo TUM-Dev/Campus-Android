@@ -146,11 +146,9 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     override fun openCamera(intent: Intent) {
         try {
             cameraLauncher.launch(intent)
-        }catch (e: ActivityNotFoundException){
+        } catch (e: ActivityNotFoundException){
             Toast.makeText(this, R.string.error_unknown, LENGTH_SHORT).show()
-
         }
-
     }
 
     override fun openGallery(intent: Intent) {
