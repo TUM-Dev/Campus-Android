@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- START Translated, please do not change identifiers -->
@@ -128,7 +128,8 @@
     <string name="add_grade_error_invalid_weight_less_than_zero">Invalid amount of credits. Must be greater than 0.</string>
     <string name="add_exam_dialog_title">Add a New Exam</string>
     <string name="add_exam_dialog_message">Grades are normally added automatically. In case special grades should be added, this can be done here. Manually added Exams can be deleted later on.</string>
-
+    <string name="grade_passed_annotation">Exam passed without a grade</string>
+    <string name="grade_percentages">Percentage of each grade</string>
 
     <!-- Preferences -->
     <string name="lrz_id">TUM Identification</string>
@@ -846,5 +847,4 @@ Signature: %5$s</string>
     <string name="not_implemented">Feature not implemented yet</string>
     <string name="not_implemented_interactive_map">Interactive map is not yet implemented. You can access it on NavigaTum website.</string>
     <string name="redirect">Redirect</string>
-
 </resources>
