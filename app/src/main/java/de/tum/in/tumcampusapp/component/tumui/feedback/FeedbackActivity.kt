@@ -154,10 +154,9 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     override fun openGallery(intent: Intent) {
         try {
             galleryLauncher.launch(intent)
-        }catch (e: ActivityNotFoundException){
+        } catch (e: ActivityNotFoundException){
             Toast.makeText(this, R.string.error_unknown, LENGTH_SHORT).show()
         }
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
