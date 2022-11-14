@@ -21,8 +21,8 @@ class NavigaTumAPIClient(private val apiService: NavigaTumAPIService) {
             .body()
     }
 
-    fun getNavigationDetails(id: String): NavigationDetails? {
-        return apiService.getNavigationDetails(id)
+    fun getNavigationDetails(id: String, lang: String): NavigationDetails? {
+        return apiService.getNavigationDetails(id, lang)
             .execute()
             .body()
             ?.toNavigationDetails()
@@ -32,8 +32,8 @@ class NavigaTumAPIClient(private val apiService: NavigaTumAPIService) {
         return apiService.searchSingle(query)
     }
 
-    fun getNavigationDetailsSingle(id: String): Single<NavigationDetailsDto> {
-        return apiService.getNavigationDetailsSingle(id)
+    fun getNavigationDetailsSingle(id: String, lang: String): Single<NavigationDetailsDto> {
+        return apiService.getNavigationDetailsSingle(id, lang)
     }
 
     companion object {

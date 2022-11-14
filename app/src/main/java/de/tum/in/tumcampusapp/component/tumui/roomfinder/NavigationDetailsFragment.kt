@@ -12,6 +12,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.preference.PreferenceManager
 import com.squareup.picasso.Picasso
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
@@ -59,8 +60,11 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
             handleDetailsLoading()
         }
 
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val lang = sharedPreferences.getString("language_preference", null) ?: "de"
+
         navigationEntityId?.let {
-            viewModel.loadNavigationDetails(navigationEntityId!!)
+            viewModel.loadNavigationDetails(navigationEntityId!!, lang)
         } ?: run {
             showLoadingError()
         }

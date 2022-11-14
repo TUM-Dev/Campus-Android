@@ -17,7 +17,8 @@ interface NavigaTumAPIService {
 
     @GET(API_GET)
     fun getNavigationDetails(
-        @Path(ID_PARAM) id: String
+        @Path(ID_PARAM) id: String,
+        @Query(LANG_PARAM) lang: String
     ): Call<NavigationDetailsDto>
 
     @GET(API_SEARCH)
@@ -27,7 +28,8 @@ interface NavigaTumAPIService {
 
     @GET(API_GET)
     fun getNavigationDetailsSingle(
-        @Path(ID_PARAM) id: String
+        @Path(ID_PARAM) id: String,
+        @Query(LANG_PARAM) lang: String
     ): Single<NavigationDetailsDto>
 
     companion object {
@@ -35,5 +37,6 @@ interface NavigaTumAPIService {
         private const val QUERY_PARAM = "q"
         private const val ID_PARAM = "id"
         private const val API_GET = "api/get/{$ID_PARAM}"
+        private const val LANG_PARAM = "lang"
     }
 }
