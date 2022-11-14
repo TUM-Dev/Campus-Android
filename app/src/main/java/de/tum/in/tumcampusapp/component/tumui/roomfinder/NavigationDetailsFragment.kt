@@ -111,7 +111,7 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
     }
 
     private fun setupShareLocationButton(navigationDetails: NavigationDetails) {
-        val url = "https://nav.tum.sexy/${navigationDetails.type}/${navigationDetails.id}";
+        val url = "https://nav.tum.sexy/${navigationDetails.type}/${navigationDetails.id}"
 
         binding.toolbarNav.shareButton.setOnClickListener {
             val sendIntent = Intent().apply {
@@ -120,8 +120,8 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
                 type = "text/plain"
             }
 
-            val shareIntent = Intent.createChooser(sendIntent, null);
-            startActivity(shareIntent);
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(shareIntent)
         }
     }
 
