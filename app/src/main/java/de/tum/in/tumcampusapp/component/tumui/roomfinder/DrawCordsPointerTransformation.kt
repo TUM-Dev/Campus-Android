@@ -26,7 +26,7 @@ class DrawCordsPointerTransformation(
     }
 
     override fun key(): String {
-        return "cordspointer"
+        return "cordspointer[x=$cordX,y=$cordY]"
     }
 
     companion object {
