@@ -110,7 +110,7 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
     private fun showNavigationDetailsProperties(navigationDetails: NavigationDetails) {
         navigationDetails.properties.forEach { property ->
             val propertyRow = NavigationPropertyRowBinding.inflate(layoutInflater, binding.propsList, true)
-            propertyRow.propertyName.text = getTranslationForPropertyTitle(property.title)
+            propertyRow.propertyName.text = property.title
             propertyRow.propertyValue.text = property.value
         }
     }
@@ -160,17 +160,6 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
             .load(map.mapImgUrl)
             .transform(pointerDrawer)
             .into(binding.photoView)
-    }
-
-    private fun getTranslationForPropertyTitle(title: String): String {
-        return when (title) {
-            "Raumkennung" -> getString(R.string.room_id)
-            "Adresse" -> getString(R.string.address)
-            "Architekten-Name" -> getString(R.string.architect_name)
-            "Sitzplätze" -> getString(R.string.seats)
-            "Anzahl Räume" -> getString(R.string.number_of_rooms)
-            else -> title
-        }
     }
 
     private fun getCapitalizeType(type: String): String {
