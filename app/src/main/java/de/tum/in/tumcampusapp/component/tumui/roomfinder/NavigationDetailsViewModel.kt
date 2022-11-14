@@ -17,10 +17,10 @@ class NavigationDetailsViewModel @Inject constructor(
 
     private var disposable: Disposable? = null
 
-    fun loadNavigationDetails(navigationEntityId: String) {
+    fun loadNavigationDetails(navigationEntityId: String, language: String) {
         state.value = state.value.copy(isLoading = true)
         disposable = navigaTumAPIClient
-            .getNavigationDetailsSingle(navigationEntityId)
+            .getNavigationDetailsSingle(navigationEntityId, language)
             .subscribeOn(Schedulers.io())
             .map { it.toNavigationDetails() }
             .doOnError(Utils::log)

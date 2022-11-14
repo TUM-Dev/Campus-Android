@@ -274,7 +274,8 @@ class LocationManager @Inject constructor(c: Context) {
             var geo: Geo? = null
             if (searchResult != null && searchResult.sections.isNotEmpty() && searchResult.sections[0].entries.isNotEmpty()) {
                 val location = searchResult.sections[0].entries[0].id
-                val locationDetails = NavigaTumAPIClient.getInstance(mContext).getNavigationDetails(location)
+                // The language does not matter, as we only use the geo information from this request
+                val locationDetails = NavigaTumAPIClient.getInstance(mContext).getNavigationDetails(location, "de")
                 locationDetails?.let {
                     geo = locationDetails.geo
                 }
