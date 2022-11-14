@@ -11,6 +11,20 @@
         android:layout_height="?attr/actionBarSize"
         android:elevation="@dimen/material_default_elevation"
         android:theme="@style/TumToolbar"
-        app:popupTheme="@style/TumToolbarPopUp"/>
+        app:popupTheme="@style/TumToolbarPopUp">
+
+        <ImageButton
+            android:id="@+id/shareButton"
+            android:layout_width="@dimen/icon_default"
+            android:layout_height="@dimen/icon_default"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginEnd="@dimen/material_default_padding"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_action_send_now"
+            app:tint="@color/tum_500" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+
 
 </com.google.android.material.appbar.AppBarLayout>
