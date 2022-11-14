@@ -91,7 +91,7 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
 
         setShowParentListener(navigationDetails)
 
-        setShareLocationListener(navigationDetails)
+        setupShareLocationButton(navigationDetails)
         setOpenInOtherAppBtnListener(navigationDetails)
 
         showNavigationDetailsProperties(navigationDetails)
@@ -110,7 +110,7 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
         }
     }
 
-    private fun setShareLocationListener(navigationDetails: NavigationDetails) {
+    private fun setupShareLocationButton(navigationDetails: NavigationDetails) {
         val roomId = navigationDetails.properties.find { it.title.equals("Raumkennung") }
 
         if (roomId != null) {
