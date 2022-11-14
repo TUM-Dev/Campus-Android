@@ -185,9 +185,6 @@ class MainFragment : BaseFragment<Unit>(
                 flow.addOnCompleteListener {
                     Utils.setSetting(requireContext(), Const.LAST_REVIEW_PROMPT, Date().time.toString())
                 }
-            } else {
-                // There was some problem, log or handle the error code.
-                @ReviewErrorCode val reviewErrorCode = (task.exception as ReviewException).errorCode
             }
         }
     }
