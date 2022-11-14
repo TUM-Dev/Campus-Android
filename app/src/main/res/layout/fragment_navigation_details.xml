@@ -166,6 +166,19 @@
                 android:background="@color/default_window_background"
                 app:layout_constraintBottom_toBottomOf="parent">
 
+
+                <Button
+                    android:id="@+id/shareLocationBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/material_default_padding"
+                    android:backgroundTint="@color/color_primary"
+                    android:insetBottom="0dp"
+                    android:insetTop="0dp"
+                    android:text="@string/share_location"
+                    android:textAllCaps="false"
+                    android:visibility="gone"/>
+
                 <Button
                     android:id="@+id/openLocationBtn"
                     android:layout_width="match_parent"

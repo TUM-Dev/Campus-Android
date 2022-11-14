@@ -91,6 +91,7 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
 
         setShowParentListener(navigationDetails)
 
+        setShareLocationListener(navigationDetails)
         setOpenInOtherAppBtnListener(navigationDetails)
 
         showNavigationDetailsProperties(navigationDetails)
@@ -105,6 +106,25 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
                 val intent = Intent(requireContext(), NavigationDetailsActivity::class.java)
                 intent.putExtra(NAVIGATION_ENTITY_ID, parentId)
                 startActivity(intent)
+            }
+        }
+    }
+
+    private fun setShareLocationListener(navigationDetails: NavigationDetails) {
+        val roomId = navigationDetails.properties.find { it.title.equals("Raumkennung") }
+
+        if (roomId != null) {
+            binding.shareLocationBtn.visibility = View.VISIBLE;
+
+            binding.shareLocationBtn.setOnClickListener {
+                val sendIntent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, "https://nav.tum.sexy/room/" + roomId.value)
+                    type = "text/plain"
+                }
+
+                val shareIntent = Intent.createChooser(sendIntent, "Share Room")
+                startActivity(shareIntent);
             }
         }
     }
