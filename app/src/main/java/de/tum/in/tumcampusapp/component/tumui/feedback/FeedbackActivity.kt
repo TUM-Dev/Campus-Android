@@ -36,7 +36,6 @@ import io.reactivex.Observable
 import java.io.File
 import javax.inject.Inject
 
-
 class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContract.View {
 
     private lateinit var thumbnailsAdapter: FeedbackThumbnailsAdapter
@@ -47,15 +46,14 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
 
     private lateinit var binding: ActivityFeedbackBinding
 
-    private val cameraLauncher = registerForActivityResult(StartActivityForResult()){
+    private val cameraLauncher = registerForActivityResult(StartActivityForResult()) {
         presenter.onNewImageTaken()
     }
 
-    private val galleryLauncher = registerForActivityResult(StartActivityForResult()){result ->
+    private val galleryLauncher = registerForActivityResult(StartActivityForResult()) {result ->
         val filePath = result.data?.data
         presenter.onNewImageSelected(filePath)
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -146,7 +144,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     override fun openCamera(intent: Intent) {
         try {
             cameraLauncher.launch(intent)
-        } catch (e: ActivityNotFoundException){
+        } catch (e: ActivityNotFoundException) {
             Toast.makeText(this, R.string.error_unknown, LENGTH_SHORT).show()
         }
     }
@@ -154,7 +152,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     override fun openGallery(intent: Intent) {
         try {
             galleryLauncher.launch(intent)
-        } catch (e: ActivityNotFoundException){
+        } catch (e: ActivityNotFoundException) {
             Toast.makeText(this, R.string.error_unknown, LENGTH_SHORT).show()
         }
     }
