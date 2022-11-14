@@ -176,8 +176,7 @@
                     android:insetBottom="0dp"
                     android:insetTop="0dp"
                     android:text="@string/share_location"
-                    android:textAllCaps="false"
-                    android:visibility="gone"/>
+                    android:textAllCaps="false" />
 
                 <Button
                     android:id="@+id/openLocationBtn"

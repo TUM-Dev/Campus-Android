@@ -111,21 +111,17 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
     }
 
     private fun setupShareLocationButton(navigationDetails: NavigationDetails) {
-        val roomId = navigationDetails.properties.find { it.title.equals("Raumkennung") }
+        val url = "https://nav.tum.sexy/${navigationDetails.type}/${navigationDetails.id}";
 
-        if (roomId != null) {
-            binding.shareLocationBtn.visibility = View.VISIBLE;
-
-            binding.shareLocationBtn.setOnClickListener {
-                val sendIntent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, "https://nav.tum.sexy/room/" + roomId.value)
-                    type = "text/plain"
-                }
-
-                val shareIntent = Intent.createChooser(sendIntent, "Share Room")
-                startActivity(shareIntent);
+        binding.shareLocationBtn.setOnClickListener {
+            val sendIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, url)
+                type = "text/plain"
             }
+
+            val shareIntent = Intent.createChooser(sendIntent, null);
+            startActivity(shareIntent);
         }
     }
 
