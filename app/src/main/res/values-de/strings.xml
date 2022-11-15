@@ -781,7 +781,6 @@ Signatur: %5$s</string>
     <string name="loading_details">lädt</string>
     <string name="site_plans">Lagepläne</string>
     <string name="interactive_map">Interaktive Karte</string>
-    <string name="share_location">Ort teilen</string>
     <string name="open_location_in_other_app">Ort in anderer Anwendung öffnen</string>
     <string name="available_maps">Verfügbare Karten:</string>
     <string name="map">Karte</string>
