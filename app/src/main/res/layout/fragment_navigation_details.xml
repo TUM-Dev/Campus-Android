@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:clipToPadding="false">
 
-    <include layout="@layout/toolbar_navigation" android:id="@+id/toolbar_nav"/>
+    <include layout="@layout/toolbar" android:id="@+id/toolbar_nav"/>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -158,25 +158,43 @@
 
             </ScrollView>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:background="@color/default_window_background"
                 app:layout_constraintBottom_toBottomOf="parent">
 
                 <Button
                     android:id="@+id/openLocationBtn"
-                    android:layout_width="match_parent"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/material_default_padding"
                     android:backgroundTint="@color/color_primary"
                     android:insetBottom="0dp"
                     android:insetTop="0dp"
-                    android:text="@string/open_location_in_other_app"
-                    android:textAllCaps="false" />
-            </LinearLayout>
+                    android:text="@string/open_in_maps"
+                    android:textAllCaps="false"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/shareLocationBtn"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <Button
+                    android:id="@+id/shareLocationBtn"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/material_default_padding"
+                    android:backgroundTint="@color/color_primary"
+                    android:insetBottom="0dp"
+                    android:insetTop="0dp"
+                    android:text="@string/share"
+                    android:textAllCaps="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/openLocationBtn"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
