@@ -24,7 +24,8 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:id="@+id/layoutWeek">
 
                 <com.alamkanak.weekview.WeekView
                     android:id="@+id/weekView"
@@ -79,6 +80,10 @@
                     tools:visibility="visible" />
 
             </FrameLayout>
+
+            <include
+                android:id="@+id/layoutMonth"
+                layout="@layout/calendar_month_view" />
 
         </LinearLayout>
 

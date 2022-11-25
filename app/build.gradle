@@ -166,6 +166,7 @@ dependencies {
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     implementation 'de.psdev.licensesdialog:licensesdialog:2.1.0'
     implementation 'com.github.thellmund.Android-Week-View:core:4.1.6'
+    implementation 'com.applandeo:material-calendar-view:1.7.0'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.github.PhilJay:MPAndroidChart:3.1.0'
     implementation 'com.makeramen:roundedimageview:2.3.0'

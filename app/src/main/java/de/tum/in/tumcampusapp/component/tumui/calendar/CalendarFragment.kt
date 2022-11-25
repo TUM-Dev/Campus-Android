@@ -32,6 +32,7 @@ import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import org.jetbrains.anko.view
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
@@ -59,6 +60,7 @@ class CalendarFragment :
     }
 
     private var isWeekMode = false
+    private var isMonthMode = true
 
     private var isFetched: Boolean = false
     private var menuItemSwitchView: MenuItem? = null
@@ -194,7 +196,16 @@ class CalendarFragment :
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_switch_view_mode -> {
-                isWeekMode = !isWeekMode
+                if (isWeekMode) {
+                    isWeekMode = !isWeekMode
+                }
+                else if (isMonthMode) {
+                    isMonthMode = !isMonthMode
+                    isWeekMode = !isWeekMode
+                }
+                else {
+                    isMonthMode = !isMonthMode
+                }
                 Utils.setSetting(requireContext(), Const.CALENDAR_WEEK_MODE, isWeekMode)
                 refreshWeekView()
                 return true
@@ -434,9 +445,17 @@ class CalendarFragment :
 
         if (isWeekMode) {
             icon = R.drawable.ic_outline_calendar_view_day_24px
+            binding.layoutWeek.visibility = View.VISIBLE
+            binding.layoutMonth.root.visibility = View.GONE
             binding.weekView.numberOfVisibleDays = 5
-        } else {
+        } else if (isMonthMode) {
             icon = R.drawable.ic_outline_view_column_24px
+            binding.layoutMonth.root.visibility = View.VISIBLE
+            binding.layoutWeek.visibility = View.GONE
+        } else {
+            icon = R.drawable.ic_outline_calendar_view_month_24px
+            binding.layoutWeek.visibility = View.VISIBLE
+            binding.layoutMonth.root.visibility = View.GONE
             binding.weekView.numberOfVisibleDays = 1
         }
 
