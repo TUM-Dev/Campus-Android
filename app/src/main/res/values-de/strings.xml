@@ -49,7 +49,27 @@
     <string name="custom_color_amber">Bernstein</string>
     <string name="custom_color_orange">Orange</string>
     <string name="apply_to_all_occurrences">Auf alle Vorkommen anwenden</string>
-
+    <string name="material_calendar_monday">M</string>
+    <string name="material_calendar_tuesday">D</string>
+    <string name="material_calendar_wednesday">M</string>
+    <string name="material_calendar_thursday">D</string>
+    <string name="material_calendar_friday">F</string>
+    <string name="material_calendar_saturday">S</string>
+    <string name="material_calendar_sunday">S</string>
+    <array name="material_calendar_months_array">
+        <item>Januar</item>
+        <item>Februar</item>
+        <item>März</item>
+        <item>April</item>
+        <item>Mai</item>
+        <item>Juni</item>
+        <item>Juli</item>
+        <item>August</item>
+        <item>September</item>
+        <item>Oktober</item>
+        <item>November</item>
+        <item>Dezember</item>
+    </array>
 
     <!-- Roomfinder -->
     <string name="no_map_available">Keine Karte verfügbar</string>
