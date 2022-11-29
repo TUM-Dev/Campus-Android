@@ -39,6 +39,11 @@ class LectureDetailsActivity : ActivityForAccessingTumOnline<LectureDetailsRespo
 
         binding = ActivityLecturedetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbarLectureDetails.toolbar)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
 
         binding.appointmentsButton.setOnClickListener {
             // LectureAppointments need the name and id of the facing lecture
