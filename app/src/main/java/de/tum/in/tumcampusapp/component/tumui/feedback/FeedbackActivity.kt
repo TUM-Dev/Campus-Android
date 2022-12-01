@@ -60,6 +60,11 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
 
         binding = ActivityFeedbackBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbarFeedback.toolbar)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
 
         val lrzId = Utils.getSetting(this, Const.LRZ_ID, "")
         injector.feedbackComponent()
