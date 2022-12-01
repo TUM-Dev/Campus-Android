@@ -175,7 +175,7 @@ class SearchViewModel @Inject constructor(
         val recentSearchesDao: RecentsDao = TcaDb.getInstance(context).recentsDao()
         val recentSearches: List<Recent> = recentSearchesDao.allRecentSearches.reversed() ?: emptyList()
         state.value = state.value.copy(
-            recentSearches = recentSearches
+            recentSearches = recentSearches.filter { x -> x.type != 1 } // filter for undesirable stations
         )
     }
 
