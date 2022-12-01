@@ -36,6 +36,11 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
 
         binding = ActivityInformationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbarInformation.toolbar)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
 
         binding.buttonFacebook.setOnClickListener {
             openFacebook()
