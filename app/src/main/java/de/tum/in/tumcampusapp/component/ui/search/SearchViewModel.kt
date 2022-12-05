@@ -7,6 +7,7 @@ import de.tum.`in`.tumcampusapp.api.navigatum.model.search.NavigaTumSearchRespon
 import de.tum.`in`.tumcampusapp.api.navigatum.model.search.NavigaTumSearchSectionDto
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
+import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao.STATIONS
 import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Utils
