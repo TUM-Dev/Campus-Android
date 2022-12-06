@@ -24,6 +24,11 @@ class CafeteriaNotificationSettingsActivity : BaseActivity(R.layout.activity_caf
 
         binding = ActivityCafeteriaNotificationSettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbarCafeteriaNotification.toolbar)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
 
         val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
