@@ -43,7 +43,7 @@ class FeedbackPresenter @Inject constructor(
     private var sendFeedbackCall = tumCabeClient.sendFeedback(feedback)
     private var sendImagesCalls = mutableListOf<Call<FeedbackResult>>()
 
-    private var currentPhotoPath: String? = null
+ //   private var currentPhotoPath: String? = null
     private var imagesSent: Int = 0
 
     private var view: FeedbackContract.View? = null
@@ -58,13 +58,16 @@ class FeedbackPresenter @Inject constructor(
         compositeDisposable += view.getIncludeEmail().subscribe { onIncludeEmailChanged(it) }
         compositeDisposable += view.getIncludeLocation().subscribe { onIncludeLocationChanged(it) }
 
-        if (SDK_INT < M || checkPermission(ACCESS_FINE_LOCATION)) {
+
             listenForLocation()
-        }
+
     }
 
     override fun listenForLocation() {
-        compositeDisposable += checkNotNull(view).getLocation().subscribe { feedback.location = it }
+        if (SDK_INT < M || checkPermission(ACCESS_FINE_LOCATION)) {
+            compositeDisposable += checkNotNull(view).getLocation().subscribe { feedback.location = it }
+        }
+
     }
 
     private fun updateFeedbackTopic(topicButton: Int) {
@@ -77,9 +80,10 @@ class FeedbackPresenter @Inject constructor(
 
     private fun onIncludeLocationChanged(includeLocation: Boolean) {
         feedback.includeLocation = includeLocation
-        if (includeLocation && (SDK_INT < M || checkPermission(ACCESS_FINE_LOCATION))) {
+        if(includeLocation){
             listenForLocation()
         }
+
     }
 
     private fun onIncludeEmailChanged(includeEmail: Boolean) {
@@ -106,40 +110,7 @@ class FeedbackPresenter @Inject constructor(
         }
     }
 
-    override fun takePicture() {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
-        // Create the file where the photo should go
-        var photoFile: File? = null
-        try {
-            photoFile = ImageUtils.createImageFile(context)
-            currentPhotoPath = photoFile.absolutePath
-        } catch (e: IOException) {
-            Utils.log(e)
-        }
-
-        if (photoFile == null) {
-            return
-        }
-
-        val authority = "de.tum.in.tumcampusapp.fileprovider"
-        val photoURI = FileProvider.getUriForFile(context, authority, photoFile)
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-        try {
-            view?.openCamera(takePictureIntent)
-        } catch (e: ActivityNotFoundException) {
-            photoFile.delete()
-        }
-    }
-
-    override fun openGallery() {
-        val intent = Intent()
-        intent.type = "image/*"
-        intent.action = Intent.ACTION_GET_CONTENT
-
-        val chooser = Intent.createChooser(intent, "Select file")
-        view?.openGallery(chooser)
-    }
 
     private fun isEmailValid(email: String?): Boolean {
         if (email == null) {
@@ -206,20 +177,6 @@ class FeedbackPresenter @Inject constructor(
             }
         })
     }
-
-    private fun showNoLocationAccessDialog() {
-        val title = context.getString(R.string.location_services_off_title)
-        val message = context.getString(R.string.location_services_off_message)
-        view?.showDialog(title, message)
-    }
-
-    override fun removeImage(path: String) {
-        val index = feedback.picturePaths.indexOf(path)
-        feedback.picturePaths.remove(path)
-        File(path).delete()
-        view?.onImageRemoved(index)
-    }
-
     private fun sendImages() {
         val imagePaths = feedback.picturePaths.toTypedArray()
         sendImagesCalls = tumCabeClient.sendFeedbackImages(feedback, imagePaths)
@@ -254,51 +211,14 @@ class FeedbackPresenter @Inject constructor(
         }
     }
 
-    /**
-     * @return true if user has given permission before
-     */
-    @RequiresApi(api = M)
-    private fun checkPermission(permission: String): Boolean {
-        val permissionCheck = ContextCompat.checkSelfPermission(context, permission)
 
-        if (permissionCheck == PackageManager.PERMISSION_DENIED) {
-            val requestCode = when (permission) {
-                READ_EXTERNAL_STORAGE -> PERMISSION_FILES
-                CAMERA -> PERMISSION_CAMERA
-                else -> PERMISSION_LOCATION
-            }
-
-            view?.showPermissionRequestDialog(permission, requestCode)
-            return false
-        }
-        return true
+    private fun showNoLocationAccessDialog() {
+        val title = context.getString(R.string.location_services_off_title)
+        val message = context.getString(R.string.location_services_off_message)
+        view?.showDialog(title, message)
     }
 
-    override fun onImageOptionSelected(option: Int) {
-        if (option == 0) {
-            if (SDK_INT < M || checkPermission(CAMERA)) {
-                takePicture()
-            }
-        } else {
-            if (SDK_INT < M || checkPermission(READ_EXTERNAL_STORAGE)) {
-                openGallery()
-            }
-        }
-    }
 
-    override fun onNewImageTaken() {
-        currentPhotoPath?.let {
-            ImageUtils.rescaleBitmap(context, it)
-            feedback.picturePaths.add(it)
-            view?.onImageAdded(it)
-        }
-    }
-
-    override fun onNewImageSelected(uri: Uri?) {
-        val filePath = ImageUtils.rescaleBitmap(context, uri ?: return) ?: return
-        feedback.picturePaths.add(filePath)
-        view?.onImageAdded(filePath)
-    }
 
     override fun detachView() {
         clearPictures()

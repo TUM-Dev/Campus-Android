@@ -32,27 +32,30 @@ import de.tum.`in`.tumcampusapp.databinding.ActivityFeedbackBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import de.tum.`in`.tumcampusapp.utils.Utils
+import de.tum.`in`.tumcampusapp.utils.camera.CameraContract
 import io.reactivex.Observable
 import java.io.File
 import javax.inject.Inject
 
-class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContract.View {
+class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContract.View, CameraContract.View {
 
     private lateinit var thumbnailsAdapter: FeedbackThumbnailsAdapter
     private var progressDialog: AlertDialog? = null
 
     @Inject
     lateinit var presenter: FeedbackContract.Presenter
+    @Inject
+    lateinit var presenterCamera: CameraContract.Presenter
 
     private lateinit var binding: ActivityFeedbackBinding
 
     private val cameraLauncher = registerForActivityResult(StartActivityForResult()) {
-        presenter.onNewImageTaken()
+        presenterCamera.onNewImageTaken()
     }
 
     private val galleryLauncher = registerForActivityResult(StartActivityForResult()) { result ->
         val filePath = result.data?.data
-        presenter.onNewImageSelected(filePath)
+        presenterCamera.onNewImageSelected(filePath)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,7 +92,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
 
     public override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        presenter.onSaveInstanceState(outState)
+        presenterCamera.onSaveInstanceState(outState)
     }
 
     private fun initPictureGallery() {
@@ -117,14 +120,14 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     }
 
     private fun removeThumbnail(path: String) {
-        presenter.removeImage(path)
+        presenterCamera.removeImage(path)
     }
 
     private fun showImageOptionsDialog() {
         val options = arrayOf(getString(R.string.feedback_take_picture), getString(R.string.gallery))
         ThemedAlertDialogBuilder(this)
                 .setTitle(R.string.feedback_add_picture)
-                .setItems(options) { _, index -> presenter.onImageOptionSelected(index) }
+                .setItems(options) { _, index -> presenterCamera.onImageOptionSelected(index) }
                 .setNegativeButton(R.string.cancel, null)
                 .show()
     }
@@ -162,10 +165,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    override fun showPermissionRequestDialog(permission: String, requestCode: Int) {
-        requestPermissions(arrayOf(permission), requestCode)
-    }
+
 
     private fun initIncludeLocation() {
         binding.includeLocationCheckBox.isChecked = presenter.feedback.includeLocation
@@ -272,19 +272,19 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
             }
             PERMISSION_CAMERA -> {
                 if (isGranted) {
-                    presenter.takePicture()
+                    presenterCamera.takePicture()
                 }
             }
             PERMISSION_FILES -> {
                 if (isGranted) {
-                    presenter.openGallery()
+                    presenterCamera.openGallery()
                 }
             }
         }
     }
 
     override fun onDestroy() {
-        presenter.detachView()
+        presenterCamera.detachView()
         super.onDestroy()
     }
 }
