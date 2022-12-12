@@ -12,13 +12,13 @@
         android:theme="@style/TumToolbar"
         app:popupTheme="@style/TumToolbarPopUp">
 
-        <FrameLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/searchEditText"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@android:color/transparent"
                 android:hint="@string/search"
@@ -26,19 +26,25 @@
                 android:importantForAutofill="no"
                 android:inputType="text|textCapSentences"
                 android:maxLines="1"
-                android:textColorHint="@color/tum_500" />
+                android:textColorHint="@color/tum_500"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/clearButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
                 android:id="@+id/clearButton"
                 android:layout_width="@dimen/icon_default"
                 android:layout_height="@dimen/icon_default"
-                android:layout_gravity="center_vertical|end"
-                android:layout_marginEnd="@dimen/material_default_padding"
+                android:layout_marginRight="@dimen/fab_margin"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_action_cancel"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/tum_500" />
 
-        </FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.appcompat.widget.Toolbar>
 
