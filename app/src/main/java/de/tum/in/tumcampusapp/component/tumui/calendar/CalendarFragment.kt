@@ -12,6 +12,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat.checkSelfPermission
 import com.alamkanak.weekview.DateTimeInterpreter
 import com.alamkanak.weekview.WeekViewDisplayable
@@ -43,6 +44,7 @@ class CalendarFragment :
         R.string.calendar
     ),
     CalendarDetailsFragment.OnEventInteractionListener {
+
 
     private val calendarController: CalendarController by lazy {
         CalendarController(requireContext())
@@ -249,23 +251,6 @@ class CalendarFragment :
         refreshWeekView()
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        val hasPermissions = grantResults.all { it == PackageManager.PERMISSION_GRANTED }
-        if (!hasPermissions) {
-            return
-        }
-
-        if (requestCode == REQUEST_SYNC) {
-            exportCalendarToGoogle()
-        } else if (requestCode == REQUEST_DELETE) {
-            deleteCalendarFromGoogle()
-        }
-    }
-
     /**
      * Asynchronous task for exporting the calendar to a local Google calendar
      */
@@ -290,8 +275,14 @@ class CalendarFragment :
     }
 
     private fun isPermissionGranted(id: Int): Boolean {
-        if (checkSelfPermission(requireContext(), Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED &&
-            checkSelfPermission(requireContext(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED
+        if (checkSelfPermission(
+                requireContext(),
+                Manifest.permission.READ_CALENDAR
+            ) == PackageManager.PERMISSION_GRANTED &&
+            checkSelfPermission(
+                requireContext(),
+                Manifest.permission.WRITE_CALENDAR
+            ) == PackageManager.PERMISSION_GRANTED
         ) {
             return true
         } else {
@@ -301,15 +292,32 @@ class CalendarFragment :
                 ThemedAlertDialogBuilder(requireContext())
                     .setMessage(getString(R.string.permission_calendar_explanation))
                     .setPositiveButton(R.string.ok) { _, _ ->
-                        requestPermissions(PERMISSIONS_CALENDAR, id)
+                        showPermissionRequestDialog(id)
                     }
                     .show()
             } else {
-                requestPermissions(PERMISSIONS_CALENDAR, id)
+                showPermissionRequestDialog(id)
             }
         }
-
         return false
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val hasPermissions = permissions.all { it.value }
+        if (hasPermissions) {
+            if (calendarController.requestCode == REQUEST_SYNC) {
+                exportCalendarToGoogle()
+            } else if (calendarController.requestCode == REQUEST_DELETE) {
+                deleteCalendarFromGoogle()
+            }
+        }
+    }
+
+    private fun showPermissionRequestDialog(id: Int) {
+        calendarController.requestCode=id
+        requestPermissionLauncher.launch(PERMISSIONS_CALENDAR)
     }
 
     private fun displayCalendarSyncSuccessDialog() {
@@ -358,7 +366,10 @@ class CalendarFragment :
             val location = StringBuilder()
             location.append(calendarItem.location)
 
-            while (i + 1 < calendarItems.size && calendarItem.isSameEventButForLocation(calendarItems[i + 1])) {
+            while (i + 1 < calendarItems.size && calendarItem.isSameEventButForLocation(
+                    calendarItems[i + 1]
+                )
+            ) {
                 i++
                 location.append(" + ")
                 location.append(calendarItems[i].location)
@@ -449,8 +460,8 @@ class CalendarFragment :
                 binding.weekView.goToDate(it)
             } ?: run {
                 binding.weekView.goToCurrentTime()
-                }
             }
+        }
 
         menuItemSwitchView?.setIcon(icon)
     }
@@ -458,7 +469,8 @@ class CalendarFragment :
     private fun setupDateTimeInterpreter(shortDate: Boolean) {
         binding.weekView.dateTimeInterpreter = object : DateTimeInterpreter {
 
-            private val timeFormat = DateTimeFormat.forPattern("HH:mm").withLocale(Locale.getDefault())
+            private val timeFormat =
+                DateTimeFormat.forPattern("HH:mm").withLocale(Locale.getDefault())
 
             override fun interpretDate(date: Calendar): String {
                 val weekDayFormat = if (shortDate) "E" else "EEEE"
