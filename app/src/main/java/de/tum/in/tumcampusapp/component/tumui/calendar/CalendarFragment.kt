@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
 import android.Manifest
+import android.app.Activity
 import android.content.ContentUris
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -12,6 +13,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat.checkSelfPermission
 import com.alamkanak.weekview.DateTimeInterpreter
@@ -217,7 +219,7 @@ class CalendarFragment :
                 val currentDate = LocalDate(binding.weekView.firstVisibleDate)
                 val intent = Intent(requireContext(), CreateEventActivity::class.java)
                 intent.putExtra(Const.DATE, currentDate)
-                startActivityForResult(intent, REQUEST_CREATE)
+                startForResult.launch(intent)
                 return true
             }
             R.id.action_calendar_filter_canceled -> {
@@ -316,7 +318,7 @@ class CalendarFragment :
     }
 
     private fun showPermissionRequestDialog(id: Int) {
-        calendarController.requestCode=id
+        calendarController.requestCode = id
         requestPermissionLauncher.launch(PERMISSIONS_CALENDAR)
     }
 
@@ -409,24 +411,23 @@ class CalendarFragment :
 
         val intent = Intent(requireContext(), CreateEventActivity::class.java)
         intent.putExtras(bundle)
-        startActivityForResult(intent, REQUEST_CREATE)
+        startForResult.launch(intent)
         detailsFragment?.dismiss()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        // Not all events were created successfully
-        if (requestCode == REQUEST_CREATE && resultCode == RESULT_ERROR) {
-            val failed = data?.getStringExtra("failed")
-            val sum = data?.getStringExtra("sum")
-            ThemedAlertDialogBuilder(requireContext())
-                .setTitle(R.string.error_something_wrong)
-                .setMessage(getString(R.string.create_event_some_failed, failed, sum))
-                .setPositiveButton(R.string.ok, null)
-                .show()
+    private val startForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+        { result: ActivityResult ->
+            if (result.resultCode != Activity.RESULT_OK) {
+                val failed = result.data?.getStringExtra("failed") ?: 1
+                val sum = result.data?.getStringExtra("sum") ?: 1
+                ThemedAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.error_something_wrong)
+                    .setMessage(getString(R.string.create_event_some_failed, failed, sum))
+                    .setPositiveButton(R.string.ok, null)
+                    .show()
+            }
         }
-    }
 
     override fun onEventDeleted(eventId: String) {
         val db = TcaDb.getInstance(requireContext())
