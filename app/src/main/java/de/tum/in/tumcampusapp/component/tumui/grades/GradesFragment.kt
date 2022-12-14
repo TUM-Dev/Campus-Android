@@ -98,12 +98,11 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             showListButton?.setOnClickListener { toggleInLandscape() }
             showChartButton?.setOnClickListener { toggleInLandscape() }
             initUIVisibility()
+            floatingButtonAddExamGrade.setOnClickListener { openAddGradeDialog() }
+            checkboxUseDiagrams.setOnCheckedChangeListener { _, isChecked ->
+                adaptDiagramToWeights = isChecked
+            }
         }
-        binding.floatingButtonAddExamGrade.setOnClickListener { openAddGradeDialog() }
-        binding.checkboxUseDiagrams.setOnCheckedChangeListener { _, isChecked ->
-            adaptDiagramToWeights = isChecked
-        }
-
         loadGrades(CacheControl.USE_CACHE)
 
         // Tracks whether the user has used the calendar module before. This is used in determining when to prompt for a
@@ -135,8 +134,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         pieMenuItem?.isEnabled = true
 
         isFetched = true
-        requireActivity().invalidateOptionsMenu()
-
         storeGradedCourses(exams)
     }
 
@@ -621,19 +618,15 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      * Toggles between list view and chart view in landscape mode.
      */
     private fun toggleInLandscape() {
-        with(binding) {
-            val showChart = chartsContainer.visibility == View.GONE
+        val showChart = binding.chartsContainer.visibility == View.GONE
+        binding.showListButton?.visibility = if (showChart) View.VISIBLE else View.GONE
+        binding.showChartButton?.visibility = if (showChart) View.GONE else View.VISIBLE
 
-            showListButton?.visibility = if (showChart) View.VISIBLE else View.GONE
-            showChartButton?.visibility = if (showChart) View.GONE else View.VISIBLE
-
-            val refreshLayout = swipeRefreshLayout
-
-            if (chartsContainer.visibility == View.GONE) {
-                crossFadeViews(refreshLayout, chartsContainer)
-            } else {
-                crossFadeViews(chartsContainer, refreshLayout)
-            }
+        val refreshLayout = swipeRefreshLayout
+        if (binding.chartsContainer.visibility == View.GONE) {
+            crossFadeViews(refreshLayout, binding.chartsContainer)
+        } else {
+            crossFadeViews(binding.chartsContainer, refreshLayout)
         }
     }
 
