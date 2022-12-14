@@ -47,7 +47,6 @@ class CalendarFragment :
     ),
     CalendarDetailsFragment.OnEventInteractionListener {
 
-
     private val calendarController: CalendarController by lazy {
         CalendarController(requireContext())
     }
@@ -416,8 +415,7 @@ class CalendarFragment :
     }
 
     private val startForResult =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-        { result: ActivityResult ->
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode != Activity.RESULT_OK) {
                 val failed = result.data?.getStringExtra("failed") ?: 1
                 val sum = result.data?.getStringExtra("sum") ?: 1
