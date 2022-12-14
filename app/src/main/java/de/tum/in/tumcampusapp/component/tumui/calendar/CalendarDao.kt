@@ -31,7 +31,7 @@ interface CalendarDao {
 
     @get:Query("SELECT * FROM calendar " +
             "WHERE status!='CANCEL' " +
-            "AND dtstart > datetime('now', 'localtime') " +
+            "AND dtend > datetime('now', 'localtime') " +
             "GROUP BY title, dtstart, dtend " +
             "ORDER BY dtstart LIMIT 4")
     val nextUniqueCalendarItems: List<CalendarItem>
