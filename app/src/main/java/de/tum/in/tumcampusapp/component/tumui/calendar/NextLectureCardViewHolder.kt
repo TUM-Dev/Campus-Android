@@ -24,26 +24,15 @@ class NextLectureCardViewHolder(
     private val lectureContainerLayout = itemView.findViewById<LinearLayout>(R.id.currentLecturesContainer)
 
     fun bind(items: List<NextLectureCard.CardCalendarItem>) = with(itemView) {
-        // Split lectures in progress / upcoming lectures
-        var (currentLectures, remaining) = items.partition {
-            it.start.isBeforeNow
-        }
-        // if no lecture is currently in progress, show the next upcoming lectures (that start within 15 minutes of each other)
-        // TODO: if a lecture starts right after the last currentLecture (or is same day?), we should also directly display it
-        if (currentLectures.isEmpty()) {
-            val nextLectureDate = remaining.first().start.plusMinutes(15)
-
-            remaining.partition {
-                it.start.isBefore(nextLectureDate)
-            }.let { (before, after) ->
-                currentLectures = before
-                remaining = after
-            }
+        // Split events into "today" and "not today", the latter will be hidden behind the expand button
+        val firstLectureDate = items.first().start.toLocalDate()
+        val (currentEvents, futureEvents) = items.partition {
+            it.start.toLocalDate().equals(firstLectureDate)
         }
 
-        showLectures(currentLectures)
+        showLectures(currentEvents)
 
-        if (remaining.isEmpty()) {
+        if (futureEvents.isEmpty()) {
             divider.visibility = View.GONE
             moreTextView.visibility = View.GONE
             return
@@ -52,20 +41,20 @@ class NextLectureCardViewHolder(
         if (didBind.not()) {
             // This is the first call of bind. Therefore, we inflate any additional NextLectureViews
             // for upcoming events.
-            remaining.forEach { item ->
+            futureEvents.forEach { item ->
                 val lectureView = NextLectureView(context).apply {
                     setLecture(item)
                 }
                 additionalLecturesLayout.addView(lectureView)
             }
-            toggleMoreButton(remaining.size)
+            toggleMoreButton(futureEvents.size)
             didBind = didBind.not()
         }
 
         moreTextView.setOnClickListener {
             isExpanded = isExpanded.not()
             additionalLecturesLayout.visibility = if (isExpanded) View.VISIBLE else View.GONE
-            toggleMoreButton(remaining.size)
+            toggleMoreButton(futureEvents.size)
         }
     }
 
