@@ -10,13 +10,11 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.utils.addCompoundDrawablesWithIntrinsicBounds
 
-class NextLectureCardViewHolder(
-        itemView: View,
-        interactionListener: CardInteractionListener
-) : CardViewHolder(itemView, interactionListener) {
+class NextLectureCardViewHolder(itemView: View, interactionListener: CardInteractionListener) : CardViewHolder(itemView, interactionListener) {
 
     private var isExpanded = false
-    private var didBind = false
+    private var didBindAdditional = false
+    private var didBindCurrent = false
 
     private val divider = itemView.findViewById<View>(R.id.divider)
     private val moreTextView = itemView.findViewById<TextView>(R.id.moreTextView)
@@ -24,13 +22,16 @@ class NextLectureCardViewHolder(
     private val lectureContainerLayout = itemView.findViewById<LinearLayout>(R.id.currentLecturesContainer)
 
     fun bind(items: List<NextLectureCard.CardCalendarItem>) = with(itemView) {
-        // Split events into "today" and "not today", the latter will be hidden behind the expand button
+        // Split events into "day of next lecture" and "not same day", the latter will be hidden behind the expand button
         val firstLectureDate = items.first().start.toLocalDate()
         val (currentEvents, futureEvents) = items.partition {
             it.start.toLocalDate().equals(firstLectureDate)
         }
 
-        showLectures(currentEvents)
+        if (!didBindCurrent) {
+            addLectures(lectureContainerLayout, currentEvents)
+            didBindCurrent = didBindCurrent.not()
+        }
 
         if (futureEvents.isEmpty()) {
             divider.visibility = View.GONE
@@ -38,17 +39,12 @@ class NextLectureCardViewHolder(
             return
         }
 
-        if (didBind.not()) {
+        if (!didBindAdditional) {
             // This is the first call of bind. Therefore, we inflate any additional NextLectureViews
             // for upcoming events.
-            futureEvents.forEach { item ->
-                val lectureView = NextLectureView(context).apply {
-                    setLecture(item)
-                }
-                additionalLecturesLayout.addView(lectureView)
-            }
+            addLectures(additionalLecturesLayout, futureEvents)
             toggleMoreButton(futureEvents.size)
-            didBind = didBind.not()
+            didBindAdditional = didBindAdditional.not()
         }
 
         moreTextView.setOnClickListener {
@@ -69,15 +65,12 @@ class NextLectureCardViewHolder(
         TransitionManager.beginDelayedTransition((this.parent ?: this) as ViewGroup)
     }
 
-    private fun showLectures(lectures: List<NextLectureCard.CardCalendarItem>) = with(itemView) {
-        // If we don't remove all views, we will add lectures again on refresh
-        lectureContainerLayout.removeAllViews()
-
+    private fun addLectures(layout: LinearLayout, lectures: List<NextLectureCard.CardCalendarItem>) = with(itemView) {
         lectures.forEach { item ->
             val lectureView = NextLectureView(context).apply {
                 setLecture(item)
             }
-            lectureContainerLayout.addView(lectureView)
+            layout.addView(lectureView)
         }
     }
 }
