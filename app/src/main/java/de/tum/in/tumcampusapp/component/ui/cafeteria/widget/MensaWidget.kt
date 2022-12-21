@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria.widget
 
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
@@ -44,7 +45,7 @@ class MensaWidget : AppWidgetProvider() {
             val mensaIntent = Intent(context, CafeteriaActivity::class.java).apply {
                 putExtra(Const.CAFETERIA_ID, mensaManager.bestMatchMensaId)
             }
-            val pendingIntent = PendingIntent.getActivity(context, appWidgetId, mensaIntent, 0)
+            val pendingIntent = PendingIntent.getActivity(context, appWidgetId, mensaIntent, FLAG_IMMUTABLE)
             remoteViews.setOnClickPendingIntent(R.id.mensa_widget_header_container, pendingIntent)
 
             // Set the adapter for the list view in the mensa widget
