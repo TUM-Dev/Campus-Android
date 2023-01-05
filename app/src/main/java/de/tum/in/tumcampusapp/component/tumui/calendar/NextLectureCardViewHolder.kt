@@ -13,8 +13,6 @@ import de.tum.`in`.tumcampusapp.utils.addCompoundDrawablesWithIntrinsicBounds
 class NextLectureCardViewHolder(itemView: View, interactionListener: CardInteractionListener) : CardViewHolder(itemView, interactionListener) {
 
     private var isExpanded = false
-    private var didBindAdditional = false
-    private var didBindCurrent = false
 
     private val divider = itemView.findViewById<View>(R.id.divider)
     private val moreTextView = itemView.findViewById<TextView>(R.id.moreTextView)
@@ -28,10 +26,7 @@ class NextLectureCardViewHolder(itemView: View, interactionListener: CardInterac
             it.start.toLocalDate().equals(firstLectureDate)
         }
 
-        if (!didBindCurrent) {
-            addLectures(lectureContainerLayout, currentEvents)
-            didBindCurrent = didBindCurrent.not()
-        }
+        addLectures(lectureContainerLayout, currentEvents)
 
         if (futureEvents.isEmpty()) {
             divider.visibility = View.GONE
@@ -39,19 +34,17 @@ class NextLectureCardViewHolder(itemView: View, interactionListener: CardInterac
             return
         }
 
-        if (!didBindAdditional) {
-            // This is the first call of bind. Therefore, we inflate any additional NextLectureViews
-            // for upcoming events.
-            addLectures(additionalLecturesLayout, futureEvents)
-            toggleMoreButton(futureEvents.size)
-            didBindAdditional = didBindAdditional.not()
-        }
+        addLectures(additionalLecturesLayout, futureEvents)
+        toggleMoreButton(futureEvents.size)
 
         moreTextView.setOnClickListener {
             isExpanded = isExpanded.not()
             additionalLecturesLayout.visibility = if (isExpanded) View.VISIBLE else View.GONE
             toggleMoreButton(futureEvents.size)
         }
+
+        divider.visibility = View.VISIBLE
+        moreTextView.visibility = View.VISIBLE
     }
 
     private fun toggleMoreButton(remainingItems: Int) = with(itemView) {
@@ -66,6 +59,8 @@ class NextLectureCardViewHolder(itemView: View, interactionListener: CardInterac
     }
 
     private fun addLectures(layout: LinearLayout, lectures: List<NextLectureCard.CardCalendarItem>) = with(itemView) {
+        layout.removeAllViews()
+
         lectures.forEach { item ->
             val lectureView = NextLectureView(context).apply {
                 setLecture(item)
