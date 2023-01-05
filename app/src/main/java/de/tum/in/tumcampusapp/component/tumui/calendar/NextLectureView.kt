@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import de.tum.`in`.tumcampusapp.R
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormat
 import java.util.*
 
@@ -24,7 +25,7 @@ class NextLectureView
         val lectureTitleTextView = view.findViewById<TextView>(R.id.lectureTitleTextView)
 
         lectureTitleTextView.text = lecture.title
-        lectureTimeTextView.text = formatLectureDate(lecture.start, context)
+        lectureTimeTextView.text = formatLectureDate(lecture.start, lecture.end, context)
 
         if (lecture.locations == null || lecture.locations.isEmpty()) {
             lectureLocationTextView.visibility = View.GONE
@@ -39,14 +40,15 @@ class NextLectureView
     /**
      * Format a recently started or future date.
      * Examples:
-     * - "Ongoing since 14:15"
+     * - "1 h 20 m left"
+     * - "20 minutes left"
      * - "Starts now"
      * - "In 32 minutes"
      * - "Today 18:30"
      * - "Tomorrow 08:30"
      * - "In 4 days"
      */
-    private fun formatLectureDate(startTime: DateTime, context: Context): String {
+    private fun formatLectureDate(startTime: DateTime, endTime: DateTime, context: Context): String {
         val timeInMillis = startTime.millis
         val now = DateTime.now()
 
@@ -54,15 +56,25 @@ class NextLectureView
 
         return when {
             diff < 0 -> {
-                val diffInMinutes = (-diff / MINUTE_IN_MILLIS)
-                context.getString(R.string.ongoing_since_minutes, diffInMinutes)
+                val timeToEnd = endTime.millis - now.millis
+                val formatter = DateTimeFormat.forPattern(if (timeToEnd < HOUR_IN_MILLIS) {
+                    "m 'min'"
+                } else {
+                    "h 'h' m 'min'"
+                }).withLocale(Locale.ENGLISH)
+                val readableTimeLeft = formatter.print(DateTime(timeToEnd, DateTimeZone.UTC))
+                context.getString(R.string.ongoing_until, readableTimeLeft)
             }
             diff < MINUTE_IN_MILLIS -> {
                 context.getString(R.string.starts_now)
             }
-            diff < HOUR_IN_MILLIS -> {
-                val diffInMinutes = diff / MINUTE_IN_MILLIS
-                context.getString(R.string.in_minutes, diffInMinutes)
+            diff < 5 * HOUR_IN_MILLIS -> {
+                val formatter = DateTimeFormat.forPattern(if (diff < HOUR_IN_MILLIS) {
+                    "m 'min'"
+                } else {
+                    "h 'h' m 'min'"
+                }).withLocale(Locale.ENGLISH)
+                "${context.getString(R.string.IN_capitalized)} ${formatter.print(DateTime(diff, DateTimeZone.UTC))}"
             }
             // Today
             startTime.dayOfYear() == now.dayOfYear() && startTime.year() == now.year() -> {

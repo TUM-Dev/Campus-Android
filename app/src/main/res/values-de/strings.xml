@@ -794,8 +794,8 @@ Signatur: %5$s</string>
     <string name="redirect">Umleiten</string>
 
     // Lecture View
-    <string name="ongoing_since_minutes">Läuft seit %1$s Minuten</string>
+    <string name="ongoing_until">Noch %1$s</string>
     <string name="starts_now">Startet jetzt</string>
-    <string name="in_minutes">In %1$s Minuten</string>
     <string name="tomorrow_time">Morgen %1$s</string>
+    <string name="IN_capitalized">In</string>
 </resources>
