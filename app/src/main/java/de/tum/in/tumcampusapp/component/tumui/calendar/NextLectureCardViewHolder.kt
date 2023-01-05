@@ -20,6 +20,8 @@ class NextLectureCardViewHolder(itemView: View, interactionListener: CardInterac
     private val lectureContainerLayout = itemView.findViewById<LinearLayout>(R.id.currentLecturesContainer)
 
     fun bind(items: List<NextLectureCard.CardCalendarItem>) = with(itemView) {
+        isExpanded = false
+
         // Split events into "day of next lecture" and "not same day", the latter will be hidden behind the expand button
         val firstLectureDate = items.first().start.toLocalDate()
         val (currentEvents, futureEvents) = items.partition {
@@ -35,24 +37,28 @@ class NextLectureCardViewHolder(itemView: View, interactionListener: CardInterac
         }
 
         addLectures(additionalLecturesLayout, futureEvents)
-        toggleMoreButton(futureEvents.size)
+
+        updateExpansion(futureEvents.size)
 
         moreTextView.setOnClickListener {
             isExpanded = isExpanded.not()
-            additionalLecturesLayout.visibility = if (isExpanded) View.VISIBLE else View.GONE
             toggleMoreButton(futureEvents.size)
         }
 
-        divider.visibility = View.VISIBLE
-        moreTextView.visibility = View.VISIBLE
     }
 
-    private fun toggleMoreButton(remainingItems: Int) = with(itemView) {
+    private fun updateExpansion(remainingItems: Int) = with(itemView) {
         val moreTextFormatString = if (isExpanded) R.string.next_lecture_hide else R.string.next_lecture_show_more
         moreTextView.text = context.getString(moreTextFormatString, remainingItems)
 
         val icon = if (isExpanded) R.drawable.ic_arrow_up_blue else R.drawable.ic_arrow_down_blue
         moreTextView.addCompoundDrawablesWithIntrinsicBounds(start = icon)
+
+        additionalLecturesLayout.visibility = if (isExpanded) View.VISIBLE else View.GONE
+    }
+
+    private fun toggleMoreButton(remainingItems: Int) = with(itemView) {
+        updateExpansion(remainingItems)
 
         // If possible, run the transition on the parent RecyclerView to incorporate sibling views
         TransitionManager.beginDelayedTransition((this.parent ?: this) as ViewGroup)
