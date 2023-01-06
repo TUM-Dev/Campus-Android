@@ -44,7 +44,6 @@ class NextLectureCardViewHolder(itemView: View, interactionListener: CardInterac
             isExpanded = isExpanded.not()
             toggleMoreButton(futureEvents.size)
         }
-
     }
 
     private fun updateExpansion(remainingItems: Int) = with(itemView) {
