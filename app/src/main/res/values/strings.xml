@@ -847,4 +847,10 @@ Signature: %5$s</string>
     <string name="not_implemented">Feature not implemented yet</string>
     <string name="not_implemented_interactive_map">Interactive map is not yet implemented. You can access it on NavigaTum website.</string>
     <string name="redirect">Redirect</string>
+
+    // Lecture View
+    <string name="ongoing_until">" %1$s left"</string>
+    <string name="starts_now">Starts now</string>
+    <string name="tomorrow_time">Tomorrow %1$s</string>
+    <string name="IN_capitalized">In</string>
 </resources>
