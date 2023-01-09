@@ -793,4 +793,9 @@ Signatur: %5$s</string>
     <string name="not_implemented_interactive_map">Interaktive Karte ist noch nicht implementiert. Sie können auf der NavigaTum-Website darauf zugreifen.</string>
     <string name="redirect">Umleiten</string>
 
+    // Lecture View
+    <string name="ongoing_until">Noch %1$s</string>
+    <string name="starts_now">Startet jetzt</string>
+    <string name="tomorrow_time">Morgen %1$s</string>
+    <string name="IN_capitalized">In</string>
 </resources>
