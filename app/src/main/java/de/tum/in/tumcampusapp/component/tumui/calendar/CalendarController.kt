@@ -34,6 +34,7 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
     private val roomLocationsDao: RoomLocationsDao = TcaDb.getInstance(context).roomLocationsDao()
     private val widgetsTimetableBlacklistDao: WidgetsTimetableBlacklistDao = TcaDb.getInstance(context).widgetsTimetableBlacklistDao()
     private val eventColorProvider: EventColorController = EventColorController(context)
+    var requestCode: Int = 0
 
     /**
      * Get current lecture from the database

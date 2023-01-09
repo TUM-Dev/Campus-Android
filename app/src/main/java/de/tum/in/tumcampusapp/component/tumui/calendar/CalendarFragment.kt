@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
 import android.Manifest
+import android.app.Activity
 import android.content.ContentUris
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -12,6 +13,8 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat.checkSelfPermission
 import com.alamkanak.weekview.DateTimeInterpreter
 import com.alamkanak.weekview.WeekViewDisplayable
@@ -215,7 +218,7 @@ class CalendarFragment :
                 val currentDate = LocalDate(binding.weekView.firstVisibleDate)
                 val intent = Intent(requireContext(), CreateEventActivity::class.java)
                 intent.putExtra(Const.DATE, currentDate)
-                startActivityForResult(intent, REQUEST_CREATE)
+                startForResult.launch(intent)
                 return true
             }
             R.id.action_calendar_filter_canceled -> {
@@ -249,23 +252,6 @@ class CalendarFragment :
         refreshWeekView()
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        val hasPermissions = grantResults.all { it == PackageManager.PERMISSION_GRANTED }
-        if (!hasPermissions) {
-            return
-        }
-
-        if (requestCode == REQUEST_SYNC) {
-            exportCalendarToGoogle()
-        } else if (requestCode == REQUEST_DELETE) {
-            deleteCalendarFromGoogle()
-        }
-    }
-
     /**
      * Asynchronous task for exporting the calendar to a local Google calendar
      */
@@ -290,8 +276,14 @@ class CalendarFragment :
     }
 
     private fun isPermissionGranted(id: Int): Boolean {
-        if (checkSelfPermission(requireContext(), Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED &&
-            checkSelfPermission(requireContext(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED
+        if (checkSelfPermission(
+                requireContext(),
+                Manifest.permission.READ_CALENDAR
+            ) == PackageManager.PERMISSION_GRANTED &&
+            checkSelfPermission(
+                requireContext(),
+                Manifest.permission.WRITE_CALENDAR
+            ) == PackageManager.PERMISSION_GRANTED
         ) {
             return true
         } else {
@@ -301,15 +293,32 @@ class CalendarFragment :
                 ThemedAlertDialogBuilder(requireContext())
                     .setMessage(getString(R.string.permission_calendar_explanation))
                     .setPositiveButton(R.string.ok) { _, _ ->
-                        requestPermissions(PERMISSIONS_CALENDAR, id)
+                        showPermissionRequestDialog(id)
                     }
                     .show()
             } else {
-                requestPermissions(PERMISSIONS_CALENDAR, id)
+                showPermissionRequestDialog(id)
             }
         }
-
         return false
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val hasPermissions = permissions.all { it.value }
+        if (hasPermissions) {
+            if (calendarController.requestCode == REQUEST_SYNC) {
+                exportCalendarToGoogle()
+            } else if (calendarController.requestCode == REQUEST_DELETE) {
+                deleteCalendarFromGoogle()
+            }
+        }
+    }
+
+    private fun showPermissionRequestDialog(id: Int) {
+        calendarController.requestCode = id
+        requestPermissionLauncher.launch(PERMISSIONS_CALENDAR)
     }
 
     private fun displayCalendarSyncSuccessDialog() {
@@ -358,7 +367,10 @@ class CalendarFragment :
             val location = StringBuilder()
             location.append(calendarItem.location)
 
-            while (i + 1 < calendarItems.size && calendarItem.isSameEventButForLocation(calendarItems[i + 1])) {
+            while (i + 1 < calendarItems.size && calendarItem.isSameEventButForLocation(
+                    calendarItems[i + 1]
+                )
+            ) {
                 i++
                 location.append(" + ")
                 location.append(calendarItems[i].location)
@@ -398,24 +410,22 @@ class CalendarFragment :
 
         val intent = Intent(requireContext(), CreateEventActivity::class.java)
         intent.putExtras(bundle)
-        startActivityForResult(intent, REQUEST_CREATE)
+        startForResult.launch(intent)
         detailsFragment?.dismiss()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        // Not all events were created successfully
-        if (requestCode == REQUEST_CREATE && resultCode == RESULT_ERROR) {
-            val failed = data?.getStringExtra("failed")
-            val sum = data?.getStringExtra("sum")
-            ThemedAlertDialogBuilder(requireContext())
-                .setTitle(R.string.error_something_wrong)
-                .setMessage(getString(R.string.create_event_some_failed, failed, sum))
-                .setPositiveButton(R.string.ok, null)
-                .show()
+    private val startForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode != Activity.RESULT_OK) {
+                val failed = result.data?.getStringExtra("failed") ?: 1
+                val sum = result.data?.getStringExtra("sum") ?: 1
+                ThemedAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.error_something_wrong)
+                    .setMessage(getString(R.string.create_event_some_failed, failed, sum))
+                    .setPositiveButton(R.string.ok, null)
+                    .show()
+            }
         }
-    }
 
     override fun onEventDeleted(eventId: String) {
         val db = TcaDb.getInstance(requireContext())
@@ -449,8 +459,8 @@ class CalendarFragment :
                 binding.weekView.goToDate(it)
             } ?: run {
                 binding.weekView.goToCurrentTime()
-                }
             }
+        }
 
         menuItemSwitchView?.setIcon(icon)
     }
@@ -458,7 +468,8 @@ class CalendarFragment :
     private fun setupDateTimeInterpreter(shortDate: Boolean) {
         binding.weekView.dateTimeInterpreter = object : DateTimeInterpreter {
 
-            private val timeFormat = DateTimeFormat.forPattern("HH:mm").withLocale(Locale.getDefault())
+            private val timeFormat =
+                DateTimeFormat.forPattern("HH:mm").withLocale(Locale.getDefault())
 
             override fun interpretDate(date: Calendar): String {
                 val weekDayFormat = if (shortDate) "E" else "EEEE"
