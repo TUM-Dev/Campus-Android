@@ -299,7 +299,10 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
         val set = BarDataSet(entries, "").apply {
             setColors(GRADE_COLORS, requireContext())
-            valueTextColor = resources.getColor(R.color.text_primary)
+            ContextCompat.getColor(
+                requireContext().applicationContext,
+                R.color.text_primary
+            )
         }
         set.setDrawValues(false)
 

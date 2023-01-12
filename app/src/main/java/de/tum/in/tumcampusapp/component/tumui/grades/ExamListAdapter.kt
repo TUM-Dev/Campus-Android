@@ -108,10 +108,16 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
                     }
                 dialog.show()
                 dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(
-                    localGradesFragment.resources.getColor(R.color.text_primary)
+                    ContextCompat.getColor(
+                        context.applicationContext,
+                        R.color.text_primary
+                    )
                 )
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(
-                    localGradesFragment.resources.getColor(R.color.text_primary)
+                    ContextCompat.getColor(
+                        context.applicationContext,
+                        R.color.text_primary
+                    )
                 )
             }
         } else {

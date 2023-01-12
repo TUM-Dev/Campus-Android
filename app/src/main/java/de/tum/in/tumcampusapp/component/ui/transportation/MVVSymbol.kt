@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.ui.transportation
 
 import android.content.Context
+import androidx.core.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 
 /**
@@ -54,12 +55,21 @@ class MVVSymbol(line: String, val context: Context) {
             }
         }
 
-        this.textColor = context.resources.getColor(textColor)
-        this.backgroundColor = context.resources.getColor(backgroundColor)
+        this.textColor = ContextCompat.getColor(
+            context.applicationContext,
+            textColor
+        )
+        this.backgroundColor = ContextCompat.getColor(
+            context.applicationContext,
+            backgroundColor
+        )
     }
 
     fun getHighlight(): Int {
-        return context.resources.getColor(R.color.reduced_opacity) and backgroundColor
+        return ContextCompat.getColor(
+            context.applicationContext,
+            R.color.reduced_opacity
+        ) and backgroundColor
     }
 
     companion object {
