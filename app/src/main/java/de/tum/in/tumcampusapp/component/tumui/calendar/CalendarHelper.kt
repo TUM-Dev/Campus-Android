@@ -41,7 +41,7 @@ object CalendarHelper {
     }
 
     private fun buildCalendarUri(): Uri {
-        return CalendarContract.Calendars.CONTENT_URI.buildUpon()
+        return Calendars.CONTENT_URI.buildUpon()
                 .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
                 .appendQueryParameter(Calendars.ACCOUNT_NAME, ACCOUNT_NAME)
                 .appendQueryParameter(Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL)
@@ -49,7 +49,10 @@ object CalendarHelper {
     }
 
     private fun buildContentValues(c: Context): ContentValues {
-        val calendarColor = c.resources.getColor(R.color.calendar_color)
+        val calendarColor = ContextCompat.getColor(
+            c.applicationContext,
+            R.color.calendar_color
+        )
         val intName = ACCOUNT_NAME + CALENDAR_NAME
         return ContentValues().apply {
             put(Calendars.ACCOUNT_NAME, ACCOUNT_NAME)
