@@ -84,7 +84,6 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
         }
     }
 
-
     private fun showLocationDetails(navigationDetails: NavigationDetails) {
         binding.parentLocations.text = navigationDetails.getFormattedParentNames()
         binding.locationName.text = navigationDetails.name
@@ -98,7 +97,6 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
 
         showAvailableMaps(navigationDetails)
     }
-
 
     private fun setShowParentListener(navigationDetails: NavigationDetails) {
         val parentId = navigationDetails.getParentId()
