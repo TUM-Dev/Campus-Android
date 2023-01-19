@@ -8,40 +8,31 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackPresenter.Companion.PERMISSION_CAMERA
-import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackPresenter.Companion.PERMISSION_FILES
-import de.tum.`in`.tumcampusapp.component.tumui.feedback.RequestPermissionUtils
-import de.tum.`in`.tumcampusapp.component.tumui.feedback.model.FeedbackResult
-import de.tum.`in`.tumcampusapp.utils.Const
-import de.tum.`in`.tumcampusapp.utils.ImageUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.io.File
 import java.io.IOException
-import java.security.AccessController.checkPermission
+import javax.inject.Inject
 
-class CameraPresenter(
+class CameraPresenter @Inject constructor(
     private val context: Context
 ) : CameraContract.Presenter {
 
     private var currentPhotoPath: String? = null
     private var view: CameraContract.View? = null
     override val imageElement: MutableList<String> = mutableListOf()
-    private lateinit var permissionUtils: RequestPermissionUtils
+
     override fun attachView(view: CameraContract.View) {
         this.view = view
-        permissionUtils=RequestPermissionUtils(context,view)
     }
 
     override fun takePicture() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-
         // Create the file where the photo should go
         var photoFile: File? = null
         try {
@@ -75,55 +66,68 @@ class CameraPresenter(
     }
 
     override fun removeImage(path: String) {
-        val index = feedback.picturePaths.indexOf(path)
-        feedback.picturePaths.remove(path)
+        val index = imageElement.indexOf(path)
+        imageElement.remove(path)
         File(path).delete()
         view?.onImageRemoved(index)
     }
 
-
+    /**
+     * @return true if user has given permission before
+     */
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private fun checkPermission(permission: String): Boolean {
+        val permissionCheck = ContextCompat.checkSelfPermission(context, permission)
+        if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+            view?.showPermissionRequestDialog(permission)
+            return false
+        }
+        return true
+    }
 
     override fun onImageOptionSelected(option: Int) {
         if (option == 0) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || permissionUtils.checkPermission(Manifest.permission.CAMERA)) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || checkPermission(Manifest.permission.CAMERA)) {
                 takePicture()
             }
         } else {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || permissionUtils.checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 openGallery()
             }
         }
     }
 
 
-
-
     override fun onNewImageTaken() {
         currentPhotoPath?.let {
             ImageUtils.rescaleBitmap(context, it)
-            feedback.picturePaths.add(it)
+            imageElement.add(it)
             view?.onImageAdded(it)
         }
     }
-
     override fun onNewImageSelected(uri: Uri?) {
         val filePath = ImageUtils.rescaleBitmap(context, uri ?: return) ?: return
-        feedback.picturePaths.add(filePath)
+        imageElement.add(filePath)
         view?.onImageAdded(filePath)
     }
 
     override fun detachView() {
         clearPictures()
+        view = null
     }
 
     private fun clearPictures() {
-        for (path in feedback.picturePaths) {
+        for (path in imageElement) {
             File(path).delete()
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(Const.FEEDBACK, feedback)
+        Log.e("debug", "onSaveInstanceState: called")
+        //     outState.putParcelable(CA, imageElement)
     }
 
+    companion object {
+        const val FEEDBACK_IMG_COMPRESSION_QUALITY = 50
+    }
 }

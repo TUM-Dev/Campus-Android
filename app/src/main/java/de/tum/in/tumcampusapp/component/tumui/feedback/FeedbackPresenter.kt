@@ -1,34 +1,29 @@
 package de.tum.`in`.tumcampusapp.component.tumui.feedback
 
 import android.Manifest.permission.*
-import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
+import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.M
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Patterns
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.di.LrzId
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.model.Feedback
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.model.FeedbackResult
 import de.tum.`in`.tumcampusapp.utils.Const
-import de.tum.`in`.tumcampusapp.utils.ImageUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
+import de.tum.`in`.tumcampusapp.utils.camera.PermissionHelper
 import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.disposables.CompositeDisposable
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
-import java.io.IOException
 import javax.inject.Inject
 
 class FeedbackPresenter @Inject constructor(
@@ -64,11 +59,13 @@ class FeedbackPresenter @Inject constructor(
     }
 
     override fun listenForLocation() {
-        if (SDK_INT < M || checkPermission(ACCESS_FINE_LOCATION)) {
+        // todo add again
+        if (SDK_INT < M/* || PermissionHelper.checkPermission(ACCESS_FINE_LOCATION, context,view )*/) {
             compositeDisposable += checkNotNull(view).getLocation().subscribe { feedback.location = it }
         }
-
     }
+
+
 
     private fun updateFeedbackTopic(topicButton: Int) {
         if (topicButton == R.id.tumInGeneralRadioButton) {

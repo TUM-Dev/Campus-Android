@@ -31,6 +31,6 @@ class RequestPermissionUtils (private val context: Context,view: View){
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     fun showPermissionRequestDialog(permission: String, requestCode: Int) {
-        requestPermissions(arrayOf(permission), requestCode)
+      //  requestPermissions(arrayOf(permission), requestCode)
     }
 }

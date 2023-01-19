@@ -6,15 +6,14 @@ import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.location.Location
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,30 +32,23 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.camera.CameraContract
+import de.tum.`in`.tumcampusapp.utils.camera.CameraThumbnailsAdapter
+import de.tum.`in`.tumcampusapp.utils.camera.CameraUtils
 import io.reactivex.Observable
 import java.io.File
 import javax.inject.Inject
 
 class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContract.View, CameraContract.View {
-
-    private lateinit var thumbnailsAdapter: FeedbackThumbnailsAdapter
     private var progressDialog: AlertDialog? = null
 
     @Inject
     lateinit var presenter: FeedbackContract.Presenter
     @Inject
     lateinit var presenterCamera: CameraContract.Presenter
+    private lateinit var cameraUtils: CameraUtils
 
     private lateinit var binding: ActivityFeedbackBinding
 
-    private val cameraLauncher = registerForActivityResult(StartActivityForResult()) {
-        presenterCamera.onNewImageTaken()
-    }
-
-    private val galleryLauncher = registerForActivityResult(StartActivityForResult()) { result ->
-        val filePath = result.data?.data
-        presenterCamera.onNewImageSelected(filePath)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,7 +74,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
         }
 
         initIncludeLocation()
-        initPictureGallery()
+        initCameraUI()
 
         if (savedInstanceState == null) {
             presenter.initEmail()
@@ -90,46 +82,16 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
         initIncludeEmail()
     }
 
+    private fun initCameraUI() {
+        cameraUtils = CameraUtils(this, this as CameraContract.View)
+        binding.addImageButton.setOnClickListener { cameraUtils.showImageOptionsDialog() }
+        cameraUtils.initRecyclerView(binding.imageRecyclerView)
+
+    }
+
     public override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         presenterCamera.onSaveInstanceState(outState)
-    }
-
-    private fun initPictureGallery() {
-        binding.imageRecyclerView.layoutManager = LinearLayoutManager(this, HORIZONTAL, false)
-
-        val imagePaths = presenter.feedback.picturePaths
-        val thumbnailSize = resources.getDimension(R.dimen.thumbnail_size).toInt()
-        thumbnailsAdapter = FeedbackThumbnailsAdapter(imagePaths, { onThumbnailRemoved(it) }, thumbnailSize)
-        binding.imageRecyclerView.adapter = thumbnailsAdapter
-
-        binding.addImageButton.setOnClickListener { showImageOptionsDialog() }
-    }
-
-    private fun onThumbnailRemoved(path: String) {
-        val view = View.inflate(this, R.layout.picture_dialog, null)
-
-        val imageView = view.findViewById<ImageView>(R.id.feedback_big_image)
-        imageView.setImageURI(Uri.fromFile(File(path)))
-
-        ThemedAlertDialogBuilder(this)
-            .setView(view)
-            .setNegativeButton(R.string.cancel, null)
-            .setPositiveButton(R.string.feedback_remove_image) { _, _ -> removeThumbnail(path) }
-            .show()
-    }
-
-    private fun removeThumbnail(path: String) {
-        presenterCamera.removeImage(path)
-    }
-
-    private fun showImageOptionsDialog() {
-        val options = arrayOf(getString(R.string.feedback_take_picture), getString(R.string.gallery))
-        ThemedAlertDialogBuilder(this)
-                .setTitle(R.string.feedback_add_picture)
-                .setItems(options) { _, index -> presenterCamera.onImageOptionSelected(index) }
-                .setNegativeButton(R.string.cancel, null)
-                .show()
     }
 
     override fun getMessage(): Observable<String> =
@@ -149,6 +111,15 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
         binding.feedbackMessage.setText(message)
     }
 
+    private val cameraLauncher = registerForActivityResult(StartActivityForResult()) {
+        cameraUtils.onNewImageTaken()
+    }
+
+    private val galleryLauncher = registerForActivityResult(StartActivityForResult()) { result ->
+        val filePath = result.data?.data
+        cameraUtils.onNewImageSelected(filePath)
+    }
+
     override fun openCamera(intent: Intent) {
         try {
             cameraLauncher.launch(intent)
@@ -164,8 +135,6 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
             Toast.makeText(this, R.string.error_unknown, LENGTH_SHORT).show()
         }
     }
-
-
 
     private fun initIncludeLocation() {
         binding.includeLocationCheckBox.isChecked = presenter.feedback.includeLocation
@@ -245,46 +214,25 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     }
 
     override fun onImageAdded(path: String) {
-        thumbnailsAdapter.addImage(path)
+        cameraUtils.onImageAdded(path)
     }
 
     override fun onImageRemoved(position: Int) {
-        thumbnailsAdapter.removeImage(position)
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        if (grantResults.isEmpty()) {
-            return
-        }
-
-        val isGranted = grantResults[0] == PERMISSION_GRANTED
-
-        when (requestCode) {
-            PERMISSION_LOCATION -> {
-                binding.includeLocationCheckBox.isChecked = isGranted
-                if (isGranted) {
-                    presenter.listenForLocation()
-                }
-            }
-            PERMISSION_CAMERA -> {
-                if (isGranted) {
-                    presenterCamera.takePicture()
-                }
-            }
-            PERMISSION_FILES -> {
-                if (isGranted) {
-                    presenterCamera.openGallery()
-                }
-            }
-        }
+        cameraUtils.onImageRemoved(position)
     }
 
     override fun onDestroy() {
         presenterCamera.detachView()
         super.onDestroy()
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        cameraUtils.processPermissionResult(permissions)
+    }
+
+    override fun showPermissionRequestDialog(permission: String) {
+        requestPermissionLauncher.launch(arrayOf(permission))
     }
 }

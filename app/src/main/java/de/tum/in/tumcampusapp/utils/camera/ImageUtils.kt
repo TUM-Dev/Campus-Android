@@ -1,10 +1,12 @@
-package de.tum.`in`.tumcampusapp.utils
+package de.tum.`in`.tumcampusapp.utils.camera
 
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
+import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.Utils
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import java.io.ByteArrayOutputStream

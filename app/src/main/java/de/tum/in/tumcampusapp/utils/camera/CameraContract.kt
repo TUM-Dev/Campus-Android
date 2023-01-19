@@ -4,11 +4,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 
-class CameraContract {
+interface CameraContract {
     interface View {
         fun openCamera(intent: Intent)
         fun openGallery(intent: Intent)
-        fun showPermissionRequestDialog(permission: String, requestCode: Int)
+        fun showPermissionRequestDialog(permission: String)
         fun onImageAdded(path: String)
         fun onImageRemoved(position: Int)
     }
