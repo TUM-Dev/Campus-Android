@@ -1,15 +1,11 @@
 package de.tum.`in`.tumcampusapp.component.tumui.feedback
 
-import android.Manifest.permission.*
+
 import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.M
 import android.os.Bundle
 import android.util.Patterns
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.di.LrzId
@@ -17,7 +13,6 @@ import de.tum.`in`.tumcampusapp.component.tumui.feedback.model.Feedback
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.model.FeedbackResult
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
-import de.tum.`in`.tumcampusapp.utils.camera.PermissionHelper
 import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.disposables.CompositeDisposable
 import retrofit2.Call
@@ -38,7 +33,6 @@ class FeedbackPresenter @Inject constructor(
     private var sendFeedbackCall = tumCabeClient.sendFeedback(feedback)
     private var sendImagesCalls = mutableListOf<Call<FeedbackResult>>()
 
- //   private var currentPhotoPath: String? = null
     private var imagesSent: Int = 0
 
     private var view: FeedbackContract.View? = null
@@ -52,20 +46,16 @@ class FeedbackPresenter @Inject constructor(
         compositeDisposable += view.getEmail().subscribe { feedback.email = it }
         compositeDisposable += view.getIncludeEmail().subscribe { onIncludeEmailChanged(it) }
         compositeDisposable += view.getIncludeLocation().subscribe { onIncludeLocationChanged(it) }
-
-
-            listenForLocation()
-
+        listenForLocation()
     }
 
     override fun listenForLocation() {
         // todo add again
         if (SDK_INT < M/* || PermissionHelper.checkPermission(ACCESS_FINE_LOCATION, context,view )*/) {
-            compositeDisposable += checkNotNull(view).getLocation().subscribe { feedback.location = it }
+            compositeDisposable += checkNotNull(view).getLocation()
+                .subscribe { feedback.location = it }
         }
     }
-
-
 
     private fun updateFeedbackTopic(topicButton: Int) {
         if (topicButton == R.id.tumInGeneralRadioButton) {
@@ -77,7 +67,7 @@ class FeedbackPresenter @Inject constructor(
 
     private fun onIncludeLocationChanged(includeLocation: Boolean) {
         feedback.includeLocation = includeLocation
-        if(includeLocation){
+        if (includeLocation) {
             listenForLocation()
         }
 
@@ -106,8 +96,6 @@ class FeedbackPresenter @Inject constructor(
             feedback.email = "$lrzId@mytum.de"
         }
     }
-
-
 
     private fun isEmailValid(email: String?): Boolean {
         if (email == null) {
@@ -174,6 +162,7 @@ class FeedbackPresenter @Inject constructor(
             }
         })
     }
+
     private fun sendImages() {
         val imagePaths = feedback.picturePaths.toTypedArray()
         sendImagesCalls = tumCabeClient.sendFeedbackImages(feedback, imagePaths)
@@ -208,14 +197,11 @@ class FeedbackPresenter @Inject constructor(
         }
     }
 
-
     private fun showNoLocationAccessDialog() {
         val title = context.getString(R.string.location_services_off_title)
         val message = context.getString(R.string.location_services_off_message)
         view?.showDialog(title, message)
     }
-
-
 
     override fun detachView() {
         clearPictures()
@@ -240,8 +226,6 @@ class FeedbackPresenter @Inject constructor(
     }
 
     companion object {
-        const val REQUEST_TAKE_PHOTO = 11
-        const val REQUEST_GALLERY = 12
         const val PERMISSION_LOCATION = 13
         const val PERMISSION_CAMERA = 14
         const val PERMISSION_FILES = 15

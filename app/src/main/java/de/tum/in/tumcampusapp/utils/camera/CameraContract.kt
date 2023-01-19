@@ -1,28 +1,25 @@
 package de.tum.`in`.tumcampusapp.utils.camera
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 
-interface CameraContract {
-    interface View {
-        fun openCamera(intent: Intent)
-        fun openGallery(intent: Intent)
-        fun showPermissionRequestDialog(permission: String)
-        fun onImageAdded(path: String)
-        fun onImageRemoved(position: Int)
-    }
-
-    interface Presenter {
+    interface CameraInterface {
         val imageElement: MutableList<String>
-        fun attachView(view: View)
         fun removeImage(path: String)
         fun onImageOptionSelected(option: Int)
         fun onNewImageTaken()
-        fun onNewImageSelected(uri: Uri?)
+        fun onNewImageSelected(result: ActivityResult)
         fun takePicture()
         fun openGallery()
         fun onSaveInstanceState(outState: Bundle)
         fun detachView()
+        fun showImageOptionsDialog()
+        fun init(imageRecyclerView: RecyclerView, fragment: ComponentActivity)
     }
-}

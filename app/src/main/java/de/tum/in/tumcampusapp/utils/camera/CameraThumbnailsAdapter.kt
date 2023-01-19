@@ -87,8 +87,4 @@ class CameraThumbnailsAdapter internal constructor(
             }
         }
     }
-
-    fun getPaths(): List<String>{
-        return paths
-    }
 }

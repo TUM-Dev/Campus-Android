@@ -8,52 +8,70 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
+import android.widget.ImageView
+import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.utils.Utils
 import java.io.File
 import java.io.IOException
 import javax.inject.Inject
 
+
 class CameraPresenter @Inject constructor(
     private val context: Context
-) : CameraContract.Presenter {
+) : CameraInterface {
 
+    private lateinit var parentFragment: ComponentActivity
     private var currentPhotoPath: String? = null
-    private var view: CameraContract.View? = null
     override val imageElement: MutableList<String> = mutableListOf()
 
-    override fun attachView(view: CameraContract.View) {
-        this.view = view
-    }
-
     override fun takePicture() {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         // Create the file where the photo should go
         var photoFile: File? = null
         try {
-            photoFile = ImageUtils.createImageFile(context)
-            currentPhotoPath = photoFile.absolutePath
-        } catch (e: IOException) {
-            Utils.log(e)
-        }
+            try {
+                photoFile = ImageUtils.createImageFile(context)
+                currentPhotoPath = photoFile.absolutePath
+            } catch (e: IOException) {
+                Utils.log(e)
+            }
 
-        if (photoFile == null) {
-            return
-        }
+            if (photoFile == null) {
+                return
+            }
+            val activityLauncher =
+                parentFragment.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                    onNewImageTaken()
+                }
+            val takePictureIntent = getPictureIntent(photoFile)
+            activityLauncher.launch(takePictureIntent)
 
+
+        } catch (e: ActivityNotFoundException) {
+            photoFile?.delete()
+        }
+    }
+
+    private fun getPictureIntent(photoFile: File): Intent {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         val authority = "de.tum.in.tumcampusapp.fileprovider"
         val photoURI = FileProvider.getUriForFile(context, authority, photoFile)
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-        try {
-            view?.openCamera(takePictureIntent)
-        } catch (e: ActivityNotFoundException) {
-            photoFile.delete()
-        }
+        return takePictureIntent
     }
 
     override fun openGallery() {
@@ -61,15 +79,25 @@ class CameraPresenter @Inject constructor(
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
 
-        val chooser = Intent.createChooser(intent, "Select file")
-        view?.openGallery(chooser)
+
+        try {
+
+            val activityLauncher = parentFragment.registerForActivityResult(
+                ActivityResultContracts.StartActivityForResult()
+            ) { result ->
+                onNewImageSelected(result)
+            }
+            activityLauncher.launch(Intent.createChooser(intent, "Select file"))
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(context, R.string.error_unknown, Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun removeImage(path: String) {
         val index = imageElement.indexOf(path)
         imageElement.remove(path)
         File(path).delete()
-        view?.onImageRemoved(index)
+        onImageRemoved(index)
     }
 
     /**
@@ -79,7 +107,19 @@ class CameraPresenter @Inject constructor(
     private fun checkPermission(permission: String): Boolean {
         val permissionCheck = ContextCompat.checkSelfPermission(context, permission)
         if (permissionCheck == PackageManager.PERMISSION_DENIED) {
-            view?.showPermissionRequestDialog(permission)
+            //if (view != null) {
+            //    view!!.getRequestPermissionLauncher().launch(arrayOf(permission))
+                // getActivity(context).register
+                //getActivity(context).
+              //  val mMultipleActivityResultLauncher = applicationContext.registerForActivityResult(
+              //      RequestMultiplePermissions()
+              //  ) { isGranted -> }
+
+         parentFragment.registerForActivityResult(
+                RequestMultiplePermissions()
+            ) { permissions ->
+                processPermissionResult(permissions)
+            }.launch(arrayOf(permission))
             return false
         }
         return true
@@ -97,23 +137,41 @@ class CameraPresenter @Inject constructor(
         }
     }
 
-
     override fun onNewImageTaken() {
         currentPhotoPath?.let {
             ImageUtils.rescaleBitmap(context, it)
             imageElement.add(it)
-            view?.onImageAdded(it)
+            onImageAdded(it)
         }
     }
-    override fun onNewImageSelected(uri: Uri?) {
-        val filePath = ImageUtils.rescaleBitmap(context, uri ?: return) ?: return
+
+    override fun onNewImageSelected(result: ActivityResult) {
+        val filePath = ImageUtils.rescaleBitmap(context, result.data?.data ?: return) ?: return
         imageElement.add(filePath)
-        view?.onImageAdded(filePath)
+        onImageAdded(filePath)
+    }
+
+    override fun showImageOptionsDialog() {
+        val options = arrayOf("Take image", "gallery")
+        val alertDialog = AlertDialog.Builder(parentFragment)
+            .setTitle("Add picture")
+            .setItems(options) { _, index -> onImageOptionSelected(index) }
+            .setNegativeButton("cancel", null)
+            .create()
+        alertDialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
+        alertDialog.show()
     }
 
     override fun detachView() {
         clearPictures()
-        view = null
+    }
+
+    override fun init(imageRecyclerView: RecyclerView, fragment: ComponentActivity) {
+        imageRecyclerView.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+        imageRecyclerView.adapter = thumbnailsAdapter
+        this.parentFragment = fragment
     }
 
     private fun clearPictures() {
@@ -127,7 +185,52 @@ class CameraPresenter @Inject constructor(
         //     outState.putParcelable(CA, imageElement)
     }
 
-    companion object {
-        const val FEEDBACK_IMG_COMPRESSION_QUALITY = 50
+    private var thumbnailsAdapter: CameraThumbnailsAdapter
+
+    init {
+        val thumbnailSize = context.resources.getDimension(R.dimen.thumbnail_size).toInt()
+        thumbnailsAdapter =
+            CameraThumbnailsAdapter(
+                imageElement,
+                { onThumbnailRemoved(it) },
+                thumbnailSize
+            )
+    }
+
+    private fun onThumbnailRemoved(path: String) {
+        val builder = AlertDialog.Builder(context)
+        val view = View.inflate(context, R.layout.picture_dialog, null)
+
+        val imageView =
+            view.findViewById<ImageView>(R.id.feedback_big_image)
+        imageView.setImageURI(Uri.fromFile(File(path)))
+
+        builder.setView(view)
+            .setNegativeButton("cancel", null)
+            .setPositiveButton("Remove image") { _, _ -> removeImage(path) }
+
+        val dialog = builder.create()
+        dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
+        dialog.show()
+    }
+
+    fun onImageAdded(path: String) {
+        thumbnailsAdapter.addImage(path)
+    }
+
+    fun onImageRemoved(position: Int) {
+        thumbnailsAdapter.removeImage(position)
+    }
+
+    fun processPermissionResult(permissions: Map<String, @JvmSuppressWildcards Boolean>) {
+        permissions.entries.forEach {
+            if (it.key == Manifest.permission.READ_EXTERNAL_STORAGE && it.value) {
+                openGallery()
+            } else if (it.key == Manifest.permission.CAMERA && it.value) {
+                takePicture()
+            } else {
+                Log.d("CameraUtils", "Permission Denied")
+            }
+        }
     }
 }

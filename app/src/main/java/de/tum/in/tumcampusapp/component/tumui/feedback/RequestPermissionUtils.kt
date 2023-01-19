@@ -8,13 +8,13 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 
-class RequestPermissionUtils (private val context: Context,view: View){
+object RequestPermissionUtils{
 
     /**
      * @return true if user has given permission before
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public fun checkPermission(permission: String): Boolean {
+    fun checkPermission(permission: String, context: Context,view: View): Boolean {
         val permissionCheck = ContextCompat.checkSelfPermission(context, permission)
 
         if (permissionCheck == PackageManager.PERMISSION_DENIED) {
