@@ -9,12 +9,17 @@ data class NavigationDetails(
     val type: String,
     val typeCommonName: String,
     val geo: Geo,
-    val parentsList: List<String> = listOf(),
+    val parentIds: List<String> = listOf(),
+    val parentsNames: List<String> = listOf(),
     val properties: List<NavigationProperty> = listOf(),
     val availableMaps: List<RoomfinderMap> = listOf()
 ) {
     fun getFormattedParentNames(): String {
-        return parentsList.reduce { acc, parentName -> "$acc \\ $parentName" }
+        return parentsNames.reduce { acc, parentName -> "$acc \\ $parentName" }
+    }
+
+    fun getParentId(): String? {
+        return parentIds.lastOrNull()
     }
 }
 
@@ -26,7 +31,8 @@ fun NavigationDetailsDto.toNavigationDetails(): NavigationDetails {
         type = this.type,
         typeCommonName = this.typeCommonName,
         geo = Geo(this.cords.lat, this.cords.lon),
-        parentsList = this.parentNames,
+        parentIds = this.parentIds.drop(1),
+        parentsNames = this.parentNames,
         properties = this.additionalProperties.propsList
             .map { it.toNavigationProperty() },
         availableMaps = this.maps.roomFinder.available

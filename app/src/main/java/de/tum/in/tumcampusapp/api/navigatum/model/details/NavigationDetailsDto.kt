@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName
 data class NavigationDetailsDto(
     val id: String = "",
     val name: String = "",
+    @SerializedName("parents")
+    val parentIds: List<String> = listOf(),
     @SerializedName("parent_names")
     val parentNames: List<String> = listOf(),
     val type: String = "",

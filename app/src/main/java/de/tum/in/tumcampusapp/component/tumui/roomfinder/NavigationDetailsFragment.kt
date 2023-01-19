@@ -89,11 +89,24 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
         binding.locationName.text = navigationDetails.name
         binding.locationType.text = getCapitalizeType(navigationDetails.typeCommonName)
 
+        setShowParentListener(navigationDetails)
+
         setOpenInOtherAppBtnListener(navigationDetails)
 
         showNavigationDetailsProperties(navigationDetails)
 
         showAvailableMaps(navigationDetails)
+    }
+
+    private fun setShowParentListener(navigationDetails: NavigationDetails) {
+        val parentId = navigationDetails.getParentId()
+        parentId?.let {
+            binding.parentLocations.setOnClickListener {
+                val intent = Intent(requireContext(), NavigationDetailsActivity::class.java)
+                intent.putExtra(NAVIGATION_ENTITY_ID, parentId)
+                startActivity(intent)
+            }
+        }
     }
 
     private fun setOpenInOtherAppBtnListener(navigationDetails: NavigationDetails) {
