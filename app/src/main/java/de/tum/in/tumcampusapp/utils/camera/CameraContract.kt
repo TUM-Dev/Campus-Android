@@ -7,8 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 interface CameraInterface {
     fun init(imageRecyclerView: RecyclerView, parent: ComponentActivity)
     fun requestNewImage()
-  //  fun removeImage(path: String)
     fun onSaveInstanceState(outState: Bundle)
     fun clearImages()
-    fun getImagePaths(): List<String>
+    fun getImagePaths(): Array<String>
 }

@@ -32,7 +32,7 @@ interface FeedbackContract {
         fun onRestoreInstanceState(savedInstanceState: Bundle)
         fun initEmail()
         fun onSendFeedback()
-        fun onConfirmSend()
+        fun onConfirmSend(imagePaths: Array<String>)
         fun listenForLocation()
         fun onSaveInstanceState(outState: Bundle)
         fun detachView()

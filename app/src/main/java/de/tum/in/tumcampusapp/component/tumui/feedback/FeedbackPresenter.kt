@@ -18,7 +18,6 @@ import io.reactivex.disposables.CompositeDisposable
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.File
 import javax.inject.Inject
 
 class FeedbackPresenter @Inject constructor(
@@ -112,7 +111,7 @@ class FeedbackPresenter @Inject constructor(
         }
     }
 
-    override fun onConfirmSend() {
+    override fun onConfirmSend(imagePaths: Array<String>) {
         if (!feedback.includeEmail) {
             feedback.email = null
         }
@@ -151,7 +150,7 @@ class FeedbackPresenter @Inject constructor(
                 if (feedback.imageCount == 0) {
                     view?.onFeedbackSent()
                 } else {
-                    sendImages()
+                    sendImages(imagePaths)
                 }
             }
 
@@ -163,8 +162,7 @@ class FeedbackPresenter @Inject constructor(
         })
     }
 
-    private fun sendImages() {
-        val imagePaths = feedback.picturePaths.toTypedArray()
+    private fun sendImages(imagePaths: Array<String>) {
         sendImagesCalls = tumCabeClient.sendFeedbackImages(feedback, imagePaths)
 
         for (call in sendImagesCalls) {
@@ -204,7 +202,6 @@ class FeedbackPresenter @Inject constructor(
     }
 
     override fun detachView() {
-        clearPictures()
         sendFeedbackCall.cancel()
 
         for (call in sendImagesCalls) {
@@ -215,19 +212,11 @@ class FeedbackPresenter @Inject constructor(
         view = null
     }
 
-    private fun clearPictures() {
-        for (path in feedback.picturePaths) {
-            File(path).delete()
-        }
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(Const.FEEDBACK, feedback)
     }
 
     companion object {
         const val PERMISSION_LOCATION = 13
-        const val PERMISSION_CAMERA = 14
-        const val PERMISSION_FILES = 15
     }
 }

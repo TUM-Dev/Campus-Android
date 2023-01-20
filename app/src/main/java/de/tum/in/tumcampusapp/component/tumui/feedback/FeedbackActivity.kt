@@ -10,7 +10,6 @@ import android.widget.Toast.LENGTH_SHORT
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import com.google.android.gms.location.LocationRequest
 import com.jakewharton.rxbinding3.widget.checkedChanges
 import com.jakewharton.rxbinding3.widget.textChanges
@@ -29,10 +28,10 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     private var progressDialog: AlertDialog? = null
 
     @Inject
-    lateinit var presenter: FeedbackContract.Presenter
+    lateinit var feedbackPresenter: FeedbackContract.Presenter
 
     @Inject
-    lateinit var presenterCamera: CameraInterface
+    lateinit var cameraManager: CameraInterface
 
 
     private lateinit var binding: ActivityFeedbackBinding
@@ -55,26 +54,25 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
             .build()
             .inject(this)
 
-        presenter.attachView(this)
+        feedbackPresenter.attachView(this)
 
         if (savedInstanceState != null) {
-            presenter.onRestoreInstanceState(savedInstanceState)
+            feedbackPresenter.onRestoreInstanceState(savedInstanceState)
         }
 
         initIncludeLocation()
 
         if (savedInstanceState == null) {
-            presenter.initEmail()
+            feedbackPresenter.initEmail()
         }
         initIncludeEmail()
-        binding.addImageButton.setOnClickListener { presenterCamera.requestNewImage() }
-       // (this as Activity).registerActivityLifecycleCallbacks(on)
-        presenterCamera.init(binding.imageRecyclerView,this as ComponentActivity)
+        binding.addImageButton.setOnClickListener { cameraManager.requestNewImage() }
+        cameraManager.init(binding.imageRecyclerView,this as ComponentActivity)
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        presenterCamera.onSaveInstanceState(outState)
+        cameraManager.onSaveInstanceState(outState)
     }
 
     override fun getMessage(): Observable<String> =
@@ -99,16 +97,16 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     }
 
     private fun initIncludeLocation() {
-        binding.includeLocationCheckBox.isChecked = presenter.feedback.includeLocation
+        binding.includeLocationCheckBox.isChecked = feedbackPresenter.feedback.includeLocation
     }
 
     private fun initIncludeEmail() {
-        val feedback = presenter.feedback
+        val feedback = feedbackPresenter.feedback
         val email = feedback.email
         with(binding) {
             includeEmailCheckbox.isChecked = feedback.includeEmail
 
-            if (presenter.lrzId.isEmpty()) {
+            if (feedbackPresenter.lrzId.isEmpty()) {
                 includeEmailCheckbox.text = getString(R.string.feedback_include_email)
                 customEmailInput.setText(email)
             } else {
@@ -122,7 +120,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     }
 
     fun onSendClicked(view: View) {
-        presenter.onSendFeedback()
+        feedbackPresenter.onSendFeedback()
     }
 
     override fun showEmptyMessageError() {
@@ -156,7 +154,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
         ThemedAlertDialogBuilder(this)
             .setMessage(R.string.feedback_sending_error)
             .setIcon(R.drawable.ic_error_outline)
-            .setPositiveButton(R.string.try_again) { _, _ -> presenter.feedback }
+            .setPositiveButton(R.string.try_again) { _, _ -> feedbackPresenter.feedback }
             .setNegativeButton(R.string.cancel, null)
             .show()
     }
@@ -170,13 +168,13 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     override fun showSendConfirmationDialog() {
         ThemedAlertDialogBuilder(this)
             .setMessage(R.string.send_feedback_question)
-            .setPositiveButton(R.string.send) { _, _ -> presenter.onConfirmSend() }
+            .setPositiveButton(R.string.send) { _, _ -> feedbackPresenter.onConfirmSend(cameraManager.getImagePaths()) }
             .setNegativeButton(R.string.cancel, null)
             .show()
     }
 
     override fun onDestroy() {
-        presenterCamera.clearImages()
+        cameraManager.clearImages()
         super.onDestroy()
     }
 }

@@ -16,8 +16,8 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -25,6 +25,7 @@ import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import de.tum.`in`.tumcampusapp.utils.Utils
 import java.io.File
 import java.io.IOException
@@ -71,12 +72,12 @@ class CameraManager @Inject constructor(
             processPermissionResult(permissions)
         }
         this.galleryLauncher = parent.registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
+            StartActivityForResult()
         ) { result ->
             onNewImageSelected(result)
         }
         this.photoLauncher =
-            parent.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            parent.registerForActivityResult(StartActivityForResult()) {
                 onNewImageTaken()
             }
     }
@@ -94,14 +95,14 @@ class CameraManager @Inject constructor(
     }
 
     override fun requestNewImage() {
-        val options = arrayOf("Take image", "Gallery")  // todo move to i18n
-        val alertDialog = AlertDialog.Builder(parent)
-            .setTitle("Add picture")
+        val options = arrayOf(
+            parent.getString(R.string.feedback_take_picture),
+            parent.getString(R.string.gallery)
+        )
+        ThemedAlertDialogBuilder(parent).setTitle(R.string.feedback_add_picture)
             .setItems(options) { _, index -> onImageOptionSelected(index) }
-            .setNegativeButton("cancel", null)
-            .create()
-        alertDialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-        alertDialog.show()
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
     private fun onImageOptionSelected(option: Int) {
@@ -168,22 +169,6 @@ class CameraManager @Inject constructor(
         }
     }
 
-   /* private fun onThumbnailRemoved(path: String) {
-        val builder = AlertDialog.Builder(context)
-        val view = View.inflate(context, R.layout.picture_dialog, null)
-
-        val imageView = view.findViewById<ImageView>(R.id.feedback_big_image)
-        imageView.setImageURI(Uri.fromFile(File(path)))
-
-        builder.setView(view)
-            .setNegativeButton("cancel", null)
-            .setPositiveButton("Remove image") { _, _ -> removeImage(path) }
-
-        val dialog = builder.create()
-        dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-        dialog.show()
-    }*/
-
     private fun removeImage(path: String) {
         val index = imageElement.indexOf(path)
         imageElement.remove(path)
@@ -193,9 +178,11 @@ class CameraManager @Inject constructor(
 
     private fun onNewImageTaken() {
         currentPhotoPath?.let {
-            ImageUtils.rescaleBitmap(context, it)
-            imageElement.add(it)
-            thumbnailsAdapter.addImage(it)
+            if (it != null) {
+                ImageUtils.rescaleBitmap(context, it)
+                imageElement.add(it)
+                thumbnailsAdapter.addImage(it)
+            }
         }
     }
 
@@ -211,8 +198,8 @@ class CameraManager @Inject constructor(
         }
     }
 
-    override fun getImagePaths(): List<String> {
-        return imageElement.toList()
+    override fun getImagePaths(): Array<String> {
+        return imageElement.toTypedArray()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -221,16 +208,16 @@ class CameraManager @Inject constructor(
     }
 
     private fun showThumbnailRemovedDialog(path: String) {
-        val builder = AlertDialog.Builder(context)
-        val view = View.inflate(context, R.layout.picture_dialog, null)
+        val builder = AlertDialog.Builder(parent)
+        val view = View.inflate(parent, R.layout.picture_dialog, null)
 
         val imageView =
             view.findViewById<ImageView>(R.id.feedback_big_image)
         imageView.setImageURI(Uri.fromFile(File(path)))
 
         builder.setView(view)
-            .setNegativeButton("cancel", null)
-            .setPositiveButton("Remove image") { _, _ -> removeImage(path) }
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.feedback_remove_image) { _, _ -> removeImage(path) }
 
         val dialog = builder.create()
         dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
