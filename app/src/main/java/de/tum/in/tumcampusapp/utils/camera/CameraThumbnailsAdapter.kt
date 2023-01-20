@@ -77,13 +77,13 @@ class CameraThumbnailsAdapter internal constructor(
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
         private val imageView = itemView as ImageView
-
         fun bind(path: String, thumbnail: Bitmap?, onRemoveImage: (path: String) -> Unit) {
             imageView.apply {
                 setImageBitmap(thumbnail)
-                setOnClickListener { onRemoveImage(path) }
+                setOnClickListener {
+                    onRemoveImage(path)
+                }
             }
         }
     }

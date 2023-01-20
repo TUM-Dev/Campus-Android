@@ -8,7 +8,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackActivity
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackContract
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.FeedbackPresenter
 import de.tum.`in`.tumcampusapp.utils.camera.CameraInterface
-import de.tum.`in`.tumcampusapp.utils.camera.CameraPresenter
+import de.tum.`in`.tumcampusapp.utils.camera.CameraManager
 
 @Subcomponent(modules = [FeedbackModule::class])
 interface FeedbackComponent {
@@ -31,5 +31,5 @@ interface FeedbackModule {
     @Binds
     fun bindsFeedbackPresenter(impl: FeedbackPresenter): FeedbackContract.Presenter
     @Binds
-    fun bindsCameraPresenter(impl: CameraPresenter): CameraInterface
+    fun bindsCameraPresenter(impl: CameraManager): CameraInterface
 }

@@ -36,6 +36,5 @@ interface FeedbackContract {
         fun listenForLocation()
         fun onSaveInstanceState(outState: Bundle)
         fun detachView()
-       // fun showImageOptionsDialog()
     }
 }

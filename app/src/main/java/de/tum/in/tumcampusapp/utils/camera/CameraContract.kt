@@ -2,17 +2,13 @@ package de.tum.`in`.tumcampusapp.utils.camera
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.result.ActivityResult
 import androidx.recyclerview.widget.RecyclerView
 
 interface CameraInterface {
-    val imageElement: MutableList<String>
-    fun removeImage(path: String)
-    fun onImageOptionSelected(option: Int)
-    fun onNewImageTaken()
-    fun onNewImageSelected(result: ActivityResult)
+    fun init(imageRecyclerView: RecyclerView, parent: ComponentActivity)
+    fun requestNewImage()
+  //  fun removeImage(path: String)
     fun onSaveInstanceState(outState: Bundle)
-    fun detachView()
-    fun showImageOptionsDialog()
-    fun init(imageRecyclerView: RecyclerView, fragment: ComponentActivity)
+    fun clearImages()
+    fun getImagePaths(): List<String>
 }

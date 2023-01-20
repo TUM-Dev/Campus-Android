@@ -67,7 +67,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
             presenter.initEmail()
         }
         initIncludeEmail()
-        binding.addImageButton.setOnClickListener { presenterCamera.showImageOptionsDialog() }
+        binding.addImageButton.setOnClickListener { presenterCamera.requestNewImage() }
        // (this as Activity).registerActivityLifecycleCallbacks(on)
         presenterCamera.init(binding.imageRecyclerView,this as ComponentActivity)
     }
@@ -176,7 +176,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     }
 
     override fun onDestroy() {
-        presenterCamera.detachView()
+        presenterCamera.clearImages()
         super.onDestroy()
     }
 }
