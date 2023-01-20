@@ -15,13 +15,13 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
@@ -30,16 +30,25 @@ import java.io.File
 import java.io.IOException
 import javax.inject.Inject
 
-
+/**
+ * Camera Presenter offers the functionality to select images either in teh gallery or take a new photo with the camera and show them as small thumbnails in a recycler view.
+ *
+ * How to use:
+ *
+ */
 class CameraPresenter @Inject constructor(
     private val context: Context
 ) : CameraInterface {
+
+    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
+    private lateinit var galleryLauncher: ActivityResultLauncher<Intent>
+    private lateinit var photoLauncher: ActivityResultLauncher<Intent>
 
     private lateinit var parentFragment: ComponentActivity
     private var currentPhotoPath: String? = null
     override val imageElement: MutableList<String> = mutableListOf()
 
-    override fun takePicture() {
+    fun takePicture() {
         // Create the file where the photo should go
         var photoFile: File? = null
         try {
@@ -53,12 +62,9 @@ class CameraPresenter @Inject constructor(
             if (photoFile == null) {
                 return
             }
-            val activityLauncher =
-                parentFragment.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                    onNewImageTaken()
-                }
+
             val takePictureIntent = getPictureIntent(photoFile)
-            activityLauncher.launch(takePictureIntent)
+            photoLauncher.launch(takePictureIntent)
 
 
         } catch (e: ActivityNotFoundException) {
@@ -74,20 +80,14 @@ class CameraPresenter @Inject constructor(
         return takePictureIntent
     }
 
-    override fun openGallery() {
+    fun openGallery() {
         val intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
 
 
         try {
-
-            val activityLauncher = parentFragment.registerForActivityResult(
-                ActivityResultContracts.StartActivityForResult()
-            ) { result ->
-                onNewImageSelected(result)
-            }
-            activityLauncher.launch(Intent.createChooser(intent, "Select file"))
+            galleryLauncher.launch(Intent.createChooser(intent, "Select file"))
         } catch (e: ActivityNotFoundException) {
             Toast.makeText(context, R.string.error_unknown, Toast.LENGTH_SHORT).show()
         }
@@ -105,6 +105,8 @@ class CameraPresenter @Inject constructor(
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
     private fun checkPermission(permission: String): Boolean {
+       // takePicture()
+
         val permissionCheck = ContextCompat.checkSelfPermission(context, permission)
         if (permissionCheck == PackageManager.PERMISSION_DENIED) {
             //if (view != null) {
@@ -115,11 +117,7 @@ class CameraPresenter @Inject constructor(
               //      RequestMultiplePermissions()
               //  ) { isGranted -> }
 
-         parentFragment.registerForActivityResult(
-                RequestMultiplePermissions()
-            ) { permissions ->
-                processPermissionResult(permissions)
-            }.launch(arrayOf(permission))
+            permissionLauncher.launch(arrayOf(permission))
             return false
         }
         return true
@@ -152,7 +150,7 @@ class CameraPresenter @Inject constructor(
     }
 
     override fun showImageOptionsDialog() {
-        val options = arrayOf("Take image", "gallery")
+        val options = arrayOf("Take image", "Gallery")  // todo move to i18n
         val alertDialog = AlertDialog.Builder(parentFragment)
             .setTitle("Add picture")
             .setItems(options) { _, index -> onImageOptionSelected(index) }
@@ -172,6 +170,20 @@ class CameraPresenter @Inject constructor(
 
         imageRecyclerView.adapter = thumbnailsAdapter
         this.parentFragment = fragment
+        this.permissionLauncher=parentFragment.registerForActivityResult(
+            RequestMultiplePermissions()
+        ) { permissions ->
+            processPermissionResult(permissions)
+        }
+        this.galleryLauncher = parentFragment.registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            onNewImageSelected(result)
+        }
+        this.photoLauncher =
+            parentFragment.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                onNewImageTaken()
+            }
     }
 
     private fun clearPictures() {
