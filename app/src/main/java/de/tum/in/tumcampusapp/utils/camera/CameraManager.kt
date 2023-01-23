@@ -178,8 +178,7 @@ class CameraManager @Inject constructor(
 
     private fun onNewImageTaken() {
         currentPhotoPath?.let {
-            if (it != null) {
-                ImageUtils.rescaleBitmap(context, it)
+            if (ImageUtils.rescaleBitmap(parent, it)) {
                 imageElement.add(it)
                 thumbnailsAdapter.addImage(it)
             }

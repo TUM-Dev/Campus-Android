@@ -2,7 +2,9 @@ package de.tum.`in`.tumcampusapp.utils.camera
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import de.tum.`in`.tumcampusapp.utils.Const
@@ -24,14 +26,14 @@ object ImageUtils {
     fun createImageFile(context: Context): File {
         // Create an image file name
         val timeStamp = DateTimeFormat.forPattern("yyyyMMdd_HHmmss")
-                .withLocale(Locale.GERMANY)
-                .print(DateTime.now())
+            .withLocale(Locale.GERMANY)
+            .print(DateTime.now())
         val imageFileName = "IMG_" + timeStamp + "_"
         val storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         return File.createTempFile(
-                imageFileName, /* prefix */
-                ".jpg", /* suffix */
-                storageDir /* directory */
+            imageFileName, /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
         )
     }
 
@@ -54,29 +56,41 @@ object ImageUtils {
     /**
      * @param filePath source and destination
      */
-    fun rescaleBitmap(context: Context, filePath: String) {
-        rescaleBitmap(context, Uri.fromFile(File(filePath)), File(filePath))
+    fun rescaleBitmap(context: Context, filePath: String): Boolean {
+        return rescaleBitmap(context, Uri.fromFile(File(filePath)), File(filePath))
     }
 
     /**
      * Scales down the image and writes it to the destination file
      */
-    private fun rescaleBitmap(context: Context, src: Uri, destination: File) {
+    private fun rescaleBitmap(context: Context, src: Uri, destination: File): Boolean {
         try {
+            // can be suppressed since the API version is checked.
+            // @Suppress("DEPRECATION") var bitmap = if (Build.VERSION.SDK_INT >= 29) {
+            //     val source = ImageDecoder.createSource(context.contentResolver, src)
+            //     ImageDecoder.decodeBitmap(source)
+            // } else {
             var bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, src)
-            val out = ByteArrayOutputStream()
-            Utils.log("img before: ${bitmap.width} x ${bitmap.height}")
-            bitmap = getResizedBitmap(bitmap)
-            Utils.log("img after: ${bitmap.width} x ${bitmap.height}")
-            bitmap.compress(Bitmap.CompressFormat.JPEG, Const.FEEDBACK_IMG_COMPRESSION_QUALITY, out)
-            FileOutputStream(destination).apply {
-                write(out.toByteArray())
-                close()
+            // }
+            if (bitmap != null) {
+                val out = ByteArrayOutputStream()
+                bitmap = getResizedBitmap(bitmap)
+                bitmap.compress(
+                    Bitmap.CompressFormat.JPEG,
+                    Const.FEEDBACK_IMG_COMPRESSION_QUALITY,
+                    out
+                )
+                FileOutputStream(destination).apply {
+                    write(out.toByteArray())
+                    close()
+                }
+                out.close()
+                return true
             }
-            out.close()
         } catch (e: IOException) {
             Utils.log(e)
         }
+        return false;
     }
 
     /**
