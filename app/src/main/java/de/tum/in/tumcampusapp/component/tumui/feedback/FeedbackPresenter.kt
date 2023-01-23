@@ -1,11 +1,16 @@
 package de.tum.`in`.tumcampusapp.component.tumui.feedback
 
 
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.M
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.di.LrzId
@@ -45,15 +50,26 @@ class FeedbackPresenter @Inject constructor(
         compositeDisposable += view.getEmail().subscribe { feedback.email = it }
         compositeDisposable += view.getIncludeEmail().subscribe { onIncludeEmailChanged(it) }
         compositeDisposable += view.getIncludeLocation().subscribe { onIncludeLocationChanged(it) }
-        listenForLocation()
+        if (SDK_INT < M || checkLocationPermission()) {
+            listenForLocation()
+        }
     }
 
-    override fun listenForLocation() {
-        // todo add again
-        if (SDK_INT < M/* || PermissionHelper.checkPermission(ACCESS_FINE_LOCATION, context,view )*/) {
-            compositeDisposable += checkNotNull(view).getLocation()
-                .subscribe { feedback.location = it }
+    private fun listenForLocation() {
+        compositeDisposable += checkNotNull(view).getLocation().subscribe { feedback.location = it }
+    }
+
+    /**
+     * @return true if user has given permission before
+     */
+    @RequiresApi(api = M)
+    private fun checkLocationPermission(): Boolean {
+        val permissionCheck = ContextCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION)
+        if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+            view?.showLocationPermissionRequestDialog()
+            return false
         }
+        return true
     }
 
     private fun updateFeedbackTopic(topicButton: Int) {
@@ -212,11 +228,18 @@ class FeedbackPresenter @Inject constructor(
         view = null
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(Const.FEEDBACK, feedback)
+    override fun processLocationPermissionResult(permissions: Map<String, @JvmSuppressWildcards Boolean>) {
+        permissions.entries.forEach {
+            if (it.key == ACCESS_FINE_LOCATION && it.value) {
+                listenForLocation()
+            } else {
+                Log.d("Feedback", "Location Permission Denied")
+
+            }
+        }
     }
 
-    companion object {
-        const val PERMISSION_LOCATION = 13
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putParcelable(Const.FEEDBACK, feedback)
     }
 }

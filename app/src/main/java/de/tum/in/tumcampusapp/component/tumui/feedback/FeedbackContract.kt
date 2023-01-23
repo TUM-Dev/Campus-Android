@@ -23,6 +23,7 @@ interface FeedbackContract {
         fun showProgressDialog()
         fun showSendErrorDialog()
         fun onFeedbackSent()
+        fun showLocationPermissionRequestDialog()
     }
 
     interface Presenter {
@@ -33,7 +34,7 @@ interface FeedbackContract {
         fun initEmail()
         fun onSendFeedback()
         fun onConfirmSend(imagePaths: Array<String>)
-        fun listenForLocation()
+        fun processLocationPermissionResult(permissions: Map<String, Boolean>)
         fun onSaveInstanceState(outState: Bundle)
         fun detachView()
     }

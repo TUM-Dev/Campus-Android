@@ -1,5 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.tumui.feedback
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.location.Location
 import android.os.Bundle
@@ -8,6 +9,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.activity.ComponentActivity
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import com.google.android.gms.location.LocationRequest
@@ -67,7 +69,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
         }
         initIncludeEmail()
         binding.addImageButton.setOnClickListener { cameraManager.requestNewImage() }
-        cameraManager.init(binding.imageRecyclerView,this as ComponentActivity)
+        cameraManager.init(binding.imageRecyclerView, this as ComponentActivity)
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
@@ -168,7 +170,11 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     override fun showSendConfirmationDialog() {
         ThemedAlertDialogBuilder(this)
             .setMessage(R.string.send_feedback_question)
-            .setPositiveButton(R.string.send) { _, _ -> feedbackPresenter.onConfirmSend(cameraManager.getImagePaths()) }
+            .setPositiveButton(R.string.send) { _, _ ->
+                feedbackPresenter.onConfirmSend(
+                    cameraManager.getImagePaths()
+                )
+            }
             .setNegativeButton(R.string.cancel, null)
             .show()
     }
@@ -176,5 +182,15 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     override fun onDestroy() {
         cameraManager.clearImages()
         super.onDestroy()
+    }
+
+    private val permissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        feedbackPresenter.processLocationPermissionResult(permissions)
+    }
+
+    override fun showLocationPermissionRequestDialog() {
+        permissionLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION))
     }
 }
