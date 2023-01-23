@@ -201,11 +201,6 @@ class CameraManager @Inject constructor(
         return imageElement.toTypedArray()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        Log.e("debug", "onSaveInstanceState: called")
-        //outState.putParcelable(CA, imageElement) // todo add again
-    }
-
     private fun showThumbnailRemovedDialog(path: String) {
         val builder = AlertDialog.Builder(parent)
         val view = View.inflate(parent, R.layout.picture_dialog, null)

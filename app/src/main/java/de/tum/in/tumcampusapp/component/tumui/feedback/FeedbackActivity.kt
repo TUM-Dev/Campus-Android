@@ -72,7 +72,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
 
     public override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        cameraManager.onSaveInstanceState(outState)
+        feedbackPresenter.onSaveInstanceState(outState)
     }
 
     override fun getMessage(): Observable<String> =
