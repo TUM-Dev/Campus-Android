@@ -35,9 +35,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
     @Inject
     lateinit var cameraManager: CameraInterface
 
-
     private lateinit var binding: ActivityFeedbackBinding
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

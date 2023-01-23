@@ -1,6 +1,5 @@
 package de.tum.`in`.tumcampusapp.component.tumui.feedback
 
-
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Context
 import android.content.pm.PackageManager
@@ -85,7 +84,6 @@ class FeedbackPresenter @Inject constructor(
         if (includeLocation) {
             listenForLocation()
         }
-
     }
 
     private fun onIncludeEmailChanged(includeEmail: Boolean) {
@@ -234,7 +232,6 @@ class FeedbackPresenter @Inject constructor(
                 listenForLocation()
             } else {
                 Log.d("Feedback", "Location Permission Denied")
-
             }
         }
     }

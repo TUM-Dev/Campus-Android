@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
@@ -32,12 +31,8 @@ import java.io.IOException
 import javax.inject.Inject
 
 /**
- * Camera Presenter offers the functionality to select images either in teh gallery or take a new photo with the camera and show them as small thumbnails in a recycler view.
- *
- * How to use:
- * call init from an activity
- * request a new photo -> thumbnail is displayed in the recyclerview
- *
+ * CameraManager is an Implementation of the cameraInterface and provides the minimal API to manage
+ * the images and thumbnail reyclerView.
  */
 class CameraManager @Inject constructor(
     private val context: Context
@@ -63,7 +58,8 @@ class CameraManager @Inject constructor(
     }
 
     /**
-     * Launchers must be initialized in the onCreate section of the lifecycle
+     * Launchers must be initialized in the onCreate section of the lifecycle.
+     * Will be launched later once they are needed.
      */
     private fun initLaunchers() {
         this.permissionLauncher = parent.registerForActivityResult(
@@ -94,6 +90,10 @@ class CameraManager @Inject constructor(
         }
     }
 
+    /**
+     * Primarily opens the dialog to select whether the image should be taken from the gallery
+     * or the camera. Forwards after one option was selected.
+     */
     override fun requestNewImage() {
         val options = arrayOf(
             parent.getString(R.string.feedback_take_picture),
@@ -150,8 +150,6 @@ class CameraManager @Inject constructor(
             val photoURI = FileProvider.getUriForFile(context, authority, photoFile)
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
             photoLauncher.launch(takePictureIntent)
-
-
         } catch (e: ActivityNotFoundException) {
             photoFile?.delete()
         }

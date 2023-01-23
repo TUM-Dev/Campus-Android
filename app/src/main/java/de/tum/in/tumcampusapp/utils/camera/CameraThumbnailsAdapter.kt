@@ -27,13 +27,13 @@ class CameraThumbnailsAdapter internal constructor(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.camera_thumb, parent, false)
+            .inflate(R.layout.camera_thumb, parent, false)
         return ViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val path = paths[position]
-        if (pathsToThumbnails[path]==null){
+        if (pathsToThumbnails[path] == null) {
             pathsToThumbnails[path] = createThumbnail(path, thumbnailSize)
         }
         holder.bind(path, pathsToThumbnails[path], onRemoveImage)

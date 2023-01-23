@@ -91,7 +91,7 @@ object ImageUtils {
         } catch (e: IOException) {
             Utils.log(e)
         }
-        return false;
+        return false
     }
 
     /**
