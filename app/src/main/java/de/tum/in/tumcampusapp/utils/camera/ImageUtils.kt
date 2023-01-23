@@ -62,16 +62,17 @@ object ImageUtils {
 
     /**
      * Scales down the image and writes it to the destination file
+     * @return true if the bitmap exits
      */
     private fun rescaleBitmap(context: Context, src: Uri, destination: File): Boolean {
         try {
             // can be suppressed since the API version is checked.
-            // @Suppress("DEPRECATION") var bitmap = if (Build.VERSION.SDK_INT >= 29) {
-            //     val source = ImageDecoder.createSource(context.contentResolver, src)
-            //     ImageDecoder.decodeBitmap(source)
-            // } else {
-            var bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, src)
-            // }
+            @Suppress("DEPRECATION") var bitmap = if (Build.VERSION.SDK_INT >= 29) {
+                val source = ImageDecoder.createSource(context.contentResolver, src)
+                ImageDecoder.decodeBitmap(source)
+            } else {
+                MediaStore.Images.Media.getBitmap(context.contentResolver, src)
+            }
             if (bitmap != null) {
                 val out = ByteArrayOutputStream()
                 bitmap = getResizedBitmap(bitmap)
