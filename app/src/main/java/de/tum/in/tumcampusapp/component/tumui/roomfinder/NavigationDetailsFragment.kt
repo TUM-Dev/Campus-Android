@@ -111,7 +111,7 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
     }
 
     private fun setupShareLocationButton(navigationDetails: NavigationDetails) {
-        val url = "https://nav.tum.sexy/view/${navigationDetails.id}"
+        val url = "https://nav.tum.de/view/${navigationDetails.id}"
 
         binding.shareLocationBtn.setOnClickListener {
             val sendIntent = Intent().apply {
