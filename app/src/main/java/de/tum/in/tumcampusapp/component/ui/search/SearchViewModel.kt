@@ -179,7 +179,7 @@ class SearchViewModel @Inject constructor(
 
     fun fetchRecentSearches(context: Context) {
         val recentSearchesDao: RecentsDao = TcaDb.getInstance(context).recentsDao()
-        val recentSearches: List<Recent> = recentSearchesDao.allRecentSearches.reversed() ?: emptyList()
+        val recentSearches: List<Recent> = recentSearchesDao.allRecentSearches.reversed()
         state.value = state.value.copy(
             recentSearches = recentSearches.filter { x -> x.type != STATIONS } // filter for undesirable stations
         )
@@ -188,7 +188,7 @@ class SearchViewModel @Inject constructor(
     fun removeRecentSearch(recent: Recent, context: Context) {
         val recentSearchesDao: RecentsDao = TcaDb.getInstance(context).recentsDao()
         recentSearchesDao.deleteByName(recent.name)
-        val recentSearches: List<Recent> = recentSearchesDao.allRecentSearches.reversed() ?: emptyList()
+        val recentSearches: List<Recent> = recentSearchesDao.allRecentSearches.reversed()
         state.value = state.value.copy(
             recentSearches = recentSearches
         )
@@ -205,7 +205,7 @@ class SearchViewModel @Inject constructor(
     fun saveRecentSearch(recent: Recent, context: Context) {
         val recentSearchesDao: RecentsDao = TcaDb.getInstance(context).recentsDao()
         recentSearchesDao.insert(recent)
-        val recentSearches: List<Recent> = recentSearchesDao.allRecentSearches.reversed() ?: emptyList()
+        val recentSearches: List<Recent> = recentSearchesDao.allRecentSearches.reversed()
         state.value = state.value.copy(
             recentSearches = recentSearches
         )

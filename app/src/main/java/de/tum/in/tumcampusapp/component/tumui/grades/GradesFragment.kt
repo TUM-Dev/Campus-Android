@@ -381,7 +381,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                     val desc = Description()
                     desc.text = context.getString(R.string.grade_percentages)
 
-                    desc.setTextSize(11f)
+                    desc.textSize = 11f
                     desc.setPosition(540F, 50F)
                     description = desc
                     axisRight.disableGridDashedLine()
