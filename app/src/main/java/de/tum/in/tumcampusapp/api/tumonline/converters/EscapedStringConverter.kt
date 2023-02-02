@@ -19,6 +19,7 @@ class EscapedStringConverter : TypeConverter<String> {
         return if (Build.VERSION.SDK_INT >= 24) {
             Html.fromHtml(str, Html.FROM_HTML_MODE_LEGACY).toString()
         } else {
+            @Suppress("DEPRECATION") // SDK version checked
             Html.fromHtml(str).toString()
         }
     }
