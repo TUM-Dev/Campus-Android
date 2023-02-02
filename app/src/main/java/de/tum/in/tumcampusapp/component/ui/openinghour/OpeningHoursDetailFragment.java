@@ -32,18 +32,10 @@ public class OpeningHoursDetailFragment extends Fragment {
     static final String ARG_ITEM_ID = "item_id";
     static final String ARG_ITEM_CONTENT = "item_content";
     static final String TWO_PANE = "two_pane";
-    private static final Pattern COMPILE = Pattern.compile("\\\\n");
+  //  private static final Pattern COMPILE = Pattern.compile("\\\\n");
 
     private int mItemId;
     private String mItemContent;
-
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public OpeningHoursDetailFragment() {
-        // NOP
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
