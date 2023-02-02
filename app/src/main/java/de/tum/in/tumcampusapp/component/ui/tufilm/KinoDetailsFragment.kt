@@ -59,9 +59,9 @@ class KinoDetailsFragment : Fragment() {
         val factory = ViewModelFactory(viewModelProvider)
         kinoViewModel = ViewModelProvider(this, factory).get(KinoDetailsViewModel::class.java)
 
-        kinoViewModel.kino.observe(this, Observer<Kino> { showMovieDetails(it) })
-        kinoViewModel.event.observe(this, Observer<Event> { showEventTicketDetails(it) })
-        kinoViewModel.aggregatedTicketStatus.observe(this, Observer { showTicketCount(it) })
+        kinoViewModel.kino.observe(this) { showMovieDetails(it) }
+        kinoViewModel.event.observe(this) { showEventTicketDetails(it) }
+        kinoViewModel.aggregatedTicketStatus.observe(this) { showTicketCount(it) }
     }
 
     override fun onCreateView(

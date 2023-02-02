@@ -46,8 +46,8 @@ class KinoActivity : ProgressActivity<Void>(R.layout.activity_kino) {
         viewPager = findViewById(R.id.kinoViewPager)
         viewPager.pageMargin = margin
 
-        kinoViewModel.kinos.observe(this, Observer<List<Kino>> { this.showMoviesOrPlaceholder(it) })
-        kinoViewModel.error.observe(this, Observer<Int> { this.showError(it) })
+        kinoViewModel.kinos.observe(this) { this.showMoviesOrPlaceholder(it) }
+        kinoViewModel.error.observe(this) { this.showError(it) }
     }
 
     private fun showMoviesOrPlaceholder(kinos: List<Kino>) {
