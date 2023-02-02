@@ -3,8 +3,6 @@ package de.tum.`in`.tumcampusapp.api.app.model
 import com.google.gson.annotations.SerializedName
 
 /**
- * @param fcmToken can be null/uploaded/invalid
- * @param publicKey can be null/uploaded/verified
  * @param studentId true if uploaded
  * @param employeeId true if uploaded
  * @param externalId true if uploaded

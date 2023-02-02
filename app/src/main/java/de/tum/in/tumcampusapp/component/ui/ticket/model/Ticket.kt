@@ -14,10 +14,10 @@ import org.joda.time.format.DateTimeFormat
  * Ticket
  *
  * @param id ID of ticket_history in DB
- * @param event Event ID
+ * @param eventId Event ID
  * @param code Ticket Code
  * @param ticketTypeId ID of TicketType
- * @param redeemed
+ * @param redemption
  */
 @Entity(tableName = "tickets")
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)

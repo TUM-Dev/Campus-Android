@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
@@ -41,12 +42,13 @@ public class OpeningHoursDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        assert getArguments() != null;
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             mItemId = getArguments().getInt(ARG_ITEM_ID);
             mItemContent = getArguments().getString(ARG_ITEM_CONTENT);
         }
         if (getArguments().containsKey(TWO_PANE) && !getArguments().getBoolean(TWO_PANE)) {
-            getActivity().setTitle(mItemContent);
+            requireActivity().setTitle(mItemContent);
         }
     }
 
@@ -55,7 +57,7 @@ public class OpeningHoursDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_item_detail, container, false);
 
         // click on category in list
-        LocationDao dao = TcaDb.Companion.getInstance(getActivity())
+        LocationDao dao = TcaDb.Companion.getInstance(requireActivity())
                                          .locationDao();
         String[] categories = {"library", "info", "cafeteria_gar", "cafeteria_grh", "cafeteria", "cafeteria_pas", "cafeteria_wst"};
         List<Location> locations = dao.getAllOfCategory(categories[mItemId]);
