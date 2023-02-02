@@ -2,6 +2,7 @@ package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
 import android.app.Activity
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -14,22 +15,16 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.Toast
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.RequestLimitReachedException
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CreateEventResponse
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventSeriesMapping
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.RepeatHelper
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.*
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.databinding.ActivityCreateEventBinding
 import de.tum.`in`.tumcampusapp.utils.Const
-import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
-import de.tum.`in`.tumcampusapp.utils.ThemedDatePickerDialog
-import de.tum.`in`.tumcampusapp.utils.ThemedTimePickerDialog
 import de.tum.`in`.tumcampusapp.utils.Utils
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
@@ -174,11 +169,13 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
             }
         }
 
-        binding.eventRepeatsTimes.doAfterTextChanged {
-            if (it.toString() != "") {
-                repeatHelper.times = it.toString().toInt()
-            } else {
-                repeatHelper.times = 0
+        binding.eventRepeatsTimes.textChangedListener {
+            afterTextChanged {
+                if (it.toString() != "") {
+                    repeatHelper.times = it.toString().toInt()
+                } else {
+                    repeatHelper.times = 0
+                }
             }
         }
 
@@ -224,9 +221,8 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         val eventTitle = extras?.getSerializable(Const.EVENT_TITLE) as String?
         val startTime = extras?.getSerializable(Const.EVENT_START) as DateTime?
 
-        if (eventNr == null || eventTitle == null || startTime == null) {
+        if (eventNr == null || eventTitle == null || startTime == null)
             return
-        }
 
         val calendarItem = CalendarItem(
             nr = eventNr,
@@ -303,7 +299,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         // starts counting months at 1.
         binding.eventStartDateView.setOnClickListener {
             hideKeyboard()
-            ThemedDatePickerDialog(this, { _, year, month, dayOfMonth ->
+            DatePickerDialog(this, { _, year, month, dayOfMonth ->
                 start = start.withDate(year, month + 1, dayOfMonth)
                 if (end.isBefore(start)) {
                     end = end.withDate(year, month + 1, dayOfMonth)
@@ -313,39 +309,31 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         }
         binding.eventEndDateView.setOnClickListener {
             hideKeyboard()
-            ThemedDatePickerDialog(this, { _, year, month, dayOfMonth ->
+            DatePickerDialog(this, { _, year, month, dayOfMonth ->
                 end = end.withDate(year, month + 1, dayOfMonth)
                 updateDateViews()
             }, start.year, start.monthOfYear - 1, start.dayOfMonth).show()
         }
 
         // TIME
-        binding.eventStartTimeView.setOnClickListener {
+        binding.eventStartTimeView.setOnClickListener { _ ->
             hideKeyboard()
-            ThemedTimePickerDialog(
-                this,
-                { timePicker, hour, minute ->
-                    timePicker.layoutParams = LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                    )
-                    val eventLength = end.millis - start.millis
-                    start = start.withHourOfDay(hour).withMinuteOfHour(minute)
-                    end = end.withMillis(start.millis + eventLength)
-                    updateTimeViews()
-                },
-                start.hourOfDay,
-                start.minuteOfHour
-            ).show()
+            TimePickerDialog(this, { _, hour, minute ->
+                val eventLength = end.millis - start.millis
+                start = start.withHourOfDay(hour)
+                    .withMinuteOfHour(minute)
+                end = end.withMillis(start.millis + eventLength)
+                updateTimeViews()
+            }, start.hourOfDay, start.minuteOfHour, true).show()
         }
 
-        binding.eventEndTimeView.setOnClickListener {
+        binding.eventEndTimeView.setOnClickListener { _ ->
             hideKeyboard()
-            ThemedTimePickerDialog(this, { _, hour, minute ->
+            TimePickerDialog(this, { _, hour, minute ->
                 end = end.withHourOfDay(hour)
                     .withMinuteOfHour(minute)
                 updateTimeViews()
-            }, end.hourOfDay, end.minuteOfHour).show()
+            }, end.hourOfDay, end.minuteOfHour, true).show()
         }
     }
 
@@ -473,19 +461,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         // event ends after n times
         if (repeatHelper.isRepeatingNTimes()) {
             for (i in 1 until repeatHelper.times) {
-                events.add(
-                    CalendarItem(
-                        "",
-                        "",
-                        "",
-                        baseEvent.title,
-                        baseEvent.description,
-                        baseEvent.dtstart.plusWeeks(i),
-                        baseEvent.dtend.plusWeeks(i),
-                        "",
-                        false
-                    )
-                )
+                events.add(CalendarItem("", "", "", baseEvent.title, baseEvent.description, baseEvent.dtstart.plusWeeks(i), baseEvent.dtend.plusWeeks(i), "", false))
             }
             // event ends after "last" date
         } else {
@@ -541,7 +517,6 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         finish()
     }
 
-    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         hideKeyboard()
 

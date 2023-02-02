@@ -30,9 +30,9 @@ import java.util.*
 class DepartureView
 @JvmOverloads constructor(context: Context, private val useCompactView: Boolean = true) :
     LinearLayout(context), LifecycleObserver, DefaultLifecycleObserver {
-    private val symbolView: TextView by lazy { findViewById<TextView>(R.id.line_symbol) }
-    private val lineView: TextView by lazy { findViewById<TextView>(R.id.nameTextView) }
-    private val timeSwitcher: TextSwitcher by lazy { findViewById<TextSwitcher>(R.id.line_switcher) }
+    private val symbolView: TextView by lazy { findViewById(R.id.line_symbol) }
+    private val lineView: TextView by lazy { findViewById(R.id.nameTextView) }
+    private val timeSwitcher: TextSwitcher by lazy { findViewById(R.id.line_switcher) }
     private val countdownHandler: Handler
     private var valueAnimator: ValueAnimator? = null
     private var departureTime: DateTime? = null

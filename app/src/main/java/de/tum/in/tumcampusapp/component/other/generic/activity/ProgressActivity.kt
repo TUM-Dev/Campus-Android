@@ -54,35 +54,35 @@ abstract class ProgressActivity<T>(
     }
 
     protected val swipeRefreshLayout: SwipeRefreshLayout? by lazy {
-        findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
+        findViewById(R.id.swipeRefreshLayout)
     }
 
     private val errorLayoutsContainer: FrameLayout by lazy {
-        findViewById<FrameLayout>(R.id.errors_layout)
+        findViewById(R.id.errors_layout)
     }
 
     private val errorLayout: LinearLayout by lazy {
-        findViewById<LinearLayout>(R.id.layout_error)
+        findViewById(R.id.layout_error)
     }
 
     private val errorIconImageView: ImageView by lazy {
-        findViewById<ImageView>(R.id.iconImageView)
+        findViewById(R.id.iconImageView)
     }
 
     private val errorHeaderTextView: TextView by lazy {
-        errorLayout.findViewById<TextView>(R.id.headerTextView)
+        errorLayout.findViewById(R.id.headerTextView)
     }
 
     private val errorMessageTextView: TextView by lazy {
-        errorLayout.findViewById<TextView>(R.id.messageTextView)
+        errorLayout.findViewById(R.id.messageTextView)
     }
 
     private val errorButton: MaterialButton by lazy {
-        errorLayout.findViewById<MaterialButton>(R.id.button)
+        errorLayout.findViewById(R.id.button)
     }
 
     private val progressLayout: FrameLayout by lazy {
-        findViewById<FrameLayout>(R.id.layout_progress)
+        findViewById(R.id.layout_progress)
     }
 
     private var registered: Boolean = false
