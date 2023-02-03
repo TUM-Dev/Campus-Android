@@ -83,7 +83,7 @@
             android:layout_marginStart="@dimen/material_default_padding"
             android:layout_marginTop="@dimen/material_small_padding"
             android:src="@drawable/tickets"
-            android:tint="@color/color_primary"
+            app:tint="@color/color_primary"
             app:layout_constraintStart_toEndOf="@id/news_img"
             app:layout_constraintTop_toBottomOf="@id/news_src_date" />
 

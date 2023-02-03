@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.tufilm
 
 import android.os.Bundle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import de.tum.`in`.tumcampusapp.R
