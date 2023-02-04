@@ -91,6 +91,7 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
 
         setShowParentListener(navigationDetails)
 
+        setupShareLocationButton(navigationDetails)
         setOpenInOtherAppBtnListener(navigationDetails)
 
         showNavigationDetailsProperties(navigationDetails)
@@ -106,6 +107,21 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
                 intent.putExtra(NAVIGATION_ENTITY_ID, parentId)
                 startActivity(intent)
             }
+        }
+    }
+
+    private fun setupShareLocationButton(navigationDetails: NavigationDetails) {
+        val url = "https://nav.tum.de/view/${navigationDetails.id}"
+
+        binding.shareLocationBtn.setOnClickListener {
+            val sendIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, url)
+                type = "text/plain"
+            }
+
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(shareIntent)
         }
     }
 
