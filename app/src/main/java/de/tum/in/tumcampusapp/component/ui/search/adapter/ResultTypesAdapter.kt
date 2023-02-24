@@ -3,19 +3,17 @@ package de.tum.`in`.tumcampusapp.component.ui.search.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.chip.Chip
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.search.SearchResultType
 import de.tum.`in`.tumcampusapp.utils.margin
-import org.jetbrains.anko.textColorResource
 
 data class ResultTypeData(
     val type: SearchResultType,
-    val selectedType: SearchResultType
+    val selected: Boolean
 )
 
 class ResultTypesAdapter(
@@ -27,13 +25,12 @@ class ResultTypesAdapter(
         private val onClick: (ResultTypeData) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
 
-        private val layout: FrameLayout = this.itemView.findViewById(R.id.typeCtn)
-        private val typeTextView: TextView = this.itemView.findViewById(R.id.typeTextView)
+        private val chip: Chip = itemView.findViewById(R.id.chip)
 
         private var currentType: ResultTypeData? = null
 
         init {
-            itemView.setOnClickListener {
+            chip.setOnClickListener {
                 currentType?.let {
                     onClick(it)
                 }
@@ -42,34 +39,38 @@ class ResultTypesAdapter(
 
         fun bind(typeData: ResultTypeData) {
             currentType = typeData
-            val text = when (typeData.type) {
+            val textId = when (typeData.type) {
                 SearchResultType.ALL -> R.string.all_results
                 SearchResultType.PERSON -> R.string.people
                 SearchResultType.LECTURE -> R.string.lectures
                 SearchResultType.NAVIGA_ROOM -> R.string.rooms_id
                 SearchResultType.BUILDING -> R.string.buildings
             }
-            typeTextView.setText(text)
 
-            if (typeData.type == typeData.selectedType) {
-                typeTextView.textColorResource = R.color.white
-                layout.setBackgroundResource(R.drawable.search_result_selected_type_background)
-            } else {
-                typeTextView.textColorResource = R.color.text_primary
-                layout.setBackgroundResource(R.drawable.search_result_type_background)
-            }
+            chip.text = chip.context.resources.getText(textId)
+            setIsSelected(typeData.selected)
 
             if (typeData.type == SearchResultType.ALL) {
-                layout.margin(left = 16F)
+                itemView.margin(left = 16F)
             } else {
-                layout.margin(left = 8F)
+                itemView.margin(left = 8F)
+            }
+        }
+
+        fun setIsSelected(selected: Boolean) {
+            if (selected) {
+                chip.isChecked = true
+                chip.isCheckable = false
+            } else {
+                chip.isCheckable = true
+                chip.isChecked = false
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ResultTypeViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.search_result_type, parent, false)
+            .inflate(R.layout.search_result_chip, parent, false)
         return ResultTypeViewHolder(view, onClick)
     }
 
@@ -77,14 +78,26 @@ class ResultTypesAdapter(
         val resultType = getItem(position)
         holder.bind(resultType)
     }
+
+    override fun onBindViewHolder(holder: ResultTypeViewHolder, position: Int, payloads: MutableList<Any>) {
+        if (payloads.isEmpty()) {
+            super.onBindViewHolder(holder, position, payloads)
+        } else {
+            holder.setIsSelected(payloads[0] as Boolean)
+        }
+    }
 }
 
 object ResultTypeCallback : DiffUtil.ItemCallback<ResultTypeData>() {
+    override fun getChangePayload(oldItem: ResultTypeData, newItem: ResultTypeData): Any {
+        return newItem.selected
+    }
+
     override fun areItemsTheSame(oldItem: ResultTypeData, newItem: ResultTypeData): Boolean {
-        return oldItem.selectedType == newItem.selectedType && oldItem.type == newItem.type
+        return oldItem.type == newItem.type
     }
 
     override fun areContentsTheSame(oldItem: ResultTypeData, newItem: ResultTypeData): Boolean {
-        return oldItem.selectedType == newItem.selectedType && oldItem.type == newItem.type
+        return oldItem.selected == newItem.selected && oldItem.type == newItem.type
     }
 }
