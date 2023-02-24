@@ -23,6 +23,7 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.sync.SyncManager
 import org.joda.time.DateTime
+import org.joda.time.LocalDate
 import java.util.*
 
 /**
@@ -59,6 +60,24 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
 
     fun getFromDbNotCancelledBetweenDates(begin: DateTime, end: DateTime) =
             applyEventColors(calendarDao.getAllNotCancelledBetweenDates(begin, end))
+
+    fun getEventsForMonth(date: LocalDate): Map<String, List<CalendarItem>> {
+        val startOfMonth = date.withDayOfMonth(1)
+        val endOfMonth = date.withDayOfMonth(date.dayOfMonth().maximumValue)
+        val events = getFromDbBetweenDates(startOfMonth.toDateTimeAtCurrentTime(), endOfMonth.toDateTimeAtCurrentTime())
+        val eventMap = mutableMapOf<String, MutableList<CalendarItem>>()
+        for (event in events) {
+            val day = event.dtstart.toLocalDate().dayOfMonth.toString()
+            if (!eventMap.containsKey(day)) {
+                eventMap[day] = mutableListOf(event)
+            } else {
+                eventMap[day]?.add(event)
+            }
+        }
+        return eventMap
+    }
+
+
 
     private fun applyEventColors(calendarItems: List<CalendarItem>): List<CalendarItem> {
         calendarItems.forEach {

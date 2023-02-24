@@ -49,27 +49,15 @@
     <string name="custom_color_amber">Bernstein</string>
     <string name="custom_color_orange">Orange</string>
     <string name="apply_to_all_occurrences">Auf alle Vorkommen anwenden</string>
-    <string name="material_calendar_monday">M</string>
-    <string name="material_calendar_tuesday">D</string>
-    <string name="material_calendar_wednesday">M</string>
-    <string name="material_calendar_thursday">D</string>
-    <string name="material_calendar_friday">F</string>
-    <string name="material_calendar_saturday">S</string>
-    <string name="material_calendar_sunday">S</string>
-    <array name="material_calendar_months_array">
-        <item>Januar</item>
-        <item>Februar</item>
-        <item>März</item>
-        <item>April</item>
-        <item>Mai</item>
-        <item>Juni</item>
-        <item>Juli</item>
-        <item>August</item>
-        <item>September</item>
-        <item>Oktober</item>
-        <item>November</item>
-        <item>Dezember</item>
-    </array>
+    <string name="month_view_monday">MO</string>
+    <string name="month_view_tuesday">DI</string>
+    <string name="month_view_wednesday">MI</string>
+    <string name="month_view_thursday">DO</string>
+    <string name="month_view_friday">FR</string>
+    <string name="month_view_saturday">SA</string>
+    <string name="month_view_sunday">SO</string>
+    <string name="month_view_back_button_description">Gehe zum vorherigen Monat</string>
+    <string name="month_view_forward_button_description">Gehe zum nächsten Monat</string>
 
     <!-- Roomfinder -->
     <string name="no_map_available">Keine Karte verfügbar</string>
