@@ -9,13 +9,13 @@ import android.os.Bundle
 import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import android.provider.CalendarContract
 import android.text.format.DateUtils
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
+import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.alamkanak.weekview.DateTimeInterpreter
 import com.alamkanak.weekview.WeekViewDisplayable
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
@@ -37,8 +37,13 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
+import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormat
+import java.time.YearMonth
+import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalAdjusters
 import java.util.*
+
 
 class CalendarFragment :
     FragmentForAccessingTumOnline<EventsResponse>(
@@ -62,7 +67,7 @@ class CalendarFragment :
     }
 
     private var isWeekMode = false
-    private var isMonthMode = true
+    private var isMonthMode = false
 
     private var isFetched: Boolean = false
     private var menuItemSwitchView: MenuItem? = null
@@ -73,6 +78,11 @@ class CalendarFragment :
     private var detailsFragment: CalendarDetailsFragment? = null
 
     private val binding by viewBinding(FragmentCalendarBinding::bind)
+
+    private lateinit var monthYearText: TextView
+    private lateinit var monthRecyclerView: RecyclerView
+    private var selectedDate: LocalDate = LocalDate.now()
+    private lateinit var monthViewAdapter: MonthViewAdapter
 
     override val swipeRefreshLayout get() = binding.swipeRefreshLayout
     override val layoutAllErrorsBinding get() = binding.layoutAllErrors
@@ -113,6 +123,16 @@ class CalendarFragment :
 
         disableRefresh()
 
+        monthYearText = binding.layoutMonth.monthYearText
+        monthRecyclerView = binding.layoutMonth.monthGrid
+        setMonthView()
+        binding.layoutMonth.monthBackButton.setOnClickListener {
+            previousMonthAction()
+        }
+        binding.layoutMonth.monthForwardButton.setOnClickListener {
+            nextMonthAction()
+        }
+
         // Tracks whether the user has used the calendar module before. This is used in determining when to prompt for a
         // Google Play store review
         Utils.setSetting(requireContext(), Const.HAS_VISITED_CALENDAR, true)
@@ -121,7 +141,7 @@ class CalendarFragment :
     override fun onStart() {
         super.onStart()
         refreshWeekView()
-
+        setMonthView()
         // In case the timezone changes when reopening the calendar, while the app is still open, this ensures
         // that the lectures are still adjusted to the new timezone
         loadEvents(CacheControl.BYPASS_CACHE)
@@ -530,6 +550,59 @@ class CalendarFragment :
             }
             .setNegativeButton(getString(R.string.no), null)
             .show()
+    }
+
+    private fun setMonthView() {
+        monthYearText.text = monthYearFromDate(selectedDate)
+        val daysInMonth: ArrayList<String> = daysInMonthArray(selectedDate)
+
+        val eventMap = calendarController.getEventsForMonth(selectedDate)
+
+        if (!::monthViewAdapter.isInitialized) {
+            monthViewAdapter = MonthViewAdapter(daysInMonth, eventMap)
+            monthRecyclerView.adapter = monthViewAdapter
+        } else {
+            monthViewAdapter.updateData(daysInMonth, eventMap)
+        }
+
+        val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(requireContext(), 7)
+        monthRecyclerView.layoutManager = layoutManager
+    }
+
+    private fun daysInMonthArray(date: LocalDate): ArrayList<String> {
+        val daysInMonthArray: ArrayList<String> = ArrayList()
+        val yearMonth: YearMonth = YearMonth.of(date.year, date.monthOfYear)
+        val daysInMonth: Int = yearMonth.lengthOfMonth()
+        val firstOfMonth: LocalDate = date.withDayOfMonth(1)
+        var dayOfWeek: Int = firstOfMonth.dayOfWeek().get()
+        if (dayOfWeek == 7) {
+            dayOfWeek = 0
+        }
+        for (i in 1..42) {
+            if (i <= dayOfWeek || i > daysInMonth + dayOfWeek) {
+                daysInMonthArray.add("")
+            } else {
+                daysInMonthArray.add((i - dayOfWeek).toString())
+            }
+        }
+        return daysInMonthArray
+    }
+
+
+    private fun monthYearFromDate(date: LocalDate): String {
+        val formatter = DateTimeFormat.forPattern("MMMM yyyy")
+        return formatter.print(date.withDayOfMonth(1))
+    }
+
+
+    private fun previousMonthAction() {
+        selectedDate = selectedDate.minusMonths(1)
+        setMonthView()
+    }
+
+    private fun nextMonthAction() {
+        selectedDate = selectedDate.plusMonths(1)
+        setMonthView()
     }
 
     override fun onDestroyView() {

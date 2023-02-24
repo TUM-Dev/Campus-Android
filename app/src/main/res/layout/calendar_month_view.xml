@@ -1,19 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <com.applandeo.materialcalendarview.CalendarView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/calendarView"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/monthBackButton"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_gravity="center_vertical|end"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:src="@drawable/ic_arrow_back"
+            style="?android:attr/borderlessButtonStyle"
+            app:tint="@color/color_primary"
+            android:contentDescription="@string/month_view_back_button_description"/>
+
+        <TextView
+            android:id="@+id/monthYearText"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="January 2023"
+            android:textAlignment="center"
+            android:textColor="@color/color_primary"
+            android:textSize="20sp" />
+
+        <ImageButton
+            android:id="@+id/monthForwardButton"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:src="@drawable/ic_arrow_forward"
+            style="?android:attr/borderlessButtonStyle"
+            app:tint="@color/color_primary"
+            android:contentDescription="@string/month_view_forward_button_description"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/month_view_monday"
+            android:textColor="@color/color_primary"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/month_view_tuesday"
+            android:textColor="@color/color_primary"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/month_view_wednesday"
+            android:textColor="@color/color_primary"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/month_view_thursday"
+            android:textColor="@color/color_primary"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/month_view_friday"
+            android:textColor="@color/color_primary"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/month_view_saturday"
+            android:textColor="@color/color_primary"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/month_view_sunday"
+            android:textColor="@color/color_primary"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="4dp"
+        android:background="@color/color_primary"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/month_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:headerColor="@color/tum_blue"
-        app:pagesColor="@color/default_window_background"
-        app:todayLabelColor="@color/tum_blue"
-        app:daysLabelsColor="@color/text_primary"
-        app:abbreviationsBarColor="@color/secondary_window_background"
-        app:abbreviationsLabelsColor="@color/text_primary" />
+        android:layout_marginTop="10dp"/>
 
-</FrameLayout>
+</LinearLayout>
