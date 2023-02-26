@@ -39,7 +39,7 @@ android {
         minSdkVersion 26
         targetSdkVersion 32
         versionCode 587
-        versionName "4.1-dev"
+        versionName "4.2-dev"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
