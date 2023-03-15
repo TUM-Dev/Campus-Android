@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
@@ -312,10 +313,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
                 updateDateViews()
             }, start.year, start.monthOfYear - 1, start.dayOfMonth)
 
-            datePickerDialogStart.setOnShowListener {
-                datePickerDialogStart.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getColor(R.color.text_primary))
-                datePickerDialogStart.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getColor(R.color.text_primary))
-            }
+            setDialogButtonColors(datePickerDialogStart)
             datePickerDialogStart.show()
         }
         binding.eventEndDateView.setOnClickListener {
@@ -325,10 +323,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
                 updateDateViews()
             }, start.year, start.monthOfYear - 1, start.dayOfMonth)
 
-            datePickerDialogEnd.setOnShowListener {
-                datePickerDialogEnd.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getColor(R.color.text_primary))
-                datePickerDialogEnd.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getColor(R.color.text_primary))
-            }
+            setDialogButtonColors(datePickerDialogEnd)
             datePickerDialogEnd.show()
         }
 
@@ -345,10 +340,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
                 updateTimeViews()
             }, start.hourOfDay, start.minuteOfHour, true)
 
-            timePickerDialogStart.setOnShowListener {
-                timePickerDialogStart.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getColor(R.color.text_primary))
-                timePickerDialogStart.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getColor(R.color.text_primary))
-            }
+            setDialogButtonColors(timePickerDialogStart)
             timePickerDialogStart.show()
         }
 
@@ -360,11 +352,17 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
                 updateTimeViews()
             }, end.hourOfDay, end.minuteOfHour, true)
 
-            timePickerDialogEnd.setOnShowListener {
-                timePickerDialogEnd.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getColor(R.color.text_primary))
-                timePickerDialogEnd.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getColor(R.color.text_primary))
-            }
+            setDialogButtonColors(timePickerDialogEnd)
             timePickerDialogEnd.show()
+        }
+    }
+
+    private fun setDialogButtonColors(dialog: AlertDialog) {
+        dialog.setOnShowListener {
+            val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
+            val negativeButton = dialog.getButton(DialogInterface.BUTTON_NEGATIVE)
+            positiveButton.setTextColor(getColor(R.color.text_primary))
+            negativeButton.setTextColor(getColor(R.color.text_primary))
         }
     }
 
