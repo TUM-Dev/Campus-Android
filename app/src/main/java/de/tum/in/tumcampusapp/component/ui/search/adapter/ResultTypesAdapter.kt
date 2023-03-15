@@ -72,6 +72,8 @@ class ResultTypesAdapter(
         holder.bind(resultType)
     }
 
+    // When a payload (indicating a new selection state for an existing view) is given, the old view can be updated and
+    // reused instead of creating a new one. This eliminates flicker.
     override fun onBindViewHolder(holder: ResultTypeViewHolder, position: Int, payloads: MutableList<Any>) {
         if (payloads.isEmpty()) {
             super.onBindViewHolder(holder, position, payloads)
@@ -82,6 +84,8 @@ class ResultTypesAdapter(
 }
 
 object ResultTypeCallback : DiffUtil.ItemCallback<ResultTypeData>() {
+    // On submitting a new list, when old and new items of the same name differ only in their
+    // "selected"-state, the new state is added as a payload, indicating a possible update.
     override fun getChangePayload(oldItem: ResultTypeData, newItem: ResultTypeData): Any {
         return newItem.selected
     }
