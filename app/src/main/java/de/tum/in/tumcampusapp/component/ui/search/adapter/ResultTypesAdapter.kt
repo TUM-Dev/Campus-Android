@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.search.SearchResultType
-import de.tum.`in`.tumcampusapp.utils.margin
 
 data class ResultTypeData(
     val type: SearchResultType,
@@ -49,12 +48,6 @@ class ResultTypesAdapter(
 
             chip.text = chip.context.resources.getText(textId)
             setIsSelected(typeData.selected)
-
-            if (typeData.type == SearchResultType.ALL) {
-                itemView.margin(left = 16F)
-            } else {
-                itemView.margin(left = 8F)
-            }
         }
 
         fun setIsSelected(selected: Boolean) {
