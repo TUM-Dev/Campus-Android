@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
@@ -303,41 +304,67 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         // starts counting months at 1.
         binding.eventStartDateView.setOnClickListener {
             hideKeyboard()
-            DatePickerDialog(this, { _, year, month, dayOfMonth ->
+            val datePickerDialogStart = DatePickerDialog(this, { _, year, month, dayOfMonth ->
                 start = start.withDate(year, month + 1, dayOfMonth)
                 if (end.isBefore(start)) {
                     end = end.withDate(year, month + 1, dayOfMonth)
                 }
                 updateDateViews()
-            }, start.year, start.monthOfYear - 1, start.dayOfMonth).show()
+            }, start.year, start.monthOfYear - 1, start.dayOfMonth)
+
+            datePickerDialogStart.setOnShowListener {
+                datePickerDialogStart.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getColor(R.color.text_primary))
+                datePickerDialogStart.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getColor(R.color.text_primary))
+            }
+            datePickerDialogStart.show()
         }
         binding.eventEndDateView.setOnClickListener {
             hideKeyboard()
-            DatePickerDialog(this, { _, year, month, dayOfMonth ->
+            val datePickerDialogEnd = DatePickerDialog(this, { _, year, month, dayOfMonth ->
                 end = end.withDate(year, month + 1, dayOfMonth)
                 updateDateViews()
-            }, start.year, start.monthOfYear - 1, start.dayOfMonth).show()
+            }, start.year, start.monthOfYear - 1, start.dayOfMonth)
+
+            datePickerDialogEnd.setOnShowListener {
+                datePickerDialogEnd.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getColor(R.color.text_primary))
+                datePickerDialogEnd.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getColor(R.color.text_primary))
+            }
+            datePickerDialogEnd.show()
         }
 
         // TIME
         binding.eventStartTimeView.setOnClickListener { view ->
             hideKeyboard()
-            TimePickerDialog(this, { timePicker, hour, minute ->
+            val timePickerDialogStart = TimePickerDialog(this, { timePicker, hour, minute ->
+                timePicker.layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                 val eventLength = end.millis - start.millis
                 start = start.withHourOfDay(hour)
                     .withMinuteOfHour(minute)
                 end = end.withMillis(start.millis + eventLength)
                 updateTimeViews()
-            }, start.hourOfDay, start.minuteOfHour, true).show()
+            }, start.hourOfDay, start.minuteOfHour, true)
+
+            timePickerDialogStart.setOnShowListener {
+                timePickerDialogStart.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getColor(R.color.text_primary))
+                timePickerDialogStart.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getColor(R.color.text_primary))
+            }
+            timePickerDialogStart.show()
         }
 
         binding.eventEndTimeView.setOnClickListener { view ->
             hideKeyboard()
-            TimePickerDialog(this, { timePicker, hour, minute ->
+            val timePickerDialogEnd = TimePickerDialog(this, { timePicker, hour, minute ->
                 end = end.withHourOfDay(hour)
                     .withMinuteOfHour(minute)
                 updateTimeViews()
-            }, end.hourOfDay, end.minuteOfHour, true).show()
+            }, end.hourOfDay, end.minuteOfHour, true)
+
+            timePickerDialogEnd.setOnShowListener {
+                timePickerDialogEnd.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getColor(R.color.text_primary))
+                timePickerDialogEnd.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getColor(R.color.text_primary))
+            }
+            timePickerDialogEnd.show()
         }
     }
 
