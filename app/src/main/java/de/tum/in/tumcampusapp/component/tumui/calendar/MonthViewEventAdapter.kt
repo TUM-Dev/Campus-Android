@@ -1,5 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +17,8 @@ class MonthViewEventAdapter(private val events: List<CalendarItem>) : RecyclerVi
     override fun onBindViewHolder(holder: MonthViewEventViewHolder, position: Int) {
         val event = events[position]
         holder.title.text = event.title
-        holder.title.setBackgroundColor(event.color!!)
+        val background = holder.title.background as GradientDrawable
+        background.setColor(event.color!!)
     }
 
     override fun getItemCount(): Int {

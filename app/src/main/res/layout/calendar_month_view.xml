@@ -14,7 +14,7 @@
         <ImageButton
             android:id="@+id/monthBackButton"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
+            android:layout_height="30dp"
             android:layout_gravity="center_vertical|end"
             android:layout_weight="1"
             android:padding="8dp"
@@ -26,7 +26,7 @@
         <TextView
             android:id="@+id/monthYearText"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
+            android:layout_height="30dp"
             android:layout_weight="1"
             android:gravity="center"
             android:text="January 2023"
@@ -37,7 +37,7 @@
         <ImageButton
             android:id="@+id/monthForwardButton"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
+            android:layout_height="30dp"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:padding="8dp"
@@ -60,7 +60,7 @@
             android:gravity="center"
             android:text="@string/month_view_monday"
             android:textColor="@color/color_primary"
-            android:textSize="16sp"/>
+            android:textSize="14sp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -69,7 +69,7 @@
             android:gravity="center"
             android:text="@string/month_view_tuesday"
             android:textColor="@color/color_primary"
-            android:textSize="16sp"/>
+            android:textSize="14sp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -78,7 +78,7 @@
             android:gravity="center"
             android:text="@string/month_view_wednesday"
             android:textColor="@color/color_primary"
-            android:textSize="16sp"/>
+            android:textSize="14sp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -87,7 +87,7 @@
             android:gravity="center"
             android:text="@string/month_view_thursday"
             android:textColor="@color/color_primary"
-            android:textSize="16sp"/>
+            android:textSize="14sp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -96,7 +96,7 @@
             android:gravity="center"
             android:text="@string/month_view_friday"
             android:textColor="@color/color_primary"
-            android:textSize="16sp"/>
+            android:textSize="14sp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -105,7 +105,7 @@
             android:gravity="center"
             android:text="@string/month_view_saturday"
             android:textColor="@color/color_primary"
-            android:textSize="16sp"/>
+            android:textSize="14sp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -114,14 +114,8 @@
             android:gravity="center"
             android:text="@string/month_view_sunday"
             android:textColor="@color/color_primary"
-            android:textSize="16sp"/>
+            android:textSize="14sp"/>
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginTop="4dp"
-        android:background="@color/color_primary"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/month_grid"
