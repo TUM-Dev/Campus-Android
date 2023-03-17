@@ -1,11 +1,8 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
@@ -17,7 +14,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.Toast
-import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.RequestLimitReachedException
@@ -29,8 +25,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventSeriesMappin
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.RepeatHelper
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.databinding.ActivityCreateEventBinding
-import de.tum.`in`.tumcampusapp.utils.Const
-import de.tum.`in`.tumcampusapp.utils.Utils
+import de.tum.`in`.tumcampusapp.utils.*
 import org.jetbrains.anko.sdk27.coroutines.textChangedListener
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
@@ -305,32 +300,26 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         // starts counting months at 1.
         binding.eventStartDateView.setOnClickListener {
             hideKeyboard()
-            val datePickerDialogStart = DatePickerDialog(this, { _, year, month, dayOfMonth ->
+            ThemedDatePickerDialog(this, { _, year, month, dayOfMonth ->
                 start = start.withDate(year, month + 1, dayOfMonth)
                 if (end.isBefore(start)) {
                     end = end.withDate(year, month + 1, dayOfMonth)
                 }
                 updateDateViews()
-            }, start.year, start.monthOfYear - 1, start.dayOfMonth)
-
-            setDialogButtonColors(datePickerDialogStart)
-            datePickerDialogStart.show()
+            }, start.year, start.monthOfYear - 1, start.dayOfMonth).show()
         }
         binding.eventEndDateView.setOnClickListener {
             hideKeyboard()
-            val datePickerDialogEnd = DatePickerDialog(this, { _, year, month, dayOfMonth ->
+            ThemedDatePickerDialog(this, { _, year, month, dayOfMonth ->
                 end = end.withDate(year, month + 1, dayOfMonth)
                 updateDateViews()
-            }, start.year, start.monthOfYear - 1, start.dayOfMonth)
-
-            setDialogButtonColors(datePickerDialogEnd)
-            datePickerDialogEnd.show()
+            }, start.year, start.monthOfYear - 1, start.dayOfMonth).show()
         }
 
         // TIME
-        binding.eventStartTimeView.setOnClickListener { view ->
+        binding.eventStartTimeView.setOnClickListener {
             hideKeyboard()
-            val timePickerDialogStart = TimePickerDialog(this, { timePicker, hour, minute ->
+            ThemedTimePickerDialog(this, { timePicker, hour, minute ->
                 timePicker.layoutParams = LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                 val eventLength = end.millis - start.millis
@@ -338,31 +327,16 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
                     .withMinuteOfHour(minute)
                 end = end.withMillis(start.millis + eventLength)
                 updateTimeViews()
-            }, start.hourOfDay, start.minuteOfHour, true)
-
-            setDialogButtonColors(timePickerDialogStart)
-            timePickerDialogStart.show()
+            }, start.hourOfDay, start.minuteOfHour).show()
         }
 
-        binding.eventEndTimeView.setOnClickListener { view ->
+        binding.eventEndTimeView.setOnClickListener {
             hideKeyboard()
-            val timePickerDialogEnd = TimePickerDialog(this, { timePicker, hour, minute ->
+            ThemedTimePickerDialog(this, { _, hour, minute ->
                 end = end.withHourOfDay(hour)
                     .withMinuteOfHour(minute)
                 updateTimeViews()
-            }, end.hourOfDay, end.minuteOfHour, true)
-
-            setDialogButtonColors(timePickerDialogEnd)
-            timePickerDialogEnd.show()
-        }
-    }
-
-    private fun setDialogButtonColors(dialog: AlertDialog) {
-        dialog.setOnShowListener {
-            val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
-            val negativeButton = dialog.getButton(DialogInterface.BUTTON_NEGATIVE)
-            positiveButton.setTextColor(getColor(R.color.text_primary))
-            negativeButton.setTextColor(getColor(R.color.text_primary))
+            }, end.hourOfDay, end.minuteOfHour).show()
         }
     }
 
