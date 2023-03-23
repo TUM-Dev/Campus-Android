@@ -167,6 +167,7 @@
     <!-- News -->
     <string name="no_link_existing">Kein Link gefunden.</string>
     <string name="info_title">Neuigkeiten:</string>
+    <string name="open_options_popup_description">Optionen Popup Öffnen</string>
 
     <!-- Kino -->
     <string name="imdb_rating">IMDb-Wertung</string>

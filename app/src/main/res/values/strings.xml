@@ -216,6 +216,7 @@
     <!-- News -->
     <string name="no_link_existing">No link existing.</string>
     <string name="info_title">New information:</string>
+    <string name="open_options_popup_description">Open options popup</string>
 
     <!-- Navigation drawer -->
     <string name="drawer_open">Open</string>

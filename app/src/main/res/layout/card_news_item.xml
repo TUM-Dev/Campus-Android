@@ -19,6 +19,7 @@
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:background="@android:color/darker_gray" />
 
         <!-- The background of the more icon, separate to allow for padding around the background -->
@@ -36,6 +37,7 @@
         <ImageButton
             android:id="@+id/cardMoreIcon"
             style="@style/CardOutlinedMoreIcon"
+            android:contentDescription="@string/open_options_popup_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

@@ -27,7 +27,6 @@ class NewsNotificationProvider(
 
     override fun buildNotification(): AppNotification {
         val summaryTitle = context.getString(R.string.news)
-        //val summaryText = context.getString(R.string.new_items_format_string, newsItems.size)
         val summaryText = context.resources.getQuantityString(R.plurals.new_items_format_string, newsItems.size, newsItems.size)
         val inboxStyle = NotificationCompat.InboxStyle()
         newsItems.forEach { inboxStyle.addLine(it.title) }

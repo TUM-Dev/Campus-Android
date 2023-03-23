@@ -48,6 +48,7 @@
         android:textSize="@dimen/semilarge_text_size"
         android:visibility="gone"
         tools:text="Person More info"
+        android:backgroundTint="@color/calendar_amber"
         tools:visibility="visible"/>
 
 </LinearLayout>
