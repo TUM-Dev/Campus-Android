@@ -8,9 +8,9 @@
         android:id="@+id/eventTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="0.5dp"
-        android:layout_marginRight="2dp"
         android:layout_marginLeft="0.5dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginVertical="0.5dp"
         android:background="@drawable/rounded_corners_monthly_calendar"
         android:maxLines="2"
         android:text="Event Title"
@@ -18,3 +18,4 @@
         android:textSize="8sp" />
 
 </LinearLayout>
+

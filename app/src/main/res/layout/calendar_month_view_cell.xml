@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/grid_monthly_calendar">
+
     <TextView
         android:id="@+id/cellDayNumber"
         android:layout_width="wrap_content"
@@ -28,3 +29,4 @@
         app:layout_constraintTop_toBottomOf="@+id/cellDayNumber" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
