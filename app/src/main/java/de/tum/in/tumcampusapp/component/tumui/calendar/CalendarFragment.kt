@@ -479,8 +479,8 @@ class CalendarFragment :
             binding.weekView.numberOfVisibleDays = 5
         } else if (isMonthMode) {
             icon = R.drawable.ic_outline_view_column_24px
-            binding.layoutMonth.root.visibility = View.VISIBLE
             binding.layoutWeek.visibility = View.GONE
+            binding.layoutMonth.root.visibility = View.VISIBLE
         } else {
             icon = R.drawable.ic_outline_calendar_view_month_24px
             binding.layoutWeek.visibility = View.VISIBLE
@@ -554,7 +554,7 @@ class CalendarFragment :
 
     private fun setMonthView() {
         monthYearText.text = monthYearFromDate(selectedDate)
-        val daysInMonth: ArrayList<String> = daysInMonthArray(selectedDate)
+        val daysInMonth = daysInMonthArray(selectedDate)
 
         val eventMap = calendarController.getEventsForMonth(selectedDate)
 
@@ -571,10 +571,10 @@ class CalendarFragment :
 
     private fun daysInMonthArray(date: LocalDate): ArrayList<String> {
         val daysInMonthArray: ArrayList<String> = ArrayList()
-        val yearMonth: YearMonth = YearMonth.of(date.year, date.monthOfYear)
-        val daysInMonth: Int = yearMonth.lengthOfMonth()
-        val firstOfMonth: LocalDate = date.withDayOfMonth(1)
-        var dayOfWeek: Int = firstOfMonth.dayOfWeek().get()
+        val yearMonth = YearMonth.of(date.year, date.monthOfYear)
+        val daysInMonth = yearMonth.lengthOfMonth()
+        val firstOfMonth = date.withDayOfMonth(1)
+        var dayOfWeek = firstOfMonth.dayOfWeek().get()
         if (dayOfWeek == 7) {
             dayOfWeek = 0
         }
