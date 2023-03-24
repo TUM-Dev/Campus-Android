@@ -63,8 +63,28 @@ class CalendarFragment :
         value ?: ""
     }
 
-    private var isWeekMode = false
-    private var isMonthMode = false
+    private enum class ViewMode {
+        DAY {
+            override fun numberOfVisibleDays(): Int {
+                return 1
+            }
+        },
+        WEEK {
+            override fun numberOfVisibleDays(): Int {
+                return 5
+            }
+        },
+        MONTH {
+            override fun numberOfVisibleDays(): Int {
+                return 30
+            }
+        };
+
+        abstract fun numberOfVisibleDays(): Int;
+    }
+
+    private var viewMode = ViewMode.MONTH
+
 
     private var isFetched: Boolean = false
     private var menuItemSwitchView: MenuItem? = null
@@ -116,7 +136,7 @@ class CalendarFragment :
 
         showDate?.let { openEvent(eventId) }
 
-        isWeekMode = Utils.getSettingBool(requireContext(), Const.CALENDAR_WEEK_MODE, false)
+        viewMode = ViewMode.valueOf(Utils.getSetting(requireContext(), Const.CALENDAR_VIEW_MODE, ViewMode.MONTH.toString()))
 
         disableRefresh()
 
@@ -215,17 +235,12 @@ class CalendarFragment :
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_switch_view_mode -> {
-                if (isWeekMode) {
-                    isWeekMode = !isWeekMode
+                viewMode = when (viewMode) {
+                    ViewMode.DAY -> ViewMode.WEEK
+                    ViewMode.WEEK -> ViewMode.MONTH
+                    ViewMode.MONTH -> ViewMode.DAY
                 }
-                else if (isMonthMode) {
-                    isMonthMode = !isMonthMode
-                    isWeekMode = !isWeekMode
-                }
-                else {
-                    isMonthMode = !isMonthMode
-                }
-                Utils.setSetting(requireContext(), Const.CALENDAR_WEEK_MODE, isWeekMode)
+                Utils.setSetting(requireContext(), Const.CALENDAR_VIEW_MODE, viewMode.toString())
                 refreshWeekView()
                 return true
             }
@@ -466,23 +481,25 @@ class CalendarFragment :
     }
 
     private fun refreshWeekView() {
-        setupDateTimeInterpreter(isWeekMode)
-        val icon: Int
+        setupDateTimeInterpreter(viewMode == ViewMode.WEEK)
 
-        if (isWeekMode) {
-            icon = R.drawable.ic_outline_calendar_view_day_24px
-            binding.layoutWeek.visibility = View.VISIBLE
-            binding.layoutMonth.root.visibility = View.GONE
-            binding.weekView.numberOfVisibleDays = 5
-        } else if (isMonthMode) {
-            icon = R.drawable.ic_outline_view_column_24px
-            binding.layoutWeek.visibility = View.GONE
-            binding.layoutMonth.root.visibility = View.VISIBLE
-        } else {
-            icon = R.drawable.ic_outline_calendar_view_month_24px
-            binding.layoutWeek.visibility = View.VISIBLE
-            binding.layoutMonth.root.visibility = View.GONE
-            binding.weekView.numberOfVisibleDays = 1
+        val icon = when (viewMode) {
+            ViewMode.DAY -> R.drawable.ic_outline_calendar_view_month_24px
+            ViewMode.WEEK -> R.drawable.ic_outline_calendar_view_day_24px
+            ViewMode.MONTH -> R.drawable.ic_outline_view_column_24px
+        }
+
+        when (viewMode) {
+            ViewMode.DAY, ViewMode.WEEK -> {
+                binding.layoutWeek.visibility = View.VISIBLE
+                binding.layoutMonth.root.visibility = View.GONE
+                binding.weekView.numberOfVisibleDays = viewMode.numberOfVisibleDays()
+            }
+
+            ViewMode.MONTH -> {
+                binding.layoutWeek.visibility = View.GONE
+                binding.layoutMonth.root.visibility = View.VISIBLE
+            }
         }
 
         // Go to current date or the one given in the intent
