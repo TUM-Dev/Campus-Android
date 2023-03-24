@@ -567,7 +567,7 @@ class CalendarFragment :
     }
 
     private fun refreshMonthView() {
-        monthYearText.text = monthYearFromDate(selectedDate)
+        monthYearText.text = formatLocalDate(selectedDate)
         val daysInMonth = daysInMonth(selectedDate)
 
         val eventMap = calendarController.getEventsForMonth(selectedDate)
@@ -603,7 +603,7 @@ class CalendarFragment :
     }
 
 
-    private fun monthYearFromDate(date: LocalDate): String {
+    private fun formatLocalDate(date: LocalDate): String {
         val formatter = DateTimeFormat.forPattern("MMMM yyyy")
         return formatter.print(date.withDayOfMonth(1))
     }
