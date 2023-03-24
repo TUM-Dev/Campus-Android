@@ -37,11 +37,8 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
-import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormat
 import java.time.YearMonth
-import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalAdjusters
 import java.util.*
 
 
@@ -125,7 +122,7 @@ class CalendarFragment :
 
         monthYearText = binding.layoutMonth.monthYearText
         monthRecyclerView = binding.layoutMonth.monthGrid
-        setMonthView()
+        refreshMonthView()
         binding.layoutMonth.monthBackButton.setOnClickListener {
             previousMonthAction()
         }
@@ -141,7 +138,7 @@ class CalendarFragment :
     override fun onStart() {
         super.onStart()
         refreshWeekView()
-        setMonthView()
+        refreshMonthView()
         // In case the timezone changes when reopening the calendar, while the app is still open, this ensures
         // that the lectures are still adjusted to the new timezone
         loadEvents(CacheControl.BYPASS_CACHE)
@@ -552,9 +549,9 @@ class CalendarFragment :
             .show()
     }
 
-    private fun setMonthView() {
+    private fun refreshMonthView() {
         monthYearText.text = monthYearFromDate(selectedDate)
-        val daysInMonth = daysInMonthArray(selectedDate)
+        val daysInMonth = daysInMonth(selectedDate)
 
         val eventMap = calendarController.getEventsForMonth(selectedDate)
 
@@ -569,7 +566,7 @@ class CalendarFragment :
         monthRecyclerView.layoutManager = layoutManager
     }
 
-    private fun daysInMonthArray(date: LocalDate): ArrayList<String> {
+    private fun daysInMonth(date: LocalDate): ArrayList<String> {
         val daysInMonthArray: ArrayList<String> = ArrayList()
         val yearMonth = YearMonth.of(date.year, date.monthOfYear)
         val daysInMonth = yearMonth.lengthOfMonth()
@@ -597,12 +594,12 @@ class CalendarFragment :
 
     private fun previousMonthAction() {
         selectedDate = selectedDate.minusMonths(1)
-        setMonthView()
+        refreshMonthView()
     }
 
     private fun nextMonthAction() {
         selectedDate = selectedDate.plusMonths(1)
-        setMonthView()
+        refreshMonthView()
     }
 
     override fun onDestroyView() {
