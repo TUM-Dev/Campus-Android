@@ -8,7 +8,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
@@ -18,7 +17,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,10 +28,7 @@ import java.io.File
 import java.io.IOException
 import javax.inject.Inject
 
-/**
- * CameraManager is an Implementation of the cameraInterface and provides the minimal API to manage
- * the images and thumbnail reyclerView.
- */
+
 class CameraManager @Inject constructor(
     private val context: Context
 ) : CameraInterface {
@@ -78,14 +73,14 @@ class CameraManager @Inject constructor(
             }
     }
 
-    private fun processPermissionResult(permissions: Map<String, @JvmSuppressWildcards Boolean>) {
+    private fun processPermissionResult(permissions: Map<String, Boolean>) {
         permissions.entries.forEach {
             if (it.key == Manifest.permission.READ_EXTERNAL_STORAGE && it.value) {
                 openGallery()
             } else if (it.key == Manifest.permission.CAMERA && it.value) {
                 takePicture()
             } else {
-                Log.d("CameraUtils", "Permission Denied")
+                Utils.log("Permission to take a photo/choose it from storage denied")
             }
         }
     }
@@ -156,9 +151,8 @@ class CameraManager @Inject constructor(
     }
 
     private fun openGallery() {
-        val intent = Intent()
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
-        intent.action = Intent.ACTION_GET_CONTENT
 
         try {
             galleryLauncher.launch(Intent.createChooser(intent, "Select file"))
@@ -167,7 +161,7 @@ class CameraManager @Inject constructor(
         }
     }
 
-    private fun removeImage(path: String) {
+    private fun deleteImage(path: String) {
         val index = imageElement.indexOf(path)
         imageElement.remove(path)
         File(path).delete()
@@ -189,7 +183,7 @@ class CameraManager @Inject constructor(
         thumbnailsAdapter.addImage(filePath)
     }
 
-    override fun clearImages() {
+    override fun deleteImageCopies() {
         for (path in imageElement) {
             File(path).delete()
         }
@@ -199,8 +193,9 @@ class CameraManager @Inject constructor(
         return imageElement.toTypedArray()
     }
 
-    private fun showThumbnailRemovedDialog(path: String) {
-        val builder = AlertDialog.Builder(parent)
+    private fun showThumbnailDeletedDialog(path: String) {
+        val builder = ThemedAlertDialogBuilder(parent)
+
         val view = View.inflate(parent, R.layout.picture_dialog, null)
 
         val imageView =
@@ -209,7 +204,7 @@ class CameraManager @Inject constructor(
 
         builder.setView(view)
             .setNegativeButton(R.string.cancel, null)
-            .setPositiveButton(R.string.feedback_remove_image) { _, _ -> removeImage(path) }
+            .setPositiveButton(R.string.feedback_remove_image) { _, _ -> deleteImage(path) }
 
         val dialog = builder.create()
         dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
@@ -221,7 +216,7 @@ class CameraManager @Inject constructor(
         thumbnailsAdapter =
             CameraThumbnailsAdapter(
                 imageElement,
-                { showThumbnailRemovedDialog(it) },
+                { showThumbnailDeletedDialog(it) },
                 thumbnailSize
             )
     }

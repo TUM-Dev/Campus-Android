@@ -6,9 +6,11 @@ import androidx.recyclerview.widget.RecyclerView
 /**
  * CameraInterface manages a recycler view with images. Images can be either either be selected
  * from the gallery or taken directly with the camera. New images are stored in the storage and can
- * be queried by their paths. Additionally, smaller versions of the images are displayed in
- * the recycler view.  * If thumbnails are clicked in the recyclerView an dialog
- * opens to confirm that the image should be deleted.
+ * be queried by their paths. All images which are added to the list from the gallery are copied.
+ * In the rest of the workflow, only this copy is used.
+ * Additionally, smaller versions of the images, thumbnails, are displayed in the recycler view.
+ * If thumbnails are clicked in the recyclerView an dialog opens to confirm that the image
+ * should be deleted.
  *
  *How to use:
  * init in the onCreate part of the parent Activity:
@@ -17,7 +19,10 @@ import androidx.recyclerview.widget.RecyclerView
  *
  * Afterwards, a new image can be requested
  *      requestNewImage()
-
+ *
+ * When the camera Interface is not needed anymore and the images are never accessed again:
+ *      deleteImageCopies()
+ *  (E.g. in an onDestroy method of the parent activity.)
  */
 interface CameraInterface {
     /**
@@ -37,7 +42,7 @@ interface CameraInterface {
      * Clears the list of currently stored images.
      * Images files are also removed from the storage.
      */
-    fun clearImages()
+    fun deleteImageCopies()
 
     /**
      * Returns the list of the paths to all images.

@@ -176,11 +176,6 @@ class FeedbackPresenter @Inject constructor(
         })
     }
 
-private fun showNoLocationAccessDialog() {
-        val title = context.getString(R.string.location_services_off_title)
-        val message = context.getString(R.string.location_services_off_message)
-        view?.showDialog(title, message)
-    }
 
     private fun sendImages(imagePaths: Array<String>) {
         sendImagesCalls = tumCabeClient.sendFeedbackImages(feedback, imagePaths)

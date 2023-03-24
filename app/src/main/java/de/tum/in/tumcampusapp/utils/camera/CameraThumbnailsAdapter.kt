@@ -13,7 +13,7 @@ import kotlin.math.min
 
 class CameraThumbnailsAdapter internal constructor(
     private var paths: List<String>,
-    private val onRemoveImage: (path: String) -> Unit,
+    private val onDeleteImage: (path: String) -> Unit,
     private val thumbnailSize: Int
 ) : RecyclerView.Adapter<CameraThumbnailsAdapter.ViewHolder>() {
 
@@ -36,7 +36,7 @@ class CameraThumbnailsAdapter internal constructor(
         if (pathsToThumbnails[path] == null) {
             pathsToThumbnails[path] = createThumbnail(path, thumbnailSize)
         }
-        holder.bind(path, pathsToThumbnails[path], onRemoveImage)
+        holder.bind(path, pathsToThumbnails[path], onDeleteImage)
     }
 
     fun update(paths: List<String>) {

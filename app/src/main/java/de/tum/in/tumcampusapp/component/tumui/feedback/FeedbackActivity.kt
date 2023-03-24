@@ -177,8 +177,12 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
             .show()
     }
 
+    /**
+     * Delete all Images which were created for this feedback. They will never be used again
+     * and only block the memory.
+     */
     override fun onDestroy() {
-        cameraManager.clearImages()
+        cameraManager.deleteImageCopies()
         super.onDestroy()
     }
 
