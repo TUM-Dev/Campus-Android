@@ -156,6 +156,22 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      * Adds all exams which are part of the new list to the existing exams list.
      */
     private fun addAllNewItemsToExamList(examsDownloaded: MutableList<Exam>) {
+        // Add a copy as Parameter to prevent overwriting the original.
+        var listAdapted = addNewExamsToList(mutableListOf<Exam>().apply { addAll(examsDownloaded) })
+
+        examsDownloaded.forEach {
+            val exam = exams.filter { e -> it.course == e.course }[0]
+            if (!exam.grade.equals(it.grade)) {
+                exam.grade = it.grade
+                listAdapted = true
+            }
+        }
+        if (listAdapted) {
+            storeExamListInSharedPreferences()
+        }
+    }
+
+    private fun addNewExamsToList(examsDownloaded: MutableList<Exam>): Boolean {
         val examsTitles = exams.map { it.course }
         examsDownloaded.removeAll { examsTitles.contains(it.course) }
 
@@ -166,8 +182,9 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 it.gradeUsedInAverage = true
             }
             exams.addAll(examsDownloaded)
-            storeExamListInSharedPreferences()
+            return true
         }
+        return false
     }
 
     private fun loadExamListFromSharedPreferences() {
@@ -288,7 +305,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         if (adaptDiagramToWeights) {
             entries = grades.mapIndexed { index, grade ->
                 val value: Double = gradeDistribution[grade] ?: 0.0
-                BarEntry(index.toFloat(), ((value*100) / sum).toFloat())
+                BarEntry(index.toFloat(), ((value * 100) / sum).toFloat())
             }
         } else {
             entries = grades.mapIndexed { index, grade ->
