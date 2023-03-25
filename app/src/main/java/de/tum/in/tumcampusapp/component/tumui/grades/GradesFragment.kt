@@ -156,35 +156,40 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      * Adds all exams which are part of the new list to the existing exams list.
      */
     private fun addAllNewItemsToExamList(examsDownloaded: MutableList<Exam>) {
-        // Add a copy as Parameter to prevent overwriting the original.
-        var listAdapted = addNewExamsToList(mutableListOf<Exam>().apply { addAll(examsDownloaded) })
+        var listAdapted = false
 
-        examsDownloaded.forEach {
-            val exam = exams.filter { e -> it.course == e.course }[0]
-            if (!exam.grade.equals(it.grade)) {
-                exam.grade = it.grade
-                listAdapted = true
+        examsDownloaded.forEach { downloadedExam ->
+            val examFiltered = exams.filter { e -> downloadedExam.course == e.course }
+            if (examFiltered.isEmpty()) { // Exam is not yet part of the list
+                downloadedExam.credits_new = 5
+                downloadedExam.weight = 1.0
+                downloadedExam.gradeUsedInAverage = true
+                downloadedExam.manuallyAdded = false
+                exams.add(downloadedExam)
+            } else { // exam already stored - update potentially
+                val exam = examFiltered[0]
+                // Exam was not manually added and the grade changed in TUM online -> adapt to the new grade.
+                val newGradeForOfficiallyExam =
+                    !exam.grade.equals(downloadedExam.grade) && !exam.manuallyAdded
+                // Exam was added manually but is now alo part of the downloaded list -> remove manually added state.
+                val manuallyAddedNowOfficial =
+                    exam.grade.equals(downloadedExam.grade) && exam.manuallyAdded
+
+                if (newGradeForOfficiallyExam || manuallyAddedNowOfficial) {
+                    downloadedExam.credits_new = exam.credits_new
+                    downloadedExam.weight = exam.weight
+                    downloadedExam.gradeUsedInAverage = exam.gradeUsedInAverage
+                    downloadedExam.manuallyAdded = false
+                    exams.remove(exam)
+                    exams.add(downloadedExam)
+                    listAdapted = true
+                }
             }
         }
+
         if (listAdapted) {
             storeExamListInSharedPreferences()
         }
-    }
-
-    private fun addNewExamsToList(examsDownloaded: MutableList<Exam>): Boolean {
-        val examsTitles = exams.map { it.course }
-        examsDownloaded.removeAll { examsTitles.contains(it.course) }
-
-        if (examsDownloaded.isNotEmpty()) {
-            examsDownloaded.forEach {
-                it.credits_new = 5
-                it.weight = 1.0
-                it.gradeUsedInAverage = true
-            }
-            exams.addAll(examsDownloaded)
-            return true
-        }
-        return false
     }
 
     private fun loadExamListFromSharedPreferences() {
