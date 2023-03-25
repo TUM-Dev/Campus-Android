@@ -176,7 +176,6 @@ class FeedbackPresenter @Inject constructor(
         })
     }
 
-
     private fun sendImages(imagePaths: Array<String>) {
         sendImagesCalls = tumCabeClient.sendFeedbackImages(feedback, imagePaths)
 

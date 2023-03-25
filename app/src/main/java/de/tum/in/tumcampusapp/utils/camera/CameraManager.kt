@@ -28,7 +28,6 @@ import java.io.File
 import java.io.IOException
 import javax.inject.Inject
 
-
 class CameraManager @Inject constructor(
     private val context: Context
 ) : CameraInterface {
