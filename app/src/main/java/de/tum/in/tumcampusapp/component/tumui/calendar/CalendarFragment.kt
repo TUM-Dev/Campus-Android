@@ -588,7 +588,7 @@ class CalendarFragment :
         val yearMonth = YearMonth.of(date.year, date.monthOfYear)
         val daysInMonth = yearMonth.lengthOfMonth()
         val firstOfMonth = date.withDayOfMonth(1)
-        var dayOfWeek = firstOfMonth.dayOfWeek().get()
+        var dayOfWeek = firstOfMonth.dayOfWeek().get() - 1 // Monday is the first day of the week in Europe
         if (dayOfWeek == 7) {
             dayOfWeek = 0
         }
