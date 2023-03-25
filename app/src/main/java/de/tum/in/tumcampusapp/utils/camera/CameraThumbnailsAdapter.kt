@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.component.tumui.feedback
+package de.tum.`in`.tumcampusapp.utils.camera
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -9,12 +9,13 @@ import android.widget.ImageView
 import androidx.collection.ArrayMap
 import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
+import kotlin.math.min
 
-class FeedbackThumbnailsAdapter internal constructor(
+class CameraThumbnailsAdapter internal constructor(
     private var paths: List<String>,
-    private val onRemoveImage: (path: String) -> Unit,
+    private val onDeleteImage: (path: String) -> Unit,
     private val thumbnailSize: Int
-) : RecyclerView.Adapter<FeedbackThumbnailsAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<CameraThumbnailsAdapter.ViewHolder>() {
 
     private val pathsToThumbnails = ArrayMap<String, Bitmap>()
 
@@ -26,14 +27,16 @@ class FeedbackThumbnailsAdapter internal constructor(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.feedback_thumb, parent, false)
+            .inflate(R.layout.camera_thumb, parent, false)
         return ViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val path = paths[position]
-        val thumbnail = pathsToThumbnails[path]
-        holder.bind(path, thumbnail, onRemoveImage)
+        if (pathsToThumbnails[path] == null) {
+            pathsToThumbnails[path] = createThumbnail(path, thumbnailSize)
+        }
+        holder.bind(path, pathsToThumbnails[path], onDeleteImage)
     }
 
     fun update(paths: List<String>) {
@@ -64,7 +67,7 @@ class FeedbackThumbnailsAdapter internal constructor(
         val height = bmOptions.outHeight
 
         // Determine how much to scale down the image
-        val scaleFactor = Math.min(width / thumbnailSize, height / thumbnailSize)
+        val scaleFactor = min(width / thumbnailSize, height / thumbnailSize)
 
         // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false
@@ -74,14 +77,13 @@ class FeedbackThumbnailsAdapter internal constructor(
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
         private val imageView = itemView as ImageView
-
         fun bind(path: String, thumbnail: Bitmap?, onRemoveImage: (path: String) -> Unit) {
             imageView.apply {
                 setImageBitmap(thumbnail)
-                tag = adapterPosition
-                setOnClickListener { onRemoveImage(path) }
+                setOnClickListener {
+                    onRemoveImage(path)
+                }
             }
         }
     }
