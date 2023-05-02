@@ -181,6 +181,8 @@
     <string name="licences">Open-source licences</string>
     <string name="licences_summary">Legal notes to licences</string>
 
+    <string name="notification_debug_view">Notification Debug View</string>
+
     <string name="appearance">Appearance</string>
 
     <string name="language_preference">Language</string>

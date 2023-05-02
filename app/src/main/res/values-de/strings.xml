@@ -142,6 +142,8 @@
     <string name="light">Hell</string>
     <string name="dark">Dunkel</string>
 
+    <string name="notification_debug_view">Benarichtigungs Debug Ansicht</string>
+
     <!-- Startup Wizard -->
     <string name="not_connected_to_tumonline">Nicht verbunden</string>
     <string name="connect_to_tum_online">Mit TUMonline verbinden</string>
