@@ -16,4 +16,8 @@ interface ScheduledNotificationsDao {
 
     @Query("DELETE FROM scheduled_notifications WHERE type_id = :typeId AND content_id = :contentId")
     fun delete(typeId: Int, contentId: Int)
+
+    @Query("SELECT * FROM scheduled_notifications")
+    fun getAllScheduledNotifications(): List<ScheduledNotification>
+
 }

@@ -17,10 +17,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewNotifications"
+        <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+            android:id="@+id/notificationsListView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:importantForAutofill="noExcludeDescendants"
+            android:scrollbars="vertical" />
+
+        <!-- TODO remove importantForAutofill (workaround) once library is fixed -->
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

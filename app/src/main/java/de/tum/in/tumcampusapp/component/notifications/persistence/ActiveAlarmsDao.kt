@@ -14,6 +14,9 @@ interface ActiveAlarmsDao {
     @Query("SELECT CASE WHEN count(*) < $MAX_ACTIVE THEN $MAX_ACTIVE - count(*) ELSE 0 END FROM active_alarms")
     fun maxAlarmsToSchedule(): Int
 
+    @Query("SELECT * FROM active_alarms")
+    fun getAllAlarms(): List<ActiveAlarm>
+
     companion object {
         private const val MAX_ACTIVE = 100
     }

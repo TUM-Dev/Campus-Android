@@ -5,20 +5,18 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.BaseFragment
-import de.tum.`in`.tumcampusapp.component.tumui.lectures.fragment.LecturesFragment
-import de.tum.`in`.tumcampusapp.databinding.ActivityNotificationDebugViewBinding
+import de.tum.`in`.tumcampusapp.database.TcaDb
+import de.tum.`in`.tumcampusapp.databinding.FragmentNotificationDebugViewBinding
 
 
 class NotificationDebugViewFragment : BaseFragment<String>(
         R.layout.fragment_notification_debug_view,
-        // TODO als String
         R.string.notification_debug_view) {
 
-    private val binding by viewBinding(ActivityNotificationDebugViewBinding::bind)
+    private val binding by viewBinding(FragmentNotificationDebugViewBinding::bind)
 
     override val swipeRefreshLayout get() = binding.swipeRefreshLayout
     override val layoutAllErrorsBinding get() = binding.layoutAllErrors
@@ -26,25 +24,40 @@ class NotificationDebugViewFragment : BaseFragment<String>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        /*binding.lecturesListView.setOnItemClickListener { _, _, position, _ ->
-            val item = binding.lecturesListView.getItemAtPosition(position) as Lecture
-            val intent = Intent(requireContext(), LectureDetailsActivity::class.java)
-            intent.putExtra(Lecture.STP_SP_NR, item.stp_sp_nr)
-            startActivity(intent)
-        }*/
-
-
         val notificationManager = activity!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
+        // lists of notifications retrieved from different sources
+        val activeNotifications = notificationManager.activeNotifications.asList()
+        val scheduledNotifications = TcaDb.getInstance(context!!).scheduledNotificationsDao().getAllScheduledNotifications()
+        val alarms = TcaDb.getInstance(context!!).activeNotificationsDao().getAllAlarms()
 
-        Toast.makeText(context, notificationManager.activeNotifications.size.toString() + notificationManager.activeNotifications.toString(), Toast.LENGTH_LONG).show();
 
-        // init recycler view
-        binding.recyclerViewNotifications.layoutManager = LinearLayoutManager(context);
-        binding.recyclerViewNotifications.adapter = NotificationsListAdapter(notificationManager.activeNotifications)
 
-        // nur möglich wenn extra databse query schreiben
-        //TcaDb.getInstance(context).activeNotificationsDao().addActiveAlarm()
+
+
+        Toast.makeText(context, String.format("Number active: %d, Number scheduled: %d, Number alarms: %d",
+            activeNotifications.size, scheduledNotifications.size, alarms.size), Toast.LENGTH_LONG).show()
+
+
+
+        val notificationsList = emptyList<NotificationItemForStickyList>().toMutableList()
+
+
+        activeNotifications.forEach {
+            notificationsList.add(NotificationItemForStickyList(it.toString(), "Active Notifications"))
+        }
+
+        scheduledNotifications.forEach {
+            notificationsList.add(NotificationItemForStickyList(it.toString(), "Scheduled Notifications"))
+        }
+
+        alarms.forEach {
+            notificationsList.add(NotificationItemForStickyList(it.toString(), "Alarms"))
+        }
+
+
+        binding.notificationsListView.adapter = NotificationsListAdapter(context!!, notificationsList)
+
     }
 
     override fun onRefresh() {
@@ -54,7 +67,7 @@ class NotificationDebugViewFragment : BaseFragment<String>(
 
 
     companion object {
-        @JvmStatic fun newInstance() = LecturesFragment()
+        @JvmStatic fun newInstance() = NotificationDebugViewFragment()
     }
 
 }

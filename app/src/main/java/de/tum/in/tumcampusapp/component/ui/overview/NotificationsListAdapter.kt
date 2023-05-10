@@ -1,45 +1,38 @@
 package de.tum.`in`.tumcampusapp.component.ui.overview
 
-import android.service.notification.StatusBarNotification
-import android.view.LayoutInflater
+import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
 
-class NotificationsListAdapter(private val dataSet: Array<StatusBarNotification>) :
-        RecyclerView.Adapter<NotificationsListAdapter.ViewHolder>() {
+class NotificationsListAdapter(context: Context, results: MutableList<NotificationItemForStickyList>) : SimpleStickyListHeadersAdapter<NotificationItemForStickyList>(context, results) {
 
-    /**
-     * Provide a reference to the type of views that you are using
-     * (custom ViewHolder)
-     */
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val textView: TextView
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        val holder: ViewHolder
+        val view: View
 
-        init {
-            // Define click listener for the ViewHolder's View
-            textView = view.findViewById(R.id.textView)
+        if (convertView == null) {
+            view = inflater.inflate(R.layout.notification_row_item, parent, false)
+            holder = ViewHolder()
+            holder.textView = view.findViewById(R.id.textView)
+            view.tag = holder
+        } else {
+            view = convertView
+            holder = view.tag as ViewHolder
         }
+
+        val notification = itemList[position]
+
+        holder.textView?.text = notification.notificationString
+
+        return view
     }
 
-    // Create new views (invoked by the layout manager)
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-        // Create a new view, which defines the UI of the list item
-        val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.notification_row_item, viewGroup, false)
-
-        return ViewHolder(view)
+    // the layout of the list
+    internal class ViewHolder {
+        var textView: TextView? = null
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
-    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-
-        // Get element from your dataset at this position and replace the
-        // contents of the view with that element
-        viewHolder.textView.text = dataSet[position].toString()
-    }
-
-    // Return the size of your dataset (invoked by the layout manager)
-    override fun getItemCount() = dataSet.size
 }
