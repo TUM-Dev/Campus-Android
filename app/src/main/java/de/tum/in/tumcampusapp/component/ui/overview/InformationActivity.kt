@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.pm.PackageInfoCompat
 import de.psdev.licensesdialog.LicensesDialog
 import de.tum.`in`.tumcampusapp.BuildConfig
@@ -58,6 +59,42 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
                     .setIncludeOwnLicense(true)
                     .build()
                     .show()
+        }
+
+        // opens notification overview after 5 quick clicks
+        var timeDebugInfoLastClicked = 0L
+        var countDebugInfoClicked = 0
+        // create Toast beforehand to be able to cancel before showing new one
+        var countdownToast = Toast.makeText(baseContext, "", Toast.LENGTH_LONG)
+        binding.debugInfos.setOnClickListener {
+            if (System.currentTimeMillis() - timeDebugInfoLastClicked < 2000) {
+                countDebugInfoClicked++
+                when (countDebugInfoClicked) {
+                    2, 3 -> {
+                        countdownToast.cancel()
+                        countdownToast = Toast.makeText(
+                                baseContext,
+                                getString(R.string.show_notification_view_progress_multiple, 5 - countDebugInfoClicked),
+                                Toast.LENGTH_LONG)
+                        countdownToast.show()
+                    }
+                    4 -> {
+                        countdownToast.cancel()
+                        countdownToast = Toast.makeText(
+                                baseContext,
+                                getString(R.string.show_notification_view_progress_single),
+                                Toast.LENGTH_LONG)
+                        countdownToast.show()
+                    }
+                    5 -> {
+                        countdownToast.cancel()
+                        // TODO open fragment here
+                    }
+                }
+            } else {
+                countDebugInfoClicked = 1
+            }
+            timeDebugInfoLastClicked = System.currentTimeMillis()
         }
 
         displayDebugInfo()

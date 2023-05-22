@@ -311,6 +311,8 @@
     <string name="send_email">E-Mail Feedback senden</string>
     <string name="show_feedback">Feedback senden</string>
     <string name="feedbackSubj">Feedback für TUM Campus App</string>
+    <string name="show_notification_view_progress_single">Die Benachrichtigungsübersicht öffnet sich mit 1 Klick.</string>
+    <string name="show_notification_view_progress_multiple">Die Benachrichtigungsübersicht öffnet sich mit %1$d Klicks.</string>
     <!-- END Translated, please do not change identifiers -->
 
     <string name="min_search_len">Text muss mindestens %d Zeichen lang sein</string>
