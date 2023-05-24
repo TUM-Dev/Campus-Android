@@ -68,7 +68,7 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
         var countDebugInfoClicked = 0
         // create Toast beforehand to be able to cancel before showing new one
         var countdownToast = Toast.makeText(baseContext, "", Toast.LENGTH_LONG)
-        binding.debugInfos.setOnClickListener {
+        binding.txtVersion.setOnClickListener {
             if (System.currentTimeMillis() - timeDebugInfoLastClicked < 2000) {
                 countDebugInfoClicked++
                 when (countDebugInfoClicked) {
