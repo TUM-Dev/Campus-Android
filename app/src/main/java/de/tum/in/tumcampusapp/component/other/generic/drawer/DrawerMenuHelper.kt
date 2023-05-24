@@ -19,7 +19,6 @@ import de.tum.`in`.tumcampusapp.component.ui.news.NewsFragment
 import de.tum.`in`.tumcampusapp.component.ui.openinghour.OpeningHoursListFragment
 import de.tum.`in`.tumcampusapp.component.ui.overview.InformationActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainFragment
-import de.tum.`in`.tumcampusapp.component.ui.overview.NotificationDebugViewFragment
 import de.tum.`in`.tumcampusapp.component.ui.search.SearchFragment
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.StudyRoomsFragment
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.EventsFragment
@@ -149,7 +148,6 @@ class DrawerMenuHelper(
         private val ABOUT = arrayOf(
                 NavItem.ActivityDestination(R.string.show_feedback, R.drawable.ic_outline_feedback_24px, FeedbackActivity::class.java),
                 NavItem.ActivityDestination(R.string.about_tca, R.drawable.ic_action_info, InformationActivity::class.java),
-                NavItem.FragmentDestination(R.string.notification_debug_view, R.drawable.ic_action_info, NotificationDebugViewFragment::class.java),
                 NavItem.ActivityDestination(R.string.settings, R.drawable.ic_outline_settings_24px, SettingsActivity::class.java)
         )
     }

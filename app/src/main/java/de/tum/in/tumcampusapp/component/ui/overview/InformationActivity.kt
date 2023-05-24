@@ -19,7 +19,9 @@ import androidx.core.content.pm.PackageInfoCompat
 import de.psdev.licensesdialog.LicensesDialog
 import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.notifications.overview.NotificationOverviewActivity
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
+import de.tum.`in`.tumcampusapp.component.other.settings.SettingsActivity
 import de.tum.`in`.tumcampusapp.databinding.ActivityInformationBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -88,7 +90,8 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
                     }
                     5 -> {
                         countdownToast.cancel()
-                        // TODO open fragment here
+                        val intent = Intent(this, NotificationOverviewActivity::class.java)
+                        startActivity(intent)
                     }
                 }
             } else {

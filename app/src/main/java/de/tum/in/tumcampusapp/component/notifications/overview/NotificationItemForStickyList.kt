@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.component.ui.overview
+package de.tum.`in`.tumcampusapp.component.notifications.overview
 
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
 

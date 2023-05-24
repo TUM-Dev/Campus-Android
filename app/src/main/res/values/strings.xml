@@ -181,8 +181,6 @@
     <string name="licences">Open-source licences</string>
     <string name="licences_summary">Legal notes to licences</string>
 
-    <string name="notification_debug_view">Notification Debug View</string>
-
     <string name="appearance">Appearance</string>
 
     <string name="language_preference">Language</string>
@@ -364,6 +362,9 @@
     </string>
     <string name="show_notification_view_progress_single">The notification overview opens with 1 click.</string>
     <string name="show_notification_view_progress_multiple">The notification overview opens with %1$d clicks.</string>
+
+    <!-- Notification Overview -->
+    <string name="notification_overview">Notification Overview</string>
 
     <!-- END Translated, please do not change identifiers -->
     <string name="min_search_len" tools:ignore="PluralsCandidate">Query must be at least %d chars long</string>

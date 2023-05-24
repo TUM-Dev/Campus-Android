@@ -297,15 +297,15 @@
                 android:value=".component.other.settings.SettingsActivity" />
         </activity>
         <activity
-            android:name=".component.ui.overview.NotificationDebugViewFragment"
+            android:name=".component.notifications.overview.NotificationOverviewActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/notification_debug_view"
+            android:label="@string/notification_overview"
             android:launchMode="singleTop"
-            android:parentActivityName=".component.other.settings.SettingsActivity"
+            android:parentActivityName=".component.ui.overview.InformationActivity"
             android:theme="@style/AppTheme.NoDrawerLayout">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.other.settings.SettingsActivity" />
+                android:value=".component.ui.overview.InformationActivity" />
         </activity>
         <activity
             android:name=".component.ui.eduroam.SetupEduroamActivity"

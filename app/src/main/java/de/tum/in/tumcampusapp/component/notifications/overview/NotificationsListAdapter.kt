@@ -1,4 +1,4 @@
-package de.tum.`in`.tumcampusapp.component.ui.overview
+package de.tum.`in`.tumcampusapp.component.notifications.overview
 
 import android.content.Context
 import android.view.View
