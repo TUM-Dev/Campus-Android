@@ -1,6 +1,8 @@
 package de.tum.`in`.tumcampusapp.component.other.generic.activity
 
+import android.content.Context
 import android.graphics.Color
+import android.net.ConnectivityManager
 import android.net.ConnectivityManager.NetworkCallback
 import android.net.Network
 import android.net.NetworkRequest
@@ -15,13 +17,20 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.api.tumonline.exception.*
-import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.*
+import de.tum.`in`.tumcampusapp.api.tumonline.exception.InactiveTokenException
+import de.tum.`in`.tumcampusapp.api.tumonline.exception.InvalidTokenException
+import de.tum.`in`.tumcampusapp.api.tumonline.exception.MissingPermissionException
+import de.tum.`in`.tumcampusapp.api.tumonline.exception.RequestLimitReachedException
+import de.tum.`in`.tumcampusapp.api.tumonline.exception.TokenLimitReachedException
+import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.EmptyViewState
+import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.ErrorViewState
+import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.FailedTokenViewState
+import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.NoInternetViewState
+import de.tum.`in`.tumcampusapp.component.other.generic.viewstates.UnknownErrorViewState
 import de.tum.`in`.tumcampusapp.utils.NetUtils.internetCapability
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.setImageResourceOrHide
 import de.tum.`in`.tumcampusapp.utils.setTextOrHide
-import org.jetbrains.anko.connectivityManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -91,9 +100,9 @@ abstract class ProgressActivity<T>(
         swipeRefreshLayout?.apply {
             setOnRefreshListener(this@ProgressActivity)
             setColorSchemeResources(
-                    R.color.color_primary,
-                    R.color.tum_A100,
-                    R.color.tum_A200
+                R.color.color_primary,
+                R.color.tum_A100,
+                R.color.tum_A200
             )
         }
     }
@@ -204,9 +213,9 @@ abstract class ProgressActivity<T>(
     protected fun showErrorSnackbar(messageResId: Int) {
         runOnUiThread {
             Snackbar.make(contentView, messageResId, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.retry) { retryRequest() }
-                    .setActionTextColor(Color.WHITE)
-                    .show()
+                .setAction(R.string.retry) { retryRequest() }
+                .setActionTextColor(Color.WHITE)
+                .show()
         }
     }
 
@@ -234,11 +243,12 @@ abstract class ProgressActivity<T>(
         }
 
         val request = NetworkRequest.Builder()
-                .addCapability(internetCapability)
-                .build()
+            .addCapability(internetCapability)
+            .build()
 
         if (registered.not()) {
-            connectivityManager.registerNetworkCallback(request, networkCallback)
+            (getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+                .registerNetworkCallback(request, networkCallback)
             registered = true
         }
     }
@@ -281,7 +291,8 @@ abstract class ProgressActivity<T>(
      */
     protected fun showLoadingStart() {
         if (registered) {
-            connectivityManager.unregisterNetworkCallback(networkCallback)
+            (getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+                .unregisterNetworkCallback(networkCallback)
             registered = false
         }
 
@@ -336,7 +347,8 @@ abstract class ProgressActivity<T>(
         super.onDestroy()
         apiCall?.cancel()
         if (registered) {
-            connectivityManager.unregisterNetworkCallback(networkCallback)
+            (getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+                .unregisterNetworkCallback(networkCallback)
             registered = false
         }
     }

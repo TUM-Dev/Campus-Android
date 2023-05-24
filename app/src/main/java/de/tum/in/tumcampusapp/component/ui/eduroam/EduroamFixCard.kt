@@ -25,7 +25,7 @@ import java.util.regex.Pattern
 
 class EduroamFixCard(
     context: Context
-) : Card(CardManager.CardTypes.EDUROAM_FIX, context) {
+) : Card(CardManager.CARD_EDUROAM_FIX, context, "card_eduroam_fix_start") {
 
     private val errors: MutableList<String> = ArrayList()
     private lateinit var eduroam: WifiConfiguration

@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.ui.overview
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.Network
@@ -14,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.work.WorkManager
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.play.core.review.ReviewException
 import com.google.android.play.core.review.ReviewManagerFactory
+import com.google.android.play.core.review.model.ReviewErrorCode
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration
@@ -25,7 +28,7 @@ import de.tum.`in`.tumcampusapp.databinding.FragmentMainBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.service.DownloadWorker
-import de.tum.`in`.tumcampusapp.service.SilenceWorker
+import de.tum.`in`.tumcampusapp.service.SilenceService
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -56,6 +59,8 @@ class MainFragment : BaseFragment<Unit>(
     private val cardsAdapter: CardAdapter by lazy { CardAdapter(this) }
 
     private val binding by viewBinding(FragmentMainBinding::bind)
+
+    private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main
 
     override val swipeRefreshLayout get() = binding.swipeRefreshLayout
 
@@ -97,8 +102,9 @@ class MainFragment : BaseFragment<Unit>(
             ItemTouchHelper(ItemTouchHelperCallback()).attachToRecyclerView(cardsRecyclerView)
         }
 
-        // Enqueue a request for the silence worker (if already started it will just invoke a check)
-        SilenceWorker.enqueueWork(requireContext())
+        // Start silence Service (if already started it will just invoke a check)
+        val service = Intent(requireContext(), SilenceService::class.java)
+        requireContext().startService(service)
 
         viewModel.cards.observe(viewLifecycleOwner) {
             it?.let { onNewCardsAvailable(it) }
@@ -136,8 +142,8 @@ class MainFragment : BaseFragment<Unit>(
 
         if (!NetUtils.isConnected(requireContext()) && !isConnectivityChangeReceiverRegistered) {
             val request = NetworkRequest.Builder()
-                    .addCapability(NetUtils.internetCapability)
-                    .build()
+                .addCapability(NetUtils.internetCapability)
+                .build()
             connectivityManager.registerNetworkCallback(request, networkCallback)
             isConnectivityChangeReceiverRegistered = true
         }
@@ -195,8 +201,7 @@ class MainFragment : BaseFragment<Unit>(
                 }
             } else {
                 // There was some problem, log or handle the error code.
-                Utils.showToast(requireContext(), R.string.in_app_review_failed_to_start)
-                task.exception?.let { Utils.log(it) }
+                @ReviewErrorCode val reviewErrorCode = (task.exception as ReviewException).errorCode
             }
         }
     }

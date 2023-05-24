@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
+import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import com.jakewharton.rxbinding3.widget.textChanges
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
@@ -24,12 +24,12 @@ import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponent
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponentProvider
 import de.tum.`in`.tumcampusapp.databinding.FragmentOnboardingStartBinding
 import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import org.jetbrains.anko.inputMethodManager
 import java.util.Locale
 import javax.inject.Inject
 
@@ -208,7 +208,8 @@ class OnboardingStartFragment : BaseFragment<Unit>(
     }
 
     private fun hideKeyboard() {
-        requireContext().inputMethodManager.hideSoftInputFromWindow(binding.lrzIdTextView.windowToken, 0)
+        (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            .hideSoftInputFromWindow(binding.lrzIdTextView.windowToken, 0)
     }
 
     private fun openNextOnboardingStep() {

@@ -4,7 +4,9 @@ import android.content.Context
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.model.StudyRoom
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup
 import de.tum.`in`.tumcampusapp.database.TcaDb
-import org.jetbrains.anko.doAsync
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Handles content for the study room feature, fetches external data.
@@ -14,14 +16,17 @@ class StudyRoomGroupManager(context: Context) {
     private val roomsDao: StudyRoomDao
     private val groupsDao: StudyRoomGroupDao
 
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+
     init {
         val db = TcaDb.getInstance(context)
         roomsDao = db.studyRoomDao()
         groupsDao = db.studyRoomGroupDao()
     }
 
-    fun updateDatabase(groups: List<StudyRoomGroup>, callback: () -> Unit) {
-        doAsync {
+    suspend fun updateDatabase(groups: List<StudyRoomGroup>) {
+        // moves to IOThread to not block MainThread
+        withContext(ioDispatcher) {
             groupsDao.removeCache()
             roomsDao.removeCache()
 
@@ -31,15 +36,14 @@ class StudyRoomGroupManager(context: Context) {
                 group.rooms.forEach { room ->
                     // only insert rooms that have data
                     if (room.code != "" &&
-                            room.name != "" &&
-                            room.buildingName != "" &&
-                            room.id != -1) {
+                        room.name != "" &&
+                        room.buildingName != "" &&
+                        room.id != -1
+                    ) {
                         roomsDao.insert(room)
                     }
                 }
             }
-
-            callback()
         }
     }
 

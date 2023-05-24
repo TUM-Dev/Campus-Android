@@ -21,7 +21,7 @@ class NotificationOverviewActivity : BaseActivity(R.layout.activity_notification
 
         binding = ActivityNotificationOverviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(binding.toolbarNotificationOverview.toolbar)
+        setSupportActionBar(binding.toolbarInformation.toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)

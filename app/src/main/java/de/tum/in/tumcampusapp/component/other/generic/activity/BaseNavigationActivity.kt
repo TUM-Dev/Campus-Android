@@ -12,6 +12,7 @@ import androidx.drawerlayout.widget.DrawerLayout.LOCK_MODE_LOCKED_CLOSED
 import androidx.drawerlayout.widget.DrawerLayout.LOCK_MODE_UNLOCKED
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.preference.PreferenceManager
 import com.google.android.material.navigation.NavigationView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.drawer.DrawerHeaderInflater
@@ -22,11 +23,12 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainFragment
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.closeDrawers
-import org.jetbrains.anko.defaultSharedPreferences
 
-class BaseNavigationActivity : BaseActivity(
-    R.layout.activity_main
-), SharedPreferences.OnSharedPreferenceChangeListener {
+class BaseNavigationActivity :
+    BaseActivity(
+        R.layout.activity_main
+    ),
+    SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val drawerHeaderInflater: DrawerHeaderInflater by lazy {
         DrawerHeaderInflater(this)
@@ -58,7 +60,8 @@ class BaseNavigationActivity : BaseActivity(
 
         initDrawer()
         supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentCallbacks, false)
-        defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this)
+
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this)
 
         if (savedInstanceState == null) {
             supportFragmentManager
@@ -103,8 +106,13 @@ class BaseNavigationActivity : BaseActivity(
 
         drawerToggle?.let { drawerLayout.removeDrawerListener(it) }
 
-        drawerToggle = object : ActionBarDrawerToggle(this, drawerLayout,
-            toolbar, R.string.drawer_open, R.string.drawer_close) {}
+        drawerToggle = object : ActionBarDrawerToggle(
+            this,
+            drawerLayout,
+            toolbar,
+            R.string.drawer_open,
+            R.string.drawer_close
+        ) {}
 
         supportActionBar?.let {
             enableDrawer(true)
@@ -141,7 +149,7 @@ class BaseNavigationActivity : BaseActivity(
     }
 
     override fun onDestroy() {
-        defaultSharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this)
         super.onDestroy()
     }
 

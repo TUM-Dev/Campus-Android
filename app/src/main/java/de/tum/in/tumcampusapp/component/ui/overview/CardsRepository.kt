@@ -35,8 +35,7 @@ class CardsRepository @Inject constructor(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
     /**
-     * Starts refresh of [Card]s and returns the corresponding [LiveData]
-     * through which the result can be received.
+     * Returns the [LiveData] of the Repository
      *
      * @return The [LiveData] of [Card]s
      */

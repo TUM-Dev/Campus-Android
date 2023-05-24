@@ -7,6 +7,9 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.net.wifi.WifiManager
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.ACCESS_FINE_LOCATION
+import androidx.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.checkSelfPermission
@@ -23,7 +26,7 @@ import org.jetbrains.anko.wifiManager
 /**
  * Card that can start [SetupEduroamActivity]
  */
-class EduroamCard(context: Context) : Card(CardManager.CardTypes.EDUROAM, context) {
+class EduroamCard(context: Context) : Card(CardManager.CARD_EDUROAM, context, "card_eduroam") {
 
     override val optionsMenuResId: Int
         get() = R.menu.card_popup_menu

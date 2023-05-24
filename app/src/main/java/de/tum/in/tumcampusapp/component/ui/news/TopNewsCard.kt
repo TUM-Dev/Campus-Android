@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.squareup.picasso.Callback
@@ -19,7 +20,6 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
-import org.jetbrains.anko.defaultSharedPreferences
 
 /**
  * Shows important news
@@ -31,7 +31,7 @@ class TopNewsCard(context: Context) : Card(CardManager.CardTypes.TOP_NEWS, conte
     private val newsAlert: NewsAlert?
 
     init {
-        this.topNewsStore = RealTopNewsStore(context.defaultSharedPreferences)
+        this.topNewsStore = RealTopNewsStore(PreferenceManager.getDefaultSharedPreferences(context))
         this.newsAlert = topNewsStore.getNewsAlert()
     }
 
@@ -41,16 +41,17 @@ class TopNewsCard(context: Context) : Card(CardManager.CardTypes.TOP_NEWS, conte
         }
 
         Picasso.get()
-                .load(newsAlert.url)
-                .into(imageView, object : Callback {
-                    override fun onSuccess() {
-                        // remove progress bar
-                        progress.visibility = View.GONE
-                    }
-                    override fun onError(e: Exception) {
-                        discard()
-                    }
-                })
+            .load(newsAlert.url)
+            .into(imageView, object : Callback {
+                override fun onSuccess() {
+                    // remove progress bar
+                    progress.visibility = View.GONE
+                }
+
+                override fun onError(e: Exception) {
+                    discard()
+                }
+            })
     }
 
     override fun getId(): Int {
@@ -60,7 +61,9 @@ class TopNewsCard(context: Context) : Card(CardManager.CardTypes.TOP_NEWS, conte
     override fun getNavigationDestination(): NavDestination? {
         return if (newsAlert == null || newsAlert.link.isEmpty()) {
             null
-        } else NavDestination.Link(newsAlert.link)
+        } else {
+            NavDestination.Link(newsAlert.link)
+        }
     }
 
     override fun updateViewHolder(viewHolder: RecyclerView.ViewHolder) {

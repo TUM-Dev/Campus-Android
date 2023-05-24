@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import androidx.core.app.NotificationManagerCompat
 import de.tum.`in`.tumcampusapp.component.notifications.model.AppNotification
 import de.tum.`in`.tumcampusapp.component.notifications.model.FutureNotification
 import de.tum.`in`.tumcampusapp.component.notifications.model.InstantNotification
@@ -14,8 +15,6 @@ import de.tum.`in`.tumcampusapp.component.notifications.receivers.NotificationAl
 import de.tum.`in`.tumcampusapp.component.notifications.receivers.NotificationReceiver
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
-import org.jetbrains.anko.alarmManager
-import org.jetbrains.anko.notificationManager
 import org.joda.time.DateTime
 import javax.inject.Inject
 
@@ -28,7 +27,7 @@ import javax.inject.Inject
  */
 class NotificationScheduler @Inject constructor(private val context: Context) {
 
-    private val notificationManager = context.notificationManager
+    private val notificationManager = NotificationManagerCompat.from(context)
 
     /**
      * Schedules a list of [FutureNotification]s for the time specified by each notification.
@@ -37,10 +36,10 @@ class NotificationScheduler @Inject constructor(private val context: Context) {
      */
     fun schedule(futureNotifications: List<FutureNotification>) {
         futureNotifications
-                // Prevent excessive alarm scheduling
-                // Clients should be responsible enough to not exceed that amount
-                .take(maxRemainingAlarms(context))
-                .forEach { schedule(it) }
+            // Prevent excessive alarm scheduling
+            // Clients should be responsible enough to not exceed that amount
+            .take(maxRemainingAlarms(context))
+            .forEach { schedule(it) }
     }
 
     /**
@@ -89,7 +88,8 @@ class NotificationScheduler @Inject constructor(private val context: Context) {
     fun cancel(globalId: Long, notification: FutureNotification) {
         val pendingIntent = getAlarmIntent(notification, globalId)
         pendingIntent.cancel()
-        context.alarmManager.cancel(pendingIntent)
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.cancel(pendingIntent)
     }
 
     /**
@@ -117,7 +117,7 @@ class NotificationScheduler @Inject constructor(private val context: Context) {
      */
     fun scheduleAlarm(type: NotificationType, time: DateTime) {
         val alarmIntent = getAlarmIntent(type)
-        val alarmManager = context.alarmManager
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         // If the same alarm has already been scheduled, we cancel it.
         alarmIntent.cancel()
@@ -134,7 +134,7 @@ class NotificationScheduler @Inject constructor(private val context: Context) {
      */
     private fun scheduleAlarm(notification: FutureNotification, globalId: Long) {
         val alarmIntent = getAlarmIntent(notification, globalId)
-        val alarmManager = context.alarmManager
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, notification.time.millis, alarmIntent)
         addActiveAlarm(context, globalId)
     }
@@ -155,8 +155,12 @@ class NotificationScheduler @Inject constructor(private val context: Context) {
             putExtra(Const.KEY_NOTIFICATION_ID, globalNotificationId.toInt())
             putExtra(Const.KEY_NOTIFICATION, futureNotification.notification)
         }
-        return PendingIntent.getBroadcast(context,
-                futureNotification.id, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT)
+        return PendingIntent.getBroadcast(
+            context,
+            futureNotification.id,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
+        )
     }
 
     /**
@@ -177,21 +181,21 @@ class NotificationScheduler @Inject constructor(private val context: Context) {
     companion object {
         private fun addActiveAlarm(context: Context, id: Long) {
             TcaDb.getInstance(context)
-                    .activeNotificationsDao()
-                    .addActiveAlarm(ActiveAlarm(id))
+                .activeNotificationsDao()
+                .addActiveAlarm(ActiveAlarm(id))
         }
 
         fun removeActiveAlarm(context: Context, id: Long) {
             TcaDb.getInstance(context)
-                    .activeNotificationsDao()
-                    .deleteActiveAlarm(ActiveAlarm(id))
+                .activeNotificationsDao()
+                .deleteActiveAlarm(ActiveAlarm(id))
         }
 
         @JvmStatic
         fun maxRemainingAlarms(context: Context): Int {
             return TcaDb.getInstance(context)
-                    .activeNotificationsDao()
-                    .maxAlarmsToSchedule()
+                .activeNotificationsDao()
+                .maxAlarmsToSchedule()
         }
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Spinner
+import androidx.lifecycle.lifecycleScope
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumCabe
 import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
@@ -12,6 +13,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.NavigationDetailsActi
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.NavigationDetailsFragment
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderListAdapter
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView
 
@@ -43,9 +45,11 @@ class BarrierFreeFacilitiesActivity :
     }
 
     private fun fetchApiCallForCurrentLocation() {
-        locationManager.fetchBuildingIDFromCurrentLocation {
-            val apiCall = apiClient.getListOfNearbyFacilities(it)
-            executeApiCall(apiCall)
+        this.lifecycleScope.launch {
+            locationManager.fetchBuildingIDFromCurrentLocation {
+                val apiCall = apiClient.getListOfNearbyFacilities(it)
+                executeApiCall(apiCall)
+            }
         }
     }
 

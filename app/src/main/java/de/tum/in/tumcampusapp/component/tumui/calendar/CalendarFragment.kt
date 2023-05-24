@@ -5,11 +5,15 @@ import android.app.Activity
 import android.content.ContentUris
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.Manifest
 import android.os.Bundle
 import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import android.provider.CalendarContract
 import android.text.format.DateUtils
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,8 +33,10 @@ import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventsResponse
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.databinding.FragmentCalendarBinding
-import de.tum.`in`.tumcampusapp.service.QueryLocationWorker
-import de.tum.`in`.tumcampusapp.utils.*
+import de.tum.`in`.tumcampusapp.service.QueryLocationsService
+import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.Utils
+import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -39,7 +45,8 @@ import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import java.time.YearMonth
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 
 class CalendarFragment :
     FragmentForAccessingTumOnline<EventsResponse>(
@@ -193,7 +200,8 @@ class CalendarFragment :
     private fun onCalendarImportedIntoDatabase() {
         // Update the action bar to display the enabled menu options
         requireActivity().invalidateOptionsMenu()
-        QueryLocationWorker.enqueueWork(requireContext())
+        // enqueues OneTimeWorkRequest
+        QueryLocationsService.enqueueWork(requireContext())
     }
 
     private fun scheduleNotifications(events: List<Event>) {

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -24,7 +25,6 @@ import de.tum.`in`.tumcampusapp.databinding.NavigationPropertyRowBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import kotlinx.coroutines.launch
-import org.jetbrains.anko.sdk27.coroutines.onItemSelectedListener
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -73,10 +73,11 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
     private suspend fun handleDetailsLoading() {
         viewModel.state.collect { state ->
 
-            if (state.isLoading)
+            if (state.isLoading) {
                 binding.progressIndicator.show()
-            else
+            } else {
                 binding.progressIndicator.hide()
+            }
 
             if (state.navigationDetails != null) {
                 showLocationDetails(state.navigationDetails)
@@ -156,13 +157,16 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
             availableMaps.forEach {
                 adapter.add(it.mapName)
             }
-            binding.availableMapSpinner.onItemSelectedListener {
-                this.onItemSelected { adapterView, _, position, _ ->
+            binding.availableMapSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(adapterView: AdapterView<*>?, selectedItemView: View?, position: Int, id: Long) {
                     val selectedMapName = adapterView?.getItemAtPosition(position).toString()
                     val selectedMap = availableMaps.find { it.mapName == selectedMapName }
                     selectedMap?.let {
                         loadMapImage(it)
                     }
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {
                 }
             }
             adapter.notifyDataSetChanged()
@@ -200,7 +204,8 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
             .setTitle(R.string.not_implemented)
             .setMessage(R.string.not_implemented_interactive_map)
             .setPositiveButton(R.string.redirect) { _, _ ->
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://nav.tum.sexy/view/${viewModel.state.value.navigationDetails?.id}"))
+                val intent =
+                    Intent(Intent.ACTION_VIEW, Uri.parse("https://nav.tum.sexy/view/${viewModel.state.value.navigationDetails?.id}"))
                 startActivity(intent)
             }
             .setNegativeButton(R.string.cancel, null)

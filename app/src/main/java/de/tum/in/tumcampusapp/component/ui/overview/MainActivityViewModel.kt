@@ -2,10 +2,8 @@ package de.tum.`in`.tumcampusapp.component.ui.overview
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MainActivityViewModel @Inject constructor(
@@ -13,6 +11,7 @@ class MainActivityViewModel @Inject constructor(
 ) : ViewModel() {
 
     val cards: LiveData<List<Card>>
+        // on get refresh cards
         get() {
             viewModelScope.launch {
                 cardsRepo.refreshCards(CacheControl.USE_CACHE)

@@ -16,7 +16,6 @@ import androidx.core.content.pm.PackageInfoCompat
 import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.BuildConfig
-import org.jetbrains.anko.defaultSharedPreferences
 import java.io.IOException
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -39,7 +38,7 @@ object Utils {
             return
         }
 
-        val prefsEditor = context.defaultSharedPreferences.edit()
+        val prefsEditor = PreferenceManager.getDefaultSharedPreferences(context).edit()
 
         for ((key, value) in entries) {
             when (value) {
@@ -54,8 +53,8 @@ object Utils {
 
         // Delete any old settings
         prefsLegacy.edit()
-                .clear()
-                .apply()
+            .clear()
+            .apply()
     }
 
     /**
@@ -134,7 +133,7 @@ object Utils {
     @JvmStatic
     fun getSettingBool(c: Context, name: String, defaultVal: Boolean): Boolean {
         return PreferenceManager.getDefaultSharedPreferences(c)
-                .getBoolean(name, defaultVal)
+            .getBoolean(name, defaultVal)
     }
 
     /**
@@ -151,8 +150,8 @@ object Utils {
             StringWriter().use { sw ->
                 t.printStackTrace(PrintWriter(sw))
                 val s = Thread.currentThread()
-                        .stackTrace[3].className
-                        .replace(LOGGING_REGEX.toRegex(), "")
+                    .stackTrace[3].className
+                    .replace(LOGGING_REGEX.toRegex(), "")
                 Log.e(s, "$t\n$sw")
             }
         } catch (ignore: IOException) {
@@ -175,8 +174,8 @@ object Utils {
             StringWriter().use { sw ->
                 e.printStackTrace(PrintWriter(sw))
                 val s = Thread.currentThread()
-                        .stackTrace[3].className
-                        .replace(LOGGING_REGEX.toRegex(), "")
+                    .stackTrace[3].className
+                    .replace(LOGGING_REGEX.toRegex(), "")
                 Log.e(s, "$e $message\n$sw")
             }
         } catch (e1: IOException) {
@@ -196,8 +195,8 @@ object Utils {
             return
         }
         val s = Thread.currentThread()
-                .stackTrace[3].className
-                .replace(LOGGING_REGEX.toRegex(), "")
+            .stackTrace[3].className
+            .replace(LOGGING_REGEX.toRegex(), "")
         Log.d(s, message)
     }
 
@@ -213,8 +212,8 @@ object Utils {
             return
         }
         val s = Thread.currentThread()
-                .stackTrace[3].className
-                .replace(LOGGING_REGEX.toRegex(), "")
+            .stackTrace[3].className
+            .replace(LOGGING_REGEX.toRegex(), "")
         Log.v(s, message)
     }
 
@@ -242,8 +241,8 @@ object Utils {
     fun setSetting(c: Context, key: String, value: Boolean) {
         val sp = PreferenceManager.getDefaultSharedPreferences(c)
         sp.edit()
-                .putBoolean(key, value)
-                .apply()
+            .putBoolean(key, value)
+            .apply()
     }
 
     /**
@@ -257,8 +256,8 @@ object Utils {
     fun setSetting(c: Context, key: String, value: String) {
         val sp = PreferenceManager.getDefaultSharedPreferences(c)
         sp.edit()
-                .putString(key, value)
-                .apply()
+            .putString(key, value)
+            .apply()
     }
 
     /**
@@ -271,8 +270,8 @@ object Utils {
     fun setSetting(c: Context, key: String, value: Any) {
         val sp = PreferenceManager.getDefaultSharedPreferences(c)
         sp.edit()
-                .putString(key, Gson().toJson(value))
-                .apply()
+            .putString(key, Gson().toJson(value))
+            .apply()
     }
 
     /**
@@ -312,6 +311,7 @@ object Utils {
                 val back = abs(meters / 100f).toInt() % 10
                 "$front.${back}km"
             }
+
             else -> "${(meters / 1000f).toInt()}km"
         }
     }
@@ -354,7 +354,7 @@ object Utils {
     @JvmStatic
     fun isBackgroundServicePermitted(context: Context): Boolean {
         return isBackgroundServiceEnabled(context) &&
-                (isBackgroundServiceAlwaysEnabled(context) || NetUtils.isConnectedWifi(context))
+            (isBackgroundServiceAlwaysEnabled(context) || NetUtils.isConnectedWifi(context))
     }
 
     private fun isBackgroundServiceEnabled(context: Context): Boolean {
@@ -369,10 +369,11 @@ object Utils {
     @TargetApi(Build.VERSION_CODES.N)
     @Suppress("deprecation")
     fun fromHtml(source: String): Spanned {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY)
-        else
+        } else {
             Html.fromHtml(source)
+        }
     }
 
     @JvmStatic

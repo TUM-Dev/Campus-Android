@@ -1,16 +1,17 @@
 package de.tum.`in`.tumcampusapp.component.ui.onboarding
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
-import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.os.Bundle
 import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.app.ActivityCompat.checkSelfPermission
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.lifecycle.LiveDataReactiveStreams
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import de.tum.`in`.tumcampusapp.BuildConfig.DEBUG
 import de.tum.`in`.tumcampusapp.BuildConfig.VERSION_CODE
@@ -27,7 +28,10 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.observe
 import io.reactivex.Flowable
 import io.reactivex.schedulers.Schedulers
-import org.jetbrains.anko.doAsync
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
@@ -35,6 +39,7 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
 
     private val initializationFinished = AtomicBoolean(false)
     private var tapCounter = 0 // for easter egg
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
     @Inject
     lateinit var workerActions: DownloadWorker.WorkerActions
@@ -69,7 +74,7 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
         Utils.setSetting(this, Const.SAVED_APP_VERSION, VERSION_CODE)
 
         initEasterEgg()
-        doAsync {
+        this.lifecycleScope.launch {
             initApp()
         }
     }
@@ -95,36 +100,38 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
         }
     }
 
-    private fun initApp() {
-        // Migrate all settings - we somehow ended up having two different shared prefs: join them
-        // back together
-        Utils.migrateSharedPreferences(this)
+    private suspend fun initApp() {
+        withContext(ioDispatcher) {
+            // Migrate all settings - we somehow ended up having two different shared prefs: join them
+            // back together
+            Utils.migrateSharedPreferences(this@StartupActivity)
 
-        // Check that we have a private key setup in order to authenticate this device
-        authManager.generatePrivateKey(null)
+            // Check that we have a private key setup in order to authenticate this device
+            authManager.generatePrivateKey(null)
 
-        // On first setup show remark that loading could last longer than normally
-        runOnUiThread {
-            binding.startupLoadingProgressBar.show()
-        }
+            // On first setup show remark that loading could last longer than normally
+            runOnUiThread {
+                binding.startupLoadingProgressBar.show()
+            }
 
-        // Start download workers and listen for finalization
-        val downloadActions = Flowable
-                .fromCallable(this::performAllWorkerActions)
+            // Start download workers and listen for finalization
+            val downloadActions = Flowable
+                .fromCallable(this@StartupActivity::performAllWorkerActions)
                 .onErrorReturnItem(Unit)
                 .subscribeOn(Schedulers.io())
 
-        runOnUiThread {
-            LiveDataReactiveStreams
+            runOnUiThread {
+                LiveDataReactiveStreams
                     .fromPublisher(downloadActions)
-                    .observe(this) { openMainActivityIfInitializationFinished() }
+                    .observe(this@StartupActivity) { openMainActivityIfInitializationFinished() }
+            }
+
+            // Start background service and ensure cards are set
+            sendBroadcast(Intent(this@StartupActivity, StartSyncReceiver::class.java))
+
+            // Request permissions for Android 6 and up
+            requestLocationPermission()
         }
-
-        // Start background service and ensure cards are set
-        sendBroadcast(Intent(this, StartSyncReceiver::class.java))
-
-        // Request permissions for Android 6 and up
-        requestLocationPermission()
     }
 
     private fun performAllWorkerActions() {
@@ -152,11 +159,11 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
      */
     private fun showLocationPermissionRationaleDialog() {
         ThemedAlertDialogBuilder(this)
-                .setMessage(R.string.permission_location_explanation)
-                .setPositiveButton(R.string.ok) { _, _ ->
-                    requestPermissions(this, PERMISSIONS_LOCATION, REQUEST_LOCATION)
-                }
-                .show()
+            .setMessage(R.string.permission_location_explanation)
+            .setPositiveButton(R.string.ok) { _, _ ->
+                requestPermissions(this, PERMISSIONS_LOCATION, REQUEST_LOCATION)
+            }
+            .show()
     }
 
     override fun onRequestPermissionsResult(

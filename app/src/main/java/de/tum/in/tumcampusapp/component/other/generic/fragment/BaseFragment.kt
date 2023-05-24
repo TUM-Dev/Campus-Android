@@ -1,5 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.other.generic.fragment
 
+import android.content.Context
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.Network
@@ -14,6 +15,7 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import de.tum.`in`.tumcampusapp.R
@@ -33,8 +35,9 @@ import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.setImageResourceOrHide
 import de.tum.`in`.tumcampusapp.utils.setTextOrHide
-import org.jetbrains.anko.connectivityManager
-import org.jetbrains.anko.support.v4.runOnUiThread
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,6 +47,8 @@ abstract class BaseFragment<T>(
     @LayoutRes private val layoutId: Int,
     @StringRes private val titleResId: Int
 ) : Fragment(), SwipeRefreshLayout.OnRefreshListener {
+
+    private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main
 
     private var apiCall: Call<T>? = null
     private var hadSuccessfulRequest = false
@@ -63,7 +68,7 @@ abstract class BaseFragment<T>(
 
     private val networkCallback: ConnectivityManager.NetworkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
-            runOnUiThread {
+            this@BaseFragment.lifecycleScope.launch(mainDispatcher) {
                 this@BaseFragment.onRefresh()
             }
         }
@@ -86,9 +91,9 @@ abstract class BaseFragment<T>(
         swipeRefreshLayout?.apply {
             setOnRefreshListener(this@BaseFragment)
             setColorSchemeResources(
-                    R.color.color_primary,
-                    R.color.tum_A100,
-                    R.color.tum_A200
+                R.color.color_primary,
+                R.color.tum_A100,
+                R.color.tum_A200
             )
         }
     }
@@ -187,7 +192,7 @@ abstract class BaseFragment<T>(
      * @param messageResId Resource id of the error text
      */
     protected fun showError(messageResId: Int) {
-        runOnUiThread {
+        this@BaseFragment.lifecycleScope.launch(mainDispatcher) {
             showError(UnknownErrorViewState(messageResId))
         }
     }
@@ -207,11 +212,11 @@ abstract class BaseFragment<T>(
     }
 
     protected fun showErrorSnackbar(messageResId: Int) {
-        runOnUiThread {
+        this@BaseFragment.lifecycleScope.launch(mainDispatcher) {
             Snackbar.make(contentView, messageResId, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.retry) { retryRequest() }
-                    .setActionTextColor(Color.WHITE)
-                    .show()
+                .setAction(R.string.retry) { retryRequest() }
+                .setActionTextColor(Color.WHITE)
+                .show()
         }
     }
 
@@ -228,40 +233,41 @@ abstract class BaseFragment<T>(
     }
 
     private fun showFailedTokenLayout(messageResId: Int = R.string.error_accessing_tumonline_body) {
-        runOnUiThread {
+        this@BaseFragment.lifecycleScope.launch(mainDispatcher) {
             showError(FailedTokenViewState(messageResId))
         }
     }
 
     protected fun showNoInternetLayout() {
-        runOnUiThread {
+        this@BaseFragment.lifecycleScope.launch(mainDispatcher) {
             showError(NoInternetViewState())
         }
 
         val request = NetworkRequest.Builder()
-                .addCapability(NetUtils.internetCapability)
-                .build()
+            .addCapability(NetUtils.internetCapability)
+            .build()
 
         if (registered.not()) {
-            baseActivity.connectivityManager.registerNetworkCallback(request, networkCallback)
+            (baseActivity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+                .registerNetworkCallback(request, networkCallback)
             registered = true
         }
     }
 
     protected fun showEmptyResponseLayout(messageResId: Int, iconResId: Int? = null) {
-        runOnUiThread {
+        this@BaseFragment.lifecycleScope.launch(mainDispatcher) {
             showError(EmptyViewState(iconResId, messageResId))
         }
     }
 
     protected fun showContentLayout() {
-        runOnUiThread {
+        this@BaseFragment.lifecycleScope.launch(mainDispatcher) {
             layoutAllErrorsBinding.layoutError.errorLayout.visibility = View.GONE
         }
     }
 
     protected fun showErrorLayout() {
-        runOnUiThread {
+        this@BaseFragment.lifecycleScope.launch(mainDispatcher) {
             layoutAllErrorsBinding.layoutError.errorLayout.visibility = View.VISIBLE
         }
     }
@@ -313,7 +319,8 @@ abstract class BaseFragment<T>(
      */
     protected fun showLoadingStart() {
         if (registered) {
-            baseActivity.connectivityManager.unregisterNetworkCallback(networkCallback)
+            (baseActivity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+                .unregisterNetworkCallback(networkCallback)
             registered = false
         }
 
@@ -372,7 +379,8 @@ abstract class BaseFragment<T>(
 
     override fun onDestroy() {
         if (registered) {
-            baseActivity.connectivityManager.unregisterNetworkCallback(networkCallback)
+            (baseActivity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+                .unregisterNetworkCallback(networkCallback)
             registered = false
         }
         super.onDestroy()

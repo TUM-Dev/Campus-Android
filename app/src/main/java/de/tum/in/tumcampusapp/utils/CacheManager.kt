@@ -5,7 +5,7 @@ import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventsResponse
-import de.tum.`in`.tumcampusapp.service.QueryLocationWorker
+import de.tum.`in`.tumcampusapp.service.QueryLocationsService
 import okhttp3.Cache
 import org.jetbrains.anko.doAsync
 import retrofit2.Call
@@ -19,9 +19,19 @@ class CacheManager @Inject constructor(private val context: Context) {
         get() = Cache(context.cacheDir, 10 * 1024 * 1024) // 10 MB
 
     fun fillCache() {
-        doAsync {
-            syncCalendar()
+        class WorkWhenReceived(appContext: Context, workerParams: WorkerParameters) :
+            Worker(appContext, workerParams) {
+            override fun doWork(): Result {
+                syncCalendar()
+                return Result.success()
+            }
         }
+        // start expedited background work
+        val request = OneTimeWorkRequestBuilder<WorkWhenReceived>()
+            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+            .build()
+        WorkManager.getInstance(context)
+            .enqueue(request)
     }
 
     private fun syncCalendar() {
@@ -43,9 +53,8 @@ class CacheManager @Inject constructor(private val context: Context) {
     }
 
     private fun loadRoomLocations() {
-        doAsync {
-            QueryLocationWorker.enqueueWork(context)
-        }
+        // enqueues OneTimeWorkRequest
+        QueryLocationsService.enqueueWork(context)
     }
 
     @Synchronized

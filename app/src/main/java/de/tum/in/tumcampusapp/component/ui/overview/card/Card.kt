@@ -3,26 +3,28 @@ package de.tum.`in`.tumcampusapp.component.ui.overview.card
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DiffUtil
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavDestination
-import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX
+import de.tum.`in`.tumcampusapp.utils.Const.DISCARD_SETTINGS_START
 import de.tum.`in`.tumcampusapp.utils.Utils
-import org.jetbrains.anko.defaultSharedPreferences
 
 /**
  * Base class for all cards
  * @param cardType Individual integer for each card type
  * @param context Android Context
+ * @param settingsPrefix Preference key prefix used for all preferences belonging to that card
  */
 abstract class Card(
-    val cardType: CardManager.CardTypes,
-    protected var context: Context
+    val cardType: Int,
+    protected var context: Context,
+    val settingsPrefix: String = ""
 ) : Comparable<Card> {
 
-    // stores information for dismiss
-    private val dismissCardSharedPreferences: SharedPreferences = context.getSharedPreferences("CardPref$cardType", Context.MODE_PRIVATE)
+    // Settings for showing this card on start page or as notification
+    private var showStart = Utils.getSettingBool(context, settingsPrefix + "_start", true)
 
     open fun getId(): Int {
         return 0
@@ -68,7 +70,8 @@ abstract class Card(
      * Should be called after the user has dismissed the card
      */
     fun discard() {
-        val editor = dismissCardSharedPreferences.edit()
+        val prefs = context.getSharedPreferences(DISCARD_SETTINGS_START, 0)
+        val editor = prefs.edit()
         discard(editor)
         editor.apply()
     }
@@ -79,8 +82,9 @@ abstract class Card(
      * @return The Card to be displayed or null
      */
     open fun getIfShowOnStart(): Card? {
-        if (context.defaultSharedPreferences.getBoolean(context.getString(cardType.showCardPreferenceStringRes), true)) {
-            if (shouldShow(dismissCardSharedPreferences)) {
+        if (showStart) {
+            val prefs = context.getSharedPreferences(DISCARD_SETTINGS_START, 0)
+            if (shouldShow(prefs)) {
                 return this
             }
         }
@@ -88,7 +92,7 @@ abstract class Card(
     }
 
     /**
-     * Determines if the card should be shown at the card level. Decision is based on the given SharedPreferences.
+     * Determines if the card should be shown. Decision is based on the given SharedPreferences.
      * This method should be overridden in most cases.
      *
      * @return returns true if the card should be shown
@@ -102,11 +106,12 @@ abstract class Card(
      * reactivated manually by the user
      */
     open fun hideAlways() {
-        context.defaultSharedPreferences
-            .edit()
-            .putBoolean(context.getString(cardType.showCardPreferenceStringRes), false)
-            .apply()
-        Utils.log("Hiding card: $cardType")
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val e = prefs.edit()
+        e.putBoolean(settingsPrefix + "_start", false)
+        e.putBoolean(settingsPrefix + "_phone", false)
+        e.apply()
+        Utils.log("Hiding card: $settingsPrefix")
     }
 
     override fun compareTo(other: Card): Int {
@@ -114,8 +119,7 @@ abstract class Card(
     }
 
     /**
-     * Save information about the dismissed card/notification to decide later if the cardView should be shown again.
-     * It is exclusively called from [discard] where the changes made to the SharedPreferences are applied.
+     * Save information about the dismissed card/notification to decide later if the cardView should be shown again
      *
      * @param editor Editor to be used for saving values
      */
@@ -131,9 +135,9 @@ abstract class Card(
         override fun getNewListSize() = newList.size
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
-            oldList[oldItemPosition].cardType == newList[newItemPosition].cardType
+                oldList[oldItemPosition].cardType == newList[newItemPosition].cardType
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
-            oldList[oldItemPosition] == newList[newItemPosition]
+                oldList[oldItemPosition] == newList[newItemPosition]
     }
 }
