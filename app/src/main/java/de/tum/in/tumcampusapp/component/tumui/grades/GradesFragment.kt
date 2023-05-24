@@ -156,16 +156,38 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      * Adds all exams which are part of the new list to the existing exams list.
      */
     private fun addAllNewItemsToExamList(examsDownloaded: MutableList<Exam>) {
-        val examsTitles = exams.map { it.course }
-        examsDownloaded.removeAll { examsTitles.contains(it.course) }
+        var listAdapted = false
 
-        if (examsDownloaded.isNotEmpty()) {
-            examsDownloaded.forEach {
-                it.credits_new = 5
-                it.weight = 1.0
-                it.gradeUsedInAverage = true
+        examsDownloaded.forEach { downloadedExam ->
+            val examFiltered = exams.filter { e -> downloadedExam.course == e.course }
+            if (examFiltered.isEmpty()) { // Exam is not yet part of the list
+                downloadedExam.credits_new = 5
+                downloadedExam.weight = 1.0
+                downloadedExam.gradeUsedInAverage = true
+                downloadedExam.manuallyAdded = false
+                exams.add(downloadedExam)
+            } else { // exam already stored - update potentially
+                val exam = examFiltered[0]
+                // Exam was not manually added and the grade changed in TUM online -> adapt to the new grade.
+                val newGradeForOfficiallyExam =
+                    !exam.grade.equals(downloadedExam.grade) && !exam.manuallyAdded
+                // Exam was added manually but is now alo part of the downloaded list -> remove manually added state.
+                val manuallyAddedNowOfficial =
+                    exam.grade.equals(downloadedExam.grade) && exam.manuallyAdded
+
+                if (newGradeForOfficiallyExam || manuallyAddedNowOfficial) {
+                    downloadedExam.credits_new = exam.credits_new
+                    downloadedExam.weight = exam.weight
+                    downloadedExam.gradeUsedInAverage = exam.gradeUsedInAverage
+                    downloadedExam.manuallyAdded = false
+                    exams.remove(exam)
+                    exams.add(downloadedExam)
+                    listAdapted = true
+                }
             }
-            exams.addAll(examsDownloaded)
+        }
+
+        if (listAdapted) {
             storeExamListInSharedPreferences()
         }
     }
@@ -288,7 +310,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         if (adaptDiagramToWeights) {
             entries = grades.mapIndexed { index, grade ->
                 val value: Double = gradeDistribution[grade] ?: 0.0
-                BarEntry(index.toFloat(), ((value*100) / sum).toFloat())
+                BarEntry(index.toFloat(), ((value * 100) / sum).toFloat())
             }
         } else {
             entries = grades.mapIndexed { index, grade ->
