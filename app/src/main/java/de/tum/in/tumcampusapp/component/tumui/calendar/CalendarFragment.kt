@@ -599,7 +599,6 @@ class CalendarFragment :
         return daysInMonthArray
     }
 
-
     private fun formatLocalDate(date: LocalDate): String {
         val formatter = DateTimeFormat.forPattern("MMMM yyyy")
         return formatter.print(date.withDayOfMonth(1))
