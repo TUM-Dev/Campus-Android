@@ -29,6 +29,7 @@ class NotificationOverviewActivity : BaseActivity(R.layout.activity_notification
 
 
 
+
         // lists of notifications retrieved from different sources
         val activeNotifications = notificationManager.activeNotifications.asList()
         val scheduledNotifications = TcaDb.getInstance(applicationContext).scheduledNotificationsDao().getAllScheduledNotifications()
@@ -39,20 +40,19 @@ class NotificationOverviewActivity : BaseActivity(R.layout.activity_notification
                 activeNotifications.size, scheduledNotifications.size, alarms.size), Toast.LENGTH_LONG).show()
 
 
-
         val notificationsList = emptyList<NotificationItemForStickyList>().toMutableList()
 
 
         activeNotifications.forEach {
-            notificationsList.add(NotificationItemForStickyList(it.toString(), "Active Notifications"))
+            notificationsList.add(NotificationItemForStickyList(it.toString(), getString(R.string.active_notifications)))
         }
 
         scheduledNotifications.forEach {
-            notificationsList.add(NotificationItemForStickyList(it.toString(), "Scheduled Notifications"))
+            notificationsList.add(NotificationItemForStickyList(it.toString(), getString(R.string.scheduled_notifications)))
         }
 
         alarms.forEach {
-            notificationsList.add(NotificationItemForStickyList(it.toString(), "Alarms"))
+            notificationsList.add(NotificationItemForStickyList(it.toString(), getString(R.string.alarms)))
         }
 
 

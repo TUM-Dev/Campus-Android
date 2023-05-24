@@ -365,6 +365,9 @@
 
     <!-- Notification Overview -->
     <string name="notification_overview">Notification Overview</string>
+    <string name="active_notifications">Active Notifications</string>
+    <string name="scheduled_notifications">Scheduled Notifications</string>
+    <string name="alarms">Alarms</string>
 
     <!-- END Translated, please do not change identifiers -->
     <string name="min_search_len" tools:ignore="PluralsCandidate">Query must be at least %d chars long</string>
