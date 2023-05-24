@@ -39,7 +39,6 @@ import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.databinding.FragmentSearchBinding
 import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
@@ -164,6 +163,7 @@ class SearchFragment : BaseFragment<Unit>(
     private fun initSearchResultsAdapter() {
         searchResultsAdapter = SearchResultsAdapter { onSearchResultClicked(it) }
         binding.searchResultsRecyclerView.adapter = searchResultsAdapter
+        binding.searchResultsRecyclerView.itemAnimator = null
 
         searchResultsAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onChanged() {
@@ -310,7 +310,6 @@ class SearchFragment : BaseFragment<Unit>(
 
             if (searchResultState.availableResultTypes.isNotEmpty()) {
                 binding.searchResultTypesRecyclerView.visibility = View.VISIBLE
-                resultTypesAdapter.submitList(mapToResultTypeData(viewModel.state.value.availableResultTypes, viewModel.state.value.selectedType))
                 resultTypesAdapter.submitList(
                     mapToResultTypeData(
                         viewModel.state.value.availableResultTypes,
@@ -332,7 +331,7 @@ class SearchFragment : BaseFragment<Unit>(
         return availableTypes.map { searchResultType ->
             ResultTypeData(
                 type = searchResultType,
-                selectedType = selectedType
+                selected = searchResultType == selectedType
             )
         }
     }

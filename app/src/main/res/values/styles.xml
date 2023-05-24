@@ -222,4 +222,10 @@
         <item name="android:textColor">@color/white</item>
         <item name="iconTint">@color/white</item>
     </style>
+
+    <style name="Chip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/choice_chip_background_color</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipStrokeColor">@color/icon_background</item>
+    </style>
 </resources>
