@@ -41,7 +41,6 @@ import org.joda.time.format.DateTimeFormat
 import java.time.YearMonth
 import java.util.*
 
-
 class CalendarFragment :
     FragmentForAccessingTumOnline<EventsResponse>(
         R.layout.fragment_calendar,
@@ -80,11 +79,10 @@ class CalendarFragment :
             }
         };
 
-        abstract fun numberOfVisibleDays(): Int;
+        abstract fun numberOfVisibleDays(): Int
     }
 
     private var viewMode = ViewMode.MONTH
-
 
     private var isFetched: Boolean = false
     private var menuItemSwitchView: MenuItem? = null
@@ -144,10 +142,12 @@ class CalendarFragment :
         monthRecyclerView = binding.layoutMonth.monthGrid
         refreshMonthView()
         binding.layoutMonth.monthBackButton.setOnClickListener {
-            previousMonthAction()
+            selectedDate = selectedDate.minusMonths(1)
+            refreshMonthView()
         }
         binding.layoutMonth.monthForwardButton.setOnClickListener {
-            nextMonthAction()
+            selectedDate = selectedDate.plusMonths(1)
+            refreshMonthView()
         }
 
         // Tracks whether the user has used the calendar module before. This is used in determining when to prompt for a
@@ -603,17 +603,6 @@ class CalendarFragment :
     private fun formatLocalDate(date: LocalDate): String {
         val formatter = DateTimeFormat.forPattern("MMMM yyyy")
         return formatter.print(date.withDayOfMonth(1))
-    }
-
-
-    private fun previousMonthAction() {
-        selectedDate = selectedDate.minusMonths(1)
-        refreshMonthView()
-    }
-
-    private fun nextMonthAction() {
-        selectedDate = selectedDate.plusMonths(1)
-        refreshMonthView()
     }
 
     override fun onDestroyView() {

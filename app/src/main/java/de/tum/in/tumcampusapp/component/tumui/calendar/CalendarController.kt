@@ -78,8 +78,6 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
         return eventMap
     }
 
-
-
     private fun applyEventColors(calendarItems: List<CalendarItem>): List<CalendarItem> {
         calendarItems.forEach {
             it.color = eventColorProvider.getColor(it)

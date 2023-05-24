@@ -7,14 +7,14 @@ import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
 
-class MonthViewAdapter(private var daysOfMonth: ArrayList<String>, private var eventMap: Map<String, List<CalendarItem>>)
-    : RecyclerView.Adapter<MonthViewHolder>() {
+class MonthViewAdapter(private var daysOfMonth: ArrayList<String>, private var eventMap: Map<String, List<CalendarItem>>) :
+    RecyclerView.Adapter<MonthViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MonthViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.calendar_month_view_cell, parent, false)
         val layoutParams = view.layoutParams
-        layoutParams.height = (parent.height * 1/6)
+        layoutParams.height = (parent.height * 1 / 6)
         return MonthViewHolder(view)
     }
 
@@ -35,5 +35,4 @@ class MonthViewAdapter(private var daysOfMonth: ArrayList<String>, private var e
         this.eventMap = eventMap
         notifyDataSetChanged()
     }
-
 }
