@@ -317,6 +317,8 @@
     <string name="active_notifications">Aktive Benarichtigungen</string>
     <string name="scheduled_notifications">Geplante Benarichtigungen</string>
     <string name="alarms">Alarme</string>
+    <string name="alarmintents_per_type">AlarmIntents nach Benarichtigungstyp</string>
+
 
     <!-- END Translated, please do not change identifiers -->
     <string name="min_search_len">Text muss mindestens %d Zeichen lang sein</string>
