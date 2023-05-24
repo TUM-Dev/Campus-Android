@@ -185,6 +185,10 @@ class MainFragment : BaseFragment<Unit>(
                 flow.addOnCompleteListener {
                     Utils.setSetting(requireContext(), Const.LAST_REVIEW_PROMPT, Date().time.toString())
                 }
+            } else {
+                // There was some problem, log or handle the error code.
+                Utils.showToast(requireContext(),R.string.in_app_review_failed_to_start)
+                task.exception?.let { Utils.log(it) }
             }
         }
     }

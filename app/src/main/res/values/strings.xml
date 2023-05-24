@@ -873,4 +873,5 @@ Signature: %5$s</string>
     <string name="starts_now">Starts now</string>
     <string name="tomorrow_time">Tomorrow %1$s</string>
     <string name="IN_capitalized">In</string>
+    <string name="in_app_review_failed_to_start">In App ReviewFlow failed to start</string>
 </resources>
