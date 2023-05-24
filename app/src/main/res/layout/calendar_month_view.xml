@@ -14,7 +14,7 @@
             android:id="@+id/monthBackButton"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="32dp"
             android:layout_gravity="center_vertical|end"
             android:layout_weight="1"
             android:contentDescription="@string/month_view_back_button_description"
@@ -37,7 +37,7 @@
         <TextView
             android:id="@+id/monthYearText"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="32dp"
             android:layout_weight="1"
             android:gravity="center"
             android:text="January 2023"
