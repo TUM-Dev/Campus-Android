@@ -206,7 +206,7 @@ dependencies {
     implementation 'org.apache.tomcat:annotations-api:6.0.53'
 
     // View binding helper
-    implementation "com.github.Zhuinden:fragmentviewbindingdelegate-kt:1.0.0"
+    implementation "com.github.Zhuinden:fragmentviewbindingdelegate-kt:1.0.2"
 }
 
 protobuf {
