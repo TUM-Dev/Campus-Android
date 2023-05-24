@@ -368,7 +368,8 @@
     <string name="active_notifications">Active Notifications</string>
     <string name="scheduled_notifications">Scheduled Notifications</string>
     <string name="alarms">Alarms</string>
-    <string name="alarmintents_per_type">AlarmIntents per NotificationType</string>
+    <string name="pendingintents_per_type">PendingIntents per NotificationType</string>
+    <string name="pendingintents_per_scheduled_notification">PendingIntents per ScheduledNotification</string>
 
     <!-- END Translated, please do not change identifiers -->
     <string name="min_search_len" tools:ignore="PluralsCandidate">Query must be at least %d chars long</string>
