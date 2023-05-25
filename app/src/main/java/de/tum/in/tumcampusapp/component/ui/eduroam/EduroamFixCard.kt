@@ -2,11 +2,13 @@ package de.tum.`in`.tumcampusapp.component.ui.eduroam
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiEnterpriseConfig.Eap.PEAP
 import android.net.wifi.WifiEnterpriseConfig.Eap.TTLS
 import android.net.wifi.WifiEnterpriseConfig.Phase2.MSCHAPV2
 import android.net.wifi.WifiEnterpriseConfig.Phase2.PAP
+import android.net.wifi.WifiManager
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.M
 import android.view.LayoutInflater
@@ -19,8 +21,6 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
-import org.jetbrains.anko.defaultSharedPreferences
-import org.jetbrains.anko.wifiManager
 import java.util.*
 import java.util.regex.Pattern
 
@@ -70,13 +70,14 @@ class EduroamFixCard(
 
     override fun shouldShow(prefs: SharedPreferences): Boolean {
         // Check if wifi is turned on at all, as we cannot say if it was configured if its off
-        return if (!context.wifiManager.isWifiEnabled) {
+        return if (!(context.getSystemService(Context.WIFI_SERVICE) as WifiManager).isWifiEnabled) {
             false
         } else !isConfigValid()
     }
 
     override fun discard(editor: SharedPreferences.Editor) {
-        context.defaultSharedPreferences.edit().putBoolean("card_eduroam_fix_start", false).apply()
+        context.getSharedPreferences(Resources.getSystem().getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+                .edit().putBoolean("card_eduroam_fix_start", false).apply()
     }
 
     override fun getId(): Int {
