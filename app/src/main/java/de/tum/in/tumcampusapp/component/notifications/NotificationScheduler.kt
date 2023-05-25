@@ -27,7 +27,7 @@ import javax.inject.Inject
  */
 class NotificationScheduler @Inject constructor(private val context: Context) {
 
-    private val notificationManager = NotificationManagerCompat.from(context)//context.notificationManager
+    private val notificationManager = NotificationManagerCompat.from(context)
 
     /**
      * Schedules a list of [FutureNotification]s for the time specified by each notification.
