@@ -2,7 +2,7 @@ package de.tum.`in`.tumcampusapp.di
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import dagger.Binds
 import dagger.Module

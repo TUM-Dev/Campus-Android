@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria
 
 import android.content.Context
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaMenuManager
 import org.joda.time.DateTime
 import org.joda.time.LocalTime

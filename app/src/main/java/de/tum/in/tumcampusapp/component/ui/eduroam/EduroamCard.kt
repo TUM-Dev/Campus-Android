@@ -7,7 +7,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.net.wifi.WifiManager
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.checkSelfPermission

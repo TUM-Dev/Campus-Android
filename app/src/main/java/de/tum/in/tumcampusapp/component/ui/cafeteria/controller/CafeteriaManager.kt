@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller
 
 import android.content.Context
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.notifications.ProvidesNotifications
 import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager

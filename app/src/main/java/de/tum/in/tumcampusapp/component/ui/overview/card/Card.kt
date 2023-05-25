@@ -3,7 +3,7 @@ package de.tum.`in`.tumcampusapp.component.ui.overview.card
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DiffUtil
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavDestination

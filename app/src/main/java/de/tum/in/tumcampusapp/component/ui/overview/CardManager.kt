@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.ui.overview
 
 import android.content.Context
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX
