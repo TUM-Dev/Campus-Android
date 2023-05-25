@@ -2,6 +2,7 @@ package de.tum.`in`.tumcampusapp.service
 
 import android.os.Bundle
 import androidx.annotation.IntDef
+import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -11,7 +12,6 @@ import de.tum.`in`.tumcampusapp.component.other.generic.PushNotification
 import de.tum.`in`.tumcampusapp.component.ui.alarm.AlarmPushNotification
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
-import org.jetbrains.anko.notificationManager
 import java.io.IOException
 
 /**
@@ -105,7 +105,7 @@ class FcmReceiverService : FirebaseMessagingService() {
      */
     private fun postNotification(pushNotification: PushNotification) {
         pushNotification.notification?.let {
-            val manager = applicationContext.notificationManager
+            val manager = NotificationManagerCompat.from(applicationContext)
             manager.notify(pushNotification.displayNotificationId, it)
         }
     }
