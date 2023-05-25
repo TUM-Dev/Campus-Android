@@ -2,6 +2,7 @@ package de.tum.`in`.tumcampusapp.component.ui.news
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +20,6 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
-import org.jetbrains.anko.defaultSharedPreferences
 
 /**
  * Shows important news
@@ -31,7 +31,8 @@ class TopNewsCard(context: Context) : Card(CardManager.CARD_TOP_NEWS, context, "
     private val newsAlert: NewsAlert?
 
     init {
-        this.topNewsStore = RealTopNewsStore(context.defaultSharedPreferences)
+        this.topNewsStore = RealTopNewsStore(
+                context.getSharedPreferences(Resources.getSystem().getString(R.string.preference_file_key), Context.MODE_PRIVATE))
         this.newsAlert = topNewsStore.getNewsAlert()
     }
 
