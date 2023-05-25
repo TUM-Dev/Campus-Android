@@ -1,5 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket
 
+import android.content.res.Resources
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -7,7 +8,6 @@ import com.google.android.material.button.MaterialButton
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.TicketType
 import de.tum.`in`.tumcampusapp.utils.Utils
-import org.jetbrains.anko.textColor
 
 class TicketAmountViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -58,7 +58,8 @@ class TicketAmountViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
             currentAmount.text = ticketAmount.toString()
             plusButton.isEnabled = false
             minusButton.isEnabled = false
-            ticketTypeName.textColor = R.color.text_light_gray
+            ticketTypeName.setTextColor(Resources.getSystem().getColor(R.color.text_light_gray, null))
+
         }
         updateButtonState()
     }
