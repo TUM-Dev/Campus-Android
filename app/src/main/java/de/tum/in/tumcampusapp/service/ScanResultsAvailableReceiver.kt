@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.net.wifi.WifiManager
 import android.net.wifi.WifiManager.SCAN_RESULTS_AVAILABLE_ACTION
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
@@ -18,7 +19,6 @@ import de.tum.`in`.tumcampusapp.component.ui.eduroam.SetupEduroamActivity
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
-import org.jetbrains.anko.wifiManager
 
 /**
  * Listens for android's ScanResultsAvailable broadcast and checks if eduroam is nearby.
@@ -38,7 +38,7 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
             return
         }
 
-        if (!context.wifiManager.isWifiEnabled) {
+        if ((context.getSystemService(Context.WIFI_SERVICE) as WifiManager).isWifiEnabled) {
             return
         }
 
@@ -55,7 +55,7 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
         val isEduroamConfigured = EduroamController.getEduroamConfig(context) != null ||
                 NetUtils.isConnected(context)
 
-        context.wifiManager.scanResults.forEach { network ->
+        (context.getSystemService(Context.WIFI_SERVICE) as WifiManager).scanResults.forEach { network ->
             if (network.SSID != Const.EDUROAM_SSID && network.SSID != Const.LRZ) {
                 return@forEach
             }
