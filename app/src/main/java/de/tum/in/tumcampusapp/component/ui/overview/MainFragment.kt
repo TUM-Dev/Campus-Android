@@ -8,6 +8,7 @@ import android.net.Network
 import android.net.NetworkRequest
 import android.os.Bundle
 import android.view.View
+import androidx.core.net.ConnectivityManagerCompat
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,7 +34,6 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.observe
-import org.jetbrains.anko.connectivityManager
 import org.jetbrains.anko.support.v4.runOnUiThread
 import org.joda.time.DateTime
 import java.util.*
@@ -48,7 +48,7 @@ class MainFragment : BaseFragment<Unit>(
 
     private var isConnectivityChangeReceiverRegistered = false
     private val connectivityManager: ConnectivityManager by lazy {
-        requireContext().connectivityManager
+        requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     }
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
