@@ -1,5 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.other.generic.fragment
 
+import android.content.Context
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.Network
@@ -33,7 +34,7 @@ import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.setImageResourceOrHide
 import de.tum.`in`.tumcampusapp.utils.setTextOrHide
-import org.jetbrains.anko.connectivityManager
+//import org.jetbrains.anko.connectivityManager
 import org.jetbrains.anko.support.v4.runOnUiThread
 import retrofit2.Call
 import retrofit2.Callback
@@ -41,8 +42,8 @@ import retrofit2.Response
 import java.net.UnknownHostException
 
 abstract class BaseFragment<T>(
-    @LayoutRes private val layoutId: Int,
-    @StringRes private val titleResId: Int
+        @LayoutRes private val layoutId: Int,
+        @StringRes private val titleResId: Int
 ) : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private var apiCall: Call<T>? = null
@@ -70,9 +71,9 @@ abstract class BaseFragment<T>(
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? = inflater.inflate(layoutId, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -243,7 +244,8 @@ abstract class BaseFragment<T>(
                 .build()
 
         if (registered.not()) {
-            baseActivity.connectivityManager.registerNetworkCallback(request, networkCallback)
+            (baseActivity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+                    .registerNetworkCallback(request, networkCallback)
             registered = true
         }
     }
@@ -313,7 +315,8 @@ abstract class BaseFragment<T>(
      */
     protected fun showLoadingStart() {
         if (registered) {
-            baseActivity.connectivityManager.unregisterNetworkCallback(networkCallback)
+            (baseActivity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+                    .unregisterNetworkCallback(networkCallback)
             registered = false
         }
 
@@ -372,7 +375,8 @@ abstract class BaseFragment<T>(
 
     override fun onDestroy() {
         if (registered) {
-            baseActivity.connectivityManager.unregisterNetworkCallback(networkCallback)
+            (baseActivity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+                    .unregisterNetworkCallback(networkCallback)
             registered = false
         }
         super.onDestroy()
