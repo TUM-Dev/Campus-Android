@@ -59,7 +59,7 @@ class BaseNavigationActivity : BaseActivity(
         initDrawer()
         supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentCallbacks, false)
 
-        this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE).registerOnSharedPreferenceChangeListener(this)
+        getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE).registerOnSharedPreferenceChangeListener(this)
 
         if (savedInstanceState == null) {
             supportFragmentManager
@@ -142,7 +142,7 @@ class BaseNavigationActivity : BaseActivity(
     }
 
     override fun onDestroy() {
-        this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE).unregisterOnSharedPreferenceChangeListener(this)
+        getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE).unregisterOnSharedPreferenceChangeListener(this)
         super.onDestroy()
     }
 
