@@ -19,5 +19,4 @@ interface ScheduledNotificationsDao {
 
     @Query("SELECT * FROM scheduled_notifications")
     fun getAllScheduledNotifications(): List<ScheduledNotification>
-
 }

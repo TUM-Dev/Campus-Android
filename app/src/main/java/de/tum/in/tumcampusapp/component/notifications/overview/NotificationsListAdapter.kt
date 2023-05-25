@@ -34,5 +34,4 @@ class NotificationsListAdapter(context: Context, results: MutableList<Notificati
     internal class ViewHolder {
         var textView: TextView? = null
     }
-
 }
