@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.edit
+import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
@@ -162,8 +163,7 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
 
         // Gets the editor for editing preferences and updates the preference values with the
         // chosen state
-        requireContext()
-            .getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
             .edit {
                 with(binding) {
                     putBoolean(Const.SILENCE_SERVICE, silentModeCheckBox.isChecked)

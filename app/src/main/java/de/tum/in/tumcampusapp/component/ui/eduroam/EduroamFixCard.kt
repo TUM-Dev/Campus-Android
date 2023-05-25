@@ -2,7 +2,6 @@ package de.tum.`in`.tumcampusapp.component.ui.eduroam
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.res.Resources
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiEnterpriseConfig.Eap.PEAP
 import android.net.wifi.WifiEnterpriseConfig.Eap.TTLS
@@ -13,6 +12,7 @@ import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.M
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
@@ -76,8 +76,7 @@ class EduroamFixCard(
     }
 
     override fun discard(editor: SharedPreferences.Editor) {
-        context.getSharedPreferences(Resources.getSystem().getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-                .edit().putBoolean("card_eduroam_fix_start", false).apply()
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean("card_eduroam_fix_start", false).apply()
     }
 
     override fun getId(): Int {

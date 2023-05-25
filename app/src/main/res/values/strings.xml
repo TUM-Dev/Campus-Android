@@ -15,7 +15,6 @@
     <string name="no">No</string>
     <string name="no_internet_connection">No internet connection available</string>
     <string name="app_short_description" translatable="false">TUM information platform - from students for students</string>
-    <string name="preference_file_key" translatable="false">de.tum.`in`.tumcampusapp.PREFERENCE_FILE_KEY</string>
 
     <!-- Calendar -->
     <string name="ends_after">Ends after</string>

@@ -21,6 +21,7 @@ import androidx.preference.MultiSelectListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreferenceCompat
 import com.squareup.picasso.Picasso
 import de.tum.`in`.tumcampusapp.R
@@ -107,8 +108,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
             }
         }
 
-        requireContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-                .registerOnSharedPreferenceChangeListener(this)
+        PreferenceManager.getDefaultSharedPreferences(requireContext()).registerOnSharedPreferenceChangeListener(this)
     }
 
     private fun populateNewsSources() {
@@ -305,7 +305,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
     @Throws(ExecutionException::class, InterruptedException::class)
     private fun clearData() {
         TcaDb.resetDb(requireContext())
-        requireContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE).edit().clear().commit()
+        PreferenceManager.getDefaultSharedPreferences(requireContext()).edit().clear().commit()
 
         // Remove all notifications that are currently shown
         (requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancelAll()

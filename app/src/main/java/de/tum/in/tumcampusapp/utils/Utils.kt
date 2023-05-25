@@ -4,7 +4,6 @@ import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Build
@@ -17,7 +16,6 @@ import androidx.core.content.pm.PackageInfoCompat
 import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.BuildConfig
-import de.tum.`in`.tumcampusapp.R
 import java.io.IOException
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -40,10 +38,7 @@ object Utils {
             return
         }
 
-        val prefsEditor = context.getSharedPreferences(
-                Resources.getSystem().getString(R.string.preference_file_key),
-                Context.MODE_PRIVATE
-        ).edit()
+        val prefsEditor = PreferenceManager.getDefaultSharedPreferences(context).edit()
 
         for ((key, value) in entries) {
             when (value) {
