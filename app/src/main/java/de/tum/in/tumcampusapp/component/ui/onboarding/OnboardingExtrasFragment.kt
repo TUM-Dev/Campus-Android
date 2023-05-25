@@ -23,7 +23,6 @@ import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
-import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.support.v4.browse
 import java.io.IOException
 import javax.inject.Inject
@@ -164,7 +163,7 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
         // Gets the editor for editing preferences and updates the preference values with the
         // chosen state
         requireContext()
-            .defaultSharedPreferences
+            .getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
             .edit {
                 with(binding) {
                     putBoolean(Const.SILENCE_SERVICE, silentModeCheckBox.isChecked)
