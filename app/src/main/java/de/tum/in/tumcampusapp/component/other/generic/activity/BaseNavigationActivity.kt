@@ -1,5 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.other.generic.activity
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
@@ -22,7 +23,6 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainFragment
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.closeDrawers
-import org.jetbrains.anko.defaultSharedPreferences
 
 class BaseNavigationActivity : BaseActivity(
     R.layout.activity_main
@@ -58,7 +58,8 @@ class BaseNavigationActivity : BaseActivity(
 
         initDrawer()
         supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentCallbacks, false)
-        defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this)
+
+        this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE).registerOnSharedPreferenceChangeListener(this)
 
         if (savedInstanceState == null) {
             supportFragmentManager
@@ -141,7 +142,7 @@ class BaseNavigationActivity : BaseActivity(
     }
 
     override fun onDestroy() {
-        defaultSharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+        this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE).unregisterOnSharedPreferenceChangeListener(this)
         super.onDestroy()
     }
 
