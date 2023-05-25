@@ -1,11 +1,11 @@
 package de.tum.`in`.tumcampusapp.utils
 
 import android.content.Context
+import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.NetworkCapabilities.*
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.M
-import org.jetbrains.anko.connectivityManager
 
 object NetUtils {
 
@@ -21,7 +21,7 @@ object NetUtils {
         condition: (NetworkCapabilities) -> Boolean = { true }
     ):
             Boolean {
-        val connectivityMgr = context.connectivityManager
+        val connectivityMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         return connectivityMgr.allNetworks.asSequence().filter {
             connectivityMgr.getNetworkInfo(it)?.isConnected ?: false
