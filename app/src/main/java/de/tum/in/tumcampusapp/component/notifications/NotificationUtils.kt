@@ -6,9 +6,9 @@ import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
+import androidx.core.app.NotificationManagerCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.utils.Const
-import org.jetbrains.anko.notificationManager
 
 object NotificationUtils {
 
@@ -79,7 +79,7 @@ object NotificationUtils {
             lightColor = Color.RED
         }
 
-        val notificationManager = context.notificationManager
+        val notificationManager = NotificationManagerCompat.from(context)
         val channels = listOf(default, chat, eduroam, cafeteria, mvv, emergency)
 
         channels.forEach { notificationManager.createNotificationChannel(it) }
