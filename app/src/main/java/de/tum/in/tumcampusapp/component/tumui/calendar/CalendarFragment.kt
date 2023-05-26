@@ -9,13 +9,13 @@ import android.os.Bundle
 import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import android.provider.CalendarContract
 import android.text.format.DateUtils
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
+import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.alamkanak.weekview.DateTimeInterpreter
 import com.alamkanak.weekview.WeekViewDisplayable
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
@@ -38,6 +38,7 @@ import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
+import java.time.YearMonth
 import java.util.*
 
 class CalendarFragment :
@@ -61,7 +62,27 @@ class CalendarFragment :
         value ?: ""
     }
 
-    private var isWeekMode = false
+    private enum class ViewMode {
+        DAY {
+            override fun numberOfVisibleDays(): Int {
+                return 1
+            }
+        },
+        WEEK {
+            override fun numberOfVisibleDays(): Int {
+                return 5
+            }
+        },
+        MONTH {
+            override fun numberOfVisibleDays(): Int {
+                return 30
+            }
+        };
+
+        abstract fun numberOfVisibleDays(): Int
+    }
+
+    private var viewMode = ViewMode.MONTH
 
     private var isFetched: Boolean = false
     private var menuItemSwitchView: MenuItem? = null
@@ -72,6 +93,11 @@ class CalendarFragment :
     private var detailsFragment: CalendarDetailsFragment? = null
 
     private val binding by viewBinding(FragmentCalendarBinding::bind)
+
+    private lateinit var monthYearText: TextView
+    private lateinit var monthRecyclerView: RecyclerView
+    private var selectedDate: LocalDate = LocalDate.now()
+    private lateinit var monthViewAdapter: MonthViewAdapter
 
     override val swipeRefreshLayout get() = binding.swipeRefreshLayout
     override val layoutAllErrorsBinding get() = binding.layoutAllErrors
@@ -108,9 +134,21 @@ class CalendarFragment :
 
         showDate?.let { openEvent(eventId) }
 
-        isWeekMode = Utils.getSettingBool(requireContext(), Const.CALENDAR_WEEK_MODE, false)
+        viewMode = ViewMode.valueOf(Utils.getSetting(requireContext(), Const.CALENDAR_VIEW_MODE, ViewMode.MONTH.toString()))
 
         disableRefresh()
+
+        monthYearText = binding.layoutMonth.monthYearText
+        monthRecyclerView = binding.layoutMonth.monthGrid
+        refreshMonthView()
+        binding.layoutMonth.monthBackButton.setOnClickListener {
+            selectedDate = selectedDate.minusMonths(1)
+            refreshMonthView()
+        }
+        binding.layoutMonth.monthForwardButton.setOnClickListener {
+            selectedDate = selectedDate.plusMonths(1)
+            refreshMonthView()
+        }
 
         // Tracks whether the user has used the calendar module before. This is used in determining when to prompt for a
         // Google Play store review
@@ -120,7 +158,7 @@ class CalendarFragment :
     override fun onStart() {
         super.onStart()
         refreshWeekView()
-
+        refreshMonthView()
         // In case the timezone changes when reopening the calendar, while the app is still open, this ensures
         // that the lectures are still adjusted to the new timezone
         loadEvents(CacheControl.BYPASS_CACHE)
@@ -197,8 +235,12 @@ class CalendarFragment :
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_switch_view_mode -> {
-                isWeekMode = !isWeekMode
-                Utils.setSetting(requireContext(), Const.CALENDAR_WEEK_MODE, isWeekMode)
+                viewMode = when (viewMode) {
+                    ViewMode.DAY -> ViewMode.WEEK
+                    ViewMode.WEEK -> ViewMode.MONTH
+                    ViewMode.MONTH -> ViewMode.DAY
+                }
+                Utils.setSetting(requireContext(), Const.CALENDAR_VIEW_MODE, viewMode.toString())
                 refreshWeekView()
                 return true
             }
@@ -439,15 +481,25 @@ class CalendarFragment :
     }
 
     private fun refreshWeekView() {
-        setupDateTimeInterpreter(isWeekMode)
-        val icon: Int
+        setupDateTimeInterpreter(viewMode == ViewMode.WEEK)
 
-        if (isWeekMode) {
-            icon = R.drawable.ic_outline_calendar_view_day_24px
-            binding.weekView.numberOfVisibleDays = 5
-        } else {
-            icon = R.drawable.ic_outline_view_column_24px
-            binding.weekView.numberOfVisibleDays = 1
+        val icon = when (viewMode) {
+            ViewMode.DAY -> R.drawable.ic_outline_calendar_view_month_24px
+            ViewMode.WEEK -> R.drawable.ic_outline_calendar_view_day_24px
+            ViewMode.MONTH -> R.drawable.ic_outline_view_column_24px
+        }
+
+        when (viewMode) {
+            ViewMode.DAY, ViewMode.WEEK -> {
+                binding.layoutWeek.visibility = View.VISIBLE
+                binding.layoutMonth.root.visibility = View.GONE
+                binding.weekView.numberOfVisibleDays = viewMode.numberOfVisibleDays()
+            }
+
+            ViewMode.MONTH -> {
+                binding.layoutWeek.visibility = View.GONE
+                binding.layoutMonth.root.visibility = View.VISIBLE
+            }
         }
 
         // Go to current date or the one given in the intent
@@ -512,6 +564,44 @@ class CalendarFragment :
             }
             .setNegativeButton(getString(R.string.no), null)
             .show()
+    }
+
+    private fun refreshMonthView() {
+        monthYearText.text = formatLocalDate(selectedDate)
+        val daysInMonth = daysInMonth(selectedDate)
+
+        val eventMap = calendarController.getEventsForMonth(selectedDate)
+
+        if (!::monthViewAdapter.isInitialized) {
+            monthViewAdapter = MonthViewAdapter(daysInMonth, eventMap)
+            monthRecyclerView.adapter = monthViewAdapter
+        } else {
+            monthViewAdapter.updateData(daysInMonth, eventMap)
+        }
+
+        val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(requireContext(), 7)
+        monthRecyclerView.layoutManager = layoutManager
+    }
+
+    private fun daysInMonth(date: LocalDate): ArrayList<String> {
+        val daysInMonthArray: ArrayList<String> = ArrayList()
+        val yearMonth = YearMonth.of(date.year, date.monthOfYear)
+        val daysInMonth = yearMonth.lengthOfMonth()
+        val firstOfMonth = date.withDayOfMonth(1)
+        var dayOfWeek = firstOfMonth.dayOfWeek().get() - 1 // Monday is the first day of the week in Europe
+        for (i in 1..42) {
+            if (i <= dayOfWeek || i > daysInMonth + dayOfWeek) {
+                daysInMonthArray.add("")
+            } else {
+                daysInMonthArray.add((i - dayOfWeek).toString())
+            }
+        }
+        return daysInMonthArray
+    }
+
+    private fun formatLocalDate(date: LocalDate): String {
+        val formatter = DateTimeFormat.forPattern("MMMM yyyy")
+        return formatter.print(date.withDayOfMonth(1))
     }
 
     override fun onDestroyView() {
