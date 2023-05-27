@@ -317,8 +317,19 @@
     <string name="send_email">E-Mail Feedback senden</string>
     <string name="show_feedback">Feedback senden</string>
     <string name="feedbackSubj">Feedback für TUM Campus App</string>
-    <!-- END Translated, please do not change identifiers -->
+    <string name="show_notification_view_progress_single">Die Benachrichtigungsübersicht öffnet sich in einem Klick.</string>
+    <string name="show_notification_view_progress_multiple">Die Benachrichtigungsübersicht öffnet sich in %1$d Klicks.</string>
 
+    <!-- Notification Overview -->
+    <string name="notification_overview">Benarichtigungsübersicht</string>
+    <string name="active_notifications">Aktive Benarichtigungen</string>
+    <string name="scheduled_notifications">Geplante Benarichtigungen</string>
+    <string name="alarms">Alarme</string>
+    <string name="pendingintents_per_type">PendingIntents nach NotificationType</string>
+    <string name="pendingintents_per_scheduled_notification">PendingIntents nach ScheduledNotification</string>
+
+
+    <!-- END Translated, please do not change identifiers -->
     <string name="min_search_len">Text muss mindestens %d Zeichen lang sein</string>
     <string name="default_cafeteria">Standardmensa</string>
     <string name="default_station">Standardhaltestelle</string>

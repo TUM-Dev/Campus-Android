@@ -369,6 +369,16 @@
         The TUM Campus App is being developed by volunteers, students of the Android practical course and employees of the Chair of Operating Systems led by Professor Dr. Baumgarten.
         The app can be used on smartphones and tablets and is available for both iOS and Android.\n\nYou can reach us via the feedback form in the app or via email (app@tum.de) if you have any special concerns or requests.
     </string>
+    <string name="show_notification_view_progress_single">The notification overview opens in one click.</string>
+    <string name="show_notification_view_progress_multiple">The notification overview opens in %1$d clicks.</string>
+
+    <!-- Notification Overview -->
+    <string name="notification_overview">Notification Overview</string>
+    <string name="active_notifications">Active Notifications</string>
+    <string name="scheduled_notifications">Scheduled Notifications</string>
+    <string name="alarms">Alarms</string>
+    <string name="pendingintents_per_type">PendingIntents per NotificationType</string>
+    <string name="pendingintents_per_scheduled_notification">PendingIntents per ScheduledNotification</string>
 
     <!-- END Translated, please do not change identifiers -->
     <string name="min_search_len" tools:ignore="PluralsCandidate">Query must be at least %d chars long</string>
