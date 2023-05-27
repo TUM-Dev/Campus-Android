@@ -76,7 +76,11 @@ class NotificationOverviewActivity : BaseActivity(R.layout.activity_notification
         // extra data is ignored according to intent filter
         val intent = Intent(applicationContext, NotificationReceiver::class.java)
         // FLAG_NO_CREATE to only show existing intents
-        return PendingIntent.getBroadcast(applicationContext,
-                id, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_NO_CREATE)
+        return PendingIntent.getBroadcast(
+            applicationContext,
+            id,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_NO_CREATE
+        )
     }
 }
