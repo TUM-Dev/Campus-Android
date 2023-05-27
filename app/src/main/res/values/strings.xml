@@ -55,6 +55,15 @@
     <string name="custom_color_amber">Amber</string>
     <string name="custom_color_orange">Orange</string>
     <string name="apply_to_all_occurrences">Apply to all occurrences</string>
+    <string name="month_view_monday">MO</string>
+    <string name="month_view_tuesday">TU</string>
+    <string name="month_view_wednesday">WE</string>
+    <string name="month_view_thursday">TH</string>
+    <string name="month_view_friday">FR</string>
+    <string name="month_view_saturday">SA</string>
+    <string name="month_view_sunday">SU</string>
+    <string name="month_view_back_button_description">Go to previous month</string>
+    <string name="month_view_forward_button_description">Go to next month</string>
 
     <!-- Roomfinder -->
     <string name="no_map_available">No map available</string>

@@ -11,7 +11,7 @@ object Const {
     const val CAFETERIA_DATE = "cafeteriaDate"
     const val CAFETERIAS = "cafeterias"
     const val CAFETERIA_BY_LOCATION_SETTINGS_ID = "-1"
-    const val CALENDAR_WEEK_MODE = "calender_week_mode"
+    const val CALENDAR_VIEW_MODE = "calender_view_mode"
     const val EVENT_BOOKED_MODE = "event_booked_mode"
     const val DATABASE_NAME = "tca.db"
     const val DATE = "date"
