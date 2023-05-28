@@ -15,6 +15,7 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat.getColor
+import androidx.preference.PreferenceManager
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
@@ -32,7 +33,6 @@ import de.tum.`in`.tumcampusapp.component.tumui.grades.model.ExamList
 import de.tum.`in`.tumcampusapp.databinding.FragmentGradesBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
-import org.jetbrains.anko.support.v4.defaultSharedPreferences
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
@@ -253,7 +253,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
     }
 
     private fun storeGradedCourses(exams: List<Exam>) {
-        val gradesStore = GradesStore(defaultSharedPreferences)
+        val gradesStore = GradesStore(PreferenceManager.getDefaultSharedPreferences(activity))
         val courses = exams.map { it.course }
         gradesStore.store(courses)
     }
