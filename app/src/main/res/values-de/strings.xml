@@ -49,7 +49,15 @@
     <string name="custom_color_amber">Bernstein</string>
     <string name="custom_color_orange">Orange</string>
     <string name="apply_to_all_occurrences">Auf alle Vorkommen anwenden</string>
-
+    <string name="month_view_monday">MO</string>
+    <string name="month_view_tuesday">DI</string>
+    <string name="month_view_wednesday">MI</string>
+    <string name="month_view_thursday">DO</string>
+    <string name="month_view_friday">FR</string>
+    <string name="month_view_saturday">SA</string>
+    <string name="month_view_sunday">SO</string>
+    <string name="month_view_back_button_description">Gehe zum vorherigen Monat</string>
+    <string name="month_view_forward_button_description">Gehe zum nächsten Monat</string>
 
     <!-- Roomfinder -->
     <string name="no_map_available">Keine Karte verfügbar</string>
@@ -309,8 +317,19 @@
     <string name="send_email">E-Mail Feedback senden</string>
     <string name="show_feedback">Feedback senden</string>
     <string name="feedbackSubj">Feedback für TUM Campus App</string>
-    <!-- END Translated, please do not change identifiers -->
+    <string name="show_notification_view_progress_single">Die Benachrichtigungsübersicht öffnet sich in einem Klick.</string>
+    <string name="show_notification_view_progress_multiple">Die Benachrichtigungsübersicht öffnet sich in %1$d Klicks.</string>
 
+    <!-- Notification Overview -->
+    <string name="notification_overview">Benarichtigungsübersicht</string>
+    <string name="active_notifications">Aktive Benarichtigungen</string>
+    <string name="scheduled_notifications">Geplante Benarichtigungen</string>
+    <string name="alarms">Alarme</string>
+    <string name="pendingintents_per_type">PendingIntents nach NotificationType</string>
+    <string name="pendingintents_per_scheduled_notification">PendingIntents nach ScheduledNotification</string>
+
+
+    <!-- END Translated, please do not change identifiers -->
     <string name="min_search_len">Text muss mindestens %d Zeichen lang sein</string>
     <string name="default_cafeteria">Standardmensa</string>
     <string name="default_station">Standardhaltestelle</string>
