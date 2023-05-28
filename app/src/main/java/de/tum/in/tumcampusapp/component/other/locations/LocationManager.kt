@@ -20,7 +20,9 @@ import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.tryOrNull
-import org.jetbrains.anko.doAsync
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.lang.Double.parseDouble
 import java.util.*
 import javax.inject.Inject
@@ -37,6 +39,7 @@ import kotlin.math.pow
 class LocationManager @Inject constructor(c: Context) {
     private val mContext: Context = c.applicationContext
     private val buildingToGpsDao: BuildingToGpsDao
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
     init {
         val db = TcaDb.getInstance(c)
@@ -238,8 +241,8 @@ class LocationManager @Inject constructor(c: Context) {
      *
      * @return the id of current building
      */
-    fun fetchBuildingIDFromCurrentLocation(callback: (String?) -> Unit) {
-        doAsync {
+    suspend fun fetchBuildingIDFromCurrentLocation(callback: (String?) -> Unit) {
+        withContext(ioDispatcher){
             fetchBuildingIDFromLocation(getCurrentOrNextLocation(), callback)
         }
     }
