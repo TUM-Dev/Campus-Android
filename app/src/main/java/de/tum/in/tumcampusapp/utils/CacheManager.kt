@@ -43,9 +43,8 @@ class CacheManager @Inject constructor(private val context: Context) {
     }
 
     private fun loadRoomLocations() {
-        doAsync {
-            QueryLocationsService.enqueueWork(context)
-        }
+        // enqueues OneTimeWorkRequest
+        QueryLocationsService.enqueueWork(context)
     }
 
     @Synchronized

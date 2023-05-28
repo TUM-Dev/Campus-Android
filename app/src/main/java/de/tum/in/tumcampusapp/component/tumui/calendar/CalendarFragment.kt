@@ -193,6 +193,7 @@ class CalendarFragment :
     private fun onCalendarImportedIntoDatabase() {
         // Update the action bar to display the enabled menu options
         requireActivity().invalidateOptionsMenu()
+        // enqueues OneTimeWorkRequest
         QueryLocationsService.enqueueWork(requireContext())
     }
 
