@@ -20,7 +20,9 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.EventCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
 import de.tum.`in`.tumcampusapp.component.ui.updatenote.UpdateNoteCard
 import de.tum.`in`.tumcampusapp.utils.Utils
-import org.jetbrains.anko.doAsync
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CardsRepository @Inject constructor(
@@ -30,22 +32,22 @@ class CardsRepository @Inject constructor(
 
     private var cards = MutableLiveData<List<Card>>()
 
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+
     /**
-     * Starts refresh of [Card]s and returns the corresponding [LiveData]
-     * through which the result can be received.
+     * Returns the [LiveData] of the Repository
      *
      * @return The [LiveData] of [Card]s
      */
     fun getCards(): LiveData<List<Card>> {
-        refreshCards(CacheControl.USE_CACHE)
         return cards
     }
 
     /**
      * Refreshes the [LiveData] of [Card]s and updates its value.
      */
-    fun refreshCards(cacheControl: CacheControl) {
-        doAsync {
+    suspend fun refreshCards(cacheControl: CacheControl) {
+        withContext(ioDispatcher){
             val results = getCardsNow(cacheControl)
             cards.postValue(results)
         }
