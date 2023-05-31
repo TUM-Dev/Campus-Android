@@ -8,8 +8,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-//import org.jetbrains.anko.doAsync
-
 /**
  * Handles content for the study room feature, fetches external data.
  */
