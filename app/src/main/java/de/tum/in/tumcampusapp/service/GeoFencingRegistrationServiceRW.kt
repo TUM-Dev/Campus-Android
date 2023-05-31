@@ -36,6 +36,7 @@ class GeoFencingRegistrationServiceRW (appContext: Context, workerParams: Worker
 
         locationClient = LocationServices.getGeofencingClient(applicationContext)
 
+        Utils.log("Geo fencing service worker started …")
         if (!isLocationPermissionGranted()) {
             return Result.failure()
         }

@@ -23,7 +23,8 @@ class StartSyncReceiver : BroadcastReceiver() {
 
         // Also start the SilenceService. It checks if it is enabled, so we don't need to
         // SilenceService also needs accurate timings, so we can't use WorkManager
-        SilenceService.enqueueWork(context, Intent())
+        //SilenceService.enqueueWork(context, Intent())
+        SilenceServiceRW.enqueueWork(context)
     }
 
     companion object {
