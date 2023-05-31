@@ -1,6 +1,9 @@
 package de.tum.`in`.tumcampusapp.component.ui.onboarding
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -20,7 +23,6 @@ import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import org.jetbrains.anko.support.v4.browse
 import java.net.UnknownHostException
 import javax.inject.Inject
 
@@ -60,7 +62,18 @@ class CheckTokenFragment : BaseFragment<Unit>(
         super.onViewCreated(view, savedInstanceState)
         disableRefresh()
         with(binding) {
-            openTumOnlineButton.setOnClickListener { browse(Const.TUM_CAMPUS_URL) }
+            openTumOnlineButton.setOnClickListener {
+                // open url in default browser
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(Const.TUM_CAMPUS_URL))
+                try{
+                    startActivity(browserIntent)
+                }
+                // if no browser is installed catch exception and inform user
+                catch (e: ActivityNotFoundException){
+                    Utils.log(e)
+                    Toast.makeText(requireContext(), R.string.error_opening_url, Toast.LENGTH_LONG).show()
+                }
+            }
             nextButton.setOnClickListener { loadIdentitySet() }
         }
     }

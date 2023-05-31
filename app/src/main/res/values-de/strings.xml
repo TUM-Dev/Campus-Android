@@ -679,6 +679,7 @@ Signatur: %5$s</string>
     <string name="enter_name_placeholder">Name eingeben …</string>
     <string name="go_to_room">Raum anzeigen</string>
     <string name="enter_your_tum_id">TUM-ID eingeben …</string>
+    <string name="error_opening_url">Es wurde kein Webbrowser gefunden um die URL zu öffnen.</string>
 
     <string name="send_feedback_question">Feedback absenden?</string>
     <string name="feedback_empty">Bitte gib hier dein Feedback ein</string>

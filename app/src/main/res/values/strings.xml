@@ -676,6 +676,7 @@ Signature: %5$s</string>
     <string name="open_tum_online">Open TUMonline</string>
     <string name="go_to_room">Go to room</string>
     <string name="topic">Topic:</string>
+    <string name="error_opening_url">No Web Browser found to open the URL.</string>
 
     <string name="add">Add</string>
     <string name="recents">Recents</string>
