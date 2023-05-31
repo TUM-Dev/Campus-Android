@@ -95,6 +95,10 @@ object Const {
     const val EXTRA_FOREIGN_CONFIGURATION_EXISTS = "CONFIGURED_BY_OTHER_APP"
     const val GEOFENCING_SERVICE_JOB_ID = 1006
     const val ADD_GEOFENCE_EXTRA = "AddGeofence"
+    const val ADD_GEOFENCE_ID = "GeofenceID"
+    const val ADD_GEOFENCE_LAT = "GeofenceLatitude"
+    const val ADD_GEOFENCE_LON = "Geofencelongitude"
+    const val ADD_GEOFENCE_RANGE = "GeofenceRange"
     const val DISTANCE_IN_METER = 50 * 1000f
     const val MUNICH_GEOFENCE = "geofence_munich_id"
 
