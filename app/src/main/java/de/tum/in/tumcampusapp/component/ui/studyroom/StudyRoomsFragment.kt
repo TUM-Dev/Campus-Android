@@ -17,10 +17,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class StudyRoomsFragment : FragmentForAccessingTumCabe<List<StudyRoomGroup>>(
-    R.layout.fragment_study_rooms,
-    R.string.study_rooms
-), AdapterView.OnItemSelectedListener {
+class StudyRoomsFragment :
+    FragmentForAccessingTumCabe<List<StudyRoomGroup>>(
+        R.layout.fragment_study_rooms,
+        R.string.study_rooms
+    ),
+    AdapterView.OnItemSelectedListener {
 
     private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main
 
@@ -95,11 +97,10 @@ class StudyRoomsFragment : FragmentForAccessingTumCabe<List<StudyRoomGroup>>(
 
     override fun onDownloadSuccessful(response: List<StudyRoomGroup>) {
         // launches coroutine on MainThread that will call finally block after finishing
-        lifecycleScope.launch(mainDispatcher){
+        lifecycleScope.launch(mainDispatcher) {
             try {
                 studyRoomGroupManager.updateDatabase(response)
-            }
-            finally {
+            } finally {
                 groups = response
                 displayStudyRooms()
             }

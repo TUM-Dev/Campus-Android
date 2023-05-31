@@ -1,12 +1,12 @@
 package de.tum.`in`.tumcampusapp.component.ui.eduroam
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
-import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.net.wifi.WifiManager
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import androidx.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -55,7 +55,7 @@ class EduroamCard(context: Context) : Card(CardManager.CARD_EDUROAM, context, "c
     override fun discard(editor: SharedPreferences.Editor) {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         prefs.edit().putBoolean("card_eduroam_start", false)
-                .apply()
+            .apply()
     }
 
     override fun getId(): Int {

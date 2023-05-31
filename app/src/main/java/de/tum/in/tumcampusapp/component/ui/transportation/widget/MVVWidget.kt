@@ -69,13 +69,16 @@ class MVVWidget : AppWidgetProvider() {
      */
     private fun planUpdates(context: Context) {
         for (i in 1..3) {
-            timer.schedule(object : TimerTask() {
-                override fun run() {
-                    val reloadIntent = Intent(context, MVVWidget::class.java)
-                    reloadIntent.action = BROADCAST_RELOAD_ALL
-                    context.sendBroadcast(reloadIntent)
-                }
-            }, (UPDATE_TRIGGER_DELAY * i).toLong())
+            timer.schedule(
+                object : TimerTask() {
+                    override fun run() {
+                        val reloadIntent = Intent(context, MVVWidget::class.java)
+                        reloadIntent.action = BROADCAST_RELOAD_ALL
+                        context.sendBroadcast(reloadIntent)
+                    }
+                },
+                (UPDATE_TRIGGER_DELAY * i).toLong()
+            )
         }
     }
 
@@ -110,10 +113,13 @@ class MVVWidget : AppWidgetProvider() {
 
         // Set up the configuration activity listeners
         val configIntent = Intent(context, MVVWidgetConfigureActivity::class.java).apply {
-            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            putExtra(
+                AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId
+            )
         }
         val pendingIntent = PendingIntent.getActivity(
-                context, appWidgetId, configIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+            context, appWidgetId, configIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
         remoteViews.setOnClickPendingIntent(R.id.mvv_widget_setting_button, pendingIntent)
 
         // Set up the reload functionality
@@ -122,7 +128,8 @@ class MVVWidget : AppWidgetProvider() {
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
         }
         val pendingReloadIntent = PendingIntent.getBroadcast(
-                context, appWidgetId, reloadIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+            context, appWidgetId, reloadIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
         remoteViews.setOnClickPendingIntent(R.id.mvv_widget_reload_button, pendingReloadIntent)
 
         val isAutoReload = widgetDepartures.autoReload
@@ -154,12 +161,14 @@ class MVVWidget : AppWidgetProvider() {
                 planUpdates(context)
                 updateAppWidgets(context, AppWidgetManager.getInstance(context), getActiveWidgetIds(context))
             }
+
             MVV_WIDGET_FORCE_RELOAD -> {
                 val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
                 if (appWidgetId >= 0) {
                     updateAppWidget(context, AppWidgetManager.getInstance(context), appWidgetId, true)
                 }
             }
+
             MVV_WIDGET_RELOAD_AFTER_CONFIG_CHANGES -> {
                 val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
                 if (appWidgetId >= 0) {
@@ -176,7 +185,8 @@ class MVVWidget : AppWidgetProvider() {
         private const val BROADCAST_RELOAD_ALL_ALARM = "de.tum.in.newtumcampus.intent.action.BROADCAST_MVV_WIDGET_RELOAD_ALL_ALARM"
         private const val BROADCAST_RELOAD_ALL = "de.tum.in.newtumcampus.intent.action.BROADCAST_MVV_WIDGET_RELOAD_ALL"
         internal const val MVV_WIDGET_FORCE_RELOAD = "de.tum.in.newtumcampus.intent.action.MVV_WIDGET_FORCE_RELOAD"
-        internal const val MVV_WIDGET_RELOAD_AFTER_CONFIG_CHANGES = "de.tum.in.newtumcampus.intent.action.MVV_WIDGET_RELOAD_AFTER_CONFIG_CHANGES"
+        internal const val MVV_WIDGET_RELOAD_AFTER_CONFIG_CHANGES =
+            "de.tum.in.newtumcampus.intent.action.MVV_WIDGET_RELOAD_AFTER_CONFIG_CHANGES"
 
         const val UPDATE_ALARM_DELAY = 60 * 1000
         const val UPDATE_TRIGGER_DELAY = 20 * 1000

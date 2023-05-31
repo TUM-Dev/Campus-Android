@@ -42,13 +42,13 @@ object CardManager {
      */
     fun restoreCards(context: Context) {
         context.getSharedPreferences(DISCARD_SETTINGS_START, 0)
-                .edit()
-                .clear()
-                .apply()
+            .edit()
+            .clear()
+            .apply()
 
         TcaDb.getInstance(context)
-                .newsDao()
-                .restoreAllNews()
+            .newsDao()
+            .restoreAllNews()
 
         Utils.setSetting(context, SHOW_TOP_NEWS, true)
         restoreCardPositions(context)

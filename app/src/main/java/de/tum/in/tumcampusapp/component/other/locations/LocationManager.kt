@@ -1,9 +1,9 @@
 package de.tum.`in`.tumcampusapp.component.other.locations
 
-import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
+import android.Manifest
 import androidx.preference.PreferenceManager
 import androidx.core.content.ContextCompat
 import com.google.android.gms.common.ConnectionResult
@@ -24,7 +24,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.Double.parseDouble
-import java.util.*
+import java.util.LinkedList
 import javax.inject.Inject
 import kotlin.math.sqrt
 import kotlin.math.tan
@@ -118,7 +118,14 @@ class LocationManager @Inject constructor(c: Context) {
      */
     private fun getLastLocation(): Location? {
         // Check Location permission for Android 6.0
-        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                mContext,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+                mContext,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             return null
         }
 
@@ -130,7 +137,6 @@ class LocationManager @Inject constructor(c: Context) {
         val locationManager = mContext.getSystemService(Context.LOCATION_SERVICE) as android.location.LocationManager
         val matchingProviders = locationManager.allProviders
         for (provider in matchingProviders) {
-
             val location = locationManager.getLastKnownLocation(provider)
             if (location != null) {
                 val accuracy = location.accuracy
@@ -242,7 +248,7 @@ class LocationManager @Inject constructor(c: Context) {
      * @return the id of current building
      */
     suspend fun fetchBuildingIDFromCurrentLocation(callback: (String?) -> Unit) {
-        withContext(ioDispatcher){
+        withContext(ioDispatcher) {
             fetchBuildingIDFromLocation(getCurrentOrNextLocation(), callback)
         }
     }
@@ -326,7 +332,13 @@ class LocationManager @Inject constructor(c: Context) {
     }
 
     companion object {
-        private enum class Campus(val short: String, val lat: Double, val lon: Double, val defaultMensa: String?, val defaultStation: Stations) {
+        private enum class Campus(
+            val short: String,
+            val lat: Double,
+            val lon: Double,
+            val defaultMensa: String?,
+            val defaultStation: Stations
+        ) {
             GarchingForschungszentrum("G", 48.2648424, 11.6709511, "422", Stations.GarchingForschungszentrum),
             GarchingHochbrueck("H", 48.249432, 11.633905, null, Stations.GarchingHochbrueck),
             Weihenstephan("W", 48.397990, 11.722727, "423", Stations.Weihenstephan),
@@ -399,15 +411,24 @@ class LocationManager @Inject constructor(c: Context) {
             val d3 = d2 / (1 - d2)
             val d10 = north / d
             val d12 = d10 / (d1 * (1 - d2 / 4 - (3 * d2 * d2) / 64 - (5 * d2.pow(3.0)) / 256))
-            val d14 = d12 + ((3 * d4) / 2 - (27 * d4.pow(3.0)) / 32) * sin(2 * d12) + ((21 * d4 * d4) / 16 - (55 * d4.pow(4.0)) / 32) * sin(4 * d12) + ((151 * d4.pow(3.0)) / 96) * sin(6 * d12)
+            val d14 =
+                d12 + ((3 * d4) / 2 - (27 * d4.pow(3.0)) / 32) * sin(2 * d12) + ((21 * d4 * d4) / 16 - (55 * d4.pow(4.0)) / 32) * sin(4 * d12) + ((151 * d4.pow(
+                    3.0
+                )) / 96) * sin(6 * d12)
             val d5 = d1 / sqrt(1 - d2 * sin(d14) * sin(d14))
             val d6 = tan(d14) * tan(d14)
             val d7 = d3 * cos(d14) * cos(d14)
             val d8 = (d1 * (1 - d2)) / (1 - d2 * sin(d14) * sin(d14)).pow(1.5)
             val d9 = d15 / (d5 * d)
-            var d17 = d14 - ((d5 * tan(d14)) / d8) * ((d9 * d9) / 2 - ((5 + 3 * d6 + 10 * d7 - 4 * d7 * d7 - 9 * d3) * d9.pow(4.0)) / 24 + ((61 + 90 * d6 + 298 * d7 + 45 * d6 * d6 - 252 * d3 - 3 * d7 * d7) * d9.pow(6.0)) / 720)
+            var d17 =
+                d14 - ((d5 * tan(d14)) / d8) * ((d9 * d9) / 2 - ((5 + 3 * d6 + 10 * d7 - 4 * d7 * d7 - 9 * d3) * d9.pow(4.0)) / 24 + ((61 + 90 * d6 + 298 * d7 + 45 * d6 * d6 - 252 * d3 - 3 * d7 * d7) * d9.pow(
+                    6.0
+                )) / 720)
             d17 *= 180 / Math.PI
-            var d18 = (d9 - ((1 + 2 * d6 + d7) * d9.pow(3.0)) / 6 + ((5 - 2 * d7 + 28 * d6 - 3 * d7 * d7 + 8 * d3 + 24 * d6 * d6) * d9.pow(5.0)) / 120) / cos(d14)
+            var d18 =
+                (d9 - ((1 + 2 * d6 + d7) * d9.pow(3.0)) / 6 + ((5 - 2 * d7 + 28 * d6 - 3 * d7 * d7 + 8 * d3 + 24 * d6 * d6) * d9.pow(5.0)) / 120) / cos(
+                    d14
+                )
             d18 = d11 + d18 * 180 / Math.PI
             return Geo(d17, d18)
         }

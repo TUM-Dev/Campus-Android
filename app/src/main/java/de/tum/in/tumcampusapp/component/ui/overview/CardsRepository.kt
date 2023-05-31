@@ -47,7 +47,7 @@ class CardsRepository @Inject constructor(
      * Refreshes the [LiveData] of [Card]s and updates its value.
      */
     suspend fun refreshCards(cacheControl: CacheControl) {
-        withContext(ioDispatcher){
+        withContext(ioDispatcher) {
             val results = getCardsNow(cacheControl)
             cards.postValue(results)
         }

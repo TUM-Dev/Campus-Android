@@ -72,7 +72,9 @@ class EduroamFixCard(
         // Check if wifi is turned on at all, as we cannot say if it was configured if its off
         return if (!(context.getSystemService(Context.WIFI_SERVICE) as WifiManager).isWifiEnabled) {
             false
-        } else !isConfigValid()
+        } else {
+            !isConfigValid()
+        }
     }
 
     override fun discard(editor: SharedPreferences.Editor) {
@@ -86,9 +88,10 @@ class EduroamFixCard(
     private fun checkAnonymousIdentity() {
         val anonymousIdentity = eduroam.enterpriseConfig.anonymousIdentity
         if (anonymousIdentity != null &&
-                anonymousIdentity != "anonymous@mwn.de" &&
-                anonymousIdentity != "anonymous@eduroam.mwn.de" &&
-                anonymousIdentity != "anonymous@mytum.de") {
+            anonymousIdentity != "anonymous@mwn.de" &&
+            anonymousIdentity != "anonymous@eduroam.mwn.de" &&
+            anonymousIdentity != "anonymous@mytum.de"
+        ) {
             errors.add(context.getString(R.string.wifi_anonymous_identity_not_set))
         }
     }
@@ -97,8 +100,9 @@ class EduroamFixCard(
         if (SDK_INT < M && !isValidSubjectMatchAPI18(eduroam)) {
             errors.add(context.getString(R.string.wifi_dns_name_not_set))
         } else if (SDK_INT >= M &&
-                (eduroam.enterpriseConfig.altSubjectMatch != "DNS:$RADIUS_DNS" || eduroam.enterpriseConfig.domainSuffixMatch != RADIUS_DNS) &&
-                !isValidSubjectMatchAPI18(eduroam)) {
+            (eduroam.enterpriseConfig.altSubjectMatch != "DNS:$RADIUS_DNS" || eduroam.enterpriseConfig.domainSuffixMatch != RADIUS_DNS) &&
+            !isValidSubjectMatchAPI18(eduroam)
+        ) {
             errors.add(context.getString(R.string.wifi_dns_name_not_set))
         }
     }
@@ -106,10 +110,10 @@ class EduroamFixCard(
     private fun isTumEduroam(identity: String): Boolean {
         val pattern = Pattern.compile(Const.TUM_ID_PATTERN)
         return (identity.endsWith("@mwn.de") ||
-                identity.endsWith("@mytum.de") ||
-                identity.endsWith("@tum.de") ||
-                (identity.endsWith(".mwn.de") || identity.endsWith(".tum.de")) && identity.contains(AT_SIGN) ||
-                pattern.matcher(identity).matches())
+            identity.endsWith("@mytum.de") ||
+            identity.endsWith("@tum.de") ||
+            (identity.endsWith(".mwn.de") || identity.endsWith(".tum.de")) && identity.contains(AT_SIGN) ||
+            pattern.matcher(identity).matches())
     }
 
     private fun isValidSubjectMatchAPI18(eduroam: WifiConfiguration): Boolean {
@@ -121,6 +125,7 @@ class EduroamFixCard(
     companion object {
         private const val RADIUS_DNS = "radius.lrz.de"
         private const val AT_SIGN = "@"
+
         @JvmStatic
         fun inflateViewHolder(parent: ViewGroup, interactionListener: CardInteractionListener): CardViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.card_eduroam_fix, parent, false)

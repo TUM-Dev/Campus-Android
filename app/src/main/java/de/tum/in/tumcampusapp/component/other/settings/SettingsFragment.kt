@@ -1,7 +1,5 @@
 package de.tum.`in`.tumcampusapp.component.other.settings
 
-import android.Manifest.permission.READ_CALENDAR
-import android.Manifest.permission.WRITE_CALENDAR
 import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.content.Context
@@ -9,6 +7,8 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.drawable.BitmapDrawable
+import android.Manifest.permission.READ_CALENDAR
+import android.Manifest.permission.WRITE_CALENDAR
 import android.os.Bundle
 import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.appcompat.app.AppCompatDelegate
@@ -45,8 +45,10 @@ import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.ExecutionException
 import javax.inject.Inject
 
-class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+class SettingsFragment :
+    PreferenceFragmentCompat(),
+    Preference.OnPreferenceClickListener,
+    SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -91,6 +93,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
                 setSummary("silent_mode_set_to")
                 setSummary("background_mode_set_to")
             }
+
             "card_cafeteria" -> {
                 setSummary("card_cafeteria_default_G")
                 setSummary("card_cafeteria_default_K")
@@ -98,11 +101,13 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
                 setSummary("card_role")
                 initCafeteriaCardSelections()
             }
+
             "card_mvv" -> {
                 setSummary("card_stations_default_G")
                 setSummary("card_stations_default_C")
                 setSummary("card_stations_default_K")
             }
+
             "card_eduroam" -> {
                 findPreference(SETUP_EDUROAM).onPreferenceClickListener = this
             }
@@ -139,11 +144,11 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         url: String
     ) {
         compositeDisposable += Single
-                .fromCallable { Picasso.get().load(url).get() }
-                .subscribeOn(Schedulers.io())
-                .map { BitmapDrawable(resources, it) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(preference::setIcon, Utils::log)
+            .fromCallable { Picasso.get().load(url).get() }
+            .subscribeOn(Schedulers.io())
+            .map { BitmapDrawable(resources, it) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(preference::setIcon, Utils::log)
     }
 
     /**
@@ -223,9 +228,9 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 
     private fun initCafeteriaCardSelections() {
         val cafeterias = cafeteriaLocalRepository
-                .getAllCafeterias()
-                .blockingFirst()
-                .sortedBy { it.name }
+            .getAllCafeterias()
+            .blockingFirst()
+            .sortedBy { it.name }
 
         val cafeteriaByLocationName = getString(R.string.settings_cafeteria_depending_on_location)
         val cafeteriaNames = listOf(cafeteriaByLocationName) + cafeterias.map { it.name }
@@ -260,11 +265,11 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
             preference.setSummary(R.string.settings_no_location_selected)
         } else {
             preference.summary = values
-                    .map { preference.findIndexOfValue(it) }
-                    .map { preference.entries[it] }
-                    .map { it.toString() }
-                    .sorted()
-                    .joinToString(", ")
+                .map { preference.findIndexOfValue(it) }
+                .map { preference.entries[it] }
+                .map { it.toString() }
+                .sorted()
+                .joinToString(", ")
         }
     }
 

@@ -41,16 +41,17 @@ class TopNewsCard(context: Context) : Card(CardManager.CARD_TOP_NEWS, context, "
         }
 
         Picasso.get()
-                .load(newsAlert.url)
-                .into(imageView, object : Callback {
-                    override fun onSuccess() {
-                        // remove progress bar
-                        progress.visibility = View.GONE
-                    }
-                    override fun onError(e: Exception) {
-                        discard()
-                    }
-                })
+            .load(newsAlert.url)
+            .into(imageView, object : Callback {
+                override fun onSuccess() {
+                    // remove progress bar
+                    progress.visibility = View.GONE
+                }
+
+                override fun onError(e: Exception) {
+                    discard()
+                }
+            })
     }
 
     override fun getId(): Int {
@@ -60,7 +61,9 @@ class TopNewsCard(context: Context) : Card(CardManager.CARD_TOP_NEWS, context, "
     override fun getNavigationDestination(): NavDestination? {
         return if (newsAlert == null || newsAlert.link.isEmpty()) {
             null
-        } else NavDestination.Link(newsAlert.link)
+        } else {
+            NavDestination.Link(newsAlert.link)
+        }
     }
 
     override fun updateViewHolder(viewHolder: RecyclerView.ViewHolder) {

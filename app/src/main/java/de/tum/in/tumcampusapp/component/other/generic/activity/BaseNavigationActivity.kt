@@ -24,9 +24,11 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.MainFragment
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.closeDrawers
 
-class BaseNavigationActivity : BaseActivity(
-    R.layout.activity_main
-), SharedPreferences.OnSharedPreferenceChangeListener {
+class BaseNavigationActivity :
+    BaseActivity(
+        R.layout.activity_main
+    ),
+    SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val drawerHeaderInflater: DrawerHeaderInflater by lazy {
         DrawerHeaderInflater(this)

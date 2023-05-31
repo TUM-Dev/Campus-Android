@@ -37,7 +37,9 @@ class CafeteriaManager @Inject constructor(private val context: Context) : Provi
             val cafeteriaId = bestMatchMensaId
             return if (cafeteriaId == Const.NO_CAFETERIA_FOUND) {
                 emptyList()
-            } else getCafeteriaMenusByCafeteriaId(cafeteriaId)
+            } else {
+                getCafeteriaMenusByCafeteriaId(cafeteriaId)
+            }
         }
 
     // Choose which mensa should be shown
@@ -55,8 +57,10 @@ class CafeteriaManager @Inject constructor(private val context: Context) : Provi
 
         // ids have to be added to a new set because the data would be changed otherwise
         val cafeteriaIds = HashSet<String>(20)
-        cafeteriaIds.addAll(PreferenceManager.getDefaultSharedPreferences(context)
-                .getStringSet(Const.CAFETERIA_CARDS_SETTING, HashSet(0))!!)
+        cafeteriaIds.addAll(
+            PreferenceManager.getDefaultSharedPreferences(context)
+                .getStringSet(Const.CAFETERIA_CARDS_SETTING, HashSet(0))!!
+        )
 
         // adding the location based id to the set now makes sure that the cafeteria is not shown twice
         if (cafeteriaIds.contains(Const.CAFETERIA_BY_LOCATION_SETTINGS_ID)) {

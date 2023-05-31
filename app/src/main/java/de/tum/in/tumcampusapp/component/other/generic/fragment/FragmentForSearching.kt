@@ -61,7 +61,6 @@ abstract class FragmentForSearching<T>(
         searchItem = checkNotNull(menu.findItem(R.id.action_search))
         searchView = searchItem.actionView as SearchView
 
-
         val searchManager = requireContext().getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val info = searchManager.getSearchableInfo(requireActivity().componentName)
         searchView.setSearchableInfo(info)

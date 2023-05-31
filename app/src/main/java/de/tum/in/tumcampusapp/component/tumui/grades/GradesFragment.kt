@@ -20,9 +20,21 @@ import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.google.gson.*
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
+import com.google.gson.JsonParseException
+import com.google.gson.JsonPrimitive
+import com.google.gson.JsonSerializationContext
+import com.google.gson.JsonSerializer
 import com.google.gson.reflect.TypeToken
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
@@ -38,7 +50,7 @@ import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import java.lang.reflect.Type
 import java.text.NumberFormat
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
@@ -496,9 +508,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         val view = View.inflate(requireContext(), R.layout.dialog_add_grade_input, null)
         val dialog = AlertDialog.Builder(requireContext())
             .setTitle(getString(R.string.add_exam_dialog_title))
-            .setMessage(
-                getString(R.string.add_exam_dialog_message)
-            )
+            .setMessage(getString(R.string.add_exam_dialog_message))
             .setView(view)
             .create()
             .apply {
@@ -683,6 +693,7 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         return when (item.itemId) {
             R.id.bar_chart_menu,
             R.id.pie_chart_menu -> toggleChart().run { true }
+
             R.id.edit_grades_menu -> changeEditMode(item).run { true }
             else -> super.onOptionsItemSelected(item)
         }

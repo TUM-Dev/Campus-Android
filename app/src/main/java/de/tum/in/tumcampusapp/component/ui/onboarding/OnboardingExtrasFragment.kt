@@ -97,11 +97,11 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
             privacyPolicyButton.setOnClickListener {
                 // open url in default browser
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_privacy_policy)))
-                try{
+                try {
                     startActivity(browserIntent)
                 }
                 // if no browser is installed catch exception and inform user
-                catch (e: ActivityNotFoundException){
+                catch (e: ActivityNotFoundException) {
                     Utils.log(e)
                     Toast.makeText(requireContext(), R.string.error_opening_url, Toast.LENGTH_LONG).show()
                 }
@@ -119,8 +119,11 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
         // By now, we should have generated the RSA key and uploaded it to our server and TUMonline
 
         val lrzId = Utils.getSetting(requireContext(), Const.LRZ_ID, "")
-        val name = Utils.getSetting(requireContext(),
-            Const.CHAT_ROOM_DISPLAY_NAME, getString(R.string.not_connected_to_tumonline))
+        val name = Utils.getSetting(
+            requireContext(),
+            Const.CHAT_ROOM_DISPLAY_NAME,
+            getString(R.string.not_connected_to_tumonline)
+        )
 
         val currentChatMember = ChatMember(lrzId)
         currentChatMember.displayName = name

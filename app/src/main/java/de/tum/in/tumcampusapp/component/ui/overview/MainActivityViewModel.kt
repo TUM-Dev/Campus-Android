@@ -14,7 +14,7 @@ class MainActivityViewModel @Inject constructor(
 
     val cards: LiveData<List<Card>>
         // on get refresh cards
-        get(){
+        get() {
             viewModelScope.launch {
                 cardsRepo.refreshCards(CacheControl.USE_CACHE)
             }

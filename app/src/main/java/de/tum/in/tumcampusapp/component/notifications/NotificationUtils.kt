@@ -67,7 +67,8 @@ object NotificationUtils {
         val cafeteria = createChannel(
             context,
             Const.NOTIFICATION_CHANNEL_CAFETERIA,
-            R.string.channel_cafeteria, R.string.channel_description_cafeteria,
+            R.string.channel_cafeteria,
+            R.string.channel_description_cafeteria,
             NotificationManager.IMPORTANCE_LOW
         )
 

@@ -26,7 +26,7 @@ class StudyRoomGroupManager(context: Context) {
 
     suspend fun updateDatabase(groups: List<StudyRoomGroup>) {
         // moves to IOThread to not block MainThread
-        withContext(ioDispatcher){
+        withContext(ioDispatcher) {
             groupsDao.removeCache()
             roomsDao.removeCache()
 
@@ -36,9 +36,10 @@ class StudyRoomGroupManager(context: Context) {
                 group.rooms.forEach { room ->
                     // only insert rooms that have data
                     if (room.code != "" &&
-                            room.name != "" &&
-                            room.buildingName != "" &&
-                            room.id != -1) {
+                        room.name != "" &&
+                        room.buildingName != "" &&
+                        room.id != -1
+                    ) {
                         roomsDao.insert(room)
                     }
                 }

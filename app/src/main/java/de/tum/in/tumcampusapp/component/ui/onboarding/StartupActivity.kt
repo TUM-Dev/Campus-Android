@@ -1,10 +1,10 @@
 package de.tum.`in`.tumcampusapp.component.ui.onboarding
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
-import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.os.Bundle
 import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.app.ActivityCompat.checkSelfPermission
@@ -74,7 +74,7 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
         Utils.setSetting(this, Const.SAVED_APP_VERSION, VERSION_CODE)
 
         initEasterEgg()
-        this.lifecycleScope.launch{
+        this.lifecycleScope.launch {
             initApp()
         }
     }
@@ -101,7 +101,7 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
     }
 
     private suspend fun initApp() {
-        withContext(ioDispatcher){
+        withContext(ioDispatcher) {
             // Migrate all settings - we somehow ended up having two different shared prefs: join them
             // back together
             Utils.migrateSharedPreferences(this@StartupActivity)
@@ -116,14 +116,14 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
 
             // Start download workers and listen for finalization
             val downloadActions = Flowable
-                    .fromCallable(this@StartupActivity::performAllWorkerActions)
-                    .onErrorReturnItem(Unit)
-                    .subscribeOn(Schedulers.io())
+                .fromCallable(this@StartupActivity::performAllWorkerActions)
+                .onErrorReturnItem(Unit)
+                .subscribeOn(Schedulers.io())
 
             runOnUiThread {
                 LiveDataReactiveStreams
-                        .fromPublisher(downloadActions)
-                        .observe(this@StartupActivity) { openMainActivityIfInitializationFinished() }
+                    .fromPublisher(downloadActions)
+                    .observe(this@StartupActivity) { openMainActivityIfInitializationFinished() }
             }
 
             // Start background service and ensure cards are set
@@ -159,11 +159,11 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
      */
     private fun showLocationPermissionRationaleDialog() {
         ThemedAlertDialogBuilder(this)
-                .setMessage(R.string.permission_location_explanation)
-                .setPositiveButton(R.string.ok) { _, _ ->
-                    requestPermissions(this, PERMISSIONS_LOCATION, REQUEST_LOCATION)
-                }
-                .show()
+            .setMessage(R.string.permission_location_explanation)
+            .setPositiveButton(R.string.ok) { _, _ ->
+                requestPermissions(this, PERMISSIONS_LOCATION, REQUEST_LOCATION)
+            }
+            .show()
     }
 
     override fun onRequestPermissionsResult(

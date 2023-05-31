@@ -19,7 +19,7 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.sync.SyncManager
 
 class QueryLocationsService(appContext: Context, workerParams: WorkerParameters) :
-        Worker(appContext, workerParams) {
+    Worker(appContext, workerParams) {
 
     private val locationManager = LocationManager(applicationContext)
 
@@ -33,13 +33,13 @@ class QueryLocationsService(appContext: Context, workerParams: WorkerParameters)
         val roomLocationsDao = TcaDb.getInstance(applicationContext).roomLocationsDao()
 
         calendarDao.lecturesWithoutCoordinates
-                .filter { it.location.isNotEmpty() }
-                .mapNotNull { createRoomLocationsOrNull(it) }
-                .also { roomLocationsDao.insert(*it.toTypedArray()) }
+            .filter { it.location.isNotEmpty() }
+            .mapNotNull { createRoomLocationsOrNull(it) }
+            .also { roomLocationsDao.insert(*it.toTypedArray()) }
 
         // Do sync of google calendar if necessary
         val shouldSyncCalendar = Utils.getSettingBool(applicationContext, Const.SYNC_CALENDAR, false) &&
-                ContextCompat.checkSelfPermission(applicationContext, WRITE_CALENDAR) == PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(applicationContext, WRITE_CALENDAR) == PERMISSION_GRANTED
         val syncManager = SyncManager(applicationContext)
         val needsSync = syncManager.needSync(Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)
 

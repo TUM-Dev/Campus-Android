@@ -46,7 +46,7 @@ class BarrierFreeFacilitiesActivity :
 
     private fun fetchApiCallForCurrentLocation() {
         this.lifecycleScope.launch {
-            locationManager.fetchBuildingIDFromCurrentLocation{
+            locationManager.fetchBuildingIDFromCurrentLocation {
                 val apiCall = apiClient.getListOfNearbyFacilities(it)
                 executeApiCall(apiCall)
             }

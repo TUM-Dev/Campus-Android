@@ -158,7 +158,8 @@ class NotificationScheduler @Inject constructor(private val context: Context) {
         return PendingIntent.getBroadcast(
             context,
             futureNotification.id,
-            intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
         )
     }
 

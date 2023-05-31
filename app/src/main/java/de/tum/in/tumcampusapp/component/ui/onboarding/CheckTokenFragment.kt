@@ -65,11 +65,11 @@ class CheckTokenFragment : BaseFragment<Unit>(
             openTumOnlineButton.setOnClickListener {
                 // open url in default browser
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(Const.TUM_CAMPUS_URL))
-                try{
+                try {
                     startActivity(browserIntent)
                 }
                 // if no browser is installed catch exception and inform user
-                catch (e: ActivityNotFoundException){
+                catch (e: ActivityNotFoundException) {
                     Utils.log(e)
                     Toast.makeText(requireContext(), R.string.error_opening_url, Toast.LENGTH_LONG).show()
                 }
