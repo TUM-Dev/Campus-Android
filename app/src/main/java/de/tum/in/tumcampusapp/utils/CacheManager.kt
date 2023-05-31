@@ -12,7 +12,6 @@ import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventsResponse
 import de.tum.`in`.tumcampusapp.service.QueryLocationsService
 import okhttp3.Cache
-import org.jetbrains.anko.doAsync
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
