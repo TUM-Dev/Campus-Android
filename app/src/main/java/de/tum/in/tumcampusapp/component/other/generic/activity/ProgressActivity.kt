@@ -92,9 +92,9 @@ abstract class ProgressActivity<T>(
         swipeRefreshLayout?.apply {
             setOnRefreshListener(this@ProgressActivity)
             setColorSchemeResources(
-                    R.color.color_primary,
-                    R.color.tum_A100,
-                    R.color.tum_A200
+                R.color.color_primary,
+                R.color.tum_A100,
+                R.color.tum_A200
             )
         }
     }
@@ -205,9 +205,9 @@ abstract class ProgressActivity<T>(
     protected fun showErrorSnackbar(messageResId: Int) {
         runOnUiThread {
             Snackbar.make(contentView, messageResId, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.retry) { retryRequest() }
-                    .setActionTextColor(Color.WHITE)
-                    .show()
+                .setAction(R.string.retry) { retryRequest() }
+                .setActionTextColor(Color.WHITE)
+                .show()
         }
     }
 
@@ -235,12 +235,12 @@ abstract class ProgressActivity<T>(
         }
 
         val request = NetworkRequest.Builder()
-                .addCapability(internetCapability)
-                .build()
+            .addCapability(internetCapability)
+            .build()
 
         if (registered.not()) {
             (getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
-                    .registerNetworkCallback(request, networkCallback)
+                .registerNetworkCallback(request, networkCallback)
             registered = true
         }
     }
@@ -284,7 +284,7 @@ abstract class ProgressActivity<T>(
     protected fun showLoadingStart() {
         if (registered) {
             (getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
-                    .unregisterNetworkCallback(networkCallback)
+                .unregisterNetworkCallback(networkCallback)
             registered = false
         }
 
@@ -340,7 +340,7 @@ abstract class ProgressActivity<T>(
         apiCall?.cancel()
         if (registered) {
             (getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
-                    .unregisterNetworkCallback(networkCallback)
+                .unregisterNetworkCallback(networkCallback)
             registered = false
         }
     }

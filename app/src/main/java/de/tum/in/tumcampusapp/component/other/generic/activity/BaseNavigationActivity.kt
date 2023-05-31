@@ -104,8 +104,13 @@ class BaseNavigationActivity : BaseActivity(
 
         drawerToggle?.let { drawerLayout.removeDrawerListener(it) }
 
-        drawerToggle = object : ActionBarDrawerToggle(this, drawerLayout,
-            toolbar, R.string.drawer_open, R.string.drawer_close) {}
+        drawerToggle = object : ActionBarDrawerToggle(
+            this,
+            drawerLayout,
+            toolbar,
+            R.string.drawer_open,
+            R.string.drawer_close
+        ) {}
 
         supportActionBar?.let {
             enableDrawer(true)
