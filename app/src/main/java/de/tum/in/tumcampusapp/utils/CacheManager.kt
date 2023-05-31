@@ -1,6 +1,11 @@
 package de.tum.`in`.tumcampusapp.utils
 
 import android.content.Context
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
+import androidx.work.WorkManager
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
@@ -19,9 +24,19 @@ class CacheManager @Inject constructor(private val context: Context) {
         get() = Cache(context.cacheDir, 10 * 1024 * 1024) // 10 MB
 
     fun fillCache() {
-        doAsync {
-            syncCalendar()
+        class WorkWhenReceived(appContext: Context, workerParams: WorkerParameters) :
+                Worker(appContext, workerParams) {
+            override fun doWork(): Result {
+                syncCalendar()
+                return Result.success()
+            }
         }
+        // start expedited background work
+        val request = OneTimeWorkRequestBuilder<WorkWhenReceived>()
+                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                .build()
+        WorkManager.getInstance(context)
+                .enqueue(request)
     }
 
     private fun syncCalendar() {
