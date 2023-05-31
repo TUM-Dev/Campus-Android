@@ -94,8 +94,12 @@ class StudyRoomsFragment : FragmentForAccessingTumCabe<List<StudyRoomGroup>>(
     }
 
     override fun onDownloadSuccessful(response: List<StudyRoomGroup>) {
-        studyRoomGroupManager.updateDatabase(response) {
-            lifecycleScope.launch(mainDispatcher){
+        // launches coroutine on MainThread that will call finally block after finishing
+        lifecycleScope.launch(mainDispatcher){
+            try {
+                studyRoomGroupManager.updateDatabase(response)
+            }
+            finally {
                 groups = response
                 displayStudyRooms()
             }
