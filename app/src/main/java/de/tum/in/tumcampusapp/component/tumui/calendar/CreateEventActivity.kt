@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.RequestLimitReachedException
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline
@@ -26,7 +27,6 @@ import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.RepeatHelper
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.databinding.ActivityCreateEventBinding
 import de.tum.`in`.tumcampusapp.utils.*
-import org.jetbrains.anko.sdk27.coroutines.textChangedListener
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
@@ -170,13 +170,11 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
             }
         }
 
-        binding.eventRepeatsTimes.textChangedListener {
-            afterTextChanged {
-                if (it.toString() != "") {
-                    repeatHelper.times = it.toString().toInt()
-                } else {
-                    repeatHelper.times = 0
-                }
+        binding.eventRepeatsTimes.doAfterTextChanged {
+            if (it.toString() != "") {
+                repeatHelper.times = it.toString().toInt()
+            } else {
+                repeatHelper.times = 0
             }
         }
 
