@@ -24,7 +24,7 @@ class CacheManager @Inject constructor(private val context: Context) {
 
     fun fillCache() {
         class WorkWhenReceived(appContext: Context, workerParams: WorkerParameters) :
-                Worker(appContext, workerParams) {
+            Worker(appContext, workerParams) {
             override fun doWork(): Result {
                 syncCalendar()
                 return Result.success()
@@ -32,28 +32,28 @@ class CacheManager @Inject constructor(private val context: Context) {
         }
         // start expedited background work
         val request = OneTimeWorkRequestBuilder<WorkWhenReceived>()
-                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                .build()
+            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+            .build()
         WorkManager.getInstance(context)
-                .enqueue(request)
+            .enqueue(request)
     }
 
     private fun syncCalendar() {
         TUMOnlineClient
-                .getInstance(context)
-                .getCalendar(CacheControl.USE_CACHE)
-                .enqueue(object : Callback<EventsResponse> {
-                    override fun onResponse(call: Call<EventsResponse>, response: Response<EventsResponse>) {
-                        val eventsResponse = response.body() ?: return
-                        val events = eventsResponse.events ?: return
-                        CalendarController(context).importCalendar(events)
-                        loadRoomLocations()
-                    }
+            .getInstance(context)
+            .getCalendar(CacheControl.USE_CACHE)
+            .enqueue(object : Callback<EventsResponse> {
+                override fun onResponse(call: Call<EventsResponse>, response: Response<EventsResponse>) {
+                    val eventsResponse = response.body() ?: return
+                    val events = eventsResponse.events ?: return
+                    CalendarController(context).importCalendar(events)
+                    loadRoomLocations()
+                }
 
-                    override fun onFailure(call: Call<EventsResponse>, t: Throwable) {
-                        Utils.log(t, "Error while loading calendar in CacheManager")
-                    }
-                })
+                override fun onFailure(call: Call<EventsResponse>, t: Throwable) {
+                    Utils.log(t, "Error while loading calendar in CacheManager")
+                }
+            })
     }
 
     private fun loadRoomLocations() {

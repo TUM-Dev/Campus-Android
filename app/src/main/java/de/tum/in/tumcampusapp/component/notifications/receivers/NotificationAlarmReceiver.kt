@@ -29,7 +29,7 @@ class NotificationAlarmReceiver : BroadcastReceiver() {
 
         // create subclass of Worker to enqueue with WorkManager
         class WorkWhenReceived(appContext: Context, workerParams: WorkerParameters) :
-                Worker(appContext, workerParams) {
+            Worker(appContext, workerParams) {
             override fun doWork(): Result {
                 val notification = notificationProvider.buildNotification()
                 notification?.let {
@@ -40,9 +40,9 @@ class NotificationAlarmReceiver : BroadcastReceiver() {
         }
         // start expedited background work
         val request = OneTimeWorkRequestBuilder<WorkWhenReceived>()
-                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                .build()
+            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+            .build()
         WorkManager.getInstance(context)
-                .enqueue(request)
+            .enqueue(request)
     }
 }
