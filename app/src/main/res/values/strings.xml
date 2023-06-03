@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- START Translated, please do not change identifiers -->
@@ -40,6 +40,30 @@
     <string name="calendar_filter_hour_limit_min_title">From Hour</string>
     <string name="calendar_filter_hour_limit_max_title">To Hour</string>
     <string name="calendar_filter_hour_limit_error_message">Minimum hour must be below maximum hour!</string>
+    <string name="change_color">Change color</string>
+    <string name="choose_color">Choose color</string>
+    <string name="custom_color_default">Default color</string>
+    <string name="custom_color_red">Red</string>
+    <string name="custom_color_pink">Pink</string>
+    <string name="custom_color_purple">Purple</string>
+    <string name="custom_color_indigo">Indigo</string>
+    <string name="custom_color_blue">Blue</string>
+    <string name="custom_color_teal">Teal</string>
+    <string name="custom_color_green">Green</string>
+    <string name="custom_color_lime">Lime</string>
+    <string name="custom_color_yellow">Yellow</string>
+    <string name="custom_color_amber">Amber</string>
+    <string name="custom_color_orange">Orange</string>
+    <string name="apply_to_all_occurrences">Apply to all occurrences</string>
+    <string name="month_view_monday">MO</string>
+    <string name="month_view_tuesday">TU</string>
+    <string name="month_view_wednesday">WE</string>
+    <string name="month_view_thursday">TH</string>
+    <string name="month_view_friday">FR</string>
+    <string name="month_view_saturday">SA</string>
+    <string name="month_view_sunday">SU</string>
+    <string name="month_view_back_button_description">Go to previous month</string>
+    <string name="month_view_forward_button_description">Go to next month</string>
 
     <!-- Roomfinder -->
     <string name="no_map_available">No map available</string>
@@ -64,6 +88,7 @@
     <string name="error_no_rights_to_access_function">Your TUMonline access token doesn’t have the rights to access this function.</string>
     <string name="error_request_limit_reached">You reached the request limit for TUMonline. Try again later.</string>
     <string name="error_access_token_limit_reached">Token limit reached. You have delete an access token in TUMonline before you can continue.</string>
+    <string name="error_access_token_insufficient_permissions">Your TUMonline access token is missing the specific rights!</string>
     <string name="error_unknown">Unknown error.</string>
     <string name="error_tum_online_unavailable">TUMonline is currently unavailable.</string>
 
@@ -73,6 +98,7 @@
     <!-- Exam/Grades -->
     <string name="average_grade">Average grade</string>
     <string name="average_grade_hint">Estimated average. Please refer to TUMOnline for the precise one.</string>
+    <string name="edit_grades">Edit Grades</string>
     <string name="show_column_chart">Show Column Chart</string>
     <string name="show_pie_chart">Show Pie Chart</string>
     <string name="result_extra">Result:&#160;</string>
@@ -83,6 +109,36 @@
     <string name="date">Date</string>
     <string name="credits" translatable="false">ECTS</string>
     <string name="no_grades">You don\'t have any grades yet.</string>
+    <string name="reset_grade">Reset Grade</string>
+    <string name="use_grade_in_average">Use Grade</string>
+    <string name="grade_weight_label">Grade Weight:</string>
+    <string name="course_name">Course name</string>
+    <string name="thesis">Thesis</string>
+    <string name="text_view_grade_label">Grade (0 for passed)</string>
+    <string name="default_grade">1,0</string>
+    <string name="text_view_examiner_name">Examiner Name</string>
+    <string name="text_view_credits_label">Credits</string>
+    <string name="default_credits">6</string>
+    <string name="text_view_grade_weight">Grade weight</string>
+    <string name="default_grade_weight">1.0</string>
+    <string name="text_view_examination_date_label">Examination Date</string>
+    <string name="grade_date_format">dd.mm.yy</string>
+    <string name="grade_date_default">01.01.22</string>
+    <string name="text_view_semester_label">Year of the start of the semester (e.g. 22WS or 21SuSe)</string>
+    <string name="grade_semester_default">22WS</string>
+    <string name="use_weights_in_diagrams">Consider credits and weights in the diagram</string>
+    <string name="delete_exam">Delete Exam</string>
+    <string name="delete_exam_dialog_message">Should this exam be irrevocably deleted?</string>
+    <string name="add_grade_error_wrong_semester">Wrong semester format: Too short. Correct: two numbers for the year + W/S</string>
+    <string name="add_grade_error_semester_no_ws">Wrong semester format: Term not specified. Correct two numbers for the year + W/S</string>
+    <string name="add_grade_error_invalid_weight">Wrong weight format: Weights can not be negative.</string>
+    <string name="add_grade_error_invalid_grade_format">Wrong grade format: Grade must be between 1.0 and 5.0 or equal to 0.</string>
+    <string name="add_grade_missing_course_title">Insert a course title.</string>
+    <string name="add_grade_error_invalid_weight_less_than_zero">Invalid amount of credits. Must be greater than 0.</string>
+    <string name="add_exam_dialog_title">Add a New Exam</string>
+    <string name="add_exam_dialog_message">Grades are normally added automatically. In case special grades should be added, this can be done here. Manually added Exams can be deleted later on.</string>
+    <string name="grade_passed_annotation">Exam passed without a grade</string>
+    <string name="grade_percentages">Percentage of each grade</string>
 
     <!-- Preferences -->
     <string name="lrz_id">TUM Identification</string>
@@ -302,7 +358,7 @@
     <string name="cafeteria_notification_settings">Cafeteria Notification Settings</string>
 
     <!-- Cafeteria Notification Settings -->
-    <string name="invalid_notification_time_format_string">Invalid time. Pick a time ranging from %d to %d.</string>
+    <string name="invalid_notification_time_format_string">Invalid time. Pick a time ranging from %1$d to %2$d.</string>
 
     <!-- Information -->
     <string name="version">Version: %1$s</string>
@@ -313,6 +369,16 @@
         The TUM Campus App is being developed by volunteers, students of the Android practical course and employees of the Chair of Operating Systems led by Professor Dr. Baumgarten.
         The app can be used on smartphones and tablets and is available for both iOS and Android.\n\nYou can reach us via the feedback form in the app or via email (app@tum.de) if you have any special concerns or requests.
     </string>
+    <string name="show_notification_view_progress_single">The notification overview opens in one click.</string>
+    <string name="show_notification_view_progress_multiple">The notification overview opens in %1$d clicks.</string>
+
+    <!-- Notification Overview -->
+    <string name="notification_overview">Notification Overview</string>
+    <string name="active_notifications">Active Notifications</string>
+    <string name="scheduled_notifications">Scheduled Notifications</string>
+    <string name="alarms">Alarms</string>
+    <string name="pendingintents_per_type">PendingIntents per NotificationType</string>
+    <string name="pendingintents_per_scheduled_notification">PendingIntents per ScheduledNotification</string>
 
     <!-- END Translated, please do not change identifiers -->
     <string name="min_search_len" tools:ignore="PluralsCandidate">Query must be at least %d chars long</string>
@@ -463,7 +529,7 @@ Signature: %5$s</string>
     <string name="accept_chat_terms">Terms must be accepted to use group chat!</string>
     <string name="IN">in</string>
     <string name="MINUTES">minutes</string>
-    <string name="AT">at</string>
+    <string name="on">on</string>
     <string name="fix_eduroam">Fix eduroam</string>
     <string name="eduroam_fix">Fix it now</string>
     <string name="eduroam_insecure_configuration">We have detected an insecure eduroam wifi configuration. You are subject to leaking information about you and your account.</string>
@@ -522,7 +588,7 @@ Signature: %5$s</string>
     <string name="grades_without_weight">Grades without weights</string>
     <string name="study_program_format_string">Program %s</string>
     <string name="summer_semester">Summer term %d</string>
-    <string name="winter_semester">Winter term %d/%d</string>
+    <string name="winter_semester">Winter term %1$d/%2$d</string>
     <string name="show_list">Show List</string>
     <string name="show_chart">Show Chart</string>
 
@@ -602,7 +668,7 @@ Signature: %5$s</string>
     <string name="user_search_hint">Search Name or TUM Identification</string>
     <string name="error_invalid_tum_id_format">Invalid TUM-ID format</string>
     <string name="error_user_not_found">No user found</string>
-    <string name="add_user_to_chat_message">Add <b>%s</b> to chat room <b>%s</b>?</string>
+    <string name="add_user_to_chat_message">Add <b>%1$s</b> to chat room <b>%2$s</b>?</string>
     <string name="chat_member_added">Added user to chat room</string>
 
     <string name="enter_your_tum_id">Enter your TUM ID …</string>
@@ -695,7 +761,7 @@ Signature: %5$s</string>
 
     <string name="choose_ticket_type">Choose your ticket type</string>
     <string name="ticket_amount_error_title">Purchase restrictions</string>
-    <string name="ticket_amount_information">You can buy a minimum of %1d and a maximum of %2d of ticket type \“%s\”</string>
+    <string name="ticket_amount_information">You can buy a maximum of %1$d of ticket type \“%2$s\”</string>
     <string name="price_per_ticket">%s per ticket</string>
     <string name="ticket_amount_label">Amount</string>
 
@@ -746,7 +812,7 @@ Signature: %5$s</string>
     <string name="update_note_version">Version %s</string>
     <string name="action_cant_be_performed">Action can’t be performed</string>
     <string name="not_redeemed_yet">Not redeemed yet</string>
-    <string name="partially_redeemed">%d of %d redeemed (%s)</string>
+    <string name="partially_redeemed">%1$d of %2$d redeemed (%3$s)</string>
     <string name="redeemed_at">Redeemed at %s</string>
     <string name="no_tickets_remaining">No tickets remaining</string>
     <string name="no_tickets_remaining_message">Unfortunately there are no more online tickets available for this event.\nFor many events you can still purchase tickets on site.</string>
@@ -769,4 +835,42 @@ Signature: %5$s</string>
     // for opening hours
     <string name="language">en</string>
     <string name="use_existing">Use existing</string>
+
+    // search
+    <string name="all_results">All results</string>
+    <string name="people">People</string>
+    <string name="lectures">Lectures</string>
+    <string name="search_info">Search for people, rooms, and others.</string>
+    <string name="no_result_info">Couldn\'t find “%1$s”</string>
+    <string name="no_result_sub_info">Try again, correct spelling or try with different keywords.</string>
+    <string name="recent_searches">Recent searches</string>
+    <string name="clear_recent_searches">Clear history</string>
+    <string name="not_available_search">Not available</string>
+    <string name="rooms_id">Rooms</string>
+    <string name="buildings">Buildings</string>
+    <string name="clear_search_history_request">Do you want to clear search history?</string>
+
+    // Navigation details
+    <string name="location_details">Location details</string>
+    <string name="loading_details">loading</string>
+    <string name="site_plans">Site plans</string>
+    <string name="interactive_map">Interactive map</string>
+    <string name="open_in_maps">Open in Maps</string>
+    <string name="share">Share</string>
+    <string name="available_maps">Available site plans:</string>
+    <string name="map">Map</string>
+    <string name="room_id">Room ID</string>
+    <string name="address">Address</string>
+    <string name="architect_name">Architect name</string>
+    <string name="seats">Available seats</string>
+    <string name="number_of_rooms">Number of rooms</string>
+    <string name="not_implemented">Feature not implemented yet</string>
+    <string name="not_implemented_interactive_map">Interactive map is not yet implemented. You can access it on NavigaTum website.</string>
+    <string name="redirect">Redirect</string>
+
+    // Lecture View
+    <string name="ongoing_until">" %1$s left"</string>
+    <string name="starts_now">Starts now</string>
+    <string name="tomorrow_time">Tomorrow %1$s</string>
+    <string name="IN_capitalized">In</string>
 </resources>

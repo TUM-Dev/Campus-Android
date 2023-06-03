@@ -13,7 +13,7 @@ task checkstyle(type: Checkstyle) {
     // empty classpath
     classpath = files()
     reports {
-        xml.enabled true
+        xml.required = true
         xml.destination file("${buildDir}/reports/checkstyle/checkstyle-result.xml")
     }
 }

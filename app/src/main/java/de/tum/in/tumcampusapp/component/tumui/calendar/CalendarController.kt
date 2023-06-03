@@ -23,6 +23,7 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.sync.SyncManager
 import org.joda.time.DateTime
+import org.joda.time.LocalDate
 import java.util.*
 
 /**
@@ -33,6 +34,8 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
     private val calendarDao: CalendarDao = TcaDb.getInstance(context).calendarDao()
     private val roomLocationsDao: RoomLocationsDao = TcaDb.getInstance(context).roomLocationsDao()
     private val widgetsTimetableBlacklistDao: WidgetsTimetableBlacklistDao = TcaDb.getInstance(context).widgetsTimetableBlacklistDao()
+    private val eventColorProvider: EventColorController = EventColorController(context)
+    var requestCode: Int = 0
 
     /**
      * Get current lecture from the database
@@ -59,10 +62,25 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
     fun getFromDbNotCancelledBetweenDates(begin: DateTime, end: DateTime) =
             applyEventColors(calendarDao.getAllNotCancelledBetweenDates(begin, end))
 
+    fun getEventsForMonth(date: LocalDate): Map<String, List<CalendarItem>> {
+        val startOfMonth = date.withDayOfMonth(1)
+        val endOfMonth = date.withDayOfMonth(date.dayOfMonth().maximumValue)
+        val events = getFromDbBetweenDates(startOfMonth.toDateTimeAtCurrentTime(), endOfMonth.toDateTimeAtCurrentTime())
+        val eventMap = mutableMapOf<String, MutableList<CalendarItem>>()
+        for (event in events) {
+            val day = event.dtstart.toLocalDate().dayOfMonth.toString()
+            if (!eventMap.containsKey(day)) {
+                eventMap[day] = mutableListOf(event)
+            } else {
+                eventMap[day]?.add(event)
+            }
+        }
+        return eventMap
+    }
+
     private fun applyEventColors(calendarItems: List<CalendarItem>): List<CalendarItem> {
-        val provider = EventColorProvider(context)
         calendarItems.forEach {
-            it.color = provider.getColor(it)
+            it.color = eventColorProvider.getColor(it)
         }
         return calendarItems
     }
@@ -79,12 +97,11 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
         val fromDate = DateTime.now()
         val toDate = fromDate.plusDays(dayCount)
 
-        val provider = EventColorProvider(context)
         // query already filters out blacklisted events
         val calendarItems = calendarDao.getNextDays(fromDate, toDate, widgetId.toString())
 
         return calendarItems.map {
-            WidgetCalendarItem.create(it).apply { color = provider.getColor(it) }
+            WidgetCalendarItem.create(it).apply { color = eventColorProvider.getColor(it) }
         }
     }
 

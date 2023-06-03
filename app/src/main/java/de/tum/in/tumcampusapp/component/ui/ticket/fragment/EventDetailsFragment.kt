@@ -8,7 +8,7 @@ import android.provider.CalendarContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -77,8 +77,8 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         return view
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         showEventDetails(event)
         viewModel.aggregatedTicketStatus.observe(viewLifecycleOwner, Observer { showTicketCount(it) })
     }
@@ -200,18 +200,13 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 getString(R.string.tum_calendar)
         )
 
-        val dialog = AlertDialog.Builder(context)
-                .setTitle(R.string.add_to_calendar_info)
-                .setSingleChoiceItems(calendars, 0, null)
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.add) { _, which ->
-                    handleCalendarExportSelection(which)
-                }
-                .setCancelable(true)
-                .create()
-
-        dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-        dialog.show()
+        ThemedAlertDialogBuilder(context)
+            .setTitle(R.string.add_to_calendar_info)
+            .setSingleChoiceItems(calendars, 0, null)
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.add) { _, which -> handleCalendarExportSelection(which) }
+            .setCancelable(true)
+            .show()
     }
 
     private fun handleCalendarExportSelection(which: Int) {

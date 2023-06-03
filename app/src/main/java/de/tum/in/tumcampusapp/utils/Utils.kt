@@ -22,6 +22,7 @@ import java.io.PrintWriter
 import java.io.StringWriter
 import java.text.DecimalFormat
 import java.util.regex.Pattern
+import kotlin.math.abs
 
 /**
  * Class for common helper functions used by a lot of classes.
@@ -308,7 +309,7 @@ object Utils {
             meters < 1000 -> "${meters.toInt()}m"
             meters < 10000 -> {
                 val front = (meters / 1000f).toInt()
-                val back = Math.abs(meters / 100f).toInt() % 10
+                val back = abs(meters / 100f).toInt() % 10
                 "$front.${back}km"
             }
             else -> "${(meters / 1000f).toInt()}km"

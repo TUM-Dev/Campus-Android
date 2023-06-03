@@ -34,7 +34,7 @@ class GeofencingUpdateReceiver : BroadcastReceiver() {
                     "enabling Auto updates")
         } else if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
             Utils.setSetting(context, Const.BACKGROUND_MODE, false)
-            StartSyncReceiver.cancelBackground()
+            StartSyncReceiver.cancelBackground(context)
             Utils.logWithTag(TAG, "Geofencing detected user leaving munich, " +
                     "disabling Auto updates")
         }

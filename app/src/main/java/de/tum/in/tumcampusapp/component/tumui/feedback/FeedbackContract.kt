@@ -1,8 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.tumui.feedback
 
-import android.content.Intent
 import android.location.Location
-import android.net.Uri
 import android.os.Bundle
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.model.Feedback
 import io.reactivex.Observable
@@ -25,11 +23,7 @@ interface FeedbackContract {
         fun showProgressDialog()
         fun showSendErrorDialog()
         fun onFeedbackSent()
-        fun openCamera(intent: Intent)
-        fun openGallery(intent: Intent)
-        fun showPermissionRequestDialog(permission: String, requestCode: Int)
-        fun onImageAdded(path: String)
-        fun onImageRemoved(position: Int)
+        fun showLocationPermissionRequestDialog()
     }
 
     interface Presenter {
@@ -38,15 +32,9 @@ interface FeedbackContract {
         fun attachView(view: View)
         fun onRestoreInstanceState(savedInstanceState: Bundle)
         fun initEmail()
-        fun removeImage(path: String)
         fun onSendFeedback()
-        fun onConfirmSend()
-        fun onImageOptionSelected(option: Int)
-        fun onNewImageTaken()
-        fun onNewImageSelected(uri: Uri?)
-        fun takePicture()
-        fun openGallery()
-        fun listenForLocation()
+        fun onConfirmSend(imagePaths: Array<String>)
+        fun processLocationPermissionResult(permissions: Map<String, Boolean>)
         fun onSaveInstanceState(outState: Bundle)
         fun detachView()
     }

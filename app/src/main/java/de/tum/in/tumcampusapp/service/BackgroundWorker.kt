@@ -15,7 +15,7 @@ class BackgroundWorker(
 
     override fun doWork(): ListenableWorker.Result {
         val downloadWorkRequest = DownloadWorker.getWorkRequest()
-        WorkManager.getInstance()
+        WorkManager.getInstance(applicationContext)
                 .beginUniqueWork(UNIQUE_DOWNLOAD, ExistingWorkPolicy.KEEP, downloadWorkRequest)
                 .enqueue()
 

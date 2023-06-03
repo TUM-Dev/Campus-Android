@@ -23,7 +23,7 @@ class GradesNotificationProvider(
                 .setColor(notificationColorAccent)
     }
 
-    override fun buildNotification(): AppNotification? {
+    override fun buildNotification(): AppNotification {
         val title = context.getString(R.string.my_grades)
         val size = newGrades.size
         val formattedNewGrades = newGrades.joinToString()
@@ -36,7 +36,7 @@ class GradesNotificationProvider(
 
         val deleteIntent = GradeNotificationDeleteReceiver.newIntent(context, newGrades)
         val deletePendingIntent = PendingIntent.getBroadcast(
-                context, DELETE_REQUEST_CODE, deleteIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+                context, DELETE_REQUEST_CODE, deleteIntent, PendingIntent.FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT)
 
         val notification = getNotificationBuilder()
                 .setContentTitle(title)

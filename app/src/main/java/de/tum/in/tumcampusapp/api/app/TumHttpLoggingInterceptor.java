@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import java.io.EOFException;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
@@ -18,16 +19,60 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import okhttp3.internal.http.HttpHeaders;
 import okhttp3.internal.platform.Platform;
 import okio.Buffer;
 import okio.BufferedSource;
 
 import static okhttp3.internal.platform.Platform.INFO;
 
+/**
+ * Copied from OkHttp internal classes, as suggested in
+ * https://github.com/square/okhttp/issues/5246
+ * for OkHttp 4+ support
+ * **/
+final class HttpHeaders {
+    private HttpHeaders() {}
+
+    private static long contentLength(Headers headers) {
+        return stringToLong(headers.get("Content-Length"));
+    }
+
+    private static long stringToLong(String s) {
+        if (s == null) {
+            return -1;
+        }
+        try {
+            return Long.parseLong(s);
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+
+    /** Returns true if the response must have a (possibly 0-length) body. See RFC 7231. */
+    public static boolean hasBody(Response response) {
+        // HEAD requests never yield a body regardless of the response headers.
+        if (response.request().method().equals("HEAD")) {
+            return false;
+        }
+
+        int responseCode = response.code();
+        if ((responseCode < 100 || responseCode >= 200)
+            && responseCode != HttpURLConnection.HTTP_NO_CONTENT
+            && responseCode != HttpURLConnection.HTTP_NOT_MODIFIED) {
+            return true;
+        }
+
+        // If the Content-Length or Transfer-Encoding headers disagree with the response code, the
+        // response is malformed. For best compatibility, we honor the headers.
+        return contentLength(response.headers()) != -1
+               || "chunked".equalsIgnoreCase(response.header("Transfer-Encoding"));
+    }
+}
 public final class TumHttpLoggingInterceptor implements Interceptor {
 
     private static final Charset UTF8 = StandardCharsets.UTF_8;
+    private static final boolean LOG_BODY = true;
+    private static final boolean LOG_HEADERS = true;
     private final Logger logger;
 
     public interface Logger {
@@ -48,21 +93,18 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
     public Response intercept(@NonNull Chain chain) throws IOException {
         Request request = chain.request();
 
-        boolean logBody = true;
-        boolean logHeaders = true;
-
         RequestBody requestBody = request.body();
         boolean hasRequestBody = requestBody != null;
 
         Connection connection = chain.connection();
         Protocol protocol = connection == null ? Protocol.HTTP_1_1 : connection.protocol();
         String requestStartMessage = "--> " + request.method() + ' ' + request.url() + ' ' + protocol;
-        if (!logHeaders && hasRequestBody) {
+        if (!LOG_HEADERS && hasRequestBody) {
             requestStartMessage += " (" + requestBody.contentLength() + "-byte body)";
         }
         logger.log(requestStartMessage);
 
-        if (logHeaders) {
+        if (LOG_HEADERS) {
             if (hasRequestBody) {
                 // Request body headers are only present when installed as a network interceptor. Force
                 // them to be included (when available) so there values are known.
@@ -83,7 +125,7 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
                 }
             }
 
-            if (logBody && hasRequestBody) {
+            if (LOG_BODY && hasRequestBody) {
                 if (bodyEncoded(request.headers())) {
                     logger.log("--> END " + request.method() + " (encoded body omitted)");
                 } else {
@@ -98,6 +140,7 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
 
                     logger.log("");
                     if (isPlaintext(buffer)) {
+                        assert charset != null;
                         logger.log(buffer.readString(charset));
                         logger.log("--> END " + request.method()
                                    + " (" + requestBody.contentLength() + "-byte body)");
@@ -122,20 +165,19 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
         long tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs);
 
         ResponseBody responseBody = response.body();
+        assert responseBody != null;
         long contentLength = responseBody.contentLength();
         String bodySize = contentLength == -1 ? "unknown-length" : contentLength + "-byte";
-        logger.log("<-- " + response.code() + ' ' + response.message() + ' '
-                   + response.request()
-                             .url() + " (" + tookMs + "ms" + (logHeaders ? "" : ", "
-                                                                                + bodySize + " body") + ')');
+        logger.log(String.format("<-- %d %s %s (%dms%s)", response.code(), response.message(), response.request().url(), tookMs,
+                                 LOG_HEADERS ? "" : ", " + bodySize + " body"));
 
-        if (logHeaders) {
+        if (LOG_HEADERS) {
             Headers headers = response.headers();
             for (int i = 0, count = headers.size(); i < count; i++) {
                 logger.log(headers.name(i) + ": " + headers.value(i));
             }
 
-            if (logBody && HttpHeaders.hasBody(response)) {
+            if (LOG_BODY && HttpHeaders.hasBody(response)) {
                 if (bodyEncoded(response.headers())) {
                     logger.log("<-- END HTTP (encoded body omitted)");
                 } else {

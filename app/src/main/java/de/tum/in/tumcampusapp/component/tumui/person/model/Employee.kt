@@ -68,8 +68,7 @@ data class Employee(
 
         if (title.isBlank()) {
             return salutationWithName
-        } else {
-            return "$salutationWithName, $title"
         }
+        return "$salutationWithName, $title"
     }
 }

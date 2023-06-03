@@ -30,6 +30,11 @@ class LecturesAppointmentsActivity : ActivityForAccessingTumOnline<LectureAppoin
 
         binding = ActivityLecturesappointmentsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbarLecturesAppointments.toolbar)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 

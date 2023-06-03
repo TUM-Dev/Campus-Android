@@ -1,33 +1,27 @@
 package de.tum.`in`.tumcampusapp.component.tumui.feedback
 
-import android.Manifest.permission.*
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.M
 import android.os.Bundle
-import android.provider.MediaStore
+import android.util.Log
 import android.util.Patterns
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.di.LrzId
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.model.Feedback
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.model.FeedbackResult
 import de.tum.`in`.tumcampusapp.utils.Const
-import de.tum.`in`.tumcampusapp.utils.ImageUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.disposables.CompositeDisposable
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.File
-import java.io.IOException
 import javax.inject.Inject
 
 class FeedbackPresenter @Inject constructor(
@@ -42,7 +36,6 @@ class FeedbackPresenter @Inject constructor(
     private var sendFeedbackCall = tumCabeClient.sendFeedback(feedback)
     private var sendImagesCalls = mutableListOf<Call<FeedbackResult>>()
 
-    private var currentPhotoPath: String? = null
     private var imagesSent: Int = 0
 
     private var view: FeedbackContract.View? = null
@@ -56,14 +49,26 @@ class FeedbackPresenter @Inject constructor(
         compositeDisposable += view.getEmail().subscribe { feedback.email = it }
         compositeDisposable += view.getIncludeEmail().subscribe { onIncludeEmailChanged(it) }
         compositeDisposable += view.getIncludeLocation().subscribe { onIncludeLocationChanged(it) }
-
-        if (SDK_INT < M || checkPermission(ACCESS_FINE_LOCATION)) {
+        if (SDK_INT < M || checkLocationPermission()) {
             listenForLocation()
         }
     }
 
-    override fun listenForLocation() {
+    private fun listenForLocation() {
         compositeDisposable += checkNotNull(view).getLocation().subscribe { feedback.location = it }
+    }
+
+    /**
+     * @return true if user has given permission before
+     */
+    @RequiresApi(api = M)
+    private fun checkLocationPermission(): Boolean {
+        val permissionCheck = ContextCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION)
+        if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+            view?.showLocationPermissionRequestDialog()
+            return false
+        }
+        return true
     }
 
     private fun updateFeedbackTopic(topicButton: Int) {
@@ -76,7 +81,7 @@ class FeedbackPresenter @Inject constructor(
 
     private fun onIncludeLocationChanged(includeLocation: Boolean) {
         feedback.includeLocation = includeLocation
-        if (includeLocation && (SDK_INT < M || checkPermission(ACCESS_FINE_LOCATION))) {
+        if (includeLocation) {
             listenForLocation()
         }
     }
@@ -105,41 +110,6 @@ class FeedbackPresenter @Inject constructor(
         }
     }
 
-    override fun takePicture() {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (takePictureIntent.resolveActivity(context.packageManager) == null) {
-            return
-        }
-
-        // Create the file where the photo should go
-        var photoFile: File? = null
-        try {
-            photoFile = ImageUtils.createImageFile(context)
-            currentPhotoPath = photoFile.absolutePath
-        } catch (e: IOException) {
-            Utils.log(e)
-        }
-
-        if (photoFile == null) {
-            return
-        }
-
-        val authority = "de.tum.in.tumcampusapp.fileprovider"
-        val photoURI = FileProvider.getUriForFile(context, authority, photoFile)
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-
-        view?.openCamera(takePictureIntent)
-    }
-
-    override fun openGallery() {
-        val intent = Intent()
-        intent.type = "image/*"
-        intent.action = Intent.ACTION_GET_CONTENT
-
-        val chooser = Intent.createChooser(intent, "Select file")
-        view?.openGallery(chooser)
-    }
-
     private fun isEmailValid(email: String?): Boolean {
         if (email == null) {
             return false
@@ -155,7 +125,7 @@ class FeedbackPresenter @Inject constructor(
         }
     }
 
-    override fun onConfirmSend() {
+    override fun onConfirmSend(imagePaths: Array<String>) {
         if (!feedback.includeEmail) {
             feedback.email = null
         }
@@ -194,7 +164,7 @@ class FeedbackPresenter @Inject constructor(
                 if (feedback.imageCount == 0) {
                     view?.onFeedbackSent()
                 } else {
-                    sendImages()
+                    sendImages(imagePaths)
                 }
             }
 
@@ -206,21 +176,7 @@ class FeedbackPresenter @Inject constructor(
         })
     }
 
-    private fun showNoLocationAccessDialog() {
-        val title = context.getString(R.string.location_services_off_title)
-        val message = context.getString(R.string.location_services_off_message)
-        view?.showDialog(title, message)
-    }
-
-    override fun removeImage(path: String) {
-        val index = feedback.picturePaths.indexOf(path)
-        feedback.picturePaths.remove(path)
-        File(path).delete()
-        view?.onImageRemoved(index)
-    }
-
-    private fun sendImages() {
-        val imagePaths = feedback.picturePaths.toTypedArray()
+    private fun sendImages(imagePaths: Array<String>) {
         sendImagesCalls = tumCabeClient.sendFeedbackImages(feedback, imagePaths)
 
         for (call in sendImagesCalls) {
@@ -253,54 +209,13 @@ class FeedbackPresenter @Inject constructor(
         }
     }
 
-    /**
-     * @return true if user has given permission before
-     */
-    @RequiresApi(api = M)
-    private fun checkPermission(permission: String): Boolean {
-        val permissionCheck = ContextCompat.checkSelfPermission(context, permission)
-
-        if (permissionCheck == PackageManager.PERMISSION_DENIED) {
-            val requestCode = when (permission) {
-                READ_EXTERNAL_STORAGE -> PERMISSION_FILES
-                CAMERA -> PERMISSION_CAMERA
-                else -> PERMISSION_LOCATION
-            }
-
-            view?.showPermissionRequestDialog(permission, requestCode)
-            return false
-        }
-        return true
-    }
-
-    override fun onImageOptionSelected(option: Int) {
-        if (option == 0) {
-            if (SDK_INT < M || checkPermission(CAMERA)) {
-                takePicture()
-            }
-        } else {
-            if (SDK_INT < M || checkPermission(READ_EXTERNAL_STORAGE)) {
-                openGallery()
-            }
-        }
-    }
-
-    override fun onNewImageTaken() {
-        currentPhotoPath?.let {
-            ImageUtils.rescaleBitmap(context, it)
-            feedback.picturePaths.add(it)
-            view?.onImageAdded(it)
-        }
-    }
-
-    override fun onNewImageSelected(uri: Uri?) {
-        val filePath = ImageUtils.rescaleBitmap(context, uri ?: return) ?: return
-        feedback.picturePaths.add(filePath)
-        view?.onImageAdded(filePath)
+    private fun showNoLocationAccessDialog() {
+        val title = context.getString(R.string.location_services_off_title)
+        val message = context.getString(R.string.location_services_off_message)
+        view?.showDialog(title, message)
     }
 
     override fun detachView() {
-        clearPictures()
         sendFeedbackCall.cancel()
 
         for (call in sendImagesCalls) {
@@ -311,21 +226,17 @@ class FeedbackPresenter @Inject constructor(
         view = null
     }
 
-    private fun clearPictures() {
-        for (path in feedback.picturePaths) {
-            File(path).delete()
+    override fun processLocationPermissionResult(permissions: Map<String, @JvmSuppressWildcards Boolean>) {
+        permissions.entries.forEach {
+            if (it.key == ACCESS_FINE_LOCATION && it.value) {
+                listenForLocation()
+            } else {
+                Log.d("Feedback", "Location Permission Denied")
+            }
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(Const.FEEDBACK, feedback)
-    }
-
-    companion object {
-        const val REQUEST_TAKE_PHOTO = 11
-        const val REQUEST_GALLERY = 12
-        const val PERMISSION_LOCATION = 13
-        const val PERMISSION_CAMERA = 14
-        const val PERMISSION_FILES = 15
     }
 }

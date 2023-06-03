@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.activities
 
 import android.view.View
+import androidx.test.core.app.ApplicationProvider
 import androidx.viewpager.widget.ViewPager
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.TestApp
@@ -23,7 +24,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 
 @Ignore
@@ -36,7 +36,7 @@ class KinoActivityTest {
 
     @Before
     fun setUp() {
-        val db = TcaDb.getInstance(RuntimeEnvironment.application)
+        val db = TcaDb.getInstance(ApplicationProvider.getApplicationContext())
         val localRepository = KinoLocalRepository(db)
         viewModel = KinoViewModel(localRepository)
         RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
@@ -50,7 +50,7 @@ class KinoActivityTest {
 
     @After
     fun tearDown() {
-        TcaDb.getInstance(RuntimeEnvironment.application).close()
+        TcaDb.getInstance(ApplicationProvider.getApplicationContext()).close()
         RxJavaPlugins.reset()
         RxAndroidPlugins.reset()
     }

@@ -79,7 +79,7 @@ public class MemberSuggestionsListAdapter extends BaseAdapter implements Filtera
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
                 FilterResults results = new FilterResults();
-                ArrayList<ChatMember> after = new ArrayList<>();
+                List<ChatMember> after = new ArrayList<>();
                 if (charSequence != null) {
                     for (ChatMember member : originalData) {
                         if (member.getDisplayName() != null && member.getDisplayName()

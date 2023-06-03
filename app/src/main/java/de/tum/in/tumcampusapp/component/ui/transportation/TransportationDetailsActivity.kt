@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.LinearLayout
-import androidx.appcompat.app.AlertDialog
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
@@ -62,14 +62,11 @@ class TransportationDetailsActivity : ProgressActivity<Unit>(R.layout.activity_t
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_transport_usage) {
-            val dialog = AlertDialog.Builder(this)
+            ThemedAlertDialogBuilder(this)
                     .setTitle(R.string.transport_action_usage)
                     .setMessage(R.string.transport_help_text)
                     .setPositiveButton(android.R.string.ok, null)
-                    .create()
-
-            dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-            dialog.show()
+                    .show()
             return true
         }
         return super.onOptionsItemSelected(item)

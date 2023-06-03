@@ -68,7 +68,7 @@ sealed class CafeteriaMenuAdapterItem {
             val priceTextView = findViewById<TextView>(R.id.priceTextView)
             val favoriteDish = findViewById<ImageView>(R.id.favoriteDish)
 
-            priceTextView.text = kotlin.String.format("%s €", price)
+            priceTextView.text = String.format("%s €", price)
 
             favoriteDish.isSelected = isFavorite
             favoriteDish.setOnClickListener { view ->

@@ -1,127 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/gradesLayout"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/gradesLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingButtonAddExamGrade"
+        style="@style/BlueButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.96"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.8"
+        app:srcCompat="@drawable/ic_add"
+        app:tint="@android:color/white" />
+
+    <CheckBox
+        android:id="@+id/checkboxUseDiagrams"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:elevation="12dp"
-            android:theme="@style/TumToolbar"
-            app:popupTheme="@style/TumToolbarPopUp">
-
-            <Spinner
-                android:id="@+id/filterSpinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </androidx.appcompat.widget.Toolbar>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <include
-        android:id="@+id/layout_all_errors"
-        layout="@layout/layout_all_errors"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <FrameLayout
-            android:id="@+id/chartsContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/padding_default">
-
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/pieChartView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="visible" />
-
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/barChartView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone" />
-
-        </FrameLayout>
-
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipeRefreshLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-
-            <se.emilsjolander.stickylistheaders.StickyListHeadersListView
-                android:id="@+id/gradesListView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical" />
-
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    </FrameLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:checked="true"
+        android:text="use weights in diagrams"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/averageGradeTextView"
-            android:layout_width="0dp"
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:elevation="12dp"
+                android:theme="@style/TumToolbar"
+                app:popupTheme="@style/TumToolbarPopUp">
+
+                <Spinner
+                    android:id="@+id/filterSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <include
+            android:id="@+id/layout_all_errors"
+            layout="@layout/layout_all_errors"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <FrameLayout
+                android:id="@+id/chartsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/padding_default">
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/pieChartView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible" />
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/barChartView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipeRefreshLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+                    android:id="@+id/gradesListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="vertical" />
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/material_small_padding"
-            android:layout_weight="1"
-            android:textSize="@dimen/semilarge_text_size"
-            android:visibility="visible"
-            tools:text="1.0" />
+            android:orientation="horizontal">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/showListButton"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="@dimen/material_tiny_padding"
-            android:drawableStart="@drawable/ic_list_bulleted"
-            android:drawablePadding="@dimen/material_small_padding"
-            android:gravity="center"
-            android:text="@string/show_list"
-            android:textColor="@android:color/white"
-            app:backgroundTint="@color/color_primary"
-            app:cornerRadius="@dimen/material_corner_radius" />
+            <TextView
+                android:id="@+id/averageGradeTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/material_small_padding"
+                android:layout_weight="1"
+                android:textSize="@dimen/semilarge_text_size"
+                android:visibility="visible"
+                tools:text="1.0" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/showChartButton"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="@dimen/material_tiny_padding"
-            android:drawableStart="@drawable/ic_pie_chart"
-            android:drawablePadding="@dimen/material_small_padding"
-            android:gravity="center"
-            android:text="@string/show_chart"
-            android:textColor="@android:color/white"
-            android:visibility="gone"
-            app:backgroundTint="@color/color_primary"
-            app:cornerRadius="@dimen/material_corner_radius" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/showListButton"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/material_tiny_padding"
+                android:drawableStart="@drawable/ic_list_bulleted"
+                android:drawablePadding="@dimen/material_small_padding"
+                android:gravity="center"
+                android:text="@string/show_list"
+                android:textColor="@android:color/white"
+                app:backgroundTint="@color/color_primary"
+                app:cornerRadius="@dimen/material_corner_radius" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/showChartButton"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/material_tiny_padding"
+                android:drawableStart="@drawable/ic_pie_chart"
+                android:drawablePadding="@dimen/material_small_padding"
+                android:gravity="center"
+                android:text="@string/show_chart"
+                android:textColor="@android:color/white"
+                android:visibility="gone"
+                app:backgroundTint="@color/color_primary"
+                app:cornerRadius="@dimen/material_corner_radius" />
+
+        </LinearLayout>
     </LinearLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

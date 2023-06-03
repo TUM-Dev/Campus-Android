@@ -1,0 +1,5 @@
+v3.12
+
+* Mehrere Bugfixes:
+  * Version 3.11 wurde geskippt
+  * Verschiedene Darkmode Fixes

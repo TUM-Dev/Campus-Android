@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="1dp"
+    android:background="@color/default_window_background"
+    android:orientation="vertical"
+    android:padding="@dimen/material_default_padding"
+    android:theme="@style/AppTheme">
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:text="@string/choose_color"
+        android:textAppearance="@android:style/TextAppearance.Large" />
+
+    <ScrollView
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioGroup
+                android:id="@+id/radioColor"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <RadioButton
+                    android:id="@+id/checkBoxDefault"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_color_default" />
+
+                <RadioButton
+                    android:id="@+id/checkBoxRed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_color_red"
+                    android:buttonTint="@color/calendar_red"/>
+
+                <RadioButton
+                    android:id="@+id/checkBoxPink"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_color_pink"
+                    android:buttonTint="@color/calendar_pink"/>
+
+                <RadioButton
+                    android:id="@+id/checkBoxPurple"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_color_purple"
+                    android:buttonTint="@color/calendar_purple"/>
+
+                <RadioButton
+                    android:id="@+id/checkBoxIndigo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_color_indigo"
+                    android:buttonTint="@color/calendar_indigo"/>
+
+                <RadioButton
+                    android:id="@+id/checkBoxBlue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_color_blue"
+                    android:buttonTint="@color/calendar_blue"/>
+
+                <RadioButton
+                    android:id="@+id/checkBoxTeal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_color_teal"
+                    android:buttonTint="@color/calendar_teal"/>
+
+                <RadioButton
+                    android:id="@+id/checkBoxGreen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_color_green"
+                    android:buttonTint="@color/calendar_green"/>
+
+                <RadioButton
+                    android:id="@+id/checkBoxLime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_color_lime"
+                    android:buttonTint="@color/calendar_lime"/>
+
+                <RadioButton
+                    android:id="@+id/checkBoxYellow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_color_yellow"
+                    android:buttonTint="@color/calendar_yellow"/>
+
+                <RadioButton
+                    android:id="@+id/checkBoxAmber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_color_amber"
+                    android:buttonTint="@color/calendar_amber"/>
+
+                <RadioButton
+                    android:id="@+id/checkBoxOrange"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_color_orange"
+                    android:buttonTint="@color/calendar_orange"/>
+            </RadioGroup>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/repeatingSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/apply_to_all_occurrences"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <LinearLayout
+                android:id="@+id/changeColorContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/material_small_padding"
+                android:gravity="start"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/changeColorButton"
+                    style="@style/BlueButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/change_color"
+                    android:textAllCaps="false"
+                    app:cornerRadius="@dimen/material_corner_radius" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

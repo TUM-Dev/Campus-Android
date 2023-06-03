@@ -1,0 +1,3 @@
+v3.3
+
+- Ein Problem mit der Datenbank-Aktualisierung wurde behoben.

@@ -76,7 +76,6 @@ public final class TUMCabeClient {
     static final String API_NOTIFICATIONS = "notifications/";
     static final String API_LOCATIONS = "locations/";
     static final String API_DEVICE = "device/";
-    static final String API_WIFI_HEATMAP = "wifimap/";
     static final String API_BARRIER_FREE = "barrierfree/";
     static final String API_BARRIER_FREE_CONTACT = "contacts/";
     static final String API_BARRIER_FREE_BUILDINGS_TO_GPS = "getBuilding2Gps/";
@@ -292,20 +291,12 @@ public final class TUMCabeClient {
                 .body();
     }
 
+    @Deprecated // This API has been deprecated. Use the equivalent NavigaTUM API instead
     public Call<List<RoomFinderMap>> fetchAvailableMaps(final String archId) {
         return service.fetchAvailableMaps(ApiHelper.encodeUrl(archId));
     }
 
-    public List<RoomFinderRoom> fetchRooms(String searchStrings) throws IOException {
-        return service.fetchRooms(ApiHelper.encodeUrl(searchStrings))
-                .execute()
-                .body();
-    }
-
-    public RoomFinderCoordinate fetchCoordinates(String archId) throws IOException {
-        return fetchRoomFinderCoordinates(archId).execute().body();
-    }
-
+    @Deprecated // This API has been deprecated. Use the equivalent NavigaTUM API instead
     public Call<RoomFinderCoordinate> fetchRoomFinderCoordinates(String archId) {
         return service.fetchCoordinates(archId);
     }
@@ -326,7 +317,7 @@ public final class TUMCabeClient {
         List<Call<FeedbackResult>> calls = new ArrayList<>();
         for (int i = 0; i < imagePaths.length; i++) {
             File file = new File(imagePaths[i]);
-            RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
+            RequestBody reqFile = RequestBody.create(file, MediaType.parse("image/*"));
             MultipartBody.Part body = MultipartBody.Part.createFormData("feedback_image", i + ".png", reqFile);
 
             Call<FeedbackResult> call = service.sendFeedbackImage(body, i + 1, feedback.getId());

@@ -3,7 +3,7 @@ package de.tum.`in`.tumcampusapp.component.ui.ticket.activity
 import android.content.Intent
 import android.os.Bundle
 import android.transition.TransitionManager
-import androidx.appcompat.app.AlertDialog
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -54,7 +54,7 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
         get() {
             currentTicketAmounts?.let {
                 val types = ticketTypes ?: arrayListOf()
-                return it.zip(types).fold(0, { acc, amount -> acc + amount.first * amount.second.price })
+                return it.zip(types).fold(0) { acc, amount -> acc + amount.first * amount.second.price }
             } ?: return 0
         }
 
@@ -130,13 +130,11 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
     }
 
     private fun showError(title: Int, message: Int) {
-        val dialog = AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setNeutralButton(R.string.ok, null)
-                .create()
-        dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-        dialog.show()
+        ThemedAlertDialogBuilder(this)
+            .setTitle(title)
+            .setMessage(message)
+            .setNeutralButton(R.string.ok, null)
+            .show()
     }
 
     private fun initEventTextViews() {
@@ -208,15 +206,11 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
     }
 
     private fun handleTicketNotReserved() {
-        val dialog = AlertDialog.Builder(this)
+        ThemedAlertDialogBuilder(this)
                 .setTitle(getString(R.string.error))
                 .setMessage(getString(R.string.ticket_not_fetched))
-                .setPositiveButton(R.string.ok) { _, _ ->
-                    showLoadingLayout(false)
-                }
-                .create()
-        dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-        dialog.show()
+                .setPositiveButton(R.string.ok) { _, _ -> showLoadingLayout(false) }
+                .show()
     }
 
     private fun handleTicketReservationFailure(messageResId: Int) {

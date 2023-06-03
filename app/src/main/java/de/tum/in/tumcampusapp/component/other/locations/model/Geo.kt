@@ -10,8 +10,8 @@ data class Geo(
 ) {
 
     constructor(latitude: Double, longitude: Double) : this(
-            latitude = java.lang.Double.toString(latitude),
-            longitude = java.lang.Double.toString(longitude)
+            latitude = latitude.toString(),
+            longitude = longitude.toString()
     )
 
     override fun toString(): String = "latitude=$latitude longitude=$longitude"

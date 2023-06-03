@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.format.DateUtils.*
 import de.tum.`in`.tumcampusapp.R
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import java.text.ParseException
@@ -25,13 +26,11 @@ object DateTimeUtils {
     }
 
     /**
-     * TODO this uses inconsistent capitalization: "Just now" and "in 30 minutes"
      * Format an upcoming string nicely by being more precise as time comes closer
      * E.g.:
-     *      Just now
      *      in 30 minutes
-     *      at 15:20
-     *      in 5 hours
+     *      in 2 h 4 min
+     *      in 6 hours
      *      tomorrow
      * @see getRelativeTimeSpanString()
      */
@@ -40,23 +39,20 @@ object DateTimeUtils {
         val now = DateTime.now().millis
 
         // Catch future dates: current clock might be running behind
-        if (timeInMillis < now || timeInMillis <= 0) {
-            return DateTimeUtils.formatTimeOrDay(time, context)
-        }
+        if (timeInMillis < now || timeInMillis <= 0) return DateTimeUtils.formatTimeOrDay(time, context)
 
         val diff = timeInMillis - now
         return when {
             diff < 60 * MINUTE_IN_MILLIS -> {
                 val formatter = DateTimeFormat.forPattern("m")
                         .withLocale(Locale.ENGLISH)
-                "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff))} " +
+                "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff, DateTimeZone.UTC))} " +
                         context.getString(R.string.MINUTES)
             }
-        // Be more precise by telling the user the exact time if below 3 hours
-            diff < 3 * HOUR_IN_MILLIS -> {
-                val formatter = DateTimeFormat.forPattern("HH:mm")
+            diff < 5 * HOUR_IN_MILLIS -> {
+                val formatter = DateTimeFormat.forPattern("h 'h' m 'min'")
                         .withLocale(Locale.ENGLISH)
-                "${context.getString(R.string.AT)} ${formatter.print(time)}"
+                "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff, DateTimeZone.UTC))}"
             }
             else -> getRelativeTimeSpanString(timeInMillis, now, MINUTE_IN_MILLIS,
                     FORMAT_ABBREV_RELATIVE).toString()

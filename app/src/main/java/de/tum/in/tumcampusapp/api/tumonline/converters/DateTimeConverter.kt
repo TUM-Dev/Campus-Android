@@ -9,9 +9,11 @@ import org.joda.time.format.DateTimeFormat
 class DateTimeConverter : TypeConverter<DateTime?> {
 
     private val formats = arrayOf(
-            "yyyy-MM-dd",
-            "yyyy-MM-dd HH:mm",
-            "yyyy-MM-dd HH:mm:ss"
+        "dd.MM.yy",
+        "dd.MM.yyyy",
+        "yyyy-MM-dd",
+        "yyyy-MM-dd HH:mm",
+        "yyyy-MM-dd HH:mm:ss"
     )
 
     override fun read(value: String?): DateTime? {
@@ -21,7 +23,7 @@ class DateTimeConverter : TypeConverter<DateTime?> {
         return parseString(value)
     }
 
-    private fun parseString(value: String): DateTime? {
+    private fun parseString(value: String): DateTime {
         formats.forEach { format ->
             val dateTime = tryOrNull { DateTimeFormat.forPattern(format).parseDateTime(value) }
             dateTime?.let {

@@ -15,7 +15,6 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.component.tumui.lectures.activity.LecturesPersonalActivity;
-import de.tum.in.tumcampusapp.component.ui.chat.activity.ChatRoomsActivity;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomAndLastMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoomDbRow;
 import de.tum.in.tumcampusapp.utils.DateTimeUtils;
@@ -184,12 +183,12 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
 
     static class ViewHolder {
 
-        TextView lectureNameTextView;
-        TextView membersTextView;
-        TextView lastMessageTextView;
-        TextView professorTextView;
-        LinearLayout additionalInfoLayout;
-        TextView unreadMessagesTextView;
+        final TextView lectureNameTextView;
+        final TextView membersTextView;
+        final TextView lastMessageTextView;
+        final TextView professorTextView;
+        final LinearLayout additionalInfoLayout;
+        final TextView unreadMessagesTextView;
 
         public ViewHolder(View itemView) {
             lectureNameTextView = itemView.findViewById(R.id.lectureNameTextView);
@@ -204,7 +203,7 @@ public class ChatRoomListAdapter extends BaseAdapter implements StickyListHeader
 
     static class HeaderViewHolder {
 
-        TextView textView;
+        final TextView textView;
 
         HeaderViewHolder(View itemView) {
             textView = itemView.findViewById(R.id.lecture_header);

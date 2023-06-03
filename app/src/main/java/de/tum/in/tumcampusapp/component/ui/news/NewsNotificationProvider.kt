@@ -25,7 +25,7 @@ class NewsNotificationProvider(
                 .setColor(notificationColorAccent)
     }
 
-    override fun buildNotification(): AppNotification? {
+    override fun buildNotification(): AppNotification {
         val summaryTitle = context.getString(R.string.news)
         val summaryText = context.getString(R.string.new_items_format_string, newsItems.size)
 

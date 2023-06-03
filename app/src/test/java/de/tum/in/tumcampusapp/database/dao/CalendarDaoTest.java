@@ -9,11 +9,11 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.util.List;
 
+import androidx.test.core.app.ApplicationProvider;
 import de.tum.in.tumcampusapp.TestApp;
 import de.tum.in.tumcampusapp.component.other.locations.RoomLocationsDao;
 import de.tum.in.tumcampusapp.component.tumui.calendar.CalendarDao;
@@ -36,14 +36,13 @@ public class CalendarDaoTest {
 
     @Before
     public void setUp() {
-        dao = TcaDb.Companion.getInstance(RuntimeEnvironment.application)
+        dao = TcaDb.Companion.getInstance(ApplicationProvider.getApplicationContext())
                              .calendarDao();
-        wtbDao = TcaDb.Companion.getInstance(RuntimeEnvironment.application)
+        wtbDao = TcaDb.Companion.getInstance(ApplicationProvider.getApplicationContext())
                                 .widgetsTimetableBlacklistDao();
-        rlDao = TcaDb.Companion.getInstance(RuntimeEnvironment.application)
+        rlDao = TcaDb.Companion.getInstance(ApplicationProvider.getApplicationContext())
                                .roomLocationsDao();
         nr = 0;
-        JodaTimeAndroid.init(RuntimeEnvironment.application);
     }
 
     @After
@@ -51,7 +50,7 @@ public class CalendarDaoTest {
         dao.flush();
         wtbDao.flush();
         rlDao.flush();
-        TcaDb.Companion.getInstance(RuntimeEnvironment.application)
+        TcaDb.Companion.getInstance(ApplicationProvider.getApplicationContext())
                        .close();
     }
 
@@ -340,7 +339,7 @@ public class CalendarDaoTest {
 
         List<CalendarItem> results = dao.getNextCalendarItems();
         assertThat(results).hasSize(1);
-        assertThat(results.get(0)).isEqualToComparingFieldByField(expected);
+        assertThat(results.get(0)).usingRecursiveComparison().isEqualTo(expected);
     }
 
     /**

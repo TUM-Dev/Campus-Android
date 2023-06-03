@@ -34,7 +34,30 @@
     <string name="calendar_filter_hour_limit_min_title">Von Uhrzeit</string>
     <string name="calendar_filter_hour_limit_max_title">Bis Uhrzeit</string>
     <string name="calendar_filter_hour_limit_error_message">Die Anfangsstunde muss vor dem Ende liegen!</string>
-
+    <string name="change_color">Farbe ändern</string>
+    <string name="choose_color">Wähle eine Farbe</string>
+    <string name="custom_color_default">Standardfarbe</string>
+    <string name="custom_color_red">Rot</string>
+    <string name="custom_color_pink">Rosa</string>
+    <string name="custom_color_purple">Purple</string>
+    <string name="custom_color_indigo">Violett</string>
+    <string name="custom_color_blue">Blau</string>
+    <string name="custom_color_teal">Blaugrün</string>
+    <string name="custom_color_green">Grün</string>
+    <string name="custom_color_lime">Limette</string>
+    <string name="custom_color_yellow">Gelb</string>
+    <string name="custom_color_amber">Bernstein</string>
+    <string name="custom_color_orange">Orange</string>
+    <string name="apply_to_all_occurrences">Auf alle Vorkommen anwenden</string>
+    <string name="month_view_monday">MO</string>
+    <string name="month_view_tuesday">DI</string>
+    <string name="month_view_wednesday">MI</string>
+    <string name="month_view_thursday">DO</string>
+    <string name="month_view_friday">FR</string>
+    <string name="month_view_saturday">SA</string>
+    <string name="month_view_sunday">SO</string>
+    <string name="month_view_back_button_description">Gehe zum vorherigen Monat</string>
+    <string name="month_view_forward_button_description">Gehe zum nächsten Monat</string>
 
     <!-- Roomfinder -->
     <string name="no_map_available">Keine Karte verfügbar</string>
@@ -47,6 +70,7 @@
     <!-- Exam/Grades -->
     <string name="average_grade">Durchschnittsnote</string>
     <string name="average_grade_hint">Deinen offiziellen Schnitt findest Du in TUMOnline.</string>
+    <string name="edit_grades">Noten Bearbeiten</string>
     <string name="show_column_chart">Zeige als Balkendiagramm</string>
     <string name="show_pie_chart">Zeige als Tortendiagramm</string>
     <string name="result_extra">Ergebnis:&#160;</string>
@@ -56,6 +80,36 @@
     <string name="all_programs">Alle Noten</string>
     <string name="date">Datum</string>
     <string name="no_grades">Du hast noch keine Noten, die angezeigt werden könnten.</string>
+    <string name="reset_grade">zurücksetzten</string>
+    <string name="use_grade_in_average">Note verwenden</string>
+    <string name="grade_weight_label">Gewichtung der Note:</string>
+    <string name="course_name">Course name</string>
+    <string name="thesis">Bachelor Arbeit</string>
+    <string name="text_view_grade_label">Grade (0 für bestanden)</string>
+    <string name="default_grade">1,0</string>
+    <string name="text_view_examiner_name">Name des Prüfers</string>
+    <string name="text_view_credits_label">Credits</string>
+    <string name="default_credits">6</string>
+    <string name="text_view_grade_weight">Notengewichtung</string>
+    <string name="default_grade_weight">1.0</string>
+    <string name="text_view_examination_date_label">Datum der Prüfung</string>
+    <string name="grade_date_format">dd.mm.jj</string>
+    <string name="grade_date_default">01.01.22</string>
+    <string name="text_view_semester_label">Jahr in dem das Semester startet (z.B. 22WS or 21SoSe)</string>
+    <string name="grade_semester_default">22WS</string>
+    <string name="use_weights_in_diagrams">Credits und Gewichte in dem Diagram berücksichtigen</string>
+    <string name="delete_exam">Prüfung löschen</string>
+    <string name="delete_exam_dialog_message">Soll diese Prüfung unwiderruflich gelöscht werden?</string>
+    <string name="add_grade_error_wrong_semester">Falsches Semesterformat: Zu kurz. Zwei Zahlen für das Jahr + W/S</string>
+    <string name="add_grade_error_semester_no_ws">Falsches Semesterformat: Semester nicht angegeben. Zwei Zahlen für das Jahr + W/S</string>
+    <string name="add_grade_error_invalid_weight">Falsches Gewichtsformat: Gewichte können nicht negativ sein.</string>
+    <string name="add_grade_error_invalid_grade_format">Falsches Notenformat: Die Note muss zwischen 1,0 und 5,0 liegen oder gleich 0 (bestanden) sein.</string>
+    <string name="add_grade_missing_course_title">Ein Kursname muss eingefügt werden.</string>
+    <string name="add_grade_error_invalid_weight_less_than_zero">Ungültige Anzahl an ECTS. Die ECTS-Zahl muss größer als 0 sein.</string>
+    <string name="add_exam_dialog_title">Eine neue Prüfung hinzufügen</string>
+    <string name="add_exam_dialog_message">Die Noten werden normalerweise automatisch hinzugefügt. Falls spezielle Noten hinzugefügt werden sollen, kann dies hier geschehen. Manuell hinzugefügte Prüfungen können später wieder gelöscht werden.</string>
+    <string name="grade_passed_annotation">Ohne Note Bestanden.</string>
+    <string name="grade_percentages">Prozentsatz der Noten.</string>
 
     <!-- Preferences -->
     <string name="lrz_id">TUM Kennung</string>
@@ -256,15 +310,26 @@
     <string name="cafeteria_notification_settings">Mensa Benachrichtigungen</string>
 
     <!-- Cafeteria Notification Settings -->
-    <string name="invalid_notification_time_format_string">Ungültige Zeit ausgewählt. Wähle eine Uhrzeit im folgenden Intervall %d – %d.</string>
+    <string name="invalid_notification_time_format_string">Ungültige Zeit ausgewählt. Wähle eine Uhrzeit im folgenden Intervall %1$d – %2$d.</string>
 
     <!-- Information -->
     <string name="version">Version: %1$s</string>
     <string name="send_email">E-Mail Feedback senden</string>
     <string name="show_feedback">Feedback senden</string>
     <string name="feedbackSubj">Feedback für TUM Campus App</string>
-    <!-- END Translated, please do not change identifiers -->
+    <string name="show_notification_view_progress_single">Die Benachrichtigungsübersicht öffnet sich in einem Klick.</string>
+    <string name="show_notification_view_progress_multiple">Die Benachrichtigungsübersicht öffnet sich in %1$d Klicks.</string>
 
+    <!-- Notification Overview -->
+    <string name="notification_overview">Benarichtigungsübersicht</string>
+    <string name="active_notifications">Aktive Benarichtigungen</string>
+    <string name="scheduled_notifications">Geplante Benarichtigungen</string>
+    <string name="alarms">Alarme</string>
+    <string name="pendingintents_per_type">PendingIntents nach NotificationType</string>
+    <string name="pendingintents_per_scheduled_notification">PendingIntents nach ScheduledNotification</string>
+
+
+    <!-- END Translated, please do not change identifiers -->
     <string name="min_search_len">Text muss mindestens %d Zeichen lang sein</string>
     <string name="default_cafeteria">Standardmensa</string>
     <string name="default_station">Standardhaltestelle</string>
@@ -395,7 +460,7 @@ Signatur: %5$s</string>
     <string name="please_connect_to_internet">Bitte verbinden Sie sich mit dem Internet, um den ersten App-Start fortzusetzen</string>
     <string name="IN">in</string>
     <string name="MINUTES">minuten</string>
-    <string name="AT">um</string>
+    <string name="on">um</string>
     <string name="eduroam_fix">Jetzt reparieren</string>
     <string name="eduroam_insecure_configuration">Wir haben eine unsichere WLAN-eduroam Konfiguration erkannt. Sie könnten möglicherweise Informationen über Sie und Ihr Konto in dritte Hände geben.</string>
     <string name="fix_eduroam">eduroam reparieren</string>
@@ -455,7 +520,7 @@ Signatur: %5$s</string>
     <string name="show_chart">Diagramm anzeigen</string>
     <string name="study_program_format_string">Studiengang %s</string>
     <string name="summer_semester">Sommersemester %d</string>
-    <string name="winter_semester">Wintersemester %d/%d</string>
+    <string name="winter_semester">Wintersemester %1$d/%2$d</string>
 
     <string name="channel_general">Allgemein</string>
     <string name="channel_cafeteria">Mensa</string>
@@ -467,11 +532,8 @@ Signatur: %5$s</string>
     <string name="location_services_off_title">Standortfreigabe ist ausgeschaltet</string>
     <string name="location_services_off_message">Schalte deinen Standort in den Einstellungen an um deinen Standort mitzusenden</string>
     <string name="study_cards_title">Cards</string>
-    <string name="card_title">Titel</string>
     <string name="create_card">Karte hinzufügen</string>
     <string name="title_activity_cards">Karteikarten</string>
-    <string name="card_front_text">Vorderseite</string>
-    <string name="card_back_text">Hinterseite</string>
     <string name="title_activity_cards_detail">Karte hinzufügen</string>
     <string name="card_question">Frage</string>
     <string name="card_answer">Antwort</string>
@@ -518,13 +580,13 @@ Signatur: %5$s</string>
     <string name="ticket_amount_error_title">Kaufeinschränkungen</string>
     <string name="unknown">Unbekannt</string>
     <string name="not_redeemed_yet">Noch nicht eingelöst</string>
-    <string name="partially_redeemed">%d von %d eingelöst (%s)</string>
+    <string name="partially_redeemed">%1$d von %2$d eingelöst (%3$s)</string>
     <string name="redeemed_at">Eingelöst um %s</string>
     <string name="no_tickets_remaining">Keine Tickets mehr vorhanden</string>
     <string name="no_tickets_remaining_message">Leider stehen für diese Veranstaltung keine weiteren Online Tickets zur Verfügung.\nBei vielen Veranstaltungen kannst du aber vor Ort noch Tickets erwerben.</string>
     <string name="error_message_select_at_least_one_ticket">Bitte wähle mindestens ein Ticket aus einer der Kategorien aus.</string>
     <string name="error_no_ticket_selected">Keine Tickets ausgewählt</string>
-    <string name="ticket_amount_information">Es können maximal %d Tickets pro Person vom Typ \“%s\” gekauft werden.</string>
+    <string name="ticket_amount_information">Es können maximal %1$d Tickets pro Person vom Typ \“%2$s\” gekauft werden.</string>
     <string name="ticket_amount_label">Betrag</string>
     <string name="tickets_saved_in_app">Das Ticket wurde in der App gespeichert.</string>
 
@@ -604,7 +666,7 @@ Signatur: %5$s</string>
     <string name="user_search_hint">Suche Name oder TUM Kennung</string>
     <string name="error_invalid_tum_id_format">Inkorrekte TUM Kennung</string>
     <string name="error_user_not_found">Niemand gefunden</string>
-    <string name="add_user_to_chat_message"><b>%s</b> zum Chatroom <b>%s</b> hinzufügen?</string>
+    <string name="add_user_to_chat_message"><b>%1$s</b> zum Chatroom <b>%2$s</b> hinzufügen?</string>
     <string name="chat_member_added">Nutzer*in hinzugefügt</string>
 
     <string name="or">oder</string>
@@ -654,6 +716,7 @@ Signatur: %5$s</string>
     <string name="error_no_rights_to_access_function">Dein TUMonline-Access-Token hat nicht die nötigte Berechtigung, um diese Funktion zu nutzen.</string>
     <string name="error_request_limit_reached">Du hast das Anfragelimit für TUMonline erreicht. Versuche es später erneut.</string>
     <string name="error_access_token_limit_reached">Limit an Access-Tokens erreicht. Du musst einen Access-Token in TUMonline löschen, bevor du fortfahren kannst.</string>
+    <string name="error_access_token_insufficient_permissions">Deinem TUMonline-Token fehlen die aktiven Rechte!</string>
     <string name="error_unknown">Unbekannter Fehler.</string>
     <string name="export_to_google_error">Ein Fehler ist während des Kalender-Exports zu Google Kalender aufgetreten.</string>
     <string name="checking_if_token_enabled">Überprüfung, ob Token aktiviert ist …</string>
@@ -717,4 +780,42 @@ Signatur: %5$s</string>
     // for opening hours
     <string name="language">de</string>
     <string name="use_existing">Bestehendes verwenden</string>
+
+    // search
+    <string name="all_results">Alle Ergebnisse</string>
+    <string name="people">Personen</string>
+    <string name="lectures">Vorlesungen</string>
+    <string name="search_info">Suchen Sie nach Personen, Räumen und anderen.</string>
+    <string name="no_result_info">Konnte nicht finden “%1$s”</string>
+    <string name="no_result_sub_info">Versuchen Sie es erneut, korrigieren Sie die Schreibweise oder versuchen Sie es mit anderen Schlüsselwörtern.</string>
+    <string name="recent_searches">Letzte Suchen</string>
+    <string name="clear_recent_searches">Verlauf löschen</string>
+    <string name="not_available_search">Nicht verfügbar</string>
+    <string name="rooms_id">Räume</string>
+    <string name="buildings">Gebäude</string>
+    <string name="clear_search_history_request">Möchten Sie den Suchverlauf löschen?</string>
+
+    // Navigation details
+    <string name="location_details">Details zum Ort</string>
+    <string name="loading_details">lädt</string>
+    <string name="site_plans">Lagepläne</string>
+    <string name="interactive_map">Interaktive Karte</string>
+    <string name="open_in_maps">Maps öffnen</string>
+    <string name="share">Teilen</string>
+    <string name="available_maps">Verfügbare Karten:</string>
+    <string name="map">Karte</string>
+    <string name="room_id">Raumkennung</string>
+    <string name="address">Adresse</string>
+    <string name="architect_name">Architekten-Name</string>
+    <string name="seats">Sitzplätze</string>
+    <string name="number_of_rooms">Anzahl Räume</string>
+    <string name="not_implemented">Funktion noch nicht implementiert</string>
+    <string name="not_implemented_interactive_map">Interaktive Karte ist noch nicht implementiert. Sie können auf der NavigaTum-Website darauf zugreifen.</string>
+    <string name="redirect">Umleiten</string>
+
+    // Lecture View
+    <string name="ongoing_until">Noch %1$s</string>
+    <string name="starts_now">Startet jetzt</string>
+    <string name="tomorrow_time">Morgen %1$s</string>
+    <string name="IN_capitalized">In</string>
 </resources>

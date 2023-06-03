@@ -39,5 +39,14 @@ class Migration6to7 : Migration(6, 7) {
                 "PRIMARY KEY(`id`))")
 
         // Reset location, to get rid of old references && Fav Dish
+
+        database.execSQL(
+                "CREATE TABLE IF NOT EXISTS `event_color_table` " +
+                        "(`eventColorId` INTEGER PRIMARY KEY, " +
+                        "`event_identifier` TEXT NOT NULL, " +
+                        "`event_nr` TEXT NOT NULL, " +
+                        "`is_single_event` INTEGER NOT NULL, " +
+                        "`color` INTEGER NOT NULL)"
+        )
     }
 }

@@ -7,7 +7,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AlertDialog
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
@@ -19,8 +19,8 @@ import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.service.DownloadWorker
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
-import java.lang.Math.round
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 class NewsFragment : FragmentForDownloadingExternal(
     R.layout.fragment_news,
@@ -60,7 +60,7 @@ class NewsFragment : FragmentForDownloadingExternal(
     }
 
     private fun initRecyclerView() {
-        val spacing = round(resources.getDimension(R.dimen.material_card_view_padding))
+        val spacing = resources.getDimension(R.dimen.material_card_view_padding).roundToInt()
         binding.newsRecyclerView.addItemDecoration(EqualSpacingItemDecoration(spacing))
     }
 
@@ -113,12 +113,8 @@ class NewsFragment : FragmentForDownloadingExternal(
             Utils.getSettingBool(requireContext(), "news_source_${it.id}", true)
         }.toTypedArray().toBooleanArray()
 
-        AlertDialog.Builder(requireContext())
+        ThemedAlertDialogBuilder(requireContext())
             .setMultiChoiceItems(items, checked, this::onNewsSourceToggled)
-            .create()
-            .apply {
-                window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
-            }
             .show()
     }
 

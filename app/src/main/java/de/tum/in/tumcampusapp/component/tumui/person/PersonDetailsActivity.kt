@@ -4,13 +4,13 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline
@@ -36,8 +36,13 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
 
         binding = ActivityPersonDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbarPersonDetails.toolbar)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
 
-        val person = intent.extras?.getSerializable("personObject") as? Person
+        val person = intent.extras?.getSerializable(PERSON_OBJECT) as? Person
         if (person == null) {
             finish()
             return
@@ -87,11 +92,11 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
             return
         }
 
-        AlertDialog.Builder(this)
-                .setMessage(R.string.dialog_add_to_contacts)
-                .setPositiveButton(R.string.add) { _, _ -> addContact(employee) }
-                .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
-                .show()
+        ThemedAlertDialogBuilder(this)
+            .setMessage(R.string.dialog_add_to_contacts)
+            .setPositiveButton(R.string.add) { _, _ -> addContact(employee) }
+            .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+            .show()
     }
 
     /**
@@ -104,7 +109,8 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
         binding.scrollView.visibility = View.VISIBLE
 
         val image = employee.image ?: BitmapFactory.decodeResource(
-                resources, R.drawable.photo_not_available)
+            resources, R.drawable.photo_not_available
+        )
 
         binding.pictureImageView.setImageBitmap(image)
         binding.nameTextView.text = employee.getNameWithTitle(this)
@@ -202,13 +208,13 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
         // For example, if the request has been denied previously.
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_CONTACTS)) {
             // Display an AlertDialog with an explanation and a button to trigger the request.
-            AlertDialog.Builder(this)
-                    .setMessage(R.string.permission_contacts_explanation)
-                    .setPositiveButton(R.string.grant_permission) { _, _ ->
-                        ActivityCompat.requestPermissions(this@PersonDetailsActivity, PERMISSIONS_CONTACTS, id)
-                    }
-                    .setNegativeButton(R.string.cancel, null)
-                    .show()
+            ThemedAlertDialogBuilder(this)
+                .setMessage(R.string.permission_contacts_explanation)
+                .setPositiveButton(R.string.grant_permission) { _, _ ->
+                    ActivityCompat.requestPermissions(this@PersonDetailsActivity, PERMISSIONS_CONTACTS, id)
+                }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
         } else {
             ActivityCompat.requestPermissions(this, PERMISSIONS_CONTACTS, id)
         }
@@ -225,5 +231,6 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
 
     companion object {
         private val PERMISSIONS_CONTACTS = arrayOf(Manifest.permission.WRITE_CONTACTS)
+        const val PERSON_OBJECT = "personObject"
     }
 }

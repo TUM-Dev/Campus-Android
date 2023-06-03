@@ -15,9 +15,8 @@ class NotificationAlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         val typeId = intent.getLongExtra(Const.KEY_NOTIFICATION_TYPE_ID, 0)
-        val type = NotificationType.fromId(typeId)
 
-        val notificationProvider = when (type) {
+        val notificationProvider = when (NotificationType.fromId(typeId)) {
             NotificationType.CAFETERIA -> CafeteriaNotificationProvider(context)
             NotificationType.TRANSPORT -> TransportNotificationProvider(context)
             NotificationType.TUITION_FEES -> TuitionFeesNotificationProvider(context)

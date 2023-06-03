@@ -4,45 +4,40 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
+import android.widget.Spinner
 import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
-import de.tum.`in`.tumcampusapp.component.other.general.model.Recent
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumCabe
 import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
-import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderDetailsActivity
+import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.NavigationDetailsActivity
+import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.NavigationDetailsFragment
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.RoomFinderListAdapter
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom
-import de.tum.`in`.tumcampusapp.database.TcaDb
-import de.tum.`in`.tumcampusapp.databinding.ActivityBarrierFreeFacilitiesBinding
 import retrofit2.Call
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView
 
-class BarrierFreeFacilitiesActivity : ActivityForAccessingTumCabe<List<RoomFinderRoom>>(
+class BarrierFreeFacilitiesActivity :
+    ActivityForAccessingTumCabe<List<RoomFinderRoom>>(
         R.layout.activity_barrier_free_facilities
-), AdapterView.OnItemSelectedListener {
-
-    private val recents: RecentsDao by lazy {
-        TcaDb.getInstance(this).recentsDao()
-    }
+    ),
+    AdapterView.OnItemSelectedListener {
 
     private val locationManager: LocationManager by lazy {
         LocationManager(this)
     }
 
-    private lateinit var binding: ActivityBarrierFreeFacilitiesBinding
+    private lateinit var listView: StickyListHeadersListView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = ActivityBarrierFreeFacilitiesBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        binding.spinnerToolbar.onItemSelectedListener = this
+        listView = findViewById(R.id.barrierFreeFacilitiesListView)
+        val spinnerToolbar = findViewById<Spinner>(R.id.spinnerToolbar)
+        spinnerToolbar.onItemSelectedListener = this
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         when (position) {
             0 -> fetchApiCallForCurrentLocation()
-            1 -> executeApiCall(apiClient.listOfElevators)
+            1 -> executeApiCall(apiClient.listOfToilets)
             else -> executeApiCall(apiClient.listOfElevators)
         }
     }
@@ -55,21 +50,22 @@ class BarrierFreeFacilitiesActivity : ActivityForAccessingTumCabe<List<RoomFinde
     }
 
     private fun executeApiCall(apiCall: Call<List<RoomFinderRoom>>?) {
-        apiCall?.let { fetch(it) } ?: showError(R.string.error_something_wrong)
-    }
-
-    override fun onDownloadSuccessful(response: List<RoomFinderRoom>) {
-        binding.barrierFreeFacilitiesListView.adapter = RoomFinderListAdapter(this, response)
-        binding.barrierFreeFacilitiesListView.setOnItemClickListener { _, _, index, _ ->
-            val facility = response[index]
-            recents.insert(Recent(facility.toString(), RecentsDao.ROOMS))
-            openRoomFinderDetails(facility)
+        this@BarrierFreeFacilitiesActivity.runOnUiThread {
+            apiCall?.let { fetch(it) } ?: showError(R.string.error_something_wrong)
         }
     }
 
-    private fun openRoomFinderDetails(facility: RoomFinderRoom) {
-        val intent = Intent(this, RoomFinderDetailsActivity::class.java)
-        intent.putExtra(RoomFinderDetailsActivity.EXTRA_ROOM_INFO, facility)
+    override fun onDownloadSuccessful(response: List<RoomFinderRoom>) {
+        listView.adapter = RoomFinderListAdapter(this, response)
+        listView.setOnItemClickListener { _, _, index, _ ->
+            val facility = response[index]
+            openNavigationDetails(facility)
+        }
+    }
+
+    private fun openNavigationDetails(facility: RoomFinderRoom) {
+        val intent = Intent(this, NavigationDetailsActivity::class.java)
+        intent.putExtra(NavigationDetailsFragment.NAVIGATION_ENTITY_ID, facility.room_code)
         startActivity(intent)
     }
 

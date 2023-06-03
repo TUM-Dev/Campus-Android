@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.fragment.app.Fragment
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.ApiHelper
@@ -28,9 +29,12 @@ import retrofit2.Callback
 import retrofit2.Response
 import javax.inject.Inject
 
-/**
- * Displays the map regarding the searched room.
- */
+@Deprecated(
+    "Use NavigationDetailsFragment instead. I don't remove it" +
+        "because of logic in WeekViewFragment and RoomFinderSchedule." +
+        "Idea is to reimplement it in new issue. More info here: " +
+        "https://github.com/TUM-Dev/Campus-Android/pull/1462"
+)
 class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R.layout.activity_roomfinderdetails), DialogInterface.OnClickListener {
 
     @Inject
@@ -59,8 +63,8 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
 
         imageFragment = ImageViewTouchFragment.newInstance()
         supportFragmentManager.beginTransaction()
-                .add(R.id.fragment_container, imageFragment)
-                .commit()
+            .add(R.id.fragment_container, imageFragment)
+            .commit()
 
         startLoading()
     }
@@ -74,8 +78,8 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
         val timetable = menu.findItem(R.id.action_room_timetable)
         timetable.isVisible = infoLoaded
         timetable.setIcon(
-                if (weekViewFragment == null) R.drawable.ic_outline_event_note_24px
-                else R.drawable.ic_outline_map_24px
+            if (weekViewFragment == null) R.drawable.ic_outline_event_note_24px
+            else R.drawable.ic_outline_map_24px
         )
 
         menu.findItem(R.id.action_directions).isVisible = infoLoaded && weekViewFragment == null
@@ -132,7 +136,7 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
         val descriptions = mapsList.map { it.description }
         val currentPosition = mapsList.indexOfFirst { it.map_id == mapId }
 
-        AlertDialog.Builder(this)
+        ThemedAlertDialogBuilder(this)
                 .setSingleChoiceItems(descriptions.toTypedArray(), currentPosition, this)
                 .show()
     }
@@ -144,7 +148,7 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
         startLoading()
     }
 
-    override fun onLoadInBackground(vararg arg: Void): String? {
+    override fun onLoadInBackground(vararg arg: Void): String {
         val encodedArchId = ApiHelper.encodeUrl(room.arch_id)
 
         return if (mapId.isEmpty()) {
@@ -271,7 +275,7 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
         val coordinates = "${result.latitude},${result.longitude}"
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=$coordinates"))
         val pkgAppsList = applicationContext.packageManager
-                .queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER)
+            .queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER)
 
         // If some app can handle this intent start it
         if (pkgAppsList.isNotEmpty()) {

@@ -21,7 +21,7 @@ class IdUploadAction @Inject constructor(
         val lrzId = Utils.getSetting(context, Const.LRZ_ID, "")
 
         val uploadStatus = tumCabeClient.getUploadStatus(lrzId) ?: return
-        Utils.log("upload missing ids: " + uploadStatus.toString())
+        Utils.log("upload missing ids: $uploadStatus")
 
         // upload FCM Token if not uploaded or invalid
         if (uploadStatus.fcmToken != UploadStatus.UPLOADED) {
