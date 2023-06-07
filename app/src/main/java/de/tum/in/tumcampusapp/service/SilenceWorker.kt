@@ -18,7 +18,7 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import org.joda.time.DateTime
 
-class SilenceService(appContext: Context, workerParams: WorkerParameters):
+class SilenceWorker(appContext: Context, workerParams: WorkerParameters):
         Worker(appContext, workerParams) {
 
     /**
@@ -59,7 +59,7 @@ class SilenceService(appContext: Context, workerParams: WorkerParameters):
         }
 
         val alarmManager = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val newIntent = Intent(applicationContext, SilenceService::class.java)
+        val newIntent = Intent(applicationContext, SilenceWorker::class.java)
         val pendingIntent = PendingIntent.getService(applicationContext, 0, newIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
         val startTime = System.currentTimeMillis()
@@ -134,7 +134,7 @@ class SilenceService(appContext: Context, workerParams: WorkerParameters):
 
         @JvmStatic fun enqueueWork(context: Context) {
             val workManager = WorkManager.getInstance(context)
-            val silenceWorkRequest = OneTimeWorkRequestBuilder<SilenceService>().build()
+            val silenceWorkRequest = OneTimeWorkRequestBuilder<SilenceWorker>().build()
             workManager.enqueue(silenceWorkRequest)
         }
 

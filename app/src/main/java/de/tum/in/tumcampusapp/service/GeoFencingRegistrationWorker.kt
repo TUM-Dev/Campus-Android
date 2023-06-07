@@ -20,7 +20,7 @@ import com.google.android.gms.location.LocationServices
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 
-class GeoFencingRegistrationService (appContext: Context, workerParams: WorkerParameters):
+class GeoFencingRegistrationWorker (appContext: Context, workerParams: WorkerParameters):
         Worker(appContext, workerParams) {
 
     private lateinit var locationClient: GeofencingClient
@@ -88,7 +88,7 @@ class GeoFencingRegistrationService (appContext: Context, workerParams: WorkerPa
                     .putFloat(Const.ADD_GEOFENCE_RANGE, range)
                     .build()
 
-            return OneTimeWorkRequestBuilder<GeoFencingRegistrationService>()
+            return OneTimeWorkRequestBuilder<GeoFencingRegistrationWorker>()
                     .setInputData(data)
                     .build()
         }

@@ -5,7 +5,7 @@ import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.api.tumonline.TUMOnlineClient
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventsResponse
-import de.tum.`in`.tumcampusapp.service.QueryLocationService
+import de.tum.`in`.tumcampusapp.service.QueryLocationWorker
 import okhttp3.Cache
 import org.jetbrains.anko.doAsync
 import retrofit2.Call
@@ -44,7 +44,7 @@ class CacheManager @Inject constructor(private val context: Context) {
 
     private fun loadRoomLocations() {
         doAsync {
-            QueryLocationService.enqueueWork(context)
+            QueryLocationWorker.enqueueWork(context)
         }
     }
 

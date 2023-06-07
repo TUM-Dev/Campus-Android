@@ -26,7 +26,7 @@ import de.tum.`in`.tumcampusapp.databinding.FragmentMainBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.service.DownloadWorker
-import de.tum.`in`.tumcampusapp.service.SilenceService
+import de.tum.`in`.tumcampusapp.service.SilenceWorker
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -97,7 +97,7 @@ class MainFragment : BaseFragment<Unit>(
         }
 
         // Start silence Service (if already started it will just invoke a check)
-        val service = Intent(requireContext(), SilenceService::class.java)
+        val service = Intent(requireContext(), SilenceWorker::class.java)
         requireContext().startService(service)
 
         viewModel.cards.observe(viewLifecycleOwner) {

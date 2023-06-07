@@ -18,7 +18,7 @@ import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMember
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponent
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponentProvider
 import de.tum.`in`.tumcampusapp.databinding.FragmentOnboardingExtrasBinding
-import de.tum.`in`.tumcampusapp.service.SilenceService
+import de.tum.`in`.tumcampusapp.service.SilenceWorker
 import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.NetUtils
@@ -69,8 +69,8 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
                 silentModeCheckBox.isChecked =
                     Utils.getSettingBool(requireContext(), Const.SILENCE_SERVICE, false)
                 silentModeCheckBox.setOnCheckedChangeListener { _, isChecked ->
-                    if (isChecked && !SilenceService.hasPermissions(requireContext())) {
-                        SilenceService.requestPermissions(requireContext())
+                    if (isChecked && !SilenceWorker.hasPermissions(requireContext())) {
+                        SilenceWorker.requestPermissions(requireContext())
                         silentModeCheckBox.isChecked = false
                     }
                 }

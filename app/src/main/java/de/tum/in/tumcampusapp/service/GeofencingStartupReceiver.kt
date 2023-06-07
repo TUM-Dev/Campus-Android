@@ -17,9 +17,9 @@ class GeofencingStartupReceiver : BroadcastReceiver() {
 
         Utils.log("Restarting geofencing due to " + intent?.action)
         context?.let {
-            val geofencingWorker = GeoFencingRegistrationService.buildGeofence(it, MUNICH_GEOFENCE,
+            val geofencingWorker = GeoFencingRegistrationWorker.buildGeofence(it, MUNICH_GEOFENCE,
                     48.137430, 11.575490, DISTANCE_IN_METER)
-            GeoFencingRegistrationService.startGeofencing(it, geofencingWorker)
+            GeoFencingRegistrationWorker.startGeofencing(it, geofencingWorker)
 
         }
     }

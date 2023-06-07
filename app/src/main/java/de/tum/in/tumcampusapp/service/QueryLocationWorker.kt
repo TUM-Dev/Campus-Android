@@ -18,7 +18,7 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.sync.SyncManager
 
-class QueryLocationService(appContext: Context, workerParams: WorkerParameters):
+class QueryLocationWorker(appContext: Context, workerParams: WorkerParameters):
         Worker(appContext, workerParams) {
 
     private lateinit var locationManager: LocationManager
@@ -70,7 +70,7 @@ class QueryLocationService(appContext: Context, workerParams: WorkerParameters):
             Utils.log("Query locations work enqueued")
             val workManager = WorkManager.getInstance(context)
 
-            val queryLocationWork = OneTimeWorkRequestBuilder<QueryLocationService>()
+            val queryLocationWork = OneTimeWorkRequestBuilder<QueryLocationWorker>()
                     .build()
 
             workManager.enqueue(queryLocationWork)
