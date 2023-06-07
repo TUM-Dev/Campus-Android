@@ -20,7 +20,7 @@ import com.google.android.gms.location.LocationServices
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 
-class GeoFencingRegistrationServiceRW (appContext: Context, workerParams: WorkerParameters):
+class GeoFencingRegistrationService (appContext: Context, workerParams: WorkerParameters):
         Worker(appContext, workerParams) {
 
     private lateinit var locationClient: GeofencingClient
@@ -33,7 +33,6 @@ class GeoFencingRegistrationServiceRW (appContext: Context, workerParams: Worker
 
     @SuppressLint("MissingPermission")
     override fun doWork(): Result {
-
         locationClient = LocationServices.getGeofencingClient(applicationContext)
 
         Utils.log("Geo fencing service worker started …")
@@ -89,7 +88,7 @@ class GeoFencingRegistrationServiceRW (appContext: Context, workerParams: Worker
                     .putFloat(Const.ADD_GEOFENCE_RANGE, range)
                     .build()
 
-            return OneTimeWorkRequestBuilder<GeoFencingRegistrationServiceRW>()
+            return OneTimeWorkRequestBuilder<GeoFencingRegistrationService>()
                     .setInputData(data)
                     .build()
         }

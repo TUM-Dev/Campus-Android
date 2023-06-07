@@ -9,22 +9,23 @@ import android.media.AudioManager
 import android.os.Build
 import android.provider.Settings
 import androidx.annotation.RequiresApi
-import androidx.core.app.JobIntentService
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
 import de.tum.`in`.tumcampusapp.utils.Const
-import de.tum.`in`.tumcampusapp.utils.Const.SILENCE_SERVICE_JOB_ID
 import de.tum.`in`.tumcampusapp.utils.Utils
 import org.joda.time.DateTime
 
-/**
- * Service used to silence the mobile during lectures
- */
-class SilenceService : JobIntentService() {
+class SilenceService(appContext: Context, workerParams: WorkerParameters):
+        Worker(appContext, workerParams) {
 
     /**
      * We can't and won't change the ringer modes, if the device is in DoNotDisturb mode. DnD requires
      * explicit user interaction, so we are out of the game until DnD is off again
      */
+
 
     // See: https://stackoverflow.com/questions/31387137/android-detect-do-not-disturb-status
     // Settings.System.getInt(getContentResolver(), Settings.System.DO_NOT_DISTURB, 1);
@@ -32,11 +33,11 @@ class SilenceService : JobIntentService() {
     private val isDoNotDisturbActive: Boolean
         get() {
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.currentInterruptionFilter != NotificationManager.INTERRUPTION_FILTER_ALL
             } else {
                 try {
-                    val mode = Settings.Global.getInt(contentResolver, "zen_mode")
+                    val mode = Settings.Global.getInt(applicationContext.contentResolver, "zen_mode")
                     mode != 0
                 } catch (e: Settings.SettingNotFoundException) {
                     false
@@ -44,54 +45,45 @@ class SilenceService : JobIntentService() {
             }
         }
 
-    override fun onCreate() {
-        super.onCreate()
-        Utils.log("SilenceService has started")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Utils.log("SilenceService has stopped")
-    }
-
-    override fun onHandleWork(intent: Intent) {
+    override fun doWork(): Result {
+        Utils.log("HOSSMARK Silence service worker started …")
         // Abort, if the settingsPrefix changed
-        if (!Utils.getSettingBool(this, Const.SILENCE_SERVICE, false)) {
+        if (!Utils.getSettingBool(applicationContext, Const.SILENCE_SERVICE, false)) {
             // Don't schedule a new run, since the service is disabled
-            return
+            return Result.failure()
         }
 
-        if (!hasPermissions(this)) {
-            Utils.setSetting(this, Const.SILENCE_SERVICE, false)
-            return
+        if (!hasPermissions(applicationContext)) {
+            Utils.setSetting(applicationContext, Const.SILENCE_SERVICE, false)
+            return Result.failure()
         }
 
-        val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val newIntent = Intent(this, SilenceService::class.java)
-        val pendingIntent = PendingIntent.getService(this, 0, newIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        val alarmManager = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val newIntent = Intent(applicationContext, SilenceService::class.java)
+        val pendingIntent = PendingIntent.getService(applicationContext, 0, newIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
         val startTime = System.currentTimeMillis()
         var waitDuration = CHECK_INTERVAL.toLong()
         Utils.log("SilenceService enabled, checking for lectures …")
 
-        val calendarController = CalendarController(this)
+        val calendarController = CalendarController(applicationContext)
         if (!calendarController.hasLectures()) {
             Utils.logVerbose("No lectures available")
             alarmManager.set(AlarmManager.RTC, startTime + waitDuration, pendingIntent)
-            return
+            return Result.success()
         }
 
-        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        val audioManager = applicationContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         val currentLectures = calendarController.currentLectures
         Utils.log("Current lectures: " + currentLectures.size)
 
         if (currentLectures.isEmpty() || isDoNotDisturbActive) {
-            if (Utils.getSettingBool(this, Const.SILENCE_ON, false) && !isDoNotDisturbActive) {
+            if (Utils.getSettingBool(applicationContext, Const.SILENCE_ON, false) && !isDoNotDisturbActive) {
                 // default: old state
                 Utils.log("set ringer mode to old state")
-                val ringerMode = Utils.getSetting(this, Const.SILENCE_OLD_STATE, AudioManager.RINGER_MODE_NORMAL.toString())
+                val ringerMode = Utils.getSetting(applicationContext, Const.SILENCE_OLD_STATE, AudioManager.RINGER_MODE_NORMAL.toString())
                 audioManager.ringerMode = ringerMode.toInt()
-                Utils.setSetting(this, Const.SILENCE_ON, false)
+                Utils.setSetting(applicationContext, Const.SILENCE_ON, false)
 
                 val nextCalendarItems = calendarController.nextCalendarItems
 
@@ -104,15 +96,15 @@ class SilenceService : JobIntentService() {
             }
         } else {
             // remember old state if just activated ; in doubt dont change
-            if (!Utils.getSettingBool(this, Const.SILENCE_ON, true)) {
-                Utils.setSetting(this, Const.SILENCE_OLD_STATE, audioManager.ringerMode)
+            if (!Utils.getSettingBool(applicationContext, Const.SILENCE_ON, true)) {
+                Utils.setSetting(applicationContext, Const.SILENCE_OLD_STATE, audioManager.ringerMode)
             }
 
             // if current lecture(s) found, silence the mobile
-            Utils.setSetting(this, Const.SILENCE_ON, true)
+            Utils.setSetting(applicationContext, Const.SILENCE_ON, true)
 
             // Set into silent or vibrate mode based on current setting
-            val mode = Utils.getSetting(this, "silent_mode_set_to", "0")
+            val mode = Utils.getSetting(applicationContext, "silent_mode_set_to", "0")
             audioManager.ringerMode = when (mode) {
                 RINGER_MODE_SILENT -> AudioManager.RINGER_MODE_VIBRATE
                 else -> AudioManager.RINGER_MODE_SILENT
@@ -123,8 +115,8 @@ class SilenceService : JobIntentService() {
         }
 
         alarmManager.set(AlarmManager.RTC, startTime + waitDuration, pendingIntent)
+        return Result.success()
     }
-
     companion object {
 
         /**
@@ -140,8 +132,10 @@ class SilenceService : JobIntentService() {
             return Math.min(CHECK_INTERVAL.toLong(), eventTime - System.currentTimeMillis() + CHECK_DELAY)
         }
 
-        @JvmStatic fun enqueueWork(context: Context, work: Intent) {
-            enqueueWork(context, SilenceService::class.java, SILENCE_SERVICE_JOB_ID, work)
+        @JvmStatic fun enqueueWork(context: Context) {
+            val workManager = WorkManager.getInstance(context)
+            val silenceWorkRequest = OneTimeWorkRequestBuilder<SilenceService>().build()
+            workManager.enqueue(silenceWorkRequest)
         }
 
         /**
@@ -171,4 +165,5 @@ class SilenceService : JobIntentService() {
             context.startActivity(intent)
         }
     }
+
 }

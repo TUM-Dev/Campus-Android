@@ -2,10 +2,8 @@ package de.tum.`in`.tumcampusapp.service
 
 import android.Manifest
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.sqlite.SQLiteException
-import androidx.core.app.JobIntentService
 import androidx.core.content.ContextCompat
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -20,7 +18,7 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.sync.SyncManager
 
-class QueryLocationServiceRW(appContext: Context, workerParams: WorkerParameters):
+class QueryLocationService(appContext: Context, workerParams: WorkerParameters):
         Worker(appContext, workerParams) {
 
     private lateinit var locationManager: LocationManager
@@ -72,7 +70,7 @@ class QueryLocationServiceRW(appContext: Context, workerParams: WorkerParameters
             Utils.log("Query locations work enqueued")
             val workManager = WorkManager.getInstance(context)
 
-            val queryLocationWork = OneTimeWorkRequestBuilder<QueryLocationServiceRW>()
+            val queryLocationWork = OneTimeWorkRequestBuilder<QueryLocationService>()
                     .build()
 
             workManager.enqueue(queryLocationWork)
