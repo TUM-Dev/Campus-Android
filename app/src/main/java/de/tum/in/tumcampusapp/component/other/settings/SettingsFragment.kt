@@ -192,10 +192,10 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
                     Utils.setSetting(requireContext(), Const.SILENCE_SERVICE, false)
                     SilenceWorker.requestPermissions(requireContext())
                 } else {
-                    requireContext().startService(service)
+                    SilenceWorker.enqueueWork(requireContext())
                 }
             } else {
-                requireContext().stopService(service)
+                SilenceWorker.dequeueWork(requireContext())
             }
         }
 

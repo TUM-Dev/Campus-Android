@@ -96,9 +96,8 @@ class MainFragment : BaseFragment<Unit>(
             ItemTouchHelper(ItemTouchHelperCallback()).attachToRecyclerView(cardsRecyclerView)
         }
 
-        // Start silence Service (if already started it will just invoke a check)
-        val service = Intent(requireContext(), SilenceWorker::class.java)
-        requireContext().startService(service)
+        // Enqueue a request for the silence worker (if already started it will just invoke a check)
+        SilenceWorker.enqueueWork(requireContext())
 
         viewModel.cards.observe(viewLifecycleOwner) {
             it?.let { onNewCardsAvailable(it) }

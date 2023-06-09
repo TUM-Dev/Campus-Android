@@ -9,6 +9,7 @@ import android.media.AudioManager
 import android.os.Build
 import android.provider.Settings
 import androidx.annotation.RequiresApi
+import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.Worker
@@ -46,11 +47,11 @@ class SilenceWorker(appContext: Context, workerParams: WorkerParameters):
         }
 
     override fun doWork(): Result {
-        Utils.log("HOSSMARK Silence service worker started …")
+        Utils.log("Silence service worker started …")
         // Abort, if the settingsPrefix changed
         if (!Utils.getSettingBool(applicationContext, Const.SILENCE_SERVICE, false)) {
             // Don't schedule a new run, since the service is disabled
-            return Result.failure()
+            return Result.success()
         }
 
         if (!hasPermissions(applicationContext)) {
@@ -127,6 +128,7 @@ class SilenceWorker(appContext: Context, workerParams: WorkerParameters):
 
         private const val RINGER_MODE_SILENT = "0"
 
+        private const val UNIQUE_WORK_NAME = "SilenceWorker_request"
         private fun getWaitDuration(eventDateTime: DateTime): Long {
             val eventTime = eventDateTime.millis
             return Math.min(CHECK_INTERVAL.toLong(), eventTime - System.currentTimeMillis() + CHECK_DELAY)
@@ -135,7 +137,14 @@ class SilenceWorker(appContext: Context, workerParams: WorkerParameters):
         @JvmStatic fun enqueueWork(context: Context) {
             val workManager = WorkManager.getInstance(context)
             val silenceWorkRequest = OneTimeWorkRequestBuilder<SilenceWorker>().build()
-            workManager.enqueue(silenceWorkRequest)
+            //only allow one silence worker work to be available. and keep it if another one is created.
+            workManager.enqueueUniqueWork(UNIQUE_WORK_NAME, ExistingWorkPolicy.KEEP, silenceWorkRequest)
+        }
+
+        @JvmStatic fun dequeueWork(context: Context){
+            val workManager = WorkManager.getInstance(context)
+            //we dequeue the work with its unique name
+            workManager.cancelUniqueWork(UNIQUE_WORK_NAME)
         }
 
         /**

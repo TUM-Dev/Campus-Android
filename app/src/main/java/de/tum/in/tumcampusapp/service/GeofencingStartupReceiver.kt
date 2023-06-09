@@ -10,7 +10,6 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 class GeofencingStartupReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        Utils.log("HOSSMARK Received geofencing broadcast")
         if (!isValidIntent(intent)) {
             return
         }
