@@ -818,4 +818,5 @@ Signatur: %5$s</string>
     <string name="starts_now">Startet jetzt</string>
     <string name="tomorrow_time">Morgen %1$s</string>
     <string name="IN_capitalized">In</string>
+    <string name="in_app_review_failed_to_start">In App ReviewFlow konnte nicht gestartet werden</string>
 </resources>
