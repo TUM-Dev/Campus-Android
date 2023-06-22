@@ -28,6 +28,7 @@ class CafeteriaNotificationSettingsActivity : BaseActivity(R.layout.activity_caf
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
+            setTitle(R.string.cafeteria_notification_settings)
         }
 
         val layoutManager = LinearLayoutManager(this)
