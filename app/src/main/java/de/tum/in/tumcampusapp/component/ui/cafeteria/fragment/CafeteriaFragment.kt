@@ -224,7 +224,7 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
     private fun showIngredientsInfo() {
         // Build a alert dialog containing the mapping of ingredients to the numbers
         val formatter = CafeteriaMenuFormatter(requireContext())
-        val message = formatter.format(R.string.cafeteria_ingredients, true)
+        val message = formatter.formatIngredientsInfo(R.string.cafeteria_ingredients)
 
         ThemedAlertDialogBuilder(requireContext())
             .setTitle(R.string.action_ingredients)

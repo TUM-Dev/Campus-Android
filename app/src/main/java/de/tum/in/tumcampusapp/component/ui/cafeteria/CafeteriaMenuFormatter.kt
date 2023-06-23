@@ -5,25 +5,16 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ImageSpan
 import de.tum.`in`.tumcampusapp.R
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import java.util.regex.Pattern
+
 
 class CafeteriaMenuFormatter(private val context: Context) {
 
-    fun format(menuResId: Int, replaceWithImages: Boolean = false): SpannableString {
-        return format(context.getString(menuResId), replaceWithImages)
-    }
-
-    fun format(menu: String, replaceWithImages: Boolean = false): SpannableString {
-        val processed = splitAnnotations(menu)
-
-        return if (replaceWithImages) {
-            // Replace all annotations with images
-            SpannableString(processed).apply { replaceWithImages(processed, this) }
-        } else {
-            // Remove all parentheses from the menu
-            val result = processed.replace("\\(.*?\\)".toRegex(), "").replace("\\s+".toRegex(), " ")
-            SpannableString(result)
-        }
+    fun formatIngredientsInfo(stringId: Int): SpannableString {
+        val ingredientsInfoString = context.getString(stringId)
+        val processed = splitAnnotations(ingredientsInfoString)
+        return SpannableString(processed).apply { replaceWithImages(processed, this) }
     }
 
     private fun replaceWithImages(menu: String, spannable: SpannableString) {
@@ -37,6 +28,29 @@ class CafeteriaMenuFormatter(private val context: Context) {
             text.setSpan(imageSpan, index, index + symbol.length, 0)
             index = menu.indexOf(symbol, index + symbol.length)
         }
+    }
+
+    fun format(menu: CafeteriaMenu, replaceWithImages: Boolean = false): String {
+        val processed = splitAnnotations(menu.name)
+
+
+        return if (replaceWithImages) {
+            processed + addLabels(menu.labels)
+        } else {
+            // Remove all parentheses from the menu
+            processed.replace("\\(.*?\\)".toRegex(), "").replace("\\s+".toRegex(), " ")
+        }
+    }
+
+    private fun addLabels(labels: String): String {
+        val processed = labels.replace("[", "").replace("]", "")
+        val labelsList = processed.split(", ")
+        val labelIcons: List<String> = labelsList
+                .map {
+                    imagesLabels.getOrDefault(it, "")
+                }
+
+        return labelIcons.joinToString("")
     }
 
     /**
@@ -69,6 +83,14 @@ class CafeteriaMenuFormatter(private val context: Context) {
                 "(S)" to R.drawable.meal_pork,
                 "(GQB)" to R.drawable.ic_gqb,
                 "(99)" to R.drawable.meal_alcohol
+        )
+
+        private val imagesLabels = mapOf(
+                "VEGAN" to "\uD83E\uDED1", //🫑
+                "VEGETARIAN" to "\uD83E\uDD55", //🥕
+                "BEEF" to "\uD83D\uDC04", //🐄
+                "PORK" to "\uD83D\uDC16", //🐖
+                "ALCOHOL" to "\uD83C\uDF77" //🍷
         )
 
         /* TODO Someday replace all of them:

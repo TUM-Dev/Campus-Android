@@ -52,7 +52,7 @@ sealed class CafeteriaMenuAdapterItem {
             listener: (() -> Unit)?
         ) = with(holder.itemView) {
             val formatter = CafeteriaMenuFormatter(context)
-            val menuSpan = formatter.format(menu.name, isBigLayout)
+            val menuSpan = formatter.format(menu, isBigLayout)
 
             val nameTextView = findViewById<TextView>(R.id.nameTextView)
             nameTextView.text = menuSpan
