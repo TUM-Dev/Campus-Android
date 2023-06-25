@@ -338,22 +338,20 @@
     <string name="card_settings_instruction">If you want to hide a card permanently or you want to be notified if a new card is available open card-settings by long pressing on a card</string>
 
     <!-- Cafeteria -->
-    <string name="cafeteria_ingredients">(f) meatless dish
-        \n(v) vegan dish
-        \n(S) dish with pork
-        \n(R) dish with beef
-        \n(GQB) Certified Quality - Bavaria
-        \n(99) dish with alcohol
-        \n\n1 with dyestuff
-        \n2 with preservative
-        \n3 with antioxidant
-        \n4 with flavor enhancers
-        \n5 sulphured
-        \n6 blackened (olive)
-        \n8 with phosphate
-        \n9 with sweeteners
-        \n10 contains a source of phenylalanine
-        \n11 with sugar and sweeteners</string>
+    <string name="cafeteria_ingredients">VEGETARIAN meatless dish
+        \nVEGAN vegan dish
+        \nPORK dish with pork
+        \nBEEF dish with beef
+        \nBAVARIA Certified Quality - Bavaria
+        \nALCOHOL dish with alcohol
+        \nDYESTUFF with dyestuff
+        \nPRESERVATIVES with preservative
+        \nANTIOXIDANTS with antioxidant
+        \nFLAVOR_ENHANCER with flavor enhancers
+        \nSULPHURS sulphured
+        \nPHOSPHATES with phosphate
+        \nSWEETENERS with sweeteners
+        \nPHENYLALANINE contains a source of phenylalanine</string>
     <string name="action_ingredients">Ingredients</string>
     <string name="cafeteria_notification_settings">Cafeteria Notification Settings</string>
 

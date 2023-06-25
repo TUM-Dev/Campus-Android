@@ -290,22 +290,20 @@
     <string name="card_settings_instruction">Wenn du eine Karte dauerhaft ausblenden willst oder bei neuen Karten benachrichtigt werden willst öffne die Karten-Einstellungen indem du lange auf eine Karte drückst</string>
 
     <!-- Cafeteria -->
-    <string name="cafeteria_ingredients">(f) fleischloses Gericht
-        \n(v) veganes Gericht
-		\n(S) Gericht mit Schweinefleisch
-		\n(R) Gericht mit Rindfleisch
-		\n(GQB) Geprüfte Qualität - Bayern
-		\n(99) Gericht mit Alkohol
-		\n\n1 mit Farbstoff
-		\n2 mit Konservierungsstoff
-		\n3 mit Antioxidationsmittel
-		\n4 mit Geschmacksverstärker
-		\n5 geschwefelt
-		\n6 geschwärzt (Oliven)
-		\n8 mit Phosphat
-		\n9 mit Süßungsmitteln
-		\n10 enthält eine Phenylalaninquelle
-		\n11 mit einer Zuckerart und Süßungsmitteln</string>
+    <string name="cafeteria_ingredients">VEGETARIAN fleischloses Gericht
+        \nVEGAN veganes Gericht
+		\nPORK Gericht mit Schweinefleisch
+		\nBEEF Gericht mit Rindfleisch
+		\nBAVARIA Geprüfte Qualität - Bayern
+		\nALCOHOL Gericht mit Alkohol
+		\nDYESTUFF mit Farbstoff
+		\nPRESERVATIVES mit Konservierungsstoff
+		\nANTIOXIDANTS mit Antioxidationsmittel
+		\nFLAVOR_ENHANCER mit Geschmacksverstärker
+		\nSULPHURS geschwefelt
+		\nPHOSPHATES mit Phosphat
+		\nSWEETENERS mit Süßungsmitteln
+		\nPHENYLALANINE enthält eine Phenylalaninquelle</string>
     <string name="action_ingredients">Inhaltsstoffe</string>
     <string name="cafeteria_notification_settings">Mensa Benachrichtigungen</string>
 
