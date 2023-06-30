@@ -40,6 +40,7 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
+            setTitle(R.string.person_information)
         }
 
         val person = intent.extras?.getSerializable(PERSON_OBJECT) as? Person

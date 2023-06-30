@@ -46,6 +46,7 @@ class FeedbackActivity : BaseActivity(R.layout.activity_feedback), FeedbackContr
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
+            setTitle(R.string.feedback)
         }
 
         val lrzId = Utils.getSetting(this, Const.LRZ_ID, "")

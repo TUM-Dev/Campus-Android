@@ -34,6 +34,7 @@ class LecturesAppointmentsActivity : ActivityForAccessingTumOnline<LectureAppoin
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
+            setTitle(R.string.lectures_appointments)
         }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
