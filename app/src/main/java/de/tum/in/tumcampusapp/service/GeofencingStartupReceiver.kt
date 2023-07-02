@@ -3,6 +3,7 @@ package de.tum.`in`.tumcampusapp.service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import androidx.work.WorkManager
 import de.tum.`in`.tumcampusapp.utils.Const.DISTANCE_IN_METER
 import de.tum.`in`.tumcampusapp.utils.Const.MUNICH_GEOFENCE
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -16,10 +17,10 @@ class GeofencingStartupReceiver : BroadcastReceiver() {
 
         Utils.log("Restarting geofencing due to " + intent?.action)
         context?.let {
-            val geofencingWorker = GeoFencingRegistrationWorker.buildGeofence(it, MUNICH_GEOFENCE,
+            val geofencingWorker = GeoFencingRegistrationWorker.buildGeofence(MUNICH_GEOFENCE,
                     48.137430, 11.575490, DISTANCE_IN_METER)
-            GeoFencingRegistrationWorker.startGeofencing(it, geofencingWorker)
-
+            val workManager = WorkManager.getInstance(context)
+            workManager.enqueue(geofencingWorker)
         }
     }
 

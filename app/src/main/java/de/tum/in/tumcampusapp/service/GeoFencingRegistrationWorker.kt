@@ -9,7 +9,6 @@ import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import androidx.work.Worker
 import androidx.work.WorkerParameters
@@ -20,11 +19,10 @@ import com.google.android.gms.location.LocationServices
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 
-class GeoFencingRegistrationWorker (appContext: Context, workerParams: WorkerParameters):
+class GeoFencingRegistrationWorker(appContext: Context, workerParams: WorkerParameters) :
         Worker(appContext, workerParams) {
 
     private lateinit var locationClient: GeofencingClient
-
 
     private fun isLocationPermissionGranted(): Boolean {
         return ContextCompat.checkSelfPermission(
@@ -39,13 +37,13 @@ class GeoFencingRegistrationWorker (appContext: Context, workerParams: WorkerPar
         if (!isLocationPermissionGranted()) {
             return Result.failure()
         }
-        //get the data to create the Geofence request
+        // get the data to create the Geofence request
         val id = inputData.getString(Const.ADD_GEOFENCE_ID) ?: return Result.failure()
-        val latitude = inputData.getDouble(Const.ADD_GEOFENCE_LAT, 0.0)
-        val longitude = inputData.getDouble(Const.ADD_GEOFENCE_LON, 0.0)
-        val range = inputData.getFloat(Const.ADD_GEOFENCE_RANGE, 0f)
+        val latitude = inputData.getDouble(Const.ADD_GEOFENCE_LAT, 48.137430)
+        val longitude = inputData.getDouble(Const.ADD_GEOFENCE_LON, 11.575490)
+        val range = inputData.getFloat(Const.ADD_GEOFENCE_RANGE, 50_000f)
 
-        //build request
+        // build request
         val geofence = Geofence.Builder()
                 .setRequestId(id)
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER or Geofence.GEOFENCE_TRANSITION_EXIT)
@@ -57,7 +55,6 @@ class GeoFencingRegistrationWorker (appContext: Context, workerParams: WorkerPar
                 .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER or GeofencingRequest.INITIAL_TRIGGER_EXIT)
                 .addGeofences(arrayListOf(geofence))
                 .build()
-
 
         val geofenceIntent = Intent(applicationContext, GeofencingUpdateReceiver::class.java)
         val geofencePendingIntent = PendingIntent.getBroadcast(
@@ -71,16 +68,10 @@ class GeoFencingRegistrationWorker (appContext: Context, workerParams: WorkerPar
 
     companion object {
 
-        @JvmStatic fun startGeofencing(context: Context, work: WorkRequest) {
-            val workManager = WorkManager.getInstance(context)
-            workManager.enqueue(work)
-        }
-
         /**
          * Helper method for creating an intent containing a geofencing request
          */
-        fun buildGeofence(context: Context, id: String, latitude: Double, longitude: Double, range: Float): WorkRequest {
-
+        fun buildGeofence(id: String, latitude: Double, longitude: Double, range: Float): WorkRequest {
             val data = Data.Builder()
                     .putString(Const.ADD_GEOFENCE_ID, id)
                     .putDouble(Const.ADD_GEOFENCE_LAT, latitude)

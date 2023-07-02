@@ -18,7 +18,7 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.sync.SyncManager
 
-class QueryLocationWorker(appContext: Context, workerParams: WorkerParameters):
+class QueryLocationWorker(appContext: Context, workerParams: WorkerParameters) :
         Worker(appContext, workerParams) {
 
     private lateinit var locationManager: LocationManager
@@ -66,13 +66,11 @@ class QueryLocationWorker(appContext: Context, workerParams: WorkerParameters):
 
         private const val TIME_TO_SYNC_CALENDAR = 604800 // 1 week
 
-        @JvmStatic fun enqueueWork(context: Context) {
+        fun enqueueWork(context: Context) {
             Utils.log("Query locations work enqueued")
             val workManager = WorkManager.getInstance(context)
-
             val queryLocationWork = OneTimeWorkRequestBuilder<QueryLocationWorker>()
                     .build()
-
             workManager.enqueue(queryLocationWork)
         }
     }

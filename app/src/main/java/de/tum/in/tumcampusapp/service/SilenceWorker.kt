@@ -19,14 +19,13 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import org.joda.time.DateTime
 
-class SilenceWorker(appContext: Context, workerParams: WorkerParameters):
+class SilenceWorker(appContext: Context, workerParams: WorkerParameters) :
         Worker(appContext, workerParams) {
 
     /**
      * We can't and won't change the ringer modes, if the device is in DoNotDisturb mode. DnD requires
      * explicit user interaction, so we are out of the game until DnD is off again
      */
-
 
     // See: https://stackoverflow.com/questions/31387137/android-detect-do-not-disturb-status
     // Settings.System.getInt(getContentResolver(), Settings.System.DO_NOT_DISTURB, 1);
@@ -134,16 +133,16 @@ class SilenceWorker(appContext: Context, workerParams: WorkerParameters):
             return Math.min(CHECK_INTERVAL.toLong(), eventTime - System.currentTimeMillis() + CHECK_DELAY)
         }
 
-        @JvmStatic fun enqueueWork(context: Context) {
+        fun enqueueWork(context: Context) {
             val workManager = WorkManager.getInstance(context)
             val silenceWorkRequest = OneTimeWorkRequestBuilder<SilenceWorker>().build()
-            //only allow one silence worker work to be available. and keep it if another one is created.
+            // only allow one silence worker work to be available. and keep it if another one is created.
             workManager.enqueueUniqueWork(UNIQUE_WORK_NAME, ExistingWorkPolicy.KEEP, silenceWorkRequest)
         }
 
-        @JvmStatic fun dequeueWork(context: Context){
+        fun dequeueWork(context: Context) {
             val workManager = WorkManager.getInstance(context)
-            //we dequeue the work with its unique name
+            // we dequeue the work with its unique name
             workManager.cancelUniqueWork(UNIQUE_WORK_NAME)
         }
 
@@ -174,5 +173,4 @@ class SilenceWorker(appContext: Context, workerParams: WorkerParameters):
             context.startActivity(intent)
         }
     }
-
 }
