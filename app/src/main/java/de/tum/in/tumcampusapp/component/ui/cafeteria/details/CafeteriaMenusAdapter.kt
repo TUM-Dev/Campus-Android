@@ -9,23 +9,18 @@ import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.FavoriteDishDao
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaPrices
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.splitOnChanged
 
 class CafeteriaMenusAdapter(
-    private val context: Context,
-    private val isBigLayout: Boolean,
-    private val onClickListener: (() -> Unit)? = null
+        private val context: Context,
+        private val isBigLayout: Boolean,
+        private val onClickListener: (() -> Unit)? = null
 ) : RecyclerView.Adapter<CafeteriaMenusAdapter.ViewHolder>() {
 
     private val dao: FavoriteDishDao by lazy {
         TcaDb.getInstance(context).favoriteDishDao()
-    }
-
-    private val rolePrices: Map<String, String> by lazy {
-        CafeteriaPrices.getRolePrices(context)
     }
 
     private val itemLayout: Int by lazy {
@@ -66,7 +61,7 @@ class CafeteriaMenusAdapter(
                 context,
                 "card_cafeteria_${menu.dishType}",
                 true//"tg" == menu.typeShort || "ae" == menu.typeShort
-        // TODO look into fxing this properly
+                // TODO look into fxing this properly
         )
         return shouldShowMenuType || isBigLayout
     }
@@ -76,10 +71,9 @@ class CafeteriaMenusAdapter(
     ): List<CafeteriaMenuAdapterItem> {
         val header = CafeteriaMenuAdapterItem.Header(menus.first())
         val items = menus.map {
-            // TODO pricing
-            val rolePrice = rolePrices[it.dishType]
+            val rolePriceText = it.getPriceText(context)
             val isFavorite = dao.checkIfFavoriteDish(it.tag).isNotEmpty()
-            CafeteriaMenuAdapterItem.Item(it, isFavorite, rolePrice, isBigLayout, dao)
+            CafeteriaMenuAdapterItem.Item(it, isFavorite, rolePriceText, isBigLayout, dao)
         }
 
         return if (header.menu.dishType.isNotBlank()) listOf(header) + items else items
@@ -95,8 +89,8 @@ class CafeteriaMenusAdapter(
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     private class DiffUtilCallback(
-        private val oldItems: List<CafeteriaMenuAdapterItem>,
-        private val newItems: List<CafeteriaMenuAdapterItem>
+            private val oldItems: List<CafeteriaMenuAdapterItem>,
+            private val newItems: List<CafeteriaMenuAdapterItem>
     ) : DiffUtil.Callback() {
 
         override fun getOldListSize() = oldItems.size

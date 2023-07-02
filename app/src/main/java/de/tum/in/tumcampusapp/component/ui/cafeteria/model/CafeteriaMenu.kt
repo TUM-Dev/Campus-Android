@@ -23,23 +23,25 @@ import java.util.regex.Pattern
 @Entity
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
 data class CafeteriaMenu(
-    @PrimaryKey(autoGenerate = true)
-    @SerializedName("menuId")
-    var menuId: Int = 0,
-    @SerializedName("cafeteriaId")
-    var cafeteriaId: Int = 0,
-    @SerializedName("cafeteriaSlug")
-    var slug: String = "",
-    @SerializedName("date")
-    var date: DateTime? = null,
-    @SerializedName("dishType")
-    var dishType: String = "",
-    @SerializedName("name")
-    var name: String = "",
-    @SerializedName("labels")
-    var labels: String = "",
-    @SerializedName("calendarWeek")
-    var calendarWeek: Int = -1
+        @PrimaryKey(autoGenerate = true)
+        @SerializedName("menuId")
+        var menuId: Int = 0,
+        @SerializedName("cafeteriaId")
+        var cafeteriaId: Int = 0,
+        @SerializedName("cafeteriaSlug")
+        var slug: String = "",
+        @SerializedName("date")
+        var date: DateTime? = null,
+        @SerializedName("dishType")
+        var dishType: String = "",
+        @SerializedName("name")
+        var name: String = "",
+        @SerializedName("labels")
+        var labels: String = "",
+        @SerializedName("calendarWeek")
+        var calendarWeek: Int = -1,
+        @SerializedName("dishPrices")
+        var dishPrices: DishPrices
 ) {
 
     val tag: String
@@ -87,11 +89,12 @@ data class CafeteriaMenu(
         }
     }
 
-    private fun getPriceText(context: Context): String? {
-        val rolePrices = CafeteriaPrices.getRolePrices(context)
-        val price = rolePrices[dishType]
-        return price?.run { "$this €" }
+    public fun getPriceText(context: Context): String {
+        val rolePrice = dishPrices.getRolePrice(context)
+        return if (rolePrice.basePrice == 0.0) String.format("%d€ + %d€", rolePrice.basePrice, rolePrice.pricePerUnit)
+        else String.format("%d€", rolePrice.pricePerUnit)
     }
+
     companion object {
         private val REMOVE_DISH_ENUMERATION_PATTERN: Pattern = Pattern.compile("[0-9]")
     }

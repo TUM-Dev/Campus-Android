@@ -16,8 +16,8 @@ sealed class CafeteriaMenuAdapterItem {
     abstract val id: String
 
     abstract fun bind(
-        holder: CafeteriaMenusAdapter.ViewHolder,
-        listener: (() -> Unit)?
+            holder: CafeteriaMenusAdapter.ViewHolder,
+            listener: (() -> Unit)?
     )
 
     data class Header(val menu: CafeteriaMenu) : CafeteriaMenuAdapterItem() {
@@ -26,8 +26,8 @@ sealed class CafeteriaMenuAdapterItem {
             get() = "header_${menu.menuId}"
 
         override fun bind(
-            holder: CafeteriaMenusAdapter.ViewHolder,
-            listener: (() -> Unit)?
+                holder: CafeteriaMenusAdapter.ViewHolder,
+                listener: (() -> Unit)?
         ) = with(holder.itemView) {
             val headerTextView = findViewById<TextView>(R.id.headerTextView)
 
@@ -48,8 +48,8 @@ sealed class CafeteriaMenuAdapterItem {
             get() = "item_${menu.menuId}"
 
         override fun bind(
-            holder: CafeteriaMenusAdapter.ViewHolder,
-            listener: (() -> Unit)?
+                holder: CafeteriaMenusAdapter.ViewHolder,
+                listener: (() -> Unit)?
         ) = with(holder.itemView) {
             val formatter = CafeteriaMenuFormatter(context)
             val menuSpan = formatter.format(menu, isBigLayout)
@@ -62,13 +62,13 @@ sealed class CafeteriaMenuAdapterItem {
         }
 
         private fun showPrice(
-            itemView: View,
-            price: String
+                itemView: View,
+                price: String
         ) = with(itemView) {
             val priceTextView = findViewById<TextView>(R.id.priceTextView)
             val favoriteDish = findViewById<ImageView>(R.id.favoriteDish)
 
-            priceTextView.text = String.format("%s €", price)
+            priceTextView.text = menu.getPriceText(context)
 
             favoriteDish.isSelected = isFavorite
             favoriteDish.setOnClickListener { view ->

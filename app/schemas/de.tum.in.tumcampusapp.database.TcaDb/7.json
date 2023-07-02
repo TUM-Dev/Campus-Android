@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 7,
-    "identityHash": "b900ad96dcb4920edef225bf5ffb3deb",
+    "identityHash": "91c4068830987aa8f12f3fc918c3060f",
     "entities": [
       {
         "tableName": "Cafeteria",
@@ -62,7 +62,7 @@
       },
       {
         "tableName": "CafeteriaMenu",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`menuId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cafeteriaId` INTEGER NOT NULL, `slug` TEXT NOT NULL, `date` TEXT, `dishType` TEXT NOT NULL, `name` TEXT NOT NULL, `labels` TEXT NOT NULL, `calendarWeek` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`menuId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cafeteriaId` INTEGER NOT NULL, `slug` TEXT NOT NULL, `date` TEXT, `dishType` TEXT NOT NULL, `name` TEXT NOT NULL, `labels` TEXT NOT NULL, `calendarWeek` INTEGER NOT NULL, `dishPrices` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "menuId",
@@ -111,13 +111,19 @@
             "columnName": "calendarWeek",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "dishPrices",
+            "columnName": "dishPrices",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
+          "autoGenerate": true,
           "columnNames": [
             "menuId"
-          ],
-          "autoGenerate": true
+          ]
         },
         "indices": [],
         "foreignKeys": []
@@ -1280,7 +1286,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b900ad96dcb4920edef225bf5ffb3deb')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '91c4068830987aa8f12f3fc918c3060f')"
     ]
   }
 }

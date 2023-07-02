@@ -6,9 +6,8 @@ import android.widget.RemoteViewsService
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaPrices
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.DishPrices
 import java.util.*
-import java.util.regex.Pattern
 
 class MensaRemoteViewFactory(private val applicationContext: Context) : RemoteViewsService.RemoteViewsFactory {
     private var menus: List<CafeteriaMenu> = ArrayList()
@@ -36,7 +35,7 @@ class MensaRemoteViewFactory(private val applicationContext: Context) : RemoteVi
                 R.string.menu_with_long_type_format_string, name, dishType)
         remoteViews.setTextViewText(R.id.menu_content, menuText)
 
-        CafeteriaPrices.getPrice(applicationContext, dishType)?.let {
+        DishPrices.getPrice(applicationContext, dishType)?.let {
             remoteViews.setTextViewText(R.id.menu_price, "$it €")
         }
 

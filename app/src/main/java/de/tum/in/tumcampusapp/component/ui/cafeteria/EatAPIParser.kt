@@ -3,6 +3,7 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaLocation
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.DishPrices
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization.*
 import org.joda.time.DateTime
 
@@ -22,6 +23,7 @@ class EatAPIParser {
             var dishName: String
             var dishType: String
             var dishLabels: String
+            var dishPrices: DishPrices
 
             val calendarWeek: Int = response.calendarWeek
 
@@ -33,6 +35,7 @@ class EatAPIParser {
                     dishName = dish.name
                     dishType = dish.type
                     dishLabels = dish.labels.toString()
+                    dishPrices = dish.prices
 
                     // Set id to 0 so that room will autogenerate the primary key
                     menus.add(CafeteriaMenu(
@@ -43,7 +46,8 @@ class EatAPIParser {
                             dishType = dishType,
                             name = dishName,
                             labels = dishLabels,
-                            calendarWeek = calendarWeek
+                            calendarWeek = calendarWeek,
+                            dishPrices = dishPrices
                     ))
                 }
             }

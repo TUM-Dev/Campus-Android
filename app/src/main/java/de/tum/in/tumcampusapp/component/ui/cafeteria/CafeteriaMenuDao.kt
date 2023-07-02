@@ -30,7 +30,7 @@ interface CafeteriaMenuDao {
      * @param date the date for which dishes should be fetched.
      * @return Any CafeteriaMenu items matching the criterion specified by the parameters
      */
-    @Query("SELECT menuId, cafeteriaId, slug, date, dishType, name, labels, calendarWeek FROM cafeteriaMenu " +
+    @Query("SELECT menuId, cafeteriaId, slug, date, dishType, name, labels, calendarWeek, dishPrices FROM cafeteriaMenu " +
             "WHERE cafeteriaId = :cafeteriaId AND strftime('%d-%m-%Y', date) = strftime('%d-%m-%Y', :date)")
     fun getCafeteriaMenus(cafeteriaId: Int, date: DateTime): List<CafeteriaMenu>
 
