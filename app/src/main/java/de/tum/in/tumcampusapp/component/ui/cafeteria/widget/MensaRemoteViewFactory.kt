@@ -6,7 +6,7 @@ import android.widget.RemoteViewsService
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.controller.CafeteriaManager
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.DishPrices
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization.DishPrices
 import java.util.*
 
 class MensaRemoteViewFactory(private val applicationContext: Context) : RemoteViewsService.RemoteViewsFactory {

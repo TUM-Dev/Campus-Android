@@ -3,7 +3,7 @@ package de.tum.`in`.tumcampusapp.database
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.component.ui.alarm.model.FcmNotificationLocation
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.DishPrices
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization.DishPrices
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMember
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import de.tum.`in`.tumcampusapp.utils.tryOrNull

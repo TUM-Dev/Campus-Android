@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.RoomWarnings
 import com.google.gson.annotations.SerializedName
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization.DishPrices
 import org.joda.time.DateTime
 import java.util.regex.Pattern
 
@@ -89,10 +90,10 @@ data class CafeteriaMenu(
         }
     }
 
-    public fun getPriceText(context: Context): String {
+    fun getPriceText(context: Context): String {
         val rolePrice = dishPrices.getRolePrice(context)
-        return if (rolePrice.basePrice == 0.0) String.format("%d€ + %d€", rolePrice.basePrice, rolePrice.pricePerUnit)
-        else String.format("%d€", rolePrice.pricePerUnit)
+        return if (rolePrice.basePrice != 0.0) String.format("%.2f€ + %.2f€", rolePrice.basePrice, rolePrice.pricePerUnit)
+        else String.format("%.2f€", rolePrice.pricePerUnit)
     }
 
     companion object {

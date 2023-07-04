@@ -3,7 +3,7 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaLocation
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.DishPrices
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization.DishPrices
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization.*
 import org.joda.time.DateTime
 

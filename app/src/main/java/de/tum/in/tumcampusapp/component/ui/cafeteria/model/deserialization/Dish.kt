@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization
 
 import com.google.gson.annotations.SerializedName
-import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.DishPrices
 
 data class Dish(
         @SerializedName("name")
