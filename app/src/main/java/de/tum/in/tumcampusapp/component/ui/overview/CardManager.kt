@@ -7,6 +7,7 @@ import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX
 import de.tum.`in`.tumcampusapp.utils.Const.DISCARD_SETTINGS_START
 import de.tum.`in`.tumcampusapp.utils.Utils
+import org.jetbrains.anko.defaultSharedPreferences
 
 /**
  * Card manager, manages inserting, dismissing, updating and displaying of cards
@@ -14,12 +15,31 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 object CardManager {
 
     const val SHOW_SUPPORT = "show_support"
-    const val SHOW_LOGIN = "show_login"
     const val SHOW_TOP_NEWS = "show_top_news"
 
     /**
      * Card typ constants
      */
+    enum class CardTypes(val id: Int) {
+        CAFETERIA(R.layout.card_cafeteria_menu),
+        TUITION_FEE(R.layout.card_tuition_fees),
+        NEXT_LECTURE(R.layout.card_next_lecture_item),
+        RESTORE(R.layout.card_restore),
+        NO_INTERNET(R.layout.card_no_internet),
+        MVV(R.layout.card_mvv),
+        NEWS(R.layout.card_news_item),
+        NEWS_FILM(R.layout.card_news_film_item),
+        EDUROAM(R.layout.card_eduroam),
+        CHAT(R.layout.card_chat_messages),
+        SUPPORT(R.layout.card_support),
+        LOGIN(R.layout.card_login_prompt),
+        EDUROAM_FIX(R.layout.card_eduroam_fix),
+        TOP_NEWS(R.layout.card_top_news),
+        EVENT(R.layout.card_events_item),
+        UPDATE_NOTE(R.layout.card_update_note)
+
+    }
+
     const val CARD_CAFETERIA = R.layout.card_cafeteria_menu
     const val CARD_TUITION_FEE = R.layout.card_tuition_fees
     const val CARD_NEXT_LECTURE = R.layout.card_next_lecture_item
@@ -41,14 +61,25 @@ object CardManager {
      * Resets dismiss settings for all cards
      */
     fun restoreCards(context: Context) {
-        context.getSharedPreferences(DISCARD_SETTINGS_START, 0)
+        CardTypes.values().forEach {
+            context.getSharedPreferences("CardPref" + it.id.toString(), Context.MODE_PRIVATE)
                 .edit()
+                // wipe completly
                 .clear()
+                //.putBoolean("shouldShow", true)
                 .apply()
+        }
+
+        println("HierHier" + "restored")
+
+        context.getSharedPreferences(DISCARD_SETTINGS_START, 0)
+            .edit()
+            .clear()
+            .apply()
 
         TcaDb.getInstance(context)
-                .newsDao()
-                .restoreAllNews()
+            .newsDao()
+            .restoreAllNews()
 
         Utils.setSetting(context, SHOW_TOP_NEWS, true)
         restoreCardPositions(context)
