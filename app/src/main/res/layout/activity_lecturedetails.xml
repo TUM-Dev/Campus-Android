@@ -50,7 +50,7 @@
                 android:id="@+id/semesterTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autoLink="web"
+                android:autoLink="email|web"
                 android:scrollHorizontally="false"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 tools:text="Lorem ipsum" />
@@ -59,7 +59,7 @@
                 android:id="@+id/swsTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autoLink="none"
+                android:autoLink="email|web"
                 android:scrollHorizontally="false"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 tools:text="Lorem ipsum" />
@@ -80,7 +80,7 @@
                 android:id="@+id/dateTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autoLink="none"
+                android:autoLink="email|web"
                 android:scrollHorizontally="false"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 tools:text="Lorem ipsum" />
@@ -101,7 +101,7 @@
                 android:id="@+id/professorTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autoLink="none"
+                android:autoLink="email|web"
                 android:scrollHorizontally="false"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 tools:text="Lorem ipsum" />
@@ -110,7 +110,7 @@
                 android:id="@+id/orgTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autoLink="none"
+                android:autoLink="email|web"
                 android:scrollHorizontally="false"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 tools:text="Lorem ipsum" />
@@ -131,7 +131,7 @@
                 android:id="@+id/contentTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autoLink="none"
+                android:autoLink="email|web"
                 android:scrollHorizontally="false"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 tools:text="Lorem ipsum" />
@@ -152,7 +152,7 @@
                 android:id="@+id/methodTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autoLink="none"
+                android:autoLink="email|web"
                 android:scrollHorizontally="false"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 tools:text="Lorem ipsum" />
@@ -173,7 +173,7 @@
                 android:id="@+id/targetsTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autoLink="none"
+                android:autoLink="email|web"
                 android:scrollHorizontally="false"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 tools:text="Lorem ipsum" />
@@ -194,6 +194,7 @@
                 android:id="@+id/examinationAidsTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:autoLink="email|web"
                 android:scrollHorizontally="false"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 tools:text="Lorem ipsum" />
