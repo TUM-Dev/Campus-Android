@@ -409,8 +409,12 @@
     <string name="card_next_lecture_summary">Shows information about your next lecture</string>
     <string name="card_tuition_fee_summary">Reminds you when you have to pay your fees</string>
     <string name="card_support_summary">Support us by giving feedback or sharing the app</string>
+    <string name="card_no_internet_summary">Shows when there is no internet connection</string>
+    <string name="card_login_summary">Allows you to connect to TUMOnline</string>
     <string name="card_news_summary">Advertises selected news</string>
     <string name="card_chat_summary">Notifies you about new messages</string>
+    <string name="card_events_summary">Shows upcoming events</string>
+    <string name="card_update_summary">Provides an overview about new features</string>
     <string name="chat" translatable="false">Chat</string>
     <string name="open_card_settings">Open card settings</string>
     <string name="always_hide_card">Always hide card</string>

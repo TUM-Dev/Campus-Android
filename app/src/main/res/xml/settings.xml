@@ -234,7 +234,7 @@
         <!-- Support card -->
         <androidx.preference.PreferenceScreen
             android:icon="@drawable/ic_live_help"
-            android:key="Not used but needed to make clickable"
+            android:key="card support"
             android:summary="@string/card_support_summary"
             android:title="@string/support_us_title">
 
@@ -361,6 +361,80 @@
             </androidx.preference.PreferenceCategory>
 
         </androidx.preference.PreferenceScreen>
+
+        <!-- NoInternet card -->
+        <androidx.preference.PreferenceScreen
+            android:icon="@drawable/ic_no_wifi"
+            android:key="card nointernet"
+            android:summary="@string/card_no_internet_summary"
+            android:title="@string/no_internet_connection">
+
+            <androidx.preference.PreferenceCategory android:title="@string/display">
+
+                <androidx.preference.CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="@string/no_internet_default_sharedpref_shown"
+                    android:title="@string/startpage" />
+
+            </androidx.preference.PreferenceCategory>
+
+        </androidx.preference.PreferenceScreen>
+
+        <!-- Login card -->
+        <androidx.preference.PreferenceScreen
+            android:icon="@drawable/ic_person_24"
+            android:key="card login"
+            android:summary="@string/card_login_summary"
+            android:title="@string/tumonline_login">
+
+            <androidx.preference.PreferenceCategory android:title="@string/display">
+
+                <androidx.preference.CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="@string/login_default_sharedpref_shown"
+                    android:title="@string/startpage" />
+
+            </androidx.preference.PreferenceCategory>
+
+        </androidx.preference.PreferenceScreen>
+
+        <!-- Event card -->
+        <androidx.preference.PreferenceScreen
+            android:icon="@drawable/ic_celebration"
+            android:key="card event"
+            android:summary="@string/card_events_summary"
+            android:title="@string/events">
+
+            <androidx.preference.PreferenceCategory android:title="@string/display">
+
+                <androidx.preference.CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="@string/event_default_sharedpref_shown"
+                    android:title="@string/startpage" />
+
+            </androidx.preference.PreferenceCategory>
+
+        </androidx.preference.PreferenceScreen>
+
+        <!-- Update card -->
+        <androidx.preference.PreferenceScreen
+            android:icon="@drawable/ic_download"
+            android:key="card update"
+            android:summary="@string/card_update_summary"
+            android:title="@string/update_note_title">
+
+            <androidx.preference.PreferenceCategory android:title="@string/display">
+
+                <androidx.preference.CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="@string/update_note_default_sharedpref_shown"
+                    android:title="@string/startpage" />
+
+            </androidx.preference.PreferenceCategory>
+
+        </androidx.preference.PreferenceScreen>
+
+
 
     </androidx.preference.PreferenceCategory>
 
