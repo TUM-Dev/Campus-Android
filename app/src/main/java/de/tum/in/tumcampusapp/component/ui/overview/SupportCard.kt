@@ -12,19 +12,21 @@ import android.view.ViewGroup
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
-import de.tum.`in`.tumcampusapp.utils.Utils
 
 /**
  * Card that describes how to dismiss a card
  */
-class SupportCard(context: Context) : Card(CardManager.CARD_SUPPORT, context, "") {
+class SupportCard(context: Context) : Card(CardManager.CardTypes.SUPPORT, context, "") {
+
+    private val SHOW_SUPPORT = "show_support"
 
     public override fun discard(editor: Editor) {
-        Utils.setSetting(context, CardManager.SHOW_SUPPORT, false)
+        editor.putBoolean(SHOW_SUPPORT, false)
     }
 
-    override fun shouldShow(prefs: SharedPreferences) =
-            Utils.getSettingBool(context, CardManager.SHOW_SUPPORT, true)
+    override fun shouldShow(prefs: SharedPreferences): Boolean {
+        return prefs.getBoolean(SHOW_SUPPORT, true)
+    }
 
     override fun getId() = 0
 
@@ -34,14 +36,18 @@ class SupportCard(context: Context) : Card(CardManager.CARD_SUPPORT, context, ""
             val view = LayoutInflater.from(parent.context).inflate(R.layout.card_support, parent, false)
             view.findViewById<View>(R.id.facebook_button).setOnClickListener { v ->
                 val browserIntent = Intent(Intent.ACTION_VIEW)
-                browserIntent.data = Uri.parse(view.context
-                        .getString(R.string.facebook_link))
+                browserIntent.data = Uri.parse(
+                    view.context
+                        .getString(R.string.facebook_link)
+                )
                 v.context.startActivity(browserIntent)
             }
             view.findViewById<View>(R.id.github_button).setOnClickListener { v ->
                 val browserIntent = Intent(Intent.ACTION_VIEW)
-                browserIntent.data = Uri.parse(view.context
-                        .getString(R.string.github_link))
+                browserIntent.data = Uri.parse(
+                    view.context
+                        .getString(R.string.github_link)
+                )
                 v.context.startActivity(browserIntent)
             }
             view.findViewById<View>(R.id.email_button).setOnClickListener { v ->
