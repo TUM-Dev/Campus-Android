@@ -29,7 +29,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventsResponse
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.databinding.FragmentCalendarBinding
-import de.tum.`in`.tumcampusapp.service.QueryLocationsService
+import de.tum.`in`.tumcampusapp.service.QueryLocationWorker
 import de.tum.`in`.tumcampusapp.utils.*
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -193,7 +193,7 @@ class CalendarFragment :
     private fun onCalendarImportedIntoDatabase() {
         // Update the action bar to display the enabled menu options
         requireActivity().invalidateOptionsMenu()
-        QueryLocationsService.enqueueWork(requireContext())
+        QueryLocationWorker.enqueueWork(requireContext())
     }
 
     private fun scheduleNotifications(events: List<Event>) {
