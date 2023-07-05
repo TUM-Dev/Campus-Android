@@ -3,12 +3,11 @@ package de.tum.`in`.tumcampusapp.component.ui.overview.card
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
-import android.preference.PreferenceManager
 import androidx.recyclerview.widget.DiffUtil
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavDestination
+import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX
-import de.tum.`in`.tumcampusapp.utils.Const.DISCARD_SETTINGS_START
 import de.tum.`in`.tumcampusapp.utils.Utils
 import org.jetbrains.anko.defaultSharedPreferences
 
@@ -19,14 +18,14 @@ import org.jetbrains.anko.defaultSharedPreferences
  * @param settingsPrefix Preference key prefix used for all preferences belonging to that card
  */
 abstract class Card(
-    val cardType: Int,
+    val cardType: CardManager.CardTypes,
     protected var context: Context,
     val settingsPrefix: String = ""
 ) : Comparable<Card> {
 
     // Settings for showing this card on start page or as notification
     //private var showStart = Utils.getSettingBool(context, settingsPrefix + "_start", true)
-    private val cardSharedPreferences = context.getSharedPreferences("CardPref$cardType", Context.MODE_PRIVATE)
+    private val cardSharedPreferences: SharedPreferences = context.getSharedPreferences("CardPref$cardType", Context.MODE_PRIVATE)
     private val shouldShowPrefName = "shouldShow"
 
     open fun getId(): Int {
@@ -85,14 +84,10 @@ abstract class Card(
      * @return The Card to be displayed or null
      */
     open fun getIfShowOnStart(): Card? {
-        println("ShownOnStart " + context.resources.getResourceEntryName(cardType) + cardSharedPreferences.getBoolean("shouldShow", true))
-        if (cardSharedPreferences.getBoolean(shouldShowPrefName, true)) {
-            //val prefs = context.getSharedPreferences(DISCARD_SETTINGS_START, 0)
+        if (context.defaultSharedPreferences.getBoolean("$cardType$shouldShowPrefName", true)) {
             if (shouldShow(cardSharedPreferences)) {
                 return this
             }
-            println("ShownOnStart2 " + context.resources.getResourceEntryName(cardType) +  shouldShow(cardSharedPreferences))
-
         }
         return null
     }
@@ -112,17 +107,11 @@ abstract class Card(
      * reactivated manually by the user
      */
     open fun hideAlways() {
-        cardSharedPreferences
+        context.defaultSharedPreferences
             .edit()
-            .putBoolean(shouldShowPrefName, false)
+            .putBoolean("$cardType$shouldShowPrefName", false)
             .apply()
         Utils.log("Hiding card: $cardType")
-        /*val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        val e = prefs.edit()
-        e.putBoolean(settingsPrefix + "_start", false)
-        e.putBoolean(settingsPrefix + "_phone", false)
-        e.apply()
-        Utils.log("Hiding card: $settingsPrefix")*/
     }
 
     override fun compareTo(other: Card): Int {
