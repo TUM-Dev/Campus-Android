@@ -23,10 +23,8 @@ abstract class Card(
     val settingsPrefix: String = ""
 ) : Comparable<Card> {
 
-    // Settings for showing this card on start page or as notification
-    //private var showStart = Utils.getSettingBool(context, settingsPrefix + "_start", true)
-    private val cardSharedPreferences: SharedPreferences = context.getSharedPreferences("CardPref$cardType", Context.MODE_PRIVATE)
-    private val shouldShowPrefName = "shouldShow"
+    // stores information for dismiss
+    private val dismissCardSharedPreferences: SharedPreferences = context.getSharedPreferences("CardPref$cardType", Context.MODE_PRIVATE)
 
     open fun getId(): Int {
         return 0
@@ -73,7 +71,7 @@ abstract class Card(
      */
     fun discard() {
         //val prefs = context.getSharedPreferences(DISCARD_SETTINGS_START, 0)
-        val editor = cardSharedPreferences.edit()
+        val editor = dismissCardSharedPreferences.edit()
         discard(editor)
         editor.apply()
     }
@@ -84,8 +82,8 @@ abstract class Card(
      * @return The Card to be displayed or null
      */
     open fun getIfShowOnStart(): Card? {
-        if (context.defaultSharedPreferences.getBoolean("$cardType$shouldShowPrefName", true)) {
-            if (shouldShow(cardSharedPreferences)) {
+        if (context.defaultSharedPreferences.getBoolean(context.getString(cardType.showCardPreferenceStringRes), true)) {
+            if (shouldShow(dismissCardSharedPreferences)) {
                 return this
             }
         }
@@ -109,9 +107,10 @@ abstract class Card(
     open fun hideAlways() {
         context.defaultSharedPreferences
             .edit()
-            .putBoolean("$cardType$shouldShowPrefName", false)
+            .putBoolean(context.getString(cardType.showCardPreferenceStringRes), false)
             .apply()
         Utils.log("Hiding card: $cardType")
+        println()
     }
 
     override fun compareTo(other: Card): Int {

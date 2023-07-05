@@ -17,24 +17,23 @@ object CardManager {
     /**
      * Card typ constants
      */
-    enum class CardTypes(val id: Int) {
-        CAFETERIA(R.layout.card_cafeteria_menu),
-        TUITION_FEE(R.layout.card_tuition_fees),
-        NEXT_LECTURE(R.layout.card_next_lecture_item),
-        RESTORE(R.layout.card_restore),
-        NO_INTERNET(R.layout.card_no_internet),
-        MVV(R.layout.card_mvv),
-        NEWS(R.layout.card_news_item),
-        NEWS_FILM(R.layout.card_news_film_item),
-        EDUROAM(R.layout.card_eduroam),
-        CHAT(R.layout.card_chat_messages),
-        SUPPORT(R.layout.card_support),
-        LOGIN(R.layout.card_login_prompt),
-        EDUROAM_FIX(R.layout.card_eduroam_fix),
-        TOP_NEWS(R.layout.card_top_news),
-        EVENT(R.layout.card_events_item),
-        UPDATE_NOTE(R.layout.card_update_note)
-
+    enum class CardTypes(val id: Int, val showCardPreferenceStringRes: Int) {
+        CAFETERIA(R.layout.card_cafeteria_menu, R.string.cafeteria_default_sharedpref_shown),
+        TUITION_FEE(R.layout.card_tuition_fees, R.string.tuition_fee_default_sharedpref_shown),
+        NEXT_LECTURE(R.layout.card_next_lecture_item, R.string.next_lecture_default_sharedpref_shown),
+        RESTORE(R.layout.card_restore, R.string.restore_default_sharedpref_shown),
+        NO_INTERNET(R.layout.card_no_internet, R.string.no_internet_default_sharedpref_shown),
+        MVV(R.layout.card_mvv, R.string.mvv_default_sharedpref_shown),
+        NEWS(R.layout.card_news_item, R.string.news_default_sharedpref_shown),
+        NEWS_FILM(R.layout.card_news_film_item, R.string.news_film_default_sharedpref_shown),
+        EDUROAM(R.layout.card_eduroam, R.string.eduroam_default_sharedpref_shown),
+        CHAT(R.layout.card_chat_messages, R.string.chat_default_sharedpref_shown),
+        SUPPORT(R.layout.card_support, R.string.support_default_sharedpref_shown),
+        LOGIN(R.layout.card_login_prompt, R.string.login_default_sharedpref_shown),
+        EDUROAM_FIX(R.layout.card_eduroam_fix, R.string.eduroam_fix_default_sharedpref_shown),
+        TOP_NEWS(R.layout.card_top_news, R.string.top_news_default_sharedpref_shown),
+        EVENT(R.layout.card_events_item, R.string.event_default_sharedpref_shown),
+        UPDATE_NOTE(R.layout.card_update_note, R.string.update_note_default_sharedpref_shown)
     }
 
     /**
