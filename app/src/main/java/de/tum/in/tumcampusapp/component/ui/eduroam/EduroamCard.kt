@@ -57,7 +57,6 @@ class EduroamCard(context: Context) : Card(CardManager.CardTypes.EDUROAM, contex
 
     override fun discard(editor: SharedPreferences.Editor) {
         editor.putBoolean("card_eduroam_start", false)
-            .apply()
     }
 
     override fun getId(): Int {
