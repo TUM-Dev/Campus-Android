@@ -47,7 +47,7 @@
 
                 <androidx.preference.CheckBoxPreference
                     android:defaultValue="true"
-                    android:key="card_cafeteria_start"
+                    android:key="@string/cafeteria_default_sharedpref_shown"
                     android:title="@string/startpage" />
 
                 <androidx.preference.CheckBoxPreference
@@ -153,7 +153,7 @@
 
                 <androidx.preference.CheckBoxPreference
                     android:defaultValue="true"
-                    android:key="card_mvv_start"
+                    android:key="@string/mvv_default_sharedpref_shown"
                     android:title="@string/startpage" />
 
             </androidx.preference.PreferenceCategory>
@@ -196,7 +196,7 @@
 
                 <androidx.preference.CheckBoxPreference
                     android:defaultValue="true"
-                    android:key="card_next_lecture_start"
+                    android:key="@string/next_lecture_default_sharedpref_shown"
                     android:title="@string/startpage" />
 
                 <androidx.preference.CheckBoxPreference
@@ -219,7 +219,7 @@
 
                 <androidx.preference.CheckBoxPreference
                     android:defaultValue="true"
-                    android:key="card_tuition_fee_start"
+                    android:key="@string/tuition_fee_default_sharedpref_shown"
                     android:title="@string/startpage" />
 
                 <androidx.preference.CheckBoxPreference
@@ -260,8 +260,18 @@
 
                 <androidx.preference.CheckBoxPreference
                     android:defaultValue="true"
-                    android:key="card_news_start"
-                    android:title="@string/startpage" />
+                    android:key="@string/news_default_sharedpref_shown"
+                    android:title="@string/startpage_news" />
+
+                <androidx.preference.CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="@string/top_news_default_sharedpref_shown"
+                    android:title="@string/startpage_top_news" />
+
+                <androidx.preference.CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="@string/news_film_default_sharedpref_shown"
+                    android:title="@string/startpage_film_news" />
 
                 <androidx.preference.CheckBoxPreference
                     android:defaultValue="false"

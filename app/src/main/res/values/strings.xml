@@ -417,6 +417,11 @@
     <string name="phone_summary">To receive notifications on your phone you have to enable Wearable</string>
     <string name="display">Display</string>
 
+    <!-- extra startpage show names for news -->
+    <string name="startpage_news">Startpage news</string>
+    <string name="startpage_top_news">Startpage top-news</string>
+    <string name="startpage_film_news">Startpage film-news</string>
+
     <string name="opens">Opens</string>
     <string name="closes">Closes</string>
     <string name="closed">Closed</string>
