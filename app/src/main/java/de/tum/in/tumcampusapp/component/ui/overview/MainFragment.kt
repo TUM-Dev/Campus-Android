@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.overview
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.Network
