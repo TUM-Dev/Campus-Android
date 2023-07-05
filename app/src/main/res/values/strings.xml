@@ -333,6 +333,24 @@
     <string name="reregister_todo">You have to reregister until %s!</string>
     <string name="undo">Undo</string>
 
+    <!-- Cards identifiers for default SharedPref -->
+    <string name="cafeteria_default_sharedpref_shown" translatable="false">CafeteriaCardShown</string>
+    <string name="tuition_fee_default_sharedpref_shown" translatable="false">TuitionFeeCardShown</string>
+    <string name="next_lecture_default_sharedpref_shown" translatable="false">NextLectureCardShown</string>
+    <string name="restore_default_sharedpref_shown" translatable="false">RestoreCardShown</string>
+    <string name="no_internet_default_sharedpref_shown" translatable="false">NoInternetCardShown</string>
+    <string name="mvv_default_sharedpref_shown" translatable="false">MVVCardShown</string>
+    <string name="news_default_sharedpref_shown" translatable="false">NewsCardShown</string>
+    <string name="news_film_default_sharedpref_shown" translatable="false">NewsFilmCardShown</string>
+    <string name="eduroam_default_sharedpref_shown" translatable="false">EduroamCardShown</string>
+    <string name="chat_default_sharedpref_shown" translatable="false">ChatCardShown</string>
+    <string name="support_default_sharedpref_shown" translatable="false">SupportCardShown</string>
+    <string name="login_default_sharedpref_shown" translatable="false">LoginCardShown</string>
+    <string name="eduroam_fix_default_sharedpref_shown" translatable="false">EduroamFixCardShown</string>
+    <string name="top_news_default_sharedpref_shown" translatable="false">TopNewsCardShown</string>
+    <string name="event_default_sharedpref_shown" translatable="false">EventCardShown</string>
+    <string name="update_note_default_sharedpref_shown" translatable="false">UpdateNoteCardShown</string>
+
     <!-- first use tutorial -->
     <string name="swipe_instruction">Swipe left or right to hide a card.</string>
     <string name="card_settings_instruction">If you want to hide a card permanently or you want to be notified if a new card is available open card-settings by long pressing on a card</string>
@@ -390,6 +408,7 @@
     <string name="card_mvv_summary">Shows you the departure times of public transport</string>
     <string name="card_next_lecture_summary">Shows information about your next lecture</string>
     <string name="card_tuition_fee_summary">Reminds you when you have to pay your fees</string>
+    <string name="card_support_summary">Support us by giving feedback or sharing the app</string>
     <string name="card_news_summary">Advertises selected news</string>
     <string name="card_chat_summary">Notifies you about new messages</string>
     <string name="chat" translatable="false">Chat</string>

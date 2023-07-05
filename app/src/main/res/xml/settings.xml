@@ -231,6 +231,24 @@
 
         </androidx.preference.PreferenceScreen>
 
+        <!-- Support card -->
+        <androidx.preference.PreferenceScreen
+            android:icon="@drawable/ic_live_help"
+            android:key="Not used but needed to make clickable"
+            android:summary="@string/card_support_summary"
+            android:title="@string/support_us_title">
+
+            <androidx.preference.PreferenceCategory android:title="@string/display">
+
+                <androidx.preference.CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="@string/support_default_sharedpref_shown"
+                    android:title="@string/startpage" />
+
+            </androidx.preference.PreferenceCategory>
+
+        </androidx.preference.PreferenceScreen>
+
         <!-- News card -->
         <androidx.preference.PreferenceScreen
             android:icon="@drawable/ic_rss"
@@ -279,6 +297,7 @@
         </androidx.preference.PreferenceScreen>
 
         <!-- Chat card -->
+        <!-- not included
         <androidx.preference.PreferenceScreen
             android:icon="@drawable/ic_outline_chat_bubble_outline_24px"
             android:key="card_chat"
@@ -300,6 +319,7 @@
             </androidx.preference.PreferenceCategory>
 
         </androidx.preference.PreferenceScreen>
+        -->
 
         <!-- Eduroam card -->
         <androidx.preference.PreferenceScreen
@@ -312,7 +332,7 @@
 
                 <androidx.preference.CheckBoxPreference
                     android:defaultValue="true"
-                    android:key="card_eduroam_start"
+                    android:key="@string/eduroam_default_sharedpref_shown"
                     android:title="@string/startpage" />
 
                 <androidx.preference.CheckBoxPreference
