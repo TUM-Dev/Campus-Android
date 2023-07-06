@@ -48,7 +48,7 @@ class DrawerMenuHelper(
             return activity.createConfigurationContext(config)
         }
 
-    private val MAP_ALL_ITEMS = mapOf(
+    private val mapAllItems = mapOf(
         // HOME
         germanContext.getString(HOME.titleRes) to HOME,
         englishContext.getString(HOME.titleRes) to HOME,
@@ -137,11 +137,11 @@ class DrawerMenuHelper(
     }
 
     fun findNavItem(menuItem: MenuItem): NavItem {
-        if (!MAP_ALL_ITEMS.containsKey(menuItem.title.toString())) {
+        if (!mapAllItems.containsKey(menuItem.title.toString())) {
             throw IllegalArgumentException("Invalid menu item ${menuItem.title} provided")
         }
 
-        return MAP_ALL_ITEMS.getValue(menuItem.title.toString())
+        return mapAllItems.getValue(menuItem.title.toString())
     }
 
     fun updateNavDrawer() {
