@@ -62,7 +62,7 @@ class RealTopNewsStore @Inject constructor(
         }
 
         val displayUntil = sharedPrefs.getString(Const.NEWS_ALERT_SHOW_UNTIL, "")!!
-        if(displayUntil.isEmpty()){
+        if (displayUntil.isEmpty()) {
             return null
         }
         val until: DateTime? = DateTimeUtils.parseIsoDateWithMillis(displayUntil)

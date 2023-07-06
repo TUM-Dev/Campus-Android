@@ -38,10 +38,10 @@ class EduroamCard(context: Context) : Card(CardManager.CardTypes.EDUROAM, contex
     override fun shouldShow(prefs: SharedPreferences): Boolean {
         // Check if WiFi is turned on at all, as we cannot say if it was configured if it is off
         val wifiManager = context.wifiManager
-        return (wifiManager.isWifiEnabled
-            && EduroamController.getEduroamConfig(context) == null
-            && eduroamAvailable(wifiManager)
-            && prefs.getBoolean("card_eduroam_start", true))
+        return (wifiManager.isWifiEnabled &&
+            EduroamController.getEduroamConfig(context) == null &&
+            eduroamAvailable(wifiManager) &&
+            prefs.getBoolean("card_eduroam_start", true))
     }
 
     private fun eduroamAvailable(wifi: WifiManager): Boolean {

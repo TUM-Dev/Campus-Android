@@ -18,7 +18,7 @@ import org.jetbrains.anko.defaultSharedPreferences
  */
 abstract class Card(
     val cardType: CardManager.CardTypes,
-    protected var context: Context,
+    protected var context: Context
 ) : Comparable<Card> {
 
     // stores information for dismiss
@@ -131,9 +131,9 @@ abstract class Card(
         override fun getNewListSize() = newList.size
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
-                oldList[oldItemPosition].cardType == newList[newItemPosition].cardType
+            oldList[oldItemPosition].cardType == newList[newItemPosition].cardType
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
-                oldList[oldItemPosition] == newList[newItemPosition]
+            oldList[oldItemPosition] == newList[newItemPosition]
     }
 }
