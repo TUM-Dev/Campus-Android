@@ -68,7 +68,6 @@ abstract class Card(
      * Should be called after the user has dismissed the card
      */
     fun discard() {
-        //val prefs = context.getSharedPreferences(DISCARD_SETTINGS_START, 0)
         val editor = dismissCardSharedPreferences.edit()
         discard(editor)
         editor.apply()
