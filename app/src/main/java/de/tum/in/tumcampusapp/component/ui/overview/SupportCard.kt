@@ -16,16 +16,16 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 /**
  * Card that describes how to dismiss a card
  */
-class SupportCard(context: Context) : Card(CardManager.CardTypes.SUPPORT, context, "") {
+class SupportCard(context: Context) : Card(CardManager.CardTypes.SUPPORT, context) {
 
-    private val SHOW_SUPPORT = "show_support"
+    private val showSupport = "show_support"
 
     public override fun discard(editor: Editor) {
-        editor.putBoolean(SHOW_SUPPORT, false)
+        editor.putBoolean(showSupport, false)
     }
 
     override fun shouldShow(prefs: SharedPreferences): Boolean {
-        return prefs.getBoolean(SHOW_SUPPORT, true)
+        return prefs.getBoolean(showSupport, true)
     }
 
     override fun getId() = 0

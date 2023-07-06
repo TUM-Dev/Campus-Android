@@ -23,7 +23,7 @@ import org.jetbrains.anko.wifiManager
 /**
  * Card that can start [SetupEduroamActivity]
  */
-class EduroamCard(context: Context) : Card(CardManager.CardTypes.EDUROAM, context, "card_eduroam") {
+class EduroamCard(context: Context) : Card(CardManager.CardTypes.EDUROAM, context) {
 
     override val optionsMenuResId: Int
         get() = R.menu.card_popup_menu

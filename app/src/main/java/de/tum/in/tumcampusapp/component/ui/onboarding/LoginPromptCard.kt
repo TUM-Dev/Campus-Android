@@ -16,7 +16,7 @@ import de.tum.`in`.tumcampusapp.utils.Const
  * Card that prompts the user to login to TUMonline since we don't show the wizard after the first launch anymore.
  * It will be shown until it is swiped away for the first time.
  */
-class LoginPromptCard(context: Context) : Card(CardManager.CardTypes.LOGIN, context, "card_login") {
+class LoginPromptCard(context: Context) : Card(CardManager.CardTypes.LOGIN, context) {
 
     private val SHOW_LOGIN = "show_login"
 

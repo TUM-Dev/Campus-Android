@@ -15,12 +15,10 @@ import org.jetbrains.anko.defaultSharedPreferences
  * Base class for all cards
  * @param cardType Individual integer for each card type
  * @param context Android Context
- * @param settingsPrefix Preference key prefix used for all preferences belonging to that card
  */
 abstract class Card(
     val cardType: CardManager.CardTypes,
     protected var context: Context,
-    val settingsPrefix: String = ""
 ) : Comparable<Card> {
 
     // stores information for dismiss

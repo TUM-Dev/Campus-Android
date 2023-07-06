@@ -23,7 +23,6 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.jetbrains.anko.doAsync
 import javax.inject.Inject
 
 class CardsRepository @Inject constructor(
@@ -42,7 +41,6 @@ class CardsRepository @Inject constructor(
      * @return The [LiveData] of [Card]s
      */
     fun getCards(): LiveData<List<Card>> {
-        //refreshCards(CacheControl.USE_CACHE)
         return cards
     }
 

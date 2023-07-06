@@ -21,7 +21,7 @@ open class NewsCard @JvmOverloads constructor(
     context: Context,
     val news: News,
     type: CardManager.CardTypes = CardManager.CardTypes.NEWS
-) : Card(type, context, "card_news") {
+) : Card(type, context) {
 
     override val optionsMenuResId: Int
         get() = R.menu.card_popup_menu

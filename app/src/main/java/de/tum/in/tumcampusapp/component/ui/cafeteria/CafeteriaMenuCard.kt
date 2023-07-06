@@ -23,7 +23,7 @@ import java.util.*
  * Card that shows the cafeteria menu
  */
 class CafeteriaMenuCard(context: Context, private val cafeteria: CafeteriaWithMenus) :
-    Card(CardManager.CardTypes.CAFETERIA, context, "card_cafeteria") {
+    Card(CardManager.CardTypes.CAFETERIA, context) {
 
     override val optionsMenuResId: Int
         get() = R.menu.card_popup_menu

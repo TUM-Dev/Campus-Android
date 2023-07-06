@@ -19,7 +19,7 @@ import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationRes
 /**
  * Card that shows MVV departure times
  */
-class MVVCard(context: Context, val station: StationResult, val departures: List<Departure>) : Card(CardManager.CardTypes.MVV, context, "card_mvv") {
+class MVVCard(context: Context, val station: StationResult, val departures: List<Departure>) : Card(CardManager.CardTypes.MVV, context) {
 
     override val optionsMenuResId: Int
         get() = R.menu.card_popup_menu

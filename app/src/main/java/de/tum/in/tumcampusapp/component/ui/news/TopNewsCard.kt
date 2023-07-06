@@ -24,7 +24,7 @@ import org.jetbrains.anko.defaultSharedPreferences
 /**
  * Shows important news
  */
-class TopNewsCard(context: Context) : Card(CardManager.CardTypes.TOP_NEWS, context, "top_news") {
+class TopNewsCard(context: Context) : Card(CardManager.CardTypes.TOP_NEWS, context) {
     private lateinit var imageView: ImageView
     private lateinit var progress: ProgressBar
     private val topNewsStore: TopNewsStore
