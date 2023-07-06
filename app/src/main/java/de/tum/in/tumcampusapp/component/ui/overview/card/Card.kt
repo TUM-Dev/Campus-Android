@@ -108,7 +108,6 @@ abstract class Card(
             .putBoolean(context.getString(cardType.showCardPreferenceStringRes), false)
             .apply()
         Utils.log("Hiding card: $cardType")
-        println()
     }
 
     override fun compareTo(other: Card): Int {
