@@ -29,6 +29,7 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocal
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.SetupEduroamActivity
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.StartupActivity
+import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.service.SilenceWorker
@@ -217,6 +218,12 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 
         // restart app after language change
         if (key == "language_preference" && activity != null) {
+            (activity as SettingsActivity).restartApp()
+        }
+        // restart app after visibility of card changed
+        val cardTypesPrefNames = CardManager.CardTypes.values().map { context?.getString(it.showCardPreferenceStringRes) }
+        // restart when visibility changed
+        if (key in cardTypesPrefNames){
             (activity as SettingsActivity).restartApp()
         }
     }

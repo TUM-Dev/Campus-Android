@@ -39,7 +39,7 @@
         <!-- Cafeteria card -->
         <androidx.preference.PreferenceScreen
             android:icon="@drawable/ic_cutlery"
-            android:key="card_cafeteria"
+            android:key="@string/cafeteria_default_sharedpref_shown"
             android:summary="@string/card_cafeteria_summary"
             android:title="@string/cafeteria">
 
@@ -145,7 +145,7 @@
         <!-- MVV card-->
         <androidx.preference.PreferenceScreen
             android:icon="@drawable/ic_outline_train_24px"
-            android:key="card_mvv"
+            android:key="@string/mvv_default_sharedpref_shown"
             android:summary="@string/card_mvv_summary"
             android:title="@string/mvv">
 
@@ -188,7 +188,7 @@
         <!-- Next lecture card -->
         <androidx.preference.PreferenceScreen
             android:icon="@drawable/ic_outline_event_24px"
-            android:key="card_next_lecture"
+            android:key="@string/next_lecture_default_sharedpref_shown"
             android:summary="@string/card_next_lecture_summary"
             android:title="@string/next_lecture">
 
@@ -211,7 +211,7 @@
         <!-- Tuition fee card -->
         <androidx.preference.PreferenceScreen
             android:icon="@drawable/ic_money"
-            android:key="card_tuition_fee"
+            android:key="@string/tuition_fee_default_sharedpref_shown"
             android:summary="@string/card_tuition_fee_summary"
             android:title="@string/tuition_fees">
 
@@ -234,7 +234,7 @@
         <!-- Support card -->
         <androidx.preference.PreferenceScreen
             android:icon="@drawable/ic_live_help"
-            android:key="card support"
+            android:key="@string/support_default_sharedpref_shown"
             android:summary="@string/card_support_summary"
             android:title="@string/support_us_title">
 
@@ -252,7 +252,7 @@
         <!-- News card -->
         <androidx.preference.PreferenceScreen
             android:icon="@drawable/ic_rss"
-            android:key="card_news"
+            android:key="@string/news_default_sharedpref_shown"
             android:summary="@string/card_news_summary"
             android:title="@string/news">
 
@@ -334,7 +334,7 @@
         <!-- Eduroam card -->
         <androidx.preference.PreferenceScreen
             android:icon="@drawable/ic_action_network_wifi"
-            android:key="card_eduroam"
+            android:key="@string/eduroam_default_sharedpref_shown"
             android:summary="@string/card_eduroam_summary"
             android:title="@string/eduroam">
 
@@ -365,7 +365,7 @@
         <!-- NoInternet card -->
         <androidx.preference.PreferenceScreen
             android:icon="@drawable/ic_no_wifi"
-            android:key="card nointernet"
+            android:key="@string/no_internet_default_sharedpref_shown"
             android:summary="@string/card_no_internet_summary"
             android:title="@string/no_internet_connection">
 
@@ -383,7 +383,7 @@
         <!-- Login card -->
         <androidx.preference.PreferenceScreen
             android:icon="@drawable/ic_person_24"
-            android:key="card login"
+            android:key="@string/login_default_sharedpref_shown"
             android:summary="@string/card_login_summary"
             android:title="@string/tumonline_login">
 
@@ -401,7 +401,7 @@
         <!-- Event card -->
         <androidx.preference.PreferenceScreen
             android:icon="@drawable/ic_celebration"
-            android:key="card event"
+            android:key="@string/event_default_sharedpref_shown"
             android:summary="@string/card_events_summary"
             android:title="@string/events">
 
@@ -419,7 +419,7 @@
         <!-- Update card -->
         <androidx.preference.PreferenceScreen
             android:icon="@drawable/ic_download"
-            android:key="card update"
+            android:key="@string/update_note_default_sharedpref_shown"
             android:summary="@string/card_update_summary"
             android:title="@string/update_note_title">
 
