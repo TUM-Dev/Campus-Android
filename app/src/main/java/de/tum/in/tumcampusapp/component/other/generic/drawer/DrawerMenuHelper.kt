@@ -48,7 +48,6 @@ class DrawerMenuHelper(
             return activity.createConfigurationContext(config)
         }
 
-
     private val MAP_ALL_ITEMS = mapOf(
         // HOME
         germanContext.getString(HOME.titleRes) to HOME,
