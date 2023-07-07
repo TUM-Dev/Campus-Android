@@ -11,6 +11,7 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.Utils
 
 /**
  * Card that prompts the user to login to TUMonline since we don't show the wizard after the first launch anymore.
@@ -27,7 +28,7 @@ class LoginPromptCard(context: Context) : Card(CardManager.CardTypes.LOGIN, cont
     override fun shouldShow(prefs: SharedPreferences): Boolean {
         // show on top as long as user hasn't swiped it away and isn't connected to TUMonline
         return prefs.getBoolean(SHOW_LOGIN, true) &&
-            prefs.getString(Const.LRZ_ID, "").isNullOrEmpty()
+            Utils.getSetting(context, Const.LRZ_ID, "").isEmpty()
     }
 
     override fun getId(): Int {
