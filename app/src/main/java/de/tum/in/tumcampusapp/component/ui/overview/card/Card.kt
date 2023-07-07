@@ -114,7 +114,8 @@ abstract class Card(
     }
 
     /**
-     * Save information about the dismissed card/notification to decide later if the cardView should be shown again
+     * Save information about the dismissed card/notification to decide later if the cardView should be shown again.
+     * It is exclusively called from [discard] where the changes made to the SharedPreferences are applied.
      *
      * @param editor Editor to be used for saving values
      */
