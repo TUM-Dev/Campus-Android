@@ -19,15 +19,15 @@ import de.tum.`in`.tumcampusapp.utils.Utils
  */
 class LoginPromptCard(context: Context) : Card(CardManager.CardTypes.LOGIN, context) {
 
-    private val SHOW_LOGIN = "show_login"
+    private val showLogin = "show_login"
 
     public override fun discard(editor: SharedPreferences.Editor) {
-        editor.putBoolean(SHOW_LOGIN, false)
+        editor.putBoolean(showLogin, false)
     }
 
     override fun shouldShow(prefs: SharedPreferences): Boolean {
         // show on top as long as user hasn't swiped it away and isn't connected to TUMonline
-        return prefs.getBoolean(SHOW_LOGIN, true) &&
+        return prefs.getBoolean(showLogin, true) &&
             Utils.getSetting(context, Const.LRZ_ID, "").isEmpty()
     }
 
