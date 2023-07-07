@@ -58,18 +58,19 @@ sealed class CafeteriaMenuAdapterItem {
             nameTextView.text = menuSpan
 
             setOnClickListener { listener?.invoke() }
-            rolePrice?.let { showPrice(this, it) } ?: hidePrice(this)
+            rolePrice?.let { showPrice(this) } ?: hidePrice(this)
+            hideFavorite(this)
         }
 
         private fun showPrice(
                 itemView: View,
-                price: String
         ) = with(itemView) {
             val priceTextView = findViewById<TextView>(R.id.priceTextView)
-            val favoriteDish = findViewById<ImageView>(R.id.favoriteDish)
-
             priceTextView.text = menu.getPriceText(context)
+        }
 
+        private fun showFavorite(itemView: View) = with(itemView) {
+            val favoriteDish = findViewById<ImageView>(R.id.favoriteDish)
             favoriteDish.isSelected = isFavorite
             favoriteDish.setOnClickListener { view ->
                 if (!view.isSelected) {
@@ -86,9 +87,11 @@ sealed class CafeteriaMenuAdapterItem {
 
         private fun hidePrice(itemView: View) = with(itemView) {
             val priceTextView = findViewById<TextView>(R.id.priceTextView)
-            val favoriteDish = findViewById<ImageView>(R.id.favoriteDish)
-
             priceTextView.visibility = View.GONE
+        }
+
+        private fun hideFavorite(itemView: View) = with(itemView) {
+            val favoriteDish = findViewById<ImageView>(R.id.favoriteDish)
             favoriteDish.visibility = View.GONE
         }
     }

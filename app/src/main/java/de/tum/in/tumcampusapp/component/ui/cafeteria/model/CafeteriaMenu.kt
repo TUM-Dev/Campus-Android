@@ -68,32 +68,13 @@ data class CafeteriaMenu(
                     .trim()
         }
 
-    fun getNotificationText(context: Context): String {
-        val lines = getNotificationLines(context)
-        return if (dishType == MenuType.SPECIALS.toString()) {
-            lines.joinToString(", ")
-        } else {
-            lines.first()
-        }
-    }
-
-    private fun getNotificationLines(context: Context): List<String> {
-        return if (dishType == MenuType.SPECIALS.toString()) {
-            // Returns a list of all specials
-            name
-                    .split("\n")
-                    .map { it.trim() }
-        } else {
-            // Returns a list containing the dish name and the price
-            val priceText = getPriceText(context)
-            listOfNotNull(name, priceText)
-        }
-    }
-
     fun getPriceText(context: Context): String {
         val rolePrice = dishPrices.getRolePrice(context)
-        return if (rolePrice.basePrice != 0.0) String.format("%.2f€ + %.2f€", rolePrice.basePrice, rolePrice.pricePerUnit)
-        else String.format("%.2f€", rolePrice.pricePerUnit)
+        return if (rolePrice.basePrice.equals(0.0))
+            rolePrice.pricePerUnitString
+        else if (rolePrice.pricePerUnit.equals(0.0))
+            rolePrice.basePriceString
+        else String.format("%s + %s", rolePrice.basePriceString, rolePrice.pricePerUnitString)
     }
 
     companion object {
