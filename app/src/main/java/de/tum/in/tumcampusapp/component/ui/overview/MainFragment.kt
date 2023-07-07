@@ -126,7 +126,6 @@ class MainFragment : BaseFragment<Unit>(
         swipeRefreshLayout.isRefreshing = true
         onRefresh()
         downloadNewsAlert()
-        println("Refresh finished")
     }
 
     private fun onNewCardsAvailable(cards: List<Card>) {
