@@ -353,8 +353,8 @@
 
     <!-- extra startpage show names for news -->
     <string name="startpage_news">Startseite News</string>
-    <string name="startpage_top_news">Startpage Top-News</string>
-    <string name="startpage_film_news">Startpage Film-News</string>
+    <string name="startpage_top_news">Startseite Top-News</string>
+    <string name="startpage_film_news">Startseite Film-News</string>
 
     <string name="opens">Öffnet</string>
     <string name="closes">Schließt</string>
