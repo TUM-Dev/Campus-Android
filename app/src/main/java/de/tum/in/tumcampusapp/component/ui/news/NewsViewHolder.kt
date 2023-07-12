@@ -93,6 +93,7 @@ class NewsViewHolder(
     private fun bindNews(newsItem: News) {
         val imageUrl = newsItem.image
         if (imageUrl.isNotEmpty()) {
+            imageView?.visibility = VISIBLE
             loadNewsImage(imageUrl)
         } else {
             imageView?.visibility = GONE
