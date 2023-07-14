@@ -7,8 +7,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization.Label
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaRemoteRepository
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.LabelLocalRepository
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.LabelRemoteRepository
 import de.tum.`in`.tumcampusapp.utils.LocationHelper.calculateDistanceToCafeteria
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
@@ -20,8 +23,10 @@ import org.joda.time.DateTime
 import javax.inject.Inject
 
 class CafeteriaViewModel @Inject constructor(
-    private val localRepository: CafeteriaLocalRepository,
-    private val remoteRepository: CafeteriaRemoteRepository
+        private val localRepository: CafeteriaLocalRepository,
+        private val remoteRepository: CafeteriaRemoteRepository,
+        private val localLabelRepository: LabelLocalRepository,
+        private val remoteLabelRepository: LabelRemoteRepository
 ) : ViewModel() {
 
     private val _cafeterias = MutableLiveData<List<Cafeteria>>()
@@ -35,6 +40,9 @@ class CafeteriaViewModel @Inject constructor(
 
     private val _menuDates = MutableLiveData<List<DateTime>>()
     val menuDates: LiveData<List<DateTime>> = _menuDates
+
+    private val _labels = MutableLiveData<List<Label>>()
+    val labels: LiveData<List<Label>> = _labels
 
     private val _error = MutableLiveData<Boolean>()
     val error: LiveData<Boolean> = _error
@@ -77,7 +85,7 @@ class CafeteriaViewModel @Inject constructor(
     }
 
     fun fetchCafeteriaMenus(context: Context?, cafeteriaId: Int, date: DateTime) {
-        if(localRepository.hasNoMenusFor(cafeteriaId, date)) {
+        if (localRepository.hasNoMenusFor(cafeteriaId, date)) {
             if (context != null) {
                 downloadRemoteCafeteriaMenus(cafeteriaId, date, context)
             } else {
@@ -85,6 +93,7 @@ class CafeteriaViewModel @Inject constructor(
             }
         }
 
+        remoteLabelRepository.downloadLabels()
         fetchLocalCafeteriaMenus(cafeteriaId, date)
     }
 

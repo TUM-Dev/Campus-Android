@@ -194,7 +194,7 @@ public interface TUMCabeAPIService {
     Observable<List<CafeteriaMetadata>> getCafeterias();
 
     @GET(API_LABELS)
-    Observable<List<Label>> getLabels();
+    Call<List<Label>> getLabels();
 
     @GET(API_KINOS + "{lastId}")
     Flowable<List<Kino>> getKinos(@Path("lastId") String lastId);

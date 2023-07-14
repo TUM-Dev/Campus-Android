@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository
 
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
+import de.tum.`in`.tumcampusapp.api.cafeteria.CafeteriaAPIClient
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.Observable
@@ -17,6 +18,14 @@ class LabelRemoteRepository @Inject constructor(private val tumCabeClient: TUMCa
                     .flatMap { tumCabeClient.labels }
                     .doAfterNext { localRepository.updateLastSync() }
                     .subscribe(localRepository::addLabels, Utils::log)
+        }
+    }
+
+    fun downloadLabels() {
+        Utils.logWithTag("LABELS", "downloading labels")
+        val response = tumCabeClient.labels.execute().body()
+        if (response != null) {
+            Utils.logWithTag("LABELS", "" + response.size + " many labels")
         }
     }
 }

@@ -91,7 +91,7 @@ public final class TUMCabeClient {
     static final String API_ROOM_FINDER_SCHEDULE = "scheduleById/";
     static final String API_FEEDBACK = "feedback/";
     static final String API_CAFETERIAS = "canteens.json";
-    static final String API_LABELS = "labels.json";
+    static final String API_LABELS = "eat-api/enums/labels.json";
     static final String API_KINOS = "kino/";
     static final String API_NEWS = "news/";
     static final String API_UPDATE_NOTE = "updatenote/";
