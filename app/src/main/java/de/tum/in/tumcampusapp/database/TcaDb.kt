@@ -28,9 +28,11 @@ import de.tum.`in`.tumcampusapp.component.ui.alarm.model.FcmNotification
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaDao
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaMenuDao
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.FavoriteDishDao
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.LabelDao
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.CafeteriaMenu
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.FavoriteDish
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization.Label
 import de.tum.`in`.tumcampusapp.component.ui.chat.ChatMessageDao
 import de.tum.`in`.tumcampusapp.component.ui.chat.ChatRoomDao
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMessage
@@ -69,36 +71,37 @@ import de.tum.`in`.tumcampusapp.utils.sync.model.Sync
 import java.util.concurrent.ExecutionException
 
 @Database(
-    version = 7,
-    entities = [
-        Cafeteria::class,
-        CafeteriaMenu::class,
-        FavoriteDish::class,
-        Sync::class,
-        BuildingToGps::class,
-        Kino::class,
-        Event::class,
-        Ticket::class,
-        TicketType::class,
-        ChatMessage::class,
-        Location::class,
-        News::class,
-        NewsSources::class,
-        CalendarItem::class,
-        EventSeriesMapping::class,
-        RoomLocations::class,
-        WidgetsTimetableBlacklist::class,
-        Recent::class,
-        StudyRoomGroup::class,
-        StudyRoom::class,
-        FcmNotification::class,
-        TransportFavorites::class,
-        WidgetsTransport::class,
-        ChatRoomDbRow::class,
-        ScheduledNotification::class,
-        ActiveAlarm::class,
-        EventColor::class
-    ]
+        version = 7,
+        entities = [
+            Cafeteria::class,
+            CafeteriaMenu::class,
+            Label::class,
+            FavoriteDish::class,
+            Sync::class,
+            BuildingToGps::class,
+            Kino::class,
+            Event::class,
+            Ticket::class,
+            TicketType::class,
+            ChatMessage::class,
+            Location::class,
+            News::class,
+            NewsSources::class,
+            CalendarItem::class,
+            EventSeriesMapping::class,
+            RoomLocations::class,
+            WidgetsTimetableBlacklist::class,
+            Recent::class,
+            StudyRoomGroup::class,
+            StudyRoom::class,
+            FcmNotification::class,
+            TransportFavorites::class,
+            WidgetsTransport::class,
+            ChatRoomDbRow::class,
+            ScheduledNotification::class,
+            ActiveAlarm::class,
+            EventColor::class
+        ]
 )
 @TypeConverters(Converters::class)
 abstract class TcaDb : RoomDatabase() {
@@ -106,6 +109,8 @@ abstract class TcaDb : RoomDatabase() {
     abstract fun cafeteriaDao(): CafeteriaDao
 
     abstract fun cafeteriaMenuDao(): CafeteriaMenuDao
+
+    abstract fun labelDao(): LabelDao
 
     abstract fun favoriteDishDao(): FavoriteDishDao
 
@@ -155,11 +160,11 @@ abstract class TcaDb : RoomDatabase() {
 
     companion object {
         private val migrations = arrayOf(
-            Migration1to2(),
-            Migration2to3(),
-            Migration3to4(),
-            Migration4to5(),
-            Migration5to6(),
+                Migration1to2(),
+                Migration2to3(),
+                Migration3to4(),
+                Migration4to5(),
+                Migration5to6(),
                 Migration6to7()
         )
 
@@ -170,9 +175,9 @@ abstract class TcaDb : RoomDatabase() {
             var instance = this.instance
             if (instance == null) {
                 instance = Room.databaseBuilder(context.applicationContext, TcaDb::class.java, Const.DATABASE_NAME)
-                    .allowMainThreadQueries()
-                    .addMigrations(*migrations)
-                    .build()
+                        .allowMainThreadQueries()
+                        .addMigrations(*migrations)
+                        .build()
                 this.instance = instance
             }
             return instance

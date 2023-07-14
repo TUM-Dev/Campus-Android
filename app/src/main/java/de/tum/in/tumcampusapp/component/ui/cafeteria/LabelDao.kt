@@ -7,7 +7,7 @@ import androidx.room.Query
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization.Label
 
 @Dao
-interface LabelsDao {
+interface LabelDao {
 
     @get:Query("SELECT DISTINCT * from labels")
     val allLabels: List<Label>

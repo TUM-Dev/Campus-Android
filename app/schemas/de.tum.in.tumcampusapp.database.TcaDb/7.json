@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 7,
-    "identityHash": "91c4068830987aa8f12f3fc918c3060f",
+    "identityHash": "8a97081c1543a39841610c22af40be1f",
     "entities": [
       {
         "tableName": "Cafeteria",
@@ -123,6 +123,44 @@
           "autoGenerate": true,
           "columnNames": [
             "menuId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "labels",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`labelId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `labelName` TEXT NOT NULL, `labelText` TEXT NOT NULL, `abbreviation` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "labelId",
+            "columnName": "labelId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "labelName",
+            "columnName": "labelName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "labelText",
+            "columnName": "labelText",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abbreviation",
+            "columnName": "abbreviation",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "labelId"
           ]
         },
         "indices": [],
@@ -1286,7 +1324,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '91c4068830987aa8f12f3fc918c3060f')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8a97081c1543a39841610c22af40be1f')"
     ]
   }
 }

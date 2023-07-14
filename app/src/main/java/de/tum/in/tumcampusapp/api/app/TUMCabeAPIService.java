@@ -22,6 +22,7 @@ import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierFreeContact;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierFreeMoreInfo;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.deserialization.CafeteriaMetadata;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.model.deserialization.Label;
 import de.tum.in.tumcampusapp.component.ui.openinghour.model.Location;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
@@ -64,6 +65,7 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_DEVICE;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_EVENTS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_FEEDBACK;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_KINOS;
+import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_LABELS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_LOCATIONS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_MEMBERS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_NEWS;
@@ -190,6 +192,9 @@ public interface TUMCabeAPIService {
 
     @GET(API_CAFETERIAS)
     Observable<List<CafeteriaMetadata>> getCafeterias();
+
+    @GET(API_LABELS)
+    Observable<List<Label>> getLabels();
 
     @GET(API_KINOS + "{lastId}")
     Flowable<List<Kino>> getKinos(@Path("lastId") String lastId);

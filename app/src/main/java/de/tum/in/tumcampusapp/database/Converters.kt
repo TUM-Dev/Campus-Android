@@ -4,6 +4,7 @@ import androidx.room.TypeConverter
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.component.ui.alarm.model.FcmNotificationLocation
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization.DishPrices
+import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.deserialization.LabelText
 import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMember
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import de.tum.`in`.tumcampusapp.utils.tryOrNull
@@ -39,4 +40,10 @@ class Converters {
 
     @TypeConverter
     fun fromStringToDishPrices(json: String): DishPrices = Gson().fromJson(json, DishPrices::class.java)
+
+    @TypeConverter
+    fun fromLabelTextToString(labelText: LabelText): String = Gson().toJson(labelText)
+
+    @TypeConverter
+    fun fromStringToLabelText(json: String): LabelText = Gson().fromJson(json, LabelText::class.java)
 }

@@ -35,6 +35,7 @@ import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierFreeContact;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierFreeMoreInfo;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.deserialization.CafeteriaMetadata;
+import de.tum.in.tumcampusapp.component.ui.cafeteria.model.deserialization.Label;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
@@ -90,6 +91,7 @@ public final class TUMCabeClient {
     static final String API_ROOM_FINDER_SCHEDULE = "scheduleById/";
     static final String API_FEEDBACK = "feedback/";
     static final String API_CAFETERIAS = "canteens.json";
+    static final String API_LABELS = "labels.json";
     static final String API_KINOS = "kino/";
     static final String API_NEWS = "news/";
     static final String API_UPDATE_NOTE = "updatenote/";
@@ -338,6 +340,10 @@ public final class TUMCabeClient {
 
     public Observable<List<CafeteriaMetadata>> getCafeterias() {
         return eatAPIService.getCafeterias();
+    }
+
+    public Observable<List<Label>> getLabels() {
+        return eatAPIService.getLabels();
     }
 
     public Flowable<List<Kino>> getKinos(String lastId) {
