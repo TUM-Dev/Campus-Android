@@ -506,16 +506,8 @@
         </receiver>
 
         <service
-            android:name=".service.SilenceService"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service
             android:name=".service.ScanResultsAvailableReceiver$NeverShowAgainService"
             android:exported="false" />
-        <service
-            android:name=".service.QueryLocationsService"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".service.FcmReceiverService"
             android:enabled="true"
@@ -525,9 +517,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service
-            android:name=".service.GeofencingRegistrationService"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver android:name=".service.GeofencingUpdateReceiver" />
         <receiver android:name=".service.GeofencingStartupReceiver"

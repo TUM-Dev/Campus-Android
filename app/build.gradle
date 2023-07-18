@@ -80,7 +80,7 @@ android {
         checkAllWarnings true
         disable 'GoogleAppIndexingWarning', 'TrulyRandom', 'ContentDescription', 'UnusedIds', 'UnusedResources', 'SelectableText'
         htmlReport false
-        lintConfig file('gradle/config/lint.xml')
+        lintConfig file('../gradle/config/lint.xml')
     }
 }
 

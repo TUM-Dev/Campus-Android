@@ -42,6 +42,7 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
+            setTitle(R.string.about_tca)
         }
 
         binding.buttonFacebook.setOnClickListener {

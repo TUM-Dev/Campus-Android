@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.overview
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.Network
@@ -26,7 +25,7 @@ import de.tum.`in`.tumcampusapp.databinding.FragmentMainBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.service.DownloadWorker
-import de.tum.`in`.tumcampusapp.service.SilenceService
+import de.tum.`in`.tumcampusapp.service.SilenceWorker
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -96,9 +95,8 @@ class MainFragment : BaseFragment<Unit>(
             ItemTouchHelper(ItemTouchHelperCallback()).attachToRecyclerView(cardsRecyclerView)
         }
 
-        // Start silence Service (if already started it will just invoke a check)
-        val service = Intent(requireContext(), SilenceService::class.java)
-        requireContext().startService(service)
+        // Enqueue a request for the silence worker (if already started it will just invoke a check)
+        SilenceWorker.enqueueWork(requireContext())
 
         viewModel.cards.observe(viewLifecycleOwner) {
             it?.let { onNewCardsAvailable(it) }

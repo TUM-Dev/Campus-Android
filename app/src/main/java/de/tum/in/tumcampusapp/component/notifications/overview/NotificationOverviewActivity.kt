@@ -21,10 +21,11 @@ class NotificationOverviewActivity : BaseActivity(R.layout.activity_notification
 
         binding = ActivityNotificationOverviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(binding.toolbarInformation.toolbar)
+        setSupportActionBar(binding.toolbarNotificationOverview.toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
+            setTitle(R.string.notification_overview)
         }
 
         // get currently active notifications
