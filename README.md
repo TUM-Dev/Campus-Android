@@ -5,12 +5,19 @@
 </a>
 
 # TUM Campus App for Android
-### 🚨 Public Service Announcement 🚨
-Due to the lack of a main maintainer and the need to revise major parts of the app to adapt it to the latest versions of Android, this app will soon become obsolete. This will probably happen sometime in 2024.
+## 🚨 Public Service Announcement 🚨
 
-You are still welcome to contribute to this app, and who knows, maybe we will find someone willing to take over the maintenance.
-
-All further development will focus on our [Flutter](https://flutter.dev/)-based alternative, hosted here: [github.com/TUM-Dev/Campus-Flutter](https://github.com/TUM-Dev/Campus-Flutter)
+> Currently, we are at a transitioning point for our TUM Campus Apps. We have three platform-specific versions: [iOS](https://github.com/TUM-Dev/Campus-iOS), [Android](https://github.com/TUM-Dev/Campus-Android), and [UWP](https://github.com/TUM-Dev/Campus-UWP).  
+ However, maintaining these distinct versions has proven challenging, with notable issues including feature disparity and the need for individual bug fixes for each platform. Furthermore, this model is dependent on having a dedicated maintainer for each app.
+> 
+> As such, we have decided to consolidate our resources and efforts towards the creation of a unified, cross-platform app using [Flutter](https://flutter.dev/). You can access the new codebase here: [github.com/TUM-Dev/Campus-Flutter](https://github.com/TUM-Dev/Campus-Flutter).
+> 
+> By uniting our efforts under one platform, we aim to enhance our efficiency and streamline the feature sets across all versions, thereby offering a more cohesive and reliable user experience.
+> 
+> We invite and value your contributions to the ongoing development of the Campus-Android.
+However, please note that we are transitioning towards a new [Flutter](https://flutter.dev/)-based codebase, expected to take over the platform-specific apps in 2024.
+> We thank you for your understanding and look forward to your continued support during this exciting period of transition.
+If you have any comments/feedback about this decison, you can reach us at app <at> tum.de or by adding a GitHub issue
 
 ### An Excellent App for Students by Students
 The TUM Campus App (TCA) is an open source project, which is mainly developed by volunteers with significant contributions by the Android Practical course. The TCA mostly targets phones, but can also be used on tablets or any Android device.
