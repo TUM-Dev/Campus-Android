@@ -24,7 +24,9 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.sync.SyncManager
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
+import java.time.YearMonth
 import java.util.*
+import kotlin.math.abs
 
 /**
  * Calendar Manager, handles database stuff, external imports.
@@ -62,20 +64,42 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
     fun getFromDbNotCancelledBetweenDates(begin: DateTime, end: DateTime) =
             applyEventColors(calendarDao.getAllNotCancelledBetweenDates(begin, end))
 
-    fun getEventsForMonth(date: LocalDate): Map<String, List<CalendarItem>> {
+    fun getEventsForMonth(date: LocalDate): Map<Int, List<CalendarItem>> {
         val startOfMonth = date.withDayOfMonth(1)
         val endOfMonth = date.withDayOfMonth(date.dayOfMonth().maximumValue)
-        val events = getFromDbBetweenDates(startOfMonth.toDateTimeAtCurrentTime(), endOfMonth.toDateTimeAtCurrentTime())
-        val eventMap = mutableMapOf<String, MutableList<CalendarItem>>()
+        val yearMonth = YearMonth.of(date.year, date.monthOfYear)
+        val start = startOfMonth.minusDays(yearMonth.minusMonths(1).lengthOfMonth() - startOfMonth.dayOfWeek)
+        val end = endOfMonth.plusDays(abs(42 - yearMonth.lengthOfMonth() - startOfMonth.dayOfWeek - 1))
+        val events = getFromDbBetweenDates(start.toDateTimeAtCurrentTime(), end.toDateTimeAtCurrentTime())
+        val eventMap = mutableMapOf<Int, MutableList<CalendarItem>>()
         for (event in events) {
-            val day = event.dtstart.toLocalDate().dayOfMonth.toString()
-            if (!eventMap.containsKey(day)) {
-                eventMap[day] = mutableListOf(event)
+            val day = event.dtstart.toLocalDate()
+            val index = dayToIndex(day, date)
+            if (!eventMap.containsKey(index)) {
+                eventMap[index] = mutableListOf(event)
             } else {
-                eventMap[day]?.add(event)
+                eventMap[index]?.add(event)
             }
         }
         return eventMap
+    }
+
+    private fun dayToIndex(eventDate: LocalDate, date: LocalDate): Int {
+        val yearMonth = YearMonth.of(date.year, date.monthOfYear)
+        val daysInMonth = yearMonth.lengthOfMonth()
+        val daysInPreviousMonth = yearMonth.minusMonths(1).lengthOfMonth()
+        val firstOfMonth = date.withDayOfMonth(1)
+        val lastOfMonth = date.withDayOfMonth(date.dayOfMonth().maximumValue)
+        val dayOfWeek = firstOfMonth.dayOfWeek
+
+        val index = if (eventDate < firstOfMonth) {
+            eventDate.dayOfMonth - daysInPreviousMonth + dayOfWeek
+        } else if (eventDate > lastOfMonth) {
+            eventDate.dayOfMonth + dayOfWeek + daysInMonth
+        } else {
+            eventDate.dayOfMonth + dayOfWeek
+        }
+        return index
     }
 
     private fun applyEventColors(calendarItems: List<CalendarItem>): List<CalendarItem> {
