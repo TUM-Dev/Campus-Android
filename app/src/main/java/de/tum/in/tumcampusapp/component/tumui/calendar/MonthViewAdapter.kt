@@ -24,7 +24,7 @@ class MonthViewAdapter(private var daysOfMonth: ArrayList<String>, private var e
     }
 
     override fun onBindViewHolder(holder: MonthViewHolder, position: Int) {
-        val events = eventMap[position + 2]
+        val events = eventMap[position]
 
         holder.dayOfMonth.text = daysOfMonth[position]
 

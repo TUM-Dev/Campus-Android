@@ -22,10 +22,10 @@ class MonthViewEventAdapter(private var events: List<CalendarItem>, private var 
         holder.title.text = event.title
         val background = holder.title.background as GradientDrawable
 
+        background.setColor(event.color!!)
+
         if (event.eventStart.monthOfYear != selectedDate.monthOfYear) {
             background.setColor(event.color!!.withAlpha(100))
-        } else {
-            background.setColor(event.color!!)
         }
     }
 

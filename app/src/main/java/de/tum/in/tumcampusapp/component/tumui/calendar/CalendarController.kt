@@ -64,12 +64,23 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
     fun getFromDbNotCancelledBetweenDates(begin: DateTime, end: DateTime) =
             applyEventColors(calendarDao.getAllNotCancelledBetweenDates(begin, end))
 
+    /**
+     * Returns all events for one page in the month-view.
+     * One page in the month-view contains 42 days.
+     *
+     * @param date The selected date
+     * @return A map with the index/day of the page as key and the list of events for the respective day as value
+     */
     fun getEventsForMonth(date: LocalDate): Map<Int, List<CalendarItem>> {
         val startOfMonth = date.withDayOfMonth(1)
         val endOfMonth = date.withDayOfMonth(date.dayOfMonth().maximumValue)
         val yearMonth = YearMonth.of(date.year, date.monthOfYear)
-        val start = startOfMonth.minusDays(yearMonth.minusMonths(1).lengthOfMonth() - startOfMonth.dayOfWeek)
-        val end = endOfMonth.plusDays(abs(42 - yearMonth.lengthOfMonth() - startOfMonth.dayOfWeek - 1))
+
+        // First day of the page, minus offset to the current month
+        val start = startOfMonth.minusDays(startOfMonth.dayOfWeek)
+
+        // Last day of the page, days of page - length of the current month - offset to the current month
+        val end = endOfMonth.plusDays(42 - yearMonth.lengthOfMonth() - startOfMonth.dayOfWeek)
         val events = getFromDbBetweenDates(start.toDateTimeAtCurrentTime(), end.toDateTimeAtCurrentTime())
         val eventMap = mutableMapOf<Int, MutableList<CalendarItem>>()
         for (event in events) {
@@ -88,18 +99,17 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
         val yearMonth = YearMonth.of(date.year, date.monthOfYear)
         val daysInMonth = yearMonth.lengthOfMonth()
         val daysInPreviousMonth = yearMonth.minusMonths(1).lengthOfMonth()
-        val firstOfMonth = date.withDayOfMonth(1)
-        val lastOfMonth = date.withDayOfMonth(date.dayOfMonth().maximumValue)
-        val dayOfWeek = firstOfMonth.dayOfWeek
+        val firstDayOfMonth = date.withDayOfMonth(1)
+        val lastDayOfMonth = date.withDayOfMonth(date.dayOfMonth().maximumValue)
 
-        val index = if (eventDate < firstOfMonth) {
-            eventDate.dayOfMonth - daysInPreviousMonth + dayOfWeek
-        } else if (eventDate > lastOfMonth) {
-            eventDate.dayOfMonth + dayOfWeek + daysInMonth
-        } else {
-            eventDate.dayOfMonth + dayOfWeek
+        if (eventDate < firstDayOfMonth) {
+            return eventDate.dayOfMonth - 1 - daysInPreviousMonth + firstDayOfMonth.dayOfWeek - 1
         }
-        return index
+        if (eventDate > lastDayOfMonth) {
+            return eventDate.dayOfMonth - 1 + firstDayOfMonth.dayOfWeek - 1 + daysInMonth
+        }
+
+        return eventDate.dayOfMonth - 1 + firstDayOfMonth.dayOfWeek - 1
     }
 
     private fun applyEventColors(calendarItems: List<CalendarItem>): List<CalendarItem> {
