@@ -66,6 +66,8 @@ class MainFragment : BaseFragment<Unit>(
         ViewModelProviders.of(this, factory).get(MainActivityViewModel::class.java)
     }
 
+    var snackBar: Snackbar? = null
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         injector.inject(this)
@@ -146,7 +148,18 @@ class MainFragment : BaseFragment<Unit>(
     }
 
     override fun onRefresh() {
-        viewModel.refreshCards()
+        // check if SnackBar is shown
+        // if shown that means a card is in the process of being discarded
+        // to guarantee that the card is really discarded we will trigger the dismiss of the SnackBar manually
+        // if shown also refreshCards is called inside the dismiss-callback of the SnackBar
+        // this guarantees that it is always called after the dismissal is completed
+        // which because of the callback would not be the case otherwise
+        if(snackBar != null && snackBar!!.isShown){
+            snackBar!!.dismiss()
+        }
+        else{
+            viewModel.refreshCards()
+        }
     }
 
     override fun onAlwaysHideCard(position: Int) {
@@ -225,7 +238,7 @@ class MainFragment : BaseFragment<Unit>(
             cardsAdapter.remove(lastPos)
 
             with(binding) {
-                Snackbar.make(cardsRecyclerView, R.string.card_dismissed, Snackbar.LENGTH_LONG)
+                snackBar = Snackbar.make(cardsRecyclerView, R.string.card_dismissed, Snackbar.LENGTH_LONG)
                         .setAction(R.string.undo) {
                             card?.let {
                                 cardsAdapter.insert(lastPos, it)
@@ -243,9 +256,13 @@ class MainFragment : BaseFragment<Unit>(
                                     // and therefore, we didn't really dismiss the card
                                     card?.discard()
                                 }
+                                if(event == DISMISS_EVENT_MANUAL){
+                                    // manual dismissal means we need to call refresh here
+                                    viewModel.refreshCards()
+                                }
                             }
                         })
-                        .show()
+                snackBar!!.show()
             }
         }
     }
