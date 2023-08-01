@@ -95,14 +95,6 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
         return eventMap
     }
 
-    /**
-     * Returns the index on the page of the event`s day.
-     * Index goes from 0 to 41.
-     *
-     * @param eventDate The date of the event
-     * @param date The selected date
-     * @return The index of the day where the event is on the page
-     */
     private fun dayToIndex(eventDate: LocalDate, date: LocalDate): Int {
         val yearMonth = YearMonth.of(date.year, date.monthOfYear)
         val daysInMonth = yearMonth.lengthOfMonth()
