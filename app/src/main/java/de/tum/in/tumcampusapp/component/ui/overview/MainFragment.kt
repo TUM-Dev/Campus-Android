@@ -154,10 +154,9 @@ class MainFragment : BaseFragment<Unit>(
         // if shown also refreshCards is called inside the dismiss-callback of the SnackBar
         // this guarantees that it is always called after the dismissal is completed
         // which because of the callback would not be the case otherwise
-        if(snackBar != null && snackBar!!.isShown){
+        if (snackBar != null && snackBar!!.isShown) {
             snackBar!!.dismiss()
-        }
-        else{
+        } else {
             viewModel.refreshCards()
         }
     }
@@ -256,7 +255,7 @@ class MainFragment : BaseFragment<Unit>(
                                     // and therefore, we didn't really dismiss the card
                                     card?.discard()
                                 }
-                                if(event == DISMISS_EVENT_MANUAL){
+                                if (event == DISMISS_EVENT_MANUAL) {
                                     // manual dismissal means we need to call refresh here
                                     viewModel.refreshCards()
                                 }
