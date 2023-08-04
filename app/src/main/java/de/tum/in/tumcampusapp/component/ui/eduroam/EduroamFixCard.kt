@@ -19,14 +19,13 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
-import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.wifiManager
 import java.util.*
 import java.util.regex.Pattern
 
 class EduroamFixCard(
     context: Context
-) : Card(CardManager.CARD_EDUROAM_FIX, context, "card_eduroam_fix_start") {
+) : Card(CardManager.CardTypes.EDUROAM_FIX, context) {
 
     private val errors: MutableList<String> = ArrayList()
     private lateinit var eduroam: WifiConfiguration
@@ -72,11 +71,11 @@ class EduroamFixCard(
         // Check if wifi is turned on at all, as we cannot say if it was configured if its off
         return if (!context.wifiManager.isWifiEnabled) {
             false
-        } else !isConfigValid()
+        } else !isConfigValid() && prefs.getBoolean("card_eduroam_fix_start", true)
     }
 
     override fun discard(editor: SharedPreferences.Editor) {
-        context.defaultSharedPreferences.edit().putBoolean("card_eduroam_fix_start", false).apply()
+        editor.putBoolean("card_eduroam_fix_start", false)
     }
 
     override fun getId(): Int {

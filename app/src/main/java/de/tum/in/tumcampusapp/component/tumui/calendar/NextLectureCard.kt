@@ -14,7 +14,7 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import org.joda.time.DateTime
 import java.util.*
 
-class NextLectureCard(context: Context) : Card(CardManager.CARD_NEXT_LECTURE, context, "card_next_lecture") {
+class NextLectureCard(context: Context) : Card(CardManager.CardTypes.NEXT_LECTURE, context) {
 
     private val calendarController: CalendarController = CalendarController(context)
 

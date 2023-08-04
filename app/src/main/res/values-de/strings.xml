@@ -339,12 +339,22 @@
     <string name="card_mvv_summary">Zeigt die Abfahrtszeiten der öffentlich Verkehrmittel an</string>
     <string name="card_next_lecture_summary">Zeigt Informationen zur nächsten Vorlesung an</string>
     <string name="card_tuition_fee_summary">Erinnert dich, wenn du die Studiengebühren zahlen musst</string>
+    <string name="card_support_summary">Unterstütze uns durch Feedback oder teilen der App</string>
+    <string name="card_no_internet_summary">Zeigt an wenn keine Internetverbindung vorhanden ist</string>
+    <string name="card_login_summary">Erlaubt dir dich mit TUMOnline zu verbinden</string>
     <string name="card_news_summary">Schlägt ausgewählte News vor</string>
     <string name="card_chat_summary">Benachrichtigt dich über neue Nachrichten</string>
+    <string name="card_events_summary">Zeigt anstehenden Events an</string>
+    <string name="card_update_summary">Gibt eine Übersicht über neue Features</string>
     <string name="open_card_settings">Karte anpassen</string>
     <string name="always_hide_card">Karte immer ausblenden</string>
     <string name="phone_summary">Um Benachrichtigungen auf dem Telefon zu erhalten muss Wearable aktiviert sein</string>
     <string name="display">Anzeige</string>
+
+    <!-- extra startpage show names for news -->
+    <string name="startpage_news">Startseite News</string>
+    <string name="startpage_top_news">Startseite Top-News</string>
+    <string name="startpage_film_news">Startseite Film-News</string>
 
     <string name="opens">Öffnet</string>
     <string name="closes">Schließt</string>
