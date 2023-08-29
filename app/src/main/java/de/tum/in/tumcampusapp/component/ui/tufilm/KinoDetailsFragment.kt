@@ -106,26 +106,18 @@ class KinoDetailsFragment : Fragment() {
                 }
                 startActivity(intent)
             }
-        } else if (!EventHelper.isEventImminent(event)) {
-            binding.buyTicketButton.setText(R.string.buy_ticket)
-            binding.buyTicketButton.setOnClickListener {
-                this.event?.let {
-                    EventHelper.buyTicket(it, binding.buyTicketButton, context)
-                }
-            }
         }
     }
 
     private fun showTicketCount(status: TicketStatus?) {
         val event = event
         val isEventBooked = event != null && ticketsLocalRepo.getTicketCount(event) > 0
-        val isEventImminent = event != null && EventHelper.isEventImminent(event)
 
         with(binding) {
             EventHelper.showRemainingTickets(
                 status,
                 isEventBooked,
-                isEventImminent,
+                true,
                 buyTicketButton,
                 remainingTicketsContainer,
                 remainingTicketsTextView,
