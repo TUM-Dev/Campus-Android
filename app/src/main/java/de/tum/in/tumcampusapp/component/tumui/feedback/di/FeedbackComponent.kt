@@ -30,6 +30,7 @@ interface FeedbackModule {
 
     @Binds
     fun bindsFeedbackPresenter(impl: FeedbackPresenter): FeedbackContract.Presenter
+
     @Binds
     fun bindsCameraPresenter(impl: CameraManager): CameraInterface
 }

@@ -105,8 +105,7 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
         // By now, we should have generated the RSA key and uploaded it to our server and TUMonline
 
         val lrzId = Utils.getSetting(requireContext(), Const.LRZ_ID, "")
-        val name = Utils.getSetting(requireContext(),
-            Const.CHAT_ROOM_DISPLAY_NAME, getString(R.string.not_connected_to_tumonline))
+        val name = Utils.getSetting(requireContext(), Const.CHAT_ROOM_DISPLAY_NAME, getString(R.string.not_connected_to_tumonline))
 
         val currentChatMember = ChatMember(lrzId)
         currentChatMember.displayName = name

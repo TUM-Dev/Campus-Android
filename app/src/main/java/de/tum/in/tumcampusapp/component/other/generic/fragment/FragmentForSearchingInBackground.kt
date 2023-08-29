@@ -68,11 +68,11 @@ abstract class FragmentForSearchingInBackground<T>(
         }
 
         compositeDisposable += observable
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onSearchFinished) {
-                    showError(R.string.error_something_wrong)
-                }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(this::onSearchFinished) {
+                showError(R.string.error_something_wrong)
+            }
     }
 
     override fun onDestroyView() {

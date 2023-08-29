@@ -1,8 +1,15 @@
 package de.tum.`in`.tumcampusapp.service
 
 import android.content.Context
-import androidx.work.*
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.ListenableWorker
 import androidx.work.ListenableWorker.Result.success
+import androidx.work.PeriodicWorkRequest
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import java.util.concurrent.TimeUnit
 
 /**
@@ -16,8 +23,8 @@ class BackgroundWorker(
     override fun doWork(): ListenableWorker.Result {
         val downloadWorkRequest = DownloadWorker.getWorkRequest()
         WorkManager.getInstance(applicationContext)
-                .beginUniqueWork(UNIQUE_DOWNLOAD, ExistingWorkPolicy.KEEP, downloadWorkRequest)
-                .enqueue()
+            .beginUniqueWork(UNIQUE_DOWNLOAD, ExistingWorkPolicy.KEEP, downloadWorkRequest)
+            .enqueue()
 
         return success()
     }
@@ -28,11 +35,11 @@ class BackgroundWorker(
 
         fun getWorkRequest(): PeriodicWorkRequest {
             val constraints = Constraints.Builder()
-                    .setRequiresBatteryNotLow(true)
-                    .build()
+                .setRequiresBatteryNotLow(true)
+                .build()
             return PeriodicWorkRequestBuilder<BackgroundWorker>(3, TimeUnit.HOURS)
-                    .setConstraints(constraints)
-                    .build()
+                .setConstraints(constraints)
+                .build()
         }
     }
 }

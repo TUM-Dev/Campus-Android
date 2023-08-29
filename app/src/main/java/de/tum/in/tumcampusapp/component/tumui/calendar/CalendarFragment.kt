@@ -6,10 +6,12 @@ import android.content.ContentUris
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import android.provider.CalendarContract
 import android.text.format.DateUtils
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -30,7 +32,10 @@ import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.databinding.FragmentCalendarBinding
 import de.tum.`in`.tumcampusapp.service.QueryLocationWorker
-import de.tum.`in`.tumcampusapp.utils.*
+import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
+import de.tum.`in`.tumcampusapp.utils.Utils
+import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -324,9 +329,9 @@ class CalendarFragment :
                 Manifest.permission.READ_CALENDAR
             ) == PackageManager.PERMISSION_GRANTED &&
             checkSelfPermission(
-                requireContext(),
-                Manifest.permission.WRITE_CALENDAR
-            ) == PackageManager.PERMISSION_GRANTED
+                    requireContext(),
+                    Manifest.permission.WRITE_CALENDAR
+                ) == PackageManager.PERMISSION_GRANTED
         ) {
             return true
         } else {
@@ -531,7 +536,8 @@ class CalendarFragment :
                     .print(DateTime(date.timeInMillis))
 
                 val dateString = DateUtils.formatDateTime(
-                    requireContext(), date.timeInMillis,
+                    requireContext(),
+                    date.timeInMillis,
                     DateUtils.FORMAT_NUMERIC_DATE or DateUtils.FORMAT_NO_YEAR
                 )
 

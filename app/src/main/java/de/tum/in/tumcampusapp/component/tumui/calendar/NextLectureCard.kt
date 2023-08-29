@@ -14,7 +14,7 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import org.joda.time.DateTime
 import java.util.*
 
-class NextLectureCard(context: Context) : Card(CardManager.CARD_NEXT_LECTURE, context, "card_next_lecture") {
+class NextLectureCard(context: Context) : Card(CardManager.CardTypes.NEXT_LECTURE, context) {
 
     private val calendarController: CalendarController = CalendarController(context)
 
@@ -47,11 +47,11 @@ class NextLectureCard(context: Context) : Card(CardManager.CARD_NEXT_LECTURE, co
     fun setLectures(calendarItems: List<CalendarItem>) {
         calendarItems.mapTo(lectures) { calendarItem ->
             CardCalendarItem(
-                    id = calendarItem.nr,
-                    start = calendarItem.dtstart,
-                    end = calendarItem.dtend,
-                    title = calendarItem.getFormattedTitle(),
-                    locations = calendarController.getLocationsForEvent(calendarItem.nr)
+                id = calendarItem.nr,
+                start = calendarItem.dtstart,
+                end = calendarItem.dtend,
+                title = calendarItem.getFormattedTitle(),
+                locations = calendarController.getLocationsForEvent(calendarItem.nr)
             )
         }
     }
@@ -78,6 +78,7 @@ class NextLectureCard(context: Context) : Card(CardManager.CARD_NEXT_LECTURE, co
 
     companion object {
         private const val NEXT_LECTURE_DATE = "next_date"
+
         @JvmStatic
         fun inflateViewHolder(parent: ViewGroup, interactionListener: CardInteractionListener): CardViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.card_next_lecture_item, parent, false)

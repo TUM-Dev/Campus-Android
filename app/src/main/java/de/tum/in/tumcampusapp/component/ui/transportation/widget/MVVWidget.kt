@@ -70,13 +70,16 @@ class MVVWidget : AppWidgetProvider() {
      */
     private fun planUpdates(context: Context) {
         for (i in 1..3) {
-            timer.schedule(object : TimerTask() {
-                override fun run() {
-                    val reloadIntent = Intent(context, MVVWidget::class.java)
-                    reloadIntent.action = BROADCAST_RELOAD_ALL
-                    context.sendBroadcast(reloadIntent)
-                }
-            }, (UPDATE_TRIGGER_DELAY * i).toLong())
+            timer.schedule(
+                object : TimerTask() {
+                    override fun run() {
+                        val reloadIntent = Intent(context, MVVWidget::class.java)
+                        reloadIntent.action = BROADCAST_RELOAD_ALL
+                        context.sendBroadcast(reloadIntent)
+                    }
+                },
+                (UPDATE_TRIGGER_DELAY * i).toLong()
+            )
         }
     }
 
@@ -114,7 +117,11 @@ class MVVWidget : AppWidgetProvider() {
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
         }
         val pendingIntent = PendingIntent.getActivity(
-                context, appWidgetId, configIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+            context,
+            appWidgetId,
+            configIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
         remoteViews.setOnClickPendingIntent(R.id.mvv_widget_setting_button, pendingIntent)
 
         // Set up the reload functionality
@@ -123,7 +130,11 @@ class MVVWidget : AppWidgetProvider() {
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
         }
         val pendingReloadIntent = PendingIntent.getBroadcast(
-                context, appWidgetId, reloadIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+            context,
+            appWidgetId,
+            reloadIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
         remoteViews.setOnClickPendingIntent(R.id.mvv_widget_reload_button, pendingReloadIntent)
 
         val isAutoReload = widgetDepartures.autoReload

@@ -22,24 +22,27 @@ class TicketEphemeralKeyProvider(
         keyUpdateListener: EphemeralKeyUpdateListener
     ) {
         try {
-            TUMCabeClient.getInstance(context).retrieveEphemeralKey(context, apiVersion,
-                    object : Callback<HashMap<String, Any>> {
-                        override fun onResponse(
-                            call: Call<HashMap<String, Any>>,
-                            response: Response<HashMap<String, Any>>
-                        ) {
-                            val responseBody = response.body()
-                            if (responseBody != null) {
-                                val id = responseBody.toString()
-                                keyUpdateListener.onKeyUpdate(id)
-                                onStringResponse(id)
-                            }
+            TUMCabeClient.getInstance(context).retrieveEphemeralKey(
+                context,
+                apiVersion,
+                object : Callback<HashMap<String, Any>> {
+                    override fun onResponse(
+                        call: Call<HashMap<String, Any>>,
+                        response: Response<HashMap<String, Any>>
+                    ) {
+                        val responseBody = response.body()
+                        if (responseBody != null) {
+                            val id = responseBody.toString()
+                            keyUpdateListener.onKeyUpdate(id)
+                            onStringResponse(id)
                         }
+                    }
 
-                        override fun onFailure(call: Call<HashMap<String, Any>>, throwable: Throwable) {
-                            Utils.log(throwable)
-                        }
-                    })
+                    override fun onFailure(call: Call<HashMap<String, Any>>, throwable: Throwable) {
+                        Utils.log(throwable)
+                    }
+                }
+            )
         } catch (e: NoPrivateKey) {
             Utils.log(e)
         }

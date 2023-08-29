@@ -19,10 +19,11 @@ data class RoomFinderRoom(
 
     private val formattedName: String
         get() {
-            return if (name == "null")
+            return if (name == "null") {
                 ""
-            else
+            } else {
                 name
+            }
         }
 
     val formattedAddress: String

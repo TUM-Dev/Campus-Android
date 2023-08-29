@@ -10,8 +10,8 @@ class FloatConverter : TypeConverter<Float> {
     override fun read(value: String?): Float {
         return try {
             NumberFormat.getInstance(Locale.GERMAN)
-                    .parse(value)
-                    .toFloat()
+                .parse(value)
+                .toFloat()
         } catch (e: ParseException) {
             0f
         }

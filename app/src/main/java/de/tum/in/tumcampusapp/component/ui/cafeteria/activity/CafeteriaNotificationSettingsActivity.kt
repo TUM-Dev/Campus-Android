@@ -55,11 +55,11 @@ class CafeteriaNotificationSettingsActivity : BaseActivity(R.layout.activity_caf
         settings: CafeteriaNotificationSettings
     ): List<CafeteriaNotificationTime> {
         return (DateTimeConstants.MONDAY until DateTimeConstants.SATURDAY)
-                .map {
-                    val day = DateTime.now().withDayOfWeek(it)
-                    val time = settings.retrieveLocalTime(day)
-                    CafeteriaNotificationTime(day, time)
-                }
-                .toList()
+            .map {
+                val day = DateTime.now().withDayOfWeek(it)
+                val time = settings.retrieveLocalTime(day)
+                CafeteriaNotificationTime(day, time)
+            }
+            .toList()
     }
 }

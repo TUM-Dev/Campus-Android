@@ -14,9 +14,9 @@ class TuitionFeesActivity : BaseActivity(R.layout.activity_tuitionfees) {
 
         if (savedInstanceState == null) {
             supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.contentFrame, TuitionFeesFragment.newInstance())
-                    .commit()
+                .beginTransaction()
+                .replace(R.id.contentFrame, TuitionFeesFragment.newInstance())
+                .commit()
         }
     }
 }

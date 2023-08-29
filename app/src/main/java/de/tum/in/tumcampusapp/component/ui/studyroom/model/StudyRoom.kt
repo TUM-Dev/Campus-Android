@@ -43,9 +43,9 @@ data class StudyRoom(
         //    amount of occupied time remaining)
         // 4. The remaining rooms
         return compareBy<StudyRoom> { it.freeUntil?.millis?.times(-1) }
-                .thenBy { it.occupiedUntil }
-                .thenBy { it.name }
-                .compare(this, other)
+            .thenBy { it.occupiedUntil }
+            .thenBy { it.name }
+            .compare(this, other)
     }
 
     override fun toString() = code

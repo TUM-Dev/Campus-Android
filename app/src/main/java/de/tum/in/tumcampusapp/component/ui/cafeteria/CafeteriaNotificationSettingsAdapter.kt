@@ -20,8 +20,13 @@ class CafeteriaNotificationSettingsAdapter(
     private val settings = CafeteriaNotificationSettings.getInstance(context)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(NotificationScheduleListitemBinding.inflate(LayoutInflater.from(parent.context),
-                parent, false))
+        return ViewHolder(
+            NotificationScheduleListitemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -32,7 +37,10 @@ class CafeteriaNotificationSettingsAdapter(
     override fun onTimeChanged(position: Int, newTime: LocalTime) {
         if (newTime.hourOfDay !in MIN_HOUR..MAX_HOUR) {
             val text = context.getString(
-                    R.string.invalid_notification_time_format_string, MIN_HOUR, MAX_HOUR)
+                R.string.invalid_notification_time_format_string,
+                MIN_HOUR,
+                MAX_HOUR
+            )
             Utils.showToast(context, text)
             return
         }
@@ -63,7 +71,7 @@ class CafeteriaNotificationSettingsAdapter(
     override fun getItemCount() = dailySchedule.size
 
     class ViewHolder(private var binding: NotificationScheduleListitemBinding) :
-            RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root) {
 
         private val dayFormatter = DateTimeFormat.forPattern("EEEE").withLocale(Locale.getDefault())
         private val timeFormatter = DateTimeFormat.shortTime().withLocale(Locale.getDefault())
@@ -74,7 +82,7 @@ class CafeteriaNotificationSettingsAdapter(
             listener: OnNotificationTimeChangedListener
         ) = with(binding) {
             val dayOfWeekString = dayFormatter.print(time.weekday)
-                        weekdayTextView.text = dayOfWeekString
+            weekdayTextView.text = dayOfWeekString
 
             notificationActiveCheckBox.setOnCheckedChangeListener(null)
             notificationActiveCheckBox.isChecked = time.time != null
@@ -86,8 +94,8 @@ class CafeteriaNotificationSettingsAdapter(
                 val defaultTime = settings.retrieveLocalTimeOrDefault(time.weekday)
                 val timePicker = TimePickerDialog(binding.root.context, { _, hour, minute ->
                     val newTime = LocalTime.now()
-                            .withHourOfDay(hour)
-                            .withMinuteOfHour(minute)
+                        .withHourOfDay(hour)
+                        .withMinuteOfHour(minute)
                     listener.onTimeChanged(adapterPosition, newTime)
                 }, defaultTime.hourOfDay, defaultTime.minuteOfHour, true)
                 timePicker.show()

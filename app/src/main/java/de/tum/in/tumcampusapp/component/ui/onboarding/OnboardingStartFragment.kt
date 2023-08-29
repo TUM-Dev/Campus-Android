@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.content.ContextCompat
 import com.jakewharton.rxbinding3.widget.textChanges
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
@@ -24,6 +23,7 @@ import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponent
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponentProvider
 import de.tum.`in`.tumcampusapp.databinding.FragmentOnboardingStartBinding
 import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers

@@ -47,9 +47,9 @@ class EventsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         injector.eventsComponent()
-                .eventType(eventType)
-                .build()
-                .inject(this)
+            .eventType(eventType)
+            .build()
+            .inject(this)
     }
 
     override fun onCreateView(
@@ -71,9 +71,9 @@ class EventsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         binding.eventsRefreshLayout.setOnRefreshListener(this@EventsListFragment)
         binding.eventsRefreshLayout.setColorSchemeResources(
-                R.color.color_primary,
-                R.color.tum_A100,
-                R.color.tum_A200
+            R.color.color_primary,
+            R.color.tum_A100,
+            R.color.tum_A200
         )
 
         viewModel.viewState.observeNonNull(viewLifecycleOwner, this@EventsListFragment::render)

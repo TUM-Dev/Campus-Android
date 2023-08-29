@@ -72,8 +72,11 @@ class TimetableWidgetService : RemoteViewsService() {
             // Setup the date
             if (currentItem.isFirstOnDay) {
                 remoteViews.setTextViewText(R.id.timetable_widget_date_day, startTime.dayOfMonth.toString())
-                remoteViews.setTextViewText(R.id.timetable_widget_date_weekday, startTime.dayOfWeek()
-                        .getAsShortText(Locale.getDefault()))
+                remoteViews.setTextViewText(
+                    R.id.timetable_widget_date_weekday,
+                    startTime.dayOfWeek()
+                        .getAsShortText(Locale.getDefault())
+                )
                 remoteViews.setViewPadding(R.id.timetable_widget_item, 0, 15, 0, 0)
             } else {
                 // Overwrite unused parameters, as the elements are reused they may could be filled with old parameters

@@ -8,10 +8,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.RecyclerView
-
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavDestination
 import de.tum.`in`.tumcampusapp.component.ui.news.model.NewsAlert
@@ -24,7 +22,7 @@ import org.jetbrains.anko.defaultSharedPreferences
 /**
  * Shows important news
  */
-class TopNewsCard(context: Context) : Card(CardManager.CARD_TOP_NEWS, context, "top_news") {
+class TopNewsCard(context: Context) : Card(CardManager.CardTypes.TOP_NEWS, context) {
     private lateinit var imageView: ImageView
     private lateinit var progress: ProgressBar
     private val topNewsStore: TopNewsStore
@@ -41,8 +39,10 @@ class TopNewsCard(context: Context) : Card(CardManager.CARD_TOP_NEWS, context, "
         }
 
         Picasso.get()
-                .load(newsAlert.url)
-                .into(imageView, object : Callback {
+            .load(newsAlert.url)
+            .into(
+                imageView,
+                object : Callback {
                     override fun onSuccess() {
                         // remove progress bar
                         progress.visibility = View.GONE
@@ -50,7 +50,8 @@ class TopNewsCard(context: Context) : Card(CardManager.CARD_TOP_NEWS, context, "
                     override fun onError(e: Exception) {
                         discard()
                     }
-                })
+                }
+            )
     }
 
     override fun getId(): Int {
@@ -58,9 +59,10 @@ class TopNewsCard(context: Context) : Card(CardManager.CARD_TOP_NEWS, context, "
     }
 
     override fun getNavigationDestination(): NavDestination? {
-        return if (newsAlert == null || newsAlert.link.isEmpty()) {
-            null
-        } else NavDestination.Link(newsAlert.link)
+        if (newsAlert != null && newsAlert.link.isNotEmpty()) {
+            return NavDestination.Link(newsAlert.link)
+        }
+        return null
     }
 
     override fun updateViewHolder(viewHolder: RecyclerView.ViewHolder) {

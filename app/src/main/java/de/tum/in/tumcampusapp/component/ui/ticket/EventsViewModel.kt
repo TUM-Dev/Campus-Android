@@ -57,9 +57,9 @@ class EventsViewModel @Inject constructor(
         val actions = refreshRelay.flatMap(this::processAction)
 
         compositeDisposable += Observable.merge(databaseChanges, actions)
-                .scan(initialViewState, this::reduceState)
-                .distinctUntilChanged()
-                .subscribe(this::render)
+            .scan(initialViewState, this::reduceState)
+            .distinctUntilChanged()
+            .subscribe(this::render)
     }
 
     private fun processAction(action: Action): Observable<Result> {
@@ -80,28 +80,28 @@ class EventsViewModel @Inject constructor(
 
     private fun fetchEventsAndTickets(isLoggedIn: Boolean): Observable<Result> {
         return loadAndStoreEvents()
-                .andThen(Observable.just(Result.None as Result))
-                .startWith(Result.ShowLoading)
-                .doOnNext { loadAndStoreTickets(isLoggedIn) }
-                .onErrorResumeNext { t: Throwable -> showErrorForDuration(ERROR_DURATION) }
+            .andThen(Observable.just(Result.None as Result))
+            .startWith(Result.ShowLoading)
+            .doOnNext { loadAndStoreTickets(isLoggedIn) }
+            .onErrorResumeNext { t: Throwable -> showErrorForDuration(ERROR_DURATION) }
     }
 
     private fun showErrorForDuration(duration: Long): Observable<Result> {
         return Observable.timer(duration, TimeUnit.SECONDS, Schedulers.computation())
-                .map<Result> { Result.HideError }
-                .startWith(Result.ShowError)
+            .map<Result> { Result.HideError }
+            .startWith(Result.ShowError)
     }
 
     private fun loadAndStoreEvents(): Completable {
         return Observable
-                .fromCallable { eventsLocalRepository.removePastEventsWithoutTicket() }
-                .subscribeOn(Schedulers.io())
-                .flatMap { eventsRemoteRepository.fetchEvents() }
-                .subscribeOn(Schedulers.io())
-                .flatMapCompletable {
-                    eventsLocalRepository.storeEvents(it)
-                    Completable.complete()
-                }
+            .fromCallable { eventsLocalRepository.removePastEventsWithoutTicket() }
+            .subscribeOn(Schedulers.io())
+            .flatMap { eventsRemoteRepository.fetchEvents() }
+            .subscribeOn(Schedulers.io())
+            .flatMapCompletable {
+                eventsLocalRepository.storeEvents(it)
+                Completable.complete()
+            }
     }
 
     private fun loadAndStoreTickets(isLoggedIn: Boolean) {
@@ -110,19 +110,19 @@ class EventsViewModel @Inject constructor(
         }
 
         compositeDisposable += ticketsRemoteRepository.fetchTickets()
-                .subscribeOn(Schedulers.io())
-                .doOnNext { loadAndStoreTicketTypes(it) }
-                .flatMapCompletable {
-                    ticketsLocalRepository.storeTickets(it)
-                    Completable.complete()
-                }
-                .subscribe()
+            .subscribeOn(Schedulers.io())
+            .doOnNext { loadAndStoreTicketTypes(it) }
+            .flatMapCompletable {
+                ticketsLocalRepository.storeTickets(it)
+                Completable.complete()
+            }
+            .subscribe()
     }
 
     private fun loadAndStoreTicketTypes(tickets: List<Ticket>) {
         compositeDisposable += ticketsRemoteRepository.fetchTicketTypesForTickets(tickets)
-                .subscribeOn(Schedulers.io())
-                .subscribe()
+            .subscribeOn(Schedulers.io())
+            .subscribe()
     }
 
     fun refreshEventsAndTickets(isLoggedIn: Boolean) {

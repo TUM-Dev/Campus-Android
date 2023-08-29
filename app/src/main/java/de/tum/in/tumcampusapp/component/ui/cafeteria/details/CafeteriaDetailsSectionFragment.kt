@@ -69,18 +69,22 @@ class CafeteriaDetailsSectionFragment : Fragment() {
             menuDateTextView.text = menuDateString
 
             // Update the remaining time for opening/closing every 10s (this interval is chosen to make our clock closer to realtime)
-            timer.schedule(object : TimerTask() {
-                override fun run() {
-                    if (view.context != null) {
-                        val hours = OpenHoursHelper(view.context).getHoursByIdAsString(
-                            cafeteriaId,
-                            menuDate
-                        )
-                        menuOpeningHours.text = hours
-                        menuOpeningHours.isVisible = hours.isNotEmpty()
+            timer.schedule(
+                object : TimerTask() {
+                    override fun run() {
+                        if (view.context != null) {
+                            val hours = OpenHoursHelper(view.context).getHoursByIdAsString(
+                                cafeteriaId,
+                                menuDate
+                            )
+                            menuOpeningHours.text = hours
+                            menuOpeningHours.isVisible = hours.isNotEmpty()
+                        }
                     }
-                }
-            }, 0, 10000)
+                },
+                0,
+                10000
+            )
 
             menusRecyclerView.layoutManager = LinearLayoutManager(requireContext())
             menusRecyclerView.itemAnimator = DefaultItemAnimator()
@@ -90,7 +94,8 @@ class CafeteriaDetailsSectionFragment : Fragment() {
 
             cafeteriaViewModel.cafeteriaMenus.observe(
                 viewLifecycleOwner,
-                Observer<List<CafeteriaMenu>> { adapter.update(it) })
+                Observer<List<CafeteriaMenu>> { adapter.update(it) }
+            )
             cafeteriaViewModel.fetchCafeteriaMenus(cafeteriaId, menuDate)
         }
     }

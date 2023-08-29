@@ -29,9 +29,9 @@ data class StationResult(
 
         fun fromJson(json: JsonObject): StationResult {
             return StationResult(
-                    json.get("name").asString,
-                    json.getAsJsonObject("ref").get("id").asString,
-                    json.get("quality")?.asInt ?: 0
+                json.get("name").asString,
+                json.getAsJsonObject("ref").get("id").asString,
+                json.get("quality")?.asInt ?: 0
             )
         }
     }

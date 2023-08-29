@@ -37,15 +37,15 @@ object CalendarHelper {
         }
         val uri = Calendars.CONTENT_URI
         return c.contentResolver
-                .delete(uri, " account_name = '$ACCOUNT_NAME'", null)
+            .delete(uri, " account_name = '$ACCOUNT_NAME'", null)
     }
 
     private fun buildCalendarUri(): Uri {
         return Calendars.CONTENT_URI.buildUpon()
-                .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-                .appendQueryParameter(Calendars.ACCOUNT_NAME, ACCOUNT_NAME)
-                .appendQueryParameter(Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL)
-                .build()
+            .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
+            .appendQueryParameter(Calendars.ACCOUNT_NAME, ACCOUNT_NAME)
+            .appendQueryParameter(Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL)
+            .build()
     }
 
     private fun buildContentValues(c: Context): ContentValues {

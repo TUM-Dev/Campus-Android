@@ -9,7 +9,6 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.content.edit
@@ -29,11 +28,13 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocal
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.SetupEduroamActivity
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.StartupActivity
+import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.service.SilenceWorker
 import de.tum.`in`.tumcampusapp.service.StartSyncReceiver
 import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.Single
@@ -45,8 +46,10 @@ import org.jetbrains.anko.notificationManager
 import java.util.concurrent.ExecutionException
 import javax.inject.Inject
 
-class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+class SettingsFragment :
+    PreferenceFragmentCompat(),
+    Preference.OnPreferenceClickListener,
+    SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -91,6 +94,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
                 setSummary("silent_mode_set_to")
                 setSummary("background_mode_set_to")
             }
+
             "card_cafeteria" -> {
                 setSummary("card_cafeteria_default_G")
                 setSummary("card_cafeteria_default_K")
@@ -98,11 +102,13 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
                 setSummary("card_role")
                 initCafeteriaCardSelections()
             }
+
             "card_mvv" -> {
                 setSummary("card_stations_default_G")
                 setSummary("card_stations_default_C")
                 setSummary("card_stations_default_K")
             }
+
             "card_eduroam" -> {
                 findPreference(SETUP_EDUROAM).onPreferenceClickListener = this
             }
@@ -139,11 +145,11 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         url: String
     ) {
         compositeDisposable += Single
-                .fromCallable { Picasso.get().load(url).get() }
-                .subscribeOn(Schedulers.io())
-                .map { BitmapDrawable(resources, it) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(preference::setIcon, Utils::log)
+            .fromCallable { Picasso.get().load(url).get() }
+            .subscribeOn(Schedulers.io())
+            .map { BitmapDrawable(resources, it) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(preference::setIcon, Utils::log)
     }
 
     /**
@@ -219,13 +225,19 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         if (key == "language_preference" && activity != null) {
             (activity as SettingsActivity).restartApp()
         }
+        // restart app after visibility of card changed
+        val cardTypesPrefNames = CardManager.CardTypes.values().map { context?.getString(it.showCardPreferenceStringRes) }
+        // restart when visibility changed
+        if (key in cardTypesPrefNames) {
+            (activity as SettingsActivity).restartApp()
+        }
     }
 
     private fun initCafeteriaCardSelections() {
         val cafeterias = cafeteriaLocalRepository
-                .getAllCafeterias()
-                .blockingFirst()
-                .sortedBy { it.name }
+            .getAllCafeterias()
+            .blockingFirst()
+            .sortedBy { it.name }
 
         val cafeteriaByLocationName = getString(R.string.settings_cafeteria_depending_on_location)
         val cafeteriaNames = listOf(cafeteriaByLocationName) + cafeterias.map { it.name }
@@ -260,11 +272,11 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
             preference.setSummary(R.string.settings_no_location_selected)
         } else {
             preference.summary = values
-                    .map { preference.findIndexOfValue(it) }
-                    .map { preference.entries[it] }
-                    .map { it.toString() }
-                    .sorted()
-                    .joinToString(", ")
+                .map { preference.findIndexOfValue(it) }
+                .map { preference.entries[it] }
+                .map { it.toString() }
+                .sorted()
+                .joinToString(", ")
         }
     }
 

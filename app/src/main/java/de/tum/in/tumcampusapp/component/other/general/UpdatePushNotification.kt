@@ -8,9 +8,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-
 import com.google.gson.Gson
-
 import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
@@ -31,7 +29,7 @@ class UpdatePushNotification(
     private val notificationFromServer: FcmNotification?
         get() = tryOrNull {
             TUMCabeClient.getInstance(appContext)
-                    .getNotification(notificationId)
+                .getNotification(notificationId)
         }
 
     init {
@@ -64,16 +62,16 @@ class UpdatePushNotification(
             val title = info.title.ifEmpty { appContext.getString(R.string.update) }
 
             return NotificationCompat.Builder(appContext, Const.NOTIFICATION_CHANNEL_DEFAULT)
-                    .setSmallIcon(defaultIcon)
-                    .setContentTitle(title)
-                    .setStyle(NotificationCompat.BigTextStyle().bigText(description))
-                    .setContentText(description)
-                    .setContentIntent(pending)
-                    .setDefaults(Notification.DEFAULT_VIBRATE)
-                    .setLights(-0xffff01, 500, 500)
-                    .setSound(sound)
-                    .setAutoCancel(true)
-                    .setColor(ContextCompat.getColor(appContext, R.color.color_primary))
-                    .build()
+                .setSmallIcon(defaultIcon)
+                .setContentTitle(title)
+                .setStyle(NotificationCompat.BigTextStyle().bigText(description))
+                .setContentText(description)
+                .setContentIntent(pending)
+                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setLights(-0xffff01, 500, 500)
+                .setSound(sound)
+                .setAutoCancel(true)
+                .setColor(ContextCompat.getColor(appContext, R.color.color_primary))
+                .build()
         }
 }

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.LinearLayout
-import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
@@ -13,6 +12,7 @@ import de.tum.`in`.tumcampusapp.component.other.generic.activity.ProgressActivit
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.Departure
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
 import de.tum.`in`.tumcampusapp.database.TcaDb
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -63,10 +63,10 @@ class TransportationDetailsActivity : ProgressActivity<Unit>(R.layout.activity_t
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_transport_usage) {
             ThemedAlertDialogBuilder(this)
-                    .setTitle(R.string.transport_action_usage)
-                    .setMessage(R.string.transport_help_text)
-                    .setPositiveButton(android.R.string.ok, null)
-                    .show()
+                .setTitle(R.string.transport_action_usage)
+                .setMessage(R.string.transport_help_text)
+                .setPositiveButton(android.R.string.ok, null)
+                .show()
             return true
         }
         return super.onOptionsItemSelected(item)
@@ -80,14 +80,16 @@ class TransportationDetailsActivity : ProgressActivity<Unit>(R.layout.activity_t
         // save clicked station into db
         recentsDao.insert(Recent(jsonStationResult, RecentsDao.STATIONS))
 
-        disposable.add(TransportController.getDeparturesFromExternal(this, locationID)
+        disposable.add(
+            TransportController.getDeparturesFromExternal(this, locationID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::displayResults) {
                     // something went wrong
                     Utils.log(it)
                     showError(R.string.no_departures_found)
-                })
+                }
+        )
     }
 
     /**

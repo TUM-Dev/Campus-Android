@@ -14,8 +14,8 @@ import java.io.InterruptedIOException
 class CheckErrorInterceptor(private val context: Context) : Interceptor {
 
     private val tikXml = TikXml.Builder()
-            .exceptionOnUnreadXml(false)
-            .build()
+        .exceptionOnUnreadXml(false)
+        .build()
 
     @Throws(InterruptedIOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {

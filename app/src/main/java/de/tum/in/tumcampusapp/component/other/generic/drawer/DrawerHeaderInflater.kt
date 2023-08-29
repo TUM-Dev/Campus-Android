@@ -79,8 +79,12 @@ class DrawerHeaderInflater(
 
         val group = parts[0]
         val personId = parts[1]
-        val url = String.format(Locale.getDefault(),
-            Const.TUM_ONLINE_PROFILE_PICTURE_URL_FORMAT_STRING, group, personId)
+        val url = String.format(
+            Locale.getDefault(),
+            Const.TUM_ONLINE_PROFILE_PICTURE_URL_FORMAT_STRING,
+            group,
+            personId
+        )
 
         val imageView = headerView.findViewById<CircleImageView>(R.id.profileImageView)
         Picasso.get()

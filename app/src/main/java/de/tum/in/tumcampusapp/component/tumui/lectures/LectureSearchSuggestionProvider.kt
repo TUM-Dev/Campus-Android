@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.tumui.lectures
 
 import android.content.SearchRecentSuggestionsProvider
-
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.activity.LecturesPersonalActivity
 
 /**

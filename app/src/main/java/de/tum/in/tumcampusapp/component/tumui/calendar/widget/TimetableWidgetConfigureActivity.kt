@@ -33,8 +33,9 @@ class TimetableWidgetConfigureActivity : AppCompatActivity() {
 
         // Get appWidgetId from intent
         appWidgetId = intent.extras?.getInt(
-                AppWidgetManager.EXTRA_APPWIDGET_ID,
-                AppWidgetManager.INVALID_APPWIDGET_ID) ?: 0
+            AppWidgetManager.EXTRA_APPWIDGET_ID,
+            AppWidgetManager.INVALID_APPWIDGET_ID
+        ) ?: 0
 
         val listViewLectures = findViewById<ListView>(R.id.activity_timetable_lectures)
 

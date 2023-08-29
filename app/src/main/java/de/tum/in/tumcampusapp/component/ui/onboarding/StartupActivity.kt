@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
-import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.app.ActivityCompat.checkSelfPermission
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
@@ -23,6 +22,7 @@ import de.tum.`in`.tumcampusapp.databinding.ActivityStartupBinding
 import de.tum.`in`.tumcampusapp.service.DownloadWorker
 import de.tum.`in`.tumcampusapp.service.StartSyncReceiver
 import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.observe
 import io.reactivex.Flowable
@@ -110,14 +110,14 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
 
         // Start download workers and listen for finalization
         val downloadActions = Flowable
-                .fromCallable(this::performAllWorkerActions)
-                .onErrorReturnItem(Unit)
-                .subscribeOn(Schedulers.io())
+            .fromCallable(this::performAllWorkerActions)
+            .onErrorReturnItem(Unit)
+            .subscribeOn(Schedulers.io())
 
         runOnUiThread {
             LiveDataReactiveStreams
-                    .fromPublisher(downloadActions)
-                    .observe(this) { openMainActivityIfInitializationFinished() }
+                .fromPublisher(downloadActions)
+                .observe(this) { openMainActivityIfInitializationFinished() }
         }
 
         // Start background service and ensure cards are set
@@ -152,11 +152,11 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
      */
     private fun showLocationPermissionRationaleDialog() {
         ThemedAlertDialogBuilder(this)
-                .setMessage(R.string.permission_location_explanation)
-                .setPositiveButton(R.string.ok) { _, _ ->
-                    requestPermissions(this, PERMISSIONS_LOCATION, REQUEST_LOCATION)
-                }
-                .show()
+            .setMessage(R.string.permission_location_explanation)
+            .setPositiveButton(R.string.ok) { _, _ ->
+                requestPermissions(this, PERMISSIONS_LOCATION, REQUEST_LOCATION)
+            }
+            .show()
     }
 
     override fun onRequestPermissionsResult(

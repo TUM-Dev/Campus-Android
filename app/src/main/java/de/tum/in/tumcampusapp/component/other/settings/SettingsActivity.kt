@@ -11,7 +11,8 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.utils.Const
 
-class SettingsActivity : BaseActivity(R.layout.activity_user_preferences),
+class SettingsActivity :
+    BaseActivity(R.layout.activity_user_preferences),
     OnPreferenceStartScreenCallback {
 
     public override fun onCreate(savedInstanceState: Bundle?) {

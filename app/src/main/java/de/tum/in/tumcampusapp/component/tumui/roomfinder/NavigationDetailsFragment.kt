@@ -73,10 +73,11 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
     private suspend fun handleDetailsLoading() {
         viewModel.state.collect { state ->
 
-            if (state.isLoading)
+            if (state.isLoading) {
                 binding.progressIndicator.show()
-            else
+            } else {
                 binding.progressIndicator.hide()
+            }
 
             if (state.navigationDetails != null) {
                 showLocationDetails(state.navigationDetails)

@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.content.ContextCompat
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
@@ -22,6 +21,7 @@ import de.tum.`in`.tumcampusapp.databinding.FragmentCalendarDetailsBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Const.CALENDAR_ID_PARAM
 import de.tum.`in`.tumcampusapp.utils.Const.CALENDAR_SHOWN_IN_CALENDAR_ACTIVITY_PARAM
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.ui.RoundedBottomSheetDialogFragment
 import retrofit2.Call

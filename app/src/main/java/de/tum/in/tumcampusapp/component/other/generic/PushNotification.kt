@@ -44,6 +44,6 @@ abstract class PushNotification(
         }
         Utils.logVerbose("Confirmed notificationId $notificationId")
         TUMCabeClient.getInstance(appContext)
-                .confirm(notificationId)
+            .confirm(notificationId)
     }
 }

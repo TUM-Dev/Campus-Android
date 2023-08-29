@@ -54,7 +54,8 @@ open class CardViewHolder @JvmOverloads constructor(
     }
 
     private fun openCardSettings() {
-        val key = currentCard?.settingsPrefix ?: return
+        val resId = currentCard?.cardType?.showCardPreferenceStringRes ?: return
+        val key = context.getString(resId)
         val intent = SettingsActivity.newIntent(context, key)
         context.startActivity(intent)
     }

@@ -3,7 +3,6 @@ package de.tum.`in`.tumcampusapp.component.ui.tufilm
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.model.Kino
 
 class KinoAdapter internal constructor(

@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 
 class ThemedTimePickerDialog(context: Context, listener: OnTimeSetListener, hourOfDay: Int, minute: Int) :
-        TimePickerDialog(context, listener, hourOfDay, minute, true) {
+    TimePickerDialog(context, listener, hourOfDay, minute, true) {
     override fun show() {
         window?.setBackgroundDrawableResource(R.drawable.rounded_corners_background)
         setOnShowListener {

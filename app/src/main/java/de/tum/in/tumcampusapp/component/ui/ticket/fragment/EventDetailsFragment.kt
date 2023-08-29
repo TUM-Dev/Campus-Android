@@ -8,7 +8,6 @@ import android.provider.CalendarContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -27,6 +26,7 @@ import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Const.KEY_EVENT_ID
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import de.tum.`in`.tumcampusapp.utils.into
 import javax.inject.Inject
 import javax.inject.Provider
@@ -38,8 +38,7 @@ import javax.inject.Provider
 class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private val event: Event by lazy {
-        arguments?.getParcelable<Event>(Const.KEY_EVENT)
-                ?: throw IllegalStateException("No event provided to EventDetailsFragment")
+        arguments?.getParcelable<Event>(Const.KEY_EVENT) ?: throw IllegalStateException("No event provided to EventDetailsFragment")
     }
 
     private val viewModel: EventDetailsViewModel by lazy {
@@ -55,9 +54,9 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         injector.ticketsComponent()
-                .eventId(event.id)
-                .build()
-                .inject(this)
+            .eventId(event.id)
+            .build()
+            .inject(this)
     }
 
     override fun onCreateView(
@@ -66,13 +65,13 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         savedInstanceState: Bundle?
     ): View? {
         val view = LayoutInflater.from(container?.context)
-                .inflate(R.layout.fragment_event_details, container, false)
+            .inflate(R.layout.fragment_event_details, container, false)
 
         binding.swipeRefreshLayout.setOnRefreshListener(this)
         binding.swipeRefreshLayout.setColorSchemeResources(
-                R.color.color_primary,
-                R.color.tum_A100,
-                R.color.tum_A200
+            R.color.color_primary,
+            R.color.tum_A100,
+            R.color.tum_A200
         )
         return view
     }
@@ -92,11 +91,11 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         with(binding) {
             if (url != null) {
                 Picasso.get()
-                        .load(url)
-                        .noPlaceholder()
-                        .into(posterView) {
-                            posterProgressBar.visibility = View.GONE
-                        }
+                    .load(url)
+                    .noPlaceholder()
+                    .into(posterView) {
+                        posterProgressBar.visibility = View.GONE
+                    }
             } else {
                 posterProgressBar.visibility = View.GONE
             }
@@ -133,13 +132,14 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun showTicketCount(status: TicketStatus?) {
         with(binding) {
             EventHelper.showRemainingTickets(
-                    status,
-                    viewModel.isEventBooked(event),
-                    EventHelper.isEventImminent(event),
-                    ticketButton,
-                    remainingTicketsContainer,
-                    remainingTicketsTextView,
-                    getString(R.string.no_tickets_remaining_message))
+                status,
+                viewModel.isEventBooked(event),
+                EventHelper.isEventImminent(event),
+                ticketButton,
+                remainingTicketsContainer,
+                remainingTicketsTextView,
+                getString(R.string.no_tickets_remaining_message)
+            )
 
             swipeRefreshLayout.isRefreshing = false
         }
@@ -196,8 +196,8 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         val context = requireContext()
 
         val calendars = arrayOf(
-                getString(R.string.external_calendar),
-                getString(R.string.tum_calendar)
+            getString(R.string.external_calendar),
+            getString(R.string.tum_calendar)
         )
 
         ThemedAlertDialogBuilder(context)

@@ -15,8 +15,8 @@ class TransportNotificationProvider(context: Context) : NotificationProvider(con
 
     override fun getNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_MVV)
-                .setSmallIcon(R.drawable.ic_notification)
-                .setColor(notificationColorAccent)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setColor(notificationColorAccent)
     }
 
     override fun buildNotification(): AppNotification? {
@@ -28,22 +28,26 @@ class TransportNotificationProvider(context: Context) : NotificationProvider(con
 
         val inboxStyle = NotificationCompat.InboxStyle()
         TransportController
-                .getDeparturesFromExternal(context, station.id)
-                .blockingFirst()
-                .map { "${it.servingLine} (${it.direction}) in ${it.countDown} min" }
-                .forEach { inboxStyle.addLine(it) }
+            .getDeparturesFromExternal(context, station.id)
+            .blockingFirst()
+            .map { "${it.servingLine} (${it.direction}) in ${it.countDown} min" }
+            .forEach { inboxStyle.addLine(it) }
 
         val intent = station.getIntent(context)
         val pendingIntent = PendingIntent.getActivity(
-                context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
         val notification = getNotificationBuilder()
-                .setContentTitle(title)
-                .setContentText(text)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .setStyle(inboxStyle)
-                .build()
+            .setContentTitle(title)
+            .setContentText(text)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .setStyle(inboxStyle)
+            .build()
 
         return InstantNotification(NotificationType.TRANSPORT, 0, notification)
     }

@@ -53,8 +53,8 @@ class KinoDetailsFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity() as BaseActivity).injector
-                .kinoComponent()
-                .inject(this)
+            .kinoComponent()
+            .inject(this)
 
         val factory = ViewModelFactory(viewModelProvider)
         kinoViewModel = ViewModelProvider(this, factory).get(KinoDetailsViewModel::class.java)
@@ -68,8 +68,7 @@ class KinoDetailsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View =
-            inflater.inflate(R.layout.fragment_kinodetails_section, container, false)
+    ): View = inflater.inflate(R.layout.fragment_kinodetails_section, container, false)
 
     override fun onResume() {
         super.onResume()
@@ -124,13 +123,14 @@ class KinoDetailsFragment : Fragment() {
 
         with(binding) {
             EventHelper.showRemainingTickets(
-                    status,
-                    isEventBooked,
-                    isEventImminent,
-                    buyTicketButton,
-                    remainingTicketsContainer,
-                    remainingTicketsTextView,
-                    getString(R.string.no_tickets_remaining_tufilm_message))
+                status,
+                isEventBooked,
+                isEventImminent,
+                buyTicketButton,
+                remainingTicketsContainer,
+                remainingTicketsTextView,
+                getString(R.string.no_tickets_remaining_tufilm_message)
+            )
         }
     }
 
@@ -167,21 +167,19 @@ class KinoDetailsFragment : Fragment() {
         binding.trailerButton.setOnClickListener { showTrailer(kino) }
 
         Picasso.get()
-                .load(kino.cover)
-                .into(object : Target {
-                    override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
-                        binding.kinoCoverPlaceholder.visibility = View.GONE
-                        binding.kinoCover.setImageBitmap(bitmap)
-                    }
-
-                    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-                        binding.kinoCoverProgress.visibility = View.GONE
-                    }
-
-                    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-                        // intentionally left blank
-                    }
-                })
+            .load(kino.cover)
+            .into(object : Target {
+                override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
+                    binding.kinoCoverPlaceholder.visibility = View.GONE
+                    binding.kinoCover.setImageBitmap(bitmap)
+                }
+                override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
+                    binding.kinoCoverProgress.visibility = View.GONE
+                }
+                override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+                    // intentionally left blank
+                }
+            })
     }
 
     private fun setCompoundDrawablesTint(textView: TextView, color: Int) {

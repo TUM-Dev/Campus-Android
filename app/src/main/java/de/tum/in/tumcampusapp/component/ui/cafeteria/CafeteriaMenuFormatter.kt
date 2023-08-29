@@ -63,12 +63,12 @@ class CafeteriaMenuFormatter(private val context: Context) {
         private val SPLIT_ANNOTATIONS_PATTERN = Pattern.compile("\\(([A-Za-z0-9]+),")
 
         private val images = mapOf(
-                "(v)" to R.drawable.meal_vegan,
-                "(f)" to R.drawable.meal_veggie,
-                "(R)" to R.drawable.meal_beef,
-                "(S)" to R.drawable.meal_pork,
-                "(GQB)" to R.drawable.ic_gqb,
-                "(99)" to R.drawable.meal_alcohol
+            "(v)" to R.drawable.meal_vegan,
+            "(f)" to R.drawable.meal_veggie,
+            "(R)" to R.drawable.meal_beef,
+            "(S)" to R.drawable.meal_pork,
+            "(GQB)" to R.drawable.ic_gqb,
+            "(99)" to R.drawable.meal_alcohol
         )
 
         /* TODO Someday replace all of them:

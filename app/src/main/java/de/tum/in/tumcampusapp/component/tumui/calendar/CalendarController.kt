@@ -59,10 +59,10 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
         get() = roomLocationsDao.nextLectureCoordinates?.toGeo()
 
     fun getFromDbBetweenDates(begin: DateTime, end: DateTime) =
-            applyEventColors(calendarDao.getAllBetweenDates(begin, end))
+        applyEventColors(calendarDao.getAllBetweenDates(begin, end))
 
     fun getFromDbNotCancelledBetweenDates(begin: DateTime, end: DateTime) =
-            applyEventColors(calendarDao.getAllNotCancelledBetweenDates(begin, end))
+        applyEventColors(calendarDao.getAllNotCancelledBetweenDates(begin, end))
 
     /**
      * Returns all events for one page in the month-view.
@@ -134,7 +134,7 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
      * @param dayCount The number of days
      * @param widgetId The id of the widget
      * @return List<IntegratedCalendarEvent> List of Events
-    </IntegratedCalendarEvent> */
+     </IntegratedCalendarEvent> */
     fun getNextDaysFromDb(dayCount: Int, widgetId: Int): List<WidgetCalendarItem> {
         val fromDate = DateTime.now()
         val toDate = fromDate.plusDays(dayCount)
@@ -202,8 +202,8 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
         val maxNotificationsToSchedule = NotificationScheduler.maxRemainingAlarms(context) / 2
 
         val notifications = events.filter { it.isFutureEvent }
-                .mapNotNull { it.toNotification(context) }
-                .take(maxNotificationsToSchedule)
+            .mapNotNull { it.toNotification(context) }
+            .take(maxNotificationsToSchedule)
 
         val scheduler = NotificationScheduler(context)
         scheduler.schedule(notifications)
@@ -232,7 +232,7 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
     private fun replaceIntoDb(events: List<Event>) {
         val items = ArrayList<CalendarItem>()
         for (event in events) {
-            if (event.id != null && event.id.isNotEmpty() && event.title.isNotEmpty()) {
+            if (!event.id.isNullOrEmpty() && event.title.isNotEmpty()) {
                 items.add(event.toCalendarItem())
             }
         }

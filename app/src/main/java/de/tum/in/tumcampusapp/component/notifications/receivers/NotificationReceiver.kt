@@ -21,7 +21,7 @@ class NotificationReceiver : BroadcastReceiver() {
         NotificationScheduler.removeActiveAlarm(context, notificationId.toLong())
 
         NotificationManagerCompat
-                .from(context)
-                .notify(notificationId, notification)
+            .from(context)
+            .notify(notificationId, notification)
     }
 }

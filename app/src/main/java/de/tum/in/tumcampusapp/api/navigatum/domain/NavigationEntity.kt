@@ -19,8 +19,11 @@ data class NavigationEntity(
 ) : Serializable {
 
     fun getFormattedName(): String {
-        return if (parsedId == null) removeHighlight(name)
-        else removeHighlight(parsedId!!) + " ➤ " + removeHighlight(name)
+        return if (parsedId == null) {
+            removeHighlight(name)
+        } else {
+            removeHighlight(parsedId!!) + " ➤ " + removeHighlight(name)
+        }
     }
 
     fun getFormattedSubtext(): String {

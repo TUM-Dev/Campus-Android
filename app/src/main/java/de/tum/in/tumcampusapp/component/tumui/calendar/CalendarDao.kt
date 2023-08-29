@@ -16,24 +16,30 @@ interface CalendarDao {
     @get:Query("SELECT c.* FROM calendar c WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend AND status != 'CANCEL' ORDER BY title")
     val currentLectures: List<CalendarItem>
 
-    @get:Query("SELECT c.* " +
+    @get:Query(
+        "SELECT c.* " +
             "FROM calendar c LEFT JOIN room_locations r ON " +
             "c.location=r.title " +
             "WHERE coalesce(r.latitude, '') = '' " +
-            "GROUP BY c.location")
+            "GROUP BY c.location"
+    )
     val lecturesWithoutCoordinates: List<CalendarItem>
 
-    @get:Query("SELECT c.* FROM calendar c JOIN " +
+    @get:Query(
+        "SELECT c.* FROM calendar c JOIN " +
             "(SELECT dtstart AS maxstart FROM calendar WHERE status!='CANCEL' AND datetime('now', 'localtime')<dtstart " +
             "ORDER BY dtstart LIMIT 1) ON status!='CANCEL' AND datetime('now', 'localtime')<dtend AND dtstart<=maxstart " +
-            "ORDER BY dtend, dtstart LIMIT 4")
+            "ORDER BY dtend, dtstart LIMIT 4"
+    )
     val nextCalendarItems: List<CalendarItem>
 
-    @get:Query("SELECT * FROM calendar " +
+    @get:Query(
+        "SELECT * FROM calendar " +
             "WHERE status!='CANCEL' " +
             "AND dtend > datetime('now', 'localtime') " +
             "GROUP BY title, dtstart, dtend " +
-            "ORDER BY dtstart LIMIT 4")
+            "ORDER BY dtstart LIMIT 4"
+    )
     val nextUniqueCalendarItems: List<CalendarItem>
 
     @Query("SELECT c.* FROM calendar c WHERE dtstart LIKE '%' || :date || '%' ORDER BY dtstart ASC")
@@ -42,30 +48,38 @@ interface CalendarDao {
     @Query("SELECT c.* FROM calendar c WHERE dtend BETWEEN :from AND :to " + "ORDER BY dtstart, title, location ASC")
     fun getAllBetweenDates(from: DateTime, to: DateTime): List<CalendarItem>
 
-    @Query("SELECT c.* FROM calendar c WHERE dtend BETWEEN :from AND :to " +
+    @Query(
+        "SELECT c.* FROM calendar c WHERE dtend BETWEEN :from AND :to " +
             "AND STATUS != 'CANCEL'" +
-            "ORDER BY dtstart, title, location ASC")
+            "ORDER BY dtstart, title, location ASC"
+    )
     fun getAllNotCancelledBetweenDates(from: DateTime, to: DateTime): List<CalendarItem>
 
-    @Query("SELECT c.* FROM calendar c WHERE dtend BETWEEN :from AND :to " +
+    @Query(
+        "SELECT c.* FROM calendar c WHERE dtend BETWEEN :from AND :to " +
             "AND STATUS != 'CANCEL'" +
             "AND NOT EXISTS (SELECT * FROM widgets_timetable_blacklist WHERE widget_id = :widgetId" +
             "                AND lecture_title = c.title)" +
-            "ORDER BY dtstart ASC")
+            "ORDER BY dtstart ASC"
+    )
     fun getNextDays(from: DateTime, to: DateTime, widgetId: String): List<CalendarItem>
 
     @Query("SELECT COUNT(*) FROM calendar")
     fun hasLectures(): Boolean
 
-    @Query("SELECT c.* FROM calendar c, widgets_timetable_blacklist " +
+    @Query(
+        "SELECT c.* FROM calendar c, widgets_timetable_blacklist " +
             "WHERE widget_id=:widgetId AND lecture_title=title " +
-            "GROUP BY title")
+            "GROUP BY title"
+    )
     fun getLecturesInBlacklist(widgetId: String): List<CalendarItem>
 
-    @Query("SELECT c.* FROM calendar c " +
+    @Query(
+        "SELECT c.* FROM calendar c " +
             "WHERE NOT EXISTS (SELECT * FROM widgets_timetable_blacklist " +
             "WHERE widget_id=:widgetId AND c.title=lecture_title) " +
-            "GROUP BY c.title")
+            "GROUP BY c.title"
+    )
     fun getLecturesNotInBlacklist(widgetId: String): List<CalendarItem>
 
     @Query("DELETE FROM calendar")
@@ -77,22 +91,26 @@ interface CalendarDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(vararg cal: CalendarItem)
 
-    @Query("SELECT location FROM calendar " +
+    @Query(
+        "SELECT location FROM calendar " +
             "WHERE title = (SELECT title FROM calendar WHERE nr=:id) " +
             "AND dtstart = (SELECT dtstart FROM calendar WHERE nr=:id) " +
             "AND dtend = (SELECT dtend FROM calendar WHERE nr=:id) " +
             "AND status != 'CANCEL' " +
-            "ORDER BY location ASC")
+            "ORDER BY location ASC"
+    )
     fun getNonCancelledLocationsById(id: String): List<String>
 
-    @Query("SELECT * FROM calendar WHERE nr=:id" +
+    @Query(
+        "SELECT * FROM calendar WHERE nr=:id" +
             " UNION " +
             "SELECT * FROM calendar " +
             "WHERE title = (SELECT title FROM calendar WHERE nr=:id) " +
             "AND dtstart = (SELECT dtstart FROM calendar WHERE nr=:id) " +
             "AND dtend = (SELECT dtend FROM calendar WHERE nr=:id) " +
             "AND nr != :id " +
-            "ORDER BY location ASC")
+            "ORDER BY location ASC"
+    )
     fun getCalendarItemsById(id: String): List<CalendarItem>
 
     @Query("SELECT * FROM calendar WHERE nr=:id")
@@ -101,9 +119,11 @@ interface CalendarDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(vararg cal: EventSeriesMapping)
 
-    @Query("SELECT calendar.* FROM calendar " +
+    @Query(
+        "SELECT calendar.* FROM calendar " +
             "LEFT JOIN eventSeriesMappings ON eventSeriesMappings.eventId=calendar.nr " +
-            "WHERE eventSeriesMappings.seriesId=:seriesId")
+            "WHERE eventSeriesMappings.seriesId=:seriesId"
+    )
     fun getCalendarItemsInSeries(seriesId: String): List<CalendarItem>
 
     @Query("SELECT eventSeriesMappings.seriesId FROM eventSeriesMappings WHERE eventSeriesMappings.eventId=:eventId LIMIT 1")

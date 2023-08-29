@@ -17,15 +17,17 @@ import de.tum.`in`.tumcampusapp.utils.Utils
  * Card that prompts the user to login to TUMonline since we don't show the wizard after the first launch anymore.
  * It will be shown until it is swiped away for the first time.
  */
-class LoginPromptCard(context: Context) : Card(CardManager.CARD_LOGIN, context, "card_login") {
+class LoginPromptCard(context: Context) : Card(CardManager.CardTypes.LOGIN, context) {
+
+    private val showLogin = "show_login"
 
     public override fun discard(editor: SharedPreferences.Editor) {
-        Utils.setSetting(context, CardManager.SHOW_LOGIN, false)
+        editor.putBoolean(showLogin, false)
     }
 
     override fun shouldShow(prefs: SharedPreferences): Boolean {
         // show on top as long as user hasn't swiped it away and isn't connected to TUMonline
-        return Utils.getSettingBool(context, CardManager.SHOW_LOGIN, true) &&
+        return prefs.getBoolean(showLogin, true) &&
             Utils.getSetting(context, Const.LRZ_ID, "").isEmpty()
     }
 
