@@ -1,6 +1,5 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket.fragment
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,7 +19,6 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.adapter.EventsAdapter
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.EventType
 import de.tum.`in`.tumcampusapp.databinding.FragmentEventsListBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
-import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.utils.Const.CHAT_MEMBER
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.observeNonNull
@@ -43,14 +41,6 @@ class EventsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private val binding by viewBinding(FragmentEventsListBinding::bind)
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        injector.eventsComponent()
-            .eventType(eventType)
-            .build()
-            .inject(this)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

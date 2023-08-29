@@ -22,7 +22,6 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.payload.TicketStatus
 import de.tum.`in`.tumcampusapp.databinding.FragmentEventDetailsBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
-import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Const.KEY_EVENT_ID
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
@@ -50,14 +49,6 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     lateinit var viewModelProviders: Provider<EventDetailsViewModel>
 
     private val binding by viewBinding(FragmentEventDetailsBinding::bind)
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        injector.ticketsComponent()
-            .eventId(event.id)
-            .build()
-            .inject(this)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
