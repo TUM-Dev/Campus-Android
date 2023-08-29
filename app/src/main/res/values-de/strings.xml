@@ -344,7 +344,6 @@
     <string name="card_login_summary">Erlaubt dir dich mit TUMOnline zu verbinden</string>
     <string name="card_news_summary">Schlägt ausgewählte News vor</string>
     <string name="card_chat_summary">Benachrichtigt dich über neue Nachrichten</string>
-    <string name="card_events_summary">Zeigt anstehenden Events an</string>
     <string name="card_update_summary">Gibt eine Übersicht über neue Features</string>
     <string name="open_card_settings">Karte anpassen</string>
     <string name="always_hide_card">Karte immer ausblenden</string>
