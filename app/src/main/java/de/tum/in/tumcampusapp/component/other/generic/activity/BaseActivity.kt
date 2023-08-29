@@ -1,18 +1,18 @@
 package de.tum.`in`.tumcampusapp.component.other.generic.activity
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.NavUtils
+import androidx.preference.PreferenceManager
+import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.di.AppComponent
 import de.tum.`in`.tumcampusapp.di.app
 import java.util.Locale
-import android.content.pm.PackageManager
-import androidx.appcompat.widget.Toolbar
-import androidx.preference.PreferenceManager
-import de.tum.`in`.tumcampusapp.R
 
 abstract class BaseActivity(
     @LayoutRes private val layoutId: Int

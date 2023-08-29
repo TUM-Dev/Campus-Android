@@ -47,11 +47,11 @@ class NextLectureCard(context: Context) : Card(CardManager.CardTypes.NEXT_LECTUR
     fun setLectures(calendarItems: List<CalendarItem>) {
         calendarItems.mapTo(lectures) { calendarItem ->
             CardCalendarItem(
-                    id = calendarItem.nr,
-                    start = calendarItem.dtstart,
-                    end = calendarItem.dtend,
-                    title = calendarItem.getFormattedTitle(),
-                    locations = calendarController.getLocationsForEvent(calendarItem.nr)
+                id = calendarItem.nr,
+                start = calendarItem.dtstart,
+                end = calendarItem.dtend,
+                title = calendarItem.getFormattedTitle(),
+                locations = calendarController.getLocationsForEvent(calendarItem.nr)
             )
         }
     }
@@ -78,6 +78,7 @@ class NextLectureCard(context: Context) : Card(CardManager.CardTypes.NEXT_LECTUR
 
     companion object {
         private const val NEXT_LECTURE_DATE = "next_date"
+
         @JvmStatic
         fun inflateViewHolder(parent: ViewGroup, interactionListener: CardInteractionListener): CardViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.card_next_lecture_item, parent, false)

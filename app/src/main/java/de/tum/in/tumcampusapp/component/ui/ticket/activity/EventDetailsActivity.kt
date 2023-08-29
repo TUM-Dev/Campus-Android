@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket.activity
 
 import android.os.Bundle
-
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.fragment.EventDetailsFragment
@@ -19,8 +18,8 @@ class EventDetailsActivity : BaseActivity(R.layout.activity_event_details) {
         super.onCreate(savedInstanceState)
         val event = intent.getParcelableExtra<Event>(Const.KEY_EVENT)
         supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragment_container, EventDetailsFragment.newInstance(event!!))
-                .commit()
+            .beginTransaction()
+            .replace(R.id.fragment_container, EventDetailsFragment.newInstance(event!!))
+            .commit()
     }
 }

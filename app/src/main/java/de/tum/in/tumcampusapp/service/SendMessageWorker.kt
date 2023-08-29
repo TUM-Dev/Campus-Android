@@ -1,9 +1,15 @@
 package de.tum.`in`.tumcampusapp.service
 
 import android.content.Context
-import androidx.work.*
-import androidx.work.ListenableWorker.Result.*
+import androidx.work.Constraints
+import androidx.work.ListenableWorker
 import androidx.work.NetworkType.CONNECTED
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequest
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkRequest
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import de.tum.`in`.tumcampusapp.api.app.AuthenticationManager
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.app.exception.NoPrivateKey
@@ -18,7 +24,7 @@ import java.util.concurrent.TimeUnit
  * Service used to send chat messages.
  */
 class SendMessageWorker(context: Context, workerParams: WorkerParameters) :
-        Worker(context, workerParams) {
+    Worker(context, workerParams) {
 
     private val tcaDb by lazy { TcaDb.getInstance(applicationContext) }
     private val tumCabeClient by lazy { TUMCabeClient.getInstance(applicationContext) }
@@ -33,17 +39,17 @@ class SendMessageWorker(context: Context, workerParams: WorkerParameters) :
 
         return try {
             viewModel.getUnsent()
-                    .asSequence()
-                    .onEach { it.signature = authenticationManager.sign(it.text) }
-                    .forEach { viewModel.sendMessage(it.room, it, applicationContext) }
-            success()
+                .asSequence()
+                .onEach { it.signature = authenticationManager.sign(it.text) }
+                .forEach { viewModel.sendMessage(it.room, it, applicationContext) }
+            ListenableWorker.Result.success()
         } catch (noPrivateKey: NoPrivateKey) {
             // Retrying doesn't make any sense
-            failure()
+            ListenableWorker.Result.failure()
         } catch (e: Exception) {
             Utils.log(e)
             // Maybe the server is currently busy, but we really want to send the messages
-            retry()
+            ListenableWorker.Result.retry()
         }
     }
 
@@ -51,20 +57,20 @@ class SendMessageWorker(context: Context, workerParams: WorkerParameters) :
         @JvmStatic
         fun getWorkRequest(): WorkRequest {
             val constraints = Constraints.Builder()
-                    .setRequiredNetworkType(CONNECTED)
-                    .build()
+                .setRequiredNetworkType(CONNECTED)
+                .build()
             return OneTimeWorkRequestBuilder<SendMessageWorker>()
-                    .setConstraints(constraints)
-                    .build()
+                .setConstraints(constraints)
+                .build()
         }
 
         fun getPeriodicWorkRequest(): PeriodicWorkRequest {
             val constraints = Constraints.Builder()
-                    .setRequiredNetworkType(CONNECTED)
-                    .build()
+                .setRequiredNetworkType(CONNECTED)
+                .build()
             return PeriodicWorkRequestBuilder<SendMessageWorker>(3, TimeUnit.HOURS)
-                    .setConstraints(constraints)
-                    .build()
+                .setConstraints(constraints)
+                .build()
         }
     }
 }

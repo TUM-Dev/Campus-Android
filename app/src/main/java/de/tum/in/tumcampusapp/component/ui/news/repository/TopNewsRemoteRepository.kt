@@ -19,8 +19,8 @@ class TopNewsRemoteRepository @Inject constructor(
     @SuppressLint("CheckResult")
     fun fetchNewsAlert() {
         tumCabeClient.newsAlert
-                .subscribeOn(Schedulers.io())
-                .subscribe(this::onTopNewsDownloaded, Utils::log)
+            .subscribeOn(Schedulers.io())
+            .subscribe(this::onTopNewsDownloaded, Utils::log)
     }
 
     private fun onTopNewsDownloaded(newsAlert: NewsAlert) {

@@ -33,10 +33,9 @@ class MensaRemoteViewFactory(private val applicationContext: Context) : RemoteVi
         val remoteViews = RemoteViews(applicationContext.packageName, R.layout.mensa_widget_item)
 
         val menuContent = PATTERN.matcher(name)
-                .replaceAll("")
-                .trim { it <= ' ' }
-        val menuText = applicationContext.getString(
-                R.string.menu_with_long_type_format_string, menuContent, typeLong)
+            .replaceAll("")
+            .trim { it <= ' ' }
+        val menuText = applicationContext.getString(R.string.menu_with_long_type_format_string, menuContent, typeLong)
         remoteViews.setTextViewText(R.id.menu_content, menuText)
 
         CafeteriaPrices.getPrice(applicationContext, typeLong)?.let {

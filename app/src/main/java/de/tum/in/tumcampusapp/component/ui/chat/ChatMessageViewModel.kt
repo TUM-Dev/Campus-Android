@@ -41,10 +41,10 @@ class ChatMessageViewModel(
         verification: TUMCabeVerification
     ): Observable<List<ChatMessage>> {
         return remoteRepository
-                .getMessages(room.id, messageId, verification)
-                .subscribeOn(Schedulers.io())
-                .doOnNext { localRepository.replaceMessages(it) }
-                .observeOn(AndroidSchedulers.mainThread())
+            .getMessages(room.id, messageId, verification)
+            .subscribeOn(Schedulers.io())
+            .doOnNext { localRepository.replaceMessages(it) }
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     fun getNewMessages(
@@ -52,10 +52,10 @@ class ChatMessageViewModel(
         verification: TUMCabeVerification
     ): Observable<List<ChatMessage>> {
         return remoteRepository
-                .getNewMessages(room.id, verification)
-                .subscribeOn(Schedulers.io())
-                .doOnNext { localRepository.replaceMessages(it) }
-                .observeOn(AndroidSchedulers.mainThread())
+            .getNewMessages(room.id, verification)
+            .subscribeOn(Schedulers.io())
+            .doOnNext { localRepository.replaceMessages(it) }
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     fun sendMessage(roomId: Int, chatMessage: ChatMessage, context: Context): Disposable {
@@ -63,8 +63,9 @@ class ChatMessageViewModel(
         val verification = TUMCabeVerification.create(context, chatMessage)
 
         return remoteRepository.sendMessage(roomId, verification)
-                .subscribeOn(Schedulers.io())
-                .subscribe({ message ->
+            .subscribeOn(Schedulers.io())
+            .subscribe(
+                { message ->
                     message.sendingStatus = ChatMessage.STATUS_SENT
                     localRepository.replaceMessage(message)
                     localRepository.removeUnsent(chatMessage)
@@ -75,12 +76,14 @@ class ChatMessageViewModel(
                         putExtra(Const.FCM_CHAT, fcmChat)
                     }
                     broadcastManager.sendBroadcast(intent)
-                }, { t ->
+                },
+                { t ->
                     Utils.logWithTag("ChatMessageViewModel", t.message ?: "unknown")
                     chatMessage.sendingStatus = ChatMessage.STATUS_ERROR
                     localRepository.replaceMessage(chatMessage)
                     val intent = Intent(Const.CHAT_BROADCAST_NAME)
                     broadcastManager.sendBroadcast(intent)
-                })
+                }
+            )
     }
 }

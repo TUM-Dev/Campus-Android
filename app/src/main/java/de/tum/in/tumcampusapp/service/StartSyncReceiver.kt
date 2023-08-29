@@ -32,8 +32,11 @@ class StartSyncReceiver : BroadcastReceiver() {
 
         fun startSendMessage(context: Context) {
             WorkManager.getInstance(context)
-                    .enqueueUniquePeriodicWork(
-                            UNIQUE_SEND_MESSAGE, KEEP, SendMessageWorker.getPeriodicWorkRequest())
+                .enqueueUniquePeriodicWork(
+                    UNIQUE_SEND_MESSAGE,
+                    KEEP,
+                    SendMessageWorker.getPeriodicWorkRequest()
+                )
         }
 
         /**
@@ -45,8 +48,11 @@ class StartSyncReceiver : BroadcastReceiver() {
                 return
             }
             WorkManager.getInstance(context)
-                    .enqueueUniquePeriodicWork(UNIQUE_BACKGROUND, KEEP,
-                            BackgroundWorker.getWorkRequest())
+                .enqueueUniquePeriodicWork(
+                    UNIQUE_BACKGROUND,
+                    KEEP,
+                    BackgroundWorker.getWorkRequest()
+                )
         }
 
         /**

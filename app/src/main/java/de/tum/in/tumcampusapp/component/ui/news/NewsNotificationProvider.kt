@@ -19,10 +19,10 @@ class NewsNotificationProvider(
 
     override fun getNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
-                .setSmallIcon(R.drawable.ic_notification)
-                .setGroupSummary(true)
-                .setGroup(GROUP_KEY_NEWS)
-                .setColor(notificationColorAccent)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setGroupSummary(true)
+            .setGroup(GROUP_KEY_NEWS)
+            .setColor(notificationColorAccent)
     }
 
     override fun buildNotification(): AppNotification {
@@ -34,14 +34,18 @@ class NewsNotificationProvider(
 
         val intent = Intent(context, NewsActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(
-                context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
         val notification = getNotificationBuilder()
-                .setContentTitle(summaryTitle)
-                .setContentText(summaryText)
-                .setStyle(inboxStyle)
-                .setContentIntent(pendingIntent)
-                .build()
+            .setContentTitle(summaryTitle)
+            .setContentText(summaryText)
+            .setStyle(inboxStyle)
+            .setContentIntent(pendingIntent)
+            .build()
 
         // We can pass 0 as the notification ID because only one notification at a time
         // will be active

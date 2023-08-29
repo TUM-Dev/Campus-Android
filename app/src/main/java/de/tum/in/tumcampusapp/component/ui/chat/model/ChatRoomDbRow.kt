@@ -24,9 +24,17 @@ data class ChatRoomDbRow(
 
     companion object {
         fun fromLecture(lecture: Lecture): ChatRoomDbRow {
-            return ChatRoomDbRow(-1, lecture.title, lecture.semesterName,
-                    lecture.semesterId, -1, lecture.lectureId.toInt(),
-                    lecture.lecturers ?: "", 0, -1)
+            return ChatRoomDbRow(
+                -1,
+                lecture.title,
+                lecture.semesterName,
+                lecture.semesterId,
+                -1,
+                lecture.lectureId.toInt(),
+                lecture.lecturers ?: "",
+                0,
+                -1
+            )
         }
     }
 }

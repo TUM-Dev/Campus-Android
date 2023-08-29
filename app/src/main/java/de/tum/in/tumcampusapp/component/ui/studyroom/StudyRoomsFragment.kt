@@ -14,10 +14,12 @@ import de.tum.`in`.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup
 import de.tum.`in`.tumcampusapp.databinding.FragmentStudyRoomsBinding
 import org.jetbrains.anko.support.v4.runOnUiThread
 
-class StudyRoomsFragment : FragmentForAccessingTumCabe<List<StudyRoomGroup>>(
-    R.layout.fragment_study_rooms,
-    R.string.study_rooms
-), AdapterView.OnItemSelectedListener {
+class StudyRoomsFragment :
+    FragmentForAccessingTumCabe<List<StudyRoomGroup>>(
+        R.layout.fragment_study_rooms,
+        R.string.study_rooms
+    ),
+    AdapterView.OnItemSelectedListener {
 
     private val sectionsPagerAdapter by lazy { StudyRoomsPagerAdapter(childFragmentManager) }
     private val studyRoomGroupManager by lazy { StudyRoomGroupManager(requireContext()) }

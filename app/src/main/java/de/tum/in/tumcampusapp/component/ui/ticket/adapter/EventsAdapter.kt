@@ -42,7 +42,7 @@ class EventsAdapter(private val mContext: Context) : RecyclerView.Adapter<CardVi
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
         if (viewType == CARD_INFO) {
             val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.card_events_info, parent, false)
+                .inflate(R.layout.card_events_info, parent, false)
             return CardViewHolder(view)
         }
 
@@ -62,7 +62,9 @@ class EventsAdapter(private val mContext: Context) : RecyclerView.Adapter<CardVi
         }
         return if ((item as Event).kino == -1) {
             CARD_HORIZONTAL
-        } else CARD_VERTICAL
+        } else {
+            CARD_VERTICAL
+        }
     }
 
     override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
@@ -105,15 +107,16 @@ class EventsAdapter(private val mContext: Context) : RecyclerView.Adapter<CardVi
         private var ticketButton: MaterialButton = view.findViewById(R.id.ticketButton)
 
         fun bind(event: Event, ticketCount: Int) {
-
             optionsButtonGroup.isVisible = showOptionsButton
 
             val imageUrl = event.imageUrl
-            val showImage = imageUrl != null && imageUrl.isNotEmpty()
+            val showImage = !imageUrl.isNullOrEmpty()
             if (showImage) {
                 Picasso.get()
-                        .load(imageUrl)
-                        .into(imageView, object : Callback {
+                    .load(imageUrl)
+                    .into(
+                        imageView,
+                        object : Callback {
                             override fun onSuccess() {
                                 progressBar.visibility = GONE
                             }
@@ -122,7 +125,8 @@ class EventsAdapter(private val mContext: Context) : RecyclerView.Adapter<CardVi
                                 Utils.log(e)
                                 progressBar.visibility = GONE
                             }
-                        })
+                        }
+                    )
             } else {
                 progressBar.visibility = GONE
                 imageView.visibility = GONE
@@ -136,7 +140,7 @@ class EventsAdapter(private val mContext: Context) : RecyclerView.Adapter<CardVi
                 return
             }
             ticketButton.text = itemView.context.resources
-                    .getQuantityString(R.plurals.tickets, ticketCount, ticketCount)
+                .getQuantityString(R.plurals.tickets, ticketCount, ticketCount)
             ticketButton.setOnClickListener {
                 val context = itemView.context
                 val intent = Intent(context, ShowTicketActivity::class.java)

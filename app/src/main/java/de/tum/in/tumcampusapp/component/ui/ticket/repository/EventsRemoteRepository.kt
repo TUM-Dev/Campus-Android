@@ -35,8 +35,8 @@ class EventsRemoteRepository @Inject constructor(
     @SuppressLint("CheckResult")
     private fun fetchAndStoreEvents() {
         fetchEvents()
-                .subscribeOn(Schedulers.io())
-                .subscribe(eventsLocalRepository::storeEvents, Utils::log)
+            .subscribeOn(Schedulers.io())
+            .subscribe(eventsLocalRepository::storeEvents, Utils::log)
     }
 
     @SuppressLint("CheckResult")
@@ -44,12 +44,12 @@ class EventsRemoteRepository @Inject constructor(
         val tickets = ticketsRemoteRepository.fetchTickets().share()
 
         tickets.flatMapCompletable { storeTickets(it) }
-                .onErrorComplete()
-                .subscribe()
+            .onErrorComplete()
+            .subscribe()
 
         tickets.flatMapCompletable { ticketsRemoteRepository.fetchTicketTypesForTickets(it) }
-                .onErrorComplete()
-                .subscribe()
+            .onErrorComplete()
+            .subscribe()
     }
 
     private fun storeTickets(tickets: List<Ticket>): Completable {
@@ -65,6 +65,6 @@ class EventsRemoteRepository @Inject constructor(
 
     fun fetchTicketStats(eventId: Int): Single<TicketStatus> {
         return tumCabeClient.fetchTicketStats(eventId)
-                .map { it.reduceRight { s, a -> TicketStatus(-1, a.contingent + s.contingent, a.sold + s.sold) } }
+            .map { it.reduceRight { s, a -> TicketStatus(-1, a.contingent + s.contingent, a.sold + s.sold) } }
     }
 }

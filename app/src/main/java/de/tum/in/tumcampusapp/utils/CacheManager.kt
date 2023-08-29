@@ -26,20 +26,19 @@ class CacheManager @Inject constructor(private val context: Context) {
 
     private fun syncCalendar() {
         TUMOnlineClient
-                .getInstance(context)
-                .getCalendar(CacheControl.USE_CACHE)
-                .enqueue(object : Callback<EventsResponse> {
-                    override fun onResponse(call: Call<EventsResponse>, response: Response<EventsResponse>) {
-                        val eventsResponse = response.body() ?: return
-                        val events = eventsResponse.events ?: return
-                        CalendarController(context).importCalendar(events)
-                        loadRoomLocations()
-                    }
-
-                    override fun onFailure(call: Call<EventsResponse>, t: Throwable) {
-                        Utils.log(t, "Error while loading calendar in CacheManager")
-                    }
-                })
+            .getInstance(context)
+            .getCalendar(CacheControl.USE_CACHE)
+            .enqueue(object : Callback<EventsResponse> {
+                override fun onResponse(call: Call<EventsResponse>, response: Response<EventsResponse>) {
+                    val eventsResponse = response.body() ?: return
+                    val events = eventsResponse.events ?: return
+                    CalendarController(context).importCalendar(events)
+                    loadRoomLocations()
+                }
+                override fun onFailure(call: Call<EventsResponse>, t: Throwable) {
+                    Utils.log(t, "Error while loading calendar in CacheManager")
+                }
+            })
     }
 
     private fun loadRoomLocations() {

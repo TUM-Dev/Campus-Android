@@ -1,11 +1,11 @@
 package de.tum.`in`.tumcampusapp.component.ui.news.model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.RoomWarnings
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.RoomWarnings
 import com.google.gson.annotations.SerializedName
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoActivity
 import de.tum.`in`.tumcampusapp.utils.Const

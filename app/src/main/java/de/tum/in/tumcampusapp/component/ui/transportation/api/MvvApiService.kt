@@ -41,7 +41,8 @@ interface MvvApiService {
      * Get all departures for a station.
      * @param stationId Station ID, station name might or might not work
      */
-    @GET("XSLT_DM_REQUEST?outputFormat=JSON" +
+    @GET(
+        "XSLT_DM_REQUEST?outputFormat=JSON" +
             "&stateless=1" +
             "&coordOutputFormat=WGS84" +
             "&type_dm=stop" +
@@ -49,7 +50,8 @@ interface MvvApiService {
             "&ptOptionsActive=1" +
             "&mergeDep=1" +
             "&useAllStops=1" +
-            "&mode=direct")
+            "&mode=direct"
+    )
     fun getDepartures(
         @Query("name_dm") stationId: String,
         @Query("language") language: String = Locale.getDefault().language
@@ -59,7 +61,8 @@ interface MvvApiService {
      * Find stations by station name prefix
      * @param namePrefix Name prefix
      */
-    @GET("XML_STOPFINDER_REQUEST?outputFormat=JSON" +
+    @GET(
+        "XML_STOPFINDER_REQUEST?outputFormat=JSON" +
             "&stateless=1" +
             "&coordOutputFormat=WGS84" +
             "&locationServerActive=1" +
@@ -67,7 +70,8 @@ interface MvvApiService {
             "&anyObjFilter_sf=126" +
             "&reducedAnyPostcodeObjFilter_sf=64" +
             "&reducedAnyTooManyObjFilter_sf=2" +
-            "&useHouseNumberList=true")
+            "&useHouseNumberList=true"
+    )
     fun getStations(
         @Query("name_sf") namePrefix: String,
         @Query("anyMaxSizeHitList") maxResults: Int = 10,

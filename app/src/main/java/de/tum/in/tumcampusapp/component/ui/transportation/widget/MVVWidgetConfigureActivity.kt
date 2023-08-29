@@ -5,11 +5,11 @@ import android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_ID
 import android.appwidget.AppWidgetManager.INVALID_APPWIDGET_ID
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.content.ContextCompat
 import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Switch
+import androidx.core.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.general.RecentsDao
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForSearching
@@ -25,7 +25,10 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
-        R.layout.activity_mvv_widget_configure, MVVStationSuggestionProvider.AUTHORITY, 3) {
+    R.layout.activity_mvv_widget_configure,
+    MVVStationSuggestionProvider.AUTHORITY,
+    3
+) {
 
     private var appWidgetId: Int = 0
     private lateinit var listViewResults: ListView
@@ -53,7 +56,7 @@ class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
 
         // Get appWidgetId from intent
         appWidgetId = intent.extras?.getInt(EXTRA_APPWIDGET_ID, INVALID_APPWIDGET_ID)
-                ?: INVALID_APPWIDGET_ID
+            ?: INVALID_APPWIDGET_ID
 
         val controller = TransportController(this)
         widgetDepartures = controller.getWidget(appWidgetId)
@@ -98,7 +101,8 @@ class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
     }
 
     override fun onStartSearch(query: String) {
-        disposable.add(TransportController.getStationsFromExternal(this, query)
+        disposable.add(
+            TransportController.getStationsFromExternal(this, query)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::displayStations) {
@@ -106,7 +110,8 @@ class MVVWidgetConfigureActivity : ActivityForSearching<Unit>(
                     Utils.showToast(this, R.string.something_wrong)
                     Utils.log(it)
                     onStartSearch()
-                })
+                }
+        )
     }
 
     private fun displayStations(stations: List<StationResult>) {

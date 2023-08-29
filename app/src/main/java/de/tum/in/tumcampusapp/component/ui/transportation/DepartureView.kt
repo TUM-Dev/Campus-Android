@@ -13,7 +13,9 @@ import android.widget.LinearLayout
 import android.widget.TextSwitcher
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.*
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.utils.Utils
 import org.joda.time.DateTime
@@ -111,7 +113,6 @@ class DepartureView
         val departureOffset = Seconds.secondsBetween(DateTime.now(), departureTime ?: DateTime.now()).seconds
 
         if (departureOffset > 0) {
-
             val hours = departureOffset / ONE_HOUR_IN_SECONDS
             val minutes = departureOffset / ONE_MINUTE_IN_SECONDS % MINUTES_PER_HOUR
             val seconds = departureOffset % ONE_MINUTE_IN_SECONDS
@@ -133,11 +134,11 @@ class DepartureView
 
     private fun animateOut() {
         valueAnimator = ValueAnimator.ofFloat(0.0f, 1.0f)
-                .setDuration(500).apply {
-                    addUpdateListener(SlideOutAnimator())
-                    interpolator = AccelerateInterpolator()
-                    start()
-                }
+            .setDuration(500).apply {
+                addUpdateListener(SlideOutAnimator())
+                interpolator = AccelerateInterpolator()
+                start()
+            }
     }
 
     override fun onStop(owner: LifecycleOwner) {
@@ -166,7 +167,6 @@ class DepartureView
     }
 
     companion object {
-
         private const val ONE_HOUR_IN_SECONDS = 3600
         private const val MINUTES_PER_HOUR = 60
         private const val ONE_MINUTE_IN_SECONDS = 60

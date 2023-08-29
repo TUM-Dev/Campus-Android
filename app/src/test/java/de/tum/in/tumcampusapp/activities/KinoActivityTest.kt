@@ -103,20 +103,20 @@ class KinoActivityTest {
 
     companion object {
         private val KINO = Kino(
-                "123",
-                "Deadpool 2",
-                "2018",
-                "137 min",
-                "Comedy",
-                "Someone",
-                "Ryan Reynolds and others",
-                "The best",
-                "I dunno stuff happens",
-                "",
-                null,
-                DateTime.now(),
-                DateTime.now(),
-                ""
+            "123",
+            "Deadpool 2",
+            "2018",
+            "137 min",
+            "Comedy",
+            "Someone",
+            "Ryan Reynolds and others",
+            "The best",
+            "I dunno stuff happens",
+            "",
+            null,
+            DateTime.now(),
+            DateTime.now(),
+            ""
         )
     }
 }

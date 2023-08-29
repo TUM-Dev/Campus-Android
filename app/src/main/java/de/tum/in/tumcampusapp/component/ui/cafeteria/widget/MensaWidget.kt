@@ -24,7 +24,6 @@ import org.joda.time.format.DateTimeFormat
 class MensaWidget : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
-
         val localRepository = CafeteriaLocalRepository(TcaDb.getInstance(context))
         val mensaManager = CafeteriaManager(context)
 

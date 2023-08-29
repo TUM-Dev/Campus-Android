@@ -6,7 +6,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 class Migration2to3 : Migration(2, 3) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("DROP TABLE events")
-        database.execSQL("CREATE TABLE IF NOT EXISTS `events` " +
+        database.execSQL(
+            "CREATE TABLE IF NOT EXISTS `events` " +
                 "(`id` INTEGER NOT NULL, " +
                 "`image_url` TEXT, " +
                 "`title` TEXT NOT NULL, " +
@@ -18,6 +19,7 @@ class Migration2to3 : Migration(2, 3) {
                 "`dismissed` INTEGER NOT NULL, " +
                 "`kino` INTEGER NOT NULL, " +
                 "`news` INTEGER NOT NULL, " +
-                "PRIMARY KEY(`id`))")
+                "PRIMARY KEY(`id`))"
+        )
     }
 }

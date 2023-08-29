@@ -17,7 +17,7 @@ class PersonContactItemsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.person_contact_item, parent, false)
+            .inflate(R.layout.person_contact_item, parent, false)
         return ViewHolder(view)
     }
 

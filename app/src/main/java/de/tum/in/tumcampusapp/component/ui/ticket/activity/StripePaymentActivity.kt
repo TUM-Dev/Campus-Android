@@ -11,9 +11,12 @@ import android.view.View
 import android.view.autofill.AutofillManager
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.view.isVisible
-import com.stripe.android.*
+import com.stripe.android.CustomerSession
+import com.stripe.android.PaymentConfiguration
+import com.stripe.android.PaymentSession
+import com.stripe.android.PaymentSessionConfig
+import com.stripe.android.PaymentSessionData
 import com.stripe.android.model.Source
 import com.stripe.android.model.SourceCardData
 import com.stripe.android.view.PaymentMethodsActivity
@@ -27,6 +30,7 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepos
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.databinding.ActivityPaymentStripeBinding
 import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import de.tum.`in`.tumcampusapp.utils.Utils
 import retrofit2.Call
 import retrofit2.Callback
@@ -62,10 +66,11 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
         val stripePublishableKey = intent.getStringExtra(Const.KEY_STRIPE_API_PUBLISHABLE_KEY)
 
         if (ticketIds == null || termsOfServiceLink == null ||
-                ticketIds.isEmpty() ||
-                ticketPrice == null ||
-                termsOfServiceLink.isEmpty() ||
-                stripePublishableKey == null) {
+            ticketIds.isEmpty() ||
+            ticketPrice == null ||
+            termsOfServiceLink.isEmpty() ||
+            stripePublishableKey == null
+        ) {
             Utils.showToast(this, R.string.error_something_wrong)
             finish()
             return
@@ -121,9 +126,11 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
     private fun updateBuyButton() {
         with(binding) {
             val hasCardholder = cardholderEditText.text.toString().isNotEmpty()
-            val enabled = (hasCardholder &&
+            val enabled = (
+                hasCardholder &&
                     didSelectPaymentMethod &&
-                    termsOfServiceCheckBox.isChecked)
+                    termsOfServiceCheckBox.isChecked
+                )
             val alpha = if (enabled) 1.0f else 0.5f
 
             completePurchaseButton.isEnabled = enabled
@@ -143,15 +150,19 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
             }
 
             TUMCabeClient
-                    .getInstance(this)
-                    .purchaseTicketStripe(this, ticketIds,
-                            methodId, cardholder, object : Callback<List<Ticket>> {
+                .getInstance(this)
+                .purchaseTicketStripe(
+                    this,
+                    ticketIds,
+                    methodId,
+                    cardholder,
+                    object : Callback<List<Ticket>> {
                         override fun onResponse(
                             call: Call<List<Ticket>>,
                             response: Response<List<Ticket>>
                         ) {
                             val tickets = response.body()
-                            if (tickets != null && tickets.isNotEmpty()) {
+                            if (!tickets.isNullOrEmpty()) {
                                 handleTicketPurchaseSuccess(tickets)
                             } else {
                                 handleTicketPurchaseFailure()
@@ -162,7 +173,8 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
                             Utils.log(t)
                             handleTicketPurchaseFailure()
                         }
-                    })
+                    }
+                )
         } catch (e: NoPrivateKey) {
             Utils.log(e)
             handleTicketPurchaseFailure()
@@ -194,12 +206,13 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
 
     private fun showError(message: String) {
         ThemedAlertDialogBuilder(this)
-                .setTitle(getString(R.string.error))
-                .setMessage(message)
-                .setPositiveButton(R.string.ok, null)
-                .show()
+            .setTitle(getString(R.string.error))
+            .setMessage(message)
+            .setPositiveButton(R.string.ok, null)
+            .show()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (data == null) {
@@ -233,19 +246,21 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
     }
 
     private fun initCustomerSession() {
-        CustomerSession.initCustomerSession(TicketEphemeralKeyProvider(this) { string ->
-            if (string.startsWith("Error: ")) {
-                showError(string)
-                finish()
-            } else {
-                initPaymentSession()
+        CustomerSession.initCustomerSession(
+            TicketEphemeralKeyProvider(this) { string ->
+                if (string.startsWith("Error: ")) {
+                    showError(string)
+                    finish()
+                } else {
+                    initPaymentSession()
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    requestAutofillIfEmptyCardholder()
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        requestAutofillIfEmptyCardholder()
+                    }
+                    showLoading(false)
                 }
-                showLoading(false)
             }
-        })
+        )
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -264,30 +279,33 @@ class StripePaymentActivity : BaseActivity(R.layout.activity_payment_stripe) {
 
     private fun initPaymentSession() {
         val config = PaymentSessionConfig.Builder()
-                .setShippingMethodsRequired(false)
-                .setShippingInfoRequired(false)
-                .build()
+            .setShippingMethodsRequired(false)
+            .setShippingInfoRequired(false)
+            .build()
 
         paymentSession = PaymentSession(this)
-        paymentSession?.init(object : PaymentSession.PaymentSessionListener {
+        paymentSession?.init(
+            object : PaymentSession.PaymentSessionListener {
 
-            override fun onCommunicatingStateChanged(isCommunicating: Boolean) {
-                with(binding.loadingLayoutBinding) {
-                    loadingLayout.isVisible = isCommunicating
-                    TransitionManager.beginDelayedTransition(loadingLayout)
+                override fun onCommunicatingStateChanged(isCommunicating: Boolean) {
+                    with(binding.loadingLayoutBinding) {
+                        loadingLayout.isVisible = isCommunicating
+                        TransitionManager.beginDelayedTransition(loadingLayout)
+                    }
                 }
-            }
 
-            override fun onError(errorCode: Int, errorMessage: String?) {
-                Utils.log("Error: ${errorMessage ?: "Unknown"}")
-                showError(getString(R.string.customersession_init_failed))
-            }
+                override fun onError(errorCode: Int, errorMessage: String?) {
+                    Utils.log("Error: ${errorMessage ?: "Unknown"}")
+                    showError(getString(R.string.customersession_init_failed))
+                }
 
-            override fun onPaymentSessionDataChanged(data: PaymentSessionData) {
-                updateBuyButton()
-                binding.selectPaymentMethodSwitcher.isEnabled = true
-            }
-        }, config)
+                override fun onPaymentSessionDataChanged(data: PaymentSessionData) {
+                    updateBuyButton()
+                    binding.selectPaymentMethodSwitcher.isEnabled = true
+                }
+            },
+            config
+        )
     }
 
     private fun buildCardString(data: SourceCardData) = getString(R.string.credit_card_format_string, data.last4)

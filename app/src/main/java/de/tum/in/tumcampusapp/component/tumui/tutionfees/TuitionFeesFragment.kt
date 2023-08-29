@@ -62,7 +62,8 @@ class TuitionFeesFragment : FragmentForAccessingTumOnline<TuitionList>(
 
             if (tuition.isPaid) {
                 amountTextView.setTextColor(
-                        ContextCompat.getColor(requireContext(), R.color.sections_green))
+                    ContextCompat.getColor(requireContext(), R.color.sections_green)
+                )
             } else {
                 // check if the deadline is less than a week from now
                 val nextWeek = DateTime().plusWeeks(1)

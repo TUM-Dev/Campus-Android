@@ -1,10 +1,10 @@
 package de.tum.`in`.tumcampusapp.component.ui.studyroom
 
-import com.google.android.material.button.MaterialButton
-import androidx.cardview.widget.CardView
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import de.tum.`in`.tumcampusapp.R
 
 class StudyRoomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

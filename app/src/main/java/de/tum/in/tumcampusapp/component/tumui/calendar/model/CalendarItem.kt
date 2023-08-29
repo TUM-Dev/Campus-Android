@@ -69,12 +69,14 @@ data class CalendarItem(
     fun getFormattedTitle(): String {
         // remove lecture codes in round or square brackets e.g. (IN0003), [MA0902]
         return Pattern.compile("[(\\[][A-Z0-9.]+[)\\]]")
-                // remove type of lecture (VO, UE, SE, PR) at the end of the line
-                .matcher(Pattern.compile(" (UE|VO|SE|PR)$")
-                        .matcher(title)
-                        .replaceAll(""))
-                .replaceAll("")
-                .trim { it <= ' ' }
+            // remove type of lecture (VO, UE, SE, PR) at the end of the line
+            .matcher(
+                Pattern.compile(" (UE|VO|SE|PR)$")
+                    .matcher(title)
+                    .replaceAll("")
+            )
+            .replaceAll("")
+            .trim { it <= ' ' }
     }
 
     /**
@@ -82,9 +84,9 @@ data class CalendarItem(
      */
     fun getEventLocation(): String {
         return Pattern.compile("\\([A-Z0-9\\.]+\\)")
-                .matcher(location)
-                .replaceAll("")
-                .trim { it <= ' ' }
+            .matcher(location)
+            .replaceAll("")
+            .trim { it <= ' ' }
     }
 
     fun getEventDateString(): String {
@@ -111,8 +113,8 @@ data class CalendarItem(
 
     fun isSameEventButForLocation(other: CalendarItem): Boolean {
         return title == other.title &&
-                dtstart == other.dtstart &&
-                dtend == other.dtend
+            dtstart == other.dtstart &&
+            dtend == other.dtend
     }
 
     override fun toWeekViewEvent(): WeekViewEvent<CalendarItem> {
@@ -123,21 +125,21 @@ data class CalendarItem(
         val borderWidth = if (isCanceled) 2 else 0
 
         val style = WeekViewEvent.Style.Builder()
-                .setBackgroundColor(backgroundColor)
-                .setTextColor(textColor)
-                .setTextStrikeThrough(isCanceled)
-                .setBorderWidth(borderWidth)
-                .setBorderColor(color)
-                .build()
+            .setBackgroundColor(backgroundColor)
+            .setTextColor(textColor)
+            .setTextStrikeThrough(isCanceled)
+            .setBorderWidth(borderWidth)
+            .setBorderColor(color)
+            .build()
 
         return WeekViewEvent.Builder<CalendarItem>(this)
-                .setId(nr.toLong())
-                .setTitle(title)
-                .setStartTime(eventStart.toGregorianCalendar())
-                .setEndTime(eventEnd.toGregorianCalendar())
-                .setLocation(location)
-                .setStyle(style)
-                .setAllDay(false)
-                .build()
+            .setId(nr.toLong())
+            .setTitle(title)
+            .setStartTime(eventStart.toGregorianCalendar())
+            .setEndTime(eventEnd.toGregorianCalendar())
+            .setLocation(location)
+            .setStyle(style)
+            .setAllDay(false)
+            .build()
     }
 }

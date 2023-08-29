@@ -24,12 +24,18 @@ data class DeviceRegister(
             val rand = BigInteger(130, SecureRandom()).toString(32)
             val device = AuthenticationManager.getDeviceID(c)
 
-            return DeviceRegister(date = date, rand = rand, device = device, publicKey = publickey, member = member,
-                    signature =
-                    if (member == null)
-                        am.sign(date + rand + device)
-                    else
-                        am.sign(date + rand + device + member.lrzId + member.id)
+            return DeviceRegister(
+                date = date,
+                rand = rand,
+                device = device,
+                publicKey = publickey,
+                member = member,
+                signature =
+                if (member == null) {
+                    am.sign(date + rand + device)
+                } else {
+                    am.sign(date + rand + device + member.lrzId + member.id)
+                }
             )
         }
     }

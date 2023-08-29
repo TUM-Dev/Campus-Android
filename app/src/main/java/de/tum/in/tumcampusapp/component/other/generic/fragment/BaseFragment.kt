@@ -86,9 +86,9 @@ abstract class BaseFragment<T>(
         swipeRefreshLayout?.apply {
             setOnRefreshListener(this@BaseFragment)
             setColorSchemeResources(
-                    R.color.color_primary,
-                    R.color.tum_A100,
-                    R.color.tum_A200
+                R.color.color_primary,
+                R.color.tum_A100,
+                R.color.tum_A200
             )
         }
     }
@@ -209,9 +209,9 @@ abstract class BaseFragment<T>(
     protected fun showErrorSnackbar(messageResId: Int) {
         runOnUiThread {
             Snackbar.make(contentView, messageResId, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.retry) { retryRequest() }
-                    .setActionTextColor(Color.WHITE)
-                    .show()
+                .setAction(R.string.retry) { retryRequest() }
+                .setActionTextColor(Color.WHITE)
+                .show()
         }
     }
 
@@ -239,8 +239,8 @@ abstract class BaseFragment<T>(
         }
 
         val request = NetworkRequest.Builder()
-                .addCapability(NetUtils.internetCapability)
-                .build()
+            .addCapability(NetUtils.internetCapability)
+            .build()
 
         if (registered.not()) {
             baseActivity.connectivityManager.registerNetworkCallback(request, networkCallback)

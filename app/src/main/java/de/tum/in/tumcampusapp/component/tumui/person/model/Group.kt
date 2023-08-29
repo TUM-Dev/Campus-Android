@@ -21,7 +21,7 @@ data class Group(
     @PropertyElement(name = "titel")
     var title: String = ""
 ) :
-        Serializable {
+    Serializable {
     companion object {
         private const val serialVersionUID = -3430225489964912473L
     }

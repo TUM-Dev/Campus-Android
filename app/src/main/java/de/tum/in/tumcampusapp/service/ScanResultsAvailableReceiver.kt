@@ -44,7 +44,7 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
 
         // Check if locations are enabled
         val locationsEnabled =
-                checkSelfPermission(context, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED
+            checkSelfPermission(context, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED
         if (!locationsEnabled) {
             // Stop here as wifi.getScanResults will either return an empty list or throw an
             // exception (on android 6.0.0)
@@ -53,7 +53,7 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
 
         // Test if user has eduroam configured already
         val isEduroamConfigured = EduroamController.getEduroamConfig(context) != null ||
-                NetUtils.isConnected(context)
+            NetUtils.isConnected(context)
 
         context.wifiManager.scanResults.forEach { network ->
             if (network.SSID != Const.EDUROAM_SSID && network.SSID != Const.LRZ) {
@@ -107,16 +107,16 @@ class ScanResultsAvailableReceiver : BroadcastReceiver() {
 
             // Create FcmNotification using NotificationCompat.Builder
             val notification = NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_EDUROAM)
-                    .setSmallIcon(R.drawable.ic_notification_wifi)
-                    .setTicker(context.getString(R.string.setup_eduroam))
-                    .setContentTitle(context.getString(R.string.setup_eduroam))
-                    .setContentText(context.getString(R.string.eduroam_setup_question))
-                    .addAction(R.drawable.ic_action_cancel, context.getString(R.string.not_ask_again), hidePendingIntent)
-                    .addAction(R.drawable.ic_notification_wifi, context.getString(R.string.setup), setupPendingIntent)
-                    .setContentIntent(setupPendingIntent)
-                    .setAutoCancel(true)
-                    .setColor(ContextCompat.getColor(context, R.color.color_primary))
-                    .build()
+                .setSmallIcon(R.drawable.ic_notification_wifi)
+                .setTicker(context.getString(R.string.setup_eduroam))
+                .setContentTitle(context.getString(R.string.setup_eduroam))
+                .setContentText(context.getString(R.string.eduroam_setup_question))
+                .addAction(R.drawable.ic_action_cancel, context.getString(R.string.not_ask_again), hidePendingIntent)
+                .addAction(R.drawable.ic_notification_wifi, context.getString(R.string.setup), setupPendingIntent)
+                .setContentIntent(setupPendingIntent)
+                .setAutoCancel(true)
+                .setColor(ContextCompat.getColor(context, R.color.color_primary))
+                .build()
 
             // Create FcmNotification Manager
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

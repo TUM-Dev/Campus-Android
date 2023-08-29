@@ -76,18 +76,18 @@ class LectureAppointmentsListAdapter(
             // english time format
             if (getLocale().equals("en")) {
                 output.append(start.toString("EEE MMM dd YYYY, hh:mm a"))
-                        .append("–")
-                        .append(end.toString("hh:mm a"))
+                    .append("–")
+                    .append(end.toString("hh:mm a"))
             } else {
                 output.append(start.toString("EEE MMM dd YYYY, kk:mm"))
-                        .append("–")
-                        .append(end.toString("kk:mm"))
+                    .append("–")
+                    .append(end.toString("kk:mm"))
             }
         } else {
             // show it normally
             output.append(startDateOutput.print(start))
-                    .append("–")
-                    .append(endDateOutput.print(end))
+                .append("–")
+                .append(endDateOutput.print(end))
         }
 
         // grey it, if in past
@@ -102,7 +102,7 @@ class LectureAppointmentsListAdapter(
     private fun getAppointmentDetails(lvItem: LectureAppointment): String {
         val details = StringBuilder(lvItem.type ?: "")
         val title = lvItem.title
-        if (title != null && title.isNotEmpty()) {
+        if (!title.isNullOrEmpty()) {
             details.append(" - ").append(lvItem.title)
         }
         return details.toString()

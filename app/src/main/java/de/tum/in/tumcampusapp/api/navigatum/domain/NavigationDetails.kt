@@ -24,7 +24,6 @@ data class NavigationDetails(
 }
 
 fun NavigationDetailsDto.toNavigationDetails(): NavigationDetails {
-
     return NavigationDetails(
         id = this.id,
         name = this.name,

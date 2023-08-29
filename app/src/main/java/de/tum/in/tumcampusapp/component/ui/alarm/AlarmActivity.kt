@@ -9,7 +9,6 @@ import androidx.core.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.component.ui.alarm.model.FcmNotification
-
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 
@@ -51,16 +50,16 @@ class AlarmActivity : BaseActivity(R.layout.activity_alarmdetails) {
         val hexColor = "#" + String.format("%06X", color and 0x00ffffff)
 
         val preHTML = "<!DOCTYPE HTML>\n" +
-                "<html>\n" +
-                "<head>\n" +
-                "<style type=\"text/css\">\n" +
-                "body{color: " + hexColor + ";}\n" +
-                "</style>\n" +
-                "</head>\n" +
-                "<body>\n"
+            "<html>\n" +
+            "<head>\n" +
+            "<style type=\"text/css\">\n" +
+            "body{color: " + hexColor + ";}\n" +
+            "</style>\n" +
+            "</head>\n" +
+            "<body>\n"
 
         val postHTML = "\n</body>\n" +
-                "</html>"
+            "</html>"
 
         return preHTML + description + postHTML
     }

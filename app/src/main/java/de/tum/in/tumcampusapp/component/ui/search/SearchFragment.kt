@@ -34,11 +34,11 @@ import de.tum.`in`.tumcampusapp.component.ui.search.adapter.RecentSearchesAdapte
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.ResultTypeData
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.ResultTypesAdapter
 import de.tum.`in`.tumcampusapp.component.ui.search.adapter.SearchResultsAdapter
+import de.tum.`in`.tumcampusapp.databinding.FragmentSearchBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
-import de.tum.`in`.tumcampusapp.utils.Utils
-import de.tum.`in`.tumcampusapp.databinding.FragmentSearchBinding
 import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
+import de.tum.`in`.tumcampusapp.utils.Utils
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
@@ -299,9 +299,9 @@ class SearchFragment : BaseFragment<Unit>(
                 binding.progressIndicator.hide()
 
                 val input = binding.toolbarSearch.searchEditText.text.toString().trim()
-                if (input.length < MIN_QUERY_LENGTH)
+                if (input.length < MIN_QUERY_LENGTH) {
                     showSearchInfo()
-                else if (viewModel.state.value.data.isEmpty()) {
+                } else if (viewModel.state.value.data.isEmpty()) {
                     showNoResultInfo(input)
                 } else {
                     hideResultInfo()

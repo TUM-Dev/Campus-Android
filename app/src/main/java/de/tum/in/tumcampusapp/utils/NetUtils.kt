@@ -2,7 +2,9 @@ package de.tum.`in`.tumcampusapp.utils
 
 import android.content.Context
 import android.net.NetworkCapabilities
-import android.net.NetworkCapabilities.*
+import android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET
+import android.net.NetworkCapabilities.NET_CAPABILITY_NOT_METERED
+import android.net.NetworkCapabilities.NET_CAPABILITY_VALIDATED
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.M
 import org.jetbrains.anko.connectivityManager
@@ -19,8 +21,7 @@ object NetUtils {
     private inline fun anyConnectedNetwork(
         context: Context,
         condition: (NetworkCapabilities) -> Boolean = { true }
-    ):
-            Boolean {
+    ): Boolean {
         val connectivityMgr = context.connectivityManager
 
         return connectivityMgr.allNetworks.asSequence().filter {

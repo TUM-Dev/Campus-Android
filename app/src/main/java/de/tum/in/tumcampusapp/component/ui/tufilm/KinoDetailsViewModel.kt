@@ -32,23 +32,23 @@ class KinoDetailsViewModel @Inject constructor(
 
     fun fetchTicketCount(eventId: Int) {
         compositeDisposable += eventsRemoteRepository.fetchTicketStats(eventId)
-                .subscribeOn(Schedulers.io())
-                .doOnError(Utils::log)
-                .subscribe(_aggregatedTicketStatus::postValue) {
-                    _aggregatedTicketStatus.postValue(null)
-                }
+            .subscribeOn(Schedulers.io())
+            .doOnError(Utils::log)
+            .subscribe(_aggregatedTicketStatus::postValue) {
+                _aggregatedTicketStatus.postValue(null)
+            }
     }
 
     fun fetchKinoByPosition(position: Int) {
         compositeDisposable += localRepository.getKinoByPosition(position)
-                .subscribeOn(Schedulers.io())
-                .subscribe(_kino::postValue)
+            .subscribeOn(Schedulers.io())
+            .subscribe(_kino::postValue)
     }
 
     fun fetchEventByMovieId(movieId: String) {
         compositeDisposable += localRepository.getEventByMovieId(movieId)
-                .subscribeOn(Schedulers.io())
-                .subscribe(_event::postValue)
+            .subscribeOn(Schedulers.io())
+            .subscribe(_event::postValue)
     }
 
     override fun onCleared() {

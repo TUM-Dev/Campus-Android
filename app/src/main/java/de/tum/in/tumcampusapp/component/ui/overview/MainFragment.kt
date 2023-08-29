@@ -38,10 +38,13 @@ import javax.inject.Inject
 import javax.inject.Provider
 import kotlin.math.roundToInt
 
-class MainFragment : BaseFragment<Unit>(
+class MainFragment :
+    BaseFragment<Unit>(
         R.layout.fragment_main,
         R.string.home
-), SwipeRefreshLayout.OnRefreshListener, CardInteractionListener {
+    ),
+    SwipeRefreshLayout.OnRefreshListener,
+    CardInteractionListener {
 
     private var isConnectivityChangeReceiverRegistered = false
     private val connectivityManager: ConnectivityManager by lazy {
@@ -80,9 +83,10 @@ class MainFragment : BaseFragment<Unit>(
             swipeRefreshLayout.setOnRefreshListener(this@MainFragment)
             swipeRefreshLayout.isRefreshing = true
             swipeRefreshLayout.setColorSchemeResources(
-                    R.color.color_primary,
-                    R.color.tum_A100,
-                    R.color.tum_A200)
+                R.color.color_primary,
+                R.color.tum_A100,
+                R.color.tum_A200
+            )
 
             registerForContextMenu(cardsRecyclerView)
 
@@ -108,10 +112,12 @@ class MainFragment : BaseFragment<Unit>(
         // The earliest possible re-trigger of a review prompt occurs after half a year
         val lastReviewDate = Utils.getSetting(requireContext(), Const.LAST_REVIEW_PROMPT, "0").toLong()
 
-        if (DateTime.now().minusMonths(6).isAfter(lastReviewDate) &&
-                Utils.getSetting(requireContext(), Const.LRZ_ID, "").isNotEmpty() &&
-                Utils.getSettingBool(requireContext(), Const.HAS_VISITED_GRADES, false) &&
-                Utils.getSettingBool(requireContext(), Const.HAS_VISITED_CALENDAR, false)) {
+        if (
+            DateTime.now().minusMonths(6).isAfter(lastReviewDate) &&
+            Utils.getSetting(requireContext(), Const.LRZ_ID, "").isNotEmpty() &&
+            Utils.getSettingBool(requireContext(), Const.HAS_VISITED_GRADES, false) &&
+            Utils.getSettingBool(requireContext(), Const.HAS_VISITED_CALENDAR, false)
+        ) {
             triggerReviewPrompt()
         }
     }
@@ -136,8 +142,8 @@ class MainFragment : BaseFragment<Unit>(
 
         if (!NetUtils.isConnected(requireContext()) && !isConnectivityChangeReceiverRegistered) {
             val request = NetworkRequest.Builder()
-                    .addCapability(NetUtils.internetCapability)
-                    .build()
+                .addCapability(NetUtils.internetCapability)
+                .build()
             connectivityManager.registerNetworkCallback(request, networkCallback)
             isConnectivityChangeReceiverRegistered = true
         }
@@ -238,16 +244,17 @@ class MainFragment : BaseFragment<Unit>(
 
             with(binding) {
                 snackBar = Snackbar.make(cardsRecyclerView, R.string.card_dismissed, Snackbar.LENGTH_LONG)
-                        .setAction(R.string.undo) {
-                            card?.let {
-                                cardsAdapter.insert(lastPos, it)
-                            }
-
-                            val layoutManager = cardsRecyclerView.layoutManager
-                            layoutManager?.smoothScrollToPosition(cardsRecyclerView, null, lastPos)
+                    .setAction(R.string.undo) {
+                        card?.let {
+                            cardsAdapter.insert(lastPos, it)
                         }
-                        .setActionTextColor(Color.WHITE)
-                        .addCallback(object : Snackbar.Callback() {
+
+                        val layoutManager = cardsRecyclerView.layoutManager
+                        layoutManager?.smoothScrollToPosition(cardsRecyclerView, null, lastPos)
+                    }
+                    .setActionTextColor(Color.WHITE)
+                    .addCallback(
+                        object : Snackbar.Callback() {
                             override fun onDismissed(snackbar: Snackbar?, event: Int) {
                                 super.onDismissed(snackbar, event)
                                 if (event != DISMISS_EVENT_ACTION) {
@@ -260,7 +267,8 @@ class MainFragment : BaseFragment<Unit>(
                                     viewModel.refreshCards()
                                 }
                             }
-                        })
+                        }
+                    )
                 snackBar!!.show()
             }
         }

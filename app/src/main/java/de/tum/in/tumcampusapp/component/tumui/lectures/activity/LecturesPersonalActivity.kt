@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.tumui.lectures.activity
 
 import android.os.Bundle
-
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseActivity
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.fragment.LecturesFragment
@@ -19,9 +18,9 @@ class LecturesPersonalActivity : BaseActivity(R.layout.activity_lectures) {
 
         if (savedInstanceState == null) {
             supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.contentFrame, LecturesFragment.newInstance())
-                    .commit()
+                .beginTransaction()
+                .replace(R.id.contentFrame, LecturesFragment.newInstance())
+                .commit()
         }
     }
 }

@@ -19,7 +19,7 @@ object NotificationPresenter {
 
     fun show(context: Context, id: Int, notification: AppNotification) {
         NotificationManagerCompat
-                .from(context)
-                .notify(id, notification.notification)
+            .from(context)
+            .notify(id, notification.notification)
     }
 }

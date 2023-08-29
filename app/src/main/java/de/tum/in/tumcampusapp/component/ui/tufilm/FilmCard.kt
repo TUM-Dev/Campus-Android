@@ -2,7 +2,6 @@ package de.tum.`in`.tumcampusapp.component.ui.tufilm
 
 import android.content.Context
 import android.os.Bundle
-
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavDestination
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsCard
 import de.tum.`in`.tumcampusapp.component.ui.news.model.News

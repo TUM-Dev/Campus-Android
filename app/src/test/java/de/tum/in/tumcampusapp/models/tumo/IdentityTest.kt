@@ -18,8 +18,8 @@ class IdentityTest {
     @Test
     fun testParsingXML() {
         val tikXml = TikXml.Builder()
-                .exceptionOnUnreadXml(false)
-                .build()
+            .exceptionOnUnreadXml(false)
+            .build()
 
         val inputStream = ByteArrayInputStream(XML_RESPONSE.toByteArray())
         val source = inputStream.source()

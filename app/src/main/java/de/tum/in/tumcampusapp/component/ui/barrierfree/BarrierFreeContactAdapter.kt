@@ -7,7 +7,6 @@ import android.text.util.Linkify
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
 import de.tum.`in`.tumcampusapp.component.tumui.person.PersonDetailsActivity
@@ -20,7 +19,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter
  * An adapter used to display contact information in barrierfree page.
  */
 class BarrierFreeContactAdapter(context: Context, infos: List<BarrierFreeContact>) :
-        SimpleStickyListHeadersAdapter<BarrierFreeContact>(context, infos.toMutableList()), StickyListHeadersAdapter {
+    SimpleStickyListHeadersAdapter<BarrierFreeContact>(context, infos.toMutableList()), StickyListHeadersAdapter {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val holder: ViewHolder

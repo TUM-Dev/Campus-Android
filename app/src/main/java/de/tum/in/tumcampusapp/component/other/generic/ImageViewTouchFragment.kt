@@ -28,9 +28,11 @@ class ImageViewTouchFragment : Fragment() {
         icon?.setTint(Color.WHITE)
 
         Picasso.get()
-                .load(url)
-                .placeholder(icon!!)
-                .into(binding.photoView, object : Callback {
+            .load(url)
+            .placeholder(icon!!)
+            .into(
+                binding.photoView,
+                object : Callback {
                     override fun onSuccess() {
                         // Left empty on purpose
                     }
@@ -38,7 +40,8 @@ class ImageViewTouchFragment : Fragment() {
                     override fun onError(e: Exception) {
                         onImageLoadingError()
                     }
-                })
+                }
+            )
     }
 
     companion object {

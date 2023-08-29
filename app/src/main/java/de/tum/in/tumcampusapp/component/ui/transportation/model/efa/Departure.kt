@@ -22,18 +22,18 @@ data class Departure(
 
     val formattedDirection: String
         get() = direction
-                .replace(",", ", ")
-                .replace("\\s+".toRegex(), " ")
+            .replace(",", ", ")
+            .replace("\\s+".toRegex(), " ")
 
     companion object {
 
         fun create(mvvDeparture: MvvDeparture): Departure {
             return Departure(
-                    mvvDeparture.servingLine.name,
-                    mvvDeparture.servingLine.direction,
-                    mvvDeparture.servingLine.symbol,
-                    mvvDeparture.countdown,
-                    mvvDeparture.dateTime
+                mvvDeparture.servingLine.name,
+                mvvDeparture.servingLine.direction,
+                mvvDeparture.servingLine.symbol,
+                mvvDeparture.countdown,
+                mvvDeparture.dateTime
             )
         }
     }

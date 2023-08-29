@@ -9,7 +9,6 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.content.edit
@@ -35,6 +34,7 @@ import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.service.SilenceWorker
 import de.tum.`in`.tumcampusapp.service.StartSyncReceiver
 import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.Single
@@ -46,7 +46,9 @@ import org.jetbrains.anko.notificationManager
 import java.util.concurrent.ExecutionException
 import javax.inject.Inject
 
-class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener,
+class SettingsFragment :
+    PreferenceFragmentCompat(),
+    Preference.OnPreferenceClickListener,
     SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val compositeDisposable = CompositeDisposable()

@@ -16,9 +16,9 @@ data class DeviceUploadFcmToken(
         fun getDeviceUploadFcmToken(c: Context, token: String): DeviceUploadFcmToken {
             val verification = TUMCabeVerification.create(c) ?: throw NoPrivateKey()
             return DeviceUploadFcmToken(
-                    verification = verification,
-                    token = token,
-                    signature = AuthenticationManager(c).sign(token)
+                verification = verification,
+                token = token,
+                signature = AuthenticationManager(c).sign(token)
             )
         }
     }

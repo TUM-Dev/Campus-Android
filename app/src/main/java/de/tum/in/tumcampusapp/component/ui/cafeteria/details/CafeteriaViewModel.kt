@@ -54,12 +54,12 @@ class CafeteriaViewModel @Inject constructor(
      */
     fun fetchCafeterias(location: Location) {
         compositeDisposable += localRepository.getAllCafeterias()
-                .map { transformCafeteria(it, location) }
-                .subscribeOn(Schedulers.io())
-                .defaultIfEmpty(emptyList())
-                .doOnError { _error.postValue(true) }
-                .doOnNext { _error.postValue(it.isEmpty()) }
-                .subscribe(_cafeterias::postValue, Utils::log)
+            .map { transformCafeteria(it, location) }
+            .subscribeOn(Schedulers.io())
+            .defaultIfEmpty(emptyList())
+            .doOnError { _error.postValue(true) }
+            .doOnNext { _error.postValue(it.isEmpty()) }
+            .subscribe(_cafeterias::postValue, Utils::log)
     }
 
     /**
@@ -67,16 +67,16 @@ class CafeteriaViewModel @Inject constructor(
      */
     fun fetchMenuDates() {
         compositeDisposable += Flowable.fromCallable { localRepository.getAllMenuDates() }
-                .subscribeOn(Schedulers.io())
-                .defaultIfEmpty(emptyList())
-                .subscribe(_menuDates::postValue, Utils::log)
+            .subscribeOn(Schedulers.io())
+            .defaultIfEmpty(emptyList())
+            .subscribe(_menuDates::postValue, Utils::log)
     }
 
     fun fetchCafeteriaMenus(id: Int, date: DateTime) {
         compositeDisposable += Flowable.fromCallable { localRepository.getCafeteriaMenus(id, date) }
-                .subscribeOn(Schedulers.io())
-                .defaultIfEmpty(emptyList())
-                .subscribe { _cafeteriaMenus.postValue(it) }
+            .subscribeOn(Schedulers.io())
+            .defaultIfEmpty(emptyList())
+            .subscribe { _cafeteriaMenus.postValue(it) }
     }
 
     /**

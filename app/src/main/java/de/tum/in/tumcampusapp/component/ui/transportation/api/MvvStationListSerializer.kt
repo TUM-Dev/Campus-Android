@@ -1,6 +1,12 @@
 package de.tum.`in`.tumcampusapp.component.ui.transportation.api
 
-import com.google.gson.*
+import com.google.gson.JsonArray
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
+import com.google.gson.JsonNull
+import com.google.gson.JsonObject
+import com.google.gson.JsonParseException
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
 import java.lang.reflect.Type
 

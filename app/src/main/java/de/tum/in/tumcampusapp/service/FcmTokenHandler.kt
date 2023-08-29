@@ -79,11 +79,13 @@ object FcmTokenHandler {
 
         // Try to create the message
         val uploadToken = tryOrNull { DeviceUploadFcmToken.getDeviceUploadFcmToken(context, token) }
-                ?: return
+            ?: return
 
         TUMCabeClient
-                .getInstance(context)
-                .deviceUploadGcmToken(uploadToken, object : Callback<TUMCabeStatus> {
+            .getInstance(context)
+            .deviceUploadGcmToken(
+                uploadToken,
+                object : Callback<TUMCabeStatus> {
                     override fun onResponse(call: Call<TUMCabeStatus>, response: Response<TUMCabeStatus>) {
                         if (!response.isSuccessful) {
                             Utils.logVerbose("Uploading FCM registration failed...")
@@ -102,7 +104,8 @@ object FcmTokenHandler {
                         Utils.log(t, "Failure uploading FCM registration id")
                         Utils.setSetting(context, FCM_REG_ID_SENT_TO_SERVER, false)
                     }
-                })
+                }
+            )
     }
 
     /**

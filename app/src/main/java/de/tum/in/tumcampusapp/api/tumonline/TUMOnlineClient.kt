@@ -34,7 +34,9 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
 
     fun getCalendar(cacheControl: CacheControl): Call<EventsResponse> {
         return apiService.getCalendar(
-            Const.CALENDAR_MONTHS_BEFORE, Const.CALENDAR_MONTHS_AFTER, cacheControl.header
+            Const.CALENDAR_MONTHS_BEFORE,
+            Const.CALENDAR_MONTHS_AFTER,
+            cacheControl.header
         )
     }
 
@@ -42,7 +44,11 @@ class TUMOnlineClient(private val apiService: TUMOnlineAPIService) {
         val start = DateTimeUtils.getDateTimeString(calendarItem.eventStart)
         val end = DateTimeUtils.getDateTimeString(calendarItem.eventEnd)
         return apiService.createCalendarEvent(
-            calendarItem.title, calendarItem.description, start, end, eventId
+            calendarItem.title,
+            calendarItem.description,
+            start,
+            end,
+            eventId
         )
     }
 

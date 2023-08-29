@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
-import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.fragment.app.Fragment
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.app.ApiHelper
@@ -23,6 +22,7 @@ import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderMap
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.NetUtils
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import de.tum.`in`.tumcampusapp.utils.Utils
 import retrofit2.Call
 import retrofit2.Callback
@@ -78,8 +78,11 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
         val timetable = menu.findItem(R.id.action_room_timetable)
         timetable.isVisible = infoLoaded
         timetable.setIcon(
-            if (weekViewFragment == null) R.drawable.ic_outline_event_note_24px
-            else R.drawable.ic_outline_map_24px
+            if (weekViewFragment == null) {
+                R.drawable.ic_outline_event_note_24px
+            } else {
+                R.drawable.ic_outline_map_24px
+            }
         )
 
         menu.findItem(R.id.action_directions).isVisible = infoLoaded && weekViewFragment == null
@@ -137,8 +140,8 @@ class RoomFinderDetailsActivity : ActivityForLoadingInBackground<Void, String>(R
         val currentPosition = mapsList.indexOfFirst { it.map_id == mapId }
 
         ThemedAlertDialogBuilder(this)
-                .setSingleChoiceItems(descriptions.toTypedArray(), currentPosition, this)
-                .show()
+            .setSingleChoiceItems(descriptions.toTypedArray(), currentPosition, this)
+            .show()
     }
 
     override fun onClick(dialog: DialogInterface, whichButton: Int) {

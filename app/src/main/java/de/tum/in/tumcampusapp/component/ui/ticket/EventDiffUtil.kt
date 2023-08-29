@@ -11,9 +11,7 @@ class EventDiffUtil(
     override fun getOldListSize() = oldItems.size
     override fun getNewListSize() = newItems.size
 
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
-            oldItems[oldItemPosition].getIdForComparison() == newItems[newItemPosition].getIdForComparison()
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) = oldItems[oldItemPosition].getIdForComparison() == newItems[newItemPosition].getIdForComparison()
 
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
-            oldItems[oldItemPosition] == newItems[newItemPosition]
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) = oldItems[oldItemPosition] == newItems[newItemPosition]
 }

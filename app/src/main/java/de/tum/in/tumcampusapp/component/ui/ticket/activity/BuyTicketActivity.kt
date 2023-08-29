@@ -3,7 +3,6 @@ package de.tum.`in`.tumcampusapp.component.ui.ticket.activity
 import android.content.Intent
 import android.os.Bundle
 import android.transition.TransitionManager
-import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +20,7 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsLocalReposi
 import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsRemoteRepository
 import de.tum.`in`.tumcampusapp.databinding.ActivityBuyTicketBinding
 import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import de.tum.`in`.tumcampusapp.utils.Utils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -83,19 +83,19 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
         binding.totalPriceTextView.text = Utils.formatPrice(0)
 
         injector.ticketsComponent()
-                .eventId(eventId)
-                .build()
-                .inject(this)
+            .eventId(eventId)
+            .build()
+            .inject(this)
 
         // Get ticket type information from API
         val disposable = ticketsRemoteRepo.fetchTicketTypesForEvent(eventId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnError { Utils.log(it) }
-                .subscribe({ handleTicketTypesDownloadSuccess(it) }, {
-                    Utils.showToast(this@BuyTicketActivity, R.string.error_something_wrong)
-                    finish()
-                })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError { Utils.log(it) }
+            .subscribe({ handleTicketTypesDownloadSuccess(it) }, {
+                Utils.showToast(this@BuyTicketActivity, R.string.error_something_wrong)
+                finish()
+            })
         compositeDisposable.add(disposable)
     }
 
@@ -147,7 +147,6 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
     }
 
     private fun reserveTicket() {
-
         if (totalTickets == 0) {
             showError(R.string.error_no_ticket_selected, R.string.error_message_select_at_least_one_ticket)
             return
@@ -164,8 +163,10 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
         }
 
         TUMCabeClient
-                .getInstance(this)
-                .reserveTicket(verification, object : Callback<TicketReservationResponse> {
+            .getInstance(this)
+            .reserveTicket(
+                verification,
+                object : Callback<TicketReservationResponse> {
                     override fun onResponse(
                         call: Call<TicketReservationResponse>,
                         response: Response<TicketReservationResponse>
@@ -173,9 +174,7 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
                         // ResponseBody can be null if the user has already bought a ticket
                         // but has not fetched it from the server yet
                         val reservationResponse = response.body()
-                        if (response.isSuccessful &&
-                                reservationResponse != null &&
-                                reservationResponse.error == null) {
+                        if (response.isSuccessful && reservationResponse != null && reservationResponse.error == null) {
                             handleTicketReservationSuccess(reservationResponse)
                         } else {
                             if (reservationResponse == null || !response.isSuccessful) {
@@ -191,7 +190,8 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
                         Utils.log(t)
                         handleTicketReservationFailure(R.string.error_something_wrong)
                     }
-                })
+                }
+            )
     }
 
     private fun handleTicketReservationSuccess(response: TicketReservationResponse) {
@@ -207,10 +207,10 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
 
     private fun handleTicketNotReserved() {
         ThemedAlertDialogBuilder(this)
-                .setTitle(getString(R.string.error))
-                .setMessage(getString(R.string.ticket_not_fetched))
-                .setPositiveButton(R.string.ok) { _, _ -> showLoadingLayout(false) }
-                .show()
+            .setTitle(getString(R.string.error))
+            .setMessage(getString(R.string.ticket_not_fetched))
+            .setPositiveButton(R.string.ok) { _, _ -> showLoadingLayout(false) }
+            .show()
     }
 
     private fun handleTicketReservationFailure(messageResId: Int) {

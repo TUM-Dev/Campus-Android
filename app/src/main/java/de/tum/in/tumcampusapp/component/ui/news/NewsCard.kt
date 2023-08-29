@@ -65,6 +65,7 @@ open class NewsCard @JvmOverloads constructor(
 
     companion object {
         private lateinit var mNewsInflater: NewsInflater
+
         @JvmStatic
         fun inflateViewHolder(parent: ViewGroup, viewType: Int, interactionListener: CardInteractionListener): CardViewHolder {
             mNewsInflater = NewsInflater(parent.context)

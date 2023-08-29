@@ -16,9 +16,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
         if (savedInstanceState == null) {
             supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.contentFrame, MainFragment.newInstance())
-                    .commit()
+                .beginTransaction()
+                .replace(R.id.contentFrame, MainFragment.newInstance())
+                .commit()
         }
     }
 }

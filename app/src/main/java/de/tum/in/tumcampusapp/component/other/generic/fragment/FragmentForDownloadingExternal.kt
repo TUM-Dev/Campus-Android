@@ -63,12 +63,12 @@ abstract class FragmentForDownloadingExternal(
 
         showLoadingStart()
         LiveDataReactiveStreams
-                .fromPublisher<Unit>(
-                        Flowable.fromCallable { method?.execute(forceDownload) }
-                                .doOnError { errorHandler() }
-                                .onErrorReturnItem(Unit)
-                                .subscribeOn(Schedulers.io())
-                )
-                .observe(this, completionHandler)
+            .fromPublisher<Unit>(
+                Flowable.fromCallable { method?.execute(forceDownload) }
+                    .doOnError { errorHandler() }
+                    .onErrorReturnItem(Unit)
+                    .subscribeOn(Schedulers.io())
+            )
+            .observe(this, completionHandler)
     }
 }

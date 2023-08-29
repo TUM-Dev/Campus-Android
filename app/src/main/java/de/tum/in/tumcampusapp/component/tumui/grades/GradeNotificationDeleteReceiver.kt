@@ -33,7 +33,7 @@ class GradeNotificationDeleteReceiver : BroadcastReceiver() {
             val gradesMutable = ArrayList<String>()
             gradesMutable.addAll(newGrades)
             return Intent(context, GradeNotificationDeleteReceiver::class.java)
-                    .putStringArrayListExtra(KEY_NEW_GRADES, gradesMutable)
+                .putStringArrayListExtra(KEY_NEW_GRADES, gradesMutable)
         }
     }
 }

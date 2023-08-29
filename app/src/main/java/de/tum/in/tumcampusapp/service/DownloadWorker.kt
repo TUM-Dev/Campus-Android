@@ -75,17 +75,17 @@ class DownloadWorker(
             fillCache: Boolean = false
         ): OneTimeWorkRequest {
             val constraints = Constraints.Builder()
-                    .setRequiredNetworkType(CONNECTED)
-                    .build()
+                .setRequiredNetworkType(CONNECTED)
+                .build()
             val data = Data.Builder()
-                    .putBoolean(FORCE_DOWNLOAD, behaviour == BYPASS_CACHE)
-                    .putBoolean(FILL_CACHE, fillCache)
-                    .build()
+                .putBoolean(FORCE_DOWNLOAD, behaviour == BYPASS_CACHE)
+                .putBoolean(FILL_CACHE, fillCache)
+                .build()
             return OneTimeWorkRequestBuilder<DownloadWorker>()
-                    .addTag(TAG)
-                    .setConstraints(constraints)
-                    .setInputData(data)
-                    .build()
+                .addTag(TAG)
+                .setConstraints(constraints)
+                .setInputData(data)
+                .build()
         }
 
         /**

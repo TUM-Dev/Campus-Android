@@ -22,10 +22,13 @@ import java.net.UnknownHostException
 /**
  * Activity to show transport stations and departures
  */
-class TransportationActivity : ActivityForSearching<Unit>(
+class TransportationActivity :
+    ActivityForSearching<Unit>(
         R.layout.activity_transportation,
-        MVVStationSuggestionProvider.AUTHORITY, 3
-), OnItemClickListener {
+        MVVStationSuggestionProvider.AUTHORITY,
+        3
+    ),
+    OnItemClickListener {
 
     private lateinit var listViewResults: ListView
     private lateinit var adapterStations: ArrayAdapter<StationResult>
@@ -37,15 +40,18 @@ class TransportationActivity : ActivityForSearching<Unit>(
         super.onCreate(savedInstanceState)
 
         recentsDao = TcaDb.getInstance(this)
-                .recentsDao()
+            .recentsDao()
 
         listViewResults = findViewById(R.id.activity_transport_listview_result)
         listViewResults.onItemClickListener = this
 
         // Initialize stations adapter
         val recentStations = recentsDao.getAll(RecentsDao.STATIONS) ?: emptyList()
-        adapterStations = ArrayAdapter(this, android.R.layout.simple_list_item_1,
-                TransportController.getRecentStations(recentStations))
+        adapterStations = ArrayAdapter(
+            this,
+            android.R.layout.simple_list_item_1,
+            TransportController.getRecentStations(recentStations)
+        )
 
         if (adapterStations.count == 0) {
             openSearch()
@@ -87,7 +93,8 @@ class TransportationActivity : ActivityForSearching<Unit>(
     }
 
     override fun onStartSearch(query: String) {
-        disposable.add(TransportController.getStationsFromExternal(this, query)
+        disposable.add(
+            TransportController.getStationsFromExternal(this, query)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::displayStations) { t ->
@@ -97,7 +104,8 @@ class TransportationActivity : ActivityForSearching<Unit>(
                         is UnknownHostException -> showNoInternetLayout()
                         else -> showError(R.string.something_wrong)
                     }
-                })
+                }
+        )
     }
 
     private fun displayStations(stations: List<StationResult>) {

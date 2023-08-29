@@ -20,9 +20,9 @@ class TicketsRemoteRepository @Inject constructor(
 
     fun fetchTickets(): Observable<List<Ticket>> {
         return tumCabeClient
-                .fetchTickets(context)
-                .doOnError { Utils.log(it) }
-                .subscribeOn(Schedulers.io())
+            .fetchTickets(context)
+            .doOnError { Utils.log(it) }
+            .subscribeOn(Schedulers.io())
     }
 
     @Throws(NoPrivateKey::class)
@@ -33,12 +33,12 @@ class TicketsRemoteRepository @Inject constructor(
     fun fetchTicketTypesForTickets(tickets: List<Ticket>): Completable {
         val sources = tickets.map { fetchTicketTypesForEvent(it.eventId) }
         return Observable
-                .merge(sources)
-                .ignoreElements()
+            .merge(sources)
+            .ignoreElements()
     }
 
     fun fetchTicketTypesForEvent(eventId: Int): Observable<List<TicketType>> {
         return tumCabeClient.fetchTicketTypes(eventId)
-                .doOnNext(ticketsLocalRepository::addTicketTypes)
+            .doOnNext(ticketsLocalRepository::addTicketTypes)
     }
 }

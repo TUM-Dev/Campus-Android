@@ -34,21 +34,21 @@ class KinoViewModel @Inject constructor(
 
     private fun fetchAllKinos() {
         compositeDisposable += localRepository.getAllKinos()
-                .subscribeOn(Schedulers.io())
-                .defaultIfEmpty(emptyList())
-                .doOnError(Utils::log)
-                .subscribe(_kinos::postValue) {
-                    _error.postValue(R.string.error_something_wrong)
-                }
+            .subscribeOn(Schedulers.io())
+            .defaultIfEmpty(emptyList())
+            .doOnError(Utils::log)
+            .subscribe(_kinos::postValue) {
+                _error.postValue(R.string.error_something_wrong)
+            }
     }
 
     /**
      * Get all kinos from database
      */
     fun getAllKinos(): Flowable<List<Kino>> = // TODO(thellmund) Remove once test is fixed
-            localRepository.getAllKinos()
-                    .subscribeOn(Schedulers.io())
-                    .defaultIfEmpty(emptyList())
+        localRepository.getAllKinos()
+            .subscribeOn(Schedulers.io())
+            .defaultIfEmpty(emptyList())
 
     fun getPositionByDate(date: String) = localRepository.getPositionByDate(date)
 

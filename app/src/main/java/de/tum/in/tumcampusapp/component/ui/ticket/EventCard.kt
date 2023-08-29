@@ -68,8 +68,7 @@ class EventCard(context: Context) : Card(CardManager.CardTypes.EVENT, context) {
             parent: ViewGroup,
             interactionListener: CardInteractionListener
         ): CardViewHolder {
-            val card = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.card_events_item, parent, false)
+            val card = LayoutInflater.from(parent.context).inflate(R.layout.card_events_item, parent, false)
             return EventsAdapter.EventViewHolder(card, interactionListener, true)
         }
     }

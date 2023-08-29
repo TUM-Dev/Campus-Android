@@ -19,9 +19,9 @@ class CalendarActivity : BaseActivity(R.layout.activity_calendar) {
             val fragment = CalendarFragment.newInstance(showDate, eventId)
 
             supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.contentFrame, fragment)
-                    .commit()
+                .beginTransaction()
+                .replace(R.id.contentFrame, fragment)
+                .commit()
         }
     }
 }
