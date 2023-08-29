@@ -25,7 +25,11 @@ import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventSeriesMappin
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.RepeatHelper
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.databinding.ActivityCreateEventBinding
-import de.tum.`in`.tumcampusapp.utils.*
+import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
+import de.tum.`in`.tumcampusapp.utils.ThemedDatePickerDialog
+import de.tum.`in`.tumcampusapp.utils.ThemedTimePickerDialog
+import de.tum.`in`.tumcampusapp.utils.Utils
 import org.jetbrains.anko.sdk27.coroutines.textChangedListener
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
@@ -222,8 +226,9 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         val eventTitle = extras?.getSerializable(Const.EVENT_TITLE) as String?
         val startTime = extras?.getSerializable(Const.EVENT_START) as DateTime?
 
-        if (eventNr == null || eventTitle == null || startTime == null)
+        if (eventNr == null || eventTitle == null || startTime == null) {
             return
+        }
 
         val calendarItem = CalendarItem(
             nr = eventNr,
@@ -321,7 +326,9 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
             hideKeyboard()
             ThemedTimePickerDialog(this, { timePicker, hour, minute ->
                 timePicker.layoutParams = LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
                 val eventLength = end.millis - start.millis
                 start = start.withHourOfDay(hour)
                     .withMinuteOfHour(minute)
@@ -520,6 +527,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         finish()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         hideKeyboard()
 
@@ -554,7 +562,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     private fun displayCloseDialog() {
         ThemedAlertDialogBuilder(this)
             .setMessage(R.string.discard_changes_question)
-            .setNegativeButton(R.string.discard) { dialogInterface, which -> finish() }
+            .setNegativeButton(R.string.discard) { _, _ -> finish() }
             .setPositiveButton(R.string.keep_editing, null)
             .show()
     }

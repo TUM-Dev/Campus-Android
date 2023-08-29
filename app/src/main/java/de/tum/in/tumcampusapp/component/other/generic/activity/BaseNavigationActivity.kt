@@ -24,9 +24,11 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.closeDrawers
 import org.jetbrains.anko.defaultSharedPreferences
 
-class BaseNavigationActivity : BaseActivity(
-    R.layout.activity_main
-), SharedPreferences.OnSharedPreferenceChangeListener {
+class BaseNavigationActivity :
+    BaseActivity(
+        R.layout.activity_main
+    ),
+    SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val drawerHeaderInflater: DrawerHeaderInflater by lazy {
         DrawerHeaderInflater(this)
@@ -103,8 +105,13 @@ class BaseNavigationActivity : BaseActivity(
 
         drawerToggle?.let { drawerLayout.removeDrawerListener(it) }
 
-        drawerToggle = object : ActionBarDrawerToggle(this, drawerLayout,
-            toolbar, R.string.drawer_open, R.string.drawer_close) {}
+        drawerToggle = object : ActionBarDrawerToggle(
+            this,
+            drawerLayout,
+            toolbar,
+            R.string.drawer_open,
+            R.string.drawer_close
+        ) {}
 
         supportActionBar?.let {
             enableDrawer(true)

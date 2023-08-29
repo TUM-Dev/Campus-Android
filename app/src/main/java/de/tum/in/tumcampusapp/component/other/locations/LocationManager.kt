@@ -24,11 +24,11 @@ import org.jetbrains.anko.doAsync
 import java.lang.Double.parseDouble
 import java.util.*
 import javax.inject.Inject
+import kotlin.math.cos
+import kotlin.math.pow
+import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.math.tan
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.pow
 
 /**
  * Location manager, manages intelligent location services, provides methods to easily access
@@ -127,7 +127,6 @@ class LocationManager @Inject constructor(c: Context) {
         val locationManager = mContext.getSystemService(Context.LOCATION_SERVICE) as android.location.LocationManager
         val matchingProviders = locationManager.allProviders
         for (provider in matchingProviders) {
-
             val location = locationManager.getLastKnownLocation(provider)
             if (location != null) {
                 val accuracy = location.accuracy

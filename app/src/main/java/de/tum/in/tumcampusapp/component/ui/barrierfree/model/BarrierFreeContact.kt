@@ -12,7 +12,7 @@ data class BarrierFreeContact(
     var faculty: String = "",
     var tumID: String = ""
 ) :
-        SimpleStickyListHeadersAdapter.SimpleStickyListItem {
+    SimpleStickyListHeadersAdapter.SimpleStickyListItem {
 
     val isValid: Boolean
         get() = name != ""

@@ -31,11 +31,11 @@ class EventDetailsViewModel @Inject constructor(
 
     fun fetchTicketCount() {
         compositeDisposable += eventsRemoteRepository.fetchTicketStats(eventId)
-                .subscribeOn(Schedulers.io())
-                .doOnError(Utils::log)
-                .subscribe(_aggregatedTicketStatus::postValue) {
-                    _aggregatedTicketStatus.postValue(null)
-                }
+            .subscribeOn(Schedulers.io())
+            .doOnError(Utils::log)
+            .subscribe(_aggregatedTicketStatus::postValue) {
+                _aggregatedTicketStatus.postValue(null)
+            }
     }
 
     fun isEventBooked(event: Event): Boolean = ticketsLocalRepository.getTicketCount(event) > 0

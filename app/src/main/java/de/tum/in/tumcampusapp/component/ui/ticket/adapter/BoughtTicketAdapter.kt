@@ -11,7 +11,7 @@ class BoughtTicketAdapter(private val ticketInfos: List<TicketInfo>) : RecyclerV
 
     override fun onCreateViewHolder(parent: ViewGroup, i: Int): BoughtTicketViewHolder {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.bought_ticket_row, parent, false)
+            .inflate(R.layout.bought_ticket_row, parent, false)
         return BoughtTicketViewHolder(view)
     }
 

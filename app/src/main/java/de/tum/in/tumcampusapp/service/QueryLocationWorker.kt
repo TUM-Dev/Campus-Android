@@ -19,7 +19,7 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.sync.SyncManager
 
 class QueryLocationWorker(appContext: Context, workerParams: WorkerParameters) :
-        Worker(appContext, workerParams) {
+    Worker(appContext, workerParams) {
 
     private lateinit var locationManager: LocationManager
 
@@ -31,13 +31,13 @@ class QueryLocationWorker(appContext: Context, workerParams: WorkerParameters) :
         val roomLocationsDao = TcaDb.getInstance(applicationContext).roomLocationsDao()
 
         calendarDao.lecturesWithoutCoordinates
-                .filter { it.location.isNotEmpty() }
-                .mapNotNull { createRoomLocationsOrNull(it) }
-                .also { roomLocationsDao.insert(*it.toTypedArray()) }
+            .filter { it.location.isNotEmpty() }
+            .mapNotNull { createRoomLocationsOrNull(it) }
+            .also { roomLocationsDao.insert(*it.toTypedArray()) }
 
         // Do sync of google calendar if necessary
         val shouldSyncCalendar = Utils.getSettingBool(applicationContext, Const.SYNC_CALENDAR, false) &&
-                ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED
         val syncManager = SyncManager(applicationContext)
         val needsSync = syncManager.needSync(Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)
 
@@ -70,7 +70,7 @@ class QueryLocationWorker(appContext: Context, workerParams: WorkerParameters) :
             Utils.log("Query locations work enqueued")
             val workManager = WorkManager.getInstance(context)
             val queryLocationWork = OneTimeWorkRequestBuilder<QueryLocationWorker>()
-                    .build()
+                .build()
             workManager.enqueue(queryLocationWork)
         }
     }

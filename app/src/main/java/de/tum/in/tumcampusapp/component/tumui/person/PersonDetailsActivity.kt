@@ -7,19 +7,26 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline
-import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.*
+import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.AbstractContactItem
+import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.EmailContactItem
+import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.HomepageContactItem
+import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.InformationContactItem
+import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.MobilePhoneContactItem
+import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.OfficeHoursContactItem
+import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.PhoneContactItem
+import de.tum.`in`.tumcampusapp.component.tumui.person.adapteritems.RoomContactItem
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Employee
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Person
 import de.tum.`in`.tumcampusapp.databinding.ActivityPersonDetailsBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.ContactsHelper
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 
 /**
  * Activity to show information about a person at TUM.
@@ -110,7 +117,8 @@ class PersonDetailsActivity : ActivityForAccessingTumOnline<Employee>(R.layout.a
         binding.scrollView.visibility = View.VISIBLE
 
         val image = employee.image ?: BitmapFactory.decodeResource(
-            resources, R.drawable.photo_not_available
+            resources,
+            R.drawable.photo_not_available
         )
 
         binding.pictureImageView.setImageBitmap(image)

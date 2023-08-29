@@ -20,7 +20,7 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import org.joda.time.DateTime
 
 class SilenceWorker(appContext: Context, workerParams: WorkerParameters) :
-        Worker(appContext, workerParams) {
+    Worker(appContext, workerParams) {
 
     /**
      * We can't and won't change the ringer modes, if the device is in DoNotDisturb mode. DnD requires

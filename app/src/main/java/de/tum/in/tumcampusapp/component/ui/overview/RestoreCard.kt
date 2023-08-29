@@ -32,7 +32,7 @@ class RestoreCard(context: Context) : StickyCard(CardManager.CardTypes.RESTORE, 
             interactionListener: CardInteractionListener
         ): CardViewHolder {
             val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.card_restore, parent, false)
+                .inflate(R.layout.card_restore, parent, false)
             view.findViewById<View>(R.id.restore_card).setOnClickListener {
                 val context = it.context
                 if (context is BaseNavigationActivity) {

@@ -24,16 +24,16 @@ class MvvClient {
 
         private fun buildService(context: Context): MvvApiService {
             val gson = GsonBuilder()
-                    .registerTypeAdapter(DateTime::class.java, MvvDateSerializer())
-                    .registerTypeAdapter(MvvStationList::class.java, MvvStationListSerializer())
-                    .create()
+                .registerTypeAdapter(DateTime::class.java, MvvDateSerializer())
+                .registerTypeAdapter(MvvStationList::class.java, MvvStationListSerializer())
+                .create()
             return Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .client(ApiHelper.getOkHttpClient(context))
-                    .build()
-                    .create(MvvApiService::class.java)
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(ApiHelper.getOkHttpClient(context))
+                .build()
+                .create(MvvApiService::class.java)
         }
     }
 }

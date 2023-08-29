@@ -26,9 +26,10 @@ class NoInternetCard(context: Context) : StickyCard(CardManager.CardTypes.NO_INT
         val lastUpdate = view.findViewById<TextView>(R.id.card_last_update)
         val lastUpdated = DateTime(DownloadWorker.lastUpdate(context))
         val time = DateUtils.getRelativeTimeSpanString(
-                lastUpdated.millis,
-                System.currentTimeMillis(),
-                DateUtils.SECOND_IN_MILLIS).toString()
+            lastUpdated.millis,
+            System.currentTimeMillis(),
+            DateUtils.SECOND_IN_MILLIS
+        ).toString()
         lastUpdate.text = String.format(context.getString(R.string.last_updated), time)
     }
 
@@ -43,7 +44,7 @@ class NoInternetCard(context: Context) : StickyCard(CardManager.CardTypes.NO_INT
             interactionListener: CardInteractionListener
         ): CardViewHolder {
             val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.card_no_internet, parent, false)
+                .inflate(R.layout.card_no_internet, parent, false)
             return CardViewHolder(view, interactionListener)
         }
     }

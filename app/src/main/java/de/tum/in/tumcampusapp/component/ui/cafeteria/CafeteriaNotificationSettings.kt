@@ -69,9 +69,9 @@ class CafeteriaNotificationSettings(context: Context) {
         }
 
         val didChangeTime = times
-                .map { updateLocalTimeOfDay(it) }
-                .toBooleanArray()
-                .any { it }
+            .map { updateLocalTimeOfDay(it) }
+            .toBooleanArray()
+            .any { it }
 
         return if (didChangeTime) {
             cafeteriaMenuManager.scheduleNotificationAlarms()
@@ -92,10 +92,10 @@ class CafeteriaNotificationSettings(context: Context) {
 
         private val defaultNotificationTime: LocalTime by lazy {
             LocalTime.now()
-                    .withHourOfDay(9)
-                    .withMinuteOfHour(30)
-                    .withSecondOfMinute(0)
-                    .withMillisOfSecond(0)
+                .withHourOfDay(9)
+                .withMinuteOfHour(30)
+                .withSecondOfMinute(0)
+                .withMillisOfSecond(0)
         }
 
         @JvmStatic
@@ -126,10 +126,10 @@ class CafeteriaNotificationSettings(context: Context) {
             val hour = time?.hourOfDay ?: NO_VALUE_SET
             val minute = time?.minuteOfHour ?: NO_VALUE_SET
             sharedPrefs
-                    .edit()
-                    .putInt(PREFIX + dayOfWeek + HOUR_SUFFIX, hour)
-                    .putInt(PREFIX + dayOfWeek + MINUTE_SUFFIX, minute)
-                    .apply()
+                .edit()
+                .putInt(PREFIX + dayOfWeek + HOUR_SUFFIX, hour)
+                .putInt(PREFIX + dayOfWeek + MINUTE_SUFFIX, minute)
+                .apply()
         }
 
         fun retrieveTimeForDay(day: DateTime) = retrieveTimeForDay(day.dayOfWeek)
@@ -146,10 +146,10 @@ class CafeteriaNotificationSettings(context: Context) {
             }
 
             return LocalTime.now()
-                    .withHourOfDay(hour)
-                    .withMinuteOfHour(minute)
-                    .withSecondOfMinute(0)
-                    .withMillisOfSecond(0)
+                .withHourOfDay(hour)
+                .withMinuteOfHour(minute)
+                .withSecondOfMinute(0)
+                .withMillisOfSecond(0)
         }
     }
 }

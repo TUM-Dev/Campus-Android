@@ -1,8 +1,8 @@
 package de.tum.`in`.tumcampusapp.component.other.generic.adapter
 
 import android.graphics.Rect
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 
 class GridEqualSpacingDecoration(
     private val spacing: Int,

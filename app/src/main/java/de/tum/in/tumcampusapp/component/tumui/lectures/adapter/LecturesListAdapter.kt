@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
 import de.tum.`in`.tumcampusapp.component.tumui.lectures.activity.LecturesPersonalActivity
@@ -21,10 +20,16 @@ import de.tum.`in`.tumcampusapp.component.tumui.lectures.model.Lecture
 class LecturesListAdapter(context: Context, results: MutableList<Lecture>) : SimpleStickyListHeadersAdapter<Lecture>(context, results) {
 
     override fun generateHeaderName(item: Lecture) = super.generateHeaderName(item)
-            .replace("Sommersemester", this.context
-                    .getString(R.string.semester_summer))
-            .replace("Wintersemester", this.context
-                    .getString(R.string.semester_winter))
+        .replace(
+            "Sommersemester",
+            this.context
+                .getString(R.string.semester_summer)
+        )
+        .replace(
+            "Wintersemester",
+            this.context
+                .getString(R.string.semester_winter)
+        )
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val holder: ViewHolder
@@ -46,8 +51,12 @@ class LecturesListAdapter(context: Context, results: MutableList<Lecture>) : Sim
 
         // if we have something to display - set for each lecture element
         holder.tvLectureName?.text = lvItem.title
-        val details = context.getString(R.string.lecture_list_item_details_format_string,
-                lvItem.lectureType, lvItem.semesterId, lvItem.duration)
+        val details = context.getString(
+            R.string.lecture_list_item_details_format_string,
+            lvItem.lectureType,
+            lvItem.semesterId,
+            lvItem.duration
+        )
         holder.tvTypeSWSSemester?.text = details
         holder.tvDozent?.text = lvItem.lecturers
 

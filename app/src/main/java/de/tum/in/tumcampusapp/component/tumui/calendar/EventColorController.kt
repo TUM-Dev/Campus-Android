@@ -76,12 +76,14 @@ class EventColorController(
         val eventIdentifier = getEventIdentifier(calendarItem)
 
         val singleEventColorList = eventColorDao.getByEventNrAndIdentifierAndIsSingleEvent(calendarItem.nr, eventIdentifier, true)
-        if (singleEventColorList.isNotEmpty())
+        if (singleEventColorList.isNotEmpty()) {
             return singleEventColorList[0]
+        }
 
         val eventColorList = eventColorDao.getByIdentifierAndIsSingleEvent(eventIdentifier, false)
-        if (eventColorList.isNotEmpty())
+        if (eventColorList.isNotEmpty()) {
             return eventColorList[0]
+        }
         return null
     }
 

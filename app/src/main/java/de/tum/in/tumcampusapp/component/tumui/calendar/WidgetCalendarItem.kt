@@ -24,18 +24,18 @@ data class WidgetCalendarItem(
 
     override fun toWeekViewEvent(): WeekViewEvent<WidgetCalendarItem> {
         val style = WeekViewEvent.Style.Builder()
-                .setBackgroundColor(color)
-                .build()
+            .setBackgroundColor(color)
+            .build()
 
         return WeekViewEvent.Builder<WidgetCalendarItem>(this)
-                .setId(id.toLong())
-                .setTitle(title)
-                .setStartTime(startTime.toGregorianCalendar())
-                .setEndTime(endTime.toGregorianCalendar())
-                .setLocation(location)
-                .setAllDay(false)
-                .setStyle(style)
-                .build()
+            .setId(id.toLong())
+            .setTitle(title)
+            .setStartTime(startTime.toGregorianCalendar())
+            .setEndTime(endTime.toGregorianCalendar())
+            .setLocation(location)
+            .setAllDay(false)
+            .setStyle(style)
+            .build()
     }
 
     companion object {
@@ -43,11 +43,11 @@ data class WidgetCalendarItem(
         @JvmStatic
         fun create(calendarItem: CalendarItem): WidgetCalendarItem {
             return WidgetCalendarItem(
-                    calendarItem.nr,
-                    calendarItem.getFormattedTitle(),
-                    calendarItem.eventStart,
-                    calendarItem.eventEnd,
-                    calendarItem.getEventLocation()
+                calendarItem.nr,
+                calendarItem.getFormattedTitle(),
+                calendarItem.eventStart,
+                calendarItem.eventEnd,
+                calendarItem.getEventLocation()
             )
         }
 

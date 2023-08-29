@@ -37,10 +37,10 @@ class NotificationScheduler @Inject constructor(private val context: Context) {
      */
     fun schedule(futureNotifications: List<FutureNotification>) {
         futureNotifications
-                // Prevent excessive alarm scheduling
-                // Clients should be responsible enough to not exceed that amount
-                .take(maxRemainingAlarms(context))
-                .forEach { schedule(it) }
+            // Prevent excessive alarm scheduling
+            // Clients should be responsible enough to not exceed that amount
+            .take(maxRemainingAlarms(context))
+            .forEach { schedule(it) }
     }
 
     /**
@@ -155,8 +155,12 @@ class NotificationScheduler @Inject constructor(private val context: Context) {
             putExtra(Const.KEY_NOTIFICATION_ID, globalNotificationId.toInt())
             putExtra(Const.KEY_NOTIFICATION, futureNotification.notification)
         }
-        return PendingIntent.getBroadcast(context,
-                futureNotification.id, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT)
+        return PendingIntent.getBroadcast(
+            context,
+            futureNotification.id,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
+        )
     }
 
     /**
@@ -177,21 +181,21 @@ class NotificationScheduler @Inject constructor(private val context: Context) {
     companion object {
         private fun addActiveAlarm(context: Context, id: Long) {
             TcaDb.getInstance(context)
-                    .activeNotificationsDao()
-                    .addActiveAlarm(ActiveAlarm(id))
+                .activeNotificationsDao()
+                .addActiveAlarm(ActiveAlarm(id))
         }
 
         fun removeActiveAlarm(context: Context, id: Long) {
             TcaDb.getInstance(context)
-                    .activeNotificationsDao()
-                    .deleteActiveAlarm(ActiveAlarm(id))
+                .activeNotificationsDao()
+                .deleteActiveAlarm(ActiveAlarm(id))
         }
 
         @JvmStatic
         fun maxRemainingAlarms(context: Context): Int {
             return TcaDb.getInstance(context)
-                    .activeNotificationsDao()
-                    .maxAlarmsToSchedule()
+                .activeNotificationsDao()
+                .maxAlarmsToSchedule()
         }
     }
 }

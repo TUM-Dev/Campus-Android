@@ -20,10 +20,11 @@ data class FavoriteDish(
         @JvmStatic
         fun create(menu: CafeteriaMenu, date: String): FavoriteDish {
             return FavoriteDish(
-                    cafeteriaId = menu.cafeteriaId,
-                    dishName = menu.name,
-                    date = date,
-                    tag = menu.tag)
+                cafeteriaId = menu.cafeteriaId,
+                dishName = menu.name,
+                date = date,
+                tag = menu.tag
+            )
         }
     }
 }

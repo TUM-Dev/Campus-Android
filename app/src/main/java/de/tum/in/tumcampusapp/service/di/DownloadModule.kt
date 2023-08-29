@@ -110,14 +110,14 @@ object DownloadModule {
         topNewsDownloadAction: TopNewsDownloadAction,
         updateNoteDownloadAction: UpdateNoteDownloadAction
     ): DownloadWorker.WorkerActions = DownloadWorker.WorkerActions(
-            cafeteriaDownloadAction,
-            locationImportAction,
-            eventsDownloadAction,
-            filmDownloadAction,
-            gradesDownloadAction,
-            idUploadAction,
-            newsDownloadAction,
-            topNewsDownloadAction,
-            updateNoteDownloadAction
+        cafeteriaDownloadAction,
+        locationImportAction,
+        eventsDownloadAction,
+        filmDownloadAction,
+        gradesDownloadAction,
+        idUploadAction,
+        newsDownloadAction,
+        topNewsDownloadAction,
+        updateNoteDownloadAction
     )
 }

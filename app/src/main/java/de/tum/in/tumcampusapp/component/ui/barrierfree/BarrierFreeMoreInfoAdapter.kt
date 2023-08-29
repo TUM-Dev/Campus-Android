@@ -4,13 +4,12 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
 import de.tum.`in`.tumcampusapp.component.ui.barrierfree.model.BarrierFreeMoreInfo
 
 class BarrierFreeMoreInfoAdapter(context: Context, infos: List<BarrierFreeMoreInfo>) :
-        SimpleStickyListHeadersAdapter<BarrierFreeMoreInfo>(context, infos.toMutableList()) {
+    SimpleStickyListHeadersAdapter<BarrierFreeMoreInfo>(context, infos.toMutableList()) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val holder: ViewHolder

@@ -23,31 +23,31 @@ object TuitionNotificationScheduler {
         // sure that the user does not miss it. We begin a month before the deadline, as this
         // ensures that the user has enough time to make the transaction.
         val notificationTimes = arrayOf(
-                Days.days(30),
-                Days.days(14),
-                Days.days(7),
-                Days.days(4),
-                Days.days(3),
-                Days.days(2),
-                Days.days(1),
-                Days.days(0)
+            Days.days(30),
+            Days.days(14),
+            Days.days(7),
+            Days.days(4),
+            Days.days(3),
+            Days.days(2),
+            Days.days(1),
+            Days.days(0)
         )
 
         val remainingDays = Days.daysBetween(DateTime.now(), tuition.deadline)
 
         // Get the next occurring notification time
         val daysBeforeDeadline = notificationTimes
-                .filter { it <= remainingDays }
-                .maxOrNull()!!
-                .days
+            .filter { it <= remainingDays }
+            .maxOrNull()!!
+            .days
 
         // Setting the notification time at 10am seems like a good trade-off between making sure
         // that the notification doesn't get lost in the morning flood of new notifications and
         // giving the user enough time to make the transaction.
         return tuition.deadline
-                .minusDays(daysBeforeDeadline)
-                .withHourOfDay(10)
-                .withMinuteOfHour(0)
-                .withSecondOfMinute(0)
+            .minusDays(daysBeforeDeadline)
+            .withHourOfDay(10)
+            .withMinuteOfHour(0)
+            .withSecondOfMinute(0)
     }
 }

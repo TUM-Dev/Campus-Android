@@ -18,12 +18,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import javax.inject.Inject
-
 /**
  * Cafeteria Menu Manager, handles database stuff, external imports
  */
 class CafeteriaMenuManager
-
 @Inject
 constructor(private val context: Context) {
     private val menuDao: CafeteriaMenuDao
@@ -44,9 +42,10 @@ constructor(private val context: Context) {
         // Responses from the cafeteria API are cached for one day. If the download is forced,
         // we add a "no-cache" header to the request.
         CafeteriaAPIClient
-                .getInstance(context)
-                .getMenus(cacheControl)
-                .enqueue(object : Callback<CafeteriaResponse> {
+            .getInstance(context)
+            .getMenus(cacheControl)
+            .enqueue(
+                object : Callback<CafeteriaResponse> {
                     override fun onResponse(
                         call: Call<CafeteriaResponse>,
                         response: Response<CafeteriaResponse>
@@ -60,7 +59,8 @@ constructor(private val context: Context) {
                     override fun onFailure(call: Call<CafeteriaResponse>, t: Throwable) {
                         Utils.log(t)
                     }
-                })
+                }
+            )
     }
 
     private fun onDownloadSuccess(response: CafeteriaResponse) {

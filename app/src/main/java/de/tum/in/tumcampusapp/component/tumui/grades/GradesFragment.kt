@@ -7,7 +7,11 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.ArrayMap
 import android.util.Log
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -19,9 +23,21 @@ import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.google.gson.*
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
+import com.google.gson.JsonParseException
+import com.google.gson.JsonPrimitive
+import com.google.gson.JsonSerializationContext
+import com.google.gson.JsonSerializer
 import com.google.gson.reflect.TypeToken
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
@@ -227,7 +243,8 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
      * Gson serialiser/deserialiser for converting Joda [DateTime] objects.
      * Source: https://riptutorial.com/android/example/14799/adding-a-custom-converter-to-gson
      */
-    class DateTimeConverter @Inject constructor() : JsonSerializer<DateTime?>,
+    class DateTimeConverter @Inject constructor() :
+        JsonSerializer<DateTime?>,
         JsonDeserializer<DateTime?> {
         private val dateTimeFormatter: DateTimeFormatter =
             DateTimeFormat.forPattern("YYYY-MM-dd HH:mm")
@@ -248,7 +265,9 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         ): DateTime? {
             return if (json.asString == null || json.asString.isEmpty()) {
                 null
-            } else dateTimeFormatter.parseDateTime(json.asString)
+            } else {
+                dateTimeFormatter.parseDateTime(json.asString)
+            }
         }
     }
 
@@ -285,9 +304,11 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
                 legend.isWordWrapEnabled = true
                 description = null
                 // the legend should not contain all possible grades but rather the most common ones
-                legend.setEntries(legend.entries.filter {
-                    it.label != null && !it.label.contains(uncommonGradeRe)
-                })
+                legend.setEntries(
+                    legend.entries.filter {
+                        it.label != null && !it.label.contains(uncommonGradeRe)
+                    }
+                )
                 legend.setCustom(legend.entries)
                 setTouchEnabled(false)
 
@@ -330,7 +351,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
 
         with(binding) {
             barChartView.apply {
-
                 data = BarData(set)
                 setFitBars(true)
 
@@ -393,8 +413,10 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         val grades = exams
             .filter { it.isPassed && it.gradeUsedInAverage }
             .map {
-                (numberFormat.parse(it.grade.toString())?.toDouble()
-                    ?: 1.0) * it.credits_new * it.weight
+                (
+                    numberFormat.parse(it.grade.toString())?.toDouble()
+                        ?: 1.0
+                    ) * it.credits_new * it.weight
             }
         var factorSum = exams
             .filter { it.isPassed && it.gradeUsedInAverage }
@@ -454,7 +476,9 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
             filters.addAll(programIds)
 
             val spinnerArrayAdapter = ArrayAdapter(
-                requireContext(), R.layout.simple_spinner_item_actionbar, filters
+                requireContext(),
+                R.layout.simple_spinner_item_actionbar,
+                filters
             )
 
             with(binding) {
@@ -509,7 +533,6 @@ class GradesFragment : FragmentForAccessingTumOnline<ExamList>(
         dialog.findViewById<Button>(R.id.cancelDialogAddGrade)
             ?.setOnClickListener { dialog.dismiss() }
         dialog.findViewById<Button>(R.id.positiveDialogAddGrade)?.setOnClickListener {
-
             val titleView = view.findViewById<EditText>(R.id.editTextaddGradeCourseName)
             val gradeView = view.findViewById<EditText>(R.id.editTextAddGrade)
             val examinerView = view.findViewById<EditText>(R.id.editTextaddGradeExaminer)

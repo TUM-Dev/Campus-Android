@@ -113,20 +113,32 @@ class TimetableWidget : AppWidgetProvider() {
             val configIntent = Intent(context, TimetableWidgetConfigureActivity::class.java)
             configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
             val pendingConfigIntent = PendingIntent.getActivity(
-                    context, appWidgetId, configIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+                context,
+                appWidgetId,
+                configIntent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
             remoteViews.setOnClickPendingIntent(R.id.timetable_widget_setting, pendingConfigIntent)
 
             // Set up the calendar activity listeners
             val calendarIntent = Intent(context, CalendarActivity::class.java)
             val pendingCalendarIntent = PendingIntent.getActivity(
-                    context, appWidgetId, calendarIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+                context,
+                appWidgetId,
+                calendarIntent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
             remoteViews.setOnClickPendingIntent(R.id.timetable_widget_header, pendingCalendarIntent)
 
             // Set up the calendar intent used when the user taps an event
             val eventIntent = Intent(context, CalendarActivity::class.java)
             eventIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
             val eventPendingIntent = PendingIntent.getActivity(
-                    context, appWidgetId, eventIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+                context,
+                appWidgetId,
+                eventIntent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
             remoteViews.setPendingIntentTemplate(R.id.timetable_widget_listview, eventPendingIntent)
 
             // Set up the intent that starts the TimetableWidgetService, which will

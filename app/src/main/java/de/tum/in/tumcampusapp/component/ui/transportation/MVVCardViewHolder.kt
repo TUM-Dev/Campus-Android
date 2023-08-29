@@ -28,19 +28,17 @@ class MVVCardViewHolder(
             }
             if (contentContainerLayout.childCount == 0) {
                 departures.asSequence()
-                        .take(items)
-                        .map { departure ->
-                            DepartureView(context, true).apply {
-                                val isFavorite = controller.isFavorite(departure.symbol)
-                                setSymbol(departure.symbol, isFavorite)
-                                setLine(departure.direction)
-                                setTime(departure.departureTime)
-                            }
+                    .take(items)
+                    .map { departure ->
+                        DepartureView(context, true).apply {
+                            val isFavorite = controller.isFavorite(departure.symbol)
+                            setSymbol(departure.symbol, isFavorite)
+                            setLine(departure.direction)
+                            setTime(departure.departureTime)
                         }
-                        .toList()
-                        .forEach { departureView ->
-                            contentContainerLayout.addView(departureView)
-                        }
+                    }
+                    .toList()
+                    .forEach { departureView -> contentContainerLayout.addView(departureView) }
             }
         }
     }

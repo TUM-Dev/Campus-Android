@@ -3,12 +3,12 @@ package de.tum.`in`.tumcampusapp.component.tumui.grades
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.CheckBox
 import android.widget.Button
+import android.widget.CheckBox
+import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import de.tum.`in`.tumcampusapp.R
@@ -62,8 +62,10 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
 
         holder.additionalInfoTextView.text = String.format(
             "%s: %s, %s: %s",
-            context.getString(R.string.examiner), exam.examiner,
-            context.getString(R.string.mode), exam.modus
+            context.getString(R.string.examiner),
+            exam.examiner,
+            context.getString(R.string.mode),
+            exam.modus
         )
     }
 

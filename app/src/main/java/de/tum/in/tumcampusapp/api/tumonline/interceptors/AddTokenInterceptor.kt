@@ -13,8 +13,8 @@ class AddTokenInterceptor(private val context: Context) : Interceptor {
 
     private fun loadAccessTokenFromPreferences(context: Context): String? {
         return PreferenceManager
-                .getDefaultSharedPreferences(context)
-                .getString(Const.ACCESS_TOKEN, null)
+            .getDefaultSharedPreferences(context)
+            .getString(Const.ACCESS_TOKEN, null)
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -28,9 +28,9 @@ class AddTokenInterceptor(private val context: Context) : Interceptor {
 
         accessToken?.let {
             url = url
-                    .newBuilder()
-                    .addQueryParameter("pToken", it)
-                    .build()
+                .newBuilder()
+                .addQueryParameter("pToken", it)
+                .build()
         }
 
         val modifiedRequest = request.newBuilder().url(url).build()

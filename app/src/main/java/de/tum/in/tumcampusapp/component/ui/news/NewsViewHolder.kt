@@ -74,8 +74,8 @@ class NewsViewHolder(
 
     private fun bindFilmItem(newsItem: News, hasEvent: Boolean) {
         Picasso.get()
-                .load(newsItem.image)
-                .into(imageView)
+            .load(newsItem.image)
+            .into(imageView)
 
         titleTextView?.text = COMPILE.matcher(newsItem.title).replaceAll("")
 
@@ -109,14 +109,17 @@ class NewsViewHolder(
 
     private fun loadNewsImage(url: String) {
         Picasso.get()
-                .load(url)
-                .into(imageView, object : Callback {
+            .load(url)
+            .into(
+                imageView,
+                object : Callback {
                     override fun onSuccess() = Unit
 
                     override fun onError(e: Exception?) {
                         imageView?.visibility = GONE
                     }
-                })
+                }
+            )
     }
 
     companion object {

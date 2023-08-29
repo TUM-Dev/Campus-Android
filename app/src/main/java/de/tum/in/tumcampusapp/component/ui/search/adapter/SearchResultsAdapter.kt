@@ -57,7 +57,6 @@ class SearchResultsAdapter(
                     .load(searchResult.person.getFullImageUrl())
                     .into(profilePicture)
             } else {
-
                 /**
                  * Adapter does not remove items from the screen, but reuse them for performance
                  * that is why we need to set this values back to original ones

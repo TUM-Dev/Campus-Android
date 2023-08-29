@@ -12,8 +12,8 @@ data class EventSeriesMapping(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 
-    @Ignore
     // Needed to tell Room to use the constructor with two arguments as kotlin auto-generates the no-arg constructor
     // and room picks it when multiple constructors are present
+    @Ignore
     constructor() : this("", "")
 }

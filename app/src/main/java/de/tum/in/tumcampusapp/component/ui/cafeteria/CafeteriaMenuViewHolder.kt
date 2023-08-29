@@ -36,13 +36,17 @@ class CafeteriaMenuViewHolder(
         } else {
             // update textview every 10s (this interval is chosen to make our clock closer to realtime)
             var timer = Timer()
-            timer.schedule(object : TimerTask() {
-                override fun run() {
-                    openingHours = openHoursHelper.getHoursByIdAsString(cafeteria.id, cafeteria.nextMenuDate)
-                    openingHoursTextView.visibility = View.VISIBLE
-                    openingHoursTextView.text = openingHours
-                }
-            }, 0, 10000)
+            timer.schedule(
+                object : TimerTask() {
+                    override fun run() {
+                        openingHours = openHoursHelper.getHoursByIdAsString(cafeteria.id, cafeteria.nextMenuDate)
+                        openingHoursTextView.visibility = View.VISIBLE
+                        openingHoursTextView.text = openingHours
+                    }
+                },
+                0,
+                10000
+            )
         }
 
         if (this@CafeteriaMenuViewHolder::adapter.isInitialized.not()) {

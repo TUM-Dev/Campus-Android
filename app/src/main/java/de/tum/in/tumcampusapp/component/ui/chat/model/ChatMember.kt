@@ -7,8 +7,10 @@ import com.google.gson.annotations.SerializedName
 class ChatMember() : Parcelable {
 
     var id: Int = 0
+
     @SerializedName("lrz_id")
     var lrzId: String? = null
+
     @SerializedName("display_name")
     var displayName: String? = null
     var signature: String? = null

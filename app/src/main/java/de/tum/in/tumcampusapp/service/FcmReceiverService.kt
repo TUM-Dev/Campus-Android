@@ -68,8 +68,8 @@ class FcmReceiverService : FirebaseMessagingService() {
                 // Nothing to do, just confirm the retrieved notificationId
                 try {
                     TUMCabeClient
-                            .getInstance(this)
-                            .confirm(notificationId)
+                        .getInstance(this)
+                        .confirm(notificationId)
                 } catch (e: IOException) {
                     Utils.log(e)
                 }

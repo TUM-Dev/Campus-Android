@@ -40,7 +40,7 @@ class AlarmPushNotification(
         get() {
             return tryOrNull {
                 TUMCabeClient.getInstance(appContext)
-                        .getNotification(notificationId)
+                    .getNotification(notificationId)
             }
         }
 
@@ -72,17 +72,17 @@ class AlarmPushNotification(
             val strippedDescription = Utils.stripHtml(info.description)
 
             return NotificationCompat.Builder(appContext, Const.NOTIFICATION_CHANNEL_EMERGENCY)
-                    .setSmallIcon(defaultIcon)
-                    .setContentTitle(info.title)
-                    .setStyle(NotificationCompat.BigTextStyle().bigText(strippedDescription))
-                    .setContentText(strippedDescription)
-                    .setContentIntent(pending)
-                    .setDefaults(Notification.DEFAULT_VIBRATE)
-                    .setLights(-0xffff01, 500, 500)
-                    .setSound(sound)
-                    .setAutoCancel(true)
-                    .setColor(ContextCompat.getColor(appContext, R.color.color_primary))
-                    .build()
+                .setSmallIcon(defaultIcon)
+                .setContentTitle(info.title)
+                .setStyle(NotificationCompat.BigTextStyle().bigText(strippedDescription))
+                .setContentText(strippedDescription)
+                .setContentIntent(pending)
+                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setLights(-0xffff01, 500, 500)
+                .setSound(sound)
+                .setAutoCancel(true)
+                .setColor(ContextCompat.getColor(appContext, R.color.color_primary))
+                .build()
         }
 
     companion object {

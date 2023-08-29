@@ -56,17 +56,18 @@ data class Event(
     // Unsafe calls are only ok because we control writeToParcel().
     // Keep in sync with writeToParcel()!
     constructor(parcel: Parcel) : this(
-            id = parcel.readInt(),
-            imageUrl = parcel.readString(),
-            title = parcel.readString()!!,
-            description = parcel.readString()!!,
-            locality = parcel.readString()!!,
-            startTime = DateTime(parcel.readLong()),
-            endTime = parcel.readDateTime(),
-            eventUrl = parcel.readString()!!,
-            dismissed = parcel.readInt(),
-            kino = parcel.readInt(),
-            news = parcel.readInt())
+        id = parcel.readInt(),
+        imageUrl = parcel.readString(),
+        title = parcel.readString()!!,
+        description = parcel.readString()!!,
+        locality = parcel.readString()!!,
+        startTime = DateTime(parcel.readLong()),
+        endTime = parcel.readDateTime(),
+        eventUrl = parcel.readString()!!,
+        dismissed = parcel.readInt(),
+        kino = parcel.readInt(),
+        news = parcel.readInt()
+    )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(id)

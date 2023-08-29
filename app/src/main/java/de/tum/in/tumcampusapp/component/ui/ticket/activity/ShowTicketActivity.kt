@@ -75,9 +75,9 @@ class ShowTicketActivity : BaseActivity(R.layout.activity_show_ticket) {
 
         val eventId = intent.getIntExtra(Const.KEY_EVENT_ID, 0)
         injector.ticketsComponent()
-                .eventId(eventId)
-                .build()
-                .inject(this)
+            .eventId(eventId)
+            .build()
+            .inject(this)
 
         initViews()
         loadTicketData(eventId)
@@ -104,9 +104,9 @@ class ShowTicketActivity : BaseActivity(R.layout.activity_show_ticket) {
             ticketList.addItemDecoration(EqualSpacingItemDecoration(spacing))
 
             swipeRefreshLayout.setColorSchemeResources(
-                    R.color.color_primary,
-                    R.color.tum_A100,
-                    R.color.tum_A200
+                R.color.color_primary,
+                R.color.tum_A100,
+                R.color.tum_A200
             )
             swipeRefreshLayout.setOnRefreshListener { loadRedemptionStatus() }
         }
@@ -114,8 +114,8 @@ class ShowTicketActivity : BaseActivity(R.layout.activity_show_ticket) {
 
     private fun loadRedemptionStatus() {
         val disposable = ticketsRemoteRepo
-                .fetchTickets()
-                .subscribe({ handleTicketRefreshSuccess(it) }, { handleTicketRefreshFailure() })
+            .fetchTickets()
+            .subscribe({ handleTicketRefreshSuccess(it) }, { handleTicketRefreshFailure() })
         compositeDisposable.add(disposable)
     }
 
