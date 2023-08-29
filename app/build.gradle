@@ -19,7 +19,6 @@ apply from: '../gradle/scripts/testLogging.gradle'
 android {
     compileSdk 33
     namespace "de.tum.in.tumcampusapp"
-    testNamespace "de.tum.in.tumcampusapp"
     buildTypes {
         all {
             proguardFiles(file('../proguard').listFiles())
