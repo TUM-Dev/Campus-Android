@@ -1,5 +1,5 @@
 plugins {
-    id 'de.aaschmid.cpd' version '3.1'
+    id 'de.aaschmid.cpd' version '3.3'
 }
 // apply plugin: "io.gitlab.arturbosch.detekt"
 apply plugin: 'com.android.application'
@@ -19,7 +19,7 @@ apply from: '../gradle/scripts/testLogging.gradle'
 android {
     namespace "de.tum.in.tumcampusapp"
     testNamespace "de.tum.in.tumcampusapp"
-    compileSdkVersion 32
+    compileSdk 33
     buildTypes {
         all {
             proguardFiles(file('../proguard').listFiles())
@@ -39,9 +39,9 @@ android {
     defaultConfig {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 26
-        targetSdkVersion 32
-        versionCode 587
-        versionName "4.2-dev"
+        targetSdkVersion 33
+        versionCode 588
+        versionName "4.3-dev"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 

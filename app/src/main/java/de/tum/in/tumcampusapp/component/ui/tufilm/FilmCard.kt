@@ -13,7 +13,7 @@ import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 class FilmCard(
     context: Context,
     news: News
-) : NewsCard(context, news, CardManager.CARD_NEWS_FILM) {
+) : NewsCard(context, news, CardManager.CardTypes.NEWS_FILM) {
     override fun getNavigationDestination(): NavDestination {
         val args = Bundle()
         args.putString(Const.KINO_DATE, DateTimeUtils.getDateTimeString(date))

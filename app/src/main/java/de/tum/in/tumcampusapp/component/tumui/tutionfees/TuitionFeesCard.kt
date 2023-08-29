@@ -24,7 +24,7 @@ import org.joda.time.format.DateTimeFormat
 class TuitionFeesCard(
     context: Context,
     private val tuition: Tuition
-) : Card(CardManager.CARD_TUITION_FEE, context, "card_tuition_fee") {
+) : Card(CardManager.CardTypes.TUITION_FEE, context) {
 
     override val optionsMenuResId: Int
         get() = R.menu.card_popup_menu

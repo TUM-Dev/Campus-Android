@@ -21,7 +21,7 @@ import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoActivity
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 
-class EventCard(context: Context) : Card(CardManager.CARD_EVENT, context, "card_event") {
+class EventCard(context: Context) : Card(CardManager.CardTypes.EVENT, context) {
 
     var event: Event? = null
 

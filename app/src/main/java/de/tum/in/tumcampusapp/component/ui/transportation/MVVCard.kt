@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavDestination
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
-import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager.CARD_MVV
+import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.Departure
@@ -19,7 +19,7 @@ import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationRes
 /**
  * Card that shows MVV departure times
  */
-class MVVCard(context: Context, val station: StationResult, val departures: List<Departure>) : Card(CARD_MVV, context, "card_mvv") {
+class MVVCard(context: Context, val station: StationResult, val departures: List<Departure>) : Card(CardManager.CardTypes.MVV, context) {
 
     override val optionsMenuResId: Int
         get() = R.menu.card_popup_menu

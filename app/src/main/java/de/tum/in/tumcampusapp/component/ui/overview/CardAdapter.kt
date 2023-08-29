@@ -27,20 +27,20 @@ class CardAdapter(private val interactionListener: CardInteractionListener) : Re
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): CardViewHolder {
         when (viewType) {
-            CardManager.CARD_CAFETERIA -> return CafeteriaMenuCard.inflateViewHolder(viewGroup, interactionListener)
-            CardManager.CARD_TUITION_FEE -> return TuitionFeesCard.inflateViewHolder(viewGroup, interactionListener)
-            CardManager.CARD_NEXT_LECTURE -> return NextLectureCard.inflateViewHolder(viewGroup, interactionListener)
-            CardManager.CARD_RESTORE -> return RestoreCard.inflateViewHolder(viewGroup, interactionListener)
-            CardManager.CARD_NO_INTERNET -> return NoInternetCard.inflateViewHolder(viewGroup, interactionListener)
-            CardManager.CARD_MVV -> return MVVCard.inflateViewHolder(viewGroup, interactionListener)
-            CardManager.CARD_NEWS, CardManager.CARD_NEWS_FILM -> return NewsCard.inflateViewHolder(viewGroup, viewType, interactionListener)
-            CardManager.CARD_EDUROAM -> return EduroamCard.inflateViewHolder(viewGroup, interactionListener)
-            CardManager.CARD_EDUROAM_FIX -> return EduroamFixCard.inflateViewHolder(viewGroup, interactionListener)
-            CardManager.CARD_SUPPORT -> return SupportCard.inflateViewHolder(viewGroup, interactionListener)
-            CardManager.CARD_LOGIN -> return LoginPromptCard.inflateViewHolder(viewGroup, interactionListener)
-            CardManager.CARD_TOP_NEWS -> return TopNewsCard.inflateViewHolder(viewGroup, interactionListener)
-            CardManager.CARD_EVENT -> return EventCard.inflateViewHolder(viewGroup, interactionListener)
-            CardManager.CARD_UPDATE_NOTE -> return UpdateNoteCard.inflateViewHolder(viewGroup, interactionListener)
+            CardManager.CardTypes.CAFETERIA.id -> return CafeteriaMenuCard.inflateViewHolder(viewGroup, interactionListener)
+            CardManager.CardTypes.TUITION_FEE.id -> return TuitionFeesCard.inflateViewHolder(viewGroup, interactionListener)
+            CardManager.CardTypes.NEXT_LECTURE.id -> return NextLectureCard.inflateViewHolder(viewGroup, interactionListener)
+            CardManager.CardTypes.RESTORE.id -> return RestoreCard.inflateViewHolder(viewGroup, interactionListener)
+            CardManager.CardTypes.NO_INTERNET.id -> return NoInternetCard.inflateViewHolder(viewGroup, interactionListener)
+            CardManager.CardTypes.MVV.id -> return MVVCard.inflateViewHolder(viewGroup, interactionListener)
+            CardManager.CardTypes.NEWS.id, CardManager.CardTypes.NEWS_FILM.id -> return NewsCard.inflateViewHolder(viewGroup, viewType, interactionListener)
+            CardManager.CardTypes.EDUROAM.id -> return EduroamCard.inflateViewHolder(viewGroup, interactionListener)
+            CardManager.CardTypes.EDUROAM_FIX.id -> return EduroamFixCard.inflateViewHolder(viewGroup, interactionListener)
+            CardManager.CardTypes.SUPPORT.id -> return SupportCard.inflateViewHolder(viewGroup, interactionListener)
+            CardManager.CardTypes.LOGIN.id -> return LoginPromptCard.inflateViewHolder(viewGroup, interactionListener)
+            CardManager.CardTypes.TOP_NEWS.id -> return TopNewsCard.inflateViewHolder(viewGroup, interactionListener)
+            CardManager.CardTypes.EVENT.id -> return EventCard.inflateViewHolder(viewGroup, interactionListener)
+            CardManager.CardTypes.UPDATE_NOTE.id -> return UpdateNoteCard.inflateViewHolder(viewGroup, interactionListener)
             else -> throw UnsupportedOperationException()
         }
     }
@@ -51,11 +51,11 @@ class CardAdapter(private val interactionListener: CardInteractionListener) : Re
         card.updateViewHolder(viewHolder)
     }
 
-    override fun getItemViewType(position: Int) = mItems[position].cardType
+    override fun getItemViewType(position: Int) = mItems[position].cardType.id
 
     override fun getItemId(position: Int): Long {
         val card = mItems[position]
-        return (card.cardType + (card.getId() shl 4)).toLong()
+        return (card.cardType.id + (card.getId() shl 4)).toLong()
     }
 
     override fun getItemCount() = mItems.size

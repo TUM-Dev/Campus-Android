@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.net.wifi.WifiManager
-import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.checkSelfPermission
@@ -24,7 +23,7 @@ import org.jetbrains.anko.wifiManager
 /**
  * Card that can start [SetupEduroamActivity]
  */
-class EduroamCard(context: Context) : Card(CardManager.CARD_EDUROAM, context, "card_eduroam") {
+class EduroamCard(context: Context) : Card(CardManager.CardTypes.EDUROAM, context) {
 
     override val optionsMenuResId: Int
         get() = R.menu.card_popup_menu
@@ -39,7 +38,10 @@ class EduroamCard(context: Context) : Card(CardManager.CARD_EDUROAM, context, "c
     override fun shouldShow(prefs: SharedPreferences): Boolean {
         // Check if WiFi is turned on at all, as we cannot say if it was configured if it is off
         val wifiManager = context.wifiManager
-        return (wifiManager.isWifiEnabled && EduroamController.getEduroamConfig(context) == null && eduroamAvailable(wifiManager))
+        return (wifiManager.isWifiEnabled &&
+            EduroamController.getEduroamConfig(context) == null &&
+            eduroamAvailable(wifiManager) &&
+            prefs.getBoolean("card_eduroam_start", true))
     }
 
     private fun eduroamAvailable(wifi: WifiManager): Boolean {
@@ -54,9 +56,7 @@ class EduroamCard(context: Context) : Card(CardManager.CARD_EDUROAM, context, "c
     }
 
     override fun discard(editor: SharedPreferences.Editor) {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        prefs.edit().putBoolean("card_eduroam_start", false)
-                .apply()
+        editor.putBoolean("card_eduroam_start", false)
     }
 
     override fun getId(): Int {

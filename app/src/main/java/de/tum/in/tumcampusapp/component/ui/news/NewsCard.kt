@@ -20,8 +20,8 @@ import org.joda.time.DateTime
 open class NewsCard @JvmOverloads constructor(
     context: Context,
     val news: News,
-    type: Int = CardManager.CARD_NEWS
-) : Card(type, context, "card_news") {
+    type: CardManager.CardTypes = CardManager.CardTypes.NEWS
+) : Card(type, context) {
 
     override val optionsMenuResId: Int
         get() = R.menu.card_popup_menu
