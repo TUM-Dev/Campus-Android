@@ -17,9 +17,9 @@ apply from: '../gradle/scripts/checkstyle.gradle'
 apply from: '../gradle/scripts/testLogging.gradle'
 
 android {
+    compileSdk 33
     namespace "de.tum.in.tumcampusapp"
     testNamespace "de.tum.in.tumcampusapp"
-    compileSdk 33
     buildTypes {
         all {
             proguardFiles(file('../proguard').listFiles())
