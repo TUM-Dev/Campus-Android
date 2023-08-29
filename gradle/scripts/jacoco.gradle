@@ -4,7 +4,8 @@ jacoco {
     toolVersion = "0.8.10"
 }
 
-task jacocoTestReport(type: JacocoReport, dependsOn: "testDebugUnitTest") {
+tasks.register('jacocoTestReport', JacocoReport) {
+    dependsOn "testDebugUnitTest"
     group = "Reporting"
     description = "Generate Jacoco coverage reports for Debug build"
 
