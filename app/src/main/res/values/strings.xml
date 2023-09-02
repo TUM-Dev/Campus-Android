@@ -495,13 +495,7 @@
     <string name="url_privacy_policy" translatable="false">https://www.tum.app/privacy</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="message_details">Message info</string>
-    <string name="message_detail_text">&lt;b>Sender&lt;/b>&lt;br>
-Name: %1$s&lt;br>
-E-Mail: %2$s@mytum.de&lt;br>&lt;br>
-&lt;b>Message&lt;/b>&lt;br>
-Time: %3$s&lt;br>
-Status: %4$s&lt;br>
-Signature: %5$s</string>
+    <string name="message_detail_text">&lt;b>Sender&lt;/b>&lt;br> Name: %1$s&lt;br> E-Mail: %2$s@mytum.de&lt;br>&lt;br> &lt;b>Message&lt;/b>&lt;br> Time: %3$s&lt;br> Status: %4$s&lt;br> Signature: %5$s</string>
     <string name="valid">Valid</string>
     <string name="not_valid">Not valid</string>
     <string name="status_sent">Sent</string>

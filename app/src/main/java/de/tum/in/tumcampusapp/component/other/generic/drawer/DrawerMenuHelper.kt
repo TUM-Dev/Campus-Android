@@ -31,8 +31,8 @@ import de.tum.`in`.tumcampusapp.utils.plusAssign
 import java.util.Locale
 
 class DrawerMenuHelper(
-    private val activity: AppCompatActivity,
-    private val navigationView: NavigationView
+        private val activity: AppCompatActivity,
+        private val navigationView: NavigationView
 ) {
     private val germanContext: Context
         get() {
@@ -47,43 +47,64 @@ class DrawerMenuHelper(
             config.setLocale(Locale.ENGLISH)
             return activity.createConfigurationContext(config)
         }
+    private val chineseContext: Context
+        get() {
+            val config = Configuration(activity.resources.configuration)
+            config.setLocale(Locale.CHINESE)
+            return activity.createConfigurationContext(config)
+        }
 
     private val mapAllItems = mapOf(
-        // HOME
-        germanContext.getString(HOME.titleRes) to HOME,
-        englishContext.getString(HOME.titleRes) to HOME,
-        // SEARCH
-        germanContext.getString(SEARCH.titleRes) to SEARCH,
-        englishContext.getString(SEARCH.titleRes) to SEARCH,
-        // MY_TUM
-        germanContext.getString(MY_TUM[0].titleRes) to MY_TUM[0],
-        englishContext.getString(MY_TUM[0].titleRes) to MY_TUM[0],
-        germanContext.getString(MY_TUM[1].titleRes) to MY_TUM[1],
-        englishContext.getString(MY_TUM[1].titleRes) to MY_TUM[1],
-        germanContext.getString(MY_TUM[2].titleRes) to MY_TUM[2],
-        englishContext.getString(MY_TUM[2].titleRes) to MY_TUM[2],
-        germanContext.getString(MY_TUM[3].titleRes) to MY_TUM[3],
-        englishContext.getString(MY_TUM[3].titleRes) to MY_TUM[3],
-        // GENERAL
-        germanContext.getString(GENERAL[0].titleRes) to GENERAL[0],
-        englishContext.getString(GENERAL[0].titleRes) to GENERAL[0],
-        germanContext.getString(GENERAL[1].titleRes) to GENERAL[1],
-        englishContext.getString(GENERAL[1].titleRes) to GENERAL[1],
-        germanContext.getString(GENERAL[2].titleRes) to GENERAL[2],
-        englishContext.getString(GENERAL[2].titleRes) to GENERAL[2],
-        germanContext.getString(GENERAL[3].titleRes) to GENERAL[3],
-        englishContext.getString(GENERAL[3].titleRes) to GENERAL[3],
-        germanContext.getString(GENERAL[4].titleRes) to GENERAL[4],
-        englishContext.getString(GENERAL[4].titleRes) to GENERAL[4],
-        germanContext.getString(GENERAL[5].titleRes) to GENERAL[5],
-        englishContext.getString(GENERAL[5].titleRes) to GENERAL[5],
-        // ABOUT
-        germanContext.getString(ABOUT[0].titleRes) to ABOUT[0],
-        englishContext.getString(ABOUT[0].titleRes) to ABOUT[0],
-        germanContext.getString(ABOUT[1].titleRes) to ABOUT[1],
-        englishContext.getString(ABOUT[1].titleRes) to ABOUT[1],
-        germanContext.getString(ABOUT[2].titleRes) to ABOUT[2],
-        englishContext.getString(ABOUT[2].titleRes) to ABOUT[2]
+            // HOME
+            germanContext.getString(HOME.titleRes) to HOME,
+            englishContext.getString(HOME.titleRes) to HOME,
+            chineseContext.getString(HOME.titleRes) to HOME, // 添加中文翻译
+            // SEARCH
+            germanContext.getString(SEARCH.titleRes) to SEARCH,
+            englishContext.getString(SEARCH.titleRes) to SEARCH,
+            chineseContext.getString(SEARCH.titleRes) to SEARCH, // 添加中文翻译
+            // MY_TUM
+            germanContext.getString(MY_TUM[0].titleRes) to MY_TUM[0],
+            englishContext.getString(MY_TUM[0].titleRes) to MY_TUM[0],
+            chineseContext.getString(MY_TUM[0].titleRes) to MY_TUM[0], // 添加中文翻译
+            germanContext.getString(MY_TUM[1].titleRes) to MY_TUM[1],
+            englishContext.getString(MY_TUM[1].titleRes) to MY_TUM[1],
+            chineseContext.getString(MY_TUM[1].titleRes) to MY_TUM[1], // 添加中文翻译
+            germanContext.getString(MY_TUM[2].titleRes) to MY_TUM[2],
+            englishContext.getString(MY_TUM[2].titleRes) to MY_TUM[2],
+            chineseContext.getString(MY_TUM[2].titleRes) to MY_TUM[2], // 添加中文翻译
+            germanContext.getString(MY_TUM[3].titleRes) to MY_TUM[3],
+            englishContext.getString(MY_TUM[3].titleRes) to MY_TUM[3],
+            chineseContext.getString(MY_TUM[3].titleRes) to MY_TUM[3], // 添加中文翻译
+            // GENERAL
+            germanContext.getString(GENERAL[0].titleRes) to GENERAL[0],
+            englishContext.getString(GENERAL[0].titleRes) to GENERAL[0],
+            chineseContext.getString(GENERAL[0].titleRes) to GENERAL[0], // 添加中文翻译
+            germanContext.getString(GENERAL[1].titleRes) to GENERAL[1],
+            englishContext.getString(GENERAL[1].titleRes) to GENERAL[1],
+            chineseContext.getString(GENERAL[1].titleRes) to GENERAL[1], // 添加中文翻译
+            germanContext.getString(GENERAL[2].titleRes) to GENERAL[2],
+            englishContext.getString(GENERAL[2].titleRes) to GENERAL[2],
+            chineseContext.getString(GENERAL[2].titleRes) to GENERAL[2], // 添加中文翻译
+            germanContext.getString(GENERAL[3].titleRes) to GENERAL[3],
+            englishContext.getString(GENERAL[3].titleRes) to GENERAL[3],
+            chineseContext.getString(GENERAL[3].titleRes) to GENERAL[3], // 添加中文翻译
+            germanContext.getString(GENERAL[4].titleRes) to GENERAL[4],
+            englishContext.getString(GENERAL[4].titleRes) to GENERAL[4],
+            chineseContext.getString(GENERAL[4].titleRes) to GENERAL[4], // 添加中文翻译
+            germanContext.getString(GENERAL[5].titleRes) to GENERAL[5],
+            englishContext.getString(GENERAL[5].titleRes) to GENERAL[5],
+            chineseContext.getString(GENERAL[5].titleRes) to GENERAL[5], // 添加中文翻译
+            // ABOUT
+            germanContext.getString(ABOUT[0].titleRes) to ABOUT[0],
+            englishContext.getString(ABOUT[0].titleRes) to ABOUT[0],
+            chineseContext.getString(ABOUT[0].titleRes) to ABOUT[0],
+            germanContext.getString(ABOUT[1].titleRes) to ABOUT[1],
+            englishContext.getString(ABOUT[1].titleRes) to ABOUT[1],
+            chineseContext.getString(ABOUT[1].titleRes) to ABOUT[1],
+            germanContext.getString(ABOUT[2].titleRes) to ABOUT[2],
+            englishContext.getString(ABOUT[2].titleRes) to ABOUT[2],
+            chineseContext.getString(ABOUT[2].titleRes) to ABOUT[2]
     )
 
     private val currentFragment: Fragment?
@@ -111,8 +132,8 @@ class DrawerMenuHelper(
         val myTumMenu = navigationMenu.addSubMenu(R.string.my_tum)
         if (hasTumOnlineAccess) {
             val candidates = MY_TUM
-                .filterNot { !isChatEnabled && it.needsChatAccess }
-                .filterNot { isEmployeeMode && it.hideForEmployees }
+                    .filterNot { !isChatEnabled && it.needsChatAccess }
+                    .filterNot { isEmployeeMode && it.hideForEmployees }
 
             for (candidate in candidates) {
                 myTumMenu += candidate
@@ -153,8 +174,8 @@ class DrawerMenuHelper(
         items.forEach { it.isChecked = false }
 
         val currentIndex = allItems
-            .mapNotNull { it as? NavItem.FragmentDestination }
-            .indexOfFirst { it.fragment == currentFragment?.javaClass }
+                .mapNotNull { it as? NavItem.FragmentDestination }
+                .indexOfFirst { it.fragment == currentFragment?.javaClass }
 
         if (currentIndex != -1) {
             items[currentIndex].isCheckable = true
@@ -168,47 +189,47 @@ class DrawerMenuHelper(
         private val SEARCH = NavItem.FragmentDestination(R.string.search, R.drawable.ic_action_search, SearchFragment::class.java, true)
 
         private val MY_TUM = arrayOf(
-            NavItem.FragmentDestination(R.string.calendar, R.drawable.ic_outline_event_24px, CalendarFragment::class.java, true),
-            NavItem.FragmentDestination(
-                R.string.my_lectures,
-                R.drawable.ic_outline_school_24px,
-                LecturesFragment::class.java,
-                true,
-                hideForEmployees = true
-            ),
-            NavItem.FragmentDestination(
-                R.string.my_grades,
-                R.drawable.ic_outline_insert_chart_outlined_24px,
-                GradesFragment::class.java,
-                true,
-                hideForEmployees = true
-            ),
-            NavItem.FragmentDestination(
-                R.string.tuition_fees,
-                R.drawable.ic_money,
-                TuitionFeesFragment::class.java,
-                true,
-                hideForEmployees = true
-            )
+                NavItem.FragmentDestination(R.string.calendar, R.drawable.ic_outline_event_24px, CalendarFragment::class.java, true),
+                NavItem.FragmentDestination(
+                        R.string.my_lectures,
+                        R.drawable.ic_outline_school_24px,
+                        LecturesFragment::class.java,
+                        true,
+                        hideForEmployees = true
+                ),
+                NavItem.FragmentDestination(
+                        R.string.my_grades,
+                        R.drawable.ic_outline_insert_chart_outlined_24px,
+                        GradesFragment::class.java,
+                        true,
+                        hideForEmployees = true
+                ),
+                NavItem.FragmentDestination(
+                        R.string.tuition_fees,
+                        R.drawable.ic_money,
+                        TuitionFeesFragment::class.java,
+                        true,
+                        hideForEmployees = true
+                )
         )
 
         private val GENERAL = arrayOf(
-            NavItem.FragmentDestination(R.string.menues, R.drawable.ic_cutlery, CafeteriaFragment::class.java),
-            NavItem.FragmentDestination(R.string.study_rooms, R.drawable.ic_outline_group_work_24px, StudyRoomsFragment::class.java),
-            NavItem.FragmentDestination(R.string.news, R.drawable.ic_rss, NewsFragment::class.java),
-            NavItem.FragmentDestination(R.string.events_tickets, R.drawable.tickets, EventsFragment::class.java),
-            NavItem.FragmentDestination(R.string.barrier_free, R.drawable.ic_outline_accessible_24px, BarrierFreeInfoFragment::class.java),
-            NavItem.FragmentDestination(
-                R.string.opening_hours,
-                R.drawable.ic_outline_access_time_24px,
-                OpeningHoursListFragment::class.java
-            )
+                NavItem.FragmentDestination(R.string.menues, R.drawable.ic_cutlery, CafeteriaFragment::class.java),
+                NavItem.FragmentDestination(R.string.study_rooms, R.drawable.ic_outline_group_work_24px, StudyRoomsFragment::class.java),
+                NavItem.FragmentDestination(R.string.news, R.drawable.ic_rss, NewsFragment::class.java),
+                NavItem.FragmentDestination(R.string.events_tickets, R.drawable.tickets, EventsFragment::class.java),
+                NavItem.FragmentDestination(R.string.barrier_free, R.drawable.ic_outline_accessible_24px, BarrierFreeInfoFragment::class.java),
+                NavItem.FragmentDestination(
+                        R.string.opening_hours,
+                        R.drawable.ic_outline_access_time_24px,
+                        OpeningHoursListFragment::class.java
+                )
         )
 
         private val ABOUT = arrayOf(
-            NavItem.ActivityDestination(R.string.show_feedback, R.drawable.ic_outline_feedback_24px, FeedbackActivity::class.java),
-            NavItem.ActivityDestination(R.string.about_tca, R.drawable.ic_action_info, InformationActivity::class.java),
-            NavItem.ActivityDestination(R.string.settings, R.drawable.ic_outline_settings_24px, SettingsActivity::class.java)
+                NavItem.ActivityDestination(R.string.show_feedback, R.drawable.ic_outline_feedback_24px, FeedbackActivity::class.java),
+                NavItem.ActivityDestination(R.string.about_tca, R.drawable.ic_action_info, InformationActivity::class.java),
+                NavItem.ActivityDestination(R.string.settings, R.drawable.ic_outline_settings_24px, SettingsActivity::class.java)
         )
     }
 }
