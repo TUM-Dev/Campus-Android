@@ -25,7 +25,6 @@ import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.FeedbackResult;
-import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordinate;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderMap;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderSchedule;
@@ -282,10 +281,6 @@ public final class TUMCabeClient {
     public Call<List<RoomFinderMap>> fetchAvailableMaps(final String archId) {
         return service.fetchAvailableMaps(ApiHelper.encodeUrl(archId));
     }
-
-    @Deprecated // This API has been deprecated. Use the equivalent NavigaTUM API instead
-    public Call<RoomFinderCoordinate> fetchRoomFinderCoordinates(String archId) {
-        return service.fetchCoordinates(archId);
     }
 
     @Nullable

@@ -13,7 +13,6 @@ import de.tum.`in`.tumcampusapp.api.navigatum.NavigaTumAPIClient
 import de.tum.`in`.tumcampusapp.component.other.locations.model.BuildingToGps
 import de.tum.`in`.tumcampusapp.component.other.locations.model.Geo
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
-import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordinate
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
 import de.tum.`in`.tumcampusapp.database.TcaDb
@@ -406,20 +405,6 @@ class LocationManager @Inject constructor(c: Context) {
             var d18 = (d9 - ((1 + 2 * d6 + d7) * d9.pow(3.0)) / 6 + ((5 - 2 * d7 + 28 * d6 - 3 * d7 * d7 + 8 * d3 + 24 * d6 * d6) * d9.pow(5.0)) / 120) / cos(d14)
             d18 = d11 + d18 * 180 / Math.PI
             return Geo(d17, d18)
-        }
-
-        @JvmStatic
-        fun convertRoomFinderCoordinateToGeo(roomFinderCoordinate: RoomFinderCoordinate): Geo? {
-            return try {
-                val zone = parseDouble(roomFinderCoordinate.utm_zone)
-                val easting = parseDouble(roomFinderCoordinate.utm_easting)
-                val northing = parseDouble(roomFinderCoordinate.utm_northing)
-
-                convertUTMtoLL(northing, easting, zone)
-            } catch (e: Exception) {
-                Utils.log(e)
-                null
-            }
         }
     }
 }
