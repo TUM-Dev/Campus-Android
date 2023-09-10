@@ -12,7 +12,6 @@ import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.FeedbackResult;
-import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderMap;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderSchedule;
 import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
@@ -165,10 +164,6 @@ public interface TUMCabeAPIService {
     // building to gps information
     @GET(API_BARRIER_FREE + API_BARRIER_FREE_BUILDINGS_TO_GPS)
     Call<List<BuildingToGps>> getBuilding2Gps();
-
-    //RoomFinder maps
-    @GET(API_ROOM_FINDER + API_ROOM_FINDER_AVAILABLE_MAPS + "{archId}")
-    Call<List<RoomFinderMap>> fetchAvailableMaps(@Path("archId") String archId);
 
     //RoomFinder schedule
     @GET(API_ROOM_FINDER + API_ROOM_FINDER_SCHEDULE + "{roomId}" + "/" + "{start}" + "/" + "{end}")
