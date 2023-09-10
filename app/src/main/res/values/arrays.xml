@@ -148,7 +148,8 @@
     <!-- Barrierfree Static Arries -->
     <string-array name="barrier_free_info_page_list">
         <item>@string/contact_person</item>
-        <item>@string/facilities</item>
+        <item>@string/near_barrier_free_toilets</item>
+        <item>@string/near_elevators</item>
         <item>@string/more_info</item>
     </string-array>
 

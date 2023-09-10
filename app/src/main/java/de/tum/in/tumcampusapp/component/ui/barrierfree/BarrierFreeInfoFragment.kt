@@ -24,14 +24,19 @@ class BarrierFreeInfoFragment : BaseFragment<Unit>(
         binding.barrierFreeListView.setOnItemClickListener { _, _, position, _ ->
             val intent = when (position) {
                 0 -> Intent(requireContext(), BarrierFreeContactActivity::class.java)
-                1 -> {
+                in 1..2 -> {
+                    val filter = when (position) {
+                        1 -> "usage:wc-barrierefrei"
+                        2 -> "usage:aufzugsanlage"
+                        else -> throw IllegalStateException("Invalid index $position in BarrierFreeInfoFragment")
+                    }
                     val tmp_int = Intent(requireContext(), SearchActivity::class.java)
                     val lat = 0.0
                     val lon = 0.0
-                    tmp_int.putExtra(SearchManager.QUERY, "type:room near:$lat,$lon")
+                    tmp_int.putExtra(SearchManager.QUERY, "$filter near:$lat,$lon")
                     tmp_int
                 }
-                2 -> Intent(requireContext(), BarrierFreeMoreInfoActivity::class.java)
+                3 -> Intent(requireContext(), BarrierFreeMoreInfoActivity::class.java)
                 else -> throw IllegalStateException("Invalid index $position in BarrierFreeInfoFragment")
             }
             startActivity(intent)
