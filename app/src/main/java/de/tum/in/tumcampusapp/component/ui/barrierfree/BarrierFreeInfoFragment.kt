@@ -7,6 +7,7 @@ import android.view.View
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.BaseFragment
+import de.tum.`in`.tumcampusapp.component.other.locations.LocationManager
 import de.tum.`in`.tumcampusapp.component.ui.search.SearchActivity
 import de.tum.`in`.tumcampusapp.databinding.FragmentBarrierfreeInfoBinding
 
@@ -14,6 +15,9 @@ class BarrierFreeInfoFragment : BaseFragment<Unit>(
     R.layout.fragment_barrierfree_info,
     R.string.barrier_free
 ) {
+    private val locationManager: LocationManager by lazy {
+       LocationManager(this.requireContext())
+    }
 
     private val binding by viewBinding(FragmentBarrierfreeInfoBinding::bind)
 
@@ -31,9 +35,8 @@ class BarrierFreeInfoFragment : BaseFragment<Unit>(
                         else -> throw IllegalStateException("Invalid index $position in BarrierFreeInfoFragment")
                     }
                     val tmp_int = Intent(requireContext(), SearchActivity::class.java)
-                    val lat = 0.0
-                    val lon = 0.0
-                    tmp_int.putExtra(SearchManager.QUERY, "$filter near:$lat,$lon")
+                    val location = locationManager.getCurrentOrNextLocation()
+                    tmp_int.putExtra(SearchManager.QUERY, "$filter near:${location.latitude},${location.longitude}")
                     tmp_int
                 }
                 3 -> Intent(requireContext(), BarrierFreeMoreInfoActivity::class.java)
