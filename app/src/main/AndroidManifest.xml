@@ -250,12 +250,6 @@
             android:label="@string/person_information">
         </activity>
         <activity
-            android:name=".component.tumui.roomfinder.RoomFinderDetailsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/roomfinder"
-            android:theme="@style/AppTheme.NoDrawerLayout">
-        </activity>
-        <activity
             android:name=".component.ui.search.SearchActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/search">
