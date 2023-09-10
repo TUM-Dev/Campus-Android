@@ -10,11 +10,12 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.WidgetCalendarItem
 import de.tum.`in`.tumcampusapp.utils.Const
 
-/**
- * Logic from WeekViewFragment and RoomFinderSchedule should be reimplemented
- * in new NavigationDetailsFragment, instead of legacy RoomFinderDetailsActivity.
- * More info: https://github.com/TUM-Dev/Campus-Android/pull/1462"
- */
+
+@Deprecated("""should be removed
+ Logic from WeekViewFragment and RoomFinderSchedule should be reimplemented
+ in new NavigationDetailsFragment, instead of legacy RoomFinderDetailsActivity.
+ More info: https://github.com/TUM-Dev/Campus-Android/pull/1462"
+""")
 class WeekViewFragment : Fragment() {
 
     private var roomApiCode: String? = null

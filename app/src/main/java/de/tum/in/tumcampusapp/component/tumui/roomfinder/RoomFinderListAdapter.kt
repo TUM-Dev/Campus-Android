@@ -8,9 +8,7 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom
 
-/**
- * Custom UI adapter for a list of employees.
- */
+@Deprecated("Please use the NavigationDetailsDto instead")
 class RoomFinderListAdapter(
     context: Context,
     items: List<RoomFinderRoom>

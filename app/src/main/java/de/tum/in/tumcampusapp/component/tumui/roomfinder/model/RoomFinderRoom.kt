@@ -3,10 +3,7 @@ package de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.SimpleStickyListHeadersAdapter
 import java.io.Serializable
 
-/**
- * This class is used as a model for rooms in Roomfinder retrofit request.
- * @param name This is the campus name
- */
+@Deprecated("""Please use NavigationDetailsDto instead""")
 data class RoomFinderRoom(
     var campus: String = "",
     var address: String = "",
