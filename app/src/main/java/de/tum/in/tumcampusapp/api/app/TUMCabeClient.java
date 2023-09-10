@@ -74,9 +74,6 @@ public final class TUMCabeClient {
     static final String API_BARRIER_FREE = "barrierfree/";
     static final String API_BARRIER_FREE_CONTACT = "contacts/";
     static final String API_BARRIER_FREE_BUILDINGS_TO_GPS = "getBuilding2Gps/";
-    static final String API_BARRIER_FREE_NERBY_FACILITIES = "nerby/";
-    static final String API_BARRIER_FREE_LIST_OF_TOILETS = "listOfToilets/";
-    static final String API_BARRIER_FREE_LIST_OF_ELEVATORS = "listOfElevators/";
     static final String API_BARRIER_FREE_MORE_INFO = "moreInformation/";
     static final String API_ROOM_FINDER = "roomfinder/room/";
     static final String API_ROOM_FINDER_SEARCH = "search/";
