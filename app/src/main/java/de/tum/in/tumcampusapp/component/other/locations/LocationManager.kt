@@ -231,18 +231,6 @@ class LocationManager @Inject constructor(c: Context) {
     }
 
     /**
-     * Get Building ID accroding to the current location
-     * Do not call on UI thread.
-     *
-     * @return the id of current building
-     */
-    fun fetchBuildingIDFromCurrentLocation(callback: (String?) -> Unit) {
-        doAsync {
-            fetchBuildingIDFromLocation(getCurrentOrNextLocation(), callback)
-        }
-    }
-
-    /**
      * Checks that Google Play services are available
      */
     private fun servicesConnected(): Boolean {
@@ -283,41 +271,6 @@ class LocationManager @Inject constructor(c: Context) {
             Utils.log(e)
         }
         return null
-    }
-
-    /**
-     * Get Building ID accroding to the given location.
-     * Do not call on UI thread.
-     *
-     * @param location the give location
-     * @return the id of current building
-     */
-    private fun fetchBuildingIDFromLocation(location: Location, block: (String?) -> Unit) {
-        val buildingToGpsList = fetchBuildingsToGps()
-        if (buildingToGpsList.isEmpty()) {
-            block(null)
-        }
-
-        val lat = location.latitude
-        val lng = location.longitude
-        val results = FloatArray(1)
-        var bestDistance = java.lang.Float.MAX_VALUE
-        var bestBuilding = ""
-
-        for ((id, latitude, longitude) in buildingToGpsList) {
-            val buildingLat = parseDouble(latitude)
-            val buildingLng = parseDouble(longitude)
-
-            Location.distanceBetween(buildingLat, buildingLng, lat, lng, results)
-            val distance = results[0]
-            if (distance < bestDistance) {
-                bestDistance = distance
-                bestBuilding = id
-            }
-        }
-
-        val result = bestBuilding.takeIf { bestDistance < 1_000 }
-        block(result)
     }
 
     companion object {
