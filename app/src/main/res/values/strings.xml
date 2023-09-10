@@ -580,9 +580,6 @@ Signature: %5$s</string>
 
     <!-- Barrier-free  -->
     <string name="facilities">Facilities</string>
-    <string name="nerby_facilities">Nearby Facilities</string>
-    <string name="barrierfree_toilets">Barrier-free Toilets</string>
-    <string name="elevators">Elevators</string>
 
     <string name="eduroam_dialog_title">Delete old eduroam profile</string>
     <string name="eduroam_dialog_preferences">Open Wi-Fi preferences</string>

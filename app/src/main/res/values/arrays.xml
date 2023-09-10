@@ -152,12 +152,6 @@
         <item>@string/more_info</item>
     </string-array>
 
-    <string-array name="barrier_free_facility_spinner_list">
-        <item>@string/nerby_facilities</item>
-        <item>@string/barrierfree_toilets</item>
-        <item>@string/elevators</item>
-    </string-array>
-
     <!-- Grades -->
     <string-array name="grades" tools:ignore="MissingTranslation">
         <item>1,0</item>

@@ -385,12 +385,6 @@
             android:launchMode="singleTop"
             android:parentActivityName=".component.ui.barrierfree.BarrierFreeInfoActivity" />
         <activity
-            android:name=".component.ui.barrierfree.BarrierFreeFacilitiesActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/facilities"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.barrierfree.BarrierFreeInfoActivity" />
-        <activity
             android:name=".component.ui.barrierfree.BarrierFreeMoreInfoActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/more_info"
