@@ -12,7 +12,6 @@ import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.FeedbackResult;
-import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderSchedule;
 import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
 import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotificationLocation;
@@ -148,18 +147,6 @@ public interface TUMCabeAPIService {
     // Barrier free More Info
     @GET(API_BARRIER_FREE + API_BARRIER_FREE_MORE_INFO)
     Call<List<BarrierFreeMoreInfo>> getMoreInfoList();
-
-    // Barrier free toilets list
-    @GET(API_BARRIER_FREE + API_BARRIER_FREE_LIST_OF_TOILETS)
-    Call<List<RoomFinderRoom>> getListOfToilets();
-
-    // Barrier free elevator list
-    @GET(API_BARRIER_FREE + API_BARRIER_FREE_LIST_OF_ELEVATORS)
-    Call<List<RoomFinderRoom>> getListOfElevators();
-
-    // Barrier free nearby list
-    @GET(API_BARRIER_FREE + API_BARRIER_FREE_NERBY_FACILITIES + "{buildingId}/")
-    Call<List<RoomFinderRoom>> getListOfNearbyFacilities(@Path("buildingId") String buildingId);
 
     // building to gps information
     @GET(API_BARRIER_FREE + API_BARRIER_FREE_BUILDINGS_TO_GPS)
