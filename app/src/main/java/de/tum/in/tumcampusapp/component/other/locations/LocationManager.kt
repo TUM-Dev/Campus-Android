@@ -8,9 +8,7 @@ import android.preference.PreferenceManager
 import androidx.core.content.ContextCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.navigatum.NavigaTumAPIClient
-import de.tum.`in`.tumcampusapp.component.other.locations.model.BuildingToGps
 import de.tum.`in`.tumcampusapp.component.other.locations.model.Geo
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
@@ -18,16 +16,9 @@ import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationRes
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
-import de.tum.`in`.tumcampusapp.utils.tryOrNull
-import org.jetbrains.anko.doAsync
 import java.lang.Double.parseDouble
-import java.util.*
+import java.util.LinkedList
 import javax.inject.Inject
-import kotlin.math.cos
-import kotlin.math.pow
-import kotlin.math.sin
-import kotlin.math.sqrt
-import kotlin.math.tan
 
 /**
  * Location manager, manages intelligent location services, provides methods to easily access

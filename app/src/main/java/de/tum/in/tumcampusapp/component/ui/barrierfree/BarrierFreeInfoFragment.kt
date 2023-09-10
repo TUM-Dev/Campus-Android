@@ -16,7 +16,7 @@ class BarrierFreeInfoFragment : BaseFragment<Unit>(
     R.string.barrier_free
 ) {
     private val locationManager: LocationManager by lazy {
-       LocationManager(this.requireContext())
+        LocationManager(this.requireContext())
     }
 
     private val binding by viewBinding(FragmentBarrierfreeInfoBinding::bind)
