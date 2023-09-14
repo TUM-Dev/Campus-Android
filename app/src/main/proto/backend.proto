@@ -11,11 +11,9 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
 service Campus {
-    rpc GetTopNews (google.protobuf.Empty) returns (GetTopNewsReply) {
-    }
-
-    rpc GetNewsSources (google.protobuf.Empty) returns (NewsSourceArray) {
-    }
+    rpc GetTopNews (google.protobuf.Empty) returns (GetTopNewsReply) { }
+    rpc GetNewsSources (google.protobuf.Empty) returns (NewsSourceArray) { }
+    rpc GetUpdateNote (GetUpdateNoteRequest) returns (GetUpdateNoteReply) { }
 }
 
 message NewsSourceArray {
@@ -34,4 +32,13 @@ message GetTopNewsReply {
     google.protobuf.Timestamp created = 3;
     google.protobuf.Timestamp from = 4;
     google.protobuf.Timestamp to = 5;
+}
+
+message GetUpdateNoteRequest{
+    int32 version = 1;
+}
+
+message GetUpdateNoteReply{
+    string message = 1;
+    string version_name = 2;
 }

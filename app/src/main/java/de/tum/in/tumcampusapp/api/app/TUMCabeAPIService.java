@@ -35,7 +35,6 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
-import de.tum.in.tumcampusapp.component.ui.updatenote.model.UpdateNote;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -72,10 +71,8 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_AVAILABLE_MAPS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_COORDINATES;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_SCHEDULE;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_SEARCH;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_STUDY_ROOMS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_TICKET;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_UPDATE_NOTE;
 
 public interface TUMCabeAPIService {
 
@@ -235,10 +232,6 @@ public interface TUMCabeAPIService {
 
     @GET(API_EVENTS + API_TICKET + "status/{event}")
     Single<List<TicketStatus>> getTicketStats(@Path("event") int event);
-
-    // Update note
-    @GET(API_UPDATE_NOTE + "{version}")
-    Call<UpdateNote> getUpdateNote(@Path("version") int version);
 
     // Opening Hours
     @GET(API_OPENING_HOURS + "{language}")
