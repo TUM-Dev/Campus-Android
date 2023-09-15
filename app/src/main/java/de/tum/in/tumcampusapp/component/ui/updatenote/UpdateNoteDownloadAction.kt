@@ -21,8 +21,9 @@ class UpdateNoteDownloadAction @Inject constructor(
         BackendClient.getInstance().getUpdateNote(
             { note -> Utils.setSetting(mContext, Const.UPDATE_MESSAGE, note.updateNote) },
             {
-                if (it.status.code == io.grpc.Status.NOT_FOUND.code)
+                if (it.status.code == io.grpc.Status.NOT_FOUND.code) {
                     return@getUpdateNote
+                }
                 Utils.log(it)
             }
         )
