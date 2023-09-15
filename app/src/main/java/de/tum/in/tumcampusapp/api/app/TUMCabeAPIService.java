@@ -193,9 +193,6 @@ public interface TUMCabeAPIService {
     @GET(API_NEWS + "{lastNewsId}")
     Call<List<News>> getNews(@Path("lastNewsId") String lastNewsId);
 
-    @GET(API_NEWS + "sources")
-    Call<List<NewsSources>> getNewsSources();
-
     @GET(API_NEWS + "alert")
     Observable<NewsAlert> getNewsAlert();
 
