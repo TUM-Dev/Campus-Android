@@ -9,10 +9,8 @@ import io.grpc.Metadata
 import io.grpc.stub.MetadataUtils
 import org.jetbrains.anko.doAsync
 
-private var instance: BackendClient? = null
-private lateinit var stub: CampusGrpc.CampusFutureStub
-
-class BackendClient {
+class BackendClient private constructor() {
+    private var stub: CampusGrpc.CampusFutureStub
 
     init {
         val managedChannel = ManagedChannelBuilder.forAddress("api-grpc.tum.app", 443).build()
@@ -35,8 +33,8 @@ class BackendClient {
     }
 
     /**
-     * getUpdateNote calls @callback with all UpdateNote currently in the api.
-     * On error, error is called with an error message.
+     * getUpdateNote calls @callback with an UpdateNote currently in the api
+     * On error, errorCallback is called with an error message.
      */
     fun getUpdateNote(callback: (UpdateNote) -> Unit, errorCallback: (message: io.grpc.StatusRuntimeException) -> Unit) {
         doAsync {
@@ -50,14 +48,11 @@ class BackendClient {
     }
 
     companion object {
-        @Synchronized
-        fun getInstance(): BackendClient {
-            if (instance == null) {
-                instance = BackendClient()
-            }
-            return instance!!
+        @Volatile
+        private var instance: BackendClient? = null
+
+        fun getInstance() = instance ?: synchronized(this) {
+            instance ?: BackendClient().also { instance = it }
         }
-
     }
-
 }
