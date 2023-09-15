@@ -7,7 +7,6 @@ import de.tum.`in`.tumcampusapp.component.ui.updatenote.model.UpdateNote
 import io.grpc.ManagedChannelBuilder
 import io.grpc.Metadata
 import io.grpc.stub.MetadataUtils
-import org.jetbrains.anko.doAsync
 
 class BackendClient private constructor() {
     private var stub: CampusGrpc.CampusFutureStub
@@ -37,14 +36,12 @@ class BackendClient private constructor() {
      * On error, errorCallback is called with an error message.
      */
     fun getUpdateNote(callback: (UpdateNote) -> Unit, errorCallback: (message: io.grpc.StatusRuntimeException) -> Unit) {
-        doAsync {
-            val request = GetUpdateNoteRequest.newBuilder().setVersion(BuildConfig.VERSION_CODE).build()
-            val response = stub.getUpdateNote(request)
-            response.runCatching { get() }.fold(
-                onSuccess = { callback(UpdateNote.fromProto(it)) },
-                onFailure = { errorCallback(getStatus(it)) }
-            )
-        }
+        val request = GetUpdateNoteRequest.newBuilder().setVersion(BuildConfig.VERSION_CODE).build()
+        val response = stub.getUpdateNote(request)
+        response.runCatching { get() }.fold(
+            onSuccess = { callback(UpdateNote.fromProto(it)) },
+            onFailure = { errorCallback(getStatus(it)) }
+        )
     }
 
     companion object {
