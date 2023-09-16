@@ -25,9 +25,6 @@ import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.FeedbackResult;
-import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordinate;
-import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderMap;
-import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom;
 import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderSchedule;
 import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
 import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotificationLocation;
@@ -77,9 +74,6 @@ public final class TUMCabeClient {
     static final String API_BARRIER_FREE = "barrierfree/";
     static final String API_BARRIER_FREE_CONTACT = "contacts/";
     static final String API_BARRIER_FREE_BUILDINGS_TO_GPS = "getBuilding2Gps/";
-    static final String API_BARRIER_FREE_NERBY_FACILITIES = "nerby/";
-    static final String API_BARRIER_FREE_LIST_OF_TOILETS = "listOfToilets/";
-    static final String API_BARRIER_FREE_LIST_OF_ELEVATORS = "listOfElevators/";
     static final String API_BARRIER_FREE_MORE_INFO = "moreInformation/";
     static final String API_ROOM_FINDER = "roomfinder/room/";
     static final String API_ROOM_FINDER_SEARCH = "search/";
@@ -260,32 +254,10 @@ public final class TUMCabeClient {
                 .body();
     }
 
-    public Call<List<RoomFinderRoom>> getListOfToilets() {
-        return service.getListOfToilets();
-    }
-
-    public Call<List<RoomFinderRoom>> getListOfElevators() {
-        return service.getListOfElevators();
-    }
-
-    public Call<List<RoomFinderRoom>> getListOfNearbyFacilities(String buildingId) {
-        return service.getListOfNearbyFacilities(buildingId);
-    }
-
     public List<BuildingToGps> getBuilding2Gps() throws IOException {
         return service.getBuilding2Gps()
                 .execute()
                 .body();
-    }
-
-    @Deprecated // This API has been deprecated. Use the equivalent NavigaTUM API instead
-    public Call<List<RoomFinderMap>> fetchAvailableMaps(final String archId) {
-        return service.fetchAvailableMaps(ApiHelper.encodeUrl(archId));
-    }
-
-    @Deprecated // This API has been deprecated. Use the equivalent NavigaTUM API instead
-    public Call<RoomFinderCoordinate> fetchRoomFinderCoordinates(String archId) {
-        return service.fetchCoordinates(archId);
     }
 
     @Nullable

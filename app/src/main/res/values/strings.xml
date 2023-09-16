@@ -235,7 +235,6 @@
     <string name="mvv">MVV</string>
     <string name="news">News</string>
     <string name="events" translatable="false">Events</string>
-    <string name="barrier_free">Barrier-free Information</string>
 
     <!-- Activity titles -->
     <string name="lectures_information">Lecture Information</string>
@@ -579,10 +578,9 @@ Signature: %5$s</string>
     <string name="eduroam_please_enter_password">Please enter your password. It will not be saved.</string>
 
     <!-- Barrier-free  -->
-    <string name="facilities">Facilities</string>
-    <string name="nerby_facilities">Nearby Facilities</string>
-    <string name="barrierfree_toilets">Barrier-free Toilets</string>
-    <string name="elevators">Elevators</string>
+    <string name="barrier_free">Barrier-free Information</string>
+    <string name="near_barrier_free_toilets">Barierefreie WCs in der Nähe</string>
+    <string name="near_elevators">Aufzugsanlagen in der Nähe</string>
 
     <string name="eduroam_dialog_title">Delete old eduroam profile</string>
     <string name="eduroam_dialog_preferences">Open Wi-Fi preferences</string>

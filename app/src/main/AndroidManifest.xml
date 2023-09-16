@@ -250,12 +250,6 @@
             android:label="@string/person_information">
         </activity>
         <activity
-            android:name=".component.tumui.roomfinder.RoomFinderDetailsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/roomfinder"
-            android:theme="@style/AppTheme.NoDrawerLayout">
-        </activity>
-        <activity
             android:name=".component.ui.search.SearchActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/search">
@@ -382,12 +376,6 @@
             android:name=".component.ui.barrierfree.BarrierFreeContactActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/contact_person"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.barrierfree.BarrierFreeInfoActivity" />
-        <activity
-            android:name=".component.ui.barrierfree.BarrierFreeFacilitiesActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/facilities"
             android:launchMode="singleTop"
             android:parentActivityName=".component.ui.barrierfree.BarrierFreeInfoActivity" />
         <activity

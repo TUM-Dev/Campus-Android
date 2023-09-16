@@ -489,11 +489,11 @@ Signatur: %5$s</string>
     <string name="timetable_widget_no_lectures">Keine Vorlesungen geplant :)</string>
     <string name="eduroam_not_valid_id">Keine gültige TUM-Kennung</string>
     <string name="eduroam_please_enter_password">Bitte Passwort eingeben. Dieses wird nicht gespeichert.</string>
+
+    <!-- Barrier-free  -->
     <string name="barrier_free">Barrierefreiheit</string>
-    <string name="barrierfree_toilets">Berrierefreie Toiletten</string>
-    <string name="elevators">Aufzüge</string>
-    <string name="facilities">Einrichtungen</string>
-    <string name="nerby_facilities">Einrichtungen in der Nähe</string>
+    <string name="near_barrier_free_toilets">Barierefreie WCs in der Nähe</string>
+    <string name="near_elevators">Aufzugsanlagen in der Nähe</string>
 
     <string name="eduroam_dialog_title">Altes Eduroam-Profil löschen</string>
     <string name="eduroam_dialog_preferences">WLAN-Einstellungen öffnen</string>

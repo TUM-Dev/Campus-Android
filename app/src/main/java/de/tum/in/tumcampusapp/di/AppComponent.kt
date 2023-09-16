@@ -6,7 +6,6 @@ import dagger.Component
 import de.tum.`in`.tumcampusapp.component.other.settings.SettingsFragment
 import de.tum.`in`.tumcampusapp.component.tumui.feedback.di.FeedbackComponent
 import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.di.NavigationDetailsComponent
-import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.di.RoomFinderComponent
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.di.CafeteriaComponent
 import de.tum.`in`.tumcampusapp.component.ui.news.di.NewsComponent
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.di.OnboardingComponent
@@ -27,7 +26,6 @@ interface AppComponent {
     fun kinoComponent(): KinoComponent
     fun newsComponent(): NewsComponent
     fun onboardingComponent(): OnboardingComponent.Factory
-    fun roomFinderComponent(): RoomFinderComponent
     fun searchComponent(): SearchComponent
     fun navigationDetailsComponent(): NavigationDetailsComponent
 
