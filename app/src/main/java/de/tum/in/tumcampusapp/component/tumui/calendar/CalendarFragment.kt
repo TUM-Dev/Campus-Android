@@ -45,6 +45,7 @@ import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import java.time.YearMonth
 import java.util.*
+import kotlin.math.abs
 
 class CalendarFragment :
     FragmentForAccessingTumOnline<EventsResponse>(
@@ -579,10 +580,10 @@ class CalendarFragment :
         val eventMap = calendarController.getEventsForMonth(selectedDate)
 
         if (!::monthViewAdapter.isInitialized) {
-            monthViewAdapter = MonthViewAdapter(daysInMonth, eventMap)
+            monthViewAdapter = MonthViewAdapter(daysInMonth, eventMap, selectedDate)
             monthRecyclerView.adapter = monthViewAdapter
         } else {
-            monthViewAdapter.updateData(daysInMonth, eventMap)
+            monthViewAdapter.updateData(daysInMonth, eventMap, selectedDate)
         }
 
         val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(requireContext(), 7)
@@ -593,11 +594,14 @@ class CalendarFragment :
         val daysInMonthArray: ArrayList<String> = ArrayList()
         val yearMonth = YearMonth.of(date.year, date.monthOfYear)
         val daysInMonth = yearMonth.lengthOfMonth()
+        val daysInPreviousMonth = yearMonth.minusMonths(1).lengthOfMonth()
         val firstOfMonth = date.withDayOfMonth(1)
-        var dayOfWeek = firstOfMonth.dayOfWeek().get() - 1 // Monday is the first day of the week in Europe
+        var dayOfWeek = firstOfMonth.dayOfWeek - 1 // Monday is the first day of the week in Europe
         for (i in 1..42) {
-            if (i <= dayOfWeek || i > daysInMonth + dayOfWeek) {
-                daysInMonthArray.add("")
+            if (i <= dayOfWeek) {
+                daysInMonthArray.add((daysInPreviousMonth - dayOfWeek + i).toString())
+            } else if (i > daysInMonth + dayOfWeek) {
+                daysInMonthArray.add((abs(i - daysInMonth - dayOfWeek)).toString())
             } else {
                 daysInMonthArray.add((i - dayOfWeek).toString())
             }
