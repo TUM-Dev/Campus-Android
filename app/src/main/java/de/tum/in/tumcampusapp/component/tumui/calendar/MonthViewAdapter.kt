@@ -39,7 +39,8 @@ class MonthViewAdapter(
             monthViewEventAdapter.updateData(events, selectedDate)
         }
 
-        if (position < selectedDate.withDayOfMonth(1).dayOfWeek - 1 ||
+        if (
+        position < selectedDate.withDayOfMonth(1).dayOfWeek - 1 ||
             position > selectedDate.withDayOfMonth(1).dayOfWeek - 1 +
             YearMonth.of(selectedDate.year, selectedDate.monthOfYear).lengthOfMonth() - 1) {
             holder.dayOfMonth.alpha = 0.2F
