@@ -46,7 +46,6 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.EphimeralKey;
-import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketPurchaseStripe;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
@@ -380,23 +379,6 @@ public final class TUMCabeClient {
     public void reserveTicket(TUMCabeVerification verification,
                               Callback<TicketReservationResponse> cb) {
         service.reserveTicket(verification).enqueue(cb);
-    }
-
-    // Ticket purchase
-
-    public void purchaseTicketStripe(
-            Context context, List<Integer> ticketIds, @NonNull String token,
-            @NonNull String customerName, Callback<List<Ticket>> cb) throws NoPrivateKey {
-        TicketPurchaseStripe purchase = new TicketPurchaseStripe(ticketIds, token, customerName);
-        TUMCabeVerification verification = getVerification(context, purchase);
-        service.purchaseTicketStripe(verification).enqueue(cb);
-    }
-
-    public void retrieveEphemeralKey(Context context, String apiVersion,
-                                     Callback<HashMap<String, Object>> cb) throws NoPrivateKey {
-        EphimeralKey key = new EphimeralKey(apiVersion);
-        TUMCabeVerification verification = getVerification(context, key);
-        service.retrieveEphemeralKey(verification).enqueue(cb);
     }
 
     public Single<List<TicketStatus>> fetchTicketStats(int event) {

@@ -94,9 +94,6 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 ticketButton.text = getString(R.string.show_ticket)
                 ticketButton.text = resources.getQuantityText(R.plurals.show_tickets, viewModel.getBookedTicketCount(event))
                 ticketButton.setOnClickListener { showTicket(event) }
-            } else {
-                ticketButton.text = getString(R.string.buy_ticket)
-                ticketButton.setOnClickListener { EventHelper.buyTicket(event, ticketButton, context) }
             }
 
             context?.let {
@@ -124,7 +121,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             EventHelper.showRemainingTickets(
                 status,
                 viewModel.isEventBooked(event),
-                EventHelper.isEventImminent(event),
+                true,
                 ticketButton,
                 remainingTicketsContainer,
                 remainingTicketsTextView,
