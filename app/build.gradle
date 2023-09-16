@@ -120,7 +120,7 @@ dependencies {
     implementation "com.google.android.play:core-ktx:$play_core_services_kotlin_extension"
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:20.1.2'
+    implementation 'com.google.firebase:firebase-core:21.1.1'
     implementation 'com.google.firebase:firebase-messaging:23.0.6'
     implementation 'com.google.firebase:firebase-crashlytics-ktx:18.2.9'
     implementation 'com.google.firebase:firebase-analytics-ktx:20.1.2'
