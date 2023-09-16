@@ -411,10 +411,7 @@ class LocationManager @Inject constructor(c: Context) {
             val d3 = d2 / (1 - d2)
             val d10 = north / d
             val d12 = d10 / (d1 * (1 - d2 / 4 - (3 * d2 * d2) / 64 - (5 * d2.pow(3.0)) / 256))
-            val d14 =
-                d12 + ((3 * d4) / 2 - (27 * d4.pow(3.0)) / 32) * sin(2 * d12) + ((21 * d4 * d4) / 16 - (55 * d4.pow(4.0)) / 32) * sin(4 * d12) + ((151 * d4.pow(
-                    3.0
-                )) / 96) * sin(6 * d12)
+            val d14 = d12 + ((3 * d4) / 2 - (27 * d4.pow(3.0)) / 32) * sin(2 * d12) + ((21 * d4 * d4) / 16 - (55 * d4.pow(4.0)) / 32) * sin(4 * d12) + ((151 * d4.pow(3.0)) / 96) * sin(6 * d12)
             val d5 = d1 / sqrt(1 - d2 * sin(d14) * sin(d14))
             val d6 = tan(d14) * tan(d14)
             val d7 = d3 * cos(d14) * cos(d14)
