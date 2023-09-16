@@ -235,7 +235,6 @@
     <string name="mvv">MVV</string>
     <string name="news">News</string>
     <string name="events" translatable="false">Events</string>
-    <string name="barrier_free">Barrier-free Information</string>
 
     <!-- Activity titles -->
     <string name="lectures_information">Lecture Information</string>
@@ -413,7 +412,6 @@
     <string name="card_login_summary">Allows you to connect to TUMOnline</string>
     <string name="card_news_summary">Advertises selected news</string>
     <string name="card_chat_summary">Notifies you about new messages</string>
-    <string name="card_events_summary">Shows upcoming events</string>
     <string name="card_update_summary">Provides an overview about new features</string>
     <string name="chat" translatable="false">Chat</string>
     <string name="open_card_settings">Open card settings</string>
@@ -580,10 +578,9 @@ Signature: %5$s</string>
     <string name="eduroam_please_enter_password">Please enter your password. It will not be saved.</string>
 
     <!-- Barrier-free  -->
-    <string name="facilities">Facilities</string>
-    <string name="nerby_facilities">Nearby Facilities</string>
-    <string name="barrierfree_toilets">Barrier-free Toilets</string>
-    <string name="elevators">Elevators</string>
+    <string name="barrier_free">Barrier-free Information</string>
+    <string name="near_barrier_free_toilets">Barierefreie WCs in der Nähe</string>
+    <string name="near_elevators">Aufzugsanlagen in der Nähe</string>
 
     <string name="eduroam_dialog_title">Delete old eduroam profile</string>
     <string name="eduroam_dialog_preferences">Open Wi-Fi preferences</string>
@@ -833,8 +830,6 @@ Signature: %5$s</string>
     <string name="next_lecture_show_more">Show %d more …</string>
     <string name="show_in_calendar">Show in Calendar</string>
 
-    <string name="stripe_terms_of_service_checkbox">I agree to the terms of service.</string>
-    <string name="stripe_terms_of_service_button">Terms of Service</string>
     <string name="tickets_available_here">Tickets available here!</string>
     <string name="update_note_title">New Features</string>
     <string name="update_note_version">Version %s</string>

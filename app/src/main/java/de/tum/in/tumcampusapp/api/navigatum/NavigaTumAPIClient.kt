@@ -37,7 +37,7 @@ class NavigaTumAPIClient(private val apiService: NavigaTumAPIService) {
     }
 
     companion object {
-        private const val BASE_URL = "https://nav.tum.sexy/"
+        private const val BASE_URL = "https://nav.tum.de/"
 
         private var apiClient: NavigaTumAPIClient? = null
 

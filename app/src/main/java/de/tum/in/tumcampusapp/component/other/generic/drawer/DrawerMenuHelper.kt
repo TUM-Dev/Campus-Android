@@ -23,7 +23,6 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.InformationActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainFragment
 import de.tum.`in`.tumcampusapp.component.ui.search.SearchFragment
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.StudyRoomsFragment
-import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.EventsFragment
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.allItems
@@ -75,8 +74,6 @@ class DrawerMenuHelper(
         englishContext.getString(GENERAL[3].titleRes) to GENERAL[3],
         germanContext.getString(GENERAL[4].titleRes) to GENERAL[4],
         englishContext.getString(GENERAL[4].titleRes) to GENERAL[4],
-        germanContext.getString(GENERAL[5].titleRes) to GENERAL[5],
-        englishContext.getString(GENERAL[5].titleRes) to GENERAL[5],
         // ABOUT
         germanContext.getString(ABOUT[0].titleRes) to ABOUT[0],
         englishContext.getString(ABOUT[0].titleRes) to ABOUT[0],
@@ -196,7 +193,6 @@ class DrawerMenuHelper(
             NavItem.FragmentDestination(R.string.menues, R.drawable.ic_cutlery, CafeteriaFragment::class.java),
             NavItem.FragmentDestination(R.string.study_rooms, R.drawable.ic_outline_group_work_24px, StudyRoomsFragment::class.java),
             NavItem.FragmentDestination(R.string.news, R.drawable.ic_rss, NewsFragment::class.java),
-            NavItem.FragmentDestination(R.string.events_tickets, R.drawable.tickets, EventsFragment::class.java),
             NavItem.FragmentDestination(R.string.barrier_free, R.drawable.ic_outline_accessible_24px, BarrierFreeInfoFragment::class.java),
             NavItem.FragmentDestination(
                 R.string.opening_hours,

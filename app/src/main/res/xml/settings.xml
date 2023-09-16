@@ -399,22 +399,6 @@
         </androidx.preference.PreferenceScreen>
 
         <!-- Event card -->
-        <androidx.preference.PreferenceScreen
-            android:icon="@drawable/ic_celebration"
-            android:key="@string/event_default_sharedpref_shown"
-            android:summary="@string/card_events_summary"
-            android:title="@string/events">
-
-            <androidx.preference.PreferenceCategory android:title="@string/display">
-
-                <androidx.preference.CheckBoxPreference
-                    android:defaultValue="true"
-                    android:key="@string/event_default_sharedpref_shown"
-                    android:title="@string/startpage" />
-
-            </androidx.preference.PreferenceCategory>
-
-        </androidx.preference.PreferenceScreen>
 
         <!-- Update card -->
         <androidx.preference.PreferenceScreen

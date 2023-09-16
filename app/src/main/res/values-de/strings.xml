@@ -344,7 +344,6 @@
     <string name="card_login_summary">Erlaubt dir dich mit TUMOnline zu verbinden</string>
     <string name="card_news_summary">Schlägt ausgewählte News vor</string>
     <string name="card_chat_summary">Benachrichtigt dich über neue Nachrichten</string>
-    <string name="card_events_summary">Zeigt anstehenden Events an</string>
     <string name="card_update_summary">Gibt eine Übersicht über neue Features</string>
     <string name="open_card_settings">Karte anpassen</string>
     <string name="always_hide_card">Karte immer ausblenden</string>
@@ -490,11 +489,11 @@ Signatur: %5$s</string>
     <string name="timetable_widget_no_lectures">Keine Vorlesungen geplant :)</string>
     <string name="eduroam_not_valid_id">Keine gültige TUM-Kennung</string>
     <string name="eduroam_please_enter_password">Bitte Passwort eingeben. Dieses wird nicht gespeichert.</string>
+
+    <!-- Barrier-free  -->
     <string name="barrier_free">Barrierefreiheit</string>
-    <string name="barrierfree_toilets">Berrierefreie Toiletten</string>
-    <string name="elevators">Aufzüge</string>
-    <string name="facilities">Einrichtungen</string>
-    <string name="nerby_facilities">Einrichtungen in der Nähe</string>
+    <string name="near_barrier_free_toilets">Barierefreie WCs in der Nähe</string>
+    <string name="near_elevators">Aufzugsanlagen in der Nähe</string>
 
     <string name="eduroam_dialog_title">Altes Eduroam-Profil löschen</string>
     <string name="eduroam_dialog_preferences">WLAN-Einstellungen öffnen</string>
@@ -765,8 +764,6 @@ Signatur: %5$s</string>
     <string name="employee_mode_info">Menüpunkte wie die Notenansicht oder Studienbeitrag werden in dieser Ansicht nicht angezeigt.</string>
     <string name="event_imminent_error">Tickets können nur bis zu vier Stunden vor Beginn über die App erworben werden.</string>
     <string name="show_in_calendar">Im Kalender öffnen</string>
-    <string name="stripe_terms_of_service_checkbox">Ich stimme den allgemeinen Geschäftsbedingungen (AGB) zu.</string>
-    <string name="stripe_terms_of_service_button">AGB</string>
     <string name="tickets_available_here">Tickets hier erhältlich!</string>
 
     <string name="update_note_title">Neue Features</string>

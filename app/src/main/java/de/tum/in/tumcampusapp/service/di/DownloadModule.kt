@@ -102,7 +102,6 @@ object DownloadModule {
     fun provideWorkerActions(
         cafeteriaDownloadAction: CafeteriaDownloadAction,
         locationImportAction: LocationImportAction,
-        eventsDownloadAction: EventsDownloadAction,
         filmDownloadAction: FilmDownloadAction,
         gradesDownloadAction: GradesDownloadAction,
         idUploadAction: IdUploadAction,
@@ -112,7 +111,6 @@ object DownloadModule {
     ): DownloadWorker.WorkerActions = DownloadWorker.WorkerActions(
         cafeteriaDownloadAction,
         locationImportAction,
-        eventsDownloadAction,
         filmDownloadAction,
         gradesDownloadAction,
         idUploadAction,
