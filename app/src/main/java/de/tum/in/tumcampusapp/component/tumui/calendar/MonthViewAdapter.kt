@@ -14,7 +14,7 @@ class MonthViewAdapter(
     private var eventMap: Map<Int, List<CalendarItem>>,
     private var selectedDate: LocalDate
 ) :
-        RecyclerView.Adapter<MonthViewHolder>() {
+    RecyclerView.Adapter<MonthViewHolder>() {
 
     private lateinit var monthViewEventAdapter: MonthViewEventAdapter
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MonthViewHolder {
