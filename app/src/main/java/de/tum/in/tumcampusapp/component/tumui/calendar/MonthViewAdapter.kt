@@ -12,7 +12,8 @@ import java.time.YearMonth
 class MonthViewAdapter(
     private var daysOfMonth: ArrayList<String>,
     private var eventMap: Map<Int, List<CalendarItem>>,
-    private var selectedDate: LocalDate) :
+    private var selectedDate: LocalDate
+) :
         RecyclerView.Adapter<MonthViewHolder>() {
 
     private lateinit var monthViewEventAdapter: MonthViewEventAdapter
