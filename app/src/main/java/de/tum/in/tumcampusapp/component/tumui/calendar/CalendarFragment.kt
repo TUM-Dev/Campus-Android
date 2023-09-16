@@ -49,8 +49,8 @@ import kotlin.math.abs
 
 class CalendarFragment :
     FragmentForAccessingTumOnline<EventsResponse>(
-            R.layout.fragment_calendar,
-            R.string.calendar
+        R.layout.fragment_calendar,
+        R.string.calendar
     ),
     CalendarDetailsFragment.OnEventInteractionListener {
 
@@ -601,7 +601,7 @@ class CalendarFragment :
             if (i <= dayOfWeek) {
                 daysInMonthArray.add((daysInPreviousMonth - dayOfWeek + i).toString())
             } else if (i > daysInMonth + dayOfWeek) {
-                daysInMonthArray.add((abs(i - daysInMonth - dayOfWeek) ).toString())
+                daysInMonthArray.add((abs(i - daysInMonth - dayOfWeek)).toString())
             } else {
                 daysInMonthArray.add((i - dayOfWeek).toString())
             }

@@ -10,7 +10,7 @@ import org.jetbrains.anko.withAlpha
 import org.joda.time.LocalDate
 
 class MonthViewEventAdapter(private var events: List<CalendarItem>, private var selectedDate: LocalDate) :
-        RecyclerView.Adapter<MonthViewEventViewHolder>() {
+    RecyclerView.Adapter<MonthViewEventViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MonthViewEventViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.calendar_month_event_view, parent, false)

@@ -9,8 +9,10 @@ import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
 import org.joda.time.LocalDate
 import java.time.YearMonth
 
-class MonthViewAdapter(private var daysOfMonth: ArrayList<String>, private var eventMap: Map<Int, List<CalendarItem>>,
-                       private var selectedDate: LocalDate) :
+class MonthViewAdapter(
+    private var daysOfMonth: ArrayList<String>,
+    private var eventMap: Map<Int, List<CalendarItem>>,
+    private var selectedDate: LocalDate) :
         RecyclerView.Adapter<MonthViewHolder>() {
 
     private lateinit var monthViewEventAdapter: MonthViewEventAdapter
@@ -36,9 +38,9 @@ class MonthViewAdapter(private var daysOfMonth: ArrayList<String>, private var e
             monthViewEventAdapter.updateData(events, selectedDate)
         }
 
-        if (position <  selectedDate.withDayOfMonth(1).dayOfWeek - 1 ||
-                position > selectedDate.withDayOfMonth(1).dayOfWeek - 1 +
-                YearMonth.of(selectedDate.year, selectedDate.monthOfYear).lengthOfMonth() - 1) {
+        if (position < selectedDate.withDayOfMonth(1).dayOfWeek - 1 ||
+            position > selectedDate.withDayOfMonth(1).dayOfWeek - 1 +
+            YearMonth.of(selectedDate.year, selectedDate.monthOfYear).lengthOfMonth() - 1) {
             holder.dayOfMonth.alpha = 0.2F
         } else {
             holder.dayOfMonth.alpha = 1F
