@@ -413,7 +413,6 @@
     <string name="card_login_summary">Allows you to connect to TUMOnline</string>
     <string name="card_news_summary">Advertises selected news</string>
     <string name="card_chat_summary">Notifies you about new messages</string>
-    <string name="card_events_summary">Shows upcoming events</string>
     <string name="card_update_summary">Provides an overview about new features</string>
     <string name="chat" translatable="false">Chat</string>
     <string name="open_card_settings">Open card settings</string>

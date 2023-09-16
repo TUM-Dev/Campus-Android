@@ -82,11 +82,6 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
 
         binding.totalPriceTextView.text = Utils.formatPrice(0)
 
-        injector.ticketsComponent()
-            .eventId(eventId)
-            .build()
-            .inject(this)
-
         // Get ticket type information from API
         val disposable = ticketsRemoteRepo.fetchTicketTypesForEvent(eventId)
             .subscribeOn(Schedulers.io())

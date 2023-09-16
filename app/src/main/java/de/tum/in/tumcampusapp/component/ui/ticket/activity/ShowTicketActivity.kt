@@ -74,10 +74,6 @@ class ShowTicketActivity : BaseActivity(R.layout.activity_show_ticket) {
         setContentView(binding.root)
 
         val eventId = intent.getIntExtra(Const.KEY_EVENT_ID, 0)
-        injector.ticketsComponent()
-            .eventId(eventId)
-            .build()
-            .inject(this)
 
         initViews()
         loadTicketData(eventId)
