@@ -40,9 +40,10 @@ class MonthViewAdapter(
         }
 
         if (
-        position < selectedDate.withDayOfMonth(1).dayOfWeek - 1 ||
+            position < selectedDate.withDayOfMonth(1).dayOfWeek - 1 ||
             position > selectedDate.withDayOfMonth(1).dayOfWeek - 1 +
-            YearMonth.of(selectedDate.year, selectedDate.monthOfYear).lengthOfMonth() - 1) {
+            YearMonth.of(selectedDate.year, selectedDate.monthOfYear).lengthOfMonth() - 1
+        ) {
             holder.dayOfMonth.alpha = 0.2F
         } else {
             holder.dayOfMonth.alpha = 1F
