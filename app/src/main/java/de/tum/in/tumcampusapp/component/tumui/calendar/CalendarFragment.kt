@@ -44,7 +44,8 @@ import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import java.time.YearMonth
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 import kotlin.math.abs
 
 class CalendarFragment :
@@ -199,6 +200,7 @@ class CalendarFragment :
     private fun onCalendarImportedIntoDatabase() {
         // Update the action bar to display the enabled menu options
         requireActivity().invalidateOptionsMenu()
+        // enqueues OneTimeWorkRequest
         QueryLocationWorker.enqueueWork(requireContext())
     }
 
@@ -324,29 +326,23 @@ class CalendarFragment :
     }
 
     private fun isPermissionGranted(id: Int): Boolean {
-        if (checkSelfPermission(
-                requireContext(),
-                Manifest.permission.READ_CALENDAR
-            ) == PackageManager.PERMISSION_GRANTED &&
-            checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.WRITE_CALENDAR
-                ) == PackageManager.PERMISSION_GRANTED
-        ) {
+        val permReadCalendar = checkSelfPermission(requireContext(), Manifest.permission.READ_CALENDAR)
+        val permWriteCalendar = checkSelfPermission(requireContext(), Manifest.permission.WRITE_CALENDAR)
+        if (permReadCalendar == PackageManager.PERMISSION_GRANTED && permWriteCalendar == PackageManager.PERMISSION_GRANTED) {
             return true
+        }
+
+        if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CALENDAR) ||
+            shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CALENDAR)
+        ) {
+            ThemedAlertDialogBuilder(requireContext())
+                .setMessage(getString(R.string.permission_calendar_explanation))
+                .setPositiveButton(R.string.ok) { _, _ ->
+                    showPermissionRequestDialog(id)
+                }
+                .show()
         } else {
-            if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CALENDAR) ||
-                shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CALENDAR)
-            ) {
-                ThemedAlertDialogBuilder(requireContext())
-                    .setMessage(getString(R.string.permission_calendar_explanation))
-                    .setPositiveButton(R.string.ok) { _, _ ->
-                        showPermissionRequestDialog(id)
-                    }
-                    .show()
-            } else {
-                showPermissionRequestDialog(id)
-            }
+            showPermissionRequestDialog(id)
         }
         return false
     }

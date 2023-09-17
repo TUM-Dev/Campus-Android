@@ -1,10 +1,15 @@
 package de.tum.`in`.tumcampusapp.component.ui.onboarding
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.edit
+import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
@@ -23,8 +28,6 @@ import de.tum.`in`.tumcampusapp.utils.CacheManager
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
-import org.jetbrains.anko.defaultSharedPreferences
-import org.jetbrains.anko.support.v4.browse
 import java.io.IOException
 import javax.inject.Inject
 
@@ -91,7 +94,18 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
                 cacheManager.fillCache()
             }
 
-            privacyPolicyButton.setOnClickListener { browse(getString(R.string.url_privacy_policy)) }
+            privacyPolicyButton.setOnClickListener {
+                // open url in default browser
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_privacy_policy)))
+                try {
+                    startActivity(browserIntent)
+                }
+                // if no browser is installed catch exception and inform user
+                catch (e: ActivityNotFoundException) {
+                    Utils.log(e)
+                    Toast.makeText(requireContext(), R.string.error_opening_url, Toast.LENGTH_LONG).show()
+                }
+            }
             finishButton.setOnClickListener { startLoading() }
         }
     }
@@ -162,8 +176,7 @@ class OnboardingExtrasFragment : FragmentForLoadingInBackground<ChatMember>(
 
         // Gets the editor for editing preferences and updates the preference values with the
         // chosen state
-        requireContext()
-            .defaultSharedPreferences
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
             .edit {
                 with(binding) {
                     putBoolean(Const.SILENCE_SERVICE, silentModeCheckBox.isChecked)

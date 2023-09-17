@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
-import org.jetbrains.anko.withAlpha
+import de.tum.`in`.tumcampusapp.utils.withAlpha
 import org.joda.time.LocalDate
 
 class MonthViewEventAdapter(private var events: List<CalendarItem>, private var selectedDate: LocalDate) :

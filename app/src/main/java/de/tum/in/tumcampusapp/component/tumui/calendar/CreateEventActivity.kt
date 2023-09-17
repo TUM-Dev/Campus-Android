@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.RequestLimitReachedException
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline
@@ -30,7 +31,6 @@ import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import de.tum.`in`.tumcampusapp.utils.ThemedDatePickerDialog
 import de.tum.`in`.tumcampusapp.utils.ThemedTimePickerDialog
 import de.tum.`in`.tumcampusapp.utils.Utils
-import org.jetbrains.anko.sdk27.coroutines.textChangedListener
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
@@ -38,7 +38,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.net.UnknownHostException
-import java.util.*
+import java.util.Locale
 import kotlin.collections.ArrayList
 
 /**
@@ -174,13 +174,11 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
             }
         }
 
-        binding.eventRepeatsTimes.textChangedListener {
-            afterTextChanged {
-                if (it.toString() != "") {
-                    repeatHelper.times = it.toString().toInt()
-                } else {
-                    repeatHelper.times = 0
-                }
+        binding.eventRepeatsTimes.doAfterTextChanged {
+            if (it.toString() != "") {
+                repeatHelper.times = it.toString().toInt()
+            } else {
+                repeatHelper.times = 0
             }
         }
 
@@ -324,17 +322,21 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         // TIME
         binding.eventStartTimeView.setOnClickListener {
             hideKeyboard()
-            ThemedTimePickerDialog(this, { timePicker, hour, minute ->
-                timePicker.layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
-                val eventLength = end.millis - start.millis
-                start = start.withHourOfDay(hour)
-                    .withMinuteOfHour(minute)
-                end = end.withMillis(start.millis + eventLength)
-                updateTimeViews()
-            }, start.hourOfDay, start.minuteOfHour).show()
+            ThemedTimePickerDialog(
+                this,
+                { timePicker, hour, minute ->
+                    timePicker.layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    val eventLength = end.millis - start.millis
+                    start = start.withHourOfDay(hour).withMinuteOfHour(minute)
+                    end = end.withMillis(start.millis + eventLength)
+                    updateTimeViews()
+                },
+                start.hourOfDay,
+                start.minuteOfHour
+            ).show()
         }
 
         binding.eventEndTimeView.setOnClickListener {
@@ -471,7 +473,19 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         // event ends after n times
         if (repeatHelper.isRepeatingNTimes()) {
             for (i in 1 until repeatHelper.times) {
-                events.add(CalendarItem("", "", "", baseEvent.title, baseEvent.description, baseEvent.dtstart.plusWeeks(i), baseEvent.dtend.plusWeeks(i), "", false))
+                events.add(
+                    CalendarItem(
+                        "",
+                        "",
+                        "",
+                        baseEvent.title,
+                        baseEvent.description,
+                        baseEvent.dtstart.plusWeeks(i),
+                        baseEvent.dtend.plusWeeks(i),
+                        "",
+                        false
+                    )
+                )
             }
             // event ends after "last" date
         } else {

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
@@ -17,7 +18,6 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
-import org.jetbrains.anko.defaultSharedPreferences
 
 /**
  * Shows important news
@@ -29,7 +29,7 @@ class TopNewsCard(context: Context) : Card(CardManager.CardTypes.TOP_NEWS, conte
     private val newsAlert: NewsAlert?
 
     init {
-        this.topNewsStore = RealTopNewsStore(context.defaultSharedPreferences)
+        this.topNewsStore = RealTopNewsStore(PreferenceManager.getDefaultSharedPreferences(context))
         this.newsAlert = topNewsStore.getNewsAlert()
     }
 
@@ -59,10 +59,11 @@ class TopNewsCard(context: Context) : Card(CardManager.CardTypes.TOP_NEWS, conte
     }
 
     override fun getNavigationDestination(): NavDestination? {
-        if (newsAlert != null && newsAlert.link.isNotEmpty()) {
-            return NavDestination.Link(newsAlert.link)
+        return if (newsAlert == null || newsAlert.link.isEmpty()) {
+            null
+        } else {
+            NavDestination.Link(newsAlert.link)
         }
-        return null
     }
 
     override fun updateViewHolder(viewHolder: RecyclerView.ViewHolder) {
