@@ -327,7 +327,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
                 { timePicker, hour, minute ->
                     timePicker.layoutParams = LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
                     )
                     val eventLength = end.millis - start.millis
                     start = start.withHourOfDay(hour).withMinuteOfHour(minute)

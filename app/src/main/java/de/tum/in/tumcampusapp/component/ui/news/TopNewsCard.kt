@@ -39,8 +39,10 @@ class TopNewsCard(context: Context) : Card(CardManager.CardTypes.TOP_NEWS, conte
         }
 
         Picasso.get()
-                .load(newsAlert.url)
-                .into(imageView, object : Callback {
+            .load(newsAlert.url)
+            .into(
+                imageView,
+                object : Callback {
                     override fun onSuccess() {
                         // remove progress bar
                         progress.visibility = View.GONE
@@ -48,7 +50,8 @@ class TopNewsCard(context: Context) : Card(CardManager.CardTypes.TOP_NEWS, conte
                     override fun onError(e: Exception) {
                         discard()
                     }
-                })
+                }
+            )
     }
 
     override fun getId(): Int {

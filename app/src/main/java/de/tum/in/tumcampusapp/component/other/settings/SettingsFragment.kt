@@ -1,5 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.other.settings
 
+import android.Manifest.permission.READ_CALENDAR
+import android.Manifest.permission.WRITE_CALENDAR
 import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.content.Context
@@ -7,8 +9,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.drawable.BitmapDrawable
-import android.Manifest.permission.READ_CALENDAR
-import android.Manifest.permission.WRITE_CALENDAR
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat.checkSelfPermission

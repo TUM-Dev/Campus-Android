@@ -1,10 +1,10 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
+import android.Manifest
 import android.app.Activity
 import android.content.ContentUris
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.Manifest
 import android.os.Bundle
 import android.provider.CalendarContract
 import android.text.format.DateUtils
@@ -326,29 +326,23 @@ class CalendarFragment :
     }
 
     private fun isPermissionGranted(id: Int): Boolean {
-        if (checkSelfPermission(
-                requireContext(),
-                Manifest.permission.READ_CALENDAR
-            ) == PackageManager.PERMISSION_GRANTED &&
-            checkSelfPermission(
-                requireContext(),
-                Manifest.permission.WRITE_CALENDAR
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
+        val permReadCalendar = checkSelfPermission(requireContext(), Manifest.permission.READ_CALENDAR)
+        val permWriteCalendar = checkSelfPermission(requireContext(), Manifest.permission.WRITE_CALENDAR)
+        if (permReadCalendar == PackageManager.PERMISSION_GRANTED && permWriteCalendar == PackageManager.PERMISSION_GRANTED) {
             return true
+        }
+
+        if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CALENDAR) ||
+            shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CALENDAR)
+        ) {
+            ThemedAlertDialogBuilder(requireContext())
+                .setMessage(getString(R.string.permission_calendar_explanation))
+                .setPositiveButton(R.string.ok) { _, _ ->
+                    showPermissionRequestDialog(id)
+                }
+                .show()
         } else {
-            if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CALENDAR) ||
-                shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CALENDAR)
-            ) {
-                ThemedAlertDialogBuilder(requireContext())
-                    .setMessage(getString(R.string.permission_calendar_explanation))
-                    .setPositiveButton(R.string.ok) { _, _ ->
-                        showPermissionRequestDialog(id)
-                    }
-                    .show()
-            } else {
-                showPermissionRequestDialog(id)
-            }
+            showPermissionRequestDialog(id)
         }
         return false
     }

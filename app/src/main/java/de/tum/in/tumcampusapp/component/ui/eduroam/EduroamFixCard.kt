@@ -12,7 +12,6 @@ import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.M
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
@@ -21,7 +20,6 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
-import java.util.*
 import java.util.regex.Pattern
 
 class EduroamFixCard(
@@ -71,7 +69,7 @@ class EduroamFixCard(
     override fun shouldShow(prefs: SharedPreferences): Boolean {
         // Check if wifi is turned on at all, as we cannot say if it was configured if its off
         val wifiEnabled = (context.getSystemService(Context.WIFI_SERVICE) as WifiManager).isWifiEnabled
-        return wifiEnabled && !isConfigValid();
+        return wifiEnabled && !isConfigValid()
     }
 
     override fun discard(editor: SharedPreferences.Editor) {
@@ -109,11 +107,11 @@ class EduroamFixCard(
         val pattern = Pattern.compile(Const.TUM_ID_PATTERN)
         return (
             identity.endsWith("@mwn.de") ||
-            identity.endsWith("@mytum.de") ||
-            identity.endsWith("@tum.de") ||
-            (identity.endsWith(".mwn.de") || identity.endsWith(".tum.de")) && identity.contains(AT_SIGN) ||
-            pattern.matcher(identity).matches()
-        )
+                identity.endsWith("@mytum.de") ||
+                identity.endsWith("@tum.de") ||
+                (identity.endsWith(".mwn.de") || identity.endsWith(".tum.de")) && identity.contains(AT_SIGN) ||
+                pattern.matcher(identity).matches()
+            )
     }
 
     private fun isValidSubjectMatchAPI18(eduroam: WifiConfiguration): Boolean {

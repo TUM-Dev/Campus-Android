@@ -113,9 +113,7 @@ class MVVWidget : AppWidgetProvider() {
 
         // Set up the configuration activity listeners
         val configIntent = Intent(context, MVVWidgetConfigureActivity::class.java).apply {
-            putExtra(
-                AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId
-            )
+            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
         }
         val pendingIntent = PendingIntent.getActivity(
             context,
