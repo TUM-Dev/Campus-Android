@@ -1,7 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.ui.overview
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.Network
@@ -16,9 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.work.WorkManager
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.play.core.review.ReviewException
 import com.google.android.play.core.review.ReviewManagerFactory
-import com.google.android.play.core.review.model.ReviewErrorCode
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration
@@ -29,7 +26,7 @@ import de.tum.`in`.tumcampusapp.databinding.FragmentMainBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.service.DownloadWorker
-import de.tum.`in`.tumcampusapp.service.SilenceService
+import de.tum.`in`.tumcampusapp.service.SilenceWorker
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -78,6 +75,8 @@ class MainFragment :
         ViewModelProviders.of(this, factory).get(MainActivityViewModel::class.java)
     }
 
+    var snackBar: Snackbar? = null
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         injector.inject(this)
@@ -108,9 +107,8 @@ class MainFragment :
             ItemTouchHelper(ItemTouchHelperCallback()).attachToRecyclerView(cardsRecyclerView)
         }
 
-        // Start silence Service (if already started it will just invoke a check)
-        val service = Intent(requireContext(), SilenceService::class.java)
-        requireContext().startService(service)
+        // Enqueue a request for the silence worker (if already started it will just invoke a check)
+        SilenceWorker.enqueueWork(requireContext())
 
         viewModel.cards.observe(viewLifecycleOwner) {
             it?.let { onNewCardsAvailable(it) }
@@ -120,7 +118,8 @@ class MainFragment :
         // The earliest possible re-trigger of a review prompt occurs after half a year
         val lastReviewDate = Utils.getSetting(requireContext(), Const.LAST_REVIEW_PROMPT, "0").toLong()
 
-        if (DateTime.now().minusMonths(6).isAfter(lastReviewDate) &&
+        if (
+            DateTime.now().minusMonths(6).isAfter(lastReviewDate) &&
             Utils.getSetting(requireContext(), Const.LRZ_ID, "").isNotEmpty() &&
             Utils.getSettingBool(requireContext(), Const.HAS_VISITED_GRADES, false) &&
             Utils.getSettingBool(requireContext(), Const.HAS_VISITED_CALENDAR, false)
@@ -161,7 +160,17 @@ class MainFragment :
     }
 
     override fun onRefresh() {
-        viewModel.refreshCards()
+        // check if SnackBar is shown
+        // if shown that means a card is in the process of being discarded
+        // to guarantee that the card is really discarded we will trigger the dismiss of the SnackBar manually
+        // if shown also refreshCards is called inside the dismiss-callback of the SnackBar
+        // this guarantees that it is always called after the dismissal is completed
+        // which because of the callback would not be the case otherwise
+        if (snackBar != null && snackBar!!.isShown) {
+            snackBar!!.dismiss()
+        } else {
+            viewModel.refreshCards()
+        }
     }
 
     override fun onAlwaysHideCard(position: Int) {
@@ -198,7 +207,8 @@ class MainFragment :
                 }
             } else {
                 // There was some problem, log or handle the error code.
-                @ReviewErrorCode val reviewErrorCode = (task.exception as ReviewException).errorCode
+                Utils.showToast(requireContext(), R.string.in_app_review_failed_to_start)
+                task.exception?.let { Utils.log(it) }
             }
         }
     }
@@ -240,7 +250,7 @@ class MainFragment :
             cardsAdapter.remove(lastPos)
 
             with(binding) {
-                Snackbar.make(cardsRecyclerView, R.string.card_dismissed, Snackbar.LENGTH_LONG)
+                snackBar = Snackbar.make(cardsRecyclerView, R.string.card_dismissed, Snackbar.LENGTH_LONG)
                     .setAction(R.string.undo) {
                         card?.let {
                             cardsAdapter.insert(lastPos, it)
@@ -250,17 +260,23 @@ class MainFragment :
                         layoutManager?.smoothScrollToPosition(cardsRecyclerView, null, lastPos)
                     }
                     .setActionTextColor(Color.WHITE)
-                    .addCallback(object : Snackbar.Callback() {
-                        override fun onDismissed(snackbar: Snackbar?, event: Int) {
-                            super.onDismissed(snackbar, event)
-                            if (event != DISMISS_EVENT_ACTION) {
-                                // DISMISS_EVENT_ACTION means, the snackbar was dismissed via the undo button
-                                // and therefore, we didn't really dismiss the card
-                                card?.discard()
+                    .addCallback(
+                        object : Snackbar.Callback() {
+                            override fun onDismissed(snackbar: Snackbar?, event: Int) {
+                                super.onDismissed(snackbar, event)
+                                if (event != DISMISS_EVENT_ACTION) {
+                                    // DISMISS_EVENT_ACTION means, the snackbar was dismissed via the undo button
+                                    // and therefore, we didn't really dismiss the card
+                                    card?.discard()
+                                }
+                                if (event == DISMISS_EVENT_MANUAL) {
+                                    // manual dismissal means we need to call refresh here
+                                    viewModel.refreshCards()
+                                }
                             }
                         }
-                    })
-                    .show()
+                    )
+                snackBar!!.show()
             }
         }
     }

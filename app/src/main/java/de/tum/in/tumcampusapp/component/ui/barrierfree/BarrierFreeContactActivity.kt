@@ -11,7 +11,7 @@ import java.io.IOException
 import java.util.*
 
 class BarrierFreeContactActivity : ActivityForLoadingInBackground<Void,
-        List<BarrierFreeContact>>(R.layout.activity_barrier_free_list_info) {
+    List<BarrierFreeContact>>(R.layout.activity_barrier_free_list_info) {
 
     lateinit var listView: StickyListHeadersListView
 

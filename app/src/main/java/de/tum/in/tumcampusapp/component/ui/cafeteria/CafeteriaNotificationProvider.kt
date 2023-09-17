@@ -24,12 +24,12 @@ class CafeteriaNotificationProvider(context: Context) : NotificationProvider(con
 
     override fun getNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_CAFETERIA)
-                .setAutoCancel(true)
-                .setSmallIcon(R.drawable.ic_cutlery)
-                .setGroup(GROUP_KEY_CAFETERIA)
-                .setGroupSummary(true)
-                .setShowWhen(false)
-                .setColor(notificationColorAccent)
+            .setAutoCancel(true)
+            .setSmallIcon(R.drawable.ic_cutlery)
+            .setGroup(GROUP_KEY_CAFETERIA)
+            .setGroupSummary(true)
+            .setShowWhen(false)
+            .setColor(notificationColorAccent)
     }
 
     override fun buildNotification(): AppNotification? {
@@ -59,14 +59,18 @@ class CafeteriaNotificationProvider(context: Context) : NotificationProvider(con
         }
 
         val pendingIntent = PendingIntent.getActivity(
-                context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
         val summaryNotification = getNotificationBuilder()
-                .setContentTitle(title)
-                .setContentText(text)
-                .setStyle(inboxStyle)
-                .setContentIntent(pendingIntent)
-                .build()
+            .setContentTitle(title)
+            .setContentText(text)
+            .setStyle(inboxStyle)
+            .setContentIntent(pendingIntent)
+            .build()
 
         // We can pass 0 as the notification ID because only one notification at a time
         // will be active

@@ -1,6 +1,10 @@
 package de.tum.`in`.tumcampusapp.component.ui.transportation.api
 
-import com.google.gson.*
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import com.google.gson.JsonParseException
 import org.joda.time.DateTime
 import java.lang.reflect.Type
 
@@ -21,8 +25,8 @@ class MvvDateSerializer : JsonDeserializer<DateTime> {
         val minute = json.get("minute")?.asInt.orThrow(json)
 
         return DateTime()
-                .withDate(year, month, day)
-                .withTime(hour, minute, 0, 0)
+            .withDate(year, month, day)
+            .withTime(hour, minute, 0, 0)
     }
 
     private fun <T> T?.orThrow(json: JsonElement): T {

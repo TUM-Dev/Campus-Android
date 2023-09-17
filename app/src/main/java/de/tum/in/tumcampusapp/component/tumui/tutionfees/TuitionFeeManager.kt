@@ -34,9 +34,9 @@ class TuitionFeeManager(private val context: Context) : ProvidesCard, ProvidesNo
     fun loadTuition(cacheControl: CacheControl): Tuition? {
         try {
             val response = TUMOnlineClient
-                    .getInstance(context)
-                    .getTuitionFeesStatus(cacheControl)
-                    .execute()
+                .getInstance(context)
+                .getTuitionFeesStatus(cacheControl)
+                .execute()
             if (!response.isSuccessful) {
                 return null
             }

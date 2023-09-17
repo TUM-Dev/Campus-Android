@@ -21,7 +21,7 @@ import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoActivity
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 
-class EventCard(context: Context) : Card(CardManager.CARD_EVENT, context, "card_event") {
+class EventCard(context: Context) : Card(CardManager.CardTypes.EVENT, context) {
 
     var event: Event? = null
 
@@ -68,8 +68,7 @@ class EventCard(context: Context) : Card(CardManager.CARD_EVENT, context, "card_
             parent: ViewGroup,
             interactionListener: CardInteractionListener
         ): CardViewHolder {
-            val card = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.card_events_item, parent, false)
+            val card = LayoutInflater.from(parent.context).inflate(R.layout.card_events_item, parent, false)
             return EventsAdapter.EventViewHolder(card, interactionListener, true)
         }
     }

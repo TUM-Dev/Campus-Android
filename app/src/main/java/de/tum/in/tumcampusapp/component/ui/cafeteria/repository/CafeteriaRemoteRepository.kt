@@ -24,11 +24,11 @@ class CafeteriaRemoteRepository @Inject constructor(
     @SuppressLint("CheckResult")
     fun fetchCafeterias(force: Boolean) {
         Observable.just(1)
-                .filter { localRepository.getLastSync() == null || force }
-                .subscribeOn(Schedulers.io())
-                .doOnNext { localRepository.clear() }
-                .flatMap { tumCabeClient.cafeterias }
-                .doAfterNext { localRepository.updateLastSync() }
-                .subscribe(localRepository::addCafeterias, Utils::log)
+            .filter { localRepository.getLastSync() == null || force }
+            .subscribeOn(Schedulers.io())
+            .doOnNext { localRepository.clear() }
+            .flatMap { tumCabeClient.cafeterias }
+            .doAfterNext { localRepository.updateLastSync() }
+            .subscribe(localRepository::addCafeterias, Utils::log)
     }
 }

@@ -10,7 +10,6 @@ import org.joda.time.Period
 import java.util.*
 
 data class CafeteriaWithMenus(val id: Int) {
-
     var name: String? = null
     var menus: List<CafeteriaMenu> = ArrayList()
     var menuDates: List<DateTime> = ArrayList()
@@ -19,9 +18,9 @@ data class CafeteriaWithMenus(val id: Int) {
         get() {
             val now = DateTime.now()
             var nextDate = menuDates
-                    .getOrElse(0) {
-                        DateTime.now()
-                    }
+                .getOrElse(0) {
+                    DateTime.now()
+                }
 
             if (nextDate.isToday() && now.hourOfDay >= 15 && menuDates.size > 1) {
                 nextDate = menuDates[1]
@@ -31,16 +30,16 @@ data class CafeteriaWithMenus(val id: Int) {
         }
 
     fun getIntent(context: Context): Intent =
-            Intent(context, CafeteriaActivity::class.java).apply {
-                putExtra(Const.CAFETERIA_ID, id)
-            }
+        Intent(context, CafeteriaActivity::class.java).apply {
+            putExtra(Const.CAFETERIA_ID, id)
+        }
 
     // We notify the user when the cafeteria typically opens
     val notificationTime: DateTime
         get() = nextMenuDate
-                .withHourOfDay(11)
-                .withMinuteOfHour(0)
-                .withSecondOfMinute(0)
+            .withHourOfDay(11)
+            .withMinuteOfHour(0)
+            .withSecondOfMinute(0)
 
     // Cafeteria is typically opened from 11 to 14 ~= 3 hours
     val notificationDuration: Long

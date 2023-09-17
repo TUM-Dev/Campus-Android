@@ -12,7 +12,7 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.card.StickyCard
 /**
  * Card that allows the user to reset the dismiss state of all cards
  */
-class RestoreCard(context: Context) : StickyCard(CardManager.CARD_RESTORE, context) {
+class RestoreCard(context: Context) : StickyCard(CardManager.CardTypes.RESTORE, context) {
 
     /**
      * Override getPositionByDate, we want the RestoreCard to be the last card.
@@ -32,7 +32,7 @@ class RestoreCard(context: Context) : StickyCard(CardManager.CARD_RESTORE, conte
             interactionListener: CardInteractionListener
         ): CardViewHolder {
             val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.card_restore, parent, false)
+                .inflate(R.layout.card_restore, parent, false)
             view.findViewById<View>(R.id.restore_card).setOnClickListener {
                 val context = it.context
                 if (context is BaseNavigationActivity) {

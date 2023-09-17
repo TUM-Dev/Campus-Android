@@ -1,14 +1,17 @@
 package de.tum.`in`.tumcampusapp.utils
 
 import android.content.Context
-import android.text.format.DateUtils.*
+import android.text.format.DateUtils.FORMAT_ABBREV_RELATIVE
+import android.text.format.DateUtils.HOUR_IN_MILLIS
+import android.text.format.DateUtils.MINUTE_IN_MILLIS
+import android.text.format.DateUtils.getRelativeTimeSpanString
 import de.tum.`in`.tumcampusapp.R
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import java.text.ParseException
-import java.util.*
+import java.util.Locale
 
 object DateTimeUtils {
 
@@ -20,9 +23,9 @@ object DateTimeUtils {
     @JvmStatic
     fun dateWithEndOfDay(): DateTime {
         return dateWithStartOfDay()
-                .withHourOfDay(23)
-                .withMinuteOfHour(59)
-                .withSecondOfMinute(59)
+            .withHourOfDay(23)
+            .withMinuteOfHour(59)
+            .withSecondOfMinute(59)
     }
 
     /**
@@ -45,17 +48,15 @@ object DateTimeUtils {
         return when {
             diff < 60 * MINUTE_IN_MILLIS -> {
                 val formatter = DateTimeFormat.forPattern("m")
-                        .withLocale(Locale.ENGLISH)
-                "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff, DateTimeZone.UTC))} " +
-                        context.getString(R.string.MINUTES)
+                    .withLocale(Locale.ENGLISH)
+                "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff, DateTimeZone.UTC))} " + context.getString(R.string.MINUTES)
             }
             diff < 5 * HOUR_IN_MILLIS -> {
                 val formatter = DateTimeFormat.forPattern("h 'h' m 'min'")
-                        .withLocale(Locale.ENGLISH)
+                    .withLocale(Locale.ENGLISH)
                 "${context.getString(R.string.IN)} ${formatter.print(DateTime(diff, DateTimeZone.UTC))}"
             }
-            else -> getRelativeTimeSpanString(timeInMillis, now, MINUTE_IN_MILLIS,
-                    FORMAT_ABBREV_RELATIVE).toString()
+            else -> getRelativeTimeSpanString(timeInMillis, now, MINUTE_IN_MILLIS, FORMAT_ABBREV_RELATIVE).toString()
         }
     }
 
@@ -98,22 +99,21 @@ object DateTimeUtils {
                 context.getString(R.string.just_now)
             diff < 24 * HOUR_IN_MILLIS ->
                 DateTimeFormat.forPattern("HH:mm")
-                        .withLocale(Locale.ENGLISH)
-                        .print(time)
+                    .withLocale(Locale.ENGLISH)
+                    .print(time)
             diff < 48 * HOUR_IN_MILLIS ->
                 context.getString(R.string.yesterday)
             else ->
                 DateTimeFormat.forPattern("dd.MM.yyyy")
-                        .withLocale(Locale.ENGLISH)
-                        .print(time)
+                    .withLocale(Locale.ENGLISH)
+                    .print(time)
         }
     }
 
     /**
      * 2014-06-30T16:31:57Z
      */
-    private val isoDateFormatter: DateTimeFormatter =
-            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+    private val isoDateFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
     fun parseIsoDate(datetime: String) = try {
         isoDateFormatter.parseDateTime(datetime)
@@ -125,8 +125,7 @@ object DateTimeUtils {
     /**
      * 2014-06-30T16:31:57.878Z
      */
-    private val isoDateWithMillisFormatter: DateTimeFormatter =
-            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    private val isoDateWithMillisFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 
     fun parseIsoDateWithMillis(datetime: String) = try {
         isoDateWithMillisFormatter.parseDateTime(datetime)
@@ -141,7 +140,7 @@ object DateTimeUtils {
      * @return true if both dates are on the same day
      */
     fun isSameDay(first: DateTime, second: DateTime) =
-            first.year() == second.year() && first.dayOfYear() == second.dayOfYear()
+        first.year() == second.year() && first.dayOfYear() == second.dayOfYear()
 
     private val dateFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
 
@@ -166,8 +165,7 @@ object DateTimeUtils {
      */
     fun getDateString(d: DateTime): String = dateFormatter.print(d)
 
-    private val dateTimeFormatter: DateTimeFormatter =
-            DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")
+    private val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")
 
     /**
      * Converts DateTime to an ISO datetime-string

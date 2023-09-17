@@ -7,8 +7,13 @@ object LocationHelper {
 
     fun calculateDistanceToCafeteria(cafeteria: Cafeteria, location: Location): Float {
         val results = FloatArray(1)
-        Location.distanceBetween(cafeteria.latitude, cafeteria.longitude,
-                location.latitude, location.longitude, results)
+        Location.distanceBetween(
+            cafeteria.latitude,
+            cafeteria.longitude,
+            location.latitude,
+            location.longitude,
+            results
+        )
         return results[0]
     }
 }

@@ -1,6 +1,6 @@
 apply plugin: 'pmd'
 
-task pmd(type: Pmd) {
+tasks.register('pmd', Pmd) {
     description 'Run PMD'
 
     ruleSetFiles = files("$rootDir/gradle/config/pmd-ruleset.xml")

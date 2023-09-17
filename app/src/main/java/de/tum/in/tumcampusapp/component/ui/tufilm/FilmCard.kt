@@ -2,7 +2,6 @@ package de.tum.`in`.tumcampusapp.component.ui.tufilm
 
 import android.content.Context
 import android.os.Bundle
-
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavDestination
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsCard
 import de.tum.`in`.tumcampusapp.component.ui.news.model.News
@@ -13,7 +12,7 @@ import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
 class FilmCard(
     context: Context,
     news: News
-) : NewsCard(context, news, CardManager.CARD_NEWS_FILM) {
+) : NewsCard(context, news, CardManager.CardTypes.NEWS_FILM) {
     override fun getNavigationDestination(): NavDestination {
         val args = Bundle()
         args.putString(Const.KINO_DATE, DateTimeUtils.getDateTimeString(date))

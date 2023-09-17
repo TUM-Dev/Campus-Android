@@ -1,6 +1,10 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.RoomWarnings
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.TicketType
 
 @Dao

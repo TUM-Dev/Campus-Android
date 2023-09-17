@@ -9,10 +9,8 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
-
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavDestination
 import de.tum.`in`.tumcampusapp.component.ui.news.model.NewsAlert
@@ -24,7 +22,7 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 /**
  * Shows important news
  */
-class TopNewsCard(context: Context) : Card(CardManager.CARD_TOP_NEWS, context, "top_news") {
+class TopNewsCard(context: Context) : Card(CardManager.CardTypes.TOP_NEWS, context) {
     private lateinit var imageView: ImageView
     private lateinit var progress: ProgressBar
     private val topNewsStore: TopNewsStore
@@ -41,17 +39,16 @@ class TopNewsCard(context: Context) : Card(CardManager.CARD_TOP_NEWS, context, "
         }
 
         Picasso.get()
-            .load(newsAlert.url)
-            .into(imageView, object : Callback {
-                override fun onSuccess() {
-                    // remove progress bar
-                    progress.visibility = View.GONE
-                }
-
-                override fun onError(e: Exception) {
-                    discard()
-                }
-            })
+                .load(newsAlert.url)
+                .into(imageView, object : Callback {
+                    override fun onSuccess() {
+                        // remove progress bar
+                        progress.visibility = View.GONE
+                    }
+                    override fun onError(e: Exception) {
+                        discard()
+                    }
+                })
     }
 
     override fun getId(): Int {

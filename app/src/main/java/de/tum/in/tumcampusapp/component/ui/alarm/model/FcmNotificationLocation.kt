@@ -9,7 +9,7 @@ data class FcmNotificationLocation(
     var lat: Double = .0,
     var radius: Int = 0
 ) :
-        Serializable {
+    Serializable {
     fun getRadius(): Double = radius.toDouble()
 
     companion object {

@@ -3,34 +3,21 @@ package de.tum.`in`.tumcampusapp.component.other.locations
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
-import android.Manifest
 import androidx.preference.PreferenceManager
 import androidx.core.content.ContextCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.navigatum.NavigaTumAPIClient
-import de.tum.`in`.tumcampusapp.component.other.locations.model.BuildingToGps
 import de.tum.`in`.tumcampusapp.component.other.locations.model.Geo
 import de.tum.`in`.tumcampusapp.component.tumui.calendar.CalendarController
-import de.tum.`in`.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordinate
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.model.Cafeteria
 import de.tum.`in`.tumcampusapp.component.ui.transportation.model.efa.StationResult
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
-import de.tum.`in`.tumcampusapp.utils.tryOrNull
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.lang.Double.parseDouble
 import java.util.LinkedList
 import javax.inject.Inject
-import kotlin.math.sqrt
-import kotlin.math.tan
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.pow
 
 /**
  * Location manager, manages intelligent location services, provides methods to easily access
@@ -39,7 +26,6 @@ import kotlin.math.pow
 class LocationManager @Inject constructor(c: Context) {
     private val mContext: Context = c.applicationContext
     private val buildingToGpsDao: BuildingToGpsDao
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
     init {
         val db = TcaDb.getInstance(c)
@@ -224,36 +210,6 @@ class LocationManager @Inject constructor(c: Context) {
     }
 
     /**
-     * This method tries to get the list of BuildingToGps by querying database or requesting the server.
-     * If both two ways fail, it returns an empty list.
-     * we have to fetch buildings to gps mapping first.
-     * @return The list of BuildingToGps
-     */
-    private fun fetchBuildingsToGps(): List<BuildingToGps> {
-        val results = buildingToGpsDao.all.orEmpty()
-        if (results.isNotEmpty()) {
-            return results
-        }
-
-        val newResults = tryOrNull { TUMCabeClient.getInstance(mContext).building2Gps }
-        return newResults.orEmpty().also {
-            buildingToGpsDao.insert(*it.toTypedArray())
-        }
-    }
-
-    /**
-     * Get Building ID accroding to the current location
-     * Do not call on UI thread.
-     *
-     * @return the id of current building
-     */
-    suspend fun fetchBuildingIDFromCurrentLocation(callback: (String?) -> Unit) {
-        withContext(ioDispatcher) {
-            fetchBuildingIDFromLocation(getCurrentOrNextLocation(), callback)
-        }
-    }
-
-    /**
      * Checks that Google Play services are available
      */
     private fun servicesConnected(): Boolean {
@@ -294,41 +250,6 @@ class LocationManager @Inject constructor(c: Context) {
             Utils.log(e)
         }
         return null
-    }
-
-    /**
-     * Get Building ID accroding to the given location.
-     * Do not call on UI thread.
-     *
-     * @param location the give location
-     * @return the id of current building
-     */
-    private fun fetchBuildingIDFromLocation(location: Location, block: (String?) -> Unit) {
-        val buildingToGpsList = fetchBuildingsToGps()
-        if (buildingToGpsList.isEmpty()) {
-            block(null)
-        }
-
-        val lat = location.latitude
-        val lng = location.longitude
-        val results = FloatArray(1)
-        var bestDistance = java.lang.Float.MAX_VALUE
-        var bestBuilding = ""
-
-        for ((id, latitude, longitude) in buildingToGpsList) {
-            val buildingLat = parseDouble(latitude)
-            val buildingLng = parseDouble(longitude)
-
-            Location.distanceBetween(buildingLat, buildingLng, lat, lng, results)
-            val distance = results[0]
-            if (distance < bestDistance) {
-                bestDistance = distance
-                bestBuilding = id
-            }
-        }
-
-        val result = bestBuilding.takeIf { bestDistance < 1_000 }
-        block(result)
     }
 
     companion object {
@@ -394,55 +315,6 @@ class LocationManager @Inject constructor(c: Context) {
             return if (bestDistance < 1000) {
                 bestCampus
             } else {
-                null
-            }
-        }
-
-        /**
-         * Converts UTM based coordinates to latitude and longitude based format
-         */
-        private fun convertUTMtoLL(north: Double, east: Double, zone: Double): Geo {
-            val d = 0.99960000000000004
-            val d1 = 6378137
-            val d2 = 0.0066943799999999998
-            val d4 = (1 - sqrt(1 - d2)) / (1 + sqrt(1 - d2))
-            val d15 = east - 500000
-            val d11 = (zone - 1) * 6 - 180 + 3
-            val d3 = d2 / (1 - d2)
-            val d10 = north / d
-            val d12 = d10 / (d1 * (1 - d2 / 4 - (3 * d2 * d2) / 64 - (5 * d2.pow(3.0)) / 256))
-            val d14 =
-                d12 + ((3 * d4) / 2 - (27 * d4.pow(3.0)) / 32) * sin(2 * d12) + ((21 * d4 * d4) / 16 - (55 * d4.pow(4.0)) / 32) * sin(4 * d12) + ((151 * d4.pow(
-                    3.0
-                )) / 96) * sin(6 * d12)
-            val d5 = d1 / sqrt(1 - d2 * sin(d14) * sin(d14))
-            val d6 = tan(d14) * tan(d14)
-            val d7 = d3 * cos(d14) * cos(d14)
-            val d8 = (d1 * (1 - d2)) / (1 - d2 * sin(d14) * sin(d14)).pow(1.5)
-            val d9 = d15 / (d5 * d)
-            var d17 =
-                d14 - ((d5 * tan(d14)) / d8) * ((d9 * d9) / 2 - ((5 + 3 * d6 + 10 * d7 - 4 * d7 * d7 - 9 * d3) * d9.pow(4.0)) / 24 + ((61 + 90 * d6 + 298 * d7 + 45 * d6 * d6 - 252 * d3 - 3 * d7 * d7) * d9.pow(
-                    6.0
-                )) / 720)
-            d17 *= 180 / Math.PI
-            var d18 =
-                (d9 - ((1 + 2 * d6 + d7) * d9.pow(3.0)) / 6 + ((5 - 2 * d7 + 28 * d6 - 3 * d7 * d7 + 8 * d3 + 24 * d6 * d6) * d9.pow(5.0)) / 120) / cos(
-                    d14
-                )
-            d18 = d11 + d18 * 180 / Math.PI
-            return Geo(d17, d18)
-        }
-
-        @JvmStatic
-        fun convertRoomFinderCoordinateToGeo(roomFinderCoordinate: RoomFinderCoordinate): Geo? {
-            return try {
-                val zone = parseDouble(roomFinderCoordinate.utm_zone)
-                val easting = parseDouble(roomFinderCoordinate.utm_easting)
-                val northing = parseDouble(roomFinderCoordinate.utm_northing)
-
-                convertUTMtoLL(northing, easting, zone)
-            } catch (e: Exception) {
-                Utils.log(e)
                 null
             }
         }

@@ -43,6 +43,7 @@ class LectureDetailsActivity : ActivityForAccessingTumOnline<LectureDetailsRespo
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
+            setTitle(R.string.lectures_information)
         }
 
         binding.appointmentsButton.setOnClickListener {

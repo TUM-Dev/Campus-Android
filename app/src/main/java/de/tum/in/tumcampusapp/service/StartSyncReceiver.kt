@@ -23,7 +23,7 @@ class StartSyncReceiver : BroadcastReceiver() {
 
         // Also start the SilenceService. It checks if it is enabled, so we don't need to
         // SilenceService also needs accurate timings, so we can't use WorkManager
-        SilenceService.enqueueWork(context, Intent())
+        SilenceWorker.enqueueWork(context)
     }
 
     companion object {
@@ -32,8 +32,11 @@ class StartSyncReceiver : BroadcastReceiver() {
 
         fun startSendMessage(context: Context) {
             WorkManager.getInstance(context)
-                    .enqueueUniquePeriodicWork(
-                            UNIQUE_SEND_MESSAGE, KEEP, SendMessageWorker.getPeriodicWorkRequest())
+                .enqueueUniquePeriodicWork(
+                    UNIQUE_SEND_MESSAGE,
+                    KEEP,
+                    SendMessageWorker.getPeriodicWorkRequest()
+                )
         }
 
         /**
@@ -45,8 +48,11 @@ class StartSyncReceiver : BroadcastReceiver() {
                 return
             }
             WorkManager.getInstance(context)
-                    .enqueueUniquePeriodicWork(UNIQUE_BACKGROUND, KEEP,
-                            BackgroundWorker.getWorkRequest())
+                .enqueueUniquePeriodicWork(
+                    UNIQUE_BACKGROUND,
+                    KEEP,
+                    BackgroundWorker.getWorkRequest()
+                )
         }
 
         /**

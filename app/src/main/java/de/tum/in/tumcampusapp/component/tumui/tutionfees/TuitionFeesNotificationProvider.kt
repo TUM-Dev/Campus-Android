@@ -15,9 +15,9 @@ class TuitionFeesNotificationProvider(context: Context) : NotificationProvider(c
 
     override fun getNotificationBuilder(): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Const.NOTIFICATION_CHANNEL_DEFAULT)
-                .setSmallIcon(R.drawable.ic_notification)
-                .setShowWhen(false)
-                .setColor(notificationColorAccent)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setShowWhen(false)
+            .setColor(notificationColorAccent)
     }
 
     override fun buildNotification(): AppNotification? {
@@ -35,10 +35,10 @@ class TuitionFeesNotificationProvider(context: Context) : NotificationProvider(c
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
 
         val notification = getNotificationBuilder()
-                .setContentTitle(title)
-                .setContentText(text)
-                .setContentIntent(pendingIntent)
-                .build()
+            .setContentTitle(title)
+            .setContentText(text)
+            .setContentIntent(pendingIntent)
+            .build()
 
         // We can pass 0 as the notification ID because only one notification at a time
         // will be active

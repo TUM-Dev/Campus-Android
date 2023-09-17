@@ -48,10 +48,10 @@ class CafeteriaMenusAdapter(
 
     fun update(menus: List<CafeteriaMenu>) {
         val newItems = menus
-                .filter(this::shouldShowMenu)
-                .splitOnChanged { it.typeLong }
-                .map(this::createAdapterItemsForSection)
-                .flatten()
+            .filter(this::shouldShowMenu)
+            .splitOnChanged { it.typeLong }
+            .map(this::createAdapterItemsForSection)
+            .flatten()
 
         val diffResult = DiffUtil.calculateDiff(DiffUtilCallback(adapterItems, newItems))
 
@@ -63,9 +63,9 @@ class CafeteriaMenusAdapter(
 
     private fun shouldShowMenu(menu: CafeteriaMenu): Boolean {
         val shouldShowMenuType = Utils.getSettingBool(
-                context,
-                "card_cafeteria_${menu.typeShort}",
-                "tg" == menu.typeShort || "ae" == menu.typeShort
+            context,
+            "card_cafeteria_${menu.typeShort}",
+            "tg" == menu.typeShort || "ae" == menu.typeShort
         )
         return shouldShowMenuType || isBigLayout
     }

@@ -10,7 +10,6 @@ import android.graphics.drawable.BitmapDrawable
 import android.Manifest.permission.READ_CALENDAR
 import android.Manifest.permission.WRITE_CALENDAR
 import android.os.Bundle
-import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.content.edit
@@ -31,11 +30,13 @@ import de.tum.`in`.tumcampusapp.component.ui.cafeteria.repository.CafeteriaLocal
 import de.tum.`in`.tumcampusapp.component.ui.eduroam.SetupEduroamActivity
 import de.tum.`in`.tumcampusapp.component.ui.news.NewsController
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.StartupActivity
+import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.di.injector
-import de.tum.`in`.tumcampusapp.service.SilenceService
+import de.tum.`in`.tumcampusapp.service.SilenceWorker
 import de.tum.`in`.tumcampusapp.service.StartSyncReceiver
 import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.Single
@@ -188,19 +189,19 @@ class SettingsFragment :
         // If the silent mode was activated, start the service. This will invoke
         // the service to call onHandleIntent which checks available lectures
         if (key == Const.SILENCE_SERVICE) {
-            val service = Intent(requireContext(), SilenceService::class.java)
+            val service = Intent(requireContext(), SilenceWorker::class.java)
             if (sharedPrefs.getBoolean(key, false)) {
-                if (!SilenceService.hasPermissions(requireContext())) {
+                if (!SilenceWorker.hasPermissions(requireContext())) {
                     // disable until silence service permission is resolved
                     val silenceSwitch = findPreference(Const.SILENCE_SERVICE) as SwitchPreferenceCompat
                     silenceSwitch.isChecked = false
                     Utils.setSetting(requireContext(), Const.SILENCE_SERVICE, false)
-                    SilenceService.requestPermissions(requireContext())
+                    SilenceWorker.requestPermissions(requireContext())
                 } else {
-                    requireContext().startService(service)
+                    SilenceWorker.enqueueWork(requireContext())
                 }
             } else {
-                requireContext().stopService(service)
+                SilenceWorker.dequeueWork(requireContext())
             }
         }
 
@@ -222,6 +223,12 @@ class SettingsFragment :
 
         // restart app after language change
         if (key == "language_preference" && activity != null) {
+            (activity as SettingsActivity).restartApp()
+        }
+        // restart app after visibility of card changed
+        val cardTypesPrefNames = CardManager.CardTypes.values().map { context?.getString(it.showCardPreferenceStringRes) }
+        // restart when visibility changed
+        if (key in cardTypesPrefNames) {
             (activity as SettingsActivity).restartApp()
         }
     }

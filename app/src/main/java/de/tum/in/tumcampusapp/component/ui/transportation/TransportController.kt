@@ -145,16 +145,16 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
 
         // Schedule a notification alarm for every last calendar item of a day
         val notificationCandidates = events
-                .dropLast(1)
-                .filterIndexed { index, current ->
-                    val next = events[index + 1]
-                    if (current.startTime == null || next.startTime == null) {
-                        false
-                    } else {
-                        current.startTime.dayOfYear != next.startTime.dayOfYear
-                    }
+            .dropLast(1)
+            .filterIndexed { index, current ->
+                val next = events[index + 1]
+                if (current.startTime == null || next.startTime == null) {
+                    false
+                } else {
+                    current.startTime.dayOfYear != next.startTime.dayOfYear
                 }
-                .take(maxNotificationsToSchedule) // Some manufacturers cap the amount of alarms you can schedule (https://stackoverflow.com/a/29610474)
+            }
+            .take(maxNotificationsToSchedule) // Some manufacturers cap the amount of alarms you can schedule (https://stackoverflow.com/a/29610474)
 
         val notifications = notificationCandidates.mapNotNull { it.toNotification(context) }
         NotificationScheduler(context).schedule(notifications)
@@ -172,11 +172,11 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
         @JvmStatic
         fun getDeparturesFromExternal(context: Context, stationID: String): Observable<List<Departure>> {
             return MvvClient.getInstance(context)
-                    .getDepartures(stationID)
-                    .onErrorReturn { MvvDepartureList(emptyList()) }
-                    .map { it.departureList.orEmpty() }
-                    .map { it.map { mvvDeparture -> Departure.create(mvvDeparture) } }
-                    .map { it.sortedBy { departure -> departure.countDown } }
+                .getDepartures(stationID)
+                .onErrorReturn { MvvDepartureList(emptyList()) }
+                .map { it.departureList.orEmpty() }
+                .map { it.map { mvvDeparture -> Departure.create(mvvDeparture) } }
+                .map { it.sortedBy { departure -> departure.countDown } }
         }
 
         /**
@@ -188,8 +188,8 @@ class TransportController(private val context: Context) : ProvidesCard, Provides
         @JvmStatic
         fun getStationsFromExternal(context: Context, prefix: String): Observable<List<StationResult>> {
             return MvvClient.getInstance(context)
-                    .getStations(prefix)
-                    .map { it.stations.sortedBy { station -> station.quality } }
+                .getStations(prefix)
+                .map { it.stations.sortedBy { station -> station.quality } }
         }
 
         @JvmStatic

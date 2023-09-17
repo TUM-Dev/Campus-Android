@@ -39,7 +39,7 @@
         <!-- Cafeteria card -->
         <androidx.preference.PreferenceScreen
             android:icon="@drawable/ic_cutlery"
-            android:key="card_cafeteria"
+            android:key="@string/cafeteria_default_sharedpref_shown"
             android:summary="@string/card_cafeteria_summary"
             android:title="@string/cafeteria">
 
@@ -47,7 +47,7 @@
 
                 <androidx.preference.CheckBoxPreference
                     android:defaultValue="true"
-                    android:key="card_cafeteria_start"
+                    android:key="@string/cafeteria_default_sharedpref_shown"
                     android:title="@string/startpage" />
 
                 <androidx.preference.CheckBoxPreference
@@ -145,7 +145,7 @@
         <!-- MVV card-->
         <androidx.preference.PreferenceScreen
             android:icon="@drawable/ic_outline_train_24px"
-            android:key="card_mvv"
+            android:key="@string/mvv_default_sharedpref_shown"
             android:summary="@string/card_mvv_summary"
             android:title="@string/mvv">
 
@@ -153,7 +153,7 @@
 
                 <androidx.preference.CheckBoxPreference
                     android:defaultValue="true"
-                    android:key="card_mvv_start"
+                    android:key="@string/mvv_default_sharedpref_shown"
                     android:title="@string/startpage" />
 
             </androidx.preference.PreferenceCategory>
@@ -188,7 +188,7 @@
         <!-- Next lecture card -->
         <androidx.preference.PreferenceScreen
             android:icon="@drawable/ic_outline_event_24px"
-            android:key="card_next_lecture"
+            android:key="@string/next_lecture_default_sharedpref_shown"
             android:summary="@string/card_next_lecture_summary"
             android:title="@string/next_lecture">
 
@@ -196,7 +196,7 @@
 
                 <androidx.preference.CheckBoxPreference
                     android:defaultValue="true"
-                    android:key="card_next_lecture_start"
+                    android:key="@string/next_lecture_default_sharedpref_shown"
                     android:title="@string/startpage" />
 
                 <androidx.preference.CheckBoxPreference
@@ -211,7 +211,7 @@
         <!-- Tuition fee card -->
         <androidx.preference.PreferenceScreen
             android:icon="@drawable/ic_money"
-            android:key="card_tuition_fee"
+            android:key="@string/tuition_fee_default_sharedpref_shown"
             android:summary="@string/card_tuition_fee_summary"
             android:title="@string/tuition_fees">
 
@@ -219,7 +219,7 @@
 
                 <androidx.preference.CheckBoxPreference
                     android:defaultValue="true"
-                    android:key="card_tuition_fee_start"
+                    android:key="@string/tuition_fee_default_sharedpref_shown"
                     android:title="@string/startpage" />
 
                 <androidx.preference.CheckBoxPreference
@@ -231,10 +231,28 @@
 
         </androidx.preference.PreferenceScreen>
 
+        <!-- Support card -->
+        <androidx.preference.PreferenceScreen
+            android:icon="@drawable/ic_live_help"
+            android:key="@string/support_default_sharedpref_shown"
+            android:summary="@string/card_support_summary"
+            android:title="@string/support_us_title">
+
+            <androidx.preference.PreferenceCategory android:title="@string/display">
+
+                <androidx.preference.CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="@string/support_default_sharedpref_shown"
+                    android:title="@string/startpage" />
+
+            </androidx.preference.PreferenceCategory>
+
+        </androidx.preference.PreferenceScreen>
+
         <!-- News card -->
         <androidx.preference.PreferenceScreen
             android:icon="@drawable/ic_rss"
-            android:key="card_news"
+            android:key="@string/news_default_sharedpref_shown"
             android:summary="@string/card_news_summary"
             android:title="@string/news">
 
@@ -242,8 +260,18 @@
 
                 <androidx.preference.CheckBoxPreference
                     android:defaultValue="true"
-                    android:key="card_news_start"
-                    android:title="@string/startpage" />
+                    android:key="@string/news_default_sharedpref_shown"
+                    android:title="@string/startpage_news" />
+
+                <androidx.preference.CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="@string/top_news_default_sharedpref_shown"
+                    android:title="@string/startpage_top_news" />
+
+                <androidx.preference.CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="@string/news_film_default_sharedpref_shown"
+                    android:title="@string/startpage_film_news" />
 
                 <androidx.preference.CheckBoxPreference
                     android:defaultValue="false"
@@ -279,6 +307,7 @@
         </androidx.preference.PreferenceScreen>
 
         <!-- Chat card -->
+        <!-- not included
         <androidx.preference.PreferenceScreen
             android:icon="@drawable/ic_outline_chat_bubble_outline_24px"
             android:key="card_chat"
@@ -300,11 +329,12 @@
             </androidx.preference.PreferenceCategory>
 
         </androidx.preference.PreferenceScreen>
+        -->
 
         <!-- Eduroam card -->
         <androidx.preference.PreferenceScreen
             android:icon="@drawable/ic_action_network_wifi"
-            android:key="card_eduroam"
+            android:key="@string/eduroam_default_sharedpref_shown"
             android:summary="@string/card_eduroam_summary"
             android:title="@string/eduroam">
 
@@ -312,7 +342,7 @@
 
                 <androidx.preference.CheckBoxPreference
                     android:defaultValue="true"
-                    android:key="card_eduroam_start"
+                    android:key="@string/eduroam_default_sharedpref_shown"
                     android:title="@string/startpage" />
 
                 <androidx.preference.CheckBoxPreference
@@ -331,6 +361,64 @@
             </androidx.preference.PreferenceCategory>
 
         </androidx.preference.PreferenceScreen>
+
+        <!-- NoInternet card -->
+        <androidx.preference.PreferenceScreen
+            android:icon="@drawable/ic_no_wifi"
+            android:key="@string/no_internet_default_sharedpref_shown"
+            android:summary="@string/card_no_internet_summary"
+            android:title="@string/no_internet_connection">
+
+            <androidx.preference.PreferenceCategory android:title="@string/display">
+
+                <androidx.preference.CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="@string/no_internet_default_sharedpref_shown"
+                    android:title="@string/startpage" />
+
+            </androidx.preference.PreferenceCategory>
+
+        </androidx.preference.PreferenceScreen>
+
+        <!-- Login card -->
+        <androidx.preference.PreferenceScreen
+            android:icon="@drawable/ic_person_24"
+            android:key="@string/login_default_sharedpref_shown"
+            android:summary="@string/card_login_summary"
+            android:title="@string/tumonline_login">
+
+            <androidx.preference.PreferenceCategory android:title="@string/display">
+
+                <androidx.preference.CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="@string/login_default_sharedpref_shown"
+                    android:title="@string/startpage" />
+
+            </androidx.preference.PreferenceCategory>
+
+        </androidx.preference.PreferenceScreen>
+
+        <!-- Event card -->
+
+        <!-- Update card -->
+        <androidx.preference.PreferenceScreen
+            android:icon="@drawable/ic_download"
+            android:key="@string/update_note_default_sharedpref_shown"
+            android:summary="@string/card_update_summary"
+            android:title="@string/update_note_title">
+
+            <androidx.preference.PreferenceCategory android:title="@string/display">
+
+                <androidx.preference.CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="@string/update_note_default_sharedpref_shown"
+                    android:title="@string/startpage" />
+
+            </androidx.preference.PreferenceCategory>
+
+        </androidx.preference.PreferenceScreen>
+
+
 
     </androidx.preference.PreferenceCategory>
 

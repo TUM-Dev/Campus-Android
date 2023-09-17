@@ -326,11 +326,11 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
                 this,
                 { timePicker, hour, minute ->
                     timePicker.layoutParams = LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
                     )
                     val eventLength = end.millis - start.millis
-                    start = start.withHourOfDay(hour)
-                        .withMinuteOfHour(minute)
+                    start = start.withHourOfDay(hour).withMinuteOfHour(minute)
                     end = end.withMillis(start.millis + eventLength)
                     updateTimeViews()
                 },
@@ -541,6 +541,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         finish()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         hideKeyboard()
 
@@ -575,7 +576,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     private fun displayCloseDialog() {
         ThemedAlertDialogBuilder(this)
             .setMessage(R.string.discard_changes_question)
-            .setNegativeButton(R.string.discard) { dialogInterface, which -> finish() }
+            .setNegativeButton(R.string.discard) { _, _ -> finish() }
             .setPositiveButton(R.string.keep_editing, null)
             .show()
     }

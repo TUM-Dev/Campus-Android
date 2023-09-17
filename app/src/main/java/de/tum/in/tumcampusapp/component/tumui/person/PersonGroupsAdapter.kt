@@ -1,11 +1,11 @@
 package de.tum.`in`.tumcampusapp.component.tumui.person
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.tumui.person.model.Group
 
@@ -13,7 +13,7 @@ class PersonGroupsAdapter(private val items: List<Group>) : RecyclerView.Adapter
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.person_group_item, parent, false)
+            .inflate(R.layout.person_group_item, parent, false)
         return ViewHolder(view)
     }
 

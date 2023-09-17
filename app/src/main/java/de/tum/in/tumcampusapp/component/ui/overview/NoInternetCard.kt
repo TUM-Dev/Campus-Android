@@ -17,7 +17,7 @@ import org.joda.time.DateTime
 /**
  * Card that informs that no internet connection is available
  */
-class NoInternetCard(context: Context) : StickyCard(CardManager.CARD_NO_INTERNET, context) {
+class NoInternetCard(context: Context) : StickyCard(CardManager.CardTypes.NO_INTERNET, context) {
 
     override fun updateViewHolder(viewHolder: RecyclerView.ViewHolder) {
         super.updateViewHolder(viewHolder)

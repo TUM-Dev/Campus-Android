@@ -35,10 +35,10 @@ class CafeteriaManager @Inject constructor(private val context: Context) : Provi
     val bestMatchCafeteriaMenus: List<CafeteriaMenu>
         get() {
             val cafeteriaId = bestMatchMensaId
-            return if (cafeteriaId == Const.NO_CAFETERIA_FOUND) {
-                emptyList()
-            } else {
+            return if (cafeteriaId != Const.NO_CAFETERIA_FOUND) {
                 getCafeteriaMenusByCafeteriaId(cafeteriaId)
+            } else {
+                emptyList()
             }
         }
 

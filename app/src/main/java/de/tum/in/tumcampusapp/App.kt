@@ -37,8 +37,8 @@ open class App : Application() {
         // We use Dagger 2 for dependency injection. The main AppModule and AppComponent can be
         // found in the package "di".
         appComponent = DaggerAppComponent.builder()
-                .context(this)
-                .build()
+            .context(this)
+            .build()
     }
 
     protected open fun setupPicasso() {
@@ -53,13 +53,16 @@ open class App : Application() {
 
     protected fun setupStrictMode() {
         if (BuildConfig.DEBUG) {
-            StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
+            StrictMode.setThreadPolicy(
+                StrictMode.ThreadPolicy.Builder()
                     .detectAll()
                     .permitDiskReads() // These are mainly caused by shared preferences and room. Probably enable
                     .permitDiskWrites() // this as soon as we don't call allowMainThreadQueries() in TcaDb
                     .penaltyLog()
-                    .build())
-            StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder()
+                    .build()
+            )
+            StrictMode.setVmPolicy(
+                StrictMode.VmPolicy.Builder()
                     .detectActivityLeaks()
                     // .detectLeakedClosableObjects() // seems like room / DAOs leak
                     .detectLeakedRegistrationObjects()
@@ -68,7 +71,8 @@ open class App : Application() {
                     // .detectContentUriWithoutPermission()
                     // .detectUntaggedSockets()
                     .penaltyLog()
-                    .build())
+                    .build()
+            )
         }
     }
 

@@ -23,7 +23,7 @@ import de.tum.`in`.tumcampusapp.utils.Const
 /**
  * Card that can start [SetupEduroamActivity]
  */
-class EduroamCard(context: Context) : Card(CardManager.CARD_EDUROAM, context, "card_eduroam") {
+class EduroamCard(context: Context) : Card(CardManager.CardTypes.EDUROAM, context) {
 
     override val optionsMenuResId: Int
         get() = R.menu.card_popup_menu
@@ -38,7 +38,12 @@ class EduroamCard(context: Context) : Card(CardManager.CARD_EDUROAM, context, "c
     override fun shouldShow(prefs: SharedPreferences): Boolean {
         // Check if WiFi is turned on at all, as we cannot say if it was configured if it is off
         val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        return (wifiManager.isWifiEnabled && EduroamController.getEduroamConfig(context) == null && eduroamAvailable(wifiManager))
+        return (
+                wifiManager.isWifiEnabled &&
+                        EduroamController.getEduroamConfig(context) == null &&
+                        eduroamAvailable(wifiManager) &&
+                        prefs.getBoolean("card_eduroam_start", true)
+                )
     }
 
     private fun eduroamAvailable(wifi: WifiManager): Boolean {
@@ -53,9 +58,7 @@ class EduroamCard(context: Context) : Card(CardManager.CARD_EDUROAM, context, "c
     }
 
     override fun discard(editor: SharedPreferences.Editor) {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        prefs.edit().putBoolean("card_eduroam_start", false)
-            .apply()
+        editor.putBoolean("card_eduroam_start", false)
     }
 
     override fun getId(): Int {

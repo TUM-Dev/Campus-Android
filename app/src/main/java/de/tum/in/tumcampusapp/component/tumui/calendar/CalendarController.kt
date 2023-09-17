@@ -24,6 +24,7 @@ import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.sync.SyncManager
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
+import java.time.YearMonth
 import java.util.*
 
 /**
@@ -57,25 +58,65 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
         get() = roomLocationsDao.nextLectureCoordinates?.toGeo()
 
     fun getFromDbBetweenDates(begin: DateTime, end: DateTime) =
-            applyEventColors(calendarDao.getAllBetweenDates(begin, end))
+        applyEventColors(calendarDao.getAllBetweenDates(begin, end))
 
     fun getFromDbNotCancelledBetweenDates(begin: DateTime, end: DateTime) =
-            applyEventColors(calendarDao.getAllNotCancelledBetweenDates(begin, end))
+        applyEventColors(calendarDao.getAllNotCancelledBetweenDates(begin, end))
 
-    fun getEventsForMonth(date: LocalDate): Map<String, List<CalendarItem>> {
+    /**
+     * Returns all events for one page in the month-view.
+     * One page in the month-view contains 42 days.
+     *
+     * @param date The selected date
+     * @return A map with the index/day of the page as key and the list of events for the respective day as value
+     */
+    fun getEventsForMonth(date: LocalDate): Map<Int, List<CalendarItem>> {
         val startOfMonth = date.withDayOfMonth(1)
         val endOfMonth = date.withDayOfMonth(date.dayOfMonth().maximumValue)
-        val events = getFromDbBetweenDates(startOfMonth.toDateTimeAtCurrentTime(), endOfMonth.toDateTimeAtCurrentTime())
-        val eventMap = mutableMapOf<String, MutableList<CalendarItem>>()
+        val yearMonth = YearMonth.of(date.year, date.monthOfYear)
+
+        // First day of the page, minus offset to the current month
+        val start = startOfMonth.minusDays(startOfMonth.dayOfWeek)
+
+        // Last day of the page, days of page - length of the current month - offset to the current month
+        val end = endOfMonth.plusDays(42 - yearMonth.lengthOfMonth() - startOfMonth.dayOfWeek)
+        val events = getFromDbBetweenDates(start.toDateTimeAtCurrentTime(), end.toDateTimeAtCurrentTime())
+        val eventMap = mutableMapOf<Int, MutableList<CalendarItem>>()
         for (event in events) {
-            val day = event.dtstart.toLocalDate().dayOfMonth.toString()
-            if (!eventMap.containsKey(day)) {
-                eventMap[day] = mutableListOf(event)
+            val day = event.dtstart.toLocalDate()
+            val index = dayToIndex(day, date)
+            if (!eventMap.containsKey(index)) {
+                eventMap[index] = mutableListOf(event)
             } else {
-                eventMap[day]?.add(event)
+                eventMap[index]?.add(event)
             }
         }
         return eventMap
+    }
+
+    /**
+     * Returns the index on the page of the event`s day.
+     * Index goes from 0 to 41.
+     *
+     * @param eventDate The date of the event
+     * @param date The selected date
+     * @return The index of the day where the event is on the page
+     */
+    private fun dayToIndex(eventDate: LocalDate, date: LocalDate): Int {
+        val yearMonth = YearMonth.of(date.year, date.monthOfYear)
+        val daysInMonth = yearMonth.lengthOfMonth()
+        val daysInPreviousMonth = yearMonth.minusMonths(1).lengthOfMonth()
+        val firstDayOfMonth = date.withDayOfMonth(1)
+        val lastDayOfMonth = date.withDayOfMonth(date.dayOfMonth().maximumValue)
+
+        if (eventDate < firstDayOfMonth) {
+            return eventDate.dayOfMonth - 1 - daysInPreviousMonth + firstDayOfMonth.dayOfWeek - 1
+        }
+        if (eventDate > lastDayOfMonth) {
+            return eventDate.dayOfMonth - 1 + firstDayOfMonth.dayOfWeek - 1 + daysInMonth
+        }
+
+        return eventDate.dayOfMonth - 1 + firstDayOfMonth.dayOfWeek - 1
     }
 
     private fun applyEventColors(calendarItems: List<CalendarItem>): List<CalendarItem> {
@@ -92,7 +133,7 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
      * @param dayCount The number of days
      * @param widgetId The id of the widget
      * @return List<IntegratedCalendarEvent> List of Events
-    </IntegratedCalendarEvent> */
+     </IntegratedCalendarEvent> */
     fun getNextDaysFromDb(dayCount: Int, widgetId: Int): List<WidgetCalendarItem> {
         val fromDate = DateTime.now()
         val toDate = fromDate.plusDays(dayCount)
@@ -160,8 +201,8 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
         val maxNotificationsToSchedule = NotificationScheduler.maxRemainingAlarms(context) / 2
 
         val notifications = events.filter { it.isFutureEvent }
-                .mapNotNull { it.toNotification(context) }
-                .take(maxNotificationsToSchedule)
+            .mapNotNull { it.toNotification(context) }
+            .take(maxNotificationsToSchedule)
 
         val scheduler = NotificationScheduler(context)
         scheduler.schedule(notifications)
@@ -190,7 +231,7 @@ class CalendarController(private val context: Context) : ProvidesCard, ProvidesN
     private fun replaceIntoDb(events: List<Event>) {
         val items = ArrayList<CalendarItem>()
         for (event in events) {
-            if (event.id != null && event.id.isNotEmpty() && event.title.isNotEmpty()) {
+            if (!event.id.isNullOrEmpty() && event.title.isNotEmpty()) {
                 items.add(event.toCalendarItem())
             }
         }

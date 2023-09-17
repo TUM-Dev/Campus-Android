@@ -74,23 +74,25 @@ class MVVSymbol(line: String, val context: Context) {
 
     companion object {
         private val S_LINE_COLOR = intArrayOf(
-                R.color.s_1,
-                R.color.s_2,
-                R.color.s_3,
-                R.color.s_4,
-                R.color.unknown_line,
-                R.color.s_6,
-                R.color.s_7,
-                R.color.s_8)
+            R.color.s_1,
+            R.color.s_2,
+            R.color.s_3,
+            R.color.s_4,
+            R.color.unknown_line,
+            R.color.s_6,
+            R.color.s_7,
+            R.color.s_8
+        )
 
         private val U_LINE_COLOR = intArrayOf(
-                R.color.u_1,
-                R.color.u_2,
-                R.color.u_3,
-                R.color.u_4,
-                R.color.u_5,
-                R.color.u_6,
-                R.color.u_7,
-                R.color.u_8)
+            R.color.u_1,
+            R.color.u_2,
+            R.color.u_3,
+            R.color.u_4,
+            R.color.u_5,
+            R.color.u_6,
+            R.color.u_7,
+            R.color.u_8
+        )
     }
 }

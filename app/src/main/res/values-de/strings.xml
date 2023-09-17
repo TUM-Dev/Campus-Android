@@ -339,12 +339,21 @@
     <string name="card_mvv_summary">Zeigt die Abfahrtszeiten der öffentlich Verkehrmittel an</string>
     <string name="card_next_lecture_summary">Zeigt Informationen zur nächsten Vorlesung an</string>
     <string name="card_tuition_fee_summary">Erinnert dich, wenn du die Studiengebühren zahlen musst</string>
+    <string name="card_support_summary">Unterstütze uns durch Feedback oder teilen der App</string>
+    <string name="card_no_internet_summary">Zeigt an wenn keine Internetverbindung vorhanden ist</string>
+    <string name="card_login_summary">Erlaubt dir dich mit TUMOnline zu verbinden</string>
     <string name="card_news_summary">Schlägt ausgewählte News vor</string>
     <string name="card_chat_summary">Benachrichtigt dich über neue Nachrichten</string>
+    <string name="card_update_summary">Gibt eine Übersicht über neue Features</string>
     <string name="open_card_settings">Karte anpassen</string>
     <string name="always_hide_card">Karte immer ausblenden</string>
     <string name="phone_summary">Um Benachrichtigungen auf dem Telefon zu erhalten muss Wearable aktiviert sein</string>
     <string name="display">Anzeige</string>
+
+    <!-- extra startpage show names for news -->
+    <string name="startpage_news">Startseite News</string>
+    <string name="startpage_top_news">Startseite Top-News</string>
+    <string name="startpage_film_news">Startseite Film-News</string>
 
     <string name="opens">Öffnet</string>
     <string name="closes">Schließt</string>
@@ -480,11 +489,11 @@ Signatur: %5$s</string>
     <string name="timetable_widget_no_lectures">Keine Vorlesungen geplant :)</string>
     <string name="eduroam_not_valid_id">Keine gültige TUM-Kennung</string>
     <string name="eduroam_please_enter_password">Bitte Passwort eingeben. Dieses wird nicht gespeichert.</string>
+
+    <!-- Barrier-free  -->
     <string name="barrier_free">Barrierefreiheit</string>
-    <string name="barrierfree_toilets">Berrierefreie Toiletten</string>
-    <string name="elevators">Aufzüge</string>
-    <string name="facilities">Einrichtungen</string>
-    <string name="nerby_facilities">Einrichtungen in der Nähe</string>
+    <string name="near_barrier_free_toilets">Barierefreie WCs in der Nähe</string>
+    <string name="near_elevators">Aufzugsanlagen in der Nähe</string>
 
     <string name="eduroam_dialog_title">Altes Eduroam-Profil löschen</string>
     <string name="eduroam_dialog_preferences">WLAN-Einstellungen öffnen</string>
@@ -756,8 +765,6 @@ Signatur: %5$s</string>
     <string name="employee_mode_info">Menüpunkte wie die Notenansicht oder Studienbeitrag werden in dieser Ansicht nicht angezeigt.</string>
     <string name="event_imminent_error">Tickets können nur bis zu vier Stunden vor Beginn über die App erworben werden.</string>
     <string name="show_in_calendar">Im Kalender öffnen</string>
-    <string name="stripe_terms_of_service_checkbox">Ich stimme den allgemeinen Geschäftsbedingungen (AGB) zu.</string>
-    <string name="stripe_terms_of_service_button">AGB</string>
     <string name="tickets_available_here">Tickets hier erhältlich!</string>
 
     <string name="update_note_title">Neue Features</string>
@@ -819,4 +826,5 @@ Signatur: %5$s</string>
     <string name="starts_now">Startet jetzt</string>
     <string name="tomorrow_time">Morgen %1$s</string>
     <string name="IN_capitalized">In</string>
+    <string name="in_app_review_failed_to_start">In App ReviewFlow konnte nicht gestartet werden</string>
 </resources>

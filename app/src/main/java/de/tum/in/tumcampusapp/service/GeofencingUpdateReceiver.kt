@@ -30,13 +30,11 @@ class GeofencingUpdateReceiver : BroadcastReceiver() {
         if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
             Utils.setSetting(context, Const.BACKGROUND_MODE, true)
             StartSyncReceiver.startBackground(context)
-            Utils.logWithTag(TAG, "Geofencing detected user entering munich, " +
-                    "enabling Auto updates")
+            Utils.logWithTag(TAG, "Geofencing detected user entering munich, enabling Auto updates")
         } else if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
             Utils.setSetting(context, Const.BACKGROUND_MODE, false)
             StartSyncReceiver.cancelBackground(context)
-            Utils.logWithTag(TAG, "Geofencing detected user leaving munich, " +
-                    "disabling Auto updates")
+            Utils.logWithTag(TAG, "Geofencing detected user leaving munich, disabling Auto updates")
         }
     }
 

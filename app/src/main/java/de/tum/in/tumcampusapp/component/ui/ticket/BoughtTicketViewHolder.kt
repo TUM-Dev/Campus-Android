@@ -16,7 +16,9 @@ class BoughtTicketViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     fun bind(ticketInfo: TicketInfo) {
         amountTextView.text = itemView.context.getString(R.string.amount_x, ticketInfo.count)
         ticketTypeNameTextView.text = ticketInfo.ticketType?.description
-        ticketPriceTextView.text = itemView.context.getString(R.string.price_per_ticket,
-                Utils.formatPrice(ticketInfo.ticketType?.price ?: 0))
+        ticketPriceTextView.text = itemView.context.getString(
+            R.string.price_per_ticket,
+            Utils.formatPrice(ticketInfo.ticketType?.price ?: 0)
+        )
     }
 }

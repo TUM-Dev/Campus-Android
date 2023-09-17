@@ -1,7 +1,11 @@
 package de.tum.`in`.tumcampusapp.utils
 
 import android.util.Base64
-import java.security.*
+import java.security.InvalidKeyException
+import java.security.NoSuchAlgorithmException
+import java.security.PrivateKey
+import java.security.Signature
+import java.security.SignatureException
 
 /**
  * Class providing an API to generate signatures of strings.

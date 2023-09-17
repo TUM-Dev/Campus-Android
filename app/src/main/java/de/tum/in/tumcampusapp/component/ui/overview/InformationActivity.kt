@@ -7,7 +7,6 @@ import android.content.Intent.ACTION_VIEW
 import android.content.pm.PackageManager.NameNotFoundException
 import android.net.Uri
 import android.os.Bundle
-import androidx.preference.PreferenceManager
 import android.text.format.DateUtils
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +15,7 @@ import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.pm.PackageInfoCompat
+import androidx.preference.PreferenceManager
 import de.psdev.licensesdialog.LicensesDialog
 import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.R
@@ -42,6 +42,7 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
+            setTitle(R.string.about_tca)
         }
 
         binding.buttonFacebook.setOnClickListener {
@@ -55,11 +56,11 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
         }
         binding.buttonLicenses.setOnClickListener {
             LicensesDialog.Builder(this)
-                    .setNotices(R.raw.notices)
-                    .setShowFullLicenseText(false)
-                    .setIncludeOwnLicense(true)
-                    .build()
-                    .show()
+                .setNotices(R.raw.notices)
+                .setShowFullLicenseText(false)
+                .setIncludeOwnLicense(true)
+                .build()
+                .show()
         }
 
         // opens notification overview after 5 quick clicks
@@ -74,17 +75,19 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
                     2, 3 -> {
                         countdownToast.cancel()
                         countdownToast = Toast.makeText(
-                                baseContext,
-                                getString(R.string.show_notification_view_progress_multiple, 5 - countDebugInfoClicked),
-                                Toast.LENGTH_LONG)
+                            baseContext,
+                            getString(R.string.show_notification_view_progress_multiple, 5 - countDebugInfoClicked),
+                            Toast.LENGTH_LONG
+                        )
                         countdownToast.show()
                     }
                     4 -> {
                         countdownToast.cancel()
                         countdownToast = Toast.makeText(
-                                baseContext,
-                                getString(R.string.show_notification_view_progress_single),
-                                Toast.LENGTH_LONG)
+                            baseContext,
+                            getString(R.string.show_notification_view_progress_single),
+                            Toast.LENGTH_LONG
+                        )
                         countdownToast.show()
                     }
                     5 -> {
@@ -138,9 +141,17 @@ class InformationActivity : BaseActivity(R.layout.activity_information) {
             addDebugRow(debugInfos, "Bug reports", sp.getBoolean(Const.BUG_REPORTS, false).toString() + " ")
 
             addDebugRow(debugInfos, "REG ID", Utils.getSetting(applicationContext, Const.FCM_REG_ID, ""))
-            addDebugRow(debugInfos, "REG transmission", DateUtils.getRelativeDateTimeString(applicationContext,
+            addDebugRow(
+                debugInfos,
+                "REG transmission",
+                DateUtils.getRelativeDateTimeString(
+                    applicationContext,
                     Utils.getSettingLong(applicationContext, Const.FCM_REG_ID_LAST_TRANSMISSION, 0),
-                    DateUtils.MINUTE_IN_MILLIS, DateUtils.DAY_IN_MILLIS * 2, 0).toString())
+                    DateUtils.MINUTE_IN_MILLIS,
+                    DateUtils.DAY_IN_MILLIS * 2,
+                    0
+                ).toString()
+            )
             try {
                 val packageInfo = packageManager.getPackageInfo(packageName, 0)
                 addDebugRow(debugInfos, "Version code", PackageInfoCompat.getLongVersionCode(packageInfo).toString())

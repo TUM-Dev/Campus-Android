@@ -1,5 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.other.generic.drawer
 
+import android.content.Context
+import android.content.res.Configuration
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -21,16 +23,65 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.InformationActivity
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainFragment
 import de.tum.`in`.tumcampusapp.component.ui.search.SearchFragment
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.StudyRoomsFragment
-import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.EventsFragment
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.allItems
 import de.tum.`in`.tumcampusapp.utils.plusAssign
+import java.util.Locale
 
 class DrawerMenuHelper(
     private val activity: AppCompatActivity,
     private val navigationView: NavigationView
 ) {
+    private val germanContext: Context
+        get() {
+            val config = Configuration(activity.resources.configuration)
+            config.setLocale(Locale.GERMAN)
+            return activity.createConfigurationContext(config)
+        }
+
+    private val englishContext: Context
+        get() {
+            val config = Configuration(activity.resources.configuration)
+            config.setLocale(Locale.ENGLISH)
+            return activity.createConfigurationContext(config)
+        }
+
+    private val mapAllItems = mapOf(
+        // HOME
+        germanContext.getString(HOME.titleRes) to HOME,
+        englishContext.getString(HOME.titleRes) to HOME,
+        // SEARCH
+        germanContext.getString(SEARCH.titleRes) to SEARCH,
+        englishContext.getString(SEARCH.titleRes) to SEARCH,
+        // MY_TUM
+        germanContext.getString(MY_TUM[0].titleRes) to MY_TUM[0],
+        englishContext.getString(MY_TUM[0].titleRes) to MY_TUM[0],
+        germanContext.getString(MY_TUM[1].titleRes) to MY_TUM[1],
+        englishContext.getString(MY_TUM[1].titleRes) to MY_TUM[1],
+        germanContext.getString(MY_TUM[2].titleRes) to MY_TUM[2],
+        englishContext.getString(MY_TUM[2].titleRes) to MY_TUM[2],
+        germanContext.getString(MY_TUM[3].titleRes) to MY_TUM[3],
+        englishContext.getString(MY_TUM[3].titleRes) to MY_TUM[3],
+        // GENERAL
+        germanContext.getString(GENERAL[0].titleRes) to GENERAL[0],
+        englishContext.getString(GENERAL[0].titleRes) to GENERAL[0],
+        germanContext.getString(GENERAL[1].titleRes) to GENERAL[1],
+        englishContext.getString(GENERAL[1].titleRes) to GENERAL[1],
+        germanContext.getString(GENERAL[2].titleRes) to GENERAL[2],
+        englishContext.getString(GENERAL[2].titleRes) to GENERAL[2],
+        germanContext.getString(GENERAL[3].titleRes) to GENERAL[3],
+        englishContext.getString(GENERAL[3].titleRes) to GENERAL[3],
+        germanContext.getString(GENERAL[4].titleRes) to GENERAL[4],
+        englishContext.getString(GENERAL[4].titleRes) to GENERAL[4],
+        // ABOUT
+        germanContext.getString(ABOUT[0].titleRes) to ABOUT[0],
+        englishContext.getString(ABOUT[0].titleRes) to ABOUT[0],
+        germanContext.getString(ABOUT[1].titleRes) to ABOUT[1],
+        englishContext.getString(ABOUT[1].titleRes) to ABOUT[1],
+        germanContext.getString(ABOUT[2].titleRes) to ABOUT[2],
+        englishContext.getString(ABOUT[2].titleRes) to ABOUT[2]
+    )
 
     private val currentFragment: Fragment?
         get() = activity.supportFragmentManager.findFragmentById(R.id.contentFrame)
@@ -83,27 +134,11 @@ class DrawerMenuHelper(
     }
 
     fun findNavItem(menuItem: MenuItem): NavItem {
-        if (menuItem.title == activity.getString(HOME.titleRes)) {
-            return HOME
+        if (!mapAllItems.containsKey(menuItem.title.toString())) {
+            throw IllegalArgumentException("Invalid menu item ${menuItem.title} provided")
         }
 
-        if (menuItem.title == activity.getString(SEARCH.titleRes)) {
-            return SEARCH
-        }
-
-        for (item in MY_TUM + GENERAL) {
-            if (menuItem.title == activity.getString(item.titleRes)) {
-                return item
-            }
-        }
-
-        for (item in ABOUT) {
-            if (menuItem.title == activity.getString(item.titleRes)) {
-                return item
-            }
-        }
-
-        throw IllegalArgumentException("Invalid menu item ${menuItem.title} provided")
+        return mapAllItems.getValue(menuItem.title.toString())
     }
 
     fun updateNavDrawer() {
@@ -130,25 +165,46 @@ class DrawerMenuHelper(
         private val SEARCH = NavItem.FragmentDestination(R.string.search, R.drawable.ic_action_search, SearchFragment::class.java, true)
 
         private val MY_TUM = arrayOf(
-                NavItem.FragmentDestination(R.string.calendar, R.drawable.ic_outline_event_24px, CalendarFragment::class.java, true),
-                NavItem.FragmentDestination(R.string.my_lectures, R.drawable.ic_outline_school_24px, LecturesFragment::class.java, true, hideForEmployees = true),
-                NavItem.FragmentDestination(R.string.my_grades, R.drawable.ic_outline_insert_chart_outlined_24px, GradesFragment::class.java, true, hideForEmployees = true),
-                NavItem.FragmentDestination(R.string.tuition_fees, R.drawable.ic_money, TuitionFeesFragment::class.java, true, hideForEmployees = true)
+            NavItem.FragmentDestination(R.string.calendar, R.drawable.ic_outline_event_24px, CalendarFragment::class.java, true),
+            NavItem.FragmentDestination(
+                R.string.my_lectures,
+                R.drawable.ic_outline_school_24px,
+                LecturesFragment::class.java,
+                true,
+                hideForEmployees = true
+            ),
+            NavItem.FragmentDestination(
+                R.string.my_grades,
+                R.drawable.ic_outline_insert_chart_outlined_24px,
+                GradesFragment::class.java,
+                true,
+                hideForEmployees = true
+            ),
+            NavItem.FragmentDestination(
+                R.string.tuition_fees,
+                R.drawable.ic_money,
+                TuitionFeesFragment::class.java,
+                true,
+                hideForEmployees = true
+            )
         )
 
         private val GENERAL = arrayOf(
-                NavItem.FragmentDestination(R.string.menues, R.drawable.ic_cutlery, CafeteriaFragment::class.java),
-                NavItem.FragmentDestination(R.string.study_rooms, R.drawable.ic_outline_group_work_24px, StudyRoomsFragment::class.java),
-                NavItem.FragmentDestination(R.string.news, R.drawable.ic_rss, NewsFragment::class.java),
-                NavItem.FragmentDestination(R.string.events_tickets, R.drawable.tickets, EventsFragment::class.java),
-                NavItem.FragmentDestination(R.string.barrier_free, R.drawable.ic_outline_accessible_24px, BarrierFreeInfoFragment::class.java),
-                NavItem.FragmentDestination(R.string.opening_hours, R.drawable.ic_outline_access_time_24px, OpeningHoursListFragment::class.java)
+            NavItem.FragmentDestination(R.string.menues, R.drawable.ic_cutlery, CafeteriaFragment::class.java),
+            NavItem.FragmentDestination(R.string.study_rooms, R.drawable.ic_outline_group_work_24px, StudyRoomsFragment::class.java),
+            NavItem.FragmentDestination(R.string.news, R.drawable.ic_rss, NewsFragment::class.java),
+            NavItem.FragmentDestination(R.string.barrier_free, R.drawable.ic_outline_accessible_24px, BarrierFreeInfoFragment::class.java),
+            NavItem.FragmentDestination(
+                R.string.opening_hours,
+                R.drawable.ic_outline_access_time_24px,
+                OpeningHoursListFragment::class.java
+            )
         )
 
         private val ABOUT = arrayOf(
-                NavItem.ActivityDestination(R.string.show_feedback, R.drawable.ic_outline_feedback_24px, FeedbackActivity::class.java),
-                NavItem.ActivityDestination(R.string.about_tca, R.drawable.ic_action_info, InformationActivity::class.java),
-                NavItem.ActivityDestination(R.string.settings, R.drawable.ic_outline_settings_24px, SettingsActivity::class.java)
+            NavItem.ActivityDestination(R.string.show_feedback, R.drawable.ic_outline_feedback_24px, FeedbackActivity::class.java),
+            NavItem.ActivityDestination(R.string.about_tca, R.drawable.ic_action_info, InformationActivity::class.java),
+            NavItem.ActivityDestination(R.string.settings, R.drawable.ic_outline_settings_24px, SettingsActivity::class.java)
         )
     }
 }

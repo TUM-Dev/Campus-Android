@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.Manifest
 import android.os.Bundle
-import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import android.provider.CalendarContract
 import android.text.format.DateUtils
 import android.view.Menu
@@ -32,8 +31,9 @@ import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventsResponse
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.databinding.FragmentCalendarBinding
-import de.tum.`in`.tumcampusapp.service.QueryLocationsService
+import de.tum.`in`.tumcampusapp.service.QueryLocationWorker
 import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.plusAssign
 import io.reactivex.Completable
@@ -46,6 +46,7 @@ import org.joda.time.format.DateTimeFormat
 import java.time.YearMonth
 import java.util.Calendar
 import java.util.Locale
+import kotlin.math.abs
 
 class CalendarFragment :
     FragmentForAccessingTumOnline<EventsResponse>(
@@ -200,7 +201,7 @@ class CalendarFragment :
         // Update the action bar to display the enabled menu options
         requireActivity().invalidateOptionsMenu()
         // enqueues OneTimeWorkRequest
-        QueryLocationsService.enqueueWork(requireContext())
+        QueryLocationWorker.enqueueWork(requireContext())
     }
 
     private fun scheduleNotifications(events: List<Event>) {
@@ -581,10 +582,10 @@ class CalendarFragment :
         val eventMap = calendarController.getEventsForMonth(selectedDate)
 
         if (!::monthViewAdapter.isInitialized) {
-            monthViewAdapter = MonthViewAdapter(daysInMonth, eventMap)
+            monthViewAdapter = MonthViewAdapter(daysInMonth, eventMap, selectedDate)
             monthRecyclerView.adapter = monthViewAdapter
         } else {
-            monthViewAdapter.updateData(daysInMonth, eventMap)
+            monthViewAdapter.updateData(daysInMonth, eventMap, selectedDate)
         }
 
         val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(requireContext(), 7)
@@ -595,11 +596,14 @@ class CalendarFragment :
         val daysInMonthArray: ArrayList<String> = ArrayList()
         val yearMonth = YearMonth.of(date.year, date.monthOfYear)
         val daysInMonth = yearMonth.lengthOfMonth()
+        val daysInPreviousMonth = yearMonth.minusMonths(1).lengthOfMonth()
         val firstOfMonth = date.withDayOfMonth(1)
-        var dayOfWeek = firstOfMonth.dayOfWeek().get() - 1 // Monday is the first day of the week in Europe
+        var dayOfWeek = firstOfMonth.dayOfWeek - 1 // Monday is the first day of the week in Europe
         for (i in 1..42) {
-            if (i <= dayOfWeek || i > daysInMonth + dayOfWeek) {
-                daysInMonthArray.add("")
+            if (i <= dayOfWeek) {
+                daysInMonthArray.add((daysInPreviousMonth - dayOfWeek + i).toString())
+            } else if (i > daysInMonth + dayOfWeek) {
+                daysInMonthArray.add((abs(i - daysInMonth - dayOfWeek)).toString())
             } else {
                 daysInMonthArray.add((i - dayOfWeek).toString())
             }

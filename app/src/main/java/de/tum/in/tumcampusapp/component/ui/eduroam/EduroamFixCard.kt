@@ -26,7 +26,7 @@ import java.util.regex.Pattern
 
 class EduroamFixCard(
     context: Context
-) : Card(CardManager.CARD_EDUROAM_FIX, context, "card_eduroam_fix_start") {
+) : Card(CardManager.CardTypes.EDUROAM_FIX, context) {
 
     private val errors: MutableList<String> = ArrayList()
     private lateinit var eduroam: WifiConfiguration
@@ -70,15 +70,15 @@ class EduroamFixCard(
 
     override fun shouldShow(prefs: SharedPreferences): Boolean {
         // Check if wifi is turned on at all, as we cannot say if it was configured if its off
-        return if (!(context.getSystemService(Context.WIFI_SERVICE) as WifiManager).isWifiEnabled) {
-            false
+        return if (context.getSystemService(Context.WIFI_SERVICE) as WifiManager).isWifiEnabled {
+            !isConfigValid() && prefs.getBoolean("card_eduroam_fix_start", true)
         } else {
-            !isConfigValid()
+            false
         }
     }
 
     override fun discard(editor: SharedPreferences.Editor) {
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean("card_eduroam_fix_start", false).apply()
+        editor.putBoolean("card_eduroam_fix_start", false)
     }
 
     override fun getId(): Int {
@@ -87,7 +87,8 @@ class EduroamFixCard(
 
     private fun checkAnonymousIdentity() {
         val anonymousIdentity = eduroam.enterpriseConfig.anonymousIdentity
-        if (anonymousIdentity != null &&
+        if (
+            anonymousIdentity != null &&
             anonymousIdentity != "anonymous@mwn.de" &&
             anonymousIdentity != "anonymous@eduroam.mwn.de" &&
             anonymousIdentity != "anonymous@mytum.de"
@@ -109,11 +110,13 @@ class EduroamFixCard(
 
     private fun isTumEduroam(identity: String): Boolean {
         val pattern = Pattern.compile(Const.TUM_ID_PATTERN)
-        return (identity.endsWith("@mwn.de") ||
+        return (
+            identity.endsWith("@mwn.de") ||
             identity.endsWith("@mytum.de") ||
             identity.endsWith("@tum.de") ||
             (identity.endsWith(".mwn.de") || identity.endsWith(".tum.de")) && identity.contains(AT_SIGN) ||
-            pattern.matcher(identity).matches())
+            pattern.matcher(identity).matches()
+        )
     }
 
     private fun isValidSubjectMatchAPI18(eduroam: WifiConfiguration): Boolean {

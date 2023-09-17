@@ -25,6 +25,7 @@ data class ChatRoom(
     companion object {
         @JvmField
         val MODE_JOINED = 1
+
         @JvmField
         val MODE_UNJOINED = 0
     }

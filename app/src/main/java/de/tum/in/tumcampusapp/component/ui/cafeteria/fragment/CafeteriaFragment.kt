@@ -3,11 +3,15 @@ package de.tum.`in`.tumcampusapp.component.ui.cafeteria.fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.lifecycle.ViewModelProvider
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
@@ -24,16 +28,19 @@ import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import de.tum.`in`.tumcampusapp.service.DownloadWorker
 import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.observeNonNull
 import org.joda.time.DateTime
 import javax.inject.Inject
 import javax.inject.Provider
 
-class CafeteriaFragment : FragmentForDownloadingExternal(
-    R.layout.fragment_cafeteria,
-    R.string.cafeteria
-), AdapterView.OnItemSelectedListener {
+class CafeteriaFragment :
+    FragmentForDownloadingExternal(
+        R.layout.fragment_cafeteria,
+        R.string.cafeteria
+    ),
+    AdapterView.OnItemSelectedListener {
 
     @Inject
     lateinit var viewModelProvider: Provider<CafeteriaViewModel>
@@ -161,12 +168,17 @@ class CafeteriaFragment : FragmentForDownloadingExternal(
 
     private fun createArrayAdapter(): ArrayAdapter<Cafeteria> {
         return object : ArrayAdapter<Cafeteria>(
-            requireContext(), R.layout.simple_spinner_item_actionbar) {
+            requireContext(),
+            R.layout.simple_spinner_item_actionbar
+        ) {
             private val inflater = LayoutInflater.from(context)
 
             override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val v = inflater.inflate(
-                    R.layout.simple_spinner_dropdown_item_actionbar_two_line, parent, false)
+                    R.layout.simple_spinner_dropdown_item_actionbar_two_line,
+                    parent,
+                    false
+                )
                 val cafeteria = getItem(position)
 
                 val name = v.findViewById<TextView>(android.R.id.text1)

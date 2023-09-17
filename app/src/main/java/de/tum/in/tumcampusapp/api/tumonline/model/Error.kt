@@ -2,7 +2,12 @@ package de.tum.`in`.tumcampusapp.api.tumonline.model
 
 import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
-import de.tum.`in`.tumcampusapp.api.tumonline.exception.*
+import de.tum.`in`.tumcampusapp.api.tumonline.exception.InactiveTokenException
+import de.tum.`in`.tumcampusapp.api.tumonline.exception.InvalidTokenException
+import de.tum.`in`.tumcampusapp.api.tumonline.exception.MissingPermissionException
+import de.tum.`in`.tumcampusapp.api.tumonline.exception.RequestLimitReachedException
+import de.tum.`in`.tumcampusapp.api.tumonline.exception.TokenLimitReachedException
+import de.tum.`in`.tumcampusapp.api.tumonline.exception.UnknownErrorException
 import java.io.InterruptedIOException
 
 @Xml(name = "error")
@@ -10,19 +15,19 @@ data class Error(@PropertyElement var message: String = "") {
 
     val exception: InterruptedIOException
         get() = errorMessageToException
-                .filter { message.contains(it.first) }
-                .map { it.second }
-                .firstOrNull() ?: UnknownErrorException()
+            .filter { message.contains(it.first) }
+            .map { it.second }
+            .firstOrNull() ?: UnknownErrorException()
 
     companion object {
 
         private val errorMessageToException = listOf(
-                Pair("Keine Rechte für Funktion", MissingPermissionException()),
-                Pair("Token ist ungültig!", InvalidTokenException()),
-                Pair("ungültiges Benutzertoken", InvalidTokenException()),
-                Pair("Token ist nicht bestätigt!", InactiveTokenException()),
-                Pair("Request-Rate überschritten", RequestLimitReachedException()),
-                Pair("Token-Limit", TokenLimitReachedException())
+            Pair("Keine Rechte für Funktion", MissingPermissionException()),
+            Pair("Token ist ungültig!", InvalidTokenException()),
+            Pair("ungültiges Benutzertoken", InvalidTokenException()),
+            Pair("Token ist nicht bestätigt!", InactiveTokenException()),
+            Pair("Request-Rate überschritten", RequestLimitReachedException()),
+            Pair("Token-Limit", TokenLimitReachedException())
         )
     }
 }

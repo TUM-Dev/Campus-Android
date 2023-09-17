@@ -16,7 +16,7 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 
-class UpdateNoteCard(context: Context) : Card(CardManager.CARD_UPDATE_NOTE, context, "update_note") {
+class UpdateNoteCard(context: Context) : Card(CardManager.CardTypes.UPDATE_NOTE, context) {
 
     override fun updateViewHolder(viewHolder: RecyclerView.ViewHolder) {
         super.updateViewHolder(viewHolder)
@@ -26,12 +26,12 @@ class UpdateNoteCard(context: Context) : Card(CardManager.CARD_UPDATE_NOTE, cont
     }
 
     override fun shouldShow(prefs: SharedPreferences): Boolean {
-        return Utils.getSettingBool(context, Const.SHOW_UPDATE_NOTE, false) &&
-        Utils.getSetting(context, Const.UPDATE_MESSAGE, "").isNotEmpty()
+        return prefs.getBoolean(Const.SHOW_UPDATE_NOTE, false) &&
+            Utils.getSetting(context, Const.UPDATE_MESSAGE, "").isNotEmpty()
     }
 
     override fun discard(editor: SharedPreferences.Editor) {
-        Utils.setSetting(context, Const.SHOW_UPDATE_NOTE, false)
+        editor.putBoolean(Const.SHOW_UPDATE_NOTE, false)
     }
 
     companion object {
@@ -41,7 +41,7 @@ class UpdateNoteCard(context: Context) : Card(CardManager.CARD_UPDATE_NOTE, cont
             interactionListener: CardInteractionListener
         ): CardViewHolder {
             val card = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.card_update_note, parent, false)
+                .inflate(R.layout.card_update_note, parent, false)
             return UpdateNoteViewHolder(card, interactionListener)
         }
     }

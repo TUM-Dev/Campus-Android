@@ -10,10 +10,10 @@ object ChatMessageRemoteRepository {
     lateinit var tumCabeClient: TUMCabeClient
 
     fun getMessages(roomId: Int, messageId: Long, verification: TUMCabeVerification): Observable<List<ChatMessage>> =
-            tumCabeClient.getMessages(roomId, messageId, verification)
+        tumCabeClient.getMessages(roomId, messageId, verification)
 
     fun getNewMessages(roomId: Int, verification: TUMCabeVerification): Observable<List<ChatMessage>> =
-            tumCabeClient.getNewMessages(roomId, verification)
+        tumCabeClient.getNewMessages(roomId, verification)
 
     fun sendMessage(roomId: Int, verification: TUMCabeVerification?): Observable<ChatMessage> = tumCabeClient.sendMessage(roomId, verification)
 }

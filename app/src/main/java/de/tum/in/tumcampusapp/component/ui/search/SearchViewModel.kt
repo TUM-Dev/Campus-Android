@@ -77,7 +77,9 @@ class SearchViewModel @Inject constructor(
                             }
                         }
                     }
-                } else currentApiCalls -= 2
+                } else {
+                    currentApiCalls -= 2
+                }
             }
     }
 
@@ -126,8 +128,10 @@ class SearchViewModel @Inject constructor(
 
     private fun saveSearchResult(result: List<SearchResult>, query: String) {
         currentApiCalls -= 1
-        if (query != currentQueryText) // don't save result if query already changed
+        if (query != currentQueryText) {
+            // don't save result if query already changed
             return
+        }
 
         if (result.isEmpty()) {
             saveResult(null)
@@ -153,8 +157,9 @@ class SearchViewModel @Inject constructor(
 
     private fun saveResult(type: SearchResultType?) {
         var availableTypes = state.value.availableResultTypes
-        if (type != null)
+        if (type != null) {
             availableTypes = availableTypes + listOf(type)
+        }
         state.value = state.value.copy(
             isLoading = currentApiCalls > 0,
             data = persons.value + buildings.value + navigaRooms.value + lectures.value,

@@ -1,6 +1,6 @@
 apply plugin: 'checkstyle'
 
-task checkstyle(type: Checkstyle) {
+tasks.register('checkstyle', Checkstyle) {
     showViolations = true
     configFile file("$rootDir/gradle/config/checkstyle.xml")
     source 'src/main/java'

@@ -1,5 +1,5 @@
 plugins {
-    id 'de.aaschmid.cpd' version '3.1'
+    id 'de.aaschmid.cpd' version '3.3'
 }
 // apply plugin: "io.gitlab.arturbosch.detekt"
 apply plugin: 'com.android.application'
@@ -17,7 +17,8 @@ apply from: '../gradle/scripts/checkstyle.gradle'
 apply from: '../gradle/scripts/testLogging.gradle'
 
 android {
-    compileSdkVersion 32
+    compileSdk 33
+    namespace "de.tum.in.tumcampusapp"
     buildTypes {
         all {
             proguardFiles(file('../proguard').listFiles())
@@ -37,9 +38,9 @@ android {
     defaultConfig {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 26
-        targetSdkVersion 32
-        versionCode 587
-        versionName "4.2-dev"
+        targetSdkVersion 33
+        versionCode 588
+        versionName "4.3-dev"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -78,7 +79,7 @@ android {
         checkAllWarnings true
         disable 'GoogleAppIndexingWarning', 'TrulyRandom', 'ContentDescription', 'UnusedIds', 'UnusedResources', 'SelectableText'
         htmlReport false
-        lintConfig file('gradle/config/lint.xml')
+        lintConfig file('../gradle/config/lint.xml')
     }
 }
 
@@ -120,10 +121,10 @@ dependencies {
     implementation "com.google.android.play:core-ktx:$play_core_services_kotlin_extension"
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:20.1.2'
+    implementation 'com.google.firebase:firebase-core:21.1.1'
     implementation 'com.google.firebase:firebase-messaging:23.0.6'
     implementation 'com.google.firebase:firebase-crashlytics-ktx:18.2.9'
-    implementation 'com.google.firebase:firebase-analytics-ktx:20.1.2'
+    implementation 'com.google.firebase:firebase-analytics-ktx:21.3.0'
 
     // Helpers
     implementation 'com.google.code.gson:gson:2.9.0'
@@ -186,7 +187,7 @@ dependencies {
     testImplementation "commons-io:commons-io:2.11.0"
 
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:3.5.11'
+    testImplementation 'org.mockito:mockito-core:5.5.0'
     testImplementation 'org.assertj:assertj-core:3.17.1'
     testImplementation "androidx.room:room-testing:$room_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
@@ -194,11 +195,7 @@ dependencies {
     testImplementation 'com.android.support.test:rules:1.0.2'
     testImplementation 'com.android.support.test:runner:1.0.2'
     testImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    testImplementation 'org.robolectric:robolectric:4.8.1'
-
-
-    // TicketSale
-    implementation 'com.stripe:stripe-android:8.1.0'
+    testImplementation 'org.robolectric:robolectric:4.10.3'
 
     // gRPC backend
     implementation 'io.grpc:grpc-okhttp:1.43.2' // CURRENT_GRPC_VERSION

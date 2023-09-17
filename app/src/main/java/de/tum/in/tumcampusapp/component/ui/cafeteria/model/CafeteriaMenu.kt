@@ -33,8 +33,8 @@ data class CafeteriaMenu(
     var typeShort: String = "",
     @SerializedName("type_long")
     var typeLong: String = "",
-        // If a menu does not have a type number, it is a
-        // side dish and is assigned type number 10
+    // If a menu does not have a type number, it is a
+    // side dish and is assigned type number 10
     @SerializedName("type_nr")
     var typeNr: Int = 10,
     @SerializedName("name")
@@ -61,9 +61,9 @@ data class CafeteriaMenu(
     val notificationTitle: String
         get() {
             return REMOVE_DISH_ENUMERATION_PATTERN
-                    .matcher(typeLong)
-                    .replaceAll("")
-                    .trim()
+                .matcher(typeLong)
+                .replaceAll("")
+                .trim()
         }
 
     fun getNotificationText(context: Context): String {
@@ -79,8 +79,8 @@ data class CafeteriaMenu(
         return if (menuType == MenuType.SPECIALS) {
             // Returns a list of all specials
             formattedName
-                    .split("\n")
-                    .map { it.trim() }
+                .split("\n")
+                .map { it.trim() }
         } else {
             // Returns a list containing the dish name and the price
             val priceText = getPriceText(context)

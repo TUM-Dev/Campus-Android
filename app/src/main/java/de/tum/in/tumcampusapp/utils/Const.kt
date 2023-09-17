@@ -95,6 +95,10 @@ object Const {
     const val EXTRA_FOREIGN_CONFIGURATION_EXISTS = "CONFIGURED_BY_OTHER_APP"
     const val GEOFENCING_SERVICE_JOB_ID = 1006
     const val ADD_GEOFENCE_EXTRA = "AddGeofence"
+    const val ADD_GEOFENCE_ID = "GeofenceID"
+    const val ADD_GEOFENCE_LAT = "GeofenceLatitude"
+    const val ADD_GEOFENCE_LON = "Geofencelongitude"
+    const val ADD_GEOFENCE_RANGE = "GeofenceRange"
     const val DISTANCE_IN_METER = 50 * 1000f
     const val MUNICH_GEOFENCE = "geofence_munich_id"
 
@@ -150,7 +154,6 @@ object Const {
     const val CALENDAR_FILTER_HOUR_LIMIT_MIN_DEFAULT = "8"
     const val CALENDAR_FILTER_HOUR_LIMIT_MAX_DEFAULT = "20"
 
-    const val KEY_STRIPE_API_PUBLISHABLE_KEY = "stripeApiPublishableKey"
     const val KEY_EVENT = "event"
     const val KEY_EVENT_ID = "eventId"
     const val KEY_CARD_HOLDER = "cardholder"

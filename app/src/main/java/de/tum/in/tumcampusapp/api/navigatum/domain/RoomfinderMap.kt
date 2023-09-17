@@ -13,7 +13,7 @@ data class RoomfinderMap(
 )
 
 fun RoomFinderMapDto.toNavigationMap(): RoomfinderMap {
-    val basicMapUrl = "https://nav.tum.sexy/cdn/maps/roomfinder/"
+    val basicMapUrl = "https://nav.tum.de/cdn/maps/roomfinder/"
     return RoomfinderMap(
         mapId = this.id,
         mapName = this.name,

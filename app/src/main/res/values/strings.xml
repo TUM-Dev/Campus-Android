@@ -235,7 +235,6 @@
     <string name="mvv">MVV</string>
     <string name="news">News</string>
     <string name="events" translatable="false">Events</string>
-    <string name="barrier_free">Barrier-free Information</string>
 
     <!-- Activity titles -->
     <string name="lectures_information">Lecture Information</string>
@@ -333,6 +332,24 @@
     <string name="reregister_todo">You have to reregister until %s!</string>
     <string name="undo">Undo</string>
 
+    <!-- Cards identifiers for default SharedPref -->
+    <string name="cafeteria_default_sharedpref_shown" translatable="false">CafeteriaCardShown</string>
+    <string name="tuition_fee_default_sharedpref_shown" translatable="false">TuitionFeeCardShown</string>
+    <string name="next_lecture_default_sharedpref_shown" translatable="false">NextLectureCardShown</string>
+    <string name="restore_default_sharedpref_shown" translatable="false">RestoreCardShown</string>
+    <string name="no_internet_default_sharedpref_shown" translatable="false">NoInternetCardShown</string>
+    <string name="mvv_default_sharedpref_shown" translatable="false">MVVCardShown</string>
+    <string name="news_default_sharedpref_shown" translatable="false">NewsCardShown</string>
+    <string name="news_film_default_sharedpref_shown" translatable="false">NewsFilmCardShown</string>
+    <string name="eduroam_default_sharedpref_shown" translatable="false">EduroamCardShown</string>
+    <string name="chat_default_sharedpref_shown" translatable="false">ChatCardShown</string>
+    <string name="support_default_sharedpref_shown" translatable="false">SupportCardShown</string>
+    <string name="login_default_sharedpref_shown" translatable="false">LoginCardShown</string>
+    <string name="eduroam_fix_default_sharedpref_shown" translatable="false">EduroamFixCardShown</string>
+    <string name="top_news_default_sharedpref_shown" translatable="false">TopNewsCardShown</string>
+    <string name="event_default_sharedpref_shown" translatable="false">EventCardShown</string>
+    <string name="update_note_default_sharedpref_shown" translatable="false">UpdateNoteCardShown</string>
+
     <!-- first use tutorial -->
     <string name="swipe_instruction">Swipe left or right to hide a card.</string>
     <string name="card_settings_instruction">If you want to hide a card permanently or you want to be notified if a new card is available open card-settings by long pressing on a card</string>
@@ -390,13 +407,22 @@
     <string name="card_mvv_summary">Shows you the departure times of public transport</string>
     <string name="card_next_lecture_summary">Shows information about your next lecture</string>
     <string name="card_tuition_fee_summary">Reminds you when you have to pay your fees</string>
+    <string name="card_support_summary">Support us by giving feedback or sharing the app</string>
+    <string name="card_no_internet_summary">Shows when there is no internet connection</string>
+    <string name="card_login_summary">Allows you to connect to TUMOnline</string>
     <string name="card_news_summary">Advertises selected news</string>
     <string name="card_chat_summary">Notifies you about new messages</string>
+    <string name="card_update_summary">Provides an overview about new features</string>
     <string name="chat" translatable="false">Chat</string>
     <string name="open_card_settings">Open card settings</string>
     <string name="always_hide_card">Always hide card</string>
     <string name="phone_summary">To receive notifications on your phone you have to enable Wearable</string>
     <string name="display">Display</string>
+
+    <!-- extra startpage show names for news -->
+    <string name="startpage_news">Startpage news</string>
+    <string name="startpage_top_news">Startpage top-news</string>
+    <string name="startpage_film_news">Startpage film-news</string>
 
     <string name="opens">Opens</string>
     <string name="closes">Closes</string>
@@ -552,10 +578,9 @@ Signature: %5$s</string>
     <string name="eduroam_please_enter_password">Please enter your password. It will not be saved.</string>
 
     <!-- Barrier-free  -->
-    <string name="facilities">Facilities</string>
-    <string name="nerby_facilities">Nearby Facilities</string>
-    <string name="barrierfree_toilets">Barrier-free Toilets</string>
-    <string name="elevators">Elevators</string>
+    <string name="barrier_free">Barrier-free Information</string>
+    <string name="near_barrier_free_toilets">Barierefreie WCs in der Nähe</string>
+    <string name="near_elevators">Aufzugsanlagen in der Nähe</string>
 
     <string name="eduroam_dialog_title">Delete old eduroam profile</string>
     <string name="eduroam_dialog_preferences">Open Wi-Fi preferences</string>
@@ -806,8 +831,6 @@ Signature: %5$s</string>
     <string name="next_lecture_show_more">Show %d more …</string>
     <string name="show_in_calendar">Show in Calendar</string>
 
-    <string name="stripe_terms_of_service_checkbox">I agree to the terms of service.</string>
-    <string name="stripe_terms_of_service_button">Terms of Service</string>
     <string name="tickets_available_here">Tickets available here!</string>
     <string name="update_note_title">New Features</string>
     <string name="update_note_version">Version %s</string>
@@ -874,4 +897,5 @@ Signature: %5$s</string>
     <string name="starts_now">Starts now</string>
     <string name="tomorrow_time">Tomorrow %1$s</string>
     <string name="IN_capitalized">In</string>
+    <string name="in_app_review_failed_to_start">In App ReviewFlow failed to start</string>
 </resources>

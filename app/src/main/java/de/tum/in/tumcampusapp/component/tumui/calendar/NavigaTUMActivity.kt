@@ -12,7 +12,7 @@ class NavigaTUMActivity : AppCompatActivity() {
         val intent = intent
         val location = intent.getStringExtra("location")
         val encoded_location = java.net.URLEncoder.encode(location, "utf-8")
-        val url = "https://nav.tum.sexy/search?q=$encoded_location"
+        val url = "https://nav.tum.de/search?q=$encoded_location"
         val webview = WebView(this)
         setContentView(webview)
         webview.settings.javaScriptEnabled = true

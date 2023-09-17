@@ -1,20 +1,10 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket
 
-import android.content.Context
-import android.content.Intent
 import android.view.View
 import android.widget.TextView
-import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.view.isVisible
-import de.tum.`in`.tumcampusapp.R
-import de.tum.`in`.tumcampusapp.api.tumonline.AccessTokenManager
-import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.BuyTicketActivity
-import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.payload.TicketStatus
-import de.tum.`in`.tumcampusapp.utils.Const
-import de.tum.`in`.tumcampusapp.utils.Utils
-import org.joda.time.DateTime
-import java.util.*
+import java.util.Locale
 
 /**
  * Logic associated with the buy button that is needed in the EventDetailsFragment
@@ -22,53 +12,6 @@ import java.util.*
  */
 class EventHelper {
     companion object {
-        fun buyTicket(event: Event, buyButton: View, context: Context?) {
-            if (context == null) {
-                return
-            }
-
-            if (isEventImminent(event)) {
-                showEventImminentDialog(context)
-                buyButton.visibility = View.GONE
-                return
-            }
-
-            val lrzId = Utils.getSetting(context, Const.LRZ_ID, "")
-            val chatRoomName = Utils.getSetting(context, Const.CHAT_ROOM_DISPLAY_NAME, "")
-            val isLoggedIn = AccessTokenManager.hasValidAccessToken(context)
-
-            if (!isLoggedIn || lrzId.isEmpty() || chatRoomName.isEmpty()) {
-                ThemedAlertDialogBuilder(context)
-                    .setTitle(R.string.error)
-                    .setMessage(R.string.not_logged_in_error)
-                    .setPositiveButton(R.string.ok, null)
-                    .show()
-                return
-            }
-
-            val intent = Intent(context, BuyTicketActivity::class.java).apply {
-                putExtra(Const.KEY_EVENT_ID, event.id)
-            }
-            context.startActivity(intent)
-        }
-
-        private fun showEventImminentDialog(context: Context) {
-            ThemedAlertDialogBuilder(context)
-                .setTitle(R.string.error)
-                .setMessage(R.string.event_imminent_error)
-                .setPositiveButton(R.string.ok, null)
-                .show()
-        }
-
-        /**
-         * Checks if the event starts less than 4 hours from now.
-         * (-> user won't be able to buy tickets anymore)
-         */
-        fun isEventImminent(event: Event): Boolean {
-            val eventStart = DateTime(event.startTime)
-            return DateTime.now().isAfter(eventStart.minusHours(4))
-        }
-
         fun showRemainingTickets(
             status: TicketStatus?,
             isEventBooked: Boolean,
@@ -78,7 +21,6 @@ class EventHelper {
             remainingTicketsTextView: TextView,
             noTicketsMessage: String
         ) {
-
             if (isEventImminent) {
                 buyTicketButton.isVisible = isEventBooked
                 remainingTicketsContainer.isVisible = false

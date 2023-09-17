@@ -21,8 +21,7 @@ object NetUtils {
     private inline fun anyConnectedNetwork(
         context: Context,
         condition: (NetworkCapabilities) -> Boolean = { true }
-    ):
-        Boolean {
+    ): Boolean {
         val connectivityMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         return connectivityMgr.allNetworks.asSequence().filter {

@@ -22,6 +22,7 @@ class WidgetDepartures(
 ) {
 
     private var lastLoad: Long = 0
+
     /**
      * Sets a station title for this widget
      *
@@ -36,6 +37,7 @@ class WidgetDepartures(
             }
             return field
         }
+
     /**
      * Are the departure information older than two minutes (because of any connection problems)
      *

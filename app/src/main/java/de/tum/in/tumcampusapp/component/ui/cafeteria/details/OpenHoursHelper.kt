@@ -34,11 +34,11 @@ class OpenHoursHelper(private val context: Context) {
         val isGerman = context.getString(R.string.language) == "de"
         val m: Matcher = if (isGerman) {
             Pattern.compile("([a-z]{2}?)[-]?([a-z]{2}?)? ([0-9]{1,2}(?:[\\:][0-9]{2}?)?)-([0-9]{1,2}(?:[\\:][0-9]{2}?)?)", Pattern.CASE_INSENSITIVE)
-                    .matcher(result)
+                .matcher(result)
         } else {
             // use three letter shortenings for english: Mon, Tue, Wed, Thu, Fri, Sat, Sun
             Pattern.compile("([a-z]{3}?)[-]?([a-z]{3}?)? ([0-9]{1,2}(?:[\\:][0-9]{2}?)?)-([0-9]{1,2}(?:[\\:][0-9]{2}?)?)", Pattern.CASE_INSENSITIVE)
-                    .matcher(result)
+                .matcher(result)
         }
 
         // Capture groups for: Mo-Do 9-21.30
@@ -53,7 +53,8 @@ class OpenHoursHelper(private val context: Context) {
         if (m.find()) {
             // We are currently in Mo-Do/Fr, when this weekday is in that range we have our result or we check if the current range is valid for fridays also
             if (dayOfWeek + 1 <= Calendar.THURSDAY || // +1 because dayOfWeek is zero-based while Calendar.THURSDAY is not
-                    m.group(2).equals(if (isGerman) "fr" else "fri", ignoreCase = true)) {
+                m.group(2).equals(if (isGerman) "fr" else "fri", ignoreCase = true)
+            ) {
                 time[0] = m.group(3)
                 time[1] = m.group(4)
             } else {
@@ -111,10 +112,10 @@ class OpenHoursHelper(private val context: Context) {
             val hour = Integer.parseInt(time.substring(0, time.indexOf(':')))
             val min = Integer.parseInt(time.substring(time.indexOf(':') + 1))
             date.withHourOfDay(hour)
-                    .withMinuteOfHour(min)
+                .withMinuteOfHour(min)
         } else {
             date.withHourOfDay(Integer.parseInt(time))
-                    .withMinuteOfHour(0)
+                .withMinuteOfHour(0)
         }
     }
 }

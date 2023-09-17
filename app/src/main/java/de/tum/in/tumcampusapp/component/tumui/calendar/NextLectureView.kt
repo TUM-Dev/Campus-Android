@@ -1,7 +1,11 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
 import android.content.Context
-import android.text.format.DateUtils.*
+import android.text.format.DateUtils.DAY_IN_MILLIS
+import android.text.format.DateUtils.FORMAT_ABBREV_RELATIVE
+import android.text.format.DateUtils.HOUR_IN_MILLIS
+import android.text.format.DateUtils.MINUTE_IN_MILLIS
+import android.text.format.DateUtils.getRelativeTimeSpanString
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -27,7 +31,7 @@ class NextLectureView
         lectureTitleTextView.text = lecture.title
         lectureTimeTextView.text = formatLectureDate(lecture.start, lecture.end, context)
 
-        if (lecture.locations == null || lecture.locations.isEmpty()) {
+        if (lecture.locations.isNullOrEmpty()) {
             lectureLocationTextView.visibility = View.GONE
         } else {
             lectureLocationTextView.visibility = View.VISIBLE
@@ -57,11 +61,13 @@ class NextLectureView
         return when {
             diff < 0 -> {
                 val timeToEnd = endTime.millis - now.millis
-                val formatter = DateTimeFormat.forPattern(if (timeToEnd < HOUR_IN_MILLIS) {
-                    "m 'min'"
-                } else {
-                    "h 'h' m 'min'"
-                }).withLocale(Locale.ENGLISH)
+                val formatter = DateTimeFormat.forPattern(
+                    if (timeToEnd < HOUR_IN_MILLIS) {
+                        "m 'min'"
+                    } else {
+                        "h 'h' m 'min'"
+                    }
+                ).withLocale(Locale.ENGLISH)
                 val readableTimeLeft = formatter.print(DateTime(timeToEnd, DateTimeZone.UTC))
                 context.getString(R.string.ongoing_until, readableTimeLeft)
             }
@@ -69,11 +75,13 @@ class NextLectureView
                 context.getString(R.string.starts_now)
             }
             diff < 5 * HOUR_IN_MILLIS -> {
-                val formatter = DateTimeFormat.forPattern(if (diff < HOUR_IN_MILLIS) {
-                    "m 'min'"
-                } else {
-                    "h 'h' m 'min'"
-                }).withLocale(Locale.ENGLISH)
+                val formatter = DateTimeFormat.forPattern(
+                    if (diff < HOUR_IN_MILLIS) {
+                        "m 'min'"
+                    } else {
+                        "h 'h' m 'min'"
+                    }
+                ).withLocale(Locale.ENGLISH)
                 "${context.getString(R.string.IN_capitalized)} ${formatter.print(DateTime(diff, DateTimeZone.UTC))}"
             }
             // Today

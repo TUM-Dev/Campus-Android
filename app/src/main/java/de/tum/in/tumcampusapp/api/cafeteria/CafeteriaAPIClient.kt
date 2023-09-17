@@ -41,21 +41,21 @@ class CafeteriaAPIClient(private val apiService: CafeteriaAPIService) {
             val cacheManager = CacheManager(context)
 
             val client = ApiHelper.getOkHttpClient(context)
-                    .newBuilder()
-                    .cache(cacheManager.cache)
-                    .addNetworkInterceptor(CacheResponseInterceptor())
-                    .build()
+                .newBuilder()
+                .cache(cacheManager.cache)
+                .addNetworkInterceptor(CacheResponseInterceptor())
+                .build()
 
             val gson = GsonBuilder()
-                    .registerTypeAdapter(DateTime::class.java, DateSerializer())
-                    .create()
+                .registerTypeAdapter(DateTime::class.java, DateSerializer())
+                .create()
 
             val apiService = Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .client(client)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .build()
-                    .create(CafeteriaAPIService::class.java)
+                .baseUrl(BASE_URL)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build()
+                .create(CafeteriaAPIService::class.java)
 
             return CafeteriaAPIClient(apiService)
         }
