@@ -10,7 +10,6 @@ import de.tum.`in`.tumcampusapp.component.other.navigation.NavDestination
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX
 import de.tum.`in`.tumcampusapp.utils.Utils
-import org.jetbrains.anko.defaultSharedPreferences
 
 /**
  * Base class for all cards
@@ -80,7 +79,7 @@ abstract class Card(
      * @return The Card to be displayed or null
      */
     open fun getIfShowOnStart(): Card? {
-        if (context.defaultSharedPreferences.getBoolean(context.getString(cardType.showCardPreferenceStringRes), true)) {
+        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(cardType.showCardPreferenceStringRes), true)) {
             if (shouldShow(dismissCardSharedPreferences)) {
                 return this
             }
@@ -103,7 +102,7 @@ abstract class Card(
      * reactivated manually by the user
      */
     open fun hideAlways() {
-        context.defaultSharedPreferences
+        PreferenceManager.getDefaultSharedPreferences(context)
             .edit()
             .putBoolean(context.getString(cardType.showCardPreferenceStringRes), false)
             .apply()

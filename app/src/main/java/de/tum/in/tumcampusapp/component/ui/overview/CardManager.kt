@@ -6,7 +6,6 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX
 import de.tum.`in`.tumcampusapp.utils.Utils
-import org.jetbrains.anko.defaultSharedPreferences
 
 /**
  * Card manager, manages inserting, dismissing, updating and displaying of cards
@@ -57,7 +56,7 @@ object CardManager {
     }
 
     private fun restoreCardPositions(context: Context) {
-        val preferences = context.defaultSharedPreferences
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = preferences.edit()
 
         for (s in preferences.all.keys) {

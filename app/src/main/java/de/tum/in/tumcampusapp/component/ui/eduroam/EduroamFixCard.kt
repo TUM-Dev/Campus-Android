@@ -70,11 +70,8 @@ class EduroamFixCard(
 
     override fun shouldShow(prefs: SharedPreferences): Boolean {
         // Check if wifi is turned on at all, as we cannot say if it was configured if its off
-        return if (context.getSystemService(Context.WIFI_SERVICE) as WifiManager).isWifiEnabled {
-            !isConfigValid() && prefs.getBoolean("card_eduroam_fix_start", true)
-        } else {
-            false
-        }
+        val wifiEnabled = (context.getSystemService(Context.WIFI_SERVICE) as WifiManager).isWifiEnabled
+        return wifiEnabled && !isConfigValid();
     }
 
     override fun discard(editor: SharedPreferences.Editor) {
