@@ -3,6 +3,7 @@ package de.tum.`in`.tumcampusapp.component.ui.eduroam
 import android.content.Context
 import android.content.Intent
 import android.net.wifi.WifiConfiguration
+import android.net.wifi.WifiManager
 import android.view.View
 import android.widget.TextView
 import com.google.android.material.button.MaterialButton
@@ -10,7 +11,6 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.utils.Const
-import org.jetbrains.anko.wifiManager
 
 class EduroamFixCardViewHolder(
     itemView: View,
@@ -38,7 +38,7 @@ class EduroamFixCardViewHolder(
 
     private fun performEduroamFix(context: Context, eduroam: WifiConfiguration?) {
         eduroam?.let {
-            context.wifiManager.removeNetwork(it.networkId)
+            (context.getSystemService(Context.WIFI_SERVICE) as WifiManager).removeNetwork(it.networkId)
         }
 
         val intent = Intent(context, SetupEduroamActivity::class.java)

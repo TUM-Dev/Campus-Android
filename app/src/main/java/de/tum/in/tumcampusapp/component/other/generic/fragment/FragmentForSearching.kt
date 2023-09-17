@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.other.generic.fragment
 
 import android.app.SearchManager
+import android.content.Context
 import android.content.SearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES
 import android.database.Cursor
 import android.os.Bundle
@@ -16,7 +17,6 @@ import androidx.appcompat.widget.SearchView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.BaseNavigationActivity
 import de.tum.`in`.tumcampusapp.utils.Utils
-import org.jetbrains.anko.searchManager
 
 abstract class FragmentForSearching<T>(
     @LayoutRes layoutId: Int,
@@ -61,7 +61,7 @@ abstract class FragmentForSearching<T>(
         searchItem = checkNotNull(menu.findItem(R.id.action_search))
         searchView = searchItem.actionView as SearchView
 
-        val searchManager = requireContext().searchManager
+        val searchManager = requireContext().getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val info = searchManager.getSearchableInfo(requireActivity().componentName)
         searchView.setSearchableInfo(info)
 

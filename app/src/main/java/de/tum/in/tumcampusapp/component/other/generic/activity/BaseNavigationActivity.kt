@@ -12,6 +12,7 @@ import androidx.drawerlayout.widget.DrawerLayout.LOCK_MODE_LOCKED_CLOSED
 import androidx.drawerlayout.widget.DrawerLayout.LOCK_MODE_UNLOCKED
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.preference.PreferenceManager
 import com.google.android.material.navigation.NavigationView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.drawer.DrawerHeaderInflater
@@ -22,7 +23,6 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.component.ui.overview.MainFragment
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.closeDrawers
-import org.jetbrains.anko.defaultSharedPreferences
 
 class BaseNavigationActivity :
     BaseActivity(
@@ -60,7 +60,8 @@ class BaseNavigationActivity :
 
         initDrawer()
         supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentCallbacks, false)
-        defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this)
+
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this)
 
         if (savedInstanceState == null) {
             supportFragmentManager
@@ -148,7 +149,7 @@ class BaseNavigationActivity :
     }
 
     override fun onDestroy() {
-        defaultSharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this)
         super.onDestroy()
     }
 

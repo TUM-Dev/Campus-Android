@@ -3,6 +3,7 @@ package de.tum.`in`.tumcampusapp.component.other.settings
 import android.Manifest.permission.READ_CALENDAR
 import android.Manifest.permission.WRITE_CALENDAR
 import android.annotation.SuppressLint
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -19,6 +20,7 @@ import androidx.preference.MultiSelectListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreferenceCompat
 import com.squareup.picasso.Picasso
 import de.tum.`in`.tumcampusapp.R
@@ -41,8 +43,6 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import org.jetbrains.anko.defaultSharedPreferences
-import org.jetbrains.anko.notificationManager
 import java.util.concurrent.ExecutionException
 import javax.inject.Inject
 
@@ -114,7 +114,7 @@ class SettingsFragment :
             }
         }
 
-        requireContext().defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this)
+        PreferenceManager.getDefaultSharedPreferences(requireContext()).registerOnSharedPreferenceChangeListener(this)
     }
 
     private fun populateNewsSources() {
@@ -317,10 +317,10 @@ class SettingsFragment :
     @Throws(ExecutionException::class, InterruptedException::class)
     private fun clearData() {
         TcaDb.resetDb(requireContext())
-        requireContext().defaultSharedPreferences.edit().clear().commit()
+        PreferenceManager.getDefaultSharedPreferences(requireContext()).edit().clear().commit()
 
         // Remove all notifications that are currently shown
-        requireContext().notificationManager.cancelAll()
+        (requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancelAll()
 
         val readCalendar = checkSelfPermission(requireActivity(), READ_CALENDAR)
         val writeCalendar = checkSelfPermission(requireActivity(), WRITE_CALENDAR)

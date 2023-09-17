@@ -44,7 +44,9 @@ import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import java.time.YearMonth
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
+import kotlin.math.abs
 
 class CalendarFragment :
     FragmentForAccessingTumOnline<EventsResponse>(
@@ -198,6 +200,7 @@ class CalendarFragment :
     private fun onCalendarImportedIntoDatabase() {
         // Update the action bar to display the enabled menu options
         requireActivity().invalidateOptionsMenu()
+        // enqueues OneTimeWorkRequest
         QueryLocationWorker.enqueueWork(requireContext())
     }
 
@@ -323,29 +326,23 @@ class CalendarFragment :
     }
 
     private fun isPermissionGranted(id: Int): Boolean {
-        if (checkSelfPermission(
-                requireContext(),
-                Manifest.permission.READ_CALENDAR
-            ) == PackageManager.PERMISSION_GRANTED &&
-            checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.WRITE_CALENDAR
-                ) == PackageManager.PERMISSION_GRANTED
-        ) {
+        val permReadCalendar = checkSelfPermission(requireContext(), Manifest.permission.READ_CALENDAR)
+        val permWriteCalendar = checkSelfPermission(requireContext(), Manifest.permission.WRITE_CALENDAR)
+        if (permReadCalendar == PackageManager.PERMISSION_GRANTED && permWriteCalendar == PackageManager.PERMISSION_GRANTED) {
             return true
+        }
+
+        if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CALENDAR) ||
+            shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CALENDAR)
+        ) {
+            ThemedAlertDialogBuilder(requireContext())
+                .setMessage(getString(R.string.permission_calendar_explanation))
+                .setPositiveButton(R.string.ok) { _, _ ->
+                    showPermissionRequestDialog(id)
+                }
+                .show()
         } else {
-            if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CALENDAR) ||
-                shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CALENDAR)
-            ) {
-                ThemedAlertDialogBuilder(requireContext())
-                    .setMessage(getString(R.string.permission_calendar_explanation))
-                    .setPositiveButton(R.string.ok) { _, _ ->
-                        showPermissionRequestDialog(id)
-                    }
-                    .show()
-            } else {
-                showPermissionRequestDialog(id)
-            }
+            showPermissionRequestDialog(id)
         }
         return false
     }
@@ -579,10 +576,10 @@ class CalendarFragment :
         val eventMap = calendarController.getEventsForMonth(selectedDate)
 
         if (!::monthViewAdapter.isInitialized) {
-            monthViewAdapter = MonthViewAdapter(daysInMonth, eventMap)
+            monthViewAdapter = MonthViewAdapter(daysInMonth, eventMap, selectedDate)
             monthRecyclerView.adapter = monthViewAdapter
         } else {
-            monthViewAdapter.updateData(daysInMonth, eventMap)
+            monthViewAdapter.updateData(daysInMonth, eventMap, selectedDate)
         }
 
         val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(requireContext(), 7)
@@ -593,11 +590,14 @@ class CalendarFragment :
         val daysInMonthArray: ArrayList<String> = ArrayList()
         val yearMonth = YearMonth.of(date.year, date.monthOfYear)
         val daysInMonth = yearMonth.lengthOfMonth()
+        val daysInPreviousMonth = yearMonth.minusMonths(1).lengthOfMonth()
         val firstOfMonth = date.withDayOfMonth(1)
-        var dayOfWeek = firstOfMonth.dayOfWeek().get() - 1 // Monday is the first day of the week in Europe
+        var dayOfWeek = firstOfMonth.dayOfWeek - 1 // Monday is the first day of the week in Europe
         for (i in 1..42) {
-            if (i <= dayOfWeek || i > daysInMonth + dayOfWeek) {
-                daysInMonthArray.add("")
+            if (i <= dayOfWeek) {
+                daysInMonthArray.add((daysInPreviousMonth - dayOfWeek + i).toString())
+            } else if (i > daysInMonth + dayOfWeek) {
+                daysInMonthArray.add((abs(i - daysInMonth - dayOfWeek)).toString())
             } else {
                 daysInMonthArray.add((i - dayOfWeek).toString())
             }

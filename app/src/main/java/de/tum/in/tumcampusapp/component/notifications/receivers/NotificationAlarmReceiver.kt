@@ -3,13 +3,17 @@ package de.tum.`in`.tumcampusapp.component.notifications.receivers
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
+import androidx.work.WorkManager
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
 import de.tum.`in`.tumcampusapp.component.notifications.persistence.NotificationType
 import de.tum.`in`.tumcampusapp.component.tumui.tutionfees.TuitionFeesNotificationProvider
 import de.tum.`in`.tumcampusapp.component.ui.cafeteria.CafeteriaNotificationProvider
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportNotificationProvider
 import de.tum.`in`.tumcampusapp.utils.Const
-import org.jetbrains.anko.doAsync
 
 class NotificationAlarmReceiver : BroadcastReceiver() {
 
@@ -23,11 +27,22 @@ class NotificationAlarmReceiver : BroadcastReceiver() {
             else -> return
         }
 
-        doAsync {
-            val notification = notificationProvider.buildNotification()
-            notification?.let {
-                NotificationScheduler(context).schedule(it)
+        // create subclass of Worker to enqueue with WorkManager
+        class WorkWhenReceived(appContext: Context, workerParams: WorkerParameters) :
+            Worker(appContext, workerParams) {
+            override fun doWork(): Result {
+                val notification = notificationProvider.buildNotification()
+                notification?.let {
+                    NotificationScheduler(applicationContext).schedule(it)
+                }
+                return Result.success()
             }
         }
+        // start expedited background work
+        val request = OneTimeWorkRequestBuilder<WorkWhenReceived>()
+            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+            .build()
+        WorkManager.getInstance(context)
+            .enqueue(request)
     }
 }

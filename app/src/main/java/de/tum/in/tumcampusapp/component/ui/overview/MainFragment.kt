@@ -8,6 +8,7 @@ import android.net.NetworkRequest
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,8 +31,9 @@ import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.NetUtils
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.observe
-import org.jetbrains.anko.connectivityManager
-import org.jetbrains.anko.support.v4.runOnUiThread
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import java.util.*
 import javax.inject.Inject
@@ -48,17 +50,21 @@ class MainFragment :
 
     private var isConnectivityChangeReceiverRegistered = false
     private val connectivityManager: ConnectivityManager by lazy {
-        requireContext().connectivityManager
+        requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     }
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
-            runOnUiThread { this@MainFragment.refreshCards() }
+            viewModel.viewModelScope.launch(mainDispatcher) {
+                this@MainFragment.refreshCards()
+            }
         }
     }
 
     private val cardsAdapter: CardAdapter by lazy { CardAdapter(this) }
 
     private val binding by viewBinding(FragmentMainBinding::bind)
+
+    private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main
 
     override val swipeRefreshLayout get() = binding.swipeRefreshLayout
 
@@ -212,7 +218,8 @@ class MainFragment :
         fun newInstance() = MainFragment()
     }
 
-    private inner class ItemTouchHelperCallback : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+    private inner class ItemTouchHelperCallback :
+        ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
         override fun getSwipeDirs(
             recyclerView: RecyclerView,

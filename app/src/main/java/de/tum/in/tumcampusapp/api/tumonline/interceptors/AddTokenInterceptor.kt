@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.api.tumonline.interceptors
 
 import android.content.Context
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import de.tum.`in`.tumcampusapp.utils.Const
 import okhttp3.Interceptor
 import okhttp3.Response

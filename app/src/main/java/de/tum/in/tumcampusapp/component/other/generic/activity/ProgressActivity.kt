@@ -1,6 +1,8 @@
 package de.tum.`in`.tumcampusapp.component.other.generic.activity
 
+import android.content.Context
 import android.graphics.Color
+import android.net.ConnectivityManager
 import android.net.ConnectivityManager.NetworkCallback
 import android.net.Network
 import android.net.NetworkRequest
@@ -29,7 +31,6 @@ import de.tum.`in`.tumcampusapp.utils.NetUtils.internetCapability
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.setImageResourceOrHide
 import de.tum.`in`.tumcampusapp.utils.setTextOrHide
-import org.jetbrains.anko.connectivityManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -246,7 +247,8 @@ abstract class ProgressActivity<T>(
             .build()
 
         if (registered.not()) {
-            connectivityManager.registerNetworkCallback(request, networkCallback)
+            (getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+                .registerNetworkCallback(request, networkCallback)
             registered = true
         }
     }
@@ -289,7 +291,8 @@ abstract class ProgressActivity<T>(
      */
     protected fun showLoadingStart() {
         if (registered) {
-            connectivityManager.unregisterNetworkCallback(networkCallback)
+            (getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+                .unregisterNetworkCallback(networkCallback)
             registered = false
         }
 
@@ -344,7 +347,8 @@ abstract class ProgressActivity<T>(
         super.onDestroy()
         apiCall?.cancel()
         if (registered) {
-            connectivityManager.unregisterNetworkCallback(networkCallback)
+            (getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+                .unregisterNetworkCallback(networkCallback)
             registered = false
         }
     }

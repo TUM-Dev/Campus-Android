@@ -16,7 +16,6 @@ import androidx.core.content.pm.PackageInfoCompat
 import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import de.tum.`in`.tumcampusapp.BuildConfig
-import org.jetbrains.anko.defaultSharedPreferences
 import java.io.IOException
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -39,7 +38,7 @@ object Utils {
             return
         }
 
-        val prefsEditor = context.defaultSharedPreferences.edit()
+        val prefsEditor = PreferenceManager.getDefaultSharedPreferences(context).edit()
 
         for ((key, value) in entries) {
             when (value) {
@@ -312,6 +311,7 @@ object Utils {
                 val back = abs(meters / 100f).toInt() % 10
                 "$front.${back}km"
             }
+
             else -> "${(meters / 1000f).toInt()}km"
         }
     }
