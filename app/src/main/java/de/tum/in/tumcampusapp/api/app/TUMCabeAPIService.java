@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.api.app;
 
-import java.util.HashMap;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
@@ -9,22 +8,20 @@ import de.tum.in.tumcampusapp.api.app.model.ObfuscatedIdsUpload;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
-import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.FeedbackResult;
-import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderSchedule;
 import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
 import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotificationLocation;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierFreeContact;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierFreeMoreInfo;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
-import de.tum.in.tumcampusapp.component.ui.openinghour.model.Location;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
 import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
+import de.tum.in.tumcampusapp.component.ui.openinghour.model.Location;
 import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
@@ -47,7 +44,6 @@ import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE_BUILDINGS_TO_GPS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE_CONTACT;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE_MORE_INFO;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CAFETERIAS;
@@ -62,8 +58,6 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_MEMBERS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_NEWS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_NOTIFICATIONS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_OPENING_HOURS;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_SCHEDULE;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_STUDY_ROOMS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_TICKET;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_UPDATE_NOTE;
@@ -72,42 +66,56 @@ public interface TUMCabeAPIService {
 
     //Group chat
     @POST(API_CHAT_ROOMS)
+    @Deprecated
+    /// This endpoint won't be avaliable in the v2 backend
     Call<ChatRoom> createRoom(@Body TUMCabeVerification verification);
 
-    @GET(API_CHAT_ROOMS + "{room}")
-    Call<ChatRoom> getChatRoom(@Path("room") int id);
-
     @POST(API_CHAT_ROOMS + "{room}/leave/")
+    @Deprecated
+        /// This endpoint won't be avaliable in the v2 backend
     Call<ChatRoom> leaveChatRoom(@Path("room") int roomId, @Body TUMCabeVerification verification);
 
     @POST(API_CHAT_ROOMS + "{room}/add/{member}")
+    @Deprecated
+        /// This endpoint won't be avaliable in the v2 backend
     Call<ChatRoom> addUserToChat(@Path("room") int roomId, @Path("member") int userId, @Body TUMCabeVerification verification);
 
     //Get/Update single message
     @PUT(API_CHAT_ROOMS + "{room}/message/")
+    @Deprecated
+    /// This endpoint won't be avaliable in the v2 backend
     Observable<ChatMessage> sendMessage(@Path("room") int roomId, @Body TUMCabeVerification message);
 
     @PUT(API_CHAT_ROOMS + "{room}/message/{message}/")
+    @Deprecated
+        /// This endpoint won't be avaliable in the v2 backend
     Observable<ChatMessage> updateMessage(@Path("room") int roomId, @Path("message") int messageId, @Body TUMCabeVerification message);
 
     //Get all recent messages or older ones
     @POST(API_CHAT_ROOMS + "{room}/messages/{page}/")
+    @Deprecated
+    /// This endpoint won't be avaliable in the v2 backend
     Observable<List<ChatMessage>> getMessages(@Path("room") int roomId, @Path("page") long messageId, @Body TUMCabeVerification verification);
 
     @POST(API_CHAT_ROOMS + "{room}/messages/")
+    @Deprecated
+        /// This endpoint won't be avaliable in the v2 backend
     Observable<List<ChatMessage>> getNewMessages(@Path("room") int roomId, @Body TUMCabeVerification verification);
 
     @POST(API_CHAT_MEMBERS)
+    @Deprecated
+        /// This endpoint won't be avaliable in the v2 backend
     Call<ChatMember> createMember(@Body ChatMember chatMember);
 
     @GET(API_CHAT_MEMBERS + "{lrz_id}/")
+    @Deprecated
+        /// This endpoint won't be avaliable in the v2 backend
     Call<ChatMember> getMember(@Path("lrz_id") String lrzId);
 
     @GET(API_CHAT_MEMBERS + "search/{query}/")
+    @Deprecated
+        /// This endpoint won't be avaliable in the v2 backend
     Call<List<ChatMember>> searchMemberByName(@Path("query") String nameQuery);
-
-    @POST(API_CHAT_MEMBERS + "{memberId}/rooms/")
-    Call<List<ChatRoom>> getMemberRooms(@Path("memberId") int memberId, @Body TUMCabeVerification verification);
 
     @POST(API_MEMBERS + "uploadIds/{lrzId}/")
     Observable<TUMCabeStatus> uploadObfuscatedIds(@Path("lrzId") String lrzId, @Body ObfuscatedIdsUpload ids);
@@ -142,15 +150,6 @@ public interface TUMCabeAPIService {
     @GET(API_BARRIER_FREE + API_BARRIER_FREE_MORE_INFO)
     Call<List<BarrierFreeMoreInfo>> getMoreInfoList();
 
-    // building to gps information
-    @GET(API_BARRIER_FREE + API_BARRIER_FREE_BUILDINGS_TO_GPS)
-    Call<List<BuildingToGps>> getBuilding2Gps();
-
-    //RoomFinder schedule
-    @GET(API_ROOM_FINDER + API_ROOM_FINDER_SCHEDULE + "{roomId}" + "/" + "{start}" + "/" + "{end}")
-    Call<List<RoomFinderSchedule>> fetchSchedule(@Path("roomId") String archId,
-                                                 @Path("start") String start, @Path("end") String end);
-
     @POST(API_FEEDBACK)
     Call<FeedbackResult> sendFeedback(@Body Feedback feedback);
 
@@ -181,23 +180,35 @@ public interface TUMCabeAPIService {
     // Getting Event information
 
     @GET(API_EVENTS + "list")
+    @Deprecated
+        /// This endpoint won't be avaliable in the v2 backend
     Observable<List<Event>> getEvents();
 
     // Getting Ticket information
     @POST(API_EVENTS + API_TICKET + "my")
+    @Deprecated
+    /// This endpoint won't be avaliable in the v2 backend
     Observable<List<Ticket>> getTickets(@Body TUMCabeVerification verification);
 
     @POST(API_EVENTS + API_TICKET + "{ticketID}")
+    @Deprecated
+        /// This endpoint won't be avaliable in the v2 backend
     Call<Ticket> getTicket(@Path("ticketID") int ticketID, @Body TUMCabeVerification verification);
 
     @GET(API_EVENTS + API_TICKET + "type/{eventID}")
+    @Deprecated
+        /// This endpoint won't be avaliable in the v2 backend
     Observable<List<TicketType>> getTicketTypes(@Path("eventID") int eventID);
 
     // Ticket reservation
     @POST(API_EVENTS + API_TICKET + "reserve/multiple")
+    @Deprecated
+    /// This endpoint won't be avaliable in the v2 backend
     Call<TicketReservationResponse> reserveTicket(@Body TUMCabeVerification verification);
 
     @GET(API_EVENTS + API_TICKET + "status/{event}")
+    @Deprecated
+        /// This endpoint won't be avaliable in the v2 backend
     Single<List<TicketStatus>> getTicketStats(@Path("event") int event);
 
     // Update note
