@@ -120,59 +120,10 @@ public final class TUMCabeClient {
 
     @Deprecated
     /// This endpoint won't be avaliable in the v2 backend
-    public void createRoom(ChatRoom chatRoom, TUMCabeVerification verification, Callback<ChatRoom> cb) {
-        verification.setData(chatRoom);
-        service.createRoom(verification)
-               .enqueue(cb);
-    }
-
-    @Deprecated
-    /// This endpoint won't be avaliable in the v2 backend
     public ChatMember createMember(ChatMember chatMember) throws IOException {
         return service.createMember(chatMember)
                 .execute()
                 .body();
-    }
-
-    @Deprecated
-    /// This endpoint won't be avaliable in the v2 backend
-    public void leaveChatRoom(ChatRoom chatRoom, TUMCabeVerification verification, Callback<ChatRoom> cb) {
-        service.leaveChatRoom(chatRoom.getId(), verification)
-                .enqueue(cb);
-    }
-
-    @Deprecated
-    /// This endpoint won't be avaliable in the v2 backend
-    public void addUserToChat(ChatRoom chatRoom, ChatMember member, TUMCabeVerification verification, Callback<ChatRoom> cb) {
-        service.addUserToChat(chatRoom.getId(), member.getId(), verification)
-                .enqueue(cb);
-    }
-
-    @Deprecated
-    /// This endpoint won't be avaliable in the v2 backend
-    public Observable<ChatMessage> sendMessage(int roomId, TUMCabeVerification verification) {
-        ChatMessage message = (ChatMessage) verification.getData();
-        if (message == null) {
-            throw new IllegalStateException("TUMCabeVerification data is not a ChatMessage");
-        }
-
-        if (message.isNewMessage()) {
-            return service.sendMessage(roomId, verification);
-        }
-
-        return service.updateMessage(roomId, message.getId(), verification);
-    }
-
-    @Deprecated
-    /// This endpoint won't be avaliable in the v2 backend
-    public Observable<List<ChatMessage>> getMessages(int roomId, long messageId, @Body TUMCabeVerification verification) {
-        return service.getMessages(roomId, messageId, verification);
-    }
-
-    @Deprecated
-    /// This endpoint won't be avaliable in the v2 backend
-    public Observable<List<ChatMessage>> getNewMessages(int roomId, @Body TUMCabeVerification verification) {
-        return service.getNewMessages(roomId, verification);
     }
 
     Observable<TUMCabeStatus> uploadObfuscatedIds(String lrzId, ObfuscatedIdsUpload ids) {
@@ -255,19 +206,6 @@ public final class TUMCabeClient {
         return calls;
     }
 
-    @Deprecated
-    /// This endpoint won't be avaliable in the v2 backend
-    public void searchChatMember(String query, Callback<List<ChatMember>> callback) {
-        service.searchMemberByName(query)
-                .enqueue(callback);
-    }
-
-    @Deprecated
-    /// This endpoint won't be avaliable in the v2 backend
-    public void getChatMemberByLrzId(String lrzId, Callback<ChatMember> callback) {
-        service.getMember(lrzId)
-                .enqueue(callback);
-    }
 
     public Observable<List<Cafeteria>> getCafeterias() {
         return service.getCafeterias();

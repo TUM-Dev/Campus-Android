@@ -342,7 +342,6 @@
     <string name="news_default_sharedpref_shown" translatable="false">NewsCardShown</string>
     <string name="news_film_default_sharedpref_shown" translatable="false">NewsFilmCardShown</string>
     <string name="eduroam_default_sharedpref_shown" translatable="false">EduroamCardShown</string>
-    <string name="chat_default_sharedpref_shown" translatable="false">ChatCardShown</string>
     <string name="support_default_sharedpref_shown" translatable="false">SupportCardShown</string>
     <string name="login_default_sharedpref_shown" translatable="false">LoginCardShown</string>
     <string name="eduroam_fix_default_sharedpref_shown" translatable="false">EduroamFixCardShown</string>
