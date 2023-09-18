@@ -27,7 +27,6 @@ object CardManager {
         NEWS(R.layout.card_news_item, R.string.news_default_sharedpref_shown),
         NEWS_FILM(R.layout.card_news_film_item, R.string.news_film_default_sharedpref_shown),
         EDUROAM(R.layout.card_eduroam, R.string.eduroam_default_sharedpref_shown),
-        CHAT(R.layout.card_chat_messages, R.string.chat_default_sharedpref_shown),
         SUPPORT(R.layout.card_support, R.string.support_default_sharedpref_shown),
         LOGIN(R.layout.card_login_prompt, R.string.login_default_sharedpref_shown),
         EDUROAM_FIX(R.layout.card_eduroam_fix, R.string.eduroam_fix_default_sharedpref_shown),

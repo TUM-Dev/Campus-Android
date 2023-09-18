@@ -61,59 +61,10 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_STUDY_ROOMS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_TICKET;
 
 public interface TUMCabeAPIService {
-
-    //Group chat
-    @POST(API_CHAT_ROOMS)
-    @Deprecated
-    /// This endpoint won't be avaliable in the v2 backend
-    Call<ChatRoom> createRoom(@Body TUMCabeVerification verification);
-
-    @POST(API_CHAT_ROOMS + "{room}/leave/")
-    @Deprecated
-        /// This endpoint won't be avaliable in the v2 backend
-    Call<ChatRoom> leaveChatRoom(@Path("room") int roomId, @Body TUMCabeVerification verification);
-
-    @POST(API_CHAT_ROOMS + "{room}/add/{member}")
-    @Deprecated
-        /// This endpoint won't be avaliable in the v2 backend
-    Call<ChatRoom> addUserToChat(@Path("room") int roomId, @Path("member") int userId, @Body TUMCabeVerification verification);
-
-    //Get/Update single message
-    @PUT(API_CHAT_ROOMS + "{room}/message/")
-    @Deprecated
-    /// This endpoint won't be avaliable in the v2 backend
-    Observable<ChatMessage> sendMessage(@Path("room") int roomId, @Body TUMCabeVerification message);
-
-    @PUT(API_CHAT_ROOMS + "{room}/message/{message}/")
-    @Deprecated
-        /// This endpoint won't be avaliable in the v2 backend
-    Observable<ChatMessage> updateMessage(@Path("room") int roomId, @Path("message") int messageId, @Body TUMCabeVerification message);
-
-    //Get all recent messages or older ones
-    @POST(API_CHAT_ROOMS + "{room}/messages/{page}/")
-    @Deprecated
-    /// This endpoint won't be avaliable in the v2 backend
-    Observable<List<ChatMessage>> getMessages(@Path("room") int roomId, @Path("page") long messageId, @Body TUMCabeVerification verification);
-
-    @POST(API_CHAT_ROOMS + "{room}/messages/")
-    @Deprecated
-        /// This endpoint won't be avaliable in the v2 backend
-    Observable<List<ChatMessage>> getNewMessages(@Path("room") int roomId, @Body TUMCabeVerification verification);
-
     @POST(API_CHAT_MEMBERS)
     @Deprecated
-        /// This endpoint won't be avaliable in the v2 backend
+    /// This endpoint won't be avaliable in the v2 backend
     Call<ChatMember> createMember(@Body ChatMember chatMember);
-
-    @GET(API_CHAT_MEMBERS + "{lrz_id}/")
-    @Deprecated
-        /// This endpoint won't be avaliable in the v2 backend
-    Call<ChatMember> getMember(@Path("lrz_id") String lrzId);
-
-    @GET(API_CHAT_MEMBERS + "search/{query}/")
-    @Deprecated
-        /// This endpoint won't be avaliable in the v2 backend
-    Call<List<ChatMember>> searchMemberByName(@Path("query") String nameQuery);
 
     @POST(API_MEMBERS + "uploadIds/{lrzId}/")
     Observable<TUMCabeStatus> uploadObfuscatedIds(@Path("lrzId") String lrzId, @Body ObfuscatedIdsUpload ids);

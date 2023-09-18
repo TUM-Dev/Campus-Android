@@ -152,10 +152,6 @@ public class ChatMessage implements Parcelable {
         return timestamp;
     }
 
-    public String getFormattedTimestamp(Context context) {
-        return DateTimeUtils.INSTANCE.formatTimeOrDay(timestamp, context);
-    }
-
     public void setTimestamp(DateTime timestamp) {
         this.timestamp = timestamp;
     }
@@ -166,19 +162,6 @@ public class ChatMessage implements Parcelable {
 
     public void setSignature(String signature) {
         this.signature = signature;
-    }
-
-    public int getStatusStringRes() {
-        if (sendingStatus == STATUS_SENT) {
-            return R.string.status_sent;
-        } else if (sendingStatus == STATUS_SENDING) {
-            return R.string.status_sending;
-        } else {
-            return R.string.status_sending_failed;
-        }
-    }
-    public boolean isNewMessage() {
-        return id == 0;
     }
 
     @Override
