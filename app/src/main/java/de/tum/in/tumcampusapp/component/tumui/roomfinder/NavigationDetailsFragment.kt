@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -24,7 +25,6 @@ import de.tum.`in`.tumcampusapp.databinding.NavigationPropertyRowBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.di.injector
 import kotlinx.coroutines.launch
-import org.jetbrains.anko.sdk27.coroutines.onItemSelectedListener
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -157,13 +157,16 @@ class NavigationDetailsFragment : BaseFragment<Unit>(
             availableMaps.forEach {
                 adapter.add(it.mapName)
             }
-            binding.availableMapSpinner.onItemSelectedListener {
-                this.onItemSelected { adapterView, _, position, _ ->
+            binding.availableMapSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(adapterView: AdapterView<*>?, selectedItemView: View?, position: Int, id: Long) {
                     val selectedMapName = adapterView?.getItemAtPosition(position).toString()
                     val selectedMap = availableMaps.find { it.mapName == selectedMapName }
                     selectedMap?.let {
                         loadMapImage(it)
                     }
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {
                 }
             }
             adapter.notifyDataSetChanged()

@@ -10,10 +10,8 @@ import org.joda.time.DateTime;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import de.tum.in.tumcampusapp.api.app.exception.NoPrivateKey;
 import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
@@ -22,13 +20,8 @@ import de.tum.in.tumcampusapp.api.app.model.ObfuscatedIdsUpload;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
-import de.tum.in.tumcampusapp.component.other.locations.model.BuildingToGps;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.FeedbackResult;
-import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderCoordinate;
-import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderMap;
-import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderRoom;
-import de.tum.in.tumcampusapp.component.tumui.roomfinder.model.RoomFinderSchedule;
 import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotification;
 import de.tum.in.tumcampusapp.component.ui.alarm.model.FcmNotificationLocation;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierFreeContact;
@@ -45,8 +38,6 @@ import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
-import de.tum.in.tumcampusapp.component.ui.ticket.payload.EphimeralKey;
-import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketPurchaseStripe;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
@@ -76,10 +67,6 @@ public final class TUMCabeClient {
     static final String API_DEVICE = "device/";
     static final String API_BARRIER_FREE = "barrierfree/";
     static final String API_BARRIER_FREE_CONTACT = "contacts/";
-    static final String API_BARRIER_FREE_BUILDINGS_TO_GPS = "getBuilding2Gps/";
-    static final String API_BARRIER_FREE_NERBY_FACILITIES = "nerby/";
-    static final String API_BARRIER_FREE_LIST_OF_TOILETS = "listOfToilets/";
-    static final String API_BARRIER_FREE_LIST_OF_ELEVATORS = "listOfElevators/";
     static final String API_BARRIER_FREE_MORE_INFO = "moreInformation/";
     static final String API_ROOM_FINDER = "roomfinder/room/";
     static final String API_ROOM_FINDER_COORDINATES = "coordinates/";
@@ -133,64 +120,10 @@ public final class TUMCabeClient {
         return verification;
     }
 
-    public void createRoom(ChatRoom chatRoom, TUMCabeVerification verification, Callback<ChatRoom> cb) {
-        verification.setData(chatRoom);
-        service.createRoom(verification)
-                .enqueue(cb);
-    }
-
-    public ChatRoom createRoom(ChatRoom chatRoom, TUMCabeVerification verification) throws IOException {
-        verification.setData(chatRoom);
-        return service.createRoom(verification)
-                .execute()
-                .body();
-    }
-
-    public ChatRoom getChatRoom(int id) throws IOException {
-        return service.getChatRoom(id)
-                .execute()
-                .body();
-    }
-
+    @Deprecated
+    /// This endpoint won't be avaliable in the v2 backend
     public ChatMember createMember(ChatMember chatMember) throws IOException {
         return service.createMember(chatMember)
-                .execute()
-                .body();
-    }
-
-    public void leaveChatRoom(ChatRoom chatRoom, TUMCabeVerification verification, Callback<ChatRoom> cb) {
-        service.leaveChatRoom(chatRoom.getId(), verification)
-                .enqueue(cb);
-    }
-
-    public void addUserToChat(ChatRoom chatRoom, ChatMember member, TUMCabeVerification verification, Callback<ChatRoom> cb) {
-        service.addUserToChat(chatRoom.getId(), member.getId(), verification)
-                .enqueue(cb);
-    }
-
-    public Observable<ChatMessage> sendMessage(int roomId, TUMCabeVerification verification) {
-        ChatMessage message = (ChatMessage) verification.getData();
-        if (message == null) {
-            throw new IllegalStateException("TUMCabeVerification data is not a ChatMessage");
-        }
-
-        if (message.isNewMessage()) {
-            return service.sendMessage(roomId, verification);
-        }
-
-        return service.updateMessage(roomId, message.getId(), verification);
-    }
-
-    public Observable<List<ChatMessage>> getMessages(int roomId, long messageId, @Body TUMCabeVerification verification) {
-        return service.getMessages(roomId, messageId, verification);
-    }
-
-    public Observable<List<ChatMessage>> getNewMessages(int roomId, @Body TUMCabeVerification verification) {
-        return service.getNewMessages(roomId, verification);
-    }
-
-    public List<ChatRoom> getMemberRooms(int memberId, TUMCabeVerification verification) throws IOException {
-        return service.getMemberRooms(memberId, verification)
                 .execute()
                 .body();
     }
@@ -258,42 +191,6 @@ public final class TUMCabeClient {
                 .body();
     }
 
-    public Call<List<RoomFinderRoom>> getListOfToilets() {
-        return service.getListOfToilets();
-    }
-
-    public Call<List<RoomFinderRoom>> getListOfElevators() {
-        return service.getListOfElevators();
-    }
-
-    public Call<List<RoomFinderRoom>> getListOfNearbyFacilities(String buildingId) {
-        return service.getListOfNearbyFacilities(buildingId);
-    }
-
-    public List<BuildingToGps> getBuilding2Gps() throws IOException {
-        return service.getBuilding2Gps()
-                .execute()
-                .body();
-    }
-
-    @Deprecated // This API has been deprecated. Use the equivalent NavigaTUM API instead
-    public Call<List<RoomFinderMap>> fetchAvailableMaps(final String archId) {
-        return service.fetchAvailableMaps(ApiHelper.encodeUrl(archId));
-    }
-
-    @Deprecated // This API has been deprecated. Use the equivalent NavigaTUM API instead
-    public Call<RoomFinderCoordinate> fetchRoomFinderCoordinates(String archId) {
-        return service.fetchCoordinates(archId);
-    }
-
-    @Nullable
-    public List<RoomFinderSchedule> fetchSchedule(String roomId, String start, String end) throws IOException {
-        return service.fetchSchedule(ApiHelper.encodeUrl(roomId),
-                ApiHelper.encodeUrl(start), ApiHelper.encodeUrl(end))
-                .execute()
-                .body();
-    }
-
     public Call<FeedbackResult> sendFeedback(Feedback feedback) {
         return service.sendFeedback(feedback);
     }
@@ -311,15 +208,6 @@ public final class TUMCabeClient {
         return calls;
     }
 
-    public void searchChatMember(String query, Callback<List<ChatMember>> callback) {
-        service.searchMemberByName(query)
-                .enqueue(callback);
-    }
-
-    public void getChatMemberByLrzId(String lrzId, Callback<ChatMember> callback) {
-        service.getMember(lrzId)
-                .enqueue(callback);
-    }
 
     public Observable<List<Cafeteria>> getCafeterias() {
         return service.getCafeterias();
@@ -346,50 +234,45 @@ public final class TUMCabeClient {
     // TICKET SALE
 
     // Getting event information
+    @Deprecated
+    /// This endpoint won't be avaliable in the v2 backend
     public Observable<List<Event>> fetchEvents() {
         return service.getEvents();
     }
 
     // Getting ticket information
 
+    @Deprecated
+    /// This endpoint won't be avaliable in the v2 backend
     public Observable<List<Ticket>> fetchTickets(Context context) throws NoPrivateKey {
         TUMCabeVerification verification = getVerification(context, null);
         return service.getTickets(verification);
     }
 
+    @Deprecated
+    /// This endpoint won't be avaliable in the v2 backend
     public Call<Ticket> fetchTicket(Context context, int ticketID) throws NoPrivateKey {
         TUMCabeVerification verification = getVerification(context, null);
         return service.getTicket(ticketID, verification);
     }
 
+    @Deprecated
+    /// This endpoint won't be avaliable in the v2 backend
     public Observable<List<TicketType>> fetchTicketTypes(int eventID) {
         return service.getTicketTypes(eventID);
     }
 
     // Ticket reservation
 
+    @Deprecated
+    /// This endpoint won't be avaliable in the v2 backend
     public void reserveTicket(TUMCabeVerification verification,
                               Callback<TicketReservationResponse> cb) {
         service.reserveTicket(verification).enqueue(cb);
     }
 
-    // Ticket purchase
-
-    public void purchaseTicketStripe(
-            Context context, List<Integer> ticketIds, @NonNull String token,
-            @NonNull String customerName, Callback<List<Ticket>> cb) throws NoPrivateKey {
-        TicketPurchaseStripe purchase = new TicketPurchaseStripe(ticketIds, token, customerName);
-        TUMCabeVerification verification = getVerification(context, purchase);
-        service.purchaseTicketStripe(verification).enqueue(cb);
-    }
-
-    public void retrieveEphemeralKey(Context context, String apiVersion,
-                                     Callback<HashMap<String, Object>> cb) throws NoPrivateKey {
-        EphimeralKey key = new EphimeralKey(apiVersion);
-        TUMCabeVerification verification = getVerification(context, key);
-        service.retrieveEphemeralKey(verification).enqueue(cb);
-    }
-
+    @Deprecated
+    /// This endpoint won't be avaliable in the v2 backend
     public Single<List<TicketStatus>> fetchTicketStats(int event) {
         return service.getTicketStats(event);
     }

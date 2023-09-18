@@ -1,11 +1,11 @@
 package de.tum.`in`.tumcampusapp.component.ui.overview
 
 import android.content.Context
+import androidx.preference.PreferenceManager
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const.CARD_POSITION_PREFERENCE_SUFFIX
 import de.tum.`in`.tumcampusapp.utils.Utils
-import org.jetbrains.anko.defaultSharedPreferences
 
 /**
  * Card manager, manages inserting, dismissing, updating and displaying of cards
@@ -27,7 +27,6 @@ object CardManager {
         NEWS(R.layout.card_news_item, R.string.news_default_sharedpref_shown),
         NEWS_FILM(R.layout.card_news_film_item, R.string.news_film_default_sharedpref_shown),
         EDUROAM(R.layout.card_eduroam, R.string.eduroam_default_sharedpref_shown),
-        CHAT(R.layout.card_chat_messages, R.string.chat_default_sharedpref_shown),
         SUPPORT(R.layout.card_support, R.string.support_default_sharedpref_shown),
         LOGIN(R.layout.card_login_prompt, R.string.login_default_sharedpref_shown),
         EDUROAM_FIX(R.layout.card_eduroam_fix, R.string.eduroam_fix_default_sharedpref_shown),
@@ -56,7 +55,7 @@ object CardManager {
     }
 
     private fun restoreCardPositions(context: Context) {
-        val preferences = context.defaultSharedPreferences
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = preferences.edit()
 
         for (s in preferences.all.keys) {

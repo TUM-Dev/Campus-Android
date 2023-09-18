@@ -1,6 +1,5 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket.activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.transition.TransitionManager
 import androidx.core.view.isVisible
@@ -81,11 +80,6 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
         eventId = intent.getIntExtra(Const.KEY_EVENT_ID, 0)
 
         binding.totalPriceTextView.text = Utils.formatPrice(0)
-
-        injector.ticketsComponent()
-            .eventId(eventId)
-            .build()
-            .inject(this)
 
         // Get ticket type information from API
         val disposable = ticketsRemoteRepo.fetchTicketTypesForEvent(eventId)
@@ -196,13 +190,6 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
 
     private fun handleTicketReservationSuccess(response: TicketReservationResponse) {
         showLoadingLayout(false)
-
-        val intent = Intent(this, StripePaymentActivity::class.java)
-        intent.putExtra(Const.KEY_TICKET_PRICE, Utils.formatPrice(totalPrice))
-        intent.putIntegerArrayListExtra(Const.KEY_TICKET_IDS, response.ticketIds)
-        intent.putExtra(Const.KEY_TERMS_LINK, ticketTypes?.get(0)?.paymentInfo?.termsLink ?: "")
-        intent.putExtra(Const.KEY_STRIPE_API_PUBLISHABLE_KEY, ticketTypes?.get(0)?.paymentInfo?.stripePublicKey ?: "")
-        startActivity(intent)
     }
 
     private fun handleTicketNotReserved() {

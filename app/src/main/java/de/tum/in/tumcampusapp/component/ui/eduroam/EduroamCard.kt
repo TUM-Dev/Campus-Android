@@ -18,7 +18,6 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.utils.Const
-import org.jetbrains.anko.wifiManager
 
 /**
  * Card that can start [SetupEduroamActivity]
@@ -37,7 +36,7 @@ class EduroamCard(context: Context) : Card(CardManager.CardTypes.EDUROAM, contex
 
     override fun shouldShow(prefs: SharedPreferences): Boolean {
         // Check if WiFi is turned on at all, as we cannot say if it was configured if it is off
-        val wifiManager = context.wifiManager
+        val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
         return (
             wifiManager.isWifiEnabled &&
                 EduroamController.getEduroamConfig(context) == null &&

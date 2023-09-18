@@ -7,12 +7,15 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.fragment.FragmentForAccessingTumCabe
 import de.tum.`in`.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup
 import de.tum.`in`.tumcampusapp.databinding.FragmentStudyRoomsBinding
-import org.jetbrains.anko.support.v4.runOnUiThread
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class StudyRoomsFragment :
     FragmentForAccessingTumCabe<List<StudyRoomGroup>>(
@@ -20,6 +23,8 @@ class StudyRoomsFragment :
         R.string.study_rooms
     ),
     AdapterView.OnItemSelectedListener {
+
+    private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main
 
     private val sectionsPagerAdapter by lazy { StudyRoomsPagerAdapter(childFragmentManager) }
     private val studyRoomGroupManager by lazy { StudyRoomGroupManager(requireContext()) }
@@ -91,8 +96,11 @@ class StudyRoomsFragment :
     }
 
     override fun onDownloadSuccessful(response: List<StudyRoomGroup>) {
-        studyRoomGroupManager.updateDatabase(response) {
-            runOnUiThread {
+        // launches coroutine on MainThread that will call finally block after finishing
+        lifecycleScope.launch(mainDispatcher) {
+            try {
+                studyRoomGroupManager.updateDatabase(response)
+            } finally {
                 groups = response
                 displayStudyRooms()
             }

@@ -1,5 +1,4 @@
 package de.tum.`in`.tumcampusapp.api.app
-
 import com.google.protobuf.Empty
 import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.api.backend.CampusGrpc

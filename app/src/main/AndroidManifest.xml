@@ -250,12 +250,6 @@
             android:label="@string/person_information">
         </activity>
         <activity
-            android:name=".component.tumui.roomfinder.RoomFinderDetailsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/roomfinder"
-            android:theme="@style/AppTheme.NoDrawerLayout">
-        </activity>
-        <activity
             android:name=".component.ui.search.SearchActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/search">
@@ -349,18 +343,6 @@
             android:label="@string/activity_create_event_title"
             android:parentActivityName=".component.tumui.calendar.CalendarActivity">
         </activity>
-
-        <activity
-            android:name=".component.ui.chat.activity.JoinRoomScanActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/app_name"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.chat.activity.ChatRoomsActivity"
-            android:theme="@style/AppThemeFullscreen">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.component.ui.chat.activity.ChatRoomsActivity" />
-        </activity>
         <activity
             android:name=".component.ui.alarm.AlarmActivity"
             android:configChanges="orientation|screenSize"
@@ -385,12 +367,6 @@
             android:launchMode="singleTop"
             android:parentActivityName=".component.ui.barrierfree.BarrierFreeInfoActivity" />
         <activity
-            android:name=".component.ui.barrierfree.BarrierFreeFacilitiesActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/facilities"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.barrierfree.BarrierFreeInfoActivity" />
-        <activity
             android:name=".component.ui.barrierfree.BarrierFreeMoreInfoActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/more_info"
@@ -403,15 +379,6 @@
             android:launchMode="singleTop"
             android:parentActivityName=".component.tumui.feedback.FeedbackActivity"
             android:theme="@style/AppTheme.NoDrawerLayout" />
-        <activity
-            android:name=".component.ui.chat.AddChatMemberActivity"
-            android:label="Add Participant"
-            android:parentActivityName=".component.ui.chat.activity.ChatActivity"
-            android:theme="@style/AppTheme.NoDrawerLayout">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.chat.activity.ChatActivity" />
-        </activity> <!-- receiver for the mensaWidget -->
         <receiver
             android:name=".component.ui.cafeteria.widget.MensaWidget"
             android:label="@string/mensa_widget"
@@ -528,68 +495,6 @@
                 <action android:name="android.location.PROVIDERS_CHANGED" />
             </intent-filter>
         </receiver>
-
-        <activity
-            android:name=".component.ui.ticket.activity.ShowTicketActivity"
-            android:configChanges="keyboardHidden|screenSize"
-            android:label="@string/your_ticket"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.tufilm.KinoActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
-        </activity>
-        <activity
-            android:name=".component.ui.ticket.activity.BuyTicketActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/order_summary"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.tufilm.KinoActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
-        </activity>
-        <activity
-            android:name=".component.ui.ticket.activity.EventsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/events_tickets"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.overview.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
-        </activity>
-        <activity
-            android:name=".component.ui.ticket.activity.EventDetailsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/events"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.ticket.activity.EventsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.ticket.activity.EventsActivity" />
-        </activity>
-        <activity
-            android:name=".component.ui.ticket.activity.StripePaymentActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/enter_card_info_title"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.ticket.activity.BuyTicketActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.overview.MainActivity" />
-        </activity>
-        <activity
-            android:name=".component.ui.ticket.activity.PaymentConfirmationActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/payment_confirmation"
-            android:launchMode="singleTop"
-            android:parentActivityName=".component.ui.ticket.activity.StripePaymentActivity"
-            android:theme="@style/AppTheme.NoDrawerLayout">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".component.ui.ticket.activity.StripePaymentActivity" />
-        </activity>
 
         <receiver android:name=".component.notifications.receivers.NotificationReceiver" />
         <receiver android:name=".component.notifications.receivers.NotificationAlarmReceiver" />
