@@ -41,7 +41,6 @@ import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
 import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
-import de.tum.in.tumcampusapp.component.ui.updatenote.model.UpdateNote;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Flowable;
@@ -69,11 +68,14 @@ public final class TUMCabeClient {
     static final String API_BARRIER_FREE = "barrierfree/";
     static final String API_BARRIER_FREE_CONTACT = "contacts/";
     static final String API_BARRIER_FREE_MORE_INFO = "moreInformation/";
+    static final String API_ROOM_FINDER = "roomfinder/room/";
+    static final String API_ROOM_FINDER_COORDINATES = "coordinates/";
+    static final String API_ROOM_FINDER_AVAILABLE_MAPS = "availableMaps/";
+    static final String API_ROOM_FINDER_SCHEDULE = "scheduleById/";
     static final String API_FEEDBACK = "feedback/";
     static final String API_CAFETERIAS = "mensen/";
     static final String API_KINOS = "kino/";
     static final String API_NEWS = "news/";
-    static final String API_UPDATE_NOTE = "updatenote/";
     static final String API_EVENTS = "event/";
     static final String API_TICKET = "ticket/";
     static final String API_STUDY_ROOMS = "studyroom/list";
@@ -279,10 +281,6 @@ public final class TUMCabeClient {
     /// This endpoint won't be avaliable in the v2 backend
     public Single<List<TicketStatus>> fetchTicketStats(int event) {
         return service.getTicketStats(event);
-    }
-
-    public UpdateNote getUpdateNote(int version) throws IOException {
-        return service.getUpdateNote(version).execute().body();
     }
 
     public List<Location> fetchOpeningHours(String language) throws IOException {

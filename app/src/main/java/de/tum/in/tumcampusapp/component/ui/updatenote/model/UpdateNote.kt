@@ -1,5 +1,13 @@
 package de.tum.`in`.tumcampusapp.component.ui.updatenote.model
 
-import com.google.gson.annotations.SerializedName
+import de.tum.`in`.tumcampusapp.api.backend.GetUpdateNoteReply
 
-data class UpdateNote(@SerializedName("message") var updateNote: String)
+data class UpdateNote(var updateNote: String) {
+    companion object {
+        fun fromProto(it: GetUpdateNoteReply?): UpdateNote {
+            return UpdateNote(
+                updateNote = it?.message ?: ""
+            )
+        }
+    }
+}
