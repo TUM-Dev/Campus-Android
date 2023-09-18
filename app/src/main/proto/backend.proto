@@ -12,11 +12,11 @@ import "google/protobuf/timestamp.proto";
 
 service Campus {
     rpc GetTopNews (google.protobuf.Empty) returns (GetTopNewsReply) { }
-    rpc GetNewsSources (google.protobuf.Empty) returns (NewsSourceArray) { }
+    rpc GetNewsSources (google.protobuf.Empty) returns (NewsSourceReply) { }
     rpc GetUpdateNote (GetUpdateNoteRequest) returns (GetUpdateNoteReply) { }
 }
 
-message NewsSourceArray {
+message NewsSourceReply {
     repeated NewsSource sources = 1;
 }
 

@@ -57,6 +57,10 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_MEMBERS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_NEWS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_NOTIFICATIONS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_OPENING_HOURS;
+import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER;
+import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_AVAILABLE_MAPS;
+import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_COORDINATES;
+import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_SCHEDULE;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_STUDY_ROOMS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_TICKET;
 
@@ -114,9 +118,6 @@ public interface TUMCabeAPIService {
 
     @GET(API_NEWS + "{lastNewsId}")
     Call<List<News>> getNews(@Path("lastNewsId") String lastNewsId);
-
-    @GET(API_NEWS + "sources")
-    Call<List<NewsSources>> getNewsSources();
 
     @GET(API_NEWS + "alert")
     Observable<NewsAlert> getNewsAlert();

@@ -223,12 +223,6 @@ public final class TUMCabeClient {
                 .body();
     }
 
-    public List<NewsSources> getNewsSources() throws IOException {
-        return service.getNewsSources()
-                .execute()
-                .body();
-    }
-
     public Observable<NewsAlert> getNewsAlert() {
         return service.getNewsAlert();
     }

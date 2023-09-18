@@ -1,6 +1,7 @@
 package de.tum.`in`.tumcampusapp.component.ui.news
 
 import android.content.Context
+import de.tum.`in`.tumcampusapp.api.app.BackendClient
 import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
@@ -71,20 +72,13 @@ class NewsController @Inject constructor(
         // Delete all too old items
         newsDao.cleanUp()
 
+        val client = BackendClient.getInstance()
+        client.getNewsSources(
+            { it.forEach { source -> newsSourcesDao.insert(source) } },
+            { Utils.log(it) }
+        )
+
         val api = TUMCabeClient.getInstance(context)
-
-        // Load all news sources
-        try {
-            val sources = api.newsSources
-            if (sources != null) {
-                newsSourcesDao.insert(sources)
-            }
-        } catch (e: IOException) {
-            Utils.log(e)
-            return
-        }
-
-        // Load all news since the last sync
         try {
             val news = api.getNews(getLastId())
             if (news != null) {
