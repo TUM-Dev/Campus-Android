@@ -30,11 +30,13 @@ data class NewsSources(
 
     companion object {
         fun fromProto(it: NewsSourceReply): List<NewsSources> {
-            return it.sourcesList.map { NewsSources(
-                id = it.source.toInt(),
-                title = it.title,
-                icon = it.icon
-            ) }
+            return it.sourcesList.map {
+                NewsSources(
+                    id = it.source.toInt(),
+                    title = it.title,
+                    icon = it.icon
+                )
+            }
         }
     }
 }
