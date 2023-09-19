@@ -217,12 +217,6 @@ public final class TUMCabeClient {
         return service.getKinos(lastId);
     }
 
-    public List<News> getNews(String lastNewsId) throws IOException {
-        return service.getNews(lastNewsId)
-                .execute()
-                .body();
-    }
-
     public Observable<NewsAlert> getNewsAlert() {
         return service.getNewsAlert();
     }

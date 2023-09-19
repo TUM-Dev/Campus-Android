@@ -1,8 +1,10 @@
 package de.tum.`in`.tumcampusapp.api.app
 import app.tum.campus.api.CampusGrpc
+import app.tum.campus.api.GetNewsRequest
 import app.tum.campus.api.GetNewsSourcesRequest
 import app.tum.campus.api.GetUpdateNoteRequest
 import de.tum.`in`.tumcampusapp.BuildConfig
+import de.tum.`in`.tumcampusapp.component.ui.news.model.News
 import de.tum.`in`.tumcampusapp.component.ui.news.model.NewsSources
 import de.tum.`in`.tumcampusapp.component.ui.updatenote.model.UpdateNote
 import io.grpc.ManagedChannelBuilder
@@ -53,6 +55,19 @@ class BackendClient private constructor() {
         val response = stub.getNewsSources(GetNewsSourcesRequest.getDefaultInstance())
         response.runCatching { get() }.fold(
             onSuccess = { callback(NewsSources.fromProto(it)) },
+            onFailure = { errorCallback(getStatus(it)) }
+        )
+    }
+
+    /**
+     * getNewsSources calls @callback with an UpdateNote currently in the api
+     * On error, errorCallback is called with an error message.
+     */
+    fun getNews(lastNewsID: Int, callback: (List<News>) -> Unit, errorCallback: (message: io.grpc.StatusRuntimeException) -> Unit) {
+        val request = GetNewsRequest.newBuilder().setLastNewsId(lastNewsID).build()
+        val response = stub.getNews(request)
+        response.runCatching { get() }.fold(
+            onSuccess = { callback(News.fromProto(it)) },
             onFailure = { errorCallback(getStatus(it)) }
         )
     }

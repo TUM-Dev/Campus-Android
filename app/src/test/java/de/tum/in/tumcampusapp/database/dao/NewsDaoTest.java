@@ -1,7 +1,5 @@
 package de.tum.in.tumcampusapp.database.dao;
 
-import net.danlew.android.joda.JodaTimeAndroid;
-
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
@@ -67,7 +65,7 @@ public class NewsDaoTest {
 
         // before testing, make sure all items are there
         assertThat(dao.getAll(new Integer[]{123}, 123)).hasSize(4);
-        dao.cleanUp();
+        dao.cleanUpOldNews();
         assertThat(dao.getAll(new Integer[]{123}, 123)).hasSize(0);
     }
 
@@ -85,7 +83,7 @@ public class NewsDaoTest {
 
         // before testing, make sure all items are there
         assertThat(dao.getAll(new Integer[]{123}, 123)).hasSize(4);
-        dao.cleanUp();
+        dao.cleanUpOldNews();
         assertThat(dao.getAll(new Integer[]{123}, 123)).hasSize(4);
     }
 
@@ -103,7 +101,7 @@ public class NewsDaoTest {
 
         // before testing, make sure all items are there
         assertThat(dao.getAll(new Integer[]{123}, 123)).hasSize(4);
-        dao.cleanUp();
+        dao.cleanUpOldNews();
         assertThat(dao.getAll(new Integer[]{123}, 123)).hasSize(2);
     }
 

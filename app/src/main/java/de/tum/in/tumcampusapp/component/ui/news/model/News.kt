@@ -6,10 +6,11 @@ import android.net.Uri
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.RoomWarnings
-import com.google.gson.annotations.SerializedName
+import app.tum.campus.api.GetNewsReply
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoActivity
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.DateTimeUtils
+import de.tum.`in`.tumcampusapp.utils.toDateTime
 import org.joda.time.DateTime
 
 /**
@@ -26,7 +27,6 @@ import org.joda.time.DateTime
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
 data class News(
     @PrimaryKey
-    @SerializedName("news")
     var id: String = "",
     var title: String = "",
     var link: String = "",
@@ -50,6 +50,22 @@ data class News(
             }
         } else {
             if (link.isBlank()) null else Intent(Intent.ACTION_VIEW, Uri.parse(link))
+        }
+    }
+
+    companion object {
+        fun fromProto(it: GetNewsReply): List<News> {
+            return it.newsList.map {
+                News(
+                    id = it.id.toString(),
+                    title = it.title,
+                    link = it.link,
+                    src = it.source,
+                    image = it.imageUrl,
+                    date = it.date.toDateTime(),
+                    created = it.created.toDateTime()
+                )
+            }
         }
     }
 }
