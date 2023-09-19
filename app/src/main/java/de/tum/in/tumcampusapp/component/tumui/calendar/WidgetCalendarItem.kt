@@ -10,45 +10,23 @@ import org.joda.time.DateTime
 /**
  * A class to represent events for the integrated WeekView calendar
  */
-data class WidgetCalendarItem(
-    val id: String,
-    val title: String,
-    val startTime: DateTime,
-    val endTime: DateTime,
-    val location: String
-) : WeekViewDisplayable<WidgetCalendarItem> {
+data class WidgetCalendarItem(val id: String, val title: String, val startTime: DateTime, val endTime: DateTime, val location: String) : WeekViewDisplayable<WidgetCalendarItem> {
 
     var color: Int = 0
 
     var isFirstOnDay: Boolean = false
 
     override fun toWeekViewEvent(): WeekViewEvent<WidgetCalendarItem> {
-        val style = WeekViewEvent.Style.Builder()
-                .setBackgroundColor(color)
-                .build()
+        val style = WeekViewEvent.Style.Builder().setBackgroundColor(color).build()
 
-        return WeekViewEvent.Builder(this)
-                .setId(id.toLong())
-                .setTitle(title)
-                .setStartTime(startTime.toGregorianCalendar())
-                .setEndTime(endTime.toGregorianCalendar())
-                .setLocation(location)
-                .setAllDay(false)
-                .setStyle(style)
-                .build()
+        return WeekViewEvent.Builder(this).setId(id.toLong()).setTitle(title).setStartTime(startTime.toGregorianCalendar()).setEndTime(endTime.toGregorianCalendar()).setLocation(location).setAllDay(false).setStyle(style).build()
     }
 
     companion object {
 
         @JvmStatic
         fun create(calendarItem: CalendarItem): WidgetCalendarItem {
-            return WidgetCalendarItem(
-                    calendarItem.nr,
-                    calendarItem.getFormattedTitle(),
-                    calendarItem.eventStart,
-                    calendarItem.eventEnd,
-                    calendarItem.getEventLocation()
-            )
+            return WidgetCalendarItem(calendarItem.nr, calendarItem.getFormattedTitle(), calendarItem.eventStart, calendarItem.eventEnd, calendarItem.getEventLocation())
         }
 
         @JvmStatic

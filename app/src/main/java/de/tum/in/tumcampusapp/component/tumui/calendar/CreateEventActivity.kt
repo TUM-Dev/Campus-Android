@@ -15,16 +15,20 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.Toast
-import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.exception.RequestLimitReachedException
 import de.tum.`in`.tumcampusapp.component.other.generic.activity.ActivityForAccessingTumOnline
-import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.*
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CalendarItem
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.CreateEventResponse
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.DeleteEventResponse
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.EventSeriesMapping
+import de.tum.`in`.tumcampusapp.component.tumui.calendar.model.RepeatHelper
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.databinding.ActivityCreateEventBinding
 import de.tum.`in`.tumcampusapp.utils.Const
+import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import de.tum.`in`.tumcampusapp.utils.Utils
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
@@ -34,7 +38,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.net.UnknownHostException
 import java.util.Locale
-import kotlin.collections.ArrayList
 
 /**
  * Allows the user to create (and edit) a private event in TUMonline.
@@ -171,11 +174,10 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
 
         binding.eventRepeatsTimes.doAfterTextChanged {
             if (it.toString() != "") {
-                    repeatHelper.times = it.toString().toInt()
-                } else {
-                    repeatHelper.times = 0
-                }
-            
+                repeatHelper.times = it.toString().toInt()
+            } else {
+                repeatHelper.times = 0
+            }
         }
 
         binding.eventLastDateView.setOnClickListener {
@@ -198,11 +200,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
             }
 
             // We’re creating a new event, so we set the start and end time to the next full hour
-            start = initialDate.toDateTimeAtCurrentTime()
-                .plusHours(1)
-                .withMinuteOfHour(0)
-                .withSecondOfMinute(0)
-                .withMillisOfSecond(0)
+            start = initialDate.toDateTimeAtCurrentTime().plusHours(1).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0)
             end = start.plusHours(1)
             repeatHelper.end = end.plusWeeks(1)
         } else {
@@ -220,15 +218,9 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         val eventTitle = extras?.getSerializable(Const.EVENT_TITLE) as String?
         val startTime = extras?.getSerializable(Const.EVENT_START) as DateTime?
 
-        if (eventNr == null || eventTitle == null || startTime == null)
-            return
+        if (eventNr == null || eventTitle == null || startTime == null) return
 
-        val calendarItem = CalendarItem(
-            nr = eventNr,
-            title = eventTitle,
-            dtstart = startTime,
-            url = ""
-        )
+        val calendarItem = CalendarItem(nr = eventNr, title = eventTitle, dtstart = startTime, url = "")
 
         val currentColor = eventColorController.getResourceColor(calendarItem)
         val colorText = getTextColorByColor(currentColor)
@@ -236,14 +228,9 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         binding.colorChangeBtn?.buttonTintList = ColorStateList.valueOf(ContextCompat.getColor(this, currentColor))
 
         binding.colorChangeBtn?.setOnClickListener {
-            val dialog = ChangeEventColorDialog(
-                context = this,
-                calendarItem = calendarItem,
-                onColorChanged = { data ->
-                    updateEventColorInput(data)
-                },
-                fromCreateEventActivity = true
-            )
+            val dialog = ChangeEventColorDialog(context = this, calendarItem = calendarItem, onColorChanged = { data ->
+                updateEventColorInput(data)
+            }, fromCreateEventActivity = true)
             dialog.show()
             dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         }
@@ -268,14 +255,9 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
 
     private fun initEventColorOnClickListener() {
         binding.colorChangeBtn?.setOnClickListener {
-            val dialog = ChangeEventColorDialog(
-                context = this,
-                calendarItem = CalendarItem(),
-                onColorChanged = { data ->
-                    updateEventColorInput(data)
-                },
-                fromCreateEventActivity = true
-            )
+            val dialog = ChangeEventColorDialog(context = this, calendarItem = CalendarItem(), onColorChanged = { data ->
+                updateEventColorInput(data)
+            }, fromCreateEventActivity = true)
             dialog.show()
             dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         }
@@ -319,8 +301,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
             hideKeyboard()
             TimePickerDialog(this, { _, hour, minute ->
                 val eventLength = end.millis - start.millis
-                start = start.withHourOfDay(hour)
-                    .withMinuteOfHour(minute)
+                start = start.withHourOfDay(hour).withMinuteOfHour(minute)
                 end = end.withMillis(start.millis + eventLength)
                 updateTimeViews()
             }, start.hourOfDay, start.minuteOfHour, true).show()
@@ -329,16 +310,14 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         binding.eventEndTimeView.setOnClickListener { _ ->
             hideKeyboard()
             TimePickerDialog(this, { _, hour, minute ->
-                end = end.withHourOfDay(hour)
-                    .withMinuteOfHour(minute)
+                end = end.withHourOfDay(hour).withMinuteOfHour(minute)
                 updateTimeViews()
             }, end.hourOfDay, end.minuteOfHour, true).show()
         }
     }
 
     private fun updateTimeViews() {
-        val format = DateTimeFormat.forPattern("HH:mm")
-            .withLocale(Locale.getDefault())
+        val format = DateTimeFormat.forPattern("HH:mm").withLocale(Locale.getDefault())
         with(binding) {
             eventStartTimeView.text = format.print(start)
             eventEndTimeView.text = format.print(end)
@@ -346,8 +325,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     }
 
     private fun updateDateViews() {
-        val format = DateTimeFormat.forPattern("EEE, dd.MM.yyyy")
-            .withLocale(Locale.getDefault())
+        val format = DateTimeFormat.forPattern("EEE, dd.MM.yyyy").withLocale(Locale.getDefault())
         with(binding) {
             eventStartDateView.text = format.print(start)
             eventEndDateView.text = format.print(end)
@@ -363,31 +341,23 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         // request), we use a short Toast to let the user know that something is happening.
         Toast.makeText(this, R.string.updating_event, Toast.LENGTH_SHORT).show()
 
-        apiClient
-            .deleteEvent(eventId)
-            .enqueue(object : Callback<DeleteEventResponse> {
-                override fun onResponse(
-                    call: Call<DeleteEventResponse>,
-                    response: Response<DeleteEventResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        Utils.log("Event successfully deleted (now creating the edited version)")
-                        TcaDb.getInstance(this@CreateEventActivity).calendarDao().delete(eventId)
-                        eventColorController.removeEventColor(eventId)
-                        createEvent()
-                    } else {
-                        Utils.showToast(this@CreateEventActivity, R.string.error_unknown)
-                    }
+        apiClient.deleteEvent(eventId).enqueue(object : Callback<DeleteEventResponse> {
+            override fun onResponse(call: Call<DeleteEventResponse>, response: Response<DeleteEventResponse>) {
+                if (response.isSuccessful) {
+                    Utils.log("Event successfully deleted (now creating the edited version)")
+                    TcaDb.getInstance(this@CreateEventActivity).calendarDao().delete(eventId)
+                    eventColorController.removeEventColor(eventId)
+                    createEvent()
+                } else {
+                    Utils.showToast(this@CreateEventActivity, R.string.error_unknown)
                 }
+            }
 
-                override fun onFailure(
-                    call: Call<DeleteEventResponse>,
-                    t: Throwable
-                ) {
-                    Utils.log(t)
-                    displayErrorMessage(t)
-                }
-            })
+            override fun onFailure(call: Call<DeleteEventResponse>, t: Throwable) {
+                Utils.log(t)
+                displayErrorMessage(t)
+            }
+        })
     }
 
     private fun displayErrorMessage(throwable: Throwable) {
@@ -548,11 +518,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     }
 
     private fun displayCloseDialog() {
-        ThemedAlertDialogBuilder(this)
-            .setMessage(R.string.discard_changes_question)
-            .setNegativeButton(R.string.discard) { _, _ -> finish() }
-            .setPositiveButton(R.string.keep_editing, null)
-            .show()
+        ThemedAlertDialogBuilder(this).setMessage(R.string.discard_changes_question).setNegativeButton(R.string.discard) { _, _ -> finish() }.setPositiveButton(R.string.keep_editing, null).show()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -564,11 +530,6 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     }
 
     private fun showErrorDialog(message: String) {
-        ThemedAlertDialogBuilder(this)
-            .setTitle(R.string.error)
-            .setMessage(message)
-            .setIcon(R.drawable.ic_error_outline)
-            .setPositiveButton(R.string.ok, null)
-            .show()
+        ThemedAlertDialogBuilder(this).setTitle(R.string.error).setMessage(message).setIcon(R.drawable.ic_error_outline).setPositiveButton(R.string.ok, null).show()
     }
 }
