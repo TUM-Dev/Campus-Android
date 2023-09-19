@@ -91,9 +91,8 @@ class CafeteriaDetailsSectionFragment : Fragment() {
             menusRecyclerView.adapter = adapter
 
             cafeteriaViewModel.cafeteriaMenus.observe(
-                viewLifecycleOwner,
-                Observer<List<CafeteriaMenu>> { adapter.update(it) }
-            )
+                viewLifecycleOwner
+            ) { adapter.update(it) }
             cafeteriaViewModel.fetchCafeteriaMenus(cafeteriaId, menuDate)
         }
     }

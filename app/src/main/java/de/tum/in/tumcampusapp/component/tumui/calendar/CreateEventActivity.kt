@@ -169,14 +169,13 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
             }
         }
 
-        binding.eventRepeatsTimes.textChangedListener {
-            afterTextChanged {
-                if (it.toString() != "") {
+        binding.eventRepeatsTimes.doAfterTextChanged {
+            if (it.toString() != "") {
                     repeatHelper.times = it.toString().toInt()
                 } else {
                     repeatHelper.times = 0
                 }
-            }
+            
         }
 
         binding.eventLastDateView.setOnClickListener {
