@@ -1,7 +1,7 @@
 package de.tum.`in`.tumcampusapp.api.app
-import com.google.protobuf.Empty
 import de.tum.`in`.tumcampusapp.BuildConfig
 import de.tum.`in`.tumcampusapp.api.backend.CampusGrpc
+import de.tum.`in`.tumcampusapp.api.backend.GetNewsSourcesRequest
 import de.tum.`in`.tumcampusapp.api.backend.GetUpdateNoteRequest
 import de.tum.`in`.tumcampusapp.component.ui.news.model.NewsSources
 import de.tum.`in`.tumcampusapp.component.ui.updatenote.model.UpdateNote
@@ -37,7 +37,7 @@ class BackendClient private constructor() {
      * On error, errorCallback is called with an error message.
      */
     fun getUpdateNote(callback: (UpdateNote) -> Unit, errorCallback: (message: io.grpc.StatusRuntimeException) -> Unit) {
-        val request = GetUpdateNoteRequest.newBuilder().setVersion(BuildConfig.VERSION_CODE).build()
+        val request = GetUpdateNoteRequest.newBuilder().setVersion(BuildConfig.VERSION_CODE.toLong()).build()
         val response = stub.getUpdateNote(request)
         response.runCatching { get() }.fold(
             onSuccess = { callback(UpdateNote.fromProto(it)) },
@@ -50,7 +50,7 @@ class BackendClient private constructor() {
      * On error, errorCallback is called with an error message.
      */
     fun getNewsSources(callback: (List<NewsSources>) -> Unit, errorCallback: (message: io.grpc.StatusRuntimeException) -> Unit) {
-        val response = stub.getNewsSources(Empty.getDefaultInstance())
+        val response = stub.getNewsSources(GetNewsSourcesRequest.getDefaultInstance())
         response.runCatching { get() }.fold(
             onSuccess = { callback(NewsSources.fromProto(it)) },
             onFailure = { errorCallback(getStatus(it)) }
