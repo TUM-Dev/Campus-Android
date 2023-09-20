@@ -16,7 +16,6 @@ import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsCard
 import de.tum.`in`.tumcampusapp.component.ui.onboarding.LoginPromptCard
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.ProvidesCard
-import de.tum.`in`.tumcampusapp.component.ui.ticket.EventCardsProvider
 import de.tum.`in`.tumcampusapp.component.ui.transportation.TransportController
 import de.tum.`in`.tumcampusapp.component.ui.updatenote.UpdateNoteCard
 import de.tum.`in`.tumcampusapp.utils.Utils
@@ -25,10 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class CardsRepository @Inject constructor(
-    private val context: Context,
-    private val eventCardsProvider: EventCardsProvider
-) {
+class CardsRepository @Inject constructor(private val context: Context) {
 
     private var cards = MutableLiveData<List<Card>>()
 
@@ -77,7 +73,6 @@ class CardsRepository @Inject constructor(
             add(CafeteriaManager(context))
             add(TransportController(context))
             add(NewsController(context))
-            add(eventCardsProvider)
         }
 
         providers.forEach { provider ->

@@ -347,7 +347,6 @@
     <string name="login_default_sharedpref_shown" translatable="false">LoginCardShown</string>
     <string name="eduroam_fix_default_sharedpref_shown" translatable="false">EduroamFixCardShown</string>
     <string name="top_news_default_sharedpref_shown" translatable="false">TopNewsCardShown</string>
-    <string name="event_default_sharedpref_shown" translatable="false">EventCardShown</string>
     <string name="update_note_default_sharedpref_shown" translatable="false">UpdateNoteCardShown</string>
 
     <!-- first use tutorial -->

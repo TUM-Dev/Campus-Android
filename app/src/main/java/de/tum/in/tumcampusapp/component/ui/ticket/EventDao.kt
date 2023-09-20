@@ -32,9 +32,6 @@ interface EventDao {
     )
     val nextEventWithoutMovie: Event
 
-    @Query("SELECT * FROM events where id = :id")
-    fun getEventById(id: Int): Event?
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(events: List<Event>)
 

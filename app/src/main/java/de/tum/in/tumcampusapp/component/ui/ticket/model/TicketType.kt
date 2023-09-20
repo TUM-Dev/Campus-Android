@@ -4,7 +4,6 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import androidx.room.RoomWarnings
-import com.google.gson.annotations.SerializedName
 
 /**
  * Ticket
@@ -17,12 +16,10 @@ import com.google.gson.annotations.SerializedName
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
 data class TicketType(
     @PrimaryKey
-    @SerializedName("ticket_type")
     var id: Int = 0,
     var price: Int = 0,
     var description: String = "",
     @Ignore
-    @SerializedName("payment")
     var paymentInfo: Payment = Payment(),
     @Ignore
     var contingent: Int = 0,

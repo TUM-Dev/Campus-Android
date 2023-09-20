@@ -28,24 +28,14 @@ import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierFreeContact;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierFreeMoreInfo;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
-import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
-import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.openinghour.model.Location;
 import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup;
-import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
-import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
-import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
-import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
-import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import de.tum.in.tumcampusapp.utils.Const;
 import de.tum.in.tumcampusapp.utils.Utils;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
-import io.reactivex.Single;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -54,7 +44,6 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Body;
 
 /**
  * Proxy class for Retrofit client to our API hosted @app.tum.de
@@ -68,22 +57,14 @@ public final class TUMCabeClient {
     static final String API_BARRIER_FREE = "barrierfree/";
     static final String API_BARRIER_FREE_CONTACT = "contacts/";
     static final String API_BARRIER_FREE_MORE_INFO = "moreInformation/";
-    static final String API_ROOM_FINDER = "roomfinder/room/";
-    static final String API_ROOM_FINDER_COORDINATES = "coordinates/";
-    static final String API_ROOM_FINDER_AVAILABLE_MAPS = "availableMaps/";
-    static final String API_ROOM_FINDER_SCHEDULE = "scheduleById/";
     static final String API_FEEDBACK = "feedback/";
     static final String API_CAFETERIAS = "mensen/";
     static final String API_KINOS = "kino/";
     static final String API_NEWS = "news/";
-    static final String API_EVENTS = "event/";
-    static final String API_TICKET = "ticket/";
     static final String API_STUDY_ROOMS = "studyroom/list";
     private static final String API_HOSTNAME = Const.API_HOSTNAME;
     private static final String API_BASEURL = "/Api/";
-    private static final String API_CHAT = "chat/";
-    static final String API_CHAT_ROOMS = API_CHAT + "rooms/";
-    static final String API_CHAT_MEMBERS = API_CHAT + "members/";
+    static final String API_CHAT_MEMBERS = "chat/members/";
     static final String API_OPENING_HOURS = "openingtimes/";
 
     private static TUMCabeClient instance;
@@ -223,52 +204,6 @@ public final class TUMCabeClient {
 
     public Call<List<StudyRoomGroup>> getStudyRoomGroups() {
         return service.getStudyRoomGroups();
-    }
-
-    // TICKET SALE
-
-    // Getting event information
-    @Deprecated
-    /// This endpoint won't be avaliable in the v2 backend
-    public Observable<List<Event>> fetchEvents() {
-        return service.getEvents();
-    }
-
-    // Getting ticket information
-
-    @Deprecated
-    /// This endpoint won't be avaliable in the v2 backend
-    public Observable<List<Ticket>> fetchTickets(Context context) throws NoPrivateKey {
-        TUMCabeVerification verification = getVerification(context, null);
-        return service.getTickets(verification);
-    }
-
-    @Deprecated
-    /// This endpoint won't be avaliable in the v2 backend
-    public Call<Ticket> fetchTicket(Context context, int ticketID) throws NoPrivateKey {
-        TUMCabeVerification verification = getVerification(context, null);
-        return service.getTicket(ticketID, verification);
-    }
-
-    @Deprecated
-    /// This endpoint won't be avaliable in the v2 backend
-    public Observable<List<TicketType>> fetchTicketTypes(int eventID) {
-        return service.getTicketTypes(eventID);
-    }
-
-    // Ticket reservation
-
-    @Deprecated
-    /// This endpoint won't be avaliable in the v2 backend
-    public void reserveTicket(TUMCabeVerification verification,
-                              Callback<TicketReservationResponse> cb) {
-        service.reserveTicket(verification).enqueue(cb);
-    }
-
-    @Deprecated
-    /// This endpoint won't be avaliable in the v2 backend
-    public Single<List<TicketStatus>> fetchTicketStats(int event) {
-        return service.getTicketStats(event);
     }
 
     public List<Location> fetchOpeningHours(String language) throws IOException {
