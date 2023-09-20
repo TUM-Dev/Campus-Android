@@ -44,7 +44,6 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onRefresh() {
-        viewModel.fetchTicketCount()
     }
 
     companion object {
