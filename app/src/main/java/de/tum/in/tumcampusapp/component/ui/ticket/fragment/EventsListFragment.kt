@@ -12,14 +12,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.generic.adapter.EqualSpacingItemDecoration
-import de.tum.`in`.tumcampusapp.component.ui.chat.model.ChatMember
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsViewModel
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsViewState
 import de.tum.`in`.tumcampusapp.component.ui.ticket.adapter.EventsAdapter
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.EventType
 import de.tum.`in`.tumcampusapp.databinding.FragmentEventsListBinding
 import de.tum.`in`.tumcampusapp.di.ViewModelFactory
-import de.tum.`in`.tumcampusapp.utils.Const.CHAT_MEMBER
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.observeNonNull
 import javax.inject.Inject
@@ -93,8 +91,6 @@ class EventsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onRefresh() {
-        val isLoggedIn = Utils.getSetting(requireContext(), CHAT_MEMBER, ChatMember::class.java) != null
-        viewModel.refreshEventsAndTickets(isLoggedIn)
     }
 
     companion object {
