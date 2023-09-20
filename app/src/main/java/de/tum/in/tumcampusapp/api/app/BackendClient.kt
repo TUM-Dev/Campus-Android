@@ -1,8 +1,8 @@
 package de.tum.`in`.tumcampusapp.api.app
+import app.tum.campus.api.CampusGrpc
+import app.tum.campus.api.GetNewsSourcesRequest
+import app.tum.campus.api.GetUpdateNoteRequest
 import de.tum.`in`.tumcampusapp.BuildConfig
-import de.tum.`in`.tumcampusapp.api.backend.CampusGrpc
-import de.tum.`in`.tumcampusapp.api.backend.GetNewsSourcesRequest
-import de.tum.`in`.tumcampusapp.api.backend.GetUpdateNoteRequest
 import de.tum.`in`.tumcampusapp.component.ui.news.model.NewsSources
 import de.tum.`in`.tumcampusapp.component.ui.updatenote.model.UpdateNote
 import io.grpc.ManagedChannelBuilder

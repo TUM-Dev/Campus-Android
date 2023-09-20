@@ -3,8 +3,8 @@ package de.tum.`in`.tumcampusapp.component.ui.news.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.RoomWarnings
+import app.tum.campus.api.GetNewsSourcesReply
 import com.google.gson.annotations.SerializedName
-import de.tum.`in`.tumcampusapp.api.backend.GetNewsSourcesReply
 
 /**
  * This class contains information about the source of a [News] item.
