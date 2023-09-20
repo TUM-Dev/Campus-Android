@@ -114,7 +114,7 @@ dependencies {
 
     // Play services
     implementation 'com.google.android.gms:play-services-base:18.0.1'
-    implementation 'com.google.android.gms:play-services-location:19.0.1'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
 
     // Used for in-app reviews
     implementation "com.google.android.play:core:$play_core_services"
