@@ -19,7 +19,15 @@ data class WidgetCalendarItem(val id: String, val title: String, val startTime: 
     override fun toWeekViewEvent(): WeekViewEvent<WidgetCalendarItem> {
         val style = WeekViewEvent.Style.Builder().setBackgroundColor(color).build()
 
-        return WeekViewEvent.Builder(this).setId(id.toLong()).setTitle(title).setStartTime(startTime.toGregorianCalendar()).setEndTime(endTime.toGregorianCalendar()).setLocation(location).setAllDay(false).setStyle(style).build()
+        return WeekViewEvent.Builder(this)
+            .setId(id.toLong())
+            .setTitle(title)
+            .setStartTime(startTime.toGregorianCalendar())
+            .setEndTime(endTime.toGregorianCalendar())
+            .setLocation(location)
+            .setAllDay(false)
+            .setStyle(style)
+            .build()
     }
 
     companion object {
