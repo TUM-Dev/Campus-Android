@@ -6,7 +6,6 @@ import de.tum.in.tumcampusapp.api.app.model.DeviceRegister;
 import de.tum.in.tumcampusapp.api.app.model.DeviceUploadFcmToken;
 import de.tum.in.tumcampusapp.api.app.model.ObfuscatedIdsUpload;
 import de.tum.in.tumcampusapp.api.app.model.TUMCabeStatus;
-import de.tum.in.tumcampusapp.api.app.model.TUMCabeVerification;
 import de.tum.in.tumcampusapp.api.app.model.UploadStatus;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.Feedback;
 import de.tum.in.tumcampusapp.component.tumui.feedback.model.FeedbackResult;
@@ -19,15 +18,9 @@ import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
 import de.tum.in.tumcampusapp.component.ui.openinghour.model.Location;
 import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup;
-import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
-import de.tum.in.tumcampusapp.component.ui.ticket.model.Ticket;
-import de.tum.in.tumcampusapp.component.ui.ticket.model.TicketType;
-import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketReservationResponse;
-import de.tum.in.tumcampusapp.component.ui.ticket.payload.TicketStatus;
 import de.tum.in.tumcampusapp.component.ui.tufilm.model.Kino;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
-import io.reactivex.Single;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -43,7 +36,6 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE_MORE
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CAFETERIAS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CHAT_MEMBERS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_DEVICE;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_EVENTS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_FEEDBACK;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_KINOS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_LOCATIONS;
@@ -52,7 +44,6 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_NEWS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_NOTIFICATIONS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_OPENING_HOURS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_STUDY_ROOMS;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_TICKET;
 
 public interface TUMCabeAPIService {
     @POST(API_CHAT_MEMBERS)
@@ -112,31 +103,6 @@ public interface TUMCabeAPIService {
     @GET(API_STUDY_ROOMS)
     Call<List<StudyRoomGroup>> getStudyRoomGroups();
 
-    // TICKET SALE
-
-    // Getting Event information
-
-    @GET(API_EVENTS + "list")
-    @Deprecated
-        /// This endpoint won't be avaliable in the v2 backend
-    Observable<List<Event>> getEvents();
-
-
-    @POST(API_EVENTS + API_TICKET + "{ticketID}")
-    @Deprecated
-        /// This endpoint won't be avaliable in the v2 backend
-    Call<Ticket> getTicket(@Path("ticketID") int ticketID, @Body TUMCabeVerification verification);
-
-    // Ticket reservation
-    @POST(API_EVENTS + API_TICKET + "reserve/multiple")
-    @Deprecated
-    /// This endpoint won't be avaliable in the v2 backend
-    Call<TicketReservationResponse> reserveTicket(@Body TUMCabeVerification verification);
-
-    @GET(API_EVENTS + API_TICKET + "status/{event}")
-    @Deprecated
-        /// This endpoint won't be avaliable in the v2 backend
-    Single<List<TicketStatus>> getTicketStats(@Path("event") int event);
 
     // Opening Hours
     @GET(API_OPENING_HOURS + "{language}")
