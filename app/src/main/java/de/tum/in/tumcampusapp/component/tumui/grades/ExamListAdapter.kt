@@ -182,7 +182,7 @@ class ExamListAdapter(context: Context, results: List<Exam>, gradesFragment: Gra
     private fun initCheckBoxUsedInAverage(exam: Exam, holder: ViewHolder) {
         holder.checkBoxUseGradeForAverage.isChecked = exam.gradeUsedInAverage
         adaptUIToCheckboxStatus(holder, exam)
-        holder.checkBoxUseGradeForAverage.setOnClickListener() {
+        holder.checkBoxUseGradeForAverage.setOnClickListener {
             exam.gradeUsedInAverage = holder.checkBoxUseGradeForAverage.isChecked
             adaptUIToCheckboxStatus(holder, exam)
             localGradesFragment.storeExamListInSharedPreferences()

@@ -10,24 +10,16 @@ import org.joda.time.DateTime
 /**
  * A class to represent events for the integrated WeekView calendar
  */
-data class WidgetCalendarItem(
-    val id: String,
-    val title: String,
-    val startTime: DateTime,
-    val endTime: DateTime,
-    val location: String
-) : WeekViewDisplayable<WidgetCalendarItem> {
+data class WidgetCalendarItem(val id: String, val title: String, val startTime: DateTime, val endTime: DateTime, val location: String) : WeekViewDisplayable<WidgetCalendarItem> {
 
     var color: Int = 0
 
     var isFirstOnDay: Boolean = false
 
     override fun toWeekViewEvent(): WeekViewEvent<WidgetCalendarItem> {
-        val style = WeekViewEvent.Style.Builder()
-            .setBackgroundColor(color)
-            .build()
+        val style = WeekViewEvent.Style.Builder().setBackgroundColor(color).build()
 
-        return WeekViewEvent.Builder<WidgetCalendarItem>(this)
+        return WeekViewEvent.Builder(this)
             .setId(id.toLong())
             .setTitle(title)
             .setStartTime(startTime.toGregorianCalendar())

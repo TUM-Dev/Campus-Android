@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
@@ -32,29 +33,21 @@ public class OpeningHoursDetailFragment extends Fragment {
     static final String ARG_ITEM_ID = "item_id";
     static final String ARG_ITEM_CONTENT = "item_content";
     static final String TWO_PANE = "two_pane";
-    private static final Pattern COMPILE = Pattern.compile("\\\\n");
 
     private int mItemId;
     private String mItemContent;
-
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public OpeningHoursDetailFragment() {
-        // NOP
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        assert getArguments() != null;
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             mItemId = getArguments().getInt(ARG_ITEM_ID);
             mItemContent = getArguments().getString(ARG_ITEM_CONTENT);
         }
         if (getArguments().containsKey(TWO_PANE) && !getArguments().getBoolean(TWO_PANE)) {
-            getActivity().setTitle(mItemContent);
+            requireActivity().setTitle(mItemContent);
         }
     }
 
@@ -63,8 +56,7 @@ public class OpeningHoursDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_item_detail, container, false);
 
         // click on category in list
-        LocationDao dao = TcaDb.Companion.getInstance(getActivity())
-                                         .locationDao();
+        LocationDao dao = TcaDb.Companion.getInstance(requireActivity()).locationDao();
         String[] categories = {"library", "info", "cafeteria_gar", "cafeteria_grh", "cafeteria", "cafeteria_pas", "cafeteria_wst"};
         List<Location> locations = dao.getAllOfCategory(categories[mItemId]);
 

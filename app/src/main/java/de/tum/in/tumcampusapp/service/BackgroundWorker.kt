@@ -3,7 +3,6 @@ package de.tum.`in`.tumcampusapp.service
 import android.content.Context
 import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
-import androidx.work.ListenableWorker
 import androidx.work.ListenableWorker.Result.success
 import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
@@ -20,7 +19,7 @@ class BackgroundWorker(
     workerParams: WorkerParameters
 ) : Worker(context, workerParams) {
 
-    override fun doWork(): ListenableWorker.Result {
+    override fun doWork(): Result {
         val downloadWorkRequest = DownloadWorker.getWorkRequest()
         WorkManager.getInstance(applicationContext)
             .beginUniqueWork(UNIQUE_DOWNLOAD, ExistingWorkPolicy.KEEP, downloadWorkRequest)

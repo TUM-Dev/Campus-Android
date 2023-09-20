@@ -112,9 +112,7 @@ data class CalendarItem(
     }
 
     fun isSameEventButForLocation(other: CalendarItem): Boolean {
-        return title == other.title &&
-            dtstart == other.dtstart &&
-            dtend == other.dtend
+        return title == other.title && dtstart == other.dtstart && dtend == other.dtend
     }
 
     override fun toWeekViewEvent(): WeekViewEvent<CalendarItem> {
@@ -132,7 +130,7 @@ data class CalendarItem(
             .setBorderColor(color)
             .build()
 
-        return WeekViewEvent.Builder<CalendarItem>(this)
+        return WeekViewEvent.Builder(this)
             .setId(nr.toLong())
             .setTitle(title)
             .setStartTime(eventStart.toGregorianCalendar())

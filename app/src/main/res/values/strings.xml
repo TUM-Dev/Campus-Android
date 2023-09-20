@@ -216,6 +216,7 @@
     <!-- News -->
     <string name="no_link_existing">No link existing.</string>
     <string name="info_title">New information:</string>
+    <string name="open_options_popup_description">Open options popup</string>
 
     <!-- Navigation drawer -->
     <string name="drawer_open">Open</string>
@@ -821,13 +822,16 @@ Signature: %5$s</string>
     <string name="released">Released</string>
 
     <string name="including_format_string">including %s</string>
-    <string name="new_items_format_string">%d new items</string>
+    <plurals name="new_items_format_string">
+        <item quantity="one">1 new item</item>
+        <item quantity="other">%d new items</item>
+    </plurals>
     <string name="chat_message_send_error">Message couldn’t be sent</string>
     <string name="chat_message_try_again">The message couldn’t be send. Try again?</string>
     <string name="today">Today</string>
     <string name="ticket_sale_beta">The ticket sale is still in beta and might have some side effects and errors. In case you experience any troubles, please contact us at app@tum.de. You can still buy tickets at the box office just before the event, even if there are no more tickets here in the app.</string>
     <string name="next_lecture_hide">Hide</string>
-    <string name="next_lecture_show_more">Show %d more …</string>
+    <string name="next_lecture_show_more" tools:ignore="PluralsCandidate">Show %d more …</string>
     <string name="show_in_calendar">Show in Calendar</string>
 
     <string name="tickets_available_here">Tickets available here!</string>
@@ -835,7 +839,7 @@ Signature: %5$s</string>
     <string name="update_note_version">Version %s</string>
     <string name="action_cant_be_performed">Action can’t be performed</string>
     <string name="not_redeemed_yet">Not redeemed yet</string>
-    <string name="partially_redeemed">%1$d of %2$d redeemed (%3$s)</string>
+    <string name="partially_redeemed" tools:ignore="PluralsCandidate">%1$d of %2$d redeemed (%3$s)</string>
     <string name="redeemed_at">Redeemed at %s</string>
     <string name="no_tickets_remaining">No tickets remaining</string>
     <string name="no_tickets_remaining_message">Unfortunately there are no more online tickets available for this event.\nFor many events you can still purchase tickets on site.</string>

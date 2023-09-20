@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.squareup.picasso.Picasso
@@ -69,7 +68,7 @@ class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         showEventDetails(event)
-        viewModel.aggregatedTicketStatus.observe(viewLifecycleOwner, Observer { showTicketCount(it) })
+        viewModel.aggregatedTicketStatus.observe(viewLifecycleOwner) { showTicketCount(it) }
     }
 
     override fun onRefresh() {

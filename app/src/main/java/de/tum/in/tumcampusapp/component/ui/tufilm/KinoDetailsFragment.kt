@@ -13,7 +13,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
@@ -59,9 +58,9 @@ class KinoDetailsFragment : Fragment() {
         val factory = ViewModelFactory(viewModelProvider)
         kinoViewModel = ViewModelProvider(this, factory).get(KinoDetailsViewModel::class.java)
 
-        kinoViewModel.kino.observe(this, Observer<Kino> { showMovieDetails(it) })
-        kinoViewModel.event.observe(this, Observer<Event> { showEventTicketDetails(it) })
-        kinoViewModel.aggregatedTicketStatus.observe(this, Observer { showTicketCount(it) })
+        kinoViewModel.kino.observe(this) { showMovieDetails(it) }
+        kinoViewModel.event.observe(this) { showEventTicketDetails(it) }
+        kinoViewModel.aggregatedTicketStatus.observe(this) { showTicketCount(it) }
     }
 
     override fun onCreateView(

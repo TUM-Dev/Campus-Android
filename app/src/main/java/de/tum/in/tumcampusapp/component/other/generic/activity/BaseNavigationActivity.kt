@@ -35,11 +35,11 @@ class BaseNavigationActivity :
     }
 
     private val drawerLayout: DrawerLayout by lazy {
-        findViewById<DrawerLayout>(R.id.drawer_layout)
+        findViewById(R.id.drawer_layout)
     }
 
     private val navigationView: NavigationView by lazy {
-        findViewById<NavigationView>(R.id.left_drawer)
+        findViewById(R.id.left_drawer)
     }
 
     private val drawerMenuHelper: DrawerMenuHelper by lazy {

@@ -26,7 +26,7 @@ class DownloadWorker(
 ) : Worker(context, workerParams) {
 
     @Inject
-    lateinit var downloadActions: DownloadWorker.WorkerActions
+    lateinit var downloadActions: WorkerActions
 
     init {
         Utils.log("DownloadService service has started")

@@ -42,7 +42,7 @@ object DateTimeUtils {
         val now = DateTime.now().millis
 
         // Catch future dates: current clock might be running behind
-        if (timeInMillis < now || timeInMillis <= 0) return DateTimeUtils.formatTimeOrDay(time, context)
+        if (timeInMillis < now || timeInMillis <= 0) return formatTimeOrDay(time, context)
 
         val diff = timeInMillis - now
         return when {
@@ -65,8 +65,8 @@ object DateTimeUtils {
      */
     @Deprecated("Use the version with a proper DateTime object, there's really no reason to pass datetimes as strings")
     fun formatTimeOrDayFromISO(datetime: String, context: Context): String {
-        val d = DateTimeUtils.parseIsoDate(datetime) ?: return ""
-        return DateTimeUtils.formatTimeOrDay(d, context)
+        val d = parseIsoDate(datetime) ?: return ""
+        return formatTimeOrDay(d, context)
     }
 
     /**

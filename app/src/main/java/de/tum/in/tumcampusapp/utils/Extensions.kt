@@ -111,13 +111,13 @@ fun DrawerLayout.closeDrawers(callback: () -> Unit) {
 }
 
 fun <T> LiveData<T>.observe(owner: LifecycleOwner, callback: (T?) -> Unit) {
-    observe(owner, Observer<T> { value -> callback(value) })
+    observe(owner, Observer { value -> callback(value) })
 }
 
 fun <T> LiveData<T>.observeNonNull(owner: LifecycleOwner, callback: (T) -> Unit) {
     observe(
         owner,
-        Observer<T> { value ->
+        Observer { value ->
             value?.let {
                 callback(it)
             }
