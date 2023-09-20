@@ -108,10 +108,6 @@ class ShowTicketActivity : BaseActivity(R.layout.activity_show_ticket) {
     }
 
     private fun loadTicketData(eventId: Int) {
-        val ticketTypes = ticketsLocalRepo.getTicketTypesByEventId(eventId)
-        if (ticketTypes.isEmpty()) {
-            ticketsLocalRepo.addTicketTypes(ticketsRemoteRepo.fetchTicketTypesForEvent(eventId).blockingSingle())
-        }
         ticketInfoList = ticketsLocalRepo.getTicketsByEventId(eventId)
         val eventForId = eventsLocalRepo.getEventById(eventId)
         if (eventForId == null) {

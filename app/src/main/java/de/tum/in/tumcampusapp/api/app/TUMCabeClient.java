@@ -68,10 +68,6 @@ public final class TUMCabeClient {
     static final String API_BARRIER_FREE = "barrierfree/";
     static final String API_BARRIER_FREE_CONTACT = "contacts/";
     static final String API_BARRIER_FREE_MORE_INFO = "moreInformation/";
-    static final String API_ROOM_FINDER = "roomfinder/room/";
-    static final String API_ROOM_FINDER_COORDINATES = "coordinates/";
-    static final String API_ROOM_FINDER_AVAILABLE_MAPS = "availableMaps/";
-    static final String API_ROOM_FINDER_SCHEDULE = "scheduleById/";
     static final String API_FEEDBACK = "feedback/";
     static final String API_CAFETERIAS = "mensen/";
     static final String API_KINOS = "kino/";
@@ -82,7 +78,6 @@ public final class TUMCabeClient {
     private static final String API_HOSTNAME = Const.API_HOSTNAME;
     private static final String API_BASEURL = "/Api/";
     private static final String API_CHAT = "chat/";
-    static final String API_CHAT_ROOMS = API_CHAT + "rooms/";
     static final String API_CHAT_MEMBERS = API_CHAT + "members/";
     static final String API_OPENING_HOURS = "openingtimes/";
 
@@ -231,12 +226,6 @@ public final class TUMCabeClient {
     public Call<Ticket> fetchTicket(Context context, int ticketID) throws NoPrivateKey {
         TUMCabeVerification verification = getVerification(context, null);
         return service.getTicket(ticketID, verification);
-    }
-
-    @Deprecated
-    /// This endpoint won't be avaliable in the v2 backend
-    public Observable<List<TicketType>> fetchTicketTypes(int eventID) {
-        return service.getTicketTypes(eventID);
     }
 
     // Ticket reservation

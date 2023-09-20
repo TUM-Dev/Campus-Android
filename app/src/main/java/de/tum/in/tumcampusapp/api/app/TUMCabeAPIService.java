@@ -127,11 +127,6 @@ public interface TUMCabeAPIService {
         /// This endpoint won't be avaliable in the v2 backend
     Call<Ticket> getTicket(@Path("ticketID") int ticketID, @Body TUMCabeVerification verification);
 
-    @GET(API_EVENTS + API_TICKET + "type/{eventID}")
-    @Deprecated
-        /// This endpoint won't be avaliable in the v2 backend
-    Observable<List<TicketType>> getTicketTypes(@Path("eventID") int eventID);
-
     // Ticket reservation
     @POST(API_EVENTS + API_TICKET + "reserve/multiple")
     @Deprecated

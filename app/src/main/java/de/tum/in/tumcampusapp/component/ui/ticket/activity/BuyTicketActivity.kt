@@ -21,9 +21,7 @@ import de.tum.`in`.tumcampusapp.databinding.ActivityBuyTicketBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
 import de.tum.`in`.tumcampusapp.utils.Utils
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -80,24 +78,6 @@ class BuyTicketActivity : BaseActivity(R.layout.activity_buy_ticket), TicketAmou
         eventId = intent.getIntExtra(Const.KEY_EVENT_ID, 0)
 
         binding.totalPriceTextView.text = Utils.formatPrice(0)
-
-        // Get ticket type information from API
-        val disposable = ticketsRemoteRepo.fetchTicketTypesForEvent(eventId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnError { Utils.log(it) }
-            .subscribe({ handleTicketTypesDownloadSuccess(it) }, {
-                Utils.showToast(this@BuyTicketActivity, R.string.error_something_wrong)
-                finish()
-            })
-        compositeDisposable.add(disposable)
-    }
-
-    private fun handleTicketTypesDownloadSuccess(ticketTypes: List<TicketType>) {
-        this.ticketTypes = ticketTypes
-
-        currentTicketAmounts = IntArray(ticketTypes.size) { 0 }
-        setupUi()
     }
 
     private fun setupUi() {

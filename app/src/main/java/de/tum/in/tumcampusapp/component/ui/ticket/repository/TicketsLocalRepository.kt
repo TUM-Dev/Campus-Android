@@ -3,7 +3,6 @@ package de.tum.`in`.tumcampusapp.component.ui.ticket.repository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Ticket
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.TicketInfo
-import de.tum.`in`.tumcampusapp.component.ui.ticket.model.TicketType
 import de.tum.`in`.tumcampusapp.database.TcaDb
 import javax.inject.Inject
 
@@ -19,12 +18,6 @@ class TicketsLocalRepository @Inject constructor(
     }
 
     fun getTicketsByEventId(eventId: Int): List<TicketInfo> = database.ticketDao().getByEventId(eventId)
-
-    fun getTicketTypesByEventId(eventId: Int): List<TicketType> = database.ticketTypeDao().getByEventId(eventId)
-
-    fun addTicketTypes(ticketTypes: List<TicketType>) {
-        database.ticketTypeDao().insert(ticketTypes)
-    }
 
     fun getTicketCount(event: Event): Int {
         return database.ticketDao().getTicketCountForEvent(event.id)
