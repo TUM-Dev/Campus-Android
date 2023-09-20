@@ -13,7 +13,7 @@ import de.tum.in.tumcampusapp.component.ui.news.model.News;
 public interface NewsDao {
 
     @Query("DELETE FROM news WHERE date < date('now','-3 month')")
-    void cleanUp();
+    void cleanUpOldNews();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(News news);

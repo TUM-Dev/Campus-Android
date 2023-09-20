@@ -2,7 +2,6 @@ package de.tum.`in`.tumcampusapp.component.ui.news
 
 import android.content.Context
 import de.tum.`in`.tumcampusapp.api.app.BackendClient
-import de.tum.`in`.tumcampusapp.api.app.TUMCabeClient
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
 import de.tum.`in`.tumcampusapp.component.notifications.NotificationScheduler
 import de.tum.`in`.tumcampusapp.component.notifications.ProvidesNotifications
@@ -15,7 +14,6 @@ import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Utils
 import de.tum.`in`.tumcampusapp.utils.sync.SyncManager
 import org.joda.time.DateTime
-import java.io.IOException
 import javax.inject.Inject
 
 private const val TIME_TO_SYNC = 86400
@@ -69,26 +67,20 @@ class NewsController @Inject constructor(
         val latestNews = newsDao.last
         val latestNewsDate = latestNews?.date ?: DateTime.now()
 
-        // Delete all too old items
-        newsDao.cleanUp()
-
         val client = BackendClient.getInstance()
         client.getNewsSources(
             { it.forEach { source -> newsSourcesDao.insert(source) } },
             { Utils.log(it) }
         )
-
-        val api = TUMCabeClient.getInstance(context)
-        try {
-            val news = api.getNews(getLastId())
-            if (news != null) {
-                newsDao.insert(news)
-            }
-            showNewsNotification(news, latestNewsDate)
-        } catch (e: IOException) {
-            Utils.log(e)
-            return
-        }
+        client.getNews(
+            if (force === CacheControl.USE_CACHE) getLastIdOrZero() else 0,
+            {
+                newsDao.cleanUpOldNews()
+                it.forEach { news -> newsDao.insert(news) }
+                showNewsNotification(it, latestNewsDate)
+            },
+            { Utils.log(it) }
+        )
 
         // Finish sync
         sync.replaceIntoDb(this)
@@ -108,10 +100,8 @@ class NewsController @Inject constructor(
         val provider = NewsNotificationProvider(context, newNews)
         val notification = provider.buildNotification()
 
-        if (notification != null) {
-            val scheduler = NotificationScheduler(context)
-            scheduler.schedule(notification)
-        }
+        val scheduler = NotificationScheduler(context)
+        scheduler.schedule(notification)
     }
 
     /**
@@ -129,8 +119,8 @@ class NewsController @Inject constructor(
         return newsDao.getAll(ids.toTypedArray(), selectedNewspread)
     }
 
-    private fun getLastId(): String {
-        return newsDao.last?.id ?: ""
+    private fun getLastIdOrZero(): Int {
+        return newsDao.last?.id?.toInt() ?: 0
     }
 
     fun setDismissed(id: String, d: Int) {

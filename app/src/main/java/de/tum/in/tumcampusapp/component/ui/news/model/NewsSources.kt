@@ -3,8 +3,8 @@ package de.tum.`in`.tumcampusapp.component.ui.news.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.RoomWarnings
+import app.tum.campus.api.GetNewsSourcesReply
 import com.google.gson.annotations.SerializedName
-import de.tum.`in`.tumcampusapp.api.backend.NewsSourceReply
 
 /**
  * This class contains information about the source of a [News] item.
@@ -29,7 +29,7 @@ data class NewsSources(
         get() = setOf(7, 8, 9, 13).contains(id)
 
     companion object {
-        fun fromProto(it: NewsSourceReply): List<NewsSources> {
+        fun fromProto(it: GetNewsSourcesReply): List<NewsSources> {
             return it.sourcesList.map {
                 NewsSources(
                     id = it.source.toInt(),
