@@ -104,27 +104,7 @@ class ShowTicketActivity : BaseActivity(R.layout.activity_show_ticket) {
                 R.color.tum_A100,
                 R.color.tum_A200
             )
-            swipeRefreshLayout.setOnRefreshListener { loadRedemptionStatus() }
         }
-    }
-
-    private fun loadRedemptionStatus() {
-        val disposable = ticketsRemoteRepo
-            .fetchTickets()
-            .subscribe({ handleTicketRefreshSuccess(it) }, { handleTicketRefreshFailure() })
-        compositeDisposable.add(disposable)
-    }
-
-    private fun handleTicketRefreshSuccess(tickets: List<Ticket>) {
-        ticketsLocalRepo.insert(*tickets.toTypedArray())
-        ticketInfoList = ticketsLocalRepo.getTicketsByEventId(event.id)
-        setViewData()
-        binding.swipeRefreshLayout.isRefreshing = false
-    }
-
-    private fun handleTicketRefreshFailure() {
-        Utils.showToast(this, R.string.error_something_wrong)
-        binding.swipeRefreshLayout.isRefreshing = false
     }
 
     private fun loadTicketData(eventId: Int) {

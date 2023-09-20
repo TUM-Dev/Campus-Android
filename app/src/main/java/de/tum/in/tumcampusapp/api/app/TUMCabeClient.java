@@ -226,23 +226,6 @@ public final class TUMCabeClient {
     }
 
     // TICKET SALE
-
-    // Getting event information
-    @Deprecated
-    /// This endpoint won't be avaliable in the v2 backend
-    public Observable<List<Event>> fetchEvents() {
-        return service.getEvents();
-    }
-
-    // Getting ticket information
-
-    @Deprecated
-    /// This endpoint won't be avaliable in the v2 backend
-    public Observable<List<Ticket>> fetchTickets(Context context) throws NoPrivateKey {
-        TUMCabeVerification verification = getVerification(context, null);
-        return service.getTickets(verification);
-    }
-
     @Deprecated
     /// This endpoint won't be avaliable in the v2 backend
     public Call<Ticket> fetchTicket(Context context, int ticketID) throws NoPrivateKey {

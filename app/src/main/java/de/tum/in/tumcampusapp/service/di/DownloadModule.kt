@@ -57,7 +57,7 @@ object DownloadModule {
     @Provides
     fun provideEventsDownloadAction(
         remoteRepository: EventsRemoteRepository
-    ): EventsDownloadAction = EventsDownloadAction(remoteRepository)
+    ): EventsDownloadAction = EventsDownloadAction()
 
     @JvmStatic
     @Provides

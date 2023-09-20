@@ -121,11 +121,6 @@ public interface TUMCabeAPIService {
         /// This endpoint won't be avaliable in the v2 backend
     Observable<List<Event>> getEvents();
 
-    // Getting Ticket information
-    @POST(API_EVENTS + API_TICKET + "my")
-    @Deprecated
-    /// This endpoint won't be avaliable in the v2 backend
-    Observable<List<Ticket>> getTickets(@Body TUMCabeVerification verification);
 
     @POST(API_EVENTS + API_TICKET + "{ticketID}")
     @Deprecated
