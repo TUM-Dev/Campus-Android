@@ -5,33 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
-import de.tum.`in`.tumcampusapp.databinding.FragmentEventDetailsBinding
-import de.tum.`in`.tumcampusapp.di.ViewModelFactory
 import de.tum.`in`.tumcampusapp.utils.Const
-import javax.inject.Inject
-import javax.inject.Provider
 
 /**
  * Fragment for displaying information about an [Event]. Manages content that's shown in the
  * PagerAdapter.
  */
 class EventDetailsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
-
-    private val viewModel: EventDetailsViewModel by lazy {
-        val factory = ViewModelFactory(viewModelProviders)
-        ViewModelProvider(this, factory).get(EventDetailsViewModel::class.java)
-    }
-
-    @Inject
-    lateinit var viewModelProviders: Provider<EventDetailsViewModel>
-
-    private val binding by viewBinding(FragmentEventDetailsBinding::bind)
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
