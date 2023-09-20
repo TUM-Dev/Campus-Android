@@ -19,6 +19,7 @@ import com.squareup.picasso.RequestCreator
 import de.tum.`in`.tumcampusapp.component.other.generic.drawer.NavItem
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import org.joda.time.DateTime
 
 /**
  * Executes the block and return null in case of an [Exception].
@@ -180,3 +181,8 @@ inline fun <reified T : ViewGroup.LayoutParams> View.layoutParams(block: T.() ->
 
 fun View.dpToPx(dp: Float): Int = context.dpToPx(dp)
 fun Context.dpToPx(dp: Float): Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics).toInt()
+
+fun com.google.protobuf.Timestamp.toDateTime(): DateTime {
+    val timeMilis = this.seconds * 1000L + this.nanos / 1000000L
+    return DateTime(timeMilis)
+}

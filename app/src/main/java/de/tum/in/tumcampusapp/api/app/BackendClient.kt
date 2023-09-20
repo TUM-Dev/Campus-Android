@@ -1,8 +1,8 @@
 package de.tum.`in`.tumcampusapp.api.app
+import app.tum.campus.api.CampusGrpc
+import app.tum.campus.api.GetNewsSourcesRequest
+import app.tum.campus.api.GetUpdateNoteRequest
 import de.tum.`in`.tumcampusapp.BuildConfig
-import de.tum.`in`.tumcampusapp.api.backend.CampusGrpc
-import de.tum.`in`.tumcampusapp.api.backend.GetNewsSourcesRequest
-import de.tum.`in`.tumcampusapp.api.backend.GetUpdateNoteRequest
 import de.tum.`in`.tumcampusapp.component.ui.news.model.NewsSources
 import de.tum.`in`.tumcampusapp.component.ui.updatenote.model.UpdateNote
 import io.grpc.ManagedChannelBuilder
@@ -13,7 +13,7 @@ class BackendClient private constructor() {
     private var stub: CampusGrpc.CampusFutureStub
 
     init {
-        val managedChannel = ManagedChannelBuilder.forAddress("api-grpc.tum.app", 443).build()
+        val managedChannel = ManagedChannelBuilder.forAddress("api.tum.app", 443).build()
         stub = CampusGrpc.newFutureStub(managedChannel).withInterceptors(MetadataUtils.newAttachHeadersInterceptor(getHeaderMetaData()))
     }
 
