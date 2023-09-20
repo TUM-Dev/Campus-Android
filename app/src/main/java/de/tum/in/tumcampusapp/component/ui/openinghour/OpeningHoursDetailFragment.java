@@ -33,7 +33,6 @@ public class OpeningHoursDetailFragment extends Fragment {
     static final String ARG_ITEM_ID = "item_id";
     static final String ARG_ITEM_CONTENT = "item_content";
     static final String TWO_PANE = "two_pane";
-  //  private static final Pattern COMPILE = Pattern.compile("\\\\n");
 
     private int mItemId;
     private String mItemContent;
