@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.other.navigation.NavDestination
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
@@ -27,18 +26,6 @@ class EventCard(context: Context) : Card(CardManager.CardTypes.EVENT, context) {
     // TODO(thellmund) Inject this
     private val eventCardsProvider = EventCardsProvider()
     private val localRepo = TicketsLocalRepository(TcaDb.getInstance(context))
-
-    override fun updateViewHolder(viewHolder: RecyclerView.ViewHolder) {
-        super.updateViewHolder(viewHolder)
-
-        val eventViewHolder = viewHolder as? EventsAdapter.EventViewHolder ?: return
-
-        val event = this.event
-        if (event != null) {
-            val ticketCount = event.let { localRepo.getTicketCount(it) }
-            eventViewHolder.bind(event, ticketCount)
-        }
-    }
 
     override fun getNavigationDestination(): NavDestination {
         val event = this.event
