@@ -1,25 +1,13 @@
 package de.tum.`in`.tumcampusapp.component.ui.ticket.repository
 
-import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Ticket
-import de.tum.`in`.tumcampusapp.component.ui.ticket.model.TicketInfo
 import de.tum.`in`.tumcampusapp.database.TcaDb
-import javax.inject.Inject
 
-class TicketsLocalRepository @Inject constructor(
+class TicketsLocalRepository constructor(
     private val database: TcaDb
 ) {
-    fun storeTickets(tickets: List<Ticket>) {
-        insert(*tickets.toTypedArray())
-    }
 
     fun insert(vararg tickets: Ticket) {
         database.ticketDao().insert(*tickets)
-    }
-
-    fun getTicketsByEventId(eventId: Int): List<TicketInfo> = database.ticketDao().getByEventId(eventId)
-
-    fun getTicketCount(event: Event): Int {
-        return database.ticketDao().getTicketCountForEvent(event.id)
     }
 }

@@ -23,8 +23,6 @@ import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.EventBetaInfo
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.EventItem
-import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository
-import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.Utils
 import java.util.*
@@ -32,10 +30,7 @@ import java.util.regex.Pattern
 
 class EventsAdapter(private val mContext: Context) : RecyclerView.Adapter<CardViewHolder>() {
 
-    private val ticketsLocalRepo: TicketsLocalRepository = TicketsLocalRepository(TcaDb.getInstance(mContext))
-
     private var events: List<EventItem> = ArrayList()
-    private val betaInfo = EventBetaInfo()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
         if (viewType == CARD_INFO) {
@@ -75,8 +70,7 @@ class EventsAdapter(private val mContext: Context) : RecyclerView.Adapter<CardVi
         eventCard.event = event
         holder.currentCard = eventCard
 
-        val ticketCount = ticketsLocalRepo.getTicketCount(event)
-        (holder as EventViewHolder).bind(event, ticketCount)
+        (holder as EventViewHolder).bind(event, 0)
     }
 
     override fun getItemCount() = events.size

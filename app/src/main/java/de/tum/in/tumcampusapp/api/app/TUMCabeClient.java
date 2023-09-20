@@ -237,12 +237,6 @@ public final class TUMCabeClient {
         service.reserveTicket(verification).enqueue(cb);
     }
 
-    @Deprecated
-    /// This endpoint won't be avaliable in the v2 backend
-    public Single<List<TicketStatus>> fetchTicketStats(int event) {
-        return service.getTicketStats(event);
-    }
-
     public List<Location> fetchOpeningHours(String language) throws IOException {
         return service.getOpeningHours(language)
                       .execute()

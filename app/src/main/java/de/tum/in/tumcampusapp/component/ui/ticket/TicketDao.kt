@@ -26,9 +26,6 @@ interface TicketDao {
     )
     fun getByEventId(eventId: Int): List<TicketInfo>
 
-    @Query("SELECT count(*) FROM tickets WHERE event_id =:eventId")
-    fun getTicketCountForEvent(eventId: Int): Int
-
     @Query("DELETE FROM tickets")
     fun flush()
 }
