@@ -13,7 +13,7 @@ class BackendClient private constructor() {
     private var stub: CampusGrpc.CampusFutureStub
 
     init {
-        val managedChannel = ManagedChannelBuilder.forAddress("api-grpc.tum.app", 443).build()
+        val managedChannel = ManagedChannelBuilder.forAddress("api.tum.app", 443).build()
         stub = CampusGrpc.newFutureStub(managedChannel).withInterceptors(MetadataUtils.newAttachHeadersInterceptor(getHeaderMetaData()))
     }
 
