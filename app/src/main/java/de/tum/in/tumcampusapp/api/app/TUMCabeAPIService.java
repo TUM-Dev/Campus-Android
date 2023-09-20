@@ -16,11 +16,7 @@ import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierFreeContact;
 import de.tum.in.tumcampusapp.component.ui.barrierfree.model.BarrierFreeMoreInfo;
 import de.tum.in.tumcampusapp.component.ui.cafeteria.model.Cafeteria;
 import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMember;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatMessage;
-import de.tum.in.tumcampusapp.component.ui.chat.model.ChatRoom;
-import de.tum.in.tumcampusapp.component.ui.news.model.News;
 import de.tum.in.tumcampusapp.component.ui.news.model.NewsAlert;
-import de.tum.in.tumcampusapp.component.ui.news.model.NewsSources;
 import de.tum.in.tumcampusapp.component.ui.openinghour.model.Location;
 import de.tum.in.tumcampusapp.component.ui.studyroom.model.StudyRoomGroup;
 import de.tum.in.tumcampusapp.component.ui.ticket.model.Event;
@@ -38,7 +34,6 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 
@@ -47,7 +42,6 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE_CONT
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_BARRIER_FREE_MORE_INFO;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CAFETERIAS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CHAT_MEMBERS;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_CHAT_ROOMS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_DEVICE;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_EVENTS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_FEEDBACK;
@@ -57,10 +51,6 @@ import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_MEMBERS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_NEWS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_NOTIFICATIONS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_OPENING_HOURS;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_AVAILABLE_MAPS;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_COORDINATES;
-import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_ROOM_FINDER_SCHEDULE;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_STUDY_ROOMS;
 import static de.tum.in.tumcampusapp.api.app.TUMCabeClient.API_TICKET;
 
@@ -115,9 +105,6 @@ public interface TUMCabeAPIService {
 
     @GET(API_KINOS + "{lastId}")
     Flowable<List<Kino>> getKinos(@Path("lastId") String lastId);
-
-    @GET(API_NEWS + "{lastNewsId}")
-    Call<List<News>> getNews(@Path("lastNewsId") String lastNewsId);
 
     @GET(API_NEWS + "alert")
     Observable<NewsAlert> getNewsAlert();
