@@ -749,7 +749,7 @@ Signatur: %5$s</string>
     <string name="released">Veröffentlicht</string>
 
     <plurals name="new_items_format_string">
-        <item quantity="one">%d neue Meldung</item>
+        <item quantity="one">1 neue Meldung</item>
         <item quantity="other">%d neue Meldungen</item>
     </plurals>
     <string name="including_format_string">inklusive %s</string>
