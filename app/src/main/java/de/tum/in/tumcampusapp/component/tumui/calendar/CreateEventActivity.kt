@@ -200,7 +200,11 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
             }
 
             // We’re creating a new event, so we set the start and end time to the next full hour
-            start = initialDate.toDateTimeAtCurrentTime().plusHours(1).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0)
+            start = initialDate.toDateTimeAtCurrentTime()
+                .plusHours(1)
+                .withMinuteOfHour(0)
+                .withSecondOfMinute(0)
+                .withMillisOfSecond(0)
             end = start.plusHours(1)
             repeatHelper.end = end.plusWeeks(1)
         } else {
