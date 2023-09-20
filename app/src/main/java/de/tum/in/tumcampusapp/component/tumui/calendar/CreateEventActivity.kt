@@ -434,7 +434,19 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         // event ends after n times
         if (repeatHelper.isRepeatingNTimes()) {
             for (i in 1 until repeatHelper.times) {
-                events.add(CalendarItem("", "", "", baseEvent.title, baseEvent.description, baseEvent.dtstart.plusWeeks(i), baseEvent.dtend.plusWeeks(i), "", false))
+                events.add(
+                    CalendarItem(
+                        "",
+                        "",
+                        "",
+                        baseEvent.title,
+                        baseEvent.description,
+                        baseEvent.dtstart.plusWeeks(i),
+                        baseEvent.dtend.plusWeeks(i),
+                        "",
+                        false
+                    )
+                )
             }
             // event ends after "last" date
         } else {
