@@ -53,7 +53,7 @@ abstract class ActivityForDownloadingExternal(layoutId: Int) : ProgressActivity<
      *
      * @param forceDownload If we should throw away cached data and re-download instead.
      */
-    protected fun requestDownload(forceDownload: CacheControl) {
+    private fun requestDownload(forceDownload: CacheControl) {
         if (!NetUtils.isConnected(this)) {
             Utils.showToast(this, R.string.no_internet_connection)
         }
