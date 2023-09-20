@@ -26,7 +26,13 @@ data class WidgetCalendarItem(val id: String, val title: String, val startTime: 
 
         @JvmStatic
         fun create(calendarItem: CalendarItem): WidgetCalendarItem {
-            return WidgetCalendarItem(calendarItem.nr, calendarItem.getFormattedTitle(), calendarItem.eventStart, calendarItem.eventEnd, calendarItem.getEventLocation())
+            return WidgetCalendarItem(
+                calendarItem.nr,
+                calendarItem.getFormattedTitle(),
+                calendarItem.eventStart,
+                calendarItem.eventEnd,
+                calendarItem.getEventLocation()
+            )
         }
 
         @JvmStatic
