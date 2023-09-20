@@ -89,11 +89,7 @@ class TicketAmountViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     }
 
     private fun notifyActivity() {
-        if (itemView.context is SelectTicketInterface) {
-            (itemView.context as SelectTicketInterface).ticketAmountUpdated(ticketTypePos, ticketAmount)
-        } else {
-            Utils.log("The context is not a SelectTicketInterface")
-        }
+        Utils.log("The context is not a SelectTicketInterface")
     }
 
     private fun updateButtonState() {
