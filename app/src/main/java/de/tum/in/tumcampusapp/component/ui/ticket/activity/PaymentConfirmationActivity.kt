@@ -37,14 +37,6 @@ class PaymentConfirmationActivity : BaseActivity(R.layout.activity_payment_confi
             startActivity(intent)
         }
 
-        binding.doneButton.setOnClickListener {
-            val intent = Intent(this, EventsActivity::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            }
-            startActivity(intent)
-            finish()
-        }
-
         runCheckmarkAnimation()
     }
 
@@ -60,7 +52,6 @@ class PaymentConfirmationActivity : BaseActivity(R.layout.activity_payment_confi
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                handleOnBackPressed()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -68,15 +59,5 @@ class PaymentConfirmationActivity : BaseActivity(R.layout.activity_payment_confi
     }
 
     override fun onBackPressed() {
-        handleOnBackPressed()
-    }
-
-    private fun handleOnBackPressed() {
-        // Go back to events and finish this activity to prevent the user from purchasing
-        // another ticket.
-        val intent = Intent(this, EventsActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        startActivity(intent)
-        finish()
     }
 }

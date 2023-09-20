@@ -11,7 +11,6 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardManager
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.Card
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
-import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.EventDetailsActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.adapter.EventsAdapter
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository
@@ -28,13 +27,8 @@ class EventCard(context: Context) : Card(CardManager.CardTypes.EVENT, context) {
     private val localRepo = TicketsLocalRepository(TcaDb.getInstance(context))
 
     override fun getNavigationDestination(): NavDestination {
-        val event = this.event
-        if (event != null && event.kino != -1) {
-            val args = Bundle().apply { putInt(Const.KINO_ID, event.kino) }
-            return NavDestination.Activity(KinoActivity::class.java, args)
-        }
-        val args = Bundle().apply { putParcelable(Const.KEY_EVENT, event) }
-        return NavDestination.Activity(EventDetailsActivity::class.java, args)
+        val args = Bundle().apply { putInt(Const.KINO_ID, 1) }
+        return NavDestination.Activity(KinoActivity::class.java, args)
     }
 
     override fun shouldShow(prefs: SharedPreferences): Boolean {
