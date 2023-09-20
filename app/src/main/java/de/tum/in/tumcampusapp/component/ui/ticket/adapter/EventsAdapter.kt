@@ -11,7 +11,6 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.Group
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.squareup.picasso.Callback
@@ -20,7 +19,6 @@ import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.component.ui.overview.CardInteractionListener
 import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.component.ui.ticket.EventCard
-import de.tum.`in`.tumcampusapp.component.ui.ticket.EventDiffUtil
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.ShowTicketActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.EventBetaInfo
@@ -84,13 +82,6 @@ class EventsAdapter(private val mContext: Context) : RecyclerView.Adapter<CardVi
     override fun getItemCount() = events.size
 
     fun update(newEvents: MutableList<EventItem>) {
-        if (newEvents.isEmpty() || newEvents[0] !is EventBetaInfo) {
-            newEvents.add(0, betaInfo)
-        }
-        val callback = EventDiffUtil(events, newEvents)
-        val diffResult = DiffUtil.calculateDiff(callback)
-        events = newEvents
-        diffResult.dispatchUpdatesTo(this)
     }
 
     class EventViewHolder(

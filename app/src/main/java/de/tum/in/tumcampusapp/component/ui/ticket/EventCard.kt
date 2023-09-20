@@ -15,7 +15,6 @@ import de.tum.`in`.tumcampusapp.component.ui.overview.card.CardViewHolder
 import de.tum.`in`.tumcampusapp.component.ui.ticket.activity.EventDetailsActivity
 import de.tum.`in`.tumcampusapp.component.ui.ticket.adapter.EventsAdapter
 import de.tum.`in`.tumcampusapp.component.ui.ticket.model.Event
-import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.EventsLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.ticket.repository.TicketsLocalRepository
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.KinoActivity
 import de.tum.`in`.tumcampusapp.database.TcaDb
@@ -26,7 +25,7 @@ class EventCard(context: Context) : Card(CardManager.CardTypes.EVENT, context) {
     var event: Event? = null
 
     // TODO(thellmund) Inject this
-    private val eventCardsProvider = EventCardsProvider(context, EventsLocalRepository(TcaDb.getInstance(context)))
+    private val eventCardsProvider = EventCardsProvider()
     private val localRepo = TicketsLocalRepository(TcaDb.getInstance(context))
 
     override fun updateViewHolder(viewHolder: RecyclerView.ViewHolder) {
