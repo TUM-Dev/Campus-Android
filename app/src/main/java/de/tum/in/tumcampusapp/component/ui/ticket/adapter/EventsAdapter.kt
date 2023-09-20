@@ -35,7 +35,5 @@ class EventsAdapter : RecyclerView.Adapter<CardViewHolder>() {
 
     companion object {
         private const val CARD_INFO = 0
-        private const val CARD_HORIZONTAL = 1
-        private const val CARD_VERTICAL = 2
     }
 }
