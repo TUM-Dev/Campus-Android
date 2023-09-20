@@ -8,7 +8,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.RoomWarnings
-import com.google.gson.annotations.SerializedName
 import de.tum.`in`.tumcampusapp.utils.readDateTime
 import de.tum.`in`.tumcampusapp.utils.writeDateTime
 import org.joda.time.DateTime
@@ -30,21 +29,16 @@ import org.joda.time.format.DateTimeFormat
 @SuppressWarnings(RoomWarnings.DEFAULT_CONSTRUCTOR)
 data class Event(
     @PrimaryKey
-    @SerializedName("event")
     var id: Int = 0,
-    @SerializedName("file")
     @ColumnInfo(name = "image_url")
     var imageUrl: String? = null,
     var title: String = "",
     var description: String = "",
     var locality: String = "",
-    @SerializedName("start")
     @ColumnInfo(name = "start_time")
     var startTime: DateTime = DateTime(),
-    @SerializedName("end")
     @ColumnInfo(name = "end_time")
     var endTime: DateTime? = null,
-    @SerializedName("link")
     @ColumnInfo(name = "event_url")
     var eventUrl: String = "",
     @ColumnInfo(name = "dismissed")

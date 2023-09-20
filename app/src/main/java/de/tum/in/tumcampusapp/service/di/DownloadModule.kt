@@ -17,7 +17,6 @@ import de.tum.`in`.tumcampusapp.component.ui.news.NewsDownloadAction
 import de.tum.`in`.tumcampusapp.component.ui.news.TopNewsDownloadAction
 import de.tum.`in`.tumcampusapp.component.ui.news.repository.TopNewsRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.openinghour.LocationImportAction
-import de.tum.`in`.tumcampusapp.component.ui.ticket.EventsDownloadAction
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.FilmDownloadAction
 import de.tum.`in`.tumcampusapp.component.ui.tufilm.repository.KinoRemoteRepository
 import de.tum.`in`.tumcampusapp.component.ui.updatenote.UpdateNoteDownloadAction
@@ -51,10 +50,6 @@ object DownloadModule {
         database: TcaDb,
         tumCabeClient: TUMCabeClient
     ): LocationImportAction = LocationImportAction(context, database, tumCabeClient)
-
-    @JvmStatic
-    @Provides
-    fun provideEventsDownloadAction(): EventsDownloadAction = EventsDownloadAction()
 
     @JvmStatic
     @Provides
