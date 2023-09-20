@@ -823,7 +823,7 @@ Signature: %5$s</string>
 
     <string name="including_format_string">including %s</string>
     <plurals name="new_items_format_string">
-        <item quantity="one">%d new item</item>
+        <item quantity="one">1 new item</item>
         <item quantity="other">%d new items</item>
     </plurals>
     <string name="chat_message_send_error">Message couldn’t be sent</string>
