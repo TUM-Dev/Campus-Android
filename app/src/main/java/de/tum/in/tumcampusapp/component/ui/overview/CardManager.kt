@@ -31,7 +31,6 @@ object CardManager {
         LOGIN(R.layout.card_login_prompt, R.string.login_default_sharedpref_shown),
         EDUROAM_FIX(R.layout.card_eduroam_fix, R.string.eduroam_fix_default_sharedpref_shown),
         TOP_NEWS(R.layout.card_top_news, R.string.top_news_default_sharedpref_shown),
-        EVENT(R.layout.card_events_item, R.string.event_default_sharedpref_shown),
         UPDATE_NOTE(R.layout.card_update_note, R.string.update_note_default_sharedpref_shown)
     }
 
