@@ -31,7 +31,8 @@ data class CalendarItem(
     var dtstart: DateTime = DateTime(),
     var dtend: DateTime = DateTime(),
     var location: String = "",
-    @Ignore var blacklisted: Boolean = false
+    @Ignore
+    var blacklisted: Boolean = false
 ) : WeekViewDisplayable<CalendarItem> {
 
     @Ignore
