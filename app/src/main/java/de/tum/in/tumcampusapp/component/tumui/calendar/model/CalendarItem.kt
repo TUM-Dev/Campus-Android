@@ -22,7 +22,8 @@ enum class CalendarItemType {
  */
 @Entity(tableName = "calendar")
 data class CalendarItem(
-    @PrimaryKey var nr: String = "",
+    @PrimaryKey
+    var nr: String = "",
     var status: String = "",
     var url: String = "",
     var title: String = "",
