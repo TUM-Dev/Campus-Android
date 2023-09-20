@@ -1,8 +1,6 @@
 package de.tum.`in`.tumcampusapp.component.tumui.calendar
 
 import android.app.Activity
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -29,6 +27,8 @@ import de.tum.`in`.tumcampusapp.database.TcaDb
 import de.tum.`in`.tumcampusapp.databinding.ActivityCreateEventBinding
 import de.tum.`in`.tumcampusapp.utils.Const
 import de.tum.`in`.tumcampusapp.utils.ThemedAlertDialogBuilder
+import de.tum.`in`.tumcampusapp.utils.ThemedDatePickerDialog
+import de.tum.`in`.tumcampusapp.utils.ThemedTimePickerDialog
 import de.tum.`in`.tumcampusapp.utils.Utils
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
@@ -182,7 +182,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
 
         binding.eventLastDateView.setOnClickListener {
             hideKeyboard()
-            DatePickerDialog(this, { _, year, month, dayOfMonth ->
+            ThemedDatePickerDialog(this, { _, year, month, dayOfMonth ->
                 repeatHelper.end = repeatHelper.end?.withDate(year, month + 1, dayOfMonth)
                 updateDateViews()
             }, repeatHelper.end?.year!!, repeatHelper.end?.monthOfYear!! - 1, repeatHelper.end?.dayOfMonth!!).show()
@@ -280,7 +280,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         // starts counting months at 1.
         binding.eventStartDateView.setOnClickListener {
             hideKeyboard()
-            DatePickerDialog(this, { _, year, month, dayOfMonth ->
+            ThemedDatePickerDialog(this, { _, year, month, dayOfMonth ->
                 start = start.withDate(year, month + 1, dayOfMonth)
                 if (end.isBefore(start)) {
                     end = end.withDate(year, month + 1, dayOfMonth)
@@ -290,7 +290,7 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         }
         binding.eventEndDateView.setOnClickListener {
             hideKeyboard()
-            DatePickerDialog(this, { _, year, month, dayOfMonth ->
+            ThemedDatePickerDialog(this, { _, year, month, dayOfMonth ->
                 end = end.withDate(year, month + 1, dayOfMonth)
                 updateDateViews()
             }, start.year, start.monthOfYear - 1, start.dayOfMonth).show()
@@ -299,20 +299,20 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
         // TIME
         binding.eventStartTimeView.setOnClickListener { _ ->
             hideKeyboard()
-            TimePickerDialog(this, { _, hour, minute ->
+            ThemedTimePickerDialog(this, { _, hour, minute ->
                 val eventLength = end.millis - start.millis
                 start = start.withHourOfDay(hour).withMinuteOfHour(minute)
                 end = end.withMillis(start.millis + eventLength)
                 updateTimeViews()
-            }, start.hourOfDay, start.minuteOfHour, true).show()
+            }, start.hourOfDay, start.minuteOfHour).show()
         }
 
         binding.eventEndTimeView.setOnClickListener { _ ->
             hideKeyboard()
-            TimePickerDialog(this, { _, hour, minute ->
+            ThemedTimePickerDialog(this, { _, hour, minute ->
                 end = end.withHourOfDay(hour).withMinuteOfHour(minute)
                 updateTimeViews()
-            }, end.hourOfDay, end.minuteOfHour, true).show()
+            }, end.hourOfDay, end.minuteOfHour).show()
         }
     }
 
@@ -518,7 +518,11 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     }
 
     private fun displayCloseDialog() {
-        ThemedAlertDialogBuilder(this).setMessage(R.string.discard_changes_question).setNegativeButton(R.string.discard) { _, _ -> finish() }.setPositiveButton(R.string.keep_editing, null).show()
+        ThemedAlertDialogBuilder(this)
+            .setMessage(R.string.discard_changes_question)
+            .setNegativeButton(R.string.discard) { _, _ -> finish() }
+            .setPositiveButton(R.string.keep_editing, null)
+            .show()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -530,6 +534,11 @@ class CreateEventActivity : ActivityForAccessingTumOnline<CreateEventResponse>(R
     }
 
     private fun showErrorDialog(message: String) {
-        ThemedAlertDialogBuilder(this).setTitle(R.string.error).setMessage(message).setIcon(R.drawable.ic_error_outline).setPositiveButton(R.string.ok, null).show()
+        ThemedAlertDialogBuilder(this)
+            .setTitle(R.string.error)
+            .setMessage(message)
+            .setIcon(R.drawable.ic_error_outline)
+            .setPositiveButton(R.string.ok, null)
+            .show()
     }
 }

@@ -21,7 +21,17 @@ enum class CalendarItemType {
  * Entity for storing information about lecture events
  */
 @Entity(tableName = "calendar")
-data class CalendarItem(@PrimaryKey var nr: String = "", var status: String = "", var url: String = "", var title: String = "", var description: String = "", var dtstart: DateTime = DateTime(), var dtend: DateTime = DateTime(), var location: String = "", @Ignore var blacklisted: Boolean = false) : WeekViewDisplayable<CalendarItem> {
+data class CalendarItem(
+    @PrimaryKey var nr: String = "",
+    var status: String = "",
+    var url: String = "",
+    var title: String = "",
+    var description: String = "",
+    var dtstart: DateTime = DateTime(),
+    var dtend: DateTime = DateTime(),
+    var location: String = "",
+    @Ignore var blacklisted: Boolean = false
+) : WeekViewDisplayable<CalendarItem> {
 
     @Ignore
     var color: Int? = null
@@ -58,7 +68,13 @@ data class CalendarItem(@PrimaryKey var nr: String = "", var status: String = ""
         // remove lecture codes in round or square brackets e.g. (IN0003), [MA0902]
         return Pattern.compile("[(\\[][A-Z0-9.]+[)\\]]")
             // remove type of lecture (VO, UE, SE, PR) at the end of the line
-            .matcher(Pattern.compile(" (UE|VO|SE|PR)$").matcher(title).replaceAll("")).replaceAll("").trim { it <= ' ' }
+            .matcher(
+                Pattern.compile(" (UE|VO|SE|PR)$")
+                    .matcher(title)
+                    .replaceAll("")
+            )
+            .replaceAll("")
+            .trim { it <= ' ' }
     }
 
     /**
@@ -101,8 +117,22 @@ data class CalendarItem(@PrimaryKey var nr: String = "", var status: String = ""
         val textColor = if (isCanceled) color else Color.WHITE
         val borderWidth = if (isCanceled) 2 else 0
 
-        val style = WeekViewEvent.Style.Builder().setBackgroundColor(backgroundColor).setTextColor(textColor).setTextStrikeThrough(isCanceled).setBorderWidth(borderWidth).setBorderColor(color).build()
+        val style = WeekViewEvent.Style.Builder()
+            .setBackgroundColor(backgroundColor)
+            .setTextColor(textColor)
+            .setTextStrikeThrough(isCanceled)
+            .setBorderWidth(borderWidth)
+            .setBorderColor(color)
+            .build()
 
-        return WeekViewEvent.Builder(this).setId(nr.toLong()).setTitle(title).setStartTime(eventStart.toGregorianCalendar()).setEndTime(eventEnd.toGregorianCalendar()).setLocation(location).setStyle(style).setAllDay(false).build()
+        return WeekViewEvent.Builder(this)
+            .setId(nr.toLong())
+            .setTitle(title)
+            .setStartTime(eventStart.toGregorianCalendar())
+            .setEndTime(eventEnd.toGregorianCalendar())
+            .setLocation(location)
+            .setStyle(style)
+            .setAllDay(false)
+            .build()
     }
 }
