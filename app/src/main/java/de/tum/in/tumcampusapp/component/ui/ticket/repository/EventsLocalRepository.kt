@@ -9,10 +9,6 @@ class EventsLocalRepository @Inject constructor(
     private val database: TcaDb
 ) {
 
-    fun storeEvents(events: List<Event>) {
-        database.eventDao().insert(events)
-    }
-
     fun getEvents(): Observable<List<Event>> = database.eventDao().allFutureEvents
 
     fun getBookedEvents(): Observable<List<Event>> = database.eventDao().allBookedEvents
