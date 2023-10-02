@@ -159,7 +159,7 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.8'
     implementation "com.tickaroo.tikxml:retrofit-converter:$tikXmlVersion"
     implementation 'com.github.franmontiel:PersistentCookieJar:1.0.1'
-    implementation 'com.squareup.okio:okio:2.10.0'
+    implementation 'com.squareup.okio:okio:3.6.0'
 
     // UI
     implementation 'com.github.mtotschnig:StickyListHeaders:2.8.0'
