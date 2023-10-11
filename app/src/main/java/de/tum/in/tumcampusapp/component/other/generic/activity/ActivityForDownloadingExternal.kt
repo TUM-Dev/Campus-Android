@@ -60,10 +60,10 @@ abstract class ActivityForDownloadingExternal(layoutId: Int) : ProgressActivity<
 
         showLoadingStart()
         Flowable.fromCallable { method?.execute(forceDownload) }
-                .doOnError { errorHandler() }
-                .onErrorReturnItem(Unit)
-                .subscribeOn(Schedulers.io())
-                .toLiveData()
-                .observe(this, completionHandler)
+            .doOnError { errorHandler() }
+            .onErrorReturnItem(Unit)
+            .subscribeOn(Schedulers.io())
+            .toLiveData()
+            .observe(this, completionHandler)
     }
 }

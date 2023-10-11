@@ -116,15 +116,15 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
 
             // Start download workers and listen for finalization
             val downloadActions = Flowable
-                    .fromCallable(this@StartupActivity::performAllWorkerActions)
-                    .onErrorReturnItem(Unit)
-                    .subscribeOn(Schedulers.io())
+                .fromCallable(this@StartupActivity::performAllWorkerActions)
+                .onErrorReturnItem(Unit)
+                .subscribeOn(Schedulers.io())
 
             runOnUiThread {
                 downloadActions.toLiveData()
-                        .observe(this@StartupActivity) {
-                            openMainActivityIfInitializationFinished()
-                        }
+                    .observe(this@StartupActivity) {
+                        openMainActivityIfInitializationFinished()
+                    }
             }
 
             // Start background service and ensure cards are set
@@ -160,17 +160,17 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
      */
     private fun showLocationPermissionRationaleDialog() {
         ThemedAlertDialogBuilder(this)
-                .setMessage(R.string.permission_location_explanation)
-                .setPositiveButton(R.string.ok) { _, _ ->
-                    requestPermissions(this, PERMISSIONS_LOCATION, REQUEST_LOCATION)
-                }
-                .show()
+            .setMessage(R.string.permission_location_explanation)
+            .setPositiveButton(R.string.ok) { _, _ ->
+                requestPermissions(this, PERMISSIONS_LOCATION, REQUEST_LOCATION)
+            }
+            .show()
     }
 
     override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<String>,
-            grantResults: IntArray
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         openMainActivityIfInitializationFinished()
