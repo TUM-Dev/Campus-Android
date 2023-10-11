@@ -107,10 +107,12 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.2'
     implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:2.6.2"
-    implementation 'android.arch.work:work-runtime-ktx:1.0.1'
+    implementation 'androidx.work:work-runtime-ktx:2.8.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.lifecycle:lifecycle-common-java8:2.6.2'
     kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+
 
     // Play services
     implementation 'com.google.android.gms:play-services-base:18.2.0'

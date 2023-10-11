@@ -9,8 +9,8 @@ import android.os.Bundle
 import androidx.core.app.ActivityCompat.checkSelfPermission
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
-import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.toLiveData
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import de.tum.`in`.tumcampusapp.BuildConfig.DEBUG
 import de.tum.`in`.tumcampusapp.BuildConfig.VERSION_CODE
@@ -116,14 +116,15 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
 
             // Start download workers and listen for finalization
             val downloadActions = Flowable
-                .fromCallable(this@StartupActivity::performAllWorkerActions)
-                .onErrorReturnItem(Unit)
-                .subscribeOn(Schedulers.io())
+                    .fromCallable(this@StartupActivity::performAllWorkerActions)
+                    .onErrorReturnItem(Unit)
+                    .subscribeOn(Schedulers.io())
 
             runOnUiThread {
-                LiveDataReactiveStreams
-                    .fromPublisher(downloadActions)
-                    .observe(this@StartupActivity) { openMainActivityIfInitializationFinished() }
+                downloadActions.toLiveData()
+                        .observe(this@StartupActivity) {
+                            openMainActivityIfInitializationFinished()
+                        }
             }
 
             // Start background service and ensure cards are set
@@ -159,18 +160,19 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
      */
     private fun showLocationPermissionRationaleDialog() {
         ThemedAlertDialogBuilder(this)
-            .setMessage(R.string.permission_location_explanation)
-            .setPositiveButton(R.string.ok) { _, _ ->
-                requestPermissions(this, PERMISSIONS_LOCATION, REQUEST_LOCATION)
-            }
-            .show()
+                .setMessage(R.string.permission_location_explanation)
+                .setPositiveButton(R.string.ok) { _, _ ->
+                    requestPermissions(this, PERMISSIONS_LOCATION, REQUEST_LOCATION)
+                }
+                .show()
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
+            requestCode: Int,
+            permissions: Array<String>,
+            grantResults: IntArray
     ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         openMainActivityIfInitializationFinished()
     }
 

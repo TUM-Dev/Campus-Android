@@ -19,7 +19,7 @@ class GeofencingUpdateReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         Utils.logWithTag(TAG, "Received event")
         val geofencingEvent = GeofencingEvent.fromIntent(intent)
-        if (geofencingEvent.hasError()) {
+        if (geofencingEvent!!.hasError()) {
             Utils.logWithTag(TAG, "Geofencing event contained errors.")
             return
         }

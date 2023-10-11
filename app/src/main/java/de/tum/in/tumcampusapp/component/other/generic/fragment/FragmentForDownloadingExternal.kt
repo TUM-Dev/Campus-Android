@@ -2,8 +2,8 @@ package de.tum.`in`.tumcampusapp.component.other.generic.fragment
 
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
-import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.Observer
+import androidx.lifecycle.toLiveData
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import de.tum.`in`.tumcampusapp.R
 import de.tum.`in`.tumcampusapp.api.tumonline.CacheControl
@@ -36,7 +36,7 @@ abstract class FragmentForDownloadingExternal(
     /**
      * Gets notifications from the DownloadWorker, if downloading was successful or not
      */
-    private val completionHandler = Observer<Unit> {
+    private val completionHandler = Observer<Unit?> {
         // Calls onStart() to simulate a new start of the activity
         // without downloading new data, since this receiver
         // receives data from a new download
@@ -62,13 +62,11 @@ abstract class FragmentForDownloadingExternal(
         }
 
         showLoadingStart()
-        LiveDataReactiveStreams
-            .fromPublisher<Unit>(
-                Flowable.fromCallable { method?.execute(forceDownload) }
-                    .doOnError { errorHandler() }
-                    .onErrorReturnItem(Unit)
-                    .subscribeOn(Schedulers.io())
-            )
-            .observe(this, completionHandler)
+        Flowable.fromCallable { method?.execute(forceDownload) }
+                .doOnError { errorHandler() }
+                .onErrorReturnItem(Unit)
+                .subscribeOn(Schedulers.io())
+                .toLiveData()
+                .observe(this, completionHandler)
     }
 }
