@@ -37,7 +37,7 @@ class GeofencingUpdateReceiver : BroadcastReceiver() {
                 StartSyncReceiver.cancelBackground(context)
                 Utils.logWithTag(TAG, "Geofencing detected user leaving munich, disabling Auto updates")
             }
-        }else{
+        } else {
             Utils.logWithTag(TAG, "Geofencing event was null. Modes are not changed")
         }
     }
