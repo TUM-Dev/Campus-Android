@@ -19,22 +19,26 @@ class GeofencingUpdateReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         Utils.logWithTag(TAG, "Received event")
         val geofencingEvent = GeofencingEvent.fromIntent(intent)
-        if (geofencingEvent.hasError()) {
-            Utils.logWithTag(TAG, "Geofencing event contained errors.")
-            return
-        }
+        if (geofencingEvent != null) {
+            if (geofencingEvent.hasError()) {
+                Utils.logWithTag(TAG, "Geofencing event contained errors.")
+                return
+            }
 
-        // Get the transition type.
-        val geofenceTransition = geofencingEvent.geofenceTransition
+            // Get the transition type.
+            val geofenceTransition = geofencingEvent.geofenceTransition
 
-        if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
-            Utils.setSetting(context, Const.BACKGROUND_MODE, true)
-            StartSyncReceiver.startBackground(context)
-            Utils.logWithTag(TAG, "Geofencing detected user entering munich, enabling Auto updates")
-        } else if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
-            Utils.setSetting(context, Const.BACKGROUND_MODE, false)
-            StartSyncReceiver.cancelBackground(context)
-            Utils.logWithTag(TAG, "Geofencing detected user leaving munich, disabling Auto updates")
+            if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
+                Utils.setSetting(context, Const.BACKGROUND_MODE, true)
+                StartSyncReceiver.startBackground(context)
+                Utils.logWithTag(TAG, "Geofencing detected user entering munich, enabling Auto updates")
+            } else if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
+                Utils.setSetting(context, Const.BACKGROUND_MODE, false)
+                StartSyncReceiver.cancelBackground(context)
+                Utils.logWithTag(TAG, "Geofencing detected user leaving munich, disabling Auto updates")
+            }
+        } else {
+            Utils.logWithTag(TAG, "Geofencing event was null. Modes are not changed")
         }
     }
 

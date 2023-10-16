@@ -9,8 +9,8 @@ import android.os.Bundle
 import androidx.core.app.ActivityCompat.checkSelfPermission
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
-import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.toLiveData
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import de.tum.`in`.tumcampusapp.BuildConfig.DEBUG
 import de.tum.`in`.tumcampusapp.BuildConfig.VERSION_CODE
@@ -121,9 +121,10 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
                 .subscribeOn(Schedulers.io())
 
             runOnUiThread {
-                LiveDataReactiveStreams
-                    .fromPublisher(downloadActions)
-                    .observe(this@StartupActivity) { openMainActivityIfInitializationFinished() }
+                downloadActions.toLiveData()
+                    .observe(this@StartupActivity) {
+                        openMainActivityIfInitializationFinished()
+                    }
             }
 
             // Start background service and ensure cards are set
@@ -171,6 +172,7 @@ class StartupActivity : BaseActivity(R.layout.activity_startup) {
         permissions: Array<String>,
         grantResults: IntArray
     ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         openMainActivityIfInitializationFinished()
     }
 
