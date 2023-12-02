@@ -166,7 +166,7 @@ dependencies {
     implementation 'com.github.mtotschnig:StickyListHeaders:2.8.0'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'de.psdev.licensesdialog:licensesdialog:2.1.0'
-    implementation 'com.github.thellmund.Android-Week-View:core:4.1.6'
+    implementation 'com.github.thellmund.Android-Week-View:core:5.3.2'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.github.PhilJay:MPAndroidChart:3.1.0'
     implementation 'com.makeramen:roundedimageview:2.3.0'
