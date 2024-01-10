@@ -84,7 +84,7 @@ android {
 }
 
 def retrofitVersion = '2.9.0'
-def tikXmlVersion = '0.8.13'
+def tikXmlVersion = '0.8.15'
 
 configurations.all {
     resolutionStrategy {
@@ -96,7 +96,7 @@ dependencies {
 
     // Support Libraries
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
@@ -107,7 +107,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.2'
     implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:2.6.2"
-    implementation 'androidx.work:work-runtime-ktx:2.8.1'
+    implementation 'androidx.work:work-runtime-ktx:2.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.lifecycle:lifecycle-common-java8:2.6.2'
     kapt "androidx.room:room-compiler:$room_version"
@@ -115,7 +115,7 @@ dependencies {
 
 
     // Play services
-    implementation 'com.google.android.gms:play-services-base:18.2.0'
+    implementation 'com.google.android.gms:play-services-base:18.3.0'
     implementation 'com.google.android.gms:play-services-location:21.0.1'
 
     // Used for in-app reviews
@@ -124,13 +124,13 @@ dependencies {
 
     // Firebase
     implementation 'com.google.firebase:firebase-core:21.1.1'
-    implementation 'com.google.firebase:firebase-messaging:23.2.1'
-    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.4.3'
-    implementation 'com.google.firebase:firebase-analytics-ktx:21.3.0'
+    implementation 'com.google.firebase:firebase-messaging:23.4.0'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.6.0'
+    implementation 'com.google.firebase:firebase-analytics-ktx:21.5.0'
 
     // Helpers
-    implementation 'com.google.code.gson:gson:2.9.0'
-    implementation 'net.danlew:android.joda:2.10.14'
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'net.danlew:android.joda:2.12.6'
 
     // XML Parsing
     implementation "com.tickaroo.tikxml:annotation:$tikXmlVersion"
@@ -140,10 +140,10 @@ dependencies {
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.12.0'
-    implementation 'androidx.fragment:fragment-ktx:1.6.1'
+    implementation 'androidx.fragment:fragment-ktx:1.6.2'
     // Note: fix for internal androidx libraries using outdated WorkManager causing a crash
-    implementation "androidx.work:work-runtime-ktx:2.8.1"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+    implementation "androidx.work:work-runtime-ktx:2.9.0"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
 
     // RxJava
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
@@ -154,59 +154,59 @@ dependencies {
     implementation 'com.patloew.rxlocation:rxlocation:1.0.5'
 
     // Transport
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
-    implementation 'com.squareup.picasso:picasso:2.8'
+    implementation 'com.squareup.picasso:picasso:2.71828'
     implementation "com.tickaroo.tikxml:retrofit-converter:$tikXmlVersion"
     implementation 'com.github.franmontiel:PersistentCookieJar:1.0.1'
 
     // UI
     implementation 'com.github.mtotschnig:StickyListHeaders:2.8.0'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
-    implementation 'de.psdev.licensesdialog:licensesdialog:2.1.0'
+    implementation 'de.psdev.licensesdialog:licensesdialog:2.2.0'
     implementation 'com.github.thellmund.Android-Week-View:core:4.1.6'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.github.PhilJay:MPAndroidChart:3.1.0'
     implementation 'com.makeramen:roundedimageview:2.3.0'
 
     // Dagger
-    implementation 'com.google.dagger:dagger:2.38.1'
-    kapt 'com.google.dagger:dagger-compiler:2.38.1'
+    implementation 'com.google.dagger:dagger:2.50'
+    kapt 'com.google.dagger:dagger-compiler:2.50'
 
     // LeakCanary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.13'
 
     // Testing
     testImplementation 'androidx.test:core:1.5.0'
-    testImplementation "commons-io:commons-io:2.11.0"
+    testImplementation "commons-io:commons-io:2.15.1"
 
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:5.5.0'
-    testImplementation 'org.assertj:assertj-core:3.17.1'
+    testImplementation 'org.mockito:mockito-core:5.8.0'
+    testImplementation 'org.assertj:assertj-core:3.25.1'
     testImplementation "androidx.room:room-testing:$room_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 
     testImplementation 'com.android.support.test:rules:1.0.2'
     testImplementation 'com.android.support.test:runner:1.0.2'
     testImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    testImplementation 'org.robolectric:robolectric:4.10.3'
+    testImplementation 'org.robolectric:robolectric:4.11.1'
 
     // gRPC backend
-    implementation 'io.grpc:grpc-protobuf-lite:1.58.0' // CURRENT_GRPC_VERSION
-    implementation 'io.grpc:grpc-stub:1.58.0' // CURRENT_GRPC_VERSION
+    implementation 'io.grpc:grpc-protobuf-lite:1.60.1' // CURRENT_GRPC_VERSION
+    implementation 'io.grpc:grpc-stub:1.60.1' // CURRENT_GRPC_VERSION
     implementation 'org.apache.tomcat:annotations-api:6.0.53'
 
     // View binding helper
-    implementation "com.github.Zhuinden:fragmentviewbindingdelegate-kt:1.0.0"
+    implementation "com.github.Zhuinden:fragmentviewbindingdelegate-kt:1.0.2"
 }
 
 protobuf {
-    protoc { artifact = 'com.google.protobuf:protoc:3.24.3' }
+    protoc { artifact = 'com.google.protobuf:protoc:3.25.2' }
     plugins {
         javalite { artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0" }
-        grpc { artifact = 'io.grpc:protoc-gen-grpc-java:1.58.0' } // CURRENT_GRPC_VERSION
+        grpc { artifact = 'io.grpc:protoc-gen-grpc-java:1.60.1' } // CURRENT_GRPC_VERSION
     }
     generateProtoTasks {
         all().each { task ->
